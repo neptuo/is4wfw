@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Default php lib</name>
+  <classname>DefaultPhp</classname>
+  <classpath>php.libs</classpath>
+  <version>1.02</version>
+  <count>1</count>
+  <comment>
+    Defaultní třída pro registrování a rušení c tag libs.
+    Max jedna instance.
+  </comment>
+  <tag>
+    <tagname>register</tagname>
+    <function>register</function>
+    <attribute>
+      <attname>tagPrefix</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>classPath</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zaregistruje tag lig na základě předaných parametrů, kde:
+      tagPrefix je prefix (př.: moje) pro nový objekt a classPath je cesta k souboru
+      s požadovanou třídou (př.: php.libs.Moje).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>unregister</tagname>
+    <function>unregister</function>
+    <attribute>
+      <attname>tagPrefix</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zruší zaregistrovaný objekt specifikovaný tagPrefixem. Defaultní objekty nelze zrušit!
+    </comment>
+  </tag>
+  <tag>
+    <tagname>cache</tagname>
+    <function>cache</function>
+    <attribute>
+      <attname>allow</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Nastaví cachování v aplikaci.
+    </comment>
+  </tag>
+</taglib>
+

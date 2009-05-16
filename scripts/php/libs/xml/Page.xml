@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Page Lib</name>
+  <classname>Page</classname>
+  <classpath>php.libs</classpath>
+  <version>1.24</version>
+  <count>*</count>
+  <comment>
+    Třída pro správu obsahu jednotlivých stránek.
+  </comment>
+  <tag>
+    <tagname>showList</tagname>
+    <function>showPages</function>
+    <attribute>
+      <attname>editable</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí kompletní administrační výpis stránek ( případně formulář ).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showFiles</tagname>
+    <function>showPageFiles</function>
+    <attribute>
+      <attname>editable</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí kompletní administrační výpis souborů ( případně formulář ).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>clearUrlCache</tagname>
+    <function>clearUrlCache</function>
+    <comment>
+      Vyprázdní url cache.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>updateKeywords</tagname>
+    <function>updateKeywords</function>
+    <comment>
+      Spravuje keywords pro vrlé webové aplikace.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showLanguages</tagname>
+    <function>showLanguages</function>
+    <attribute>
+      <attname>editable</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí jazykové verze, pokud je editable true, zobrazí formulář na mazání.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showTemplates</tagname>
+    <function>showTemplates</function>
+    <attribute>
+      <attname>detailPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showError</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí výpis templatů.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>editTemplate</tagname>
+    <function>showEditTemplateForm</function>
+    <attribute>
+      <attname>submitPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showError</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí editaci jednotlivého templatu.
+    </comment>
+  </tag>
+</taglib>
+

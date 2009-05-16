@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Article Lib</name>
+  <classname>Article</classname>
+  <classpath>php.libs</classpath>
+  <version>1.21</version>
+  <count>*</count>
+  <comment>
+    Třída pro články.
+  </comment>
+  <tag>
+    <tagname>showLine</tagname>
+    <function>showLine</function>
+    <attribute>
+      <attname>lineId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>template</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>templateId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageLangId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>articleLangId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>method</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vypíše všechny všechny články z řady. Pokud je zadáno pageId, je to stránka,
+      na kterou povede odkaz na detail článku, method (static | dynamic) pak udává jesi
+      má být použit dynamický překlad adres nebo předání parametrem.
+      Musí být zadán buď template(deprecated) nebo templateId
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showRss</tagname>
+    <function>showRssLine</function>
+    <attribute>
+      <attname>lineId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>articleLangId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageLangId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>method</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí řadu článků jako RSS dokument.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showDetail</tagname>
+    <function>showDetail</function>
+    <attribute>
+      <attname>template</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>templateId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>articleId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>articleLangId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>defaultArticleId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showError</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí detail článku do templatu. Parametr 'articleId' může být také zadán jako
+      _REQUEST['article-id'].
+    </comment>
+  </tag>
+  <tag>
+    <tagname>compose</tagname>
+    <function>composeUrl</function>
+    <comment>
+      Pro dynamický překlad adres. Zadanou cestu bude hledat mezi články (ve tvaru id-cokoli).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showManagement</tagname>
+    <function>showManagement</function>
+    <attribute>
+      <attname>lineId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>detailPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>method</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Správa článků. Argument 'lineId' může být předán přes _REQUEST['line-id'] nebo _SESSION['article-line-id']
+    </comment>
+  </tag>
+  <tag>
+    <tagname>createArticle</tagname>
+    <function>createArticle</function>
+    <attribute>
+      <attname>lineId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>detailPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>method</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showError</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Form pro vytvoření nového článku.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>setLine</tagname>
+    <function>setLine</function>
+    <attribute>
+      <attname>method</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showError</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro nastavení line-id. Argument 'method' (get | post | session) určuje
+      metodu jakou se má hodnota předat, defaultně 'post'. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showLines</tagname>
+    <function>showLines</function>
+    <attribute>
+      <attname>editable</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>detailPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vypíše všechny řady článků. Pokud je 'editable' "true", pak se zobrazí editační formuláře. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>createLine</tagname>
+    <function>createLine</function>
+    <attribute>
+      <attname>detailPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro přidání řady článků. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>editArticle</tagname>
+    <function>showEditForm</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>submitPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro editaci článku. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>editLine</tagname>
+    <function>showEditLineForm</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>submitPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro editaci řady článků. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>date</tagname>
+    <function>showDate</function>
+    <comment>
+      Zobrazí datum. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>time</tagname>
+    <function>showTime</function>
+    <comment>
+      Zobrazí čas.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>name</tagname>
+    <function>showName</function>
+    <comment>
+      Zobrazí název.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>author</tagname>
+    <function>showAuthor</function>
+    <comment>
+      Zobrazí autora.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>head</tagname>
+    <function>showHead</function>
+    <comment>
+      Zobrazí hlavičku.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>content</tagname>
+    <function>showContent</function>
+    <comment>
+      Zobrazí obsah.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>link</tagname>
+    <function>showLink</function>
+    <comment>
+      Zobrazí odkaz.
+    </comment>
+  </tag>
+</taglib>
+

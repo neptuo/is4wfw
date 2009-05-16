@@ -1,0 +1,553 @@
+[Config]
+Relative path=1
+Compilator.SaveAll=0
+Compilator.Capture=0
+Compilator.HideOutput=0
+Compilator.LogType=0
+DefaultCPIndex=0
+LogtoEnd=1
+DontOpen=0
+FileFormat=0
+[Project tree]
+wfw-wp
+	+wfw-wp
+		-cache
+			-images
+			-pages
+		-data
+			-create
+				data\create\article.php
+				data\create\article_content.php
+				data\create\article_line.php
+				data\create\connect.inc.php
+				data\create\content.php
+				data\create\counter.php
+				data\create\directory.php
+				data\create\file.php
+				data\create\group.php
+				data\create\guestbook.php
+				data\create\index.php
+				data\create\info.php
+				data\create\language.php
+				data\create\order_list.php
+				data\create\page.php
+				data\create\page_file.php
+				data\create\page_file_inc.php
+				data\create\page_right.php
+				data\create\urlcache.php
+				data\create\user.php
+				data\create\user_in_group.php
+				data\create\user_log.php
+			-insert
+				data\insert\default-insert_2009-01-21-155620.sql
+				data\insert\default-insert_2009-01-21-174933.sql
+				data\insert\default-insert_2009-01-23-191700.sql
+				data\insert\default-insert_2009-02-04-191800.sql
+				data\insert\default-insert_2009-02-12-214600.sql
+				data\insert\default-insert_2009-02-27-222500.sql
+		-files
+		-images
+			-cms
+				-design
+					images\cms\design\dot-transparent.png
+					images\cms\design\head-line.png
+					images\cms\design\logout-icon.png
+					images\cms\design\menu-background.png
+				-login
+					images\cms\login\login-body.png
+					images\cms\login\login-body-top.png
+					images\cms\login\login-head.jpg
+					images\cms\login\login-head.png
+			images\arro_do.png
+			images\arro_up.png
+			images\error.png
+			images\file_bws.png
+			images\lang_add.png
+			images\lang_del.png
+			images\minus.png
+			images\page_add.png
+			images\page_del.png
+			images\page_edi.png
+			images\plus.png
+			images\success.png
+		-logs
+			logs\2009-04-30.log
+		+scripts
+			+css
+				scripts\css\cms.css
+				scripts\css\editor.css
+			+js
+				scripts\js\Closer.js
+				scripts\js\Confirm.js
+				scripts\js\Editor.js
+				scripts\js\FileName.js
+				scripts\js\init.js
+				scripts\js\initTiny.js
+				scripts\js\CountDown.js
+			+php
+				-classes
+				+includes
+					scripts\php\includes\settings.inc.php
+				+libs
+					+xml
+						scripts\php\libs\xml\Article.xml
+						scripts\php\libs\xml\Counter.xml
+						scripts\php\libs\xml\Database.xml
+						scripts\php\libs\xml\DefaultPhp.xml
+						scripts\php\libs\xml\DefaultWeb.xml
+						scripts\php\libs\xml\Error.xml
+						scripts\php\libs\xml\File.xml
+						scripts\php\libs\xml\Form.xml
+						scripts\php\libs\xml\Guestbook.xml
+						scripts\php\libs\xml\Log.xml
+						scripts\php\libs\xml\Login.xml
+						scripts\php\libs\xml\Page.xml
+						scripts\php\libs\xml\User.xml
+					scripts\php\libs\Article.class.php
+					scripts\php\libs\BaseTagLib.class.php
+					scripts\php\libs\Counter.class.php
+					scripts\php\libs\Database.class.php
+					scripts\php\libs\DefaultPhp.class.php
+					scripts\php\libs\DefaultWeb.class.php
+					scripts\php\libs\Error.class.php
+					scripts\php\libs\File.class.php
+					scripts\php\libs\Form.class.php
+					scripts\php\libs\Guestbook.class.php
+					scripts\php\libs\Log.class.php
+					scripts\php\libs\Login.class.php
+					scripts\php\libs\Page.class.php
+					scripts\php\libs\User.class.php
+		-tiny-mce
+			-langs
+				tiny-mce\langs\en.js
+			-plugins
+				-advhr
+					-css
+						tiny-mce\plugins\advhr\css\advhr.css
+					-js
+						tiny-mce\plugins\advhr\js\rule.js
+					-langs
+						tiny-mce\plugins\advhr\langs\en_dlg.js
+					tiny-mce\plugins\advhr\editor_plugin.js
+					tiny-mce\plugins\advhr\editor_plugin_src.js
+					tiny-mce\plugins\advhr\rule.htm
+				-advimage
+					-css
+						tiny-mce\plugins\advimage\css\advimage.css
+					-img
+						tiny-mce\plugins\advimage\img\sample.gif
+					-js
+						tiny-mce\plugins\advimage\js\image.js
+					-langs
+						tiny-mce\plugins\advimage\langs\en_dlg.js
+					tiny-mce\plugins\advimage\editor_plugin.js
+					tiny-mce\plugins\advimage\editor_plugin_src.js
+					tiny-mce\plugins\advimage\image.htm
+				-advlink
+					-css
+						tiny-mce\plugins\advlink\css\advlink.css
+					-js
+						tiny-mce\plugins\advlink\js\advlink.js
+					-langs
+						tiny-mce\plugins\advlink\langs\en_dlg.js
+					tiny-mce\plugins\advlink\editor_plugin.js
+					tiny-mce\plugins\advlink\editor_plugin_src.js
+					tiny-mce\plugins\advlink\link.htm
+				-autosave
+					tiny-mce\plugins\autosave\editor_plugin.js
+					tiny-mce\plugins\autosave\editor_plugin_src.js
+				-bbcode
+					tiny-mce\plugins\bbcode\editor_plugin.js
+					tiny-mce\plugins\bbcode\editor_plugin_src.js
+				-compat2x
+					tiny-mce\plugins\compat2x\editor_plugin.js
+					tiny-mce\plugins\compat2x\editor_plugin_src.js
+				-contextmenu
+					tiny-mce\plugins\contextmenu\editor_plugin.js
+					tiny-mce\plugins\contextmenu\editor_plugin_src.js
+				-directionality
+					tiny-mce\plugins\directionality\editor_plugin.js
+					tiny-mce\plugins\directionality\editor_plugin_src.js
+				-emotions
+					-img
+						tiny-mce\plugins\emotions\img\smiley-cool.gif
+						tiny-mce\plugins\emotions\img\smiley-cry.gif
+						tiny-mce\plugins\emotions\img\smiley-embarassed.gif
+						tiny-mce\plugins\emotions\img\smiley-foot-in-mouth.gif
+						tiny-mce\plugins\emotions\img\smiley-frown.gif
+						tiny-mce\plugins\emotions\img\smiley-innocent.gif
+						tiny-mce\plugins\emotions\img\smiley-kiss.gif
+						tiny-mce\plugins\emotions\img\smiley-laughing.gif
+						tiny-mce\plugins\emotions\img\smiley-money-mouth.gif
+						tiny-mce\plugins\emotions\img\smiley-sealed.gif
+						tiny-mce\plugins\emotions\img\smiley-smile.gif
+						tiny-mce\plugins\emotions\img\smiley-surprised.gif
+						tiny-mce\plugins\emotions\img\smiley-tongue-out.gif
+						tiny-mce\plugins\emotions\img\smiley-undecided.gif
+						tiny-mce\plugins\emotions\img\smiley-wink.gif
+						tiny-mce\plugins\emotions\img\smiley-yell.gif
+					-js
+						tiny-mce\plugins\emotions\js\emotions.js
+					-langs
+						tiny-mce\plugins\emotions\langs\en_dlg.js
+					tiny-mce\plugins\emotions\editor_plugin.js
+					tiny-mce\plugins\emotions\editor_plugin_src.js
+					tiny-mce\plugins\emotions\emotions.htm
+				-example
+					-img
+						tiny-mce\plugins\example\img\example.gif
+					-js
+						tiny-mce\plugins\example\js\dialog.js
+					-langs
+						tiny-mce\plugins\example\langs\en.js
+						tiny-mce\plugins\example\langs\en_dlg.js
+					tiny-mce\plugins\example\dialog.htm
+					tiny-mce\plugins\example\editor_plugin.js
+					tiny-mce\plugins\example\editor_plugin_src.js
+				-fullpage
+					-css
+						tiny-mce\plugins\fullpage\css\fullpage.css
+					-js
+						tiny-mce\plugins\fullpage\js\fullpage.js
+					-langs
+						tiny-mce\plugins\fullpage\langs\en_dlg.js
+					tiny-mce\plugins\fullpage\editor_plugin.js
+					tiny-mce\plugins\fullpage\editor_plugin_src.js
+					tiny-mce\plugins\fullpage\fullpage.htm
+				-fullscreen
+					tiny-mce\plugins\fullscreen\editor_plugin.js
+					tiny-mce\plugins\fullscreen\editor_plugin_src.js
+					tiny-mce\plugins\fullscreen\fullscreen.htm
+				-iespell
+					tiny-mce\plugins\iespell\editor_plugin.js
+					tiny-mce\plugins\iespell\editor_plugin_src.js
+				-inlinepopups
+					-skins
+						-clearlooks2
+							-img
+								tiny-mce\plugins\inlinepopups\skins\clearlooks2\img\alert.gif
+								tiny-mce\plugins\inlinepopups\skins\clearlooks2\img\button.gif
+								tiny-mce\plugins\inlinepopups\skins\clearlooks2\img\buttons.gif
+								tiny-mce\plugins\inlinepopups\skins\clearlooks2\img\confirm.gif
+								tiny-mce\plugins\inlinepopups\skins\clearlooks2\img\corners.gif
+								tiny-mce\plugins\inlinepopups\skins\clearlooks2\img\horizontal.gif
+								tiny-mce\plugins\inlinepopups\skins\clearlooks2\img\vertical.gif
+							tiny-mce\plugins\inlinepopups\skins\clearlooks2\window.css
+					tiny-mce\plugins\inlinepopups\editor_plugin.js
+					tiny-mce\plugins\inlinepopups\editor_plugin_src.js
+					tiny-mce\plugins\inlinepopups\template.htm
+				-insertdatetime
+					tiny-mce\plugins\insertdatetime\editor_plugin.js
+					tiny-mce\plugins\insertdatetime\editor_plugin_src.js
+				-layer
+					tiny-mce\plugins\layer\editor_plugin.js
+					tiny-mce\plugins\layer\editor_plugin_src.js
+				-media
+					-css
+						tiny-mce\plugins\media\css\content.css
+						tiny-mce\plugins\media\css\media.css
+					-img
+						tiny-mce\plugins\media\img\flash.gif
+						tiny-mce\plugins\media\img\flv_player.swf
+						tiny-mce\plugins\media\img\quicktime.gif
+						tiny-mce\plugins\media\img\realmedia.gif
+						tiny-mce\plugins\media\img\shockwave.gif
+						tiny-mce\plugins\media\img\trans.gif
+						tiny-mce\plugins\media\img\windowsmedia.gif
+					-js
+						tiny-mce\plugins\media\js\embed.js
+						tiny-mce\plugins\media\js\media.js
+					-langs
+						tiny-mce\plugins\media\langs\en_dlg.js
+					tiny-mce\plugins\media\editor_plugin.js
+					tiny-mce\plugins\media\editor_plugin_src.js
+					tiny-mce\plugins\media\media.htm
+				-nonbreaking
+					tiny-mce\plugins\nonbreaking\editor_plugin.js
+					tiny-mce\plugins\nonbreaking\editor_plugin_src.js
+				-noneditable
+					tiny-mce\plugins\noneditable\editor_plugin.js
+					tiny-mce\plugins\noneditable\editor_plugin_src.js
+				-pagebreak
+					-css
+						tiny-mce\plugins\pagebreak\css\content.css
+					-img
+						tiny-mce\plugins\pagebreak\img\pagebreak.gif
+						tiny-mce\plugins\pagebreak\img\trans.gif
+					tiny-mce\plugins\pagebreak\editor_plugin.js
+					tiny-mce\plugins\pagebreak\editor_plugin_src.js
+				-paste
+					-css
+						tiny-mce\plugins\paste\css\blank.css
+						tiny-mce\plugins\paste\css\pasteword.css
+					-js
+						tiny-mce\plugins\paste\js\pastetext.js
+						tiny-mce\plugins\paste\js\pasteword.js
+					-langs
+						tiny-mce\plugins\paste\langs\en_dlg.js
+					tiny-mce\plugins\paste\blank.htm
+					tiny-mce\plugins\paste\editor_plugin.js
+					tiny-mce\plugins\paste\editor_plugin_src.js
+					tiny-mce\plugins\paste\pastetext.htm
+					tiny-mce\plugins\paste\pasteword.htm
+				-preview
+					-jscripts
+						tiny-mce\plugins\preview\jscripts\embed.js
+					tiny-mce\plugins\preview\editor_plugin.js
+					tiny-mce\plugins\preview\editor_plugin_src.js
+					tiny-mce\plugins\preview\example.html
+					tiny-mce\plugins\preview\preview.html
+				-print
+					tiny-mce\plugins\print\editor_plugin.js
+					tiny-mce\plugins\print\editor_plugin_src.js
+				-safari
+					tiny-mce\plugins\safari\blank.htm
+					tiny-mce\plugins\safari\editor_plugin.js
+					tiny-mce\plugins\safari\editor_plugin_src.js
+				-save
+					tiny-mce\plugins\save\editor_plugin.js
+					tiny-mce\plugins\save\editor_plugin_src.js
+				-searchreplace
+					-css
+						tiny-mce\plugins\searchreplace\css\searchreplace.css
+					-js
+						tiny-mce\plugins\searchreplace\js\searchreplace.js
+					-langs
+						tiny-mce\plugins\searchreplace\langs\en_dlg.js
+					tiny-mce\plugins\searchreplace\editor_plugin.js
+					tiny-mce\plugins\searchreplace\editor_plugin_src.js
+					tiny-mce\plugins\searchreplace\searchreplace.htm
+				-spellchecker
+					-css
+						tiny-mce\plugins\spellchecker\css\content.css
+					-img
+						tiny-mce\plugins\spellchecker\img\wline.gif
+					tiny-mce\plugins\spellchecker\editor_plugin.js
+					tiny-mce\plugins\spellchecker\editor_plugin_src.js
+				-style
+					-css
+						tiny-mce\plugins\style\css\props.css
+					-js
+						tiny-mce\plugins\style\js\props.js
+					-langs
+						tiny-mce\plugins\style\langs\en_dlg.js
+					tiny-mce\plugins\style\editor_plugin.js
+					tiny-mce\plugins\style\editor_plugin_src.js
+					tiny-mce\plugins\style\props.htm
+				-table
+					-css
+						tiny-mce\plugins\table\css\cell.css
+						tiny-mce\plugins\table\css\row.css
+						tiny-mce\plugins\table\css\table.css
+					-js
+						tiny-mce\plugins\table\js\cell.js
+						tiny-mce\plugins\table\js\merge_cells.js
+						tiny-mce\plugins\table\js\row.js
+						tiny-mce\plugins\table\js\table.js
+					-langs
+						tiny-mce\plugins\table\langs\en_dlg.js
+					tiny-mce\plugins\table\cell.htm
+					tiny-mce\plugins\table\editor_plugin.js
+					tiny-mce\plugins\table\editor_plugin_src.js
+					tiny-mce\plugins\table\merge_cells.htm
+					tiny-mce\plugins\table\row.htm
+					tiny-mce\plugins\table\table.htm
+				-template
+					-css
+						tiny-mce\plugins\template\css\template.css
+					-js
+						tiny-mce\plugins\template\js\template.js
+					-langs
+						tiny-mce\plugins\template\langs\en_dlg.js
+					tiny-mce\plugins\template\blank.htm
+					tiny-mce\plugins\template\editor_plugin.js
+					tiny-mce\plugins\template\editor_plugin_src.js
+					tiny-mce\plugins\template\template.htm
+				-visualchars
+					tiny-mce\plugins\visualchars\editor_plugin.js
+					tiny-mce\plugins\visualchars\editor_plugin_src.js
+				-xhtmlxtras
+					-css
+						tiny-mce\plugins\xhtmlxtras\css\attributes.css
+						tiny-mce\plugins\xhtmlxtras\css\popup.css
+					-js
+						tiny-mce\plugins\xhtmlxtras\js\abbr.js
+						tiny-mce\plugins\xhtmlxtras\js\acronym.js
+						tiny-mce\plugins\xhtmlxtras\js\attributes.js
+						tiny-mce\plugins\xhtmlxtras\js\cite.js
+						tiny-mce\plugins\xhtmlxtras\js\del.js
+						tiny-mce\plugins\xhtmlxtras\js\element_common.js
+						tiny-mce\plugins\xhtmlxtras\js\ins.js
+					-langs
+						tiny-mce\plugins\xhtmlxtras\langs\en_dlg.js
+					tiny-mce\plugins\xhtmlxtras\abbr.htm
+					tiny-mce\plugins\xhtmlxtras\acronym.htm
+					tiny-mce\plugins\xhtmlxtras\attributes.htm
+					tiny-mce\plugins\xhtmlxtras\cite.htm
+					tiny-mce\plugins\xhtmlxtras\del.htm
+					tiny-mce\plugins\xhtmlxtras\editor_plugin.js
+					tiny-mce\plugins\xhtmlxtras\editor_plugin_src.js
+					tiny-mce\plugins\xhtmlxtras\ins.htm
+			-themes
+				-advanced
+					-img
+						tiny-mce\themes\advanced\img\colorpicker.jpg
+						tiny-mce\themes\advanced\img\icons.gif
+					-js
+						tiny-mce\themes\advanced\js\about.js
+						tiny-mce\themes\advanced\js\anchor.js
+						tiny-mce\themes\advanced\js\color_picker.js
+						tiny-mce\themes\advanced\js\charmap.js
+						tiny-mce\themes\advanced\js\image.js
+						tiny-mce\themes\advanced\js\link.js
+						tiny-mce\themes\advanced\js\source_editor.js
+					-langs
+						tiny-mce\themes\advanced\langs\en.js
+						tiny-mce\themes\advanced\langs\en_dlg.js
+					-skins
+						-default
+							-img
+								tiny-mce\themes\advanced\skins\default\img\buttons.png
+								tiny-mce\themes\advanced\skins\default\img\items.gif
+								tiny-mce\themes\advanced\skins\default\img\menu_arrow.gif
+								tiny-mce\themes\advanced\skins\default\img\menu_check.gif
+								tiny-mce\themes\advanced\skins\default\img\progress.gif
+								tiny-mce\themes\advanced\skins\default\img\tabs.gif
+							tiny-mce\themes\advanced\skins\default\content.css
+							tiny-mce\themes\advanced\skins\default\dialog.css
+							tiny-mce\themes\advanced\skins\default\ui.css
+						-o2k7
+							-img
+								tiny-mce\themes\advanced\skins\o2k7\img\button_bg.png
+								tiny-mce\themes\advanced\skins\o2k7\img\button_bg_black.png
+								tiny-mce\themes\advanced\skins\o2k7\img\button_bg_silver.png
+							tiny-mce\themes\advanced\skins\o2k7\content.css
+							tiny-mce\themes\advanced\skins\o2k7\dialog.css
+							tiny-mce\themes\advanced\skins\o2k7\ui.css
+							tiny-mce\themes\advanced\skins\o2k7\ui_black.css
+							tiny-mce\themes\advanced\skins\o2k7\ui_silver.css
+					tiny-mce\themes\advanced\about.htm
+					tiny-mce\themes\advanced\anchor.htm
+					tiny-mce\themes\advanced\color_picker.htm
+					tiny-mce\themes\advanced\editor_template.js
+					tiny-mce\themes\advanced\editor_template_src.js
+					tiny-mce\themes\advanced\charmap.htm
+					tiny-mce\themes\advanced\image.htm
+					tiny-mce\themes\advanced\link.htm
+					tiny-mce\themes\advanced\source_editor.htm
+				-simple
+					-img
+						tiny-mce\themes\simple\img\icons.gif
+					-langs
+						tiny-mce\themes\simple\langs\en.js
+					-skins
+						-default
+							tiny-mce\themes\simple\skins\default\content.css
+							tiny-mce\themes\simple\skins\default\ui.css
+						-o2k7
+							-img
+								tiny-mce\themes\simple\skins\o2k7\img\button_bg.png
+							tiny-mce\themes\simple\skins\o2k7\content.css
+							tiny-mce\themes\simple\skins\o2k7\ui.css
+					tiny-mce\themes\simple\editor_template.js
+					tiny-mce\themes\simple\editor_template_src.js
+			-utils
+				tiny-mce\utils\editable_selects.js
+				tiny-mce\utils\form_utils.js
+				tiny-mce\utils\mctabs.js
+				tiny-mce\utils\validate.js
+			tiny-mce\tiny_mce.js
+			tiny-mce\tiny_mce_popup.js
+			tiny-mce\tiny_mce_src.js
+		-tpls
+			tpls\defaultArticleDetail.tpl.php
+			tpls\defaultArticleLine.tpl.php
+			tpls\defaultCounter.tpl.php
+		index.php
+		keywords.txt
+		robots.txt
+		file.php
+[Open project files]
+0=index.php
+1=scripts\css\cms.css
+2=scripts\php\libs\DefaultWeb.class.php
+3=scripts\php\libs\xml\DefaultWeb.xml
+4=scripts\php\libs\Page.class.php
+5=scripts\php\libs\xml\Page.xml
+6=scripts\php\libs\WebProject.class.php
+7=scripts\php\libs\xml\WebProject.xml
+8=scripts\php\libs\Article.class.php
+9=scripts\php\libs\xml\Article.xml
+10=scripts\php\libs\Counter.class.php
+11=scripts\php\libs\xml\Counter.xml
+12=scripts\php\libs\File.class.php
+13=scripts\php\libs\xml\File.xml
+14=scripts\php\libs\Login.class.php
+15=scripts\php\libs\xml\Login.xml
+16=scripts\php\libs\User.class.php
+17=scripts\php\libs\xml\User.xml
+18=file.php
+19=scripts\js\CountDown.js
+[Selected Project Files]
+Main=index.php
+Selected=scripts\js\CountDown.js
+[index.php]
+TopLine=1
+Caret=62,39
+[scripts\css\cms.css]
+TopLine=624
+Caret=290,650
+[scripts\php\libs\DefaultWeb.class.php]
+TopLine=420
+Caret=20,471
+[scripts\php\libs\xml\DefaultWeb.xml]
+TopLine=77
+Caret=32,116
+[scripts\php\libs\Page.class.php]
+TopLine=1492
+Caret=35,1524
+[scripts\php\libs\xml\Page.xml]
+TopLine=1
+Caret=16,7
+[scripts\php\libs\WebProject.class.php]
+TopLine=58
+Caret=4,80
+[scripts\php\libs\xml\WebProject.xml]
+TopLine=1
+Caret=39,14
+[scripts\php\libs\Article.class.php]
+TopLine=356
+Caret=252,373
+[scripts\php\libs\xml\Article.xml]
+TopLine=228
+Caret=18,289
+[scripts\php\libs\Counter.class.php]
+TopLine=195
+Caret=36,56
+[scripts\php\libs\xml\Counter.xml]
+TopLine=1
+Caret=16,7
+[scripts\php\libs\File.class.php]
+TopLine=1
+Caret=29,15
+[scripts\php\libs\xml\File.xml]
+TopLine=1
+Caret=16,7
+[scripts\php\libs\Login.class.php]
+TopLine=375
+Caret=41,401
+[scripts\php\libs\xml\Login.xml]
+TopLine=1
+Caret=16,7
+[scripts\php\libs\User.class.php]
+TopLine=456
+Caret=32,483
+[scripts\php\libs\xml\User.xml]
+TopLine=1
+Caret=29,49
+[file.php]
+TopLine=37
+Caret=62,59
+[scripts\js\CountDown.js]
+TopLine=1
+Caret=2,15

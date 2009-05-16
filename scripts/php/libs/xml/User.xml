@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>User management lib</name>
+  <classname>User</classname>
+  <classpath>php.libs</classpath>
+  <version>1.01</version>
+  <count>*</count>
+  <comment>
+    Třída pro správu uživatelských účtů.
+  </comment>
+  <tag>
+    <tagname>management</tagname>
+    <function>showUserManagement</function>
+    <comment>
+      Správa uživatelů.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>newGroup</tagname>
+    <function>addNewGroup</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Přidání nové uživatelské skupiny.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>deleteGroup</tagname>
+    <function>deleteGroup</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Mazání uživatelských skupin.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showLog</tagname>
+    <function>showUserLog</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Výpisu logu uživatelů.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>truncateLog</tagname>
+    <function>truncateUserLog</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Smaže log uživatelů.
+    </comment>
+  </tag>
+</taglib>

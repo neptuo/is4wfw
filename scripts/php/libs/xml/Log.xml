@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Log lib</name>
+  <classname>Log</classname>
+  <classpath>php.libs</classpath>
+  <version>1.02</version>
+  <count>1</count>
+  <commnet>
+    Logovací třída.
+  </comment>
+  <tag>
+    <tagname>write</tagname>
+    <function>write</function>
+    <attribute>
+      <attname>msg</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zapíše zprávu do log souboru aplikace.
+    </comment>
+  </tag>
+</taglib>
+

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Default web lib</name>
+  <classname>DefaultWeb</classname>
+  <classpath>php.libs</classpath>
+  <version>1.36</version>
+  <count>1</count>
+  <comment>
+    Základní třída aplikace.
+  </comment>
+  <tag>
+    <tagname>content</tagname>
+    <function>getContent</function>
+    <comment>
+      Zobrazí obsah podstránky.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>menu</tagname>
+    <function>getMenu</function>
+    <attribute>
+      <attname>parentId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>inner</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>classes</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>template</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vygeneruje menu stránek, kde: "parentId" je id kořenové stránky menu,
+      "inner" je hloubka v noření menu, (př.: pro inner="1", zobrazí pouze jednu úroveň menu).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>crumbMenu</tagname>
+    <function>getCrumbMenu</function>
+    <attribute>
+      <attname>delimeter</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Vygeneruje drobečkovou nápovědu. Atribute 'delimenter' obsahuje znaky, 
+      které bodou použity pro oddělení jednotlivých odkazů
+    </comment>
+  </tag>
+  <tag>
+    <tagname>cache</tagname>
+    <function>cache</function>
+    <attribute>
+      <attname>allow</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>time</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Nastaví cachování v aplikaci.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>inc</tagname>
+    <function>includePage</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>languageId</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <attribute>
+      <attname>notParseCTag</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <attribute>
+      <attname>whenLogged</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <attribute>
+      <attname>whenNotLogged</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <comment>
+      Vloží do stránky další stránku specifikovanou v "pageId". Pokud je nastaveno
+      "languageId", zobrazí obsah stránky z dané jazykové verze, jinak zobrazen obsah
+      podle aktuální jazykové verze. Pokud je nastaven atribut "notParseCTag" na "true",
+      nebudou se ve vkládané stránce prasovat custom tagy.  
+    </comment>
+  </tag>
+  <tag>
+    <tagname>incTemplate</tagname>
+    <function>includeTemplate</function>
+    <attribute>
+      <attname>templateId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>whenLogged</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <attribute>
+      <attname>whenNotLogged</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <comment>
+      Vloží do stránky template.  
+    </comment>
+  </tag>
+  <tag>
+    <tagname>a</tagname>
+    <function>makeAnchor</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>text</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>languageId</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <attribute>
+      <attname>class</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <attribute>
+      <attname>id</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <attribute>
+      <attname>target</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <attribute>
+      <attname>rel</attname>
+      <attreq>imlied</attreq>
+    </attribute>
+    <comment>
+      Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 
+      "text" je text v html odkazu, "languageId" je jazyková verze požadované
+      stránky, defaultně aktuální jazyková verze. Zbytek jsou standartní html 
+      atributy.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>composeTextFileUrl</tagname>
+    <function>composeTextFileUrl</function>
+    <comment>
+      Pro dynamický překlad adres u 'text file'.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>textFile</tagname>
+    <function>getTextFile</function>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>fileId</attname>
+      <attreq>imlpied</attreq>
+    </attribute>
+    <comment>
+      Vrací 'text file' v binární podobě.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>redirect</tagname>
+    <function>redirect</function>
+    <attribute>
+      <attname>path</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Přesměruje užívatele na externí odkaz.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>redirect</tagname>
+    <function>redirect</function>
+    <attribute>
+      <attname>path</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Přesměruje uživatele na danou adresu. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>redirectTo</tagname>
+    <function>redirectTo</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>langId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>browser</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Přesměruje uživatele na danou stranku, pokud je zadán 'browser', přesměruje pouze uživatele
+			používající odpovídající prohlížeč. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>lang</tagname>
+    <function>getLanguages</function>
+    <attribute>
+      <attname>homePage</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí odkazy na jednotlivé jazykové verze. Pokud je "homePage" true, pak 
+      jsou tyto odkazy prokliky na domovskou stránku jazykové verze, jinak vede
+      odkaz na odpovídající stranku dané jazykové verze stránce, aktuální.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>redirectToRightLangVersion</tagname>
+    <function>redirectToRightLangVersion</function>
+    <attribute>
+      <attname>default</attname>
+      <attreq>requierd</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Přesměruje uživatele na jeho jazykovou verzi, pokud neexistuje použije tu 
+      zadanou v default, pageId je id stránky pro přesměrování.
+    </comment>
+  </tag>
+</taglib>
+

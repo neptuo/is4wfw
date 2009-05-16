@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Error handle lib</name>
+  <classname>Error</classname>
+  <classpath>php.libs</classpath>
+  <version>1.01</version>
+  <count>*</count>
+  <comment>
+    Jednoduchá třída pro správu erorů. Jedna instance je také default objekt.
+  </comment>
+  <tag>
+    <tagname>add</tagname>
+    <function>add</function>
+    <attribute>
+      <attname>msg</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Přidá eror do eror listu. Zpráva eror je zadána pro povinného atributu "msg".
+    </comment>
+  </tag>
+  <tag>
+    <tagname>show</tagname>
+    <function>show</function>
+    <comment>
+      Vypíše všechny erory z listu.
+    </comment>
+  </tag>
+</taglib>
+

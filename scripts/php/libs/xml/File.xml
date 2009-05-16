@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>File Lib</name>
+  <classname>File</classname>
+  <classpath>php.libs</classpath>
+  <version>1.10</version>
+  <count>*</count>
+  <comment>
+    Třída pro správu souborů.
+  </comment>
+  <tag>
+    <tagname>showDirectory</tagname>
+    <function>showDirectory</function>
+    <attribute>
+      <attname>dirId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí kompletní obsah adresáře z FS.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showNewDirectoryForm</tagname>
+    <function>showNewDirectoryForm</function>
+    <attribute>
+      <attname>dirId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro přidání adresáře.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showUploadForm</tagname>
+    <function>showUploadForm</function>
+    <attribute>
+      <attname>dirId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useRights</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro upload souborů.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>get</tagname>
+    <function>getFile</function>
+    <attribute>
+      <attname>fileId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vrátí binární podobu souboru (ke stažení).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>compose</tagname>
+    <function>composeUrl</function>
+    <comment>
+      Pro dynamický překlad adres. Zadanou cestu bude hledat mezi soubory (ve tvaru id-name).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>gallery</tagname>
+    <function>galleryFromDirectory</function>
+    <attribute>
+      <attname>method</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>langId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>dirId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showSubDirs</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showNames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showTitles</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>detailWidth</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>detailHeight</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>lightbox</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>lightWidth</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>lightHeight</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>lightTitle</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>lightId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vrátí všechny obrázky z daného adresáře(přímo v tagu nebo v $_POST['dir-id']). 
+      Odkaz na skutečnou velikost fotky je v pageId, pokud není zadána, zobrazí se jen miniatury.
+      Method může nabývat hodnot "static" nebo "dynamic" a určuje způvob předání fileId další stránce,
+      pokud je "dynamic", musí mít strana "pageId" zapnutý dynamické překlad adres.
+      Atributy s prefixem light, slouzi pro lightbox, je ovsem nutne lightbox samostny (JS + CSS) prilozit 
+			ke strance
+    </comment>
+  </tag>
+  <tag>
+    <tagname>galleryDetail</tagname>
+    <function>galleryDetail</function>
+    <attribute>
+      <attname>fileId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showName</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showTitle</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vrátí detajl z galerie. FileId musí být zadáno přímo v tagu, v _REQUEST nebo v objektu třídy File
+      v proměnné CurrentId (pokud je volán přes dynamický překlad adres).
+    </comment>
+  </tag>
+</taglib>
+
