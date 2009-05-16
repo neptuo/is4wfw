@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>WebProject Lib</name>
+  <classname>WebProject</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Třída pro správu webových projektů.
+  </comment>
+  <tag>
+    <tagname>selectProject</tagname>
+    <function>selectProject</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showMsg</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro výběr projektu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showProjects</tagname>
+    <function>showProjects</function>
+    <attribute>
+      <attname>detailPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>editable</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí výpis všech formulářú.
+      Atributy:
+      detailPageId - id stránky pro  zobrazení formuláře s detailem projektu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showEditForm</tagname>
+    <function>showEditForm</function>
+    <comment>
+      Zobrazí formulář pro úpravu nebo vytvoření projektu.
+    </comment>
+  </tag>
+</taglib>
+

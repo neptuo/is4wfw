@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Guestbook Lib</name>
+  <classname>Guestbook</classname>
+  <classpath>php.libs</classpath>
+  <version>1.02</version>
+  <count>*</count>
+  <comment>
+    Uživatelská kniha návštěv.
+  </comment>
+  <tag>
+    <tagname>input</tagname>
+    <function>showForm</function>
+    <attribute>
+      <attname>guestbookId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>parentId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>smilies</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro vložení nového příspěvku. Kde guestbookId je Id návštěvní knihy 
+      a parentId je Id rodičovského příspěvku(defaultně 0). ParentId je také možné 
+      předávat přes _POST['guestbook-parent-id']. Pokud je nastaven pageId, po odeslání
+      dat bude uživatel přesměrován na tuto stránku. Pokud je 'smilies' true, zobrazí
+      se smajlíci.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>show</tagname>
+    <function>showGuestbook</function>
+    <attribute>
+      <attname>guestbookId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>editable</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>answer</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>answerPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrame</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vypíše všechny příspěvky z knihy (guestbookId). Pokud je editable true, rozbrazí ikonky pro editaci.
+      Pokud je answer na true, je povoleno reagovat(odpovídat) na příspěvky, pak answerPageId je id
+      stránky s formulářem pro zadání odpovědi. Pokud je 'useFrames' true, odpoved bude zobrazena do framu.
+    </comment>
+  </tag>
+</taglib>
+

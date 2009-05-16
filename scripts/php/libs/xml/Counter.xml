@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Counter Lib</name>
+  <classname>Counter</classname>
+  <classpath>php.libs</classpath>
+  <version>1.10</version>
+  <count>*</count>
+  <comment>
+    Třída pro počítající uživatelské přístupy.
+  </comment>
+  <tag>
+    <tagname>access</tagname>
+    <function>countAccess</function>
+    <attribute>
+      <attname>id</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>every</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Počítá uživatelské přístupy. "id" je id počítadla a "every" je po jaké době má být znovu
+      připočítán přístup z jedné ip, možné hodnoty (every, minute, hour, day, week)
+    </comment>
+  </tag>
+  <tag>
+    <tagname>show</tagname>
+    <function>showTable</function>
+    <attribute>
+      <attname>template</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>templateId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>id</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Počítá uživatelské přístupy.
+      Template nebo templateId musí zadán.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>redirectWhenTimeLimitExceeded</tagname>
+    <function>redirectWhenTimeLimitExceeded</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>counterId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>every</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Přesměruje na pageId pokud vypršel časový limit v every.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>redirectWhenTimeLimitNotExceeded</tagname>
+    <function>redirectWhenTimeLimitNotExceeded</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>counterId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>every</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Přesměruje na pageId pokud nevypršel časový limit v every.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>all</tagname>
+    <function>showAll</function>
+    <comment>
+      Zobrazí všechny přístupy.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>visitors</tagname>
+    <function>showVisitors</function>
+    <comment>
+      Zobrazí všechny návštěvníky.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>visitorsWeek</tagname>
+    <function>showVisitorsWeek</function>
+    <comment>
+      Zobrazí všechny návštěvníky za tento týden.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>visitorsToday</tagname>
+    <function>showVisitorsToday</function>
+    <comment>
+      Zobrazí všechny návštěvníky za dnes.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>visitorsHour</tagname>
+    <function>showVisitorsHour</function>
+    <comment>
+      Zobrazí všechny návštěvníky za poslední hodinu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>visitorsOnline</tagname>
+    <function>showVisitorsOnline</function>
+    <comment>
+      Zobrazí všechny návštěvníky on line.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>user</tagname>
+    <function>showUser</function>
+    <comment>
+      Zobrazí všechny od aktuálního užívatele.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>userWeek</tagname>
+    <function>showUserWeek</function>
+    <comment>
+      Zobrazí všechny od aktuálního užívatele za poslední týden.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>userToday</tagname>
+    <function>showUserToday</function>
+    <comment>
+      Zobrazí všechny od aktuálního užívatele dnes.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>userHour</tagname>
+    <function>showUserHour</function>
+    <comment>
+      Zobrazí všechny od aktuálního užívatele za poslední hodinu.
+    </comment>
+  </tag>
+</taglib>
+

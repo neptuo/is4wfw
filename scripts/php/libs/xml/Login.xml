@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Login lib</name>
+  <classname>Login</classname>
+  <classpath>php.libs</classpath>
+  <version>1.12</version>
+  <count>1</count>
+  <comment>
+    Třída pro logování užívatelů, je defaultním objektem a maximálně jedna instance.
+    Za logovaný uživatel smí být max 15min bez aktivity, poté je automaticky ohlášen.
+  </comment>
+  <tag>
+    <tagname>init</tagname>
+    <function>initLogin</function>
+    <attribute>
+      <attname>group</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Inicializuje login.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>form</tagname>
+    <function>showLoginForm</function>
+    <attribute>
+      <attname>group</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro přihlášení a po jeho odeslání se pokusí uživatele 
+      přihlásit do skupiny specifikované atributem "group".
+      V případě úspechu je přesměrován na stránku "pageId".
+    </comment>
+  </tag>
+  <tag>
+    <tagname>logout</tagname>
+    <function>showLogoutForm</function>
+    <attribute>
+      <attname>group</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro ohlášení uživatele ze skupin 'group'. Dále také kontroluje zda přihlášení uživatele
+      nevypršelo. Po odhlášení je uživatel přesměrován na stránku "pageId".
+    </comment>
+  </tag>
+  <tag>
+    <tagname>info</tagname>
+    <function>loggedUserInfo</function>
+    <comment>
+      Zobrazí informace o přihlášeném uživateli (jméno, login, skupinu).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>redirectWhenLogged</tagname>
+    <function>redirectWhenLogged</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Přesměruje užívatele pokud je přihlášen na stránku "pageId".
+    </comment>
+  </tag>
+  <tag>
+    <tagname>redirectWhenNotLogged</tagname>
+    <function>redirectWhenNotLogged</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Přesměruje užívatele pokud není přihlášen na stránku "pageId".
+    </comment>
+  </tag>
+</taglib>

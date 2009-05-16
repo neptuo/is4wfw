@@ -1,0 +1,879 @@
+/* CSS Document */
+
+body {
+  margin: 0 auto;
+}
+
+form {
+  margin: 0;
+  display: inline;
+}
+
+textarea {
+  width: 100%;
+}
+
+input[type=image] {
+	margin-bottom: -4px;
+}
+
+.show-lines table input[type=image], .group-list table input[type=image], .user-log-list input[type=image], .languages-edit input[type=image], .show-projects input[type=image], .page-file-list input[type=image], .template-list input[type=image], .dir-list input[type=image] {
+	margin-bottom: -2px;
+}
+
+.closed .frame-body {
+	background: white;
+	display: none;
+}
+
+.pages-list td {
+  padding: 2px 10px;
+}
+
+table.pages-table {
+  border-collapse: collapse;
+}
+/*
+.inn-1 {
+  background: #eeeeee;
+}
+
+.inn-2 {
+  background: #dddddd;
+}
+
+.inn-3 {
+  background: #cccccc;
+}
+
+.inn-4 {
+  background: #bbbbbb
+}
+*/
+.page-item {
+  clear: both;
+}
+
+.page-edit, .page-edit form {
+  text-align: left;
+}
+
+.float-right {
+  width: 400px;
+  float: right;
+}
+
+.clear {
+  clear: both;
+}
+
+.page-list span {
+  padding: 2px 5px;
+}
+
+.page-language-version {
+  display: inline;
+}
+
+.page-list li {
+  padding: 4px 0 0 0;
+}
+
+.page-id-col {
+  color: #888888;
+}
+
+.page-name {
+  font-weight: bold;
+}
+
+.page-file-list, .template-list {
+  width: 100%;
+  border-top: 1px solid #cccccc;
+  border-collapse: collapse;
+}
+
+.show-lines table, .group-list table, .user-log-list table {
+  border-top: 1px solid #cccccc;
+  border-collapse: collapse;
+}
+
+.show-lines table td, .group-list table td, .user-log-list td, .languages-edit td, .show-projects td, .user-list-table td, .dir-list td {
+	padding: 2px 10px;
+  border-bottom: 1px solid #cccccc;
+}
+
+.group-list table th, .show-lines table th, .user-log-list th, .user-list-table th, .dir-list th {
+	padding: 0 10px;
+	text-align: left;
+}
+
+.file-tr th, .dir-list th, .show-lines th, .template-list th, .group-list th, .user-log-list th {
+  text-align: left;
+  background: #cccccc;
+  border-bottom: 1px solid black;
+}
+
+.group-list .group-list-name {
+	font-weight: bold;
+}
+
+.file-id {
+  width: 20px;
+}
+
+.file-name {
+  width: 130px;
+  font-weight: bold;
+}
+
+td.template-id {
+	font-weight: bold;
+} 
+
+.file-content, td.template-content {
+  color: #777777;
+}
+
+.file-content-in {
+  width: 560px;
+  overflow: hidden;
+}
+
+.file-content-in .foo {
+  width: 1000px;
+}
+
+.file-tr td, .template-list td {
+  overflow: hidden;
+  padding: 2px 5px;
+  border-bottom: 1px solid #cccccc;
+}
+
+.frame-cover {
+  margin-top: 15px;
+}
+
+div.login {
+  width: 256px;
+  margin: 100px 0 0 100px;
+  background: #04601C url('/images/cms/login/login-head.jpg') no-repeat 15px 14px;
+  border: 5px solid #04601C;
+}
+  	
+div.login-head {
+  width: 100%;
+  height: 22px;
+  /*background: url('/images/cms/login/login-head.png') no-repeat;*/
+}
+  	
+div.login-in {
+  padding-bottom: 6px;
+  /*background: url('/images/cms/login/login-body.png') no-repeat left bottom;*/
+}
+
+div.login-form {
+  margin: 0 10px;
+  padding: 0 5px;
+}
+
+div.login-form form {
+  margin: 0
+}
+
+div.login-form {
+	color: white;
+}
+
+div.login-form .login-head {
+	font-weight: bold;
+	visibility: hidden;
+}
+
+div.login-form p.login-head {
+  margin-top: 0;
+}
+
+div.login-form p.login-message {
+	background-color:red;
+	margin: 30px 0 -25px 0;
+	padding: 4px;
+	font-weight: bold;
+}
+
+.dir-list .dir-name input[type=submit] {
+  width: 100%;
+  text-align: left;
+  font-weight: bold;
+  font-family: Times;
+  font-size: 16px;
+  padding: 0;
+  background: white;
+  border: none;
+}
+
+.frame-cover {
+	border: 1px solid #04601C;
+}
+
+.frame-head {
+	width: 100%;
+	background: #04601C;
+}
+
+.frame-cover .frame-head .click-able-roll {
+  width: 15px;
+  height: 15px;
+  margin: 3px;
+  display: block;
+  background: url('/images/minus.png');
+}
+
+.frame-cover.closed-frame .frame-head .click-able-roll {
+  background: url('/images/plus.png');
+}
+
+.frame-cover .frame-head .click-able-roll span {
+  display: none;
+}
+
+.frame-head .frame-label {
+	color: white;
+	font-weight: bold;
+	float: left;
+	padding: 1px 0 1px 5px;
+}
+
+.frame-head .frame-close {
+	float: right;
+}
+
+.frame-body {
+	padding: 5px;
+	background: white;
+}
+
+.frames-used .frame-body {
+	display: none;
+}
+
+th.file-head-th {
+	background: #cccccc;
+}
+
+.dir-list {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.dir-list .file-edit, .dir-list .dir-edit {
+	width: 60px;
+}
+
+.dir-list .file-icon, .dir-list .file-id, .dir-list .file-type, .dir-list .dir-icon, .dir-list .dir-id, .dir-list .dir-type {
+	width: 20px;
+}
+
+.dir-list .file-name, .dir-list .dir-name {
+	width: 300px;
+}
+
+.dir-list .th-timestamp {
+  width: 100px;
+}
+
+.dir-list .th-edit {
+  width: 50px;
+}
+
+.dir-list tr.even, .dir-list tr.even .dir-name input {
+	background: #eeeeee;
+}
+
+.edit-prop, .edit-rights {
+  float: left;
+}
+
+.edit-rights div, .text-file-name, .text-file-type, .edit-keywords {
+  float: left;
+  padding: 6px 8px;
+  margin: 2px;
+  background: #eeeeee;
+}
+
+.edit-prop .edit-in-title input, .edit-prop .edit-menu input, .edit-prop .edit-visible input, .edit-prop .edit-clear-cache input, .edit-prop .edit-language select, .project-edit-http, .project-edit-https {
+	display: block;
+}
+
+.edit-prop .edit-name, .edit-prop .edit-href {
+  text-align: right;
+}
+
+.edit-prop .edit-name input, .edit-prop .edit-href input {
+  width: 320px;
+}
+
+.edit-keywords input {
+	width: 700px;
+}
+
+.edit-rights select {
+  width: 116px;
+}
+
+.edit-prop div {
+  padding: 6px 8px;
+  margin: 2px;
+  background: #eeeeee;
+}
+
+.edit-rights label {
+  display: block;
+}
+
+.edit-prop div.clear, .edit-rights .clear {
+  float: none;
+  padding: 0;
+  margin: 0;
+}
+
+.edit-tl-start, .edit-tl-end, .edit-content .edit-head, .edit-content .edit-content, .text-file-content, .user-edit-login, .user-edit-name, .user-edit-surname, .user-edit-password, .user-edit-password-again, .user-edit-submit, .user-edit-info, .user-edit-groups, .directory-name, .user-edit-enable {
+  padding: 6px 8px;
+  margin: 2px;
+  background: #eeeeee;
+}
+
+.edit-submit, .text-file-submit {
+  padding: 6px 8px;
+  margin: 2px;
+  text-align: right;
+  background: #eeeeee;
+}
+
+.user-edit-cover span, .directory-name span, .new-group-name span {
+  color: red;
+}
+
+.user-edit-prop {
+  width: 500px;
+  float: left;
+  text-align: right;
+}
+
+.user-edit-prop input {
+  width: 300px;
+}
+
+.user-edit-prop label {
+  float: left;
+}
+
+.user-edit-groups {
+  float: left;
+}
+
+.user-edit-groups label {
+  display: block;
+}
+
+.frame-body .error {
+	margin: 2px 0;
+	padding: 0 0 1px 18px;
+	color: white;
+	background: url('/images/error.png') #bd2828 no-repeat 1px 3px;
+}
+
+.frame-body .success {
+	margin: 2px 0;
+	padding: 0 0 1px 18px;
+	color: white;
+	background: url('/images/success.png') #38cb35 no-repeat 1px 3px;
+}
+
+.frame-body .warning {
+	margin: 2px 0;
+	padding: 0 0 1px 18px;
+	color: black;
+	background: url('/images/warning.png') no-repeat 1px 3px;
+}
+
+body {
+  overflow: -moz-scrollbars-vertical;
+	background: #cccccc;
+}
+
+.cms .head {
+	/*position: fixed;*/
+	width: 100%;
+	top: 0;
+	left: 0;
+	height: 50px;
+	padding: 1px;
+	background: url('/images/cms/design/head-line.png') repeat-x;
+}
+
+.cms .head .logout-form {
+	margin-right: 20px;
+	float: right;
+}
+
+.cms .head .logout-form form {
+	margin: 0;
+}
+
+.cms .head .logout-form p {
+	margin: 2px 0 9px 0;
+}
+
+.cms .head .logout-form input[type=submit] {
+	width: 30px;
+	height: 31px;
+	color: transparent;
+	background: url('/images/cms/design/logout-icon.png') no-repeat;
+	border: none;
+}
+
+.cms .head .user-info, .cms .head .select-project, .cms .head .logon-count-down {
+	font-size: 11px;
+	float: right;
+	margin: 2px 10px 0 2px;
+	padding: 2px 4px;
+	background: url('/images/cms/design/dot-transparent.png');
+	border: 1px solid #011D09;
+	height: 28px;
+}
+
+/* Pro prvni "bublinu" */
+.cms .head .logon-count-down {
+	margin-right: 20px;
+}
+
+.cms .head .logon-count-down .count-down-counter {
+	font-weight: bold;
+}
+
+.cms .head .select-project {
+	font-size: 12px;
+	padding: 4px;
+	height: 24px;
+}
+
+.cms .head .select-project select {
+	min-width: 100px;
+}
+
+.cms .head .select-project label {
+	font-weight: bold;
+	border-bottom:1px solid black;
+	border-top:1px solid black;
+	font-weight:bold;
+	padding:2px 0;
+}
+
+.cms .head .user-info .user-login {
+	margin: 16px 0 0 0;
+	font-size: 10px;
+}
+
+.cms .head .user-info .user-group {
+	margin-left: 10px;
+	float: left;
+}
+
+.cms .head .user-info .user-name {
+	float: left;
+	font-weight: bold;
+}
+
+.cms .head .cms-menu .menu-root {
+	width: 170px;
+	display: block;
+	font-weight: bold;
+	color: white;
+	cursor: Pointer;
+}
+
+.cms .body {
+	margin: 60px; 100px 30px 100px;
+}
+
+.article-mgm-td.article-mgm-id {
+	width: 20px;
+}
+
+.article-mgm-td.article-mgm-lang {
+	width: 30px;
+}
+
+.article-mgm-td.article-mgm-edit {
+	width: 50px;
+}
+
+.article-mgm-show form {
+	margin: 0;
+}
+
+.article-head-cover {
+	width: 680px; 
+	overflow: hidden; 
+	white-space: nowrap;
+}
+
+.article-head-in {
+	width: 1000px;
+}
+
+table.article-mgm-table {
+	width: 100%;
+	border-collapse: collapse;
+	border-bottom: 1px solid gray;
+}
+
+table.article-mgm-table th {
+	background: #cccccc;
+}
+
+table.article-mgm-table td {
+	vertical-align: top;
+}
+
+.article-mgm-tr td {
+	border-top: 1px solid #cccccc;
+}
+
+.article-mgm-first td {
+	border-color: gray;
+}
+
+td.article-mgm-id, td.article-mgm-lang, td.article-mgm-edit {
+	text-align: center;
+}
+
+td.article-mgm-id input[type=image] {
+	margin: 2px;
+}
+
+td.article-mgm-head {
+	color: #777777;
+}
+
+td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
+	padding: 4px 0;
+}
+
+.article-name, .article-line, .article-lang, .article-author {
+  float: left;
+}
+
+.article-name, .article-line, .article-lang, .article-head, .article-content, .article-author {
+  padding: 6px 8px;
+  margin: 2px;
+  background: #eeeeee;
+}
+
+.article-submit {
+  padding: 6px 8px;
+  margin: 2px;
+  text-align: right;
+  background: #eeeeee;
+}
+
+.guestbook-line {
+	margin: 4px 0;
+	padding: 4px 0;
+}
+
+.guestbook-head {
+	background: #cccccc;
+	clear: both;
+}
+
+.guestbook-editable {
+	float: right;
+}
+
+.guestbook-editable input[type=image] {
+	margin-top: 2px;
+}
+
+.guestbook-name {
+	float: left;
+	margin-left: 10px;
+	font-weight: bold;
+}
+
+.guestbook-timestamp, .guestbook-content {
+	float: left;
+}
+
+.guestbook-answers {
+	margin-left: 30px;
+}
+
+.even {
+  background: #eeeeee;
+}
+
+.user-list-table {
+  border-collapse: collapse;
+}
+
+.user-list-table th {
+  text-align: left;
+  background: #cccccc;
+  border-bottom: 1px solid black;
+}
+
+.edit-prop, .edit-rights, .project-prop, .project-edit-rights, .article-line-edit-name, .article-line-edit-rights, .template-rights, .up-file-prop {
+  float: left;
+}
+
+.edit-prop .edit-in-title, .edit-prop .edit-menu, .edit-prop .edit-visible, .edit-clear-cache, .edit-prop .edit-language, .edit-rights div, .text-file-name, .text-file-type, .text-file-browser, .project-edit-right-read, .project-edit-right-write, .project-edit-right-delete, .project-edit-http, .project-edit-https, .article-line-r-r, .article-line-r-w, .article-line-r-d, .template-right-r, .template-right-w, .template-right-d, .directory-right-r, .directory-right-w, .directory-right-d, .file-right-r, .file-right-w, .file-right-d {
+  float: left;
+  padding: 6px 8px;
+  margin: 2px;
+  background: #eeeeee;
+}
+
+.edit-prop .edit-name, .edit-prop .edit-href, .project-edit-name, .project-edit-url, .project-edit-alias1, .project-edit-alias2, .project-edit-alias3, .article-line-edit-name, .file-name label, .up-file-name label, .up-file-title label, .up-file-rs label, .up-file-name, .up-file-title, .up-file-rs, .new-group-name label, .new-group-parent label {
+  text-align: right;
+}
+
+.edit-prop .edit-name input, .edit-prop .edit-href input, .project-edit-name input, .project-edit-url input, .project-edit-alias1 input, .project-edit-alias2 input, .project-edit-alias3 input, .article-line-edit-name input, .file-name input, .up-file-name input, .up-file-title input, .up-file-rs input, .directory-name input {
+  width: 320px;
+}
+
+.new-group-name input {
+	width: 200px;
+}
+
+.new-group-parent select {
+	width: 298px;
+}
+
+.edit-rights select, .project-edit-rights select, .template-rights select, .file-right-r select, .file-right-w select .file-right-d select {
+  width: 116px;
+}
+
+.edit-prop div, .project-prop div, .article-line-edit-name, .article-line-edit-submit, .move-branch, .up-file-name, .up-file-title, .up-file-rs, .up-file-submit, .directory-submit, .move-copy-branch, .new-group-name, .new-group-parent, .update-keywords, .clear-url-cache, .add-new-language, .user-log-truncate {
+  padding: 6px 8px;
+  margin: 2px;
+  background: #eeeeee;
+}
+
+.move-branch select {
+	min-width: 200px;
+	_width: 200px;
+}
+
+.edit-rights label, .project-edit-rights label, .article-line-rights label, .template-rights label, .file-right-r label, .file-right-w label, .file-right-d label, .file-right-r label, .file-right-w label, .file-right-d label, .directory-right-r label, .directory-right-w label, .directory-right-d label {
+  display: block;
+}
+
+.edit-prop div.clear, .edit-rights .clear {
+  float: none;
+  padding: 0;
+  margin: 0;
+}
+.edit-tl-start, .edit-tl-end, .edit-content .edit-head, .edit-content .edit-content, .text-file-content, .template-edit-content, .template-submit {
+  padding: 6px 8px;
+  margin: 2px;
+  background: #eeeeee;
+}
+
+.file-submit {
+  padding: 6px 8px;
+  margin: 2px;
+  background: #eeeeee;
+}
+
+.edit-submit, .text-file-submit {
+  padding: 6px 8px;
+  margin: 2px;
+  text-align: right;
+  background: #eeeeee;
+}
+
+.languages-edit, .show-projects {
+	border-collapse: collapse;
+}
+
+.languages-edit th, .show-projects th {
+	padding: 2px 10px;
+	background: #CCCCCC none repeat scroll 0 0;
+	border-bottom: 1px solid black;
+	text-align: left;
+}
+
+.update-keywords .keywords-input {
+	width: 500px;
+}
+
+.login-user input, .login-passwd input {
+	width: 140px;
+}
+
+.select-webproject option {
+	padding: 0 10px 0 2px;
+}
+
+.select-webproject .webproject {
+	background: #cccccc;
+}
+
+/* ----------------------- ICONS ------------------------------ */
+
+.file-icon {
+	background: url('/images/icons/file.gif') no-repeat center center;
+}
+
+.dir-icon {
+	background: url('/images/icons/folder-orange.gif') no-repeat center center;
+}
+
+.file-icon.css {
+	background: url('/images/icons/web-page-orange.gif') no-repeat center center;
+}
+
+.file-icon.js {
+	background: url('/images/icons/page_script.gif') no-repeat center center;
+}
+
+.file-icon.jpg, .file-icon.gif, .file-icon.png, .file-icon.bmp {
+	background: url('/images/icons/image.gif') no-repeat center center;
+}
+
+.file-icon.pdf {
+	background: url('/images/icons/pdf.gif') no-repeat center center;
+}
+
+.file-icon.rar, .file-icon.zip {
+	background: url('/images/icons/zip-file.gif') no-repeat center center;
+}
+
+.file-icon.txt, .file-icon.sql, .file-icon.c, .file-icon.cpp, .file-icon.h {
+	background: url('/images/icons/text-file.gif') no-repeat center center;
+}
+
+.file-icon.java {
+	background: url('/images/icons/page_java.gif') no-repeat center center;
+}
+
+.file-icon.php {
+	background: url('/images/icons/page_php.gif') no-repeat center center;
+}
+
+.file-icon.html {
+	background: url('/images/icons/page_html.gif') no-repeat center center;
+}
+
+.file-icon.xml, .file-icon.xsl, .file-icon.dtd {
+	background: url('/images/icons/web-page-blue.gif') no-repeat center center;
+}
+
+.file-icon.swf {
+	background: url('/images/icons/flash-file.gif') no-repeat center center;
+}
+
+.file-icon.mp3 {
+	background: url('/images/icons/mp3-music-file.gif') no-repeat center center;
+}
+
+.file-icon.psd {
+	background: url('/images/icons/photoshop-file.gif') no-repeat center center;
+}
+
+.file-icon.doc {
+	background: url('/images/icons/ms-word.gif') no-repeat center center;
+}
+
+.file-icon.ppt {
+	background: url('/images/icons/page_white_powerpoint.png') no-repeat center center;
+}
+
+.file-icon.xls {
+	background: url('/images/icons/excel-file.gif') no-repeat center center;
+}
+
+.file-icon.mpeg, .file-icon.avi, .file-icon.mov {
+	background: url('/images/icons/page_video.gif') no-repeat center center;
+}
+
+/* ---------------------- CMS MENU ------------------------------------------- */
+
+
+.cms .head .cms-menu {
+	position: absolute;
+	margin: 10px 0pt 0pt 15px;
+}
+
+.cms .head .cms-menu .menu {
+	width: 184px;
+	margin: 11px 0 0;
+	padding: 2px 10px 10px;
+	display: none;
+	padding: 2px 0 10px 0;
+	background: transparent url(/images/cms/design/menu-background.png) repeat;
+	border: 1px solid #011D09;
+	border-top: none;
+}
+
+
+.cms .head .cms-menu .menu .menu-item a {
+	width: 150px;
+	padding: 1px 10px 1px 24px;
+	display: block;
+	color: #04601C;
+	text-decoration: none;
+}
+
+.cms .head .cms-menu .menu .menu-item a:hover {
+	color: white;
+	background-color: #04601C;
+}
+
+.cms .head .cms-menu:hover .menu {
+	display: block;
+}
+
+.cms .head .cms-menu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cms-menu li.menu-item.li-1 a {
+	background: url('/images/icons/page_tag_red.gif') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-2 a {
+	background: url('/images/icons/page_attachment.gif') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-3 a {
+	background: url('/images/icons/drive.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-4 a {
+	background: url('/images/icons/user.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-5 a {
+	background: url('/images/icons/book_open.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-6 a {
+	background: url('/images/icons/comment.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-7 a {
+	background: url('/images/icons/cog.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-8 a {
+	background: url('/images/icons/building.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-9 a {
+	background: url('/images/icons/page_code.png') no-repeat 4px center;
+}

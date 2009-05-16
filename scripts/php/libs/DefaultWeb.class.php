@@ -1,0 +1,1145 @@
+<?php
+
+  /**
+   *
+   *  Require base tag lib class.
+   *
+   */
+  require_once("BaseTagLib.class.php");
+  
+  /**
+   *
+   *  Main web object.
+   *  Take care of life-cycle of web application.
+   *  Default object.
+   *  
+   *  @objectname webObject
+   *  
+   *  @author     Marek SMM
+   *  @timestamp  2009-05-13	    
+   *
+   */           
+  class DefaultWeb extends BaseTagLib {
+    
+    /**
+     *
+     *  Handle caching on/off.
+     *     
+     */              
+    private $IsCached = true;
+    
+    /**
+     *
+     *  Dir name for storing caches.
+     *
+     */
+    private $CacheDir = "cache";
+    /**
+     *
+     *	Path to cached file.     
+     *
+     */		 		     
+    private $CacheFile = "";
+    
+    /**
+     *
+     *  Handle page title.
+     *
+     */                   
+    private $PageTitle = "";
+    
+    /**
+     *
+     *  Handle computed page head.
+     *     
+     */              
+    private $PageHead = "";
+    
+    /**
+     *
+     *  Handle computed page content.
+     *
+     */                   
+    private $PageContent = "";
+    
+    /**
+     *
+     *	Web project Id
+     *
+     */		 		 		     
+    public $ProjectId = "";
+    
+    /**
+     *
+     *	Http / Https
+     *
+     */		 		 		     
+    public $Protocol = '';
+    
+    /**
+     *
+     *  Text file content when dynamic rewrite.
+     *
+     */                   
+    private $TextFileId = 0;
+    
+    /**
+     *
+     *  Array to hold attributes values during callback.
+     *
+     */                   
+    private $Attributes = array();
+    
+    /**
+     *
+     *  Holds requested path.
+     *
+     */                   
+    private $Path = "";
+    
+    /**
+     *
+     *  Holds current path when dynamic rewriting.
+     *
+     */                   
+    private $CurrentDynamicPath = "";
+    
+    /**
+     *
+     *  Holds language id.
+     *
+     */
+    public $LanguageId = 0;
+    
+    /**
+     *
+     *  Holds parent page id to actually parsed page.
+     *
+     */                   
+    private $ParentId = 0;
+    
+    /**
+     *
+     *  Holds current path while composeUrl.
+     *
+     */                   
+    private $CurrentPath = "";
+    
+    private $TempLoadedContent = array();
+    
+    /**
+     *
+     *  Regular expression for parsing c tag.     
+     *
+     */              
+    private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;/?-]+ *[a-zA-Z0-9\.\*`_;/?-]*)*" )*)\/>)';
+    
+    /**
+     *
+     *  Regular expression for parsing attribute.
+     *
+     */                   
+    private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;/?-]+ *[a-zA-Z0-9\.\*`_;/?-]*)*")';
+    
+    private $PagesId = array();
+    private $PagesIdIndex = 0;
+    private $ParsingPages = false;
+    
+    /**
+     *
+     *	Keywords.
+     *
+     */		 		 		     
+    private $keywords = '';
+    
+    /**
+     *
+     *  Initializes object.
+     *
+     */                   
+    public function __construct() {
+      self::setTagLibXml("xml/DefaultWeb.xml");
+      
+      $this->PageTitle = $_SERVER['HTTP_HOST'];
+    }
+    
+    /**
+     *
+     *  Loads page content.
+     *  
+     *  @param  path  requested path
+     *  @return returns success, true if file exists               
+     *
+     */
+    public function loadPageContent() {
+      global $phpObject;
+      global $dbObject;
+      
+      if(array_key_exists("WEB_PAGE_PATH", $_GET)) {
+        $this->Path = $_GET['WEB_PAGE_PATH'];
+      } else {
+        $error = "Can't load this page!";
+        echo "<h1 clas=\"error\">".$error."</h1>";
+        trigger_error($error, E_USER_ERROR);
+      }
+      
+      $domainUrl = $_SERVER['SERVER_NAME'];
+      $domainProtocol = $_SERVER['SERVER_PROTOCOL'];
+      if(substr($domainProtocol, 0, 5) == "HTTPS") {
+				$domainProtocol = "https";
+			} else {
+				$domainProtocol = "http";
+			}
+			$this->Protocol = $domainProtocol;
+      
+      $dbProject = $dbObject->fetchAll('SELECT `id` FROM `web_project` WHERE `url` = "'.$domainUrl.'" AND `'.$domainProtocol.'` = 1;');
+      if(count($dbProject) != 0) {
+      	$this->ProjectId = $dbProject[0]['id'];
+      } else {
+				$dbProject = $dbObject->fetchAll('SELECT `project_id` FROM `web_alias` WHERE `url` = "'.$domainUrl.'" AND `'.$domainProtocol.'` = 1;');
+				if(count($dbProject) != 0) {
+      		$this->ProjectId = $dbProject[0]['project_id'];
+      	} else {
+					header("HTTP/1.1 404 Not Found");
+  	      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+	        exit;
+				}
+			}
+      
+      $path = $phpObject->str_tr($this->Path, '/', 1);
+      $return = $dbObject->fetchAll("SELECT `id` FROM `language` WHERE `language` = \"".$path[0]."\";");
+      if(count($return) == 1) {
+        $this->LanguageId = $return[0]['id'];
+        $this->Path = $path[1];
+      } else {
+        $return = $dbObject->fetchAll("SELECT `id` FROM `language` WHERE `language` = \"\";");
+        if(count($return) == 1) {
+          $this->LanguageId = $return[0]['id'];
+          $this->Path = $path[0]."/".$path[1];
+        } else {
+          $error = "Sorry, but this language version doesn't exists!";
+          echo "<h4 clas=\"error\">".$error."</h4>";
+          trigger_error($error, E_USER_ERROR);
+        }
+      }
+      
+      $ucache = $dbObject->fetchAll('SELECT `page-ids` FROM `urlcache` WHERE `url` = "'.$this->Path.'" AND `language_id` = '.$this->LanguageId.' AND `wp` = '.$this->ProjectId.';');
+      if(count($ucache) == 0) {
+      	self::parsePages($this->Path, 0);
+      	
+      	$pcache = '';
+      	for($i = 0; $i < count($this->PagesId); $i ++) {
+					$pcache .= $this->PagesId[$i];
+					if($i < (count($this->PagesId) -1)) {
+						$pcache .= '-';
+					}
+				}
+				$dbObject->execute('INSERT INTO `urlcache` (`url`, `page-ids`, `language_id`, `wp`) VALUES ("'.$this->Path.'", "'.$pcache.'", '.$this->LanguageId.', '.$this->ProjectId.');');
+      } else {
+				$pages = $ucache[0]['page-ids'];
+				$this->PagesId = $phpObject->str_tr($pages, '-');
+			}
+			
+			$str = '';
+			for($i = 0; $i < count($this->PagesId); $i++) {
+				$str .= $this->PagesId[$i];
+				if($i < (count($this->PagesId) - 1)) {
+					$str .= ', ';
+				}
+			}
+			
+			if(array_key_exists('__START_ID', $_REQUEST) && in_array($_REQUEST['__START_ID'], $this->PagesId)) {
+				for($i = 0; $i < count($this->PagesId); $i ++) {
+					if($this->PagesId[$i] == $_REQUEST['__START_ID']) {
+						$this->PagesIdIndex = $i;
+						break;
+					}
+				}
+			}
+			
+			if(array_key_exists('SHOW_CHANGES_ONLY', $_REQUEST) && $_REQUEST['SHOW_CHANGES_ONLY'] == 'true') {
+				for($i = 0; $i < min(count($_SESSION['last-request']['pages-id']), count($this->PagesId)); $i ++) {
+					if($_SESSION['last-request']['pages-id'][$i] != $this->PagesId[$i]) {
+						$this->PagesIdIndex = $i;
+						break;
+					}
+				}
+				if($this->PagesIdIndex == 0) {
+					$this->PagesIdIndex = $i - 1;
+				}
+			}
+			
+			$this->TempLoadedContent = $dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `tag_lib_start`, `tag_lib_end`, `head`, `content` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`id` IN (".$str.") AND `page`.`wp` = ".$this->ProjectId.";");
+      $this->PageContent = self::getContent();
+    }
+    
+    /**
+     *
+     *	Parse path to array of page id's.
+     *	
+     *	@param		path			path
+     *	@paeam		parentId	parent page id
+     *	@return		none     
+     *
+     */		 		 		     
+    private function parsePages($path, $parentId) {
+      global $phpObject;
+      global $dbObject;
+      global $loginObject;
+      
+      $path = $phpObject->str_tr($path, '/', 1);
+      $return = $dbObject->fetchAll("SELECT `info`.`page_id`, `info`.`href`, `content`.`tag_lib_start`, `content`.`tag_lib_end` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `content` ON `info`.`page_id` = `content`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `page`.`parent_id` = ".$parentId." AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`wp` = ".$this->ProjectId." ORDER BY `info`.`href` DESC;");
+      
+      $this->CurrentDynamicPath = $path[0];
+      $this->ParsingPages = true;
+      if(count($return) == 0 && ($path[0] != "" || $path[1] != "")) {
+        header("HTTP/1.1 404 Not Found");
+        echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+        exit;
+      } elseif(count($return) == 0 && $path[0] == "" && $path[1] == "") {
+      	if(count($this->PagesId) == 0) {
+					header("HTTP/1.1 404 Not Found");
+  	      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+	        exit;
+				} else {
+        	return;
+        }
+      } else {
+      	for($i = 0; $i < count($return); $i ++) {
+    	    $tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['href']);
+  	      if($tmp_path == $path[0]) {
+	          $this->ParsingPages = true;
+          	preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_start']);
+        	  
+      	    $this->PagesId[] = $return[$i]['page_id'];
+    	      self::parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0].'/'.$path[1], $return[$i]['page_id']);
+  	        
+	          preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_end']);
+          	  
+        	  $this->ParsingPages = false;
+    	      return;
+  	      }
+	      }
+      	for($i = 0; $i < count($return); $i ++) {
+    	    $tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['href']);
+  	      if($tmp_path == "") {
+	          $this->ParsingPages = true;
+          	preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_start']);
+        	  
+      	    $this->PagesId[] = $return[$i]['page_id'];
+    	      self::parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0].'/'.$path[1], $return[$i]['page_id']);
+  	        
+	          preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_end']);
+          	
+        	  $this->ParsingPages = false;
+    	      return;
+  	      }
+	      }
+	      
+	    	header("HTTP/1.1 404 Not Found");
+        echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+        exit;
+      }
+    }
+    
+    /**
+     *
+     *  Setups IsCashed flag.
+     *  
+     *  @param  allow  value for cashing ( true | false )
+     *  @return none
+     *
+     */
+    public function cache($allow, $time) {
+      if($allow == "true") {
+        $this->IsCached = 1;
+      } else if($allow == "false") {
+        $this->IsCached = 0;
+      } else {
+        trigger_error("Passed value [allow] is not valid in cache [DefaultWeb]!", E_USER_WARNING);
+        return;
+      }
+      if(!is_numeric($time)) {
+        trigger_error("Passed value [time] is not valid in cache [DefaultWeb]!", E_USER_WARNING);
+        return;
+      }
+      
+      if($this->IsCached && $this->ParsingPages == false) {
+        $name = 'page';
+        foreach($this->PagesId as $pg) {
+          $name .= '-'.$pg;
+        }
+        $name .= '.cache.html';
+        $path = $_SERVER['DOCUMENT_ROOT'].WEB_ROOT.$this->CacheDir.'/pages/';
+        $cacheMTime = filemtime($path.$name);
+        
+        if(file_exists($path.$name) && is_readable($path.$name) && ($cacheMTime > (time() - $time))) {
+          //echo $cacheMTime;
+          echo file_get_contents($path.$name);
+          exit;
+        } else {
+          $this->CacheFile = $name;
+        }
+      }
+    }
+    
+    /**
+     *
+     *  Flushes page content to output.
+     *  
+     *  @param  path  string containing path template file ( implied )
+     *  @return none     
+     *
+     */
+    public function flush($path = null) {
+      global $dbObject;
+      global $loginObject;
+      
+      /*foreach($this->PagesId as $pg) {
+  	    preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[0]['tag_lib_end']);
+			}*/
+      
+      $_SESSION['last-request']['pages-id'] = $this->PagesId;
+      
+      foreach($this->PagesId as $page) {
+        $rights = $dbObject->fetchAll("SELECT `group`.`name` FROM `group` LEFT JOIN `page_right` ON `group`.`gid` = `page_right`.`gid` WHERE `page_right`.`pid` = ".$page." AND `type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString()."));");
+        if(count($rights) == 0) {
+        	header("HTTP/1.1 403 Forbidden");
+          echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
+          exit;
+        }
+      }
+      
+      $lang = $dbObject->fetchAll("SELECT `language` FROM `language` WHERE `id` = ".$this->LanguageId.";");
+      $lang = $lang[0]['language'];
+      
+      $keywords = file_get_contents("keywords.txt");
+      
+      $return = 
+			 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+  	    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  	    <meta name="description" content="'.$this->PageTitle.'" />
+  	    <meta name="keywords" content="'.((strlen($this->Keywords) > 0) ? $this->Keywords.',' : '').((strlen($keywords) > 0) ? $keywords.',' : '').'wfw,rssmm" />
+  	    <meta http-equiv="Content-language" content="'.$lang.'" />
+  	    <meta name="robots" content="all, index, follow" />
+  	    <meta name="author" content="WFW Group www.rssmm.wz.cz Marek Fišera" /> 
+  	    <title>'.$this->PageTitle.'</title>
+        '.$this->PageHead.'
+        </head>
+        <body>'.$this->PageContent.'</body>
+        </html>
+       ';
+      $return = str_replace("~/", WEB_ROOT, $return);
+      //echo "<html>\n\t<head>\n<title>\n".$this->PageTitle."\n</title>\n".$this->PageHead."\n</head>\n<body>\n".$this->PageContent."\n</body>\n</html>"; 
+    
+      if($this->IsCached) {
+        $path = $_SERVER['DOCUMENT_ROOT'].WEB_ROOT.$this->CacheDir.'/pages/';
+        $name = $this->CacheFile;
+        //$cacheMTime = filemtime($path.$name);
+        //echo $cacheMTime;
+        file_put_contents($path.$name, $return);
+      }
+      
+      $return = preg_replace_callback('(&web:page=([0-9]+))', array( &$this,'parseproperties'), $return);
+      
+      //echo $return;
+      //echo $this->PageContent;
+      //return;
+      
+      $acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
+    	if(headers_sent()) {
+        $encoding = false;
+    	} elseif(strpos($acceptEnc, 'x-gzip') !== false) {
+        $encoding = 'x-gzip';
+  	  } elseif(strpos($acceptEnc,'gzip') !== false) {
+        $encoding = 'gzip';
+	    } else {
+        $encoding = false;
+    	}
+
+  	  if($encoding) {
+        header('Content-Encoding: '.$encoding);
+        print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
+        $size = strlen($return);
+        $return = gzcompress($return, 9);
+        $return = substr($return, 0, $size);
+        print($return);
+        exit();
+	    } else {
+	    	echo $return;
+  	    exit();
+	    }
+    }
+    
+    private function parseproperties($values) {
+    	$path = self::composeUrl($values[1], $this->LanguageId);
+			return $path;
+		}
+    
+    /**
+     *
+     *  Compose url recursivly from passed pageId to root page[0].
+     *  
+     *  @param  pageId      	page id of required page path
+     *  @param  languageId  	language id
+     *  @param	absolutePath  use absolute path any time   
+     *  @return composed url     
+     *
+     */
+    public function composeUrl($pageId, $languageId = false, $absolutePath = false) {
+      global $dbObject;
+      $languageId = ($languageId === false) ? $this->LanguageId : $languageId;
+      $lastPageId = 0;
+      while($pageId != 0) {
+        $return = $dbObject->fetchAll("SELECT `parent_id`, `href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = ".$pageId." AND `info`.`language_id` = ".$languageId.";");
+        if(count($return) == 1) {
+          if(strlen($return[0]['href']) != 0 && !preg_match($this->TAG_RE, $return[0]['href'])) {
+            $this->CurrentPath = "/".$return[0]['href'].$this->CurrentPath;
+          }
+          $lastPageId = $pageId; 
+          $pageId = $return[0]['parent_id'];
+        } else {
+          $message = "Error while composing url! [pageId = ".$pageId." ; languageId = ".$languageId."]";
+          //echo "<h4 class=\"error\">".$message."</h4>";
+          trigger_error($message, E_USER_WARNING);
+          return '#';
+        }
+      }
+      
+      $return = $dbObject->fetchAll("SELECT `language` FROM `language` WHERE `id` = ".$languageId.";");
+      if(count($return) == 1) {
+        if(strlen($return[0]['language']) == 0) {
+          $this->CurrentPath = substr($this->CurrentPath, 1, strlen($this->CurrentPath));
+        }
+        $tmpPath = WEB_ROOT.$return[0]['language'].$this->CurrentPath;
+        $this->CurrentPath = "";
+        
+        $project = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`url`, `web_project`.`http`, `web_project`.`https` FROM `web_project` LEFT JOIN `page` ON `web_project`.`id` = `page`.`wp` WHERE `page`.`id` = '.$lastPageId.';');
+        if(count($project) != 0) {
+        	if($project[0]['id'] == $this->ProjectId && !$absolutePath) {
+        		return $tmpPath;
+        	} else {
+						if($this->Protocol == 'http' && $project[0]['http'] == 1) {
+							return 'http://'.$project[0]['url'].$tmpPath;
+						} elseif($this->Protocol == 'https' && $project[0]['https'] == 1) {
+							return 'https://'.$project[0]['url'].$tmpPath;
+						} elseif($project[0]['http'] == 1) {
+							return 'http://'.$project[0]['url'].$tmpPath;
+						} elseif($project[0]['https'] == 1) {
+							return 'https://'.$project[0]['url'].$tmpPath;
+						}
+					}
+				}
+        
+      }
+    }
+    
+    /**
+     *
+     *  Parse all attributes to array.
+     *  
+     *  @param  att string with attributes
+     *  @return array of attributes
+     *
+     */                   
+    private function parseatt($att) {
+      $this->Attributes[] = $att[0];
+    }
+    
+    /**
+     *
+     *  Function parses custom tag, call right function & return content.
+     *  
+     *  @param  ctag  custom tag as string
+     *  @return return of custom tag function     
+     *
+     */
+    private function parsectag($ctag) {
+      $object = explode(":", $ctag[1]);
+      $attributes = array();
+      $this->Attributes = array();
+      
+      preg_replace_callback($this->ATT_RE, array( &$this,'parseatt'), $ctag[2]);
+      
+      foreach($this->Attributes as $tmp) {
+        $att = explode("=", $tmp);
+        if(strlen($att[0]) > 0) {
+          $attributes[$att[0]] = str_replace("\"", "", $att[1]);
+        }
+      }
+      
+      global $phpObject;
+      if($phpObject->isRegistered($object[0]) && $phpObject->isTag($object[0], $object[1], $attributes)) {
+        $attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
+        
+        global ${$object[0]."Object"};
+        $func = $phpObject->getFuncToTag($object[0], $object[1]);
+        if($func && ($attributes !== false)) {
+          $attstring = "";
+          $i = 0;
+          foreach($attributes as $att) {
+            $attstring .= "'" . $att . "'";
+            if($i < (count($attributes) - 1)) {
+              $attstring .= ", ";
+            }
+            $i ++;
+          }
+          eval('$return =  ${$object[0]."Object"}->{$func}('.$attstring.');');
+          return $return;
+        }  
+      } else {
+        echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
+        return "";
+      }
+    }
+    
+    /**
+     *
+     *  Generates page content and parse c tags.
+     *  
+     *  $return page content          
+     *
+     */                   
+    public function getContent() {
+      global $phpObject;
+      global $dbObject;
+      
+      $path = $phpObject->str_tr($this->Path, '/', 1);
+      $return = $this->TempLoadedContent[$this->PagesIdIndex];
+      $this->CurrentDynamicPath = $path[0];
+      $tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['href']);
+      $this->ParentId = $this->PagesId[$this->PagesIdIndex];
+    	$this->PagesIdIndex ++;
+      if($return['in_title'] == 1) {
+        $this->PageTitle = $return['name']." - ".$this->PageTitle;
+      }
+      $this->PageHead .= $return['head'];
+      $this->Keywords .= $return['keywords'];
+      
+      $allHeaders = getallheaders();
+			$userBrowser = $allHeaders['User-Agent'];
+			$browser = 'for_all';
+			if(preg_match("(Firefox)", $userBrowser)) {
+				$browser = 'for_firefox';
+			} elseif(preg_match("(MSIE 8.0)", $userBrowser)) {
+				$browser = 'for_msie8';
+			} elseif(preg_match("(MSIE 7.0)", $userBrowser)) {
+				$browser = 'for_msie7';
+			} elseif(preg_match("(MSIE 6.0)", $userBrowser)) {
+				$browser = 'for_msie6';
+			} elseif(preg_match("(Opera)", $userBrowser)) {
+				$browser = 'for_opera';
+			} elseif(preg_match("(Safari)", $userBrowser)) {
+				$browser = 'for_safari';
+			}
+        
+      $files = $dbObject->fetchAll("SELECT `page_file`.`id`, `page_file`.`name`, `page_file`.`type` FROM `page_file_inc` LEFT JOIN `page_file` ON `page_file_inc`.`file_id` = `page_file`.`id` WHERE `page_file_inc`.`page_id` = ".$this->ParentId." AND `page_file_inc`.`language_id` = ".$this->LanguageId." AND `for_all` = 1 OR `".$browser."` = 1;");
+      foreach($files as $file) {
+        switch($file['type']) {
+          //case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="'.WEB_ROOT.'css/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'" type="text/css" />'; break;
+          //case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="'.WEB_ROOT.'js/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'"></script>'; break;
+          case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="~/file.php?fid='.$file['id'].'" type="text/css" />'; break;
+          case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="~/file.php?fid='.$file['id'].'"></script>'; break;
+        }
+      }
+      
+      $this->Path = $path[1];
+            
+      preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['tag_lib_start']);
+      
+      $pageContent = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['content']);
+      
+      //$pageContent = preg_replace_callback('(&web:pathToId=([0-9]+))', array( &$this,'parseproperties'), $pageContent);
+      //$return = preg_replace_callback('(&web:pathToId=([0-9]+))', array( &$this,'parseproperties'), $return);
+			      
+      preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['tag_lib_end']);
+        
+      return $pageContent;
+    }
+    
+    /**
+     *
+     *  Generates menu.
+     *  
+     *  @param  parentId  id parent level page
+     *  @param  template  template for generated menu
+     *  @param  inn       menu nesting     
+     *  @return generated menu                    
+     *
+     */              
+    public function getMenu($parentId = false, $inner = false, $classes = false, $template = false, $inn = false) {
+      global $dbObject;
+      global $loginObject;
+      if($inn == false) {
+        $inn = 1;
+      }
+      if($inner == false) {
+				$inner = 1000;
+			}
+      $parentId = (!$parentId) ? 0 : $parentId;
+      $return = $dbObject->fetchAll("SELECT `page`.`id`, `info`.`name`, `info`.`href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = ".$parentId." AND `info`.`in_menu` = 1 AND `is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`wp` = ".$this->ProjectId." ORDER BY `info`.`page_pos`;");
+      if(count($return) > 0) {
+        $content .= '<div class="menu menu-'.$inn.((strlen($classes) > 0) ? ' '.$classes : '').'"><ul class="ul-'.$inn.'">';
+        $i = 1;
+        foreach($return as $lnk) {
+        	$rights = $dbObject->fetchAll("SELECT `value` FROM `page_right` LEFT JOIN `group` ON `page_right`.`gid` = `group`.`gid` WHERE `pid` = ".$lnk['id']." AND `type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString()."));");
+        	if(count($rights) == 0) {
+						continue;
+					}
+          $href = self::composeUrl($lnk['id'], $this->LanguageId);
+          $parent = (in_array($lnk['id'], $this->PagesId)) ? true : false;
+          //$active = (($lnk['id'] == $this->PagesId[count($this->PagesId) - 1]) ? true : false);
+          
+          $active = false;
+          if($href == '/'.$_REQUEST['WEB_PAGE_PATH']) {
+						$active = true;
+						$parent = false;
+					}
+          
+          
+          //$class = ($this->ParentId == $lnk['id']) ? " class=\"active-item\"" : "";
+          if($inner > 1) {
+            $tmpContent = self::getMenu($lnk['id'], $inner, (($parent || $active) ? 'active-submenu' : ''), false, $inn + 1);
+          }
+          
+          $content .= ''
+					.'<li class="menu-item li-'.$i.(($parent) ? ' active-parent' : '').(($active) ? ' active-item' : '').' '.((strlen($tmpContent) != 0) ? 'parent' : 'single').'">'
+						.'<div class="link'.(($parent) ? ' active-parent-link' : '').(($active) ? ' active-link' : '').'">'
+							.'<a href="'.$href.'">'
+								.'<span>'.$lnk['name'].'</span>'
+							.'</a>'
+						.'</div>'
+						.$tmpContent
+					.'</li>';
+          $i ++;
+        }
+        $inner --;
+        $content .= "</ul></div>";
+    
+        return $content;
+      }
+    }
+    
+    /**
+     *
+     *  Generates language links.
+     *  C tag.     
+     *  
+     *  @param  homePage  show home page in links
+     *  @return generate links to language versions
+     *
+     */                   
+    public function getLanguages($homePage = false) {
+      global $phpObject;
+      global $dbObject;
+      
+      if($homePage) {
+        $return = $dbObject->fetchAll("SELECT `language`.`id`, `language`.`language` FROM `info` LEFT JOIN `language` ON `info`.`language_id` = `language`.`id` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` WHERE `language`.`language` != \"\" AND `page`.`parent_id` = 0 AND `info`.`href` = \"\" ORDER BY `language`.`id`;");
+        
+        if(count($return) > 0) {
+          $ret = "<div class=\"languages\">";
+          foreach($return as $lang) {
+            $ret .= '<a class="lang-'.$lang['language'].(($this->LanguageId == $lang['id']) ? ' active-language' : '').'" href="'.WEB_ROOT.$lang['language'].'">'.$lang['language'].'</a> ';
+          }
+          $ret .= "</div>";
+          return $ret;
+        } else {
+          return "";
+        }
+      } else {
+        $langs = array();
+        $return = $dbObject->fetchAll("SELECT `id`, `language` FROM `language` WHERE `language` != \"\";");
+        foreach($return as $ln) {
+          $names[$ln['id']] = $ln['language'];
+          $langs[$ln['id']] = WEB_ROOT.$ln['language'];
+        }
+        
+        foreach($this->PagesId as $pg) {
+          $return = $dbObject->fetchAll("SELECT `info`.`href`, `info`.`language_id` FROM `info` WHERE `info`.`page_id` = ".$pg.";");
+          foreach($return as $ln) {
+            if($ln['href'] != '') {
+              $langs[$ln['language_id']] .= '/'.$ln['href'];
+            }
+          }
+        }
+        
+        $ret = "<div class=\"languages\">";
+        foreach($langs as $name => $ln) {
+          $ret .= '<a class="lang-'.$names[$name].(($this->LanguageId == $name) ? ' active-language' : '').'" href="'.$ln.'"><span>'.$names[$name].'</span></a> ';
+        }
+        $ret .= "</div>";
+        return $ret;
+      }
+    }
+    
+    /**
+     *
+     *  Generates crumb menu.
+     *  C tag.
+     *  
+     *  @param    delimenter    delimenter between links
+     *  @return   crumb menu
+     *
+     */                   
+    public function getCrumbMenu($delimeter) {
+      global $dbObject;
+      $return = '';
+      $path = '';
+      $root = $dbObject->fetchAll("SELECT `language` FROM `language` WHERE `id` = ".$this->LanguageId.";");
+      $return .= '<a href="'.WEB_ROOT.$root[0]['language'].'">'.strtoupper($root[0]['language']).'</a> ';
+      $path = WEB_ROOT.$root[0]['language'];
+      
+      foreach($this->PagesId as $pg) {
+        $page = $dbObject->fetchAll("SELECT `name`, `href` FROM `info` WHERE `page_id` = ".$pg." AND `language_id` = ".$this->LanguageId." AND `href` != \"\";");
+        if(count($page) == 1) {
+          $path .= '/'.$page[0]['href'];
+          $return .= $delimeter.' <a href="'.$path.'">'.$page[0]['name'].'</a> ';
+        }
+      }
+      
+      return '<div class="crumb-menu">'.$return.'</div>';
+    }
+    
+    /**
+     *
+     *  Creates anchor.
+     *  C tag.     
+     *  
+     *  @param  pageId  id of other page in web page
+     *  @param  text    inner html of anchor     
+     *  @param  class   typical html class attribute
+     *  @param  id      tycipal html id attribute
+     *  @param  target  typical html target attribute
+     *  @param  rel     typical html rel attribute
+     *  @return html anchor               
+     *
+     */            
+    public function makeAnchor($pageId, $text = false, $languageId = false, $class = "", $id = "", $target = "", $rel = "") {
+      global $dbObject;
+      $languageId = (!$languageId) ? $this->LanguageId : $languageId;
+      
+      $sql_return = $dbObject->fetchAll("SELECT `href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = ".$pageId." AND `info`.`language_id` = ".$languageId.";");
+      if(count($sql_return) == 1) {
+        $url = self::composeUrl($pageId, $languageId);
+        $return = "<a href=\"".$url."\"";
+        if($class) {
+          $return .= " class=\"".$class."\"";
+        }
+        if($id) {
+          $return .= " id=\"".$id."\"";
+        }
+        if($target) {
+          $return .= " target=\"".$target."\"";
+        }
+        if($rel) {
+          $return .= " rel=\"".$rel."\"";
+        }
+        if($text != false) {
+        	$return .= ">".$text."</a>";
+        } else {
+					$return .= ">";
+				}
+        return $return;
+      } else {
+        $error = "Sorry. Requested page [".$pageId."] doesn't exists in this languageId [".$languageId."]!";
+        trigger_error($error, E_USER_WARNING);
+        return "<h4 class=\"error\">".$error."</h4>";
+      }
+    }
+    
+    /**
+     *
+     *  Include content of another web page.
+     *  C tag.   
+     *  
+     *  @param  pageId        id of other page in web page
+     *  @param  language      can select language, if isn't set, it uses current language
+     *  @param  notParseCTag  if false, i doesn't parse c tags in included page    
+     *  @param	whenLogged		include only when true and user is logged
+     * 	@param	whenNotLogged	include only when true and user is not logged
+     *  @return content of requested page                      
+     *
+     */
+    public function includePage($pageId, $languageId = false, $notParseCTag = false, $whenLogged = false, $whenNotLogged = false) {
+      global $dbObject;
+      global $loginObject;
+      $languageId = (!$languageId) ? $this->LanguageId : $languageId;
+      
+      if(($whenLogged == true && $loginObject->isLogged() == true) || ($whenNotLogged == true && $loginObject->isLogged() == false) || ($whenLogged == false && $whenNotLogged == false)) {
+	      $return = $dbObject->fetchAll("SELECT `content` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` WHERE `page`.`id` = ".$pageId." AND `content`.`language_id` = ".$languageId.";");
+	      if(count($return) == 1) {
+	        if(!$notParseCTag) {
+	          return preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[0]['content']);
+	        } else {
+	          return $return[0]['content'];
+	        }
+	      } else {
+	        $error = "Sorry. Requested page [".$pageId."] doesn't exists in this languageId [".$languageId."]!";
+	        trigger_error($error, E_USER_WARNING);
+	        return "<h4 class=\"error\">".$error."</h4>";
+	      }
+      }
+    }
+    
+    /**
+     *
+     *  Include content of template.
+     *  C tag.   
+     *  
+     *  @param  pageId        id of other page in web page    
+     *  @param	whenLogged		include only when true and user is logged
+     * 	@param	whenNotLogged	include only when true and user is not logged
+     *  @return content of requested template     
+     *
+     */
+    public function includeTemplate($templateId, $whenLogged = false, $whenNotLogged = false) {
+      global $dbObject;
+      global $loginObject;
+      $languageId = (!$languageId) ? $this->LanguageId : $languageId;
+      
+      if(($whenLogged == true && $loginObject->isLogged() == true) || ($whenNotLogged == true && $loginObject->isLogged() == false) || ($whenLogged == false && $whenNotLogged == false)) {
+	      $template = $dbObject->fetchAll('SELECT `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
+	      if(count($template) == 1) {
+	      	require_once("scripts/php/classes/CustomTagParser.class.php");
+	        $Parser = new CustomTagParser();
+					$Parser->setContent($template[0]['content']);
+					$Parser->startParsing();
+ 					$return = $Parser->getResult();
+	  	    return $return;
+	      } else {
+	        trigger_error('Permission denied when reading template id = '.$templateId.'!', E_USER_WARNING);
+	      }
+      }
+    }
+    
+    /**
+     *
+     *  Redirects to another page, its path is defined in $path or $_REQUEST['path'].
+     *  C tag.          
+     *  
+     *  @param  path  new location path     
+     *  @return none;          
+     *
+     */                   
+    public function redirect($path = false) {
+      if($path) {
+        // zkontrolovat odkaz, doplnit http ...
+        header("Location: ".$path);
+        exit;
+      } else {
+        if(array_key_exists("path", $_REQUEST)) {
+          // zkontrolovat odkaz, doplnit http ...
+          header("Location: ".$_REQUEST['path']); 
+          exit;
+        } else {
+          $error = "Missing argument path for redirect!";
+          trigger_error($error, E_USER_WARNING);
+          return "<h4 class=\"error\">".$error."</h4>";
+        }
+      }
+    }
+    
+    /**
+     *
+     *	redirects users using passed browser.
+     *	C tag.
+     *	
+     *	@param		pageId		page id to redirect
+     *	@parem		langId		language id of page
+     *	@param		browser		browser name
+     *	@return		none
+     *
+     */		 		 		     
+    public function redirectTo($pageId, $langId = false, $browser = false) {
+    	global $webObject;
+    
+			if($langId != false) {
+				$href = $webObject->composeUrl($pageId, $langId);
+			} else {
+				$href = $webObject->composeUrl($pageId, $langId);
+			}
+			
+			$redirect = true;
+			if(strlen($browser) > 0) {
+				$allHeaders = getallheaders();
+				$userBrowser = $allHeaders['User-Agent'];
+				
+				// Takhle ne!!!
+				if(strstr(strtolower($userBrowser), $browser) != false) {
+					$redirect = true;
+				} else {
+					$redirect = false;
+				}
+			}
+			
+			if($redirect) {
+				header("Location: ".$href);
+				exit;
+			}
+		}
+    
+    /**
+     *
+     *  Function returns text files in binary representation.
+     *  C tag. 
+     *  
+     *  @param    type    text web file type
+     *  @param    fileId  text file id                
+     *  
+     *  @return   text files in binary representation
+     *
+     */                   
+    public function getTextFile($type, $fileId = false) {
+      global $dbObject;
+      
+      if($fileId == false) {
+        if(array_key_exists('text-file-id', $_REQUEST)) {
+          $fileId = $_REQUEST['text-file-id'];
+        } elseif($this->TextFileId != 0) {
+          $fileId = $this->TextFileId;
+        } else {
+          $message = 'Text File Id argument missing!';
+          echo '<h4 class="error">'.$message.'</h4>';
+          trigger_error($message, E_USER_ERROR);
+        }
+      }
+      
+      $file = $dbObject->fetchAll("SELECT `content` FROM `page_file` WHERE `id` = ".$fileId.";");
+      if(count($file) == 1) {
+        $fileType = "text/plain";
+        switch($type) {
+          case "css": $fileType = "text/css"; break;
+          case "js": $fileType = "text/javascript"; break;
+        }
+        $file[0]['content'] = str_replace("~/", WEB_ROOT, $file[0]['content']);
+         
+        header('Content-Type: '.$fileType);
+        header('Content-Length: '.strlen($file[0]['content']));
+        header('Content-Transfer-Encoding: binary');
+        echo $file[0]['content'];
+        exit;
+      } else {
+        trigger_error('Text File doesn\'t exists! [fileId = '.$fileId.']', E_USER_WARNING);
+      }
+    }
+    
+    /**
+     *
+     *  Dynamicly rewrite address.
+     *  C tag.
+     *  
+     *  return    if text file exists, it returns CurrentDynamicPath     
+     *
+     */                        
+    public function composeTextFileUrl() {
+      global $phpObject;
+      global $dbObject;
+      $cdp = self::getCurrentDynamicPath();
+      
+      $id = $phpObject->str_tr($cdp, "-", 1);
+      
+      $file = $dbObject->fetchAll("SELECT `id` FROM `page_file` WHERE `id` = ".$id[0].";");
+      if(count($file)) {
+        $this->TextFileId = $file[0]['id'];
+        return $cdp;
+      } else {
+        return 'false.false';
+      }
+    }
+    
+    /**
+     *
+     *  Returns current path when parsing request.
+     *  
+     *  @return   current path when parsing request
+     *
+     */                   
+    public function getCurrentDynamicPath() {
+      return $this->CurrentDynamicPath;
+    }
+    
+    /**
+     *
+     *	redirects user 'his' lang version (if exists) or use default one.
+     *	
+     *	@param		default		default language version, if user one doesn't exists
+     *	@param		pageId		page if to redirect to
+     *	@return		none		 		 		      
+     *
+     */		 		 		     
+    public function redirectToRightLangVersion($default, $pageId = false) {
+    	global $dbObject;
+    	
+			$allHeaders = getallheaders();
+			$userLang = substr($allHeaders['Accept-Language'], 0, 2);
+    	
+    	$ok = false;
+			if($pageId == false) {
+				$page = $dbObject->fetchAll('SELECT `info`.`href` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `language` ON `info`.`language_id` = `language`.`id` WHERE `page`.`parent_id` = 0 AND `language`.`language` = "'.strtolower($userLang).'" ORDER BY `page`.`id` LIMIT 1;');
+				if(count($page) > 0) {
+					$href = $userLang.((strlen($page[0]['href']) > 0) ? '/'.$page[0]['href'] : '');
+					$ok = true;
+				} else {
+					$page = $dbObject->fetchAll('SELECT `info`.`href` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `language` ON `info`.`language_id` = `language`.`id` WHERE `page`.`parent_id` = 0 AND `language`.`language` = "'.strtolower($default).'" ORDER BY `page`.`id` LIMIT 1;');
+					if(count($page) > 0) {
+						$href = $userLang.((strlen($page[0]['href']) > 0) ? '/'.$page[0]['href'] : '');
+						$ok = true;
+					}
+				}
+			} else {
+				$langId = $dbObject->fetchAll('SELECT `id` FROM `language` WHERE `language` = "'.$userLang.'";');
+				if(count($langId) > 0) {
+					$href = $this->composeUrl($pageId, $langId[0]['id']);
+					$ok = true;
+				} else {
+					$langId = $dbObject->fetchAll('SELECT `id` FROM `language` WHERE `language` = "'.$default.'";');
+					if(count($langId) > 0) {
+						$href = $this->composeUrl($pageId, $langId[0]['id']);
+						$ok = true;
+					}
+				}
+			}
+			
+			if($ok) {
+				header('Location: '.$href);
+				exit;
+			}
+		}
+		
+		/**
+		 *
+		 *	Returns current page title.
+		 *	
+		 *	@return		page title		 		 
+		 *
+		 */		 		 		 		
+		public function getPageTitle() {
+			return $this->PageTitle;
+		}
+		
+		/**
+		 *
+		 *	Returns http host name/
+		 *	
+		 *	@return		http host		 		 
+		 *
+		 */		 		 		 		
+		public function getHttpHost() {
+			return $_SERVER['HTTP_HOST'];
+		}
+		
+		/**
+		 *
+		 *	Returns requested path.
+		 *	
+		 *	@return		requested path		 		 		 
+		 *
+		 */		 		 		
+		public function getCurrentRequestPath() {
+			return $_SERVER['HTTP_HOST'].'/'.$_REQUEST['WEB_PAGE_PATH'];
+		}
+  }
+
+?>

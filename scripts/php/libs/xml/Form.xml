@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Form lib</name>
+  <classname>Form</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Formuláře
+  </comment>
+  <tag>
+    <tagname>form1</tagname>
+    <function>orderForm1</function>
+    <comment>
+      Objednávkový formulář 1.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>form2</tagname>
+    <function>orderForm2</function>
+    <comment>
+      Objednávkový formulář 2.
+    </comment>
+  </tag>
+</taglib>
