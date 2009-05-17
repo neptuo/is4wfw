@@ -157,6 +157,10 @@ function Editor(conf) {
 	this.openCloseTiny = function (event) {
 		if(Tiny == false) {
 			TextArea.id = RandomId;
+			
+			// !!!!!!!! Important !!!!!!!!!!!!!!!!!!!!
+			TextArea.value = TextArea.value.replace('<', '&gt;');
+			
   		if(TinyFirst == false) {
 				initTiny(RandomId);
 			}

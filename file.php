@@ -1,5 +1,7 @@
 <?php
 
+	session_start();
+
   if(array_key_exists('fid', $_REQUEST)) {
     $fileId = $_REQUEST['fid'];
   
@@ -26,8 +28,15 @@
   	  $fileType = "text/plain";
 	    switch($file[0]['type']) {
       	case WEB_TYPE_CSS: $fileType = "text/css"; break;
-    		case WEB_TYPE_JS: $fileType = "text/javascript"; break;
+    		case WEB_TYPE_JS: $fileType = "application/x-javascript"; break;
   	  }
+  	  
+  	  //require_once("scripts/php/classes/CustomTagParser.class.php");
+  	  /*$Parser = new CustomTagParser();
+			$Parser->setContent($file[0]['content']);
+			$Parser->startParsing();
+ 			$file[0]['content'] = $Parser->getResult();*/
+  	  
 	    $file[0]['content'] = str_replace("~/", WEB_ROOT, $file[0]['content']);   
     	header('Content-Type: '.$fileType);
     	header('Content-Length: '.strlen($file[0]['content']));
