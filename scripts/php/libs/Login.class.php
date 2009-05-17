@@ -170,7 +170,7 @@
             
             $sessionId = rand(100000, 2000000);
             $timestamp = time();
-            $dbObject->execute("INSERT INTO `user_log`(`user_id`, `session_id`, `timestamp`, `login_timestamp`) VALUES (".$uid.", ".$sessionId.", ".$timestamp.", ".$timestamp.");");
+            $dbObject->execute("INSERT INTO `user_log`(`user_id`, `session_id`, `timestamp`, `login_timestamp`, `used_group`) VALUES (".$uid.", ".$sessionId.", ".$timestamp.", ".$timestamp.", \"".$group."\");");
             $return = $dbObject->fetchAll("SELECT `id`, `session_id` FROM `user_log` WHERE `user_id` = ".$uid." AND `session_id` = ".$sessionId.";");
             if(count($return) == 1) {
               $this->LogId = $return[0]['id'];

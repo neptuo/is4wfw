@@ -14,10 +14,9 @@ function initTiny(taId) {
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_statusbar_location : "bottom",
 		theme_advanced_resizing : false,
-		extended_valid_elements : "<baftag>,</baftag>",
 
 		// Example content CSS (should be your site CSS)
-		content_css : "/css/2-tiny",
+		content_css : "/wysiwyg-styles.php",
 
 		// Drop lists for link/image/media/template dialogs
 		template_external_list_url : "lists/template_list.js",

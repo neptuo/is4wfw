@@ -1,0 +1,45 @@
+<?php
+
+	session_start();
+
+	if(array_key_exists('selected-project', $_SESSION)) {
+		$projectId = $_SESSION['selected-project'];
+		
+		require_once("scripts/php/includes/settings.inc.php");
+  	require_once("scripts/php/libs/Database.class.php");
+	  $dbObject = new Database();
+	  
+	  $allHeaders = getallheaders();
+		$userBrowser = $allHeaders['User-Agent'];
+		$browser = 'for_all';
+		if(preg_match("(Firefox)", $userBrowser)) {
+			$browser = 'for_firefox';
+		} elseif(preg_match("(MSIE 8.0)", $userBrowser)) {
+			$browser = 'for_msie8';
+		} elseif(preg_match("(MSIE 7.0)", $userBrowser)) {
+			$browser = 'for_msie7';
+		} elseif(preg_match("(MSIE 6.0)", $userBrowser)) {
+			$browser = 'for_msie6';
+		} elseif(preg_match("(Opera)", $userBrowser)) {
+			$browser = 'for_opera';
+		} elseif(preg_match("(Safari)", $userBrowser)) {
+			$browser = 'for_safari';
+		}
+	  
+		$styles = $dbObject->fetchAll('SELECT `page_file`.`content` FROM `wp_wysiwyg_file` LEFT JOIN `page_file` ON `wp_wysiwyg_file`.`tf_id` = `page_file`.`id` WHERE `wp_wysiwyg_file`.`wp` = '.$projectId.' AND `page_file`.`for_all` = 1 OR `page_file`.`'.$browser.'` = 1;');
+		
+		$return = '';
+		foreach($styles as $css) {
+			$return .= $css['content'];
+		}
+		
+		$fileType = "text/css";
+		$return = str_replace("~/", WEB_ROOT, $return);
+    header('Content-Type: '.$fileType);
+    header('Content-Length: '.strlen($return));
+  	header('Content-Transfer-Encoding: binary');
+	  echo $return;
+  	exit;
+	}
+
+?>

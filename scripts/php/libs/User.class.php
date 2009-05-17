@@ -389,6 +389,14 @@
 						if(count($dbObject->fetchAll('SELECT `gid` FROM `user_in_group` WHERE `gid` = '.$groupId.';')) == 0) {
 							// Smazat skupinu
 							$dbObject->execute('DELETE FROM `group` WHERE `gid` = '.$groupId.';');
+							$dbObject->execute('DELETE FROM `user_in_group` WHERE `gid` = '.$groupId.';');
+							$dbObject->execute('DELETE FROM `page_right` WHERE `gid` = '.$groupId.';');
+							$dbObject->execute('DELETE FROM `article_line_right` WHERE `gid` = '.$groupId.';');
+							$dbObject->execute('DELETE FROM `directory_right` WHERE `gid` = '.$groupId.';');
+							$dbObject->execute('DELETE FROM `file_right` WHERE `gid` = '.$groupId.';');
+							$dbObject->execute('DELETE FROM `template_right` WHERE `gid` = '.$groupId.';');
+							$dbObject->execute('DELETE FROM `web_project_right` WHERE `gid` = '.$groupId.';');
+							$return .= '<h4 class="success">Group deleted!</h4>';
 						} else {
 							$return .= '<h4 class="error">There are still users in this [Gid = '.$groupId.'] group!</h4>';
 						}
@@ -473,7 +481,7 @@
 			if($ok) {
 				$rows = '';
 				$i = 0;
-				$logs = $dbObject->fetchAll('SELECT `user_log`.`id`, `user_log`.`user_id`, `user`.`name`, `user`.`surname`, `user`.`login`, `user_log`.`login_timestamp`, `user_log`.`logout_timestamp` FROM `user_log` LEFT JOIN `user` ON `user_log`.`user_id` = `user`.`uid` ORDER BY `user_log`.`login_timestamp`;');
+				$logs = $dbObject->fetchAll('SELECT `user_log`.`id`, `user_log`.`session_id`, `user_log`.`user_id`, `user_log`.`used_group`, `user`.`name`, `user`.`surname`, `user`.`login`, `user_log`.`login_timestamp`, `user_log`.`logout_timestamp` FROM `user_log` LEFT JOIN `user` ON `user_log`.`user_id` = `user`.`uid` ORDER BY `user_log`.`login_timestamp`;');
 				foreach($logs as $log) {
 					$rows .= ''
 					.'<tr class="'.((($i % 2) == 1) ? 'even' : 'idle').'">'
@@ -483,7 +491,8 @@
 						.'<td class="user-log-surname">'.$log['surname'].'</td>'
 						.'<td class="user-log-login">'.$log['login'].'</td>'
 						.'<td class="user-log-logon">'.date('H:i:s d:m:Y', $log['login_timestamp']).'</td>'
-						.'<td class="user-log-logout">'.(($log['logout_timestamp'] != 0) ? date('H:i:s d:m:Y', $log['logout_timestamp']) : 'Current session').'</td>'
+						.'<td class="user-log-logout">'.(($log['session_id'] != $loginObject->getSessionId()) ? (($log['logout_timestamp'] != 0) ? date('H:i:s d:m:Y', $log['logout_timestamp']) : 'No logout time') : 'Current session').'</td>'
+						.'<td class="user-log-login">'.$log['used_group'].'</td>'
 					.'</tr>';
 					$i ++;
 				}
@@ -499,6 +508,7 @@
 							.'<th class="user-log-login">Login:</th>'
 							.'<th class="user-log-logon">Logon:</th>'
 							.'<th class="user-log-logout">Logout:</th>'
+							.'<th class="user-log-logout">used group:</th>'
 						.'</tr>'
 						.$rows
 					.'</table>'

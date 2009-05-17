@@ -38,6 +38,8 @@
 			??	lepsi pouziti web aliasu
 			ok	pro admina vypis logu uzivatelu a moznost jeho smazani.
 			ok	pocitadlo casu do odhlaseni
+			--	styly do Wysiwygu pro webovy projekt -> samostatnou tabulku! -> pripojovat pres samosattny php soubor, ten vybere style podle session selected project
+			!!	Page pos????
 	*/
   
   require_once("scripts/php/includes/settings.inc.php");

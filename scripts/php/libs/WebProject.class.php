@@ -223,7 +223,7 @@
 			$return = '';
 			
 			if($_POST['save-project'] == 'Save') {
-				$project = array('id' => $_POST['wp'], 'name' => $_POST['project-name'], 'url' => $_POST['project-url'], 'http' => $_POST['project-http'], 'https' => $_POST['project-https'], 'alias1' => $_POST['project-alias1'], 'alias2' => $_POST['project-alias2'], 'alias3' => $_POST['project-alias3'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d']);
+				$project = array('id' => $_POST['wp'], 'name' => $_POST['project-name'], 'url' => $_POST['project-url'], 'http' => $_POST['project-http'], 'https' => $_POST['project-https'], 'alias1' => $_POST['project-alias1'], 'alias2' => $_POST['project-alias2'], 'alias3' => $_POST['project-alias3'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d'], 'wysiwyg' => $_POST['project-edit-styles-wysiwyg']);
 				$errors = array();
 				
 				$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`wp` = '.$project['id'].' AND `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
@@ -331,7 +331,21 @@
           		  foreach($project['delete'] as $right) {
         	    	  $row = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$project['id']." AND `type` = ".WEB_R_DELETE." AND `gid` = ".$right.";");
       	        	if(count($row) == 0) {
-    	            	$dbObject->execute("INSERT INTO `web_project_right`(`wp`, `gid`, `type`) VALUES (".$project['id'].", ".$right.", ".WEB_R_DELETE.")");
+    	            	$dbObject->execute("INSERT INTO `web_project_right`(`wp`, `gid`, `type`) VALUES (".$project['id'].", ".$right.", ".WEB_R_DELETE.");");
+	  	            }
+		            }
+		          }
+     	      	if(count($project['wysiwyg']) != 0) {
+	    	        $stylesS = $dbObject->fetchAll("SELECT `tf_id` FROM `wp_wysiwyg_file` WHERE `wp` = ".$project['id'].";");
+  		          foreach($stylesS as $style) {
+	  	            if(!in_array($style, $project['wysiwyg'])) {
+      	          	$dbObject->execute("DELETE FROM `wp_wysiwyg_file` WHERE `wp` = ".$project['id']." AND `tf_id` = ".$style['tf_id'].";");
+        	      	}
+          	  	}
+          		  foreach($project['wysiwyg'] as $style) {
+        	    	  $row = $dbObject->fetchAll("SELECT `tf_id` FROM `wp_wysiwyg_file` WHERE `wp` = ".$project['id']." AND `tf_id` = ".$style.";");
+      	        	if(count($row) == 0) {
+    	            	$dbObject->execute("INSERT INTO `wp_wysiwyg_file`(`wp`, `tf_id`) VALUES (".$project['id'].", ".$style.");");
 	  	            }
 		            }
 		          }
@@ -410,8 +424,23 @@
         $groupSelectR .= '</select>';
         $groupSelectW .= '</select>';
         $groupSelectD .= '</select>';
+        
+        // Vybrat styly pro wysiwyg!!!!
+        $allStyles = $dbObject->fetchAll('SELECT `id`, `name` FROM `page_file` WHERE `wp` = '.$projectId.' AND `type` = '.WEB_TYPE_CSS.';');
+        $selectedStyles = $dbObject->fetchAll('SELECT `tf_id` FROM `wp_wysiwyg_file` WHERE `wp` = '.$projectId.';');
+        $styleSelect = '<select id="project-edit-styles-wysiwyg-'.$project['id'].'" name="project-edit-styles-wysiwyg[]" multiple="multiple" size="5">';
+        foreach($allStyles as $style) {
+        	$selected = false;
+        	foreach($selectedStyles as $sStyle) {
+            if($style['id'] == $sStyle['tf_id']) {
+              $selected = true;
+            }
+          }
+          $styleSelect .= '<option'.(($selected) ? ' selected="selected"' : '').' value="'.$style['id'].'">'.$style['name'].'</option>';
+        }
+        $styleSelect .= '</select>';
+        
 				// Vytvorit formular ....
-				
 				$return .= ''
 				.'<form name="project-edit-detail" method="post" action="">'
 					.'<div class="project-prop">'
@@ -464,6 +493,10 @@
             .'</div>'
             : '')
           	.'<div class="clear"></div>'
+          	.'<div class="project-edit-styles-wysiwyg">'
+          		.'<label for="project-edit-styles-wysiwyg-'.$project['id'].'">Styles for wysiwyg:</label> '
+          		.$styleSelect
+          	.'</div>'
           .'</div>'
           .'<div class="clear"></div>'
           .'<hr />'

@@ -6,7 +6,16 @@ function addEvent (obj, ev, func, b) {
   }
 }
 
-addEvent(window, "load", initEditors, false);
+Event.domReady.add(init);
+
+function init(event) {
+	initEditors(event);
+	initClosers(event);
+	fileNameInit(event);
+	initCountDown(event);
+}
+
+//addEvent(window, "load", initEditors, false);
 
 var Editors = new Array();
 
@@ -56,9 +65,9 @@ function initEditors(event) {
   }
 }
 
-addEvent(window, "load", initClosers, false);
+//addEvent(window, "load", initClosers, false);
 
-function initClosers() {
+function initClosers(event) {
   var divs = document.getElementsByTagName('div');
   for(var i = 0; i < divs.length; i ++) {
     if(divs[i].className.indexOf('frame frame-cover') != -1) {
@@ -67,7 +76,7 @@ function initClosers() {
   }
 }
 
-addEvent(window, "load", fileNameInit);
+//addEvent(window, "load", fileNameInit);
 
 function fileNameInit(event) {
 	var inpts = document.getElementsByTagName('input');
@@ -88,10 +97,11 @@ function fileNameInit(event) {
 	}
 }
 
-addEvent(window, "load", initCountDown);
+//addEvent(window, "load", initCountDown);
 
-function initCountDown() {
+function initCountDown(event) {
 	var cdl = document.getElementById('logon-count-down');
+	cdl.innerHTML = '';
 	var cd = new CountDown('Login session <br />expires in: ', 15 * 60, cdl);
 	cd.start();
 }

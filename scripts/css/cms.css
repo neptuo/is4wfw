@@ -628,7 +628,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   float: left;
 }
 
-.edit-prop .edit-in-title, .edit-prop .edit-menu, .edit-prop .edit-visible, .edit-clear-cache, .edit-prop .edit-language, .edit-rights div, .text-file-name, .text-file-type, .text-file-browser, .project-edit-right-read, .project-edit-right-write, .project-edit-right-delete, .project-edit-http, .project-edit-https, .article-line-r-r, .article-line-r-w, .article-line-r-d, .template-right-r, .template-right-w, .template-right-d, .directory-right-r, .directory-right-w, .directory-right-d, .file-right-r, .file-right-w, .file-right-d {
+.edit-prop .edit-in-title, .edit-prop .edit-menu, .edit-prop .edit-visible, .edit-clear-cache, .edit-prop .edit-language, .edit-rights div, .text-file-name, .text-file-type, .text-file-browser, .project-edit-right-read, .project-edit-right-write, .project-edit-right-delete, .project-edit-http, .project-edit-https, .article-line-r-r, .article-line-r-w, .article-line-r-d, .template-right-r, .template-right-w, .template-right-d, .directory-right-r, .directory-right-w, .directory-right-d, .file-right-r, .file-right-w, .file-right-d, .project-edit-styles-wysiwyg {
   float: left;
   padding: 6px 8px;
   margin: 2px;

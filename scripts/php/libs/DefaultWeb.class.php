@@ -270,7 +270,13 @@
 			}
 			
 			$this->TempLoadedContent = $dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `tag_lib_start`, `tag_lib_end`, `head`, `content` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`id` IN (".$str.") AND `page`.`wp` = ".$this->ProjectId.";");
-      $this->PageContent = self::getContent();
+			if(count($this->TempLoadedContent) == count($this->PagesId)) {
+      	$this->PageContent = self::getContent();
+      } else {
+      	header("HTTP/1.1 404 Not Found");
+        echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+        exit;
+			}
     }
     
     /**

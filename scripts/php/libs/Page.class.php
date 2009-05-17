@@ -1282,6 +1282,7 @@
       if($_POST['delete-file'] == "Delete") {
         $fileId = $_POST['file-id'];
         $dbObject->execute("DELETE FROM `page_file_inc` WHERE `file_id` = ".$fileId.";");
+        $dbObject->execute("DELETE FROM `wp_wysiwyg_file` WHERE `tf_id` = ".$fileId.";");
         $dbObject->execute("DELETE FROM `page_file` WHERE `id` = ".$fileId.";");
       }
       $n = 1;
