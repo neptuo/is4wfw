@@ -1,5 +1,6 @@
 <?php
-
+	
+	error_reporting(0);
 	session_start();
 
   if(array_key_exists('fid', $_REQUEST)) {
@@ -65,7 +66,8 @@
     $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = ".$fileId.";");
       
     if(count($file) == 1) {
-			$filePath = $_SERVER['DOCUMENT_ROOT'].$flObject->getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".$flObject->FileEx[$file[0]['type']];  
+			$filePath = $_SERVER['DOCUMENT_ROOT'].$flObject->getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".$flObject->FileEx[$file[0]['type']];
+			echo $filePath;
       $updTime = filemtime($filePath);
       
       // Try cached file ...  

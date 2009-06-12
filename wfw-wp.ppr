@@ -89,6 +89,9 @@ wfw-wp
 				-classes
 				+includes
 					scripts\php\includes\settings.inc.php
+					scripts\php\includes\version.inc.php
+					scripts\php\includes\extensions.inc.php
+					scripts\php\includes\database.inc.php
 				+libs
 					+xml
 						scripts\php\libs\xml\Article.xml
@@ -473,34 +476,38 @@ wfw-wp
 [Open project files]
 0=index.php
 1=scripts\css\cms.css
-2=scripts\php\libs\DefaultWeb.class.php
-3=scripts\php\libs\xml\DefaultWeb.xml
-4=scripts\php\libs\Page.class.php
-5=scripts\php\libs\xml\Page.xml
-6=scripts\php\libs\WebProject.class.php
-7=scripts\php\libs\xml\WebProject.xml
-8=scripts\php\libs\Article.class.php
-9=scripts\php\libs\xml\Article.xml
-10=scripts\php\libs\Hotproject.class.php
-11=scripts\php\libs\xml\Hotproject.xml
+2=scripts\php\includes\version.inc.php
+3=scripts\php\libs\DefaultWeb.class.php
+4=scripts\php\libs\xml\DefaultWeb.xml
+5=scripts\php\libs\Page.class.php
+6=scripts\php\libs\xml\Page.xml
+7=scripts\php\libs\WebProject.class.php
+8=scripts\php\libs\xml\WebProject.xml
+9=scripts\php\libs\Article.class.php
+10=scripts\php\libs\xml\Article.xml
+11=file.php
+12=scripts\php\includes\settings.inc.php
 [Selected Project Files]
 Main=index.php
-Selected=scripts\php\libs\DefaultWeb.class.php
+Selected=scripts\php\includes\settings.inc.php
 [index.php]
-TopLine=9
-Caret=53,56
+TopLine=22
+Caret=3,60
 [scripts\css\cms.css]
-TopLine=707
-Caret=31,733
+TopLine=410
+Caret=20,447
+[scripts\php\includes\version.inc.php]
+TopLine=1
+Caret=1,11
 [scripts\php\libs\DefaultWeb.class.php]
-TopLine=1236
-Caret=42,1284
+TopLine=1292
+Caret=11,1313
 [scripts\php\libs\xml\DefaultWeb.xml]
 TopLine=1
 Caret=16,7
 [scripts\php\libs\Page.class.php]
-TopLine=348
-Caret=302,373
+TopLine=468
+Caret=11,500
 [scripts\php\libs\xml\Page.xml]
 TopLine=1
 Caret=16,7
@@ -514,11 +521,11 @@ Caret=1,53
 TopLine=1
 Caret=29,15
 [scripts\php\libs\xml\Article.xml]
-TopLine=165
-Caret=24,184
-[scripts\php\libs\Hotproject.class.php]
-TopLine=401
-Caret=45,446
-[scripts\php\libs\xml\Hotproject.xml]
 TopLine=1
-Caret=22,68
+Caret=1,1
+[file.php]
+TopLine=56
+Caret=19,69
+[scripts\php\includes\settings.inc.php]
+TopLine=1
+Caret=31,20
