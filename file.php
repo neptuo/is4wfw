@@ -55,6 +55,9 @@
     $fileId = $_REQUEST['rid'];
       
     require_once("scripts/php/includes/settings.inc.php");
+  	require_once("scripts/php/includes/database.inc.php");
+  	require_once("scripts/php/includes/version.inc.php");
+	  require_once("scripts/php/includes/extensions.inc.php");
   	require_once("scripts/php/libs/Database.class.php");
   	require_once("scripts/php/libs/File.class.php");
 	  $dbObject = new Database();
@@ -151,6 +154,9 @@
 	} elseif(array_key_exists('path', $_REQUEST)) {
       
     require_once("scripts/php/includes/settings.inc.php");
+  	require_once("scripts/php/includes/database.inc.php");
+  	require_once("scripts/php/includes/version.inc.php");
+	  require_once("scripts/php/includes/extensions.inc.php");
   	require_once("scripts/php/libs/Database.class.php");
   	require_once("scripts/php/libs/File.class.php");
 	  $dbObject = new Database();
