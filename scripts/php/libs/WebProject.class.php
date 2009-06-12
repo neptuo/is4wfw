@@ -222,8 +222,13 @@
 			$formSave = false;
 			$return = '';
 			
+			
+			// ukladani chybovych stranek .... ;)
+			// project-errors-all
+			
+			
 			if($_POST['save-project'] == 'Save') {
-				$project = array('id' => $_POST['wp'], 'name' => $_POST['project-name'], 'url' => $_POST['project-url'], 'http' => $_POST['project-http'], 'https' => $_POST['project-https'], 'alias1' => $_POST['project-alias1'], 'alias2' => $_POST['project-alias2'], 'alias3' => $_POST['project-alias3'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d'], 'wysiwyg' => $_POST['project-edit-styles-wysiwyg']);
+				$project = array('id' => $_POST['wp'], 'name' => $_POST['project-name'], 'url' => $_POST['project-url'], 'http' => $_POST['project-http'], 'https' => $_POST['project-https'], 'alias1' => $_POST['project-alias1'], 'alias2' => $_POST['project-alias2'], 'alias3' => $_POST['project-alias3'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d'], 'wysiwyg' => $_POST['project-edit-styles-wysiwyg'], 'error_all_pid' => $_POST['project-errors-all'], 'error_404_pid' => $_POST['project-errors-404'], 'error_403_pid' => $_POST['project-errors-403']);
 				$errors = array();
 				
 				$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`wp` = '.$project['id'].' AND `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
@@ -246,7 +251,7 @@
 					if(count($errors) == 0) {
 						if($project['id'] == 0) {
 							// vlozit novy projekt
-							$dbObject->execute('INSERT INTO `web_project`(`name`, `url`, `http`, `https`) VALUES ("'.$project['name'].'", "'.$project['url'].'", '.$project['http'].', '.$project['https'].');');
+							$dbObject->execute('INSERT INTO `web_project`(`name`, `url`, `http`, `https`, `error_all_pid`, `error_404_pid`, `error_403_pid`) VALUES ("'.$project['name'].'", "'.$project['url'].'", '.$project['http'].', '.$project['https'].', '.$project['error_all_pid'].', '.$project['error_404_pid'].', '.$project['error_403_pid'].');');
 							$projectId = $dbObject->fetchAll('SELECT `id` FROM `web_project` WHERE `name` = "'.$project['name'].'";');
 							$projectId = $projectId[0]['id'];
 							if(strlen($project['alias1']) != 0) {
@@ -270,7 +275,7 @@
 	            }					
 						} else {
 							// update stavajiciho projektu 
-							$dbObject->execute('UPDATE `web_project` SET `name` = "'.$project['name'].'", `url` = "'.$project['url'].'", `http` = '.$project['http'].', `https` = '.$project['https'].' WHERE `id` = '.$project['id'].';');
+							$dbObject->execute('UPDATE `web_project` SET `name` = "'.$project['name'].'", `url` = "'.$project['url'].'", `http` = '.$project['http'].', `https` = '.$project['https'].', `error_all_pid` = '.$project['error_all_pid'].', `error_404_pid` = '.$project['error_404_pid'].', `error_403_pid` = '.$project['error_403_pid'].' WHERE `id` = '.$project['id'].';');
 							// UPDATE ALIASuu !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 							$dbA = $dbObject->fetchAll("SELECT `id`, `url` FROM `web_alias` WHERE `web_alias`.`project_id` = ".$project['id'].";");
 							$newAliases = array(0 => true, 1 => true, 2 => true); 
@@ -370,7 +375,7 @@
 					$projectId = $project['id'];
 				} elseif($_POST['edit'] == "Edit Project") {
 					$projectId = $_POST['wp'];
-					$project = $dbObject->fetchAll('SELECT `name`, `url`, `http`, `https` FROM `web_project` WHERE `id` = '.$projectId.';');
+					$project = $dbObject->fetchAll('SELECT `name`, `url`, `http`, `https`, `error_all_pid`, `error_404_pid`, `error_403_pid` FROM `web_project` WHERE `id` = '.$projectId.';');
 					if(count($project) != 0) {
 						$aliases = $dbObject->fetchAll('SELECT `url`, `http`, `https` FROM `web_alias` WHERE `project_id` = '.$projectId.';');
 						$project = $project[0];
@@ -425,6 +430,27 @@
         $groupSelectW .= '</select>';
         $groupSelectD .= '</select>';
         
+        $project['error-all-options'] = $project['error-404-options'] = $project['error-403-options'] = '<option value="0">Don\'t set</option>';
+        $prjs = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `id`;');
+				foreach($prjs as $prj) {
+					$project['error-all-options'] .= '<optgroup class="webproject" label="'.$prj['name'].'">';
+					$project['error-404-options'] .= '<optgroup class="webproject" label="'.$prj['name'].'">';
+					$project['error-403-options'] .= '<optgroup class="webproject" label="'.$prj['name'].'">';
+					//$strProjects .= '<optgroup class="webproject" value="wp'.$project['id'].'">'.$project['name'].'</optgroup>';
+					$pages = $dbObject->fetchAll('SELECT DISTINCT `page`.`id`, `info`.`name` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `page_right` ON `page`.`id` = `page_right`.`pid` LEFT JOIN `group` ON `page_right`.`gid` = `group`.`gid` WHERE `page_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) AND `page`.`wp` = '.$prj['id'].' ORDER BY `info`.`page_id`;');
+					$i = 0;
+					foreach($pages as $page) {
+						$project['error-all-options'] .= '<option'.(($project['error_all_pid'] == $page['id']) ? ' selected="selected"' : '').' value="'.$page['id'].'">- '.(($page['id'] < 10) ? '000'.$page['id'] : ($page['id'] < 100) ? '00'.$page['id'] : ($page['id'] < 1000) ? '0'.$page['id'] : $page['id'] ).' - '.$page['name'].'</option>'; 
+						$project['error-404-options'] .= '<option'.(($project['error_404_pid'] == $page['id']) ? ' selected="selected"' : '').' value="'.$page['id'].'">- '.(($page['id'] < 10) ? '000'.$page['id'] : ($page['id'] < 100) ? '00'.$page['id'] : ($page['id'] < 1000) ? '0'.$page['id'] : $page['id'] ).' - '.$page['name'].'</option>'; 
+						$project['error-403-options'] .= '<option'.(($project['error_403_pid'] == $page['id']) ? ' selected="selected"' : '').' value="'.$page['id'].'">- '.(($page['id'] < 10) ? '000'.$page['id'] : ($page['id'] < 100) ? '00'.$page['id'] : ($page['id'] < 1000) ? '0'.$page['id'] : $page['id'] ).' - '.$page['name'].'</option>';
+						//$strProjects .= '<option value="'.$page['id'].'">- '.(($page['id'] < 10) ? '0'.$page['id'] : $page['id'] ).' - '.$page['name'].'</option>';
+						$i ++;
+					}
+					$project['error-all-options'] .= '</optgroup>';
+					$project['error-404-options'] .= '</optgroup>';
+					$project['error-403-options'] .= '</optgroup>';
+				}
+        
         // Vybrat styly pro wysiwyg!!!!
         $allStyles = $dbObject->fetchAll('SELECT `id`, `name` FROM `page_file` WHERE `wp` = '.$projectId.' AND `type` = '.WEB_TYPE_CSS.';');
         $selectedStyles = $dbObject->fetchAll('SELECT `tf_id` FROM `wp_wysiwyg_file` WHERE `wp` = '.$projectId.';');
@@ -463,6 +489,18 @@
 						.'<div class="project-edit-alias3">'
 							.'<label for="project-edit-alias3-'.$project['id'].'">Alias 3:</label> '
 							.'<input type="text" id="project-edit-alias3-'.$project['id'].'" name="project-alias3" value="'.$project['alias3'].'" />'
+						.'</div>'
+						.'<div class="project-edit-error-all">'
+							.'<label for="project-edit-error-all-'.$project['id'].'">All Errors:</label> '
+							.'<select id="project-edit-error-all-'.$project['id'].'" name="project-errors-all">'.$project['error-all-options'].'</select>'
+						.'</div>'
+						.'<div class="project-edit-error-404">'
+							.'<label for="project-edit-error-404-'.$project['id'].'">Error 404:</label> '
+							.'<select id="project-edit-error-404-'.$project['id'].'" name="project-errors-404">'.$project['error-404-options'].'</select>'
+						.'</div>'
+						.'<div class="project-edit-error-403">'
+							.'<label for="project-edit-error-403-'.$project['id'].'">Error 403:</label> '
+							.'<select id="project-edit-error-403-'.$project['id'].'" name="project-errors-403">'.$project['error-403-options'].'</select>'
 						.'</div>'
 						.'<div class="project-edit-http">'
 							.'<label for="project-http-'.$project['id'].'">Http</label> '

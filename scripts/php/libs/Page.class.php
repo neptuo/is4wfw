@@ -76,6 +76,7 @@
         $type = $_POST['type'];
         $keywords = $_POST['edit-keywords'];
         $clearUrlCache = $_POST['edit-clearurlcache'];
+        $cacheTime = $_POST['edit-cachetime'];
         $errors = array();
         
         $pageRightR = $_POST['right-edit-groups-r'];
@@ -96,9 +97,9 @@
         if(count($errors) == 0) {
           if($type == "page-edit") {
             $dbObject->execute("UPDATE `content` SET `tag_lib_start` = \"".$tlStart."\", `tag_lib_end` = \"".$tlEnd."\", `head` = \"".$head."\", `content` = \"".$content."\" WHERE `page_id` = ".$pageId." AND `language_id` = ".$languageId.";");
-            $dbObject->execute("UPDATE `info` SET `name` = \"".$name."\", `href` = \"".$href."\", `in_title` = \"".$inTitle."\", `in_menu` = ".$menu.", `is_visible` = ".$visible.", `keywords` = \"".$keywords."\", `timestamp` = ".time()." WHERE `page_id` = ".$pageId." AND `language_id` = ".$languageId.";");
+            $dbObject->execute("UPDATE `info` SET `name` = \"".$name."\", `href` = \"".$href."\", `in_title` = \"".$inTitle."\", `in_menu` = ".$menu.", `is_visible` = ".$visible.", `keywords` = \"".$keywords."\", `timestamp` = ".time().", `cachetime` = ".$cacheTime." WHERE `page_id` = ".$pageId." AND `language_id` = ".$languageId.";");
       
-     	    	if(count($pageRightR) != 0) {      
+     	    	if(count($pageRightR) != 0) {
     	        $dbR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `page_right`.`pid` = ".$pageId." AND `type` = ".WEB_R_READ.";");
   	          foreach($dbR as $right) {
 	              if(!in_array($right, $pageRightR)) {
@@ -151,29 +152,44 @@
             
             $dbObject->execute("INSERT INTO `page`(`id`, `parent_id`, `wp`) VALUES(".$pageId.", ".$parentId.", ".$projectId.");");
             $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(".$pageId.", \"".$tlStart."\", \"".$tlEnd."\", \"".$head."\", \"".$content."\", ".$languageId.");");
-            $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`) VALUES(".$pageId.", ".$languageId.", \"".$name."\", \"".$href."\", ".$inTitle.", ".$menu.", ".$pageId.", ".$visible.", \"".$keywords."\", ".time().");");
+            $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES(".$pageId.", ".$languageId.", \"".$name."\", \"".$href."\", ".$inTitle.", ".$menu.", ".$pageId.", ".$visible.", \"".$keywords."\", ".time().", ".$cacheTime.");");
             
      	    	if(count($pageRightR) != 0) {
 	            foreach($pageRightR as $right) {
   	            $dbObject->execute("INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES (".$pageId.", ".$right.", ".WEB_R_READ.")");
     	        }
-    	      }
+    	      } else {
+							$rights = $dbObject->fetchAll('SELECT `gid` FROM `page_right` WHERE `pid` = '.$parentId.' AND `type` = '.WEB_R_READ.';');
+							foreach($rights as $right) {
+								$dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES ('.$pageId.', '.$right['gid'].', '.WEB_R_READ.');');
+							}
+						}
      	    	if(count($pageRightW) != 0) {
 	            foreach($pageRightW as $right) {
   	            $dbObject->execute("INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES (".$pageId.", ".$right.", ".WEB_R_WRITE.")");
     	        }
-    	      }
+    	      } else {
+							$rights = $dbObject->fetchAll('SELECT `gid` FROM `page_right` WHERE `pid` = '.$parentId.' AND `type` = '.WEB_R_WRITE.';');
+							foreach($rights as $right) {
+								$dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES ('.$pageId.', '.$right['gid'].', '.WEB_R_WRITE.');');
+							}
+						}
      	    	if(count($pageRightD) != 0) {
 	            foreach($pageRightD as $right) {
   	            $dbObject->execute("INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES (".$pageId.", ".$right.", ".WEB_R_DELETE.")");
     	        }
-    	      }
+    	      } else {
+							$rights = $dbObject->fetchAll('SELECT `gid` FROM `page_right` WHERE `pid` = '.$parentId.' AND `type` = '.WEB_R_DELETE.';');
+							foreach($rights as $right) {
+								$dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES ('.$pageId.', '.$right['gid'].', '.WEB_R_DELETE.');');
+							}
+						}
             
             $return .= parent::getFrame("Success Message", '<h4 class="success">New page added!</h4>', "", true);
           } else if($type == "page-add-lang-ver") {
             
             $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(".$pageId.", \"".$tlStart."\", \"".$tlEnd."\", \"".$head."\", \"".$content."\", ".$languageId.");");
-            $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`) VALUES(".$pageId.", ".$languageId.", \"".$name."\", \"".$href."\", ".$inTitle.", ".$menu.", ".$pageId.", ".$visible.", \"".$keywords."\", ".time().");");
+            $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES(".$pageId.", ".$languageId.", \"".$name."\", \"".$href."\", ".$inTitle.", ".$menu.", ".$pageId.", ".$visible.", \"".$keywords."\", ".time().", ".$cacheTime.");");
             
             $return .= parent::getFrame("Success Message" ,'<h4 class="success">Language version added!</h4>', "", true);
           } else if($type == "page-add-sub") {
@@ -184,7 +200,7 @@
             
             $dbObject->execute("INSERT INTO `page`(`id`, `parent_id`, `wp`) VALUES(".$pageId.", ".$parentId.", ".$projectId.");");
             $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(".$pageId.", \"".$tlStart."\", \"".$tlEnd."\", \"".$head."\", \"".$content."\", ".$languageId.");");
-            $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`) VALUES(".$pageId.", ".$languageId.", \"".$name."\", \"".$href."\", ".$inTitle.", ".$menu.", ".$pageId.", ".$visible.", \"".$keywords."\", ".time().");");
+            $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES(".$pageId.", ".$languageId.", \"".$name."\", \"".$href."\", ".$inTitle.", ".$menu.", ".$pageId.", ".$visible.", \"".$keywords."\", ".time().", ".$cacheTime.");");
       
      	    	if(count($pageRightR) != 0) {      
     	        foreach($pageRightR as $right) {
@@ -465,7 +481,7 @@
 								if(count($urls) == 0) {
 									// neni treba menit url, je jedinecna v dane sekci
 									// rekurzivne zkopirovat vsechny stranky atd.
-									$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`id` = '.$pageId.' ORDER BY `page`.`id`;');
+									$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`id` = '.$pageId.' ORDER BY `page`.`id`;');
 									$lastId = 0;
 									$newId = 0;
 									foreach($pages as $page) {
@@ -479,7 +495,7 @@
 											}
 											self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
 										}
-										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$page['href'].'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().');');
+										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$page['href'].'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
@@ -487,7 +503,7 @@
 								} else {
 									// zmenit url na nahodnou a vypsat ji.
 									// rekurzivne zkopirovat vsechny stranky atd.
-									$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`id` = '.$pageId.' ORDER BY `page`.`id`;');
+									$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`id` = '.$pageId.' ORDER BY `page`.`id`;');
 									$lastId = 0;
 									$newId = 0;
 									$randUrl = 'random-url-'.rand(100, 1000).rand(100, 1000);
@@ -502,7 +518,7 @@
 											}
 											self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
 										}
-										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$randUrl.'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().');');
+										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$randUrl.'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
@@ -514,7 +530,7 @@
 								if(count($urls) == 0) {
 									// neni treba menit url, je jedinecna v dane sekci
 									// rekurzivne zkopirovat vsechny stranky atd.
-									$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`id` = '.$pageId.' ORDER BY `page`.`id`;');
+									$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`id` = '.$pageId.' ORDER BY `page`.`id`;');
 									$lastId = 0;
 									$newId = 0;
 									foreach($pages as $page) {
@@ -528,7 +544,7 @@
 											}
 											self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
 										}
-										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$page['href'].'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().');');
+										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$page['href'].'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
@@ -536,7 +552,7 @@
 								} else {
 									// zmenit url na nahodnou a vypsat ji.
 									// rekurzivne zkopirovat vsechny stranky atd.
-									$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`id` = '.$pageId.' ORDER BY `page`.`id`;');
+									$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`id` = '.$pageId.' ORDER BY `page`.`id`;');
 									$lastId = 0;
 									$newId = 0;
 									$randUrl = 'random-url-'.rand(100, 1000).rand(100, 1000);
@@ -551,7 +567,7 @@
 											}
 											self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
 										}
-										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$randUrl.'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().');');
+										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$randUrl.'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
@@ -613,12 +629,13 @@
             $type = "undefined";
           }
           if($_POST['page-edit'] == "Edit") {
-            $sql_return = $dbObject->fetchAll("SELECT `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content`, `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords` FROM `content` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `info`.`page_id` = ".$pageId." AND `info`.`language_id` = ".$langId.";");
+            $sql_return = $dbObject->fetchAll("SELECT `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content`, `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`cachetime` FROM `content` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `info`.`page_id` = ".$pageId." AND `info`.`language_id` = ".$langId.";");
             $frameTitle = 'Edit page :: '.$sql_return[0]['name'];
           } else {
             $sql_return = array();
             $sql_return[0]['in_title'] = 1;
             $sql_return[0]['is_visible'] = 1;
+            $sql_return[0]['cachetime'] = -1;
           }
           
           if($errorOccurs == "true") {
@@ -631,6 +648,7 @@
             $sql_return[0]['content'] = $content;
             $sql_return[0]['tag_lib_start'] = $tlStart;
             $sql_return[0]['tag_lib_end'] = $tlEnd;
+            $sql_return[0]['cachetime'] = $cacheTime;
             $langId = $languageId;
           }
           
@@ -695,28 +713,38 @@
                       .'<div class="edit edit-page-info">'
                         .'<div class="edit edit-prop">'
                           .'<div class="edit edit-name">'
-                            .'<lable for="edit-name">Name:</label> '
-                            .'<input type="text" name="edit-name" value="'.$sql_return[0]['name'].'" />'
+                            .'<label for="edit-name">Name:</label> '
+                            .'<input type="text" name="edit-name" id="edit-name" value="'.$sql_return[0]['name'].'" />'
                           .'</div>'
                           .'<div class="edit edit-href">'
-                            .'<lable for="edit-href">Href:</label> '
-                            .'<input type="text" name="edit-href" value="'.$sql_return[0]['href'].'" />'
+                            .'<label for="edit-href">Href:</label> '
+                            .'<input type="text" name="edit-href" id="edit-href" value="'.$sql_return[0]['href'].'" />'
                           .'</div>'
                           .'<div class="edit edit-in-title">'
-                            .'<lable for="edit-in-title">in title:</label> '
-                            .'<input type="checkbox" name="edit-in-title"'.(($sql_return[0]['in_title'] == 1) ? 'checked="checked"' : '').' />'
+                            .'<label for="edit-in-title">in title:</label> '
+                            .'<input type="checkbox" name="edit-in-title" id="edit-in-title"'.(($sql_return[0]['in_title'] == 1) ? 'checked="checked"' : '').' />'
                           .'</div>'
                           .'<div class="edit edit-menu">'
-                            .'<lable for="edit-menu">in menu:</label> '
-                            .'<input type="checkbox" name="edit-menu"'.(($sql_return[0]['in_menu'] == 1) ? 'checked="checked"' : '').' />'
+                            .'<label for="edit-menu">in menu:</label> '
+                            .'<input type="checkbox" name="edit-menu" id="edit-menu"'.(($sql_return[0]['in_menu'] == 1) ? 'checked="checked"' : '').' />'
                           .'</div>'
                           .'<div class="edit edit-visible">'
-                            .'<lable for="edit-visible">is visible:</label> '
-                            .'<input type="checkbox" name="edit-visible"'.(($sql_return[0]['is_visible'] == 1) ? 'checked="checked"' : '').' />'
+                            .'<label for="edit-visible">is visible:</label> '
+                            .'<input type="checkbox" name="edit-visible" id="edit-visible"'.(($sql_return[0]['is_visible'] == 1) ? 'checked="checked"' : '').' />'
                           .'</div>'
                           .'<div class="edit edit-clear-cache">'
-                            .'<lable for="edit-clearurlcache">clear urlcache:</label> '
-                            .'<input type="checkbox" name="edit-clearurlcache" />'
+                            .'<label for="edit-clearurlcache">clear urlcache:</label> '
+                            .'<input type="checkbox" name="edit-clearurlcache" id="edit-clearurlcache" />'
+                          .'</div>'
+                          .'<div class="edit edit-cache-time">'
+                            .'<label for="edit-cachetime">cache time:</label>'
+                            .'<select id="edit-cachetime" name="edit-cachetime">'
+                            	.'<option value="-1"'.(($sql_return[0]['cachetime'] == -1) ? 'selected="selected"' : '').'>Don\'t use</option>'
+                            	.'<option value="60"'.(($sql_return[0]['cachetime'] == 60) ? 'selected="selected"' : '').'>1 minute</option>'
+                            	.'<option value="3600"'.(($sql_return[0]['cachetime'] == 3600) ? 'selected="selected"' : '').'>1 hour</option>'
+                            	.'<option value="86400"'.(($sql_return[0]['cachetime'] == 86400) ? 'selected="selected"' : '').'>1 day</option>'
+                            	.'<option value="0"'.(($sql_return[0]['cachetime'] == 0) ? 'selected="selected"' : '').'>Unlimited</option>'
+                            .'</select>'
                           .'</div>';
             if($type == "add-new-page" || $type == "page-add-lang-ver") {
               $returnTmp .= 
@@ -774,7 +802,7 @@
                         .'</div>'
                         .'<div class="clear"></div>'
                         .'<div class="edit edit-keywords">'
-                          .'<lable for="edit-keywords">Key words:</label> '
+                          .'<label for="edit-keywords">Key words:</label> '
                           .'<input type="text" name="edit-keywords" value="'.$sql_return[0]['keywords'].'" />'
                         .'</div>'
                         .'<div class="clear"></div>'
@@ -912,7 +940,7 @@
   	      //$return1 = parent::getFrame('Added files', $returnTmp, '');
 	        $return1 = $returnTmp;
         } else {
-					$return1 = '<h4 class="error">No files added!</h4>';
+					$return1 = '<h4 class="warning">No files added!</h4>';
 				}
                   
         
@@ -950,7 +978,7 @@
         	//$return2 = parent::getFrame('Files to add', $returnTmp, '');
         	$return2 = $returnTmp;
         } else {
-					$return2 = '<h4 class="error">No files to add!</h4>';
+					$return2 = '<h4 class="warning">No files to add!</h4>';
 				}
         $return .= parent::getFrame('Text Files', $return1.$return2, '');
       }
@@ -1146,7 +1174,7 @@
 			global $dbObject;
 			
 			if($pageFileInc) {
-				$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`parent_id` = '.$parentId.' ORDER BY `page`.`id`;');
+				$pages = $dbObject->fetchAll('SELECT `page`.`id`, `info`.`language_id`, `info`.`name`, `info`.`in_title`, `info`.`href`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `content` ON `page`.`id` = `content`.`page_id` WHERE `page`.`parent_id` = '.$parentId.' ORDER BY `page`.`id`;');
 				$lastId = 0;
 				$newId = 0;
 				foreach($pages as $page) {
@@ -1160,7 +1188,7 @@
 						}
 						self::copyPagesRecursivly($page['id'], $newId, $projectId, $pageFileInc);
 					}
-					$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$page['href'].'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().');');
+					$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$page['href'].'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 					$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 					
 					$lastId = $page['id'];
@@ -1672,8 +1700,14 @@
 						$last = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `template`;');
 						$templateId = $last[0]['id'];
 						$_POST['template-id'] = $templateId;
+						if($showError != 'false') {
+							$return .= '<h4 class="success">Template added!</h4>';
+						}
 					} else {
 						$dbObject->execute('UPDATE `template` SET `content` = "'.$templateContent.'" WHERE `id` = '.$templateId.';');
+						if($showError != 'false') {
+							$return .= '<h4 class="success">Template updated!</h4>';
+						}
 					}
 			
      	    if(count($templateR) != 0) {		
@@ -1718,10 +1752,6 @@
  	      	  	}
 	        	}
 	        }
-	        
-	        if($showError != 'false') {
-						$return .= '<h4 class="success">Template added!</h4>';
-					}
 				} else {
 					if($showError != 'false') {
 						$return .= '<h4 class="error">Permission Denied!</h4>';

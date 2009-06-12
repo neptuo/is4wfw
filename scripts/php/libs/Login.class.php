@@ -15,7 +15,7 @@
    *  @objectname loginObject     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-05-12
+   *  @timestamp  2009-06-03
    *
    *
    */              
@@ -62,6 +62,13 @@
      *
      */                   
     private $Groups = array(array('gid' => 3, 'name' => "web"));
+    
+    /**
+     *
+     *	Used user group for log in.
+     *
+     */		 		 		     
+    private $UsedGroup = array();
     
     /**
      *
@@ -124,7 +131,8 @@
           if(count($return) == 1) {
             $groups = $dbObject->fetchAll("SELECT `group`.`gid`, `group`.`name`, `group`.`value` FROM `user_in_group` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE `uid` = ".$return[0]['uid']." ORDER BY `group`.`value`;");
             $groupMinValue = $dbObject->fetchAll("SELECT MIN(`group`.`value`) AS `value` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `uid` = ".$return[0]['uid'].";");
-            $this->Groups = array();
+            $this->UsedGroup['name'] = $group;
+            //$this->Groups = array();
 						foreach($groups as $group) {
               $this->Groups[] = $group;
             }
@@ -291,7 +299,7 @@
      */                   
     public function loggedUserInfo() {
       if(self::isLogged()) {
-        return '<div class="user-info"><div class="user-name">'.$this->UserName.' '.$this->UserSurname.'</div><div class="user-group">'.$this->Groups[0]['name'].'</div><div class="user-login">'.$this->UserLogin.'@'.$_SERVER['HTTP_HOST'].'</div></div>';
+        return '<div class="user-info"><div class="user-name">'.$this->UserName.' '.$this->UserSurname.'</div><div class="user-group">'.$this->UsedGroup['name'].'</div><div class="user-login">'.$this->UserLogin.'@'.$_SERVER['HTTP_HOST'].'</div></div>';
       } else {
         return '<div class="user-info">Not logged!</div>';
       }

@@ -12,7 +12,7 @@
    *  Article class
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-05-04
+   *  @timestamp  2009-06-11
    * 
    */  
   class Article extends BaseTagLib {
@@ -410,7 +410,7 @@
               .'<th class="article-mgm-th article-mgm-edit">Edit</th>'
             .'</tr>';
         foreach($articles as $article) {
-          $infos = $dbObject->fetchAll("SELECT `article_content`.`head`, `language`.`id` AS `lang_id`, `language`.`language` FROM `article_content` LEFT JOIN `language` ON `article_content`.`language_id` = `language`.`id` WHERE `article_content`.`article_id` = ".$article['id']." ORDER BY `language`.`language`;");
+          $infos = $dbObject->fetchAll("SELECT `article_content`.`name`, `article_content`.`head`, `language`.`id` AS `lang_id`, `language`.`language` FROM `article_content` LEFT JOIN `language` ON `article_content`.`language_id` = `language`.`id` WHERE `article_content`.`article_id` = ".$article['id']." ORDER BY `language`.`language`;");
           $lnVersions = count($infos);
           $first = true;
           foreach($infos as $info) {
@@ -439,7 +439,7 @@
               .'<td class="article-mgm-td article-mgm-head">'
                 .'<div class="article-head-cover">'
                   .'<span class="article-head-in">'
-                    .$info['head']
+                    .htmlspecialchars($info['head'])
                   .'</span>'
                 .'</div>'
               .'</td>'
@@ -845,18 +845,26 @@
   			      $artc = $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = ".$article['id'].";");
 		    	    if(count($artc) == 0) {
         			  $ac = $articleContent;
+        			  $maxId = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `article`;');
+        			  $article['id'] = $ac['article_id'] = $maxId[0]['id'] + 1;
       	  		  $dbObject->execute("INSERT INTO `article`(`id`, `line_id`) VALUES (".$article['id'].", ".$article['line_id'].");");
     	  	    	$dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `head`, `content`, `author`, `timestamp`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", ".$ac['language_id'].");");
 	  		        $return .= '<h4 class="success">New Article Added!</h4>';
+	  		        $_POST['article-id'] = $article['id'];
+	  		        $_POST['language-id'] = $ac['language_id'];
 			        } else {
   	  	    	  $ac = $articleContent;
 	      		    $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `head`, `content`, `author`, `timestamp`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", ".$ac['language_id'].");");
     	  	    	$return .= '<h4 class="success">Article Language Version Added!</h4>';
+    	  	    	$_POST['article-id'] = $article['id'];
+	  		        $_POST['language-id'] = $ac['language_id'];
   	      		}
 		      	} else {
   	    	  	$ac = $articleContent;
     		  	  $dbObject->execute("UPDATE `article` SET `line_id` = ".$article['line_id']." WHERE `id` = ".$article['id'].";");
     			    $dbObject->execute("UPDATE `article_content` SET `name` = \"".$ac['name']."\", `head` = \"".$ac['head']."\", `content` = \"".$ac['content']."\", `author` = \"".$ac['author']."\", `timestamp` = ".$ac['timestamp'].", `language_id` = ".$ac['language_id']." WHERE `article_id` = ".$ac['article_id']." AND `language_id` = ".$ac['language_old_id'].";");
+    			    $_POST['article-id'] = $article['id'];
+	  		      $_POST['language-id'] = $ac['language_id'];
   		    	  $return .= '<h4 class="success">Article Updated!</h4>';
 		      	}
 	      	}

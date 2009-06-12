@@ -23,4 +23,40 @@
       Objednávkový formulář 2.
     </comment>
   </tag>
+  <tag>
+    <tagname>order1</tagname>
+    <function>showOrder1</function>
+    <attribute>
+      <attname>detailPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Výpis: Objednávkový formulář 1.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>order2</tagname>
+    <function>showOrder2</function>
+    <attribute>
+      <attname>detailPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Výpis: Objednávkový formulář 2.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>order1Detail</tagname>
+    <function>showOrder1Detail</function>
+    <comment>
+      Detail: Objednávky 1.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>order2Detail</tagname>
+    <function>showOrder2Detail</function>
+    <comment>
+      Detail: Objednávky 2.
+    </comment>
+  </tag>
 </taglib>

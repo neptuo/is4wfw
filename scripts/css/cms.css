@@ -93,22 +93,22 @@ table.pages-table {
   border-collapse: collapse;
 }
 
-.show-lines table, .group-list table, .user-log-list table {
+.show-lines table, .group-list table, .user-log-list table, .hp-projection-edit table {
   border-top: 1px solid #cccccc;
   border-collapse: collapse;
 }
 
-.show-lines table td, .group-list table td, .user-log-list td, .languages-edit td, .show-projects td, .user-list-table td, .dir-list td {
+.show-lines table td, .group-list table td, .user-log-list td, .languages-edit td, .show-projects td, .user-list-table td, .dir-list td, .hp-projection-edit td, .references-edit td {
 	padding: 2px 10px;
   border-bottom: 1px solid #cccccc;
 }
 
-.group-list table th, .show-lines table th, .user-log-list th, .user-list-table th, .dir-list th {
+.group-list table th, .show-lines table th, .user-log-list th, .user-list-table th, .dir-list th, .hp-projection-edit th, .references-edit th {
 	padding: 0 10px;
 	text-align: left;
 }
 
-.file-tr th, .dir-list th, .show-lines th, .template-list th, .group-list th, .user-log-list th {
+.file-tr th, .dir-list th, .show-lines th, .template-list th, .group-list th, .user-log-list th, .hp-projection-edit th, .references-edit th {
   text-align: left;
   background: #cccccc;
   border-bottom: 1px solid black;
@@ -301,7 +301,7 @@ th.file-head-th {
   background: #eeeeee;
 }
 
-.edit-prop .edit-in-title input, .edit-prop .edit-menu input, .edit-prop .edit-visible input, .edit-prop .edit-clear-cache input, .edit-prop .edit-language select, .project-edit-http, .project-edit-https {
+.edit-prop .edit-in-title input, .edit-prop .edit-menu input, .edit-prop .edit-visible input, .edit-prop .edit-clear-cache input, .edit-prop .edit-language select, .project-edit-http, .project-edit-https, .edit-cache-time select {
 	display: block;
 }
 
@@ -394,7 +394,7 @@ th.file-head-th {
 	margin: 2px 0;
 	padding: 0 0 1px 18px;
 	color: black;
-	background: url('/images/warning.png') no-repeat 1px 3px;
+	background: url('/images/warning.png') #ff8c2f no-repeat 1px 3px;
 }
 
 body {
@@ -403,7 +403,7 @@ body {
 }
 
 .cms .head {
-	/*position: fixed;*/
+	position: fixed;
 	width: 100%;
 	top: 0;
 	left: 0;
@@ -433,7 +433,7 @@ body {
 	border: none;
 }
 
-.cms .head .user-info, .cms .head .select-project, .cms .head .logon-count-down {
+.cms .head .user-info, .cms .head .select-project, .cms .head .logon-count-down, .cms .web-version {
 	font-size: 11px;
 	float: right;
 	margin: 2px 10px 0 2px;
@@ -441,6 +441,11 @@ body {
 	background: url('/images/cms/design/dot-transparent.png');
 	border: 1px solid #011D09;
 	height: 28px;
+}
+
+.cms .web-version .value {
+	text-align: center;
+	font-weight: bold;
 }
 
 /* Pro prvni "bublinu" */
@@ -624,23 +629,36 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   border-bottom: 1px solid black;
 }
 
-.edit-prop, .edit-rights, .project-prop, .project-edit-rights, .article-line-edit-name, .article-line-edit-rights, .template-rights, .up-file-prop {
+.edit-prop, .edit-rights, .project-prop, .project-edit-rights, .article-line-edit-name, .article-line-edit-rights, .template-rights, .up-file-prop, .hp-projection-form, .hp-reference-form {
   float: left;
 }
 
-.edit-prop .edit-in-title, .edit-prop .edit-menu, .edit-prop .edit-visible, .edit-clear-cache, .edit-prop .edit-language, .edit-rights div, .text-file-name, .text-file-type, .text-file-browser, .project-edit-right-read, .project-edit-right-write, .project-edit-right-delete, .project-edit-http, .project-edit-https, .article-line-r-r, .article-line-r-w, .article-line-r-d, .template-right-r, .template-right-w, .template-right-d, .directory-right-r, .directory-right-w, .directory-right-d, .file-right-r, .file-right-w, .file-right-d, .project-edit-styles-wysiwyg {
+.edit-prop .edit-in-title, .edit-prop .edit-menu, .edit-prop .edit-visible, .edit-clear-cache, .edit-cache-time, .edit-prop .edit-language, .edit-rights div, .text-file-name, .text-file-type, .text-file-browser, .project-edit-right-read, .project-edit-right-write, .project-edit-right-delete, .project-edit-http, .project-edit-https, .article-line-r-r, .article-line-r-w, .article-line-r-d, .template-right-r, .template-right-w, .template-right-d, .directory-right-r, .directory-right-w, .directory-right-d, .file-right-r, .file-right-w, .file-right-d, .project-edit-styles-wysiwyg {
   float: left;
   padding: 6px 8px;
   margin: 2px;
   background: #eeeeee;
 }
 
-.edit-prop .edit-name, .edit-prop .edit-href, .project-edit-name, .project-edit-url, .project-edit-alias1, .project-edit-alias2, .project-edit-alias3, .article-line-edit-name, .file-name label, .up-file-name label, .up-file-title label, .up-file-rs label, .up-file-name, .up-file-title, .up-file-rs, .new-group-name label, .new-group-parent label {
+.edit-prop .edit-name, .edit-prop .edit-href, .project-edit-name, .project-edit-url, .project-edit-alias1, .project-edit-alias2, .project-edit-alias3, .article-line-edit-name, .file-name label, .up-file-name label, .up-file-title label, .up-file-rs label, .up-file-name, .up-file-title, .up-file-rs, .new-group-name label, .new-group-parent label, .hp-projection-form label, .hp-reference-form label, .project-edit-error-all label, .project-edit-error-404 label, .project-edit-error-403 label {
   text-align: right;
 }
 
-.edit-prop .edit-name input, .edit-prop .edit-href input, .project-edit-name input, .project-edit-url input, .project-edit-alias1 input, .project-edit-alias2 input, .project-edit-alias3 input, .article-line-edit-name input, .file-name input, .up-file-name input, .up-file-title input, .up-file-rs input, .directory-name input {
+.hp-projection-form label, .hp-reference-form label {
+	width: 80px;
+	float: left;
+}
+
+.hp-projection-form .hp-projection-form-submit, .hp-reference-form .hp-reference-form-submit {
+	text-align: right;
+}
+
+.edit-prop .edit-name input, .edit-prop .edit-href input, .project-edit-name input, .project-edit-url input, .project-edit-alias1 input, .project-edit-alias2 input, .project-edit-alias3 input, .article-line-edit-name input, .file-name input, .up-file-name input, .up-file-title input, .up-file-rs input, .directory-name input, .hp-projection-form input[type=text], .hp-reference-form input[type=text], .project-edit-error-all select, .project-edit-error-404 select, .project-edit-error-403 select {
   width: 320px;
+}
+
+.edit-prop .edit-name input, .edit-prop .edit-href input {
+	width: 410px;
 }
 
 .new-group-name input {
@@ -655,7 +673,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   width: 116px;
 }
 
-.edit-prop div, .project-prop div, .article-line-edit-name, .article-line-edit-submit, .move-branch, .up-file-name, .up-file-title, .up-file-rs, .up-file-submit, .directory-submit, .move-copy-branch, .new-group-name, .new-group-parent, .update-keywords, .clear-url-cache, .add-new-language, .user-log-truncate {
+.edit-prop div, .project-prop div, .article-line-edit-name, .article-line-edit-submit, .move-branch, .up-file-name, .up-file-title, .up-file-rs, .up-file-submit, .directory-submit, .move-copy-branch, .new-group-name, .new-group-parent, .update-keywords, .clear-url-cache, .add-new-language, .user-log-truncate, .hp-projection-form div, .hp-reference-form div, .project-edit-error-all, .project-edit-error-404, .project-edit-error-403 {
   padding: 6px 8px;
   margin: 2px;
   background: #eeeeee;
@@ -694,7 +712,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   background: #eeeeee;
 }
 
-.languages-edit, .show-projects {
+.languages-edit, .show-projects, .references-edit table {
 	border-collapse: collapse;
 }
 

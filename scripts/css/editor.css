@@ -58,3 +58,11 @@
 .line-numbers-cover {
 	float: left;
 }
+
+.editor-word-count {
+	float: right;
+}
+
+.editor-word-count span {
+	font-weight: bold;
+}

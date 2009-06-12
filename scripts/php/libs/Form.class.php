@@ -84,6 +84,20 @@
 				
 				if(count($errors) == 0) {
 					$dbObject->execute('INSERT INTO `form_order1`(`comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `door_type`, `cover`, `fill_in`, `comment`) VALUES("'.$compName.'", "'.$contPerson.'", "'.$contEmail.'", "'.$contPhone.'", "'.$contAddress.'", '.$width.', '.$height.', '.$doorType.', '.$cover.', '.$fillIn.', "'.$comment.'");');
+					$oid = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `form_order1`;');
+					$oid = $oid[0]['id'];
+					$_GET['order1-id'] = $oid;
+					
+					$objCon = self::showOrder1Detail();
+					
+					$obsah = "Vaše poptávka byla zaznamenána";
+  				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Lamelové clony\"\n\n");
+  				$message .= $objCon;
+  				
+  				$headers = "From: info@plasticport.cz\n";
+				  $headers .= "CONTENT-TYPE: text/plain; CHARSET=windows-utf-8";
+  				mail("info@plasticport.cz, petr.dasek@portaflex.cz", "Nová poptávka", $message, $headers );
+					
 					$success = true;
 					$compName = "";
 					$contPerson = "";
@@ -279,6 +293,20 @@
 				
 				if(count($errors) == 0) {
 					$dbObject->execute('INSERT INTO `form_order2`(`comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `fixture`, `draught`, `transit`, `heating`, `gripping_1`, `gripping_2`, `comment`) VALUES("'.$compName.'", "'.$contPerson.'", "'.$contEmail.'", "'.$contPhone.'", "'.$contAddress.'", '.$width.', '.$height.', '.$fixture.', '.$draught.', '.$transitDb.', '.$heating.', '.$gripping1.', '.$gripping2.', "'.$comment.'");');
+					$oid = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `form_order2`;');
+					$oid = $oid[0]['id'];
+					$_GET['order2-id'] = $oid;
+					
+					$objCon = self::showOrder2Detail();
+					
+					$obsah = "Vaše poptávka byla zaznamenána";
+  				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Kyvná vrata\"\n\n");
+  				$message .= $objCon;
+  				
+  				$headers = "From: info@plasticport.cz\n";
+				  $headers .= "CONTENT-TYPE: text/plain; CHARSET=windows-utf-8";
+  				mail("info@plasticport.cz, petr.dasek@portaflex.cz", "Nová poptávka", $message, $headers );
+					
 					$success = true;
 					$compName = "";
 					$contPerson = "";
@@ -474,6 +502,381 @@
       $_SESSION['token-order-form-2'] = $token;
       return $return;
     }
+    
+    public function showOrder1($detailPageId = false) {
+			global $dbObject;
+			global $webObject;
+			$return = '';
+			
+			$actionUrl = '';
+			if($detailPageId != false) {
+				$actionUrl = $webObject->composeUrl($detailPageId);
+			}
+			
+			if($_POST['delete-order-form-1'] == "Smazat") {
+				$oId = $_POST['order1-id'];
+				
+				$dbObject->execute('DELETE FROM `form_order1` WHERE `id` = '.$oId.';');
+				$return .= '<h4 class="success">Objednavka smazana!</h4>';
+			}
+			
+			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `door_type`, `cover`, `fill_in`, `comment` FROM `form_order1` ORDER BY `id` DESC;');
+			if(count($orders1) > 0) {
+				$return .= ''
+				.'<table class="form-orders">'
+					.'<tr>'
+						.'<th class="order-id">Id:</th>'
+						.'<th class="order-name">Společnost:</th>'
+						.'<th class="order-person">Osoba:</th>'
+						.'<th class="order-email">Email:</th>'
+						.'<th class="order-phone">Telefon:</th>'
+						.'<th class="order-address">Adresa:</th>'
+						.'<th class="order-action">Akce:</th>'
+					.'</tr>';
+				$i = 0;
+				foreach($orders1 as $order) {
+					$return .= ''
+					.'<tr class="'.((($i % 2) == 1) ? 'even' : 'idle').'">'
+						.'<td class="order-id">'.$order['id'].'</td>'
+						.'<td class="order-name">'.$order['comp_name'].'</td>'
+						.'<td class="order-person">'.$order['cont_person'].'</td>'
+						.'<td class="order-email">'.$order['cont_email'].'</td>'
+						.'<td class="order-phone">'.$order['cont_phone'].'</td>'
+						.'<td class="order-address">'.$order['cont_address'].'</td>'
+						.'<td class="order-action">'
+							.'<a target="_blank" href="'.$actionUrl.'?order1-id='.$order['id'].'">náhled celé objednávky</a> '
+							.'<form name="order-delete" method="post" action="">'
+								.'<input type="hidden" name="order1-id" value="'.$order['id'].'" />'
+	      				.'<input type="hidden" name="delete-order-form-1" value="Smazat" />'
+	      				.'<input type="image" src="~/images/page_del.png" name="delete-order-form-1" value="Smazat" />'
+      				.'</form>'
+						.'</td>'
+					.'</tr>';
+      		$i ++;
+				}
+				$return .= '</table>';
+				
+				$return = parent::getFrame('Objednavky 1', $return, '', true);
+			} else {
+				$return .= parent::getFrame('Objednavky', '<h4 class="error">No orders!</h4>', '', true);
+			}
+			
+			$return .= $ordersStr;
+			
+			return $return;
+		}
+    
+    public function showOrder2($detailPageId = false) {
+			global $dbObject;
+			global $webObject;
+			$return = '';
+			
+			$actionUrl = '';
+			if($detailPageId != false) {
+				$actionUrl = $webObject->composeUrl($detailPageId);
+			}
+			
+			if($_POST['delete-order-form-2'] == "Smazat") {
+				$oId = $_POST['order2-id'];
+				
+				$dbObject->execute('DELETE FROM `form_order2` WHERE `id` = '.$oId.';');
+				$return .= parent::getFrame('Objednavka '.$oId, '<h4 class="success">Objednavka smazana!</h4>', '', true);
+			}
+			
+			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `fixture`, `draught`, `transit`, `heating`, `gripping_1`, `gripping_2`, `comment` FROM `form_order2` ORDER BY `id` DESC;');
+			if(count($orders1) > 0) {
+				$return .= ''
+				.'<table class="form-orders">'
+					.'<tr>'
+						.'<th class="order-id">Id:</th>'
+						.'<th class="order-name">Společnost:</th>'
+						.'<th class="order-person">Osoba:</th>'
+						.'<th class="order-email">Email:</th>'
+						.'<th class="order-phone">Telefon:</th>'
+						.'<th class="order-address">Adresa:</th>'
+						.'<th class="order-action">Akce:</th>'
+					.'</tr>';
+				$i = 0;
+				foreach($orders1 as $order) {
+					$return .= ''
+					.'<tr class="'.((($i % 2) == 1) ? 'even' : 'idle').'">'
+						.'<td class="order-id">'.$order['id'].'</td>'
+						.'<td class="order-name">'.$order['comp_name'].'</td>'
+						.'<td class="order-person">'.$order['cont_person'].'</td>'
+						.'<td class="order-email">'.$order['cont_email'].'</td>'
+						.'<td class="order-phone">'.$order['cont_phone'].'</td>'
+						.'<td class="order-address">'.$order['cont_address'].'</td>'
+						.'<td class="order-action">'
+							.'<a target="_blank" href="'.$actionUrl.'?order2-id='.$order['id'].'">náhled celé objednávky</a> '
+							.'<form name="order-delete" method="post" action="">'
+								.'<input type="hidden" name="order2-id" value="'.$order['id'].'" />'
+	      				.'<input type="hidden" name="delete-order-form-2" value="Smazat" />'
+	      				.'<input type="image" src="~/images/page_del.png" name="delete-order-form-2" value="Smazat" />'
+      				.'</form>'
+						.'</td>'
+					.'</tr>';
+      		$i ++;
+				}
+				$return .= '</table>';
+				
+				$return = parent::getFrame('Objednavky 2', $return, '', true);
+			} else {
+				$return .= parent::getFrame('Objednavky', '<h4 class="error">No orders!</h4>', '', true);
+			}
+			
+			$return .= $ordersStr;
+			
+			return $return;
+		}
+		
+		public function showOrder1Detail() {
+			global $dbObject;
+			$return = '';
+			
+			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `door_type`, `cover`, `fill_in`, `comment` FROM `form_order1` WHERE `id` = '.$_GET['order1-id'].' ORDER BY `id` DESC;');
+			if(count($orders1) > 0) {
+				$order = $orders1[0];
+				
+				if($order['door_type'] == 1) {
+					$order['door_type'] = 'jednokřídlová';
+				} elseif($order['door_type'] == 2) {
+					$order['door_type'] = 'dvoukřídlová';
+				}
+				
+				if($order['cover'] == 1) {
+					$order['cover'] = 'nerez';
+				} elseif($order['cover'] == 2) {
+					$order['cover'] = 'pozink';
+				} elseif($order['cover'] == 3) {
+					$order['cover'] = 'komaxit';
+				}
+				
+				if($order['fill_in'] == 1) {
+					$order['fill_in'] = 'síla 5mm';
+				} elseif($order['fill_in'] == 2) {
+					$order['fill_in'] = 'síla 7mm';
+				}
+				
+				$return .= ''
+				.'<div class="order-form-2">'
+      		.'<table class="comment-2">'
+      			.'<tr class="comment-2-1">'
+      				.'<td class="lab">Název společnosti:</td>'
+      				.'<td class="val">'.$order['comp_name'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-2">'
+      				.'<td class="lab">Kontaktní osoba:</td>'
+      				.'<td class="val">'.$order['cont_person'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-3">'
+      				.'<td class="lab">Email:</td>'
+      				.'<td class="val">'.$order['cont_email'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-4">'
+      				.'<td class="lab">Telefon:</td>'
+      				.'<td class="val">'.$order['cont_phone'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-5">'
+      				.'<td class="lab">Adresa:</td>'
+      				.'<td class="val">'.$order['cont_address'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-6">'
+      				.'<td class="lab">Rozměry otvoru:</td>'
+      				.'<td class="val">šířka[m]: <span class="s1">'.$order['width'].'</span><br />výška[m]: <span class="s2">'.$order['height'].'</span></td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-7">'
+      				.'<td class="lab">typ dveří:</td>'
+      				.'<td class="val">'.$order['door_type'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-8">'
+      				.'<td class="lab">rám:</td>'
+      				.'<td class="val">'.$order['cover'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-9">'
+      				.'<td class="lab">výplň:</td>'
+      				.'<td class="val">'.$order['fill_in'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-12">'
+      				.'<td class="lab">Poznámka:</td>'
+      				.'<td class="val">'.$order['comment'].'</td>'
+      			.'</tr>'
+      	.'</table>'
+      .'</div>';
+						
+			} else {
+				$return .= '<h4 class="error">Nebylo zadáno id objednávky</h4>';
+			}
+			
+			return $return;
+		
+		}
+		
+		public function showOrder2Detail() {
+			global $dbObject;
+			$return = '';
+			
+			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `fixture`, `draught`, `transit`, `heating`, `gripping_1`, `gripping_2`, `comment` FROM `form_order2` WHERE `id` = '.$_GET['order2-id'].' ORDER BY `id` DESC;');
+			if(count($orders1) > 0) {
+				$order = $orders1[0];
+				$trans = $order['transit'];
+				
+				$transStr = '';
+				if($trans >= 32) {
+					$order['transit'][32] = 1;
+					$trans -= 32;
+					if(strlen($transStr) != 0) {
+						$transStr .= ', kamiony';
+					} else {
+						$transStr .= 'kamiony';
+					}
+				}
+				if($trans >= 16) {
+					$order['transit'][16] = 1;
+					$trans -= 16;
+					if(strlen($transStr) != 0) {
+						$transStr .= ', nákl.auta';
+					} else {
+						$transStr .= 'nákl.auta';
+					}
+				}
+				if($trans >= 8) {
+					$order['transit'][8] = 1;
+					$trans -= 8;
+					if(strlen($transStr) != 0) {
+						$transStr .= ', os.auto';
+					} else {
+						$transStr .= 'os.auto';
+					}
+				}
+				if($trans >= 4) {
+					$order['transit'][4] = 1;
+					$trans -= 4;
+					if(strlen($transStr) != 0) {
+						$transStr .= ', pal.vozík';
+					} else {
+						$transStr .= 'pal.vozík';
+					}
+				}
+				if($trans >= 2) {
+					$order['transit'][2] = 1;
+					$trans -= 2;
+					if(strlen($transStr) != 0) {
+						$transStr .= ', pal.vozík';
+					} else {
+						$transStr .= 'pal.vozík';
+					}
+				}
+				if($trans >= 1) {
+					$order['transit'][1] = 1;
+					$trans -= 1;
+					if(strlen($transStr) != 0) {
+						$transStr .= ', osoby';
+					} else {
+						$transStr .= 'osoby';
+					}
+				}
+				
+				if($order['fixture'] == 1) {
+					$order['fixture'] = 'exteriér';
+				} elseif($order['fixture'] == 2) {
+					$order['fixture'] = 'interiér';
+				}
+				
+				if($order['draught'] == 1) {
+					$order['draught'] = 'není';
+				} elseif($order['draught'] == 2) {
+					$order['draught'] = 'mírný';
+				} elseif($order['draught'] == 3) {
+					$order['draught'] = 'velký';
+				}
+				
+				if($order['heating'] == 1) {
+					$order['heating'] = 'ano';
+				} elseif($order['heating'] == 2) {
+					$order['heating'] = 'ne';
+				} elseif($order['heating'] == 3) {
+					$order['heating'] = 'mrazírna';
+				}
+				
+				if($order['gripping_1'] == 1) {
+					$order['gripping_1'] = 'PVC';
+				} elseif($order['gripping_1'] == 2) {
+					$order['gripping_1'] = 'pozink';
+				} elseif($order['gripping_1'] == 3) {
+					$order['gripping_1'] = 'nerez';
+				}
+				
+				if($order['gripping_2'] == 1) {
+					$order['gripping_2'] = 'nad otvor';
+				} elseif($order['gripping_2'] == 2) {
+					$order['gripping_2'] = 'do otvoru';
+				} elseif($order['gripping_2'] == 3) {
+					$order['gripping_2'] = 'pojezdové';
+				} elseif($order['gripping_2'] == 4) {
+					$order['gripping_2'] = 'předsunuté';
+				}
+					
+				$return .= ''
+				.'<div class="order-form-2">'
+      		.'<table class="comment-2">'
+      			.'<tr class="comment-2-1">'
+      				.'<td class="lab">Název společnosti:</td>'
+      				.'<td class="val">'.$order['comp_name'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-2">'
+      				.'<td class="lab">Kontaktní osoba:</td>'
+      				.'<td class="val">'.$order['cont_person'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-3">'
+      				.'<td class="lab">Email:</td>'
+      				.'<td class="val">'.$order['cont_email'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-4">'
+      				.'<td class="lab">Telefon:</td>'
+      				.'<td class="val">'.$order['cont_phone'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-5">'
+      				.'<td class="lab">Adresa:</td>'
+      				.'<td class="val">'.$order['cont_address'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-6">'
+      				.'<td class="lab">Rozměry otvoru:</td>'
+      				.'<td class="val">šířka[m]: <span class="s1">'.$order['width'].'</span><br />výška[m]: <span class="s2">'.$order['height'].'</span></td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-7">'
+      				.'<td class="lab">umístění otvoru:</td>'
+      				.'<td class="val">'.$order['fixture'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-8">'
+      				.'<td class="lab">průvan:</td>'
+      				.'<td class="val">'.$order['draught'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-9">'
+      				.'<td class="lab">průjezd:</td>'
+      				.'<td class="val">'.$transStr.'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-10">'
+      				.'<td class="lab">vytápění:</td>'
+      				.'<td class="val">'.$order['heating'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-11">'
+      				.'<td class="lab">uchycení:</td>'
+      				.'<td class="val">'.$order['gripping_1'].' - '.$order['gripping_2'].'</td>'
+      			.'</tr>'
+      			.'<tr class="comment-2-12">'
+      				.'<td class="lab">Poznámka:</td>'
+      				.'<td class="val">'.$order['comment'].'</td>'
+      			.'</tr>'
+      	.'</table>'
+      .'</div>';
+						
+			} else {
+				$return .= '<h4 class="error">Nebylo zadáno id objednávky</h4>';
+			}
+			
+			return $return;
+		}
+		
   }
 
 ?>
