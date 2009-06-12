@@ -11,6 +11,7 @@ function Editor(conf) {
   var TinyFirst = false;
   var RandomId = Math.random(100, 1000) + "" + Math.random(100, 1000);
   var LastSearchedValue = '';
+  var WordCount = 0;
   
   Controls.Form = document.createElement('form');
   Controls.Form.name = "editor-controls-form";
@@ -19,6 +20,16 @@ function Editor(conf) {
   
   Controls.Cover = document.createElement('div');
   Controls.Cover.className = "editor-panel";
+  
+  if(conf.wc != false) {
+  	WordCount = conf.wc;
+		Controls.WordCount = document.createElement('div');
+		Controls.WordCount.className = 'editor-word-count';
+		//Controls.WordCount.innerHTML = 'remaining: <span>' + WordCount + '</span> chars';
+		var pwc = WordCount - TextArea.value.length;
+		Controls.WordCount.innerHTML = 'remaining <span>' + pwc + '</span> chars';
+		Controls.Form.appendChild(Controls.WordCount);
+	}
   
   if(conf.tiny != false) {
   	Controls.TinyCover = document.createElement('div');
@@ -159,7 +170,8 @@ function Editor(conf) {
 			TextArea.id = RandomId;
 			
 			// !!!!!!!! Important !!!!!!!!!!!!!!!!!!!!
-			TextArea.value = TextArea.value.replace('<', '&gt;');
+			TextArea.value = TextArea.value.replace(/</g, '&lt;&nbsp;');
+			TextArea.value = TextArea.value.replace(/>/g, '&gt;&nbsp;');
 			
   		if(TinyFirst == false) {
 				initTiny(RandomId);
@@ -171,6 +183,8 @@ function Editor(conf) {
 			Own.enable();
   		tinyMCE.execCommand('mceRemoveControl', true, RandomId);
   		Tiny = false;
+		TextArea.value = TextArea.value.replace(/&lt;&nbsp;/g, '<');
+		TextArea.value = TextArea.value.replace(/&gt;&nbsp;/, '>');
 		}
 	}
   
@@ -253,6 +267,10 @@ function Editor(conf) {
 				pos2 = pos;
 			}
 			TextArea.setSelectionRange(pos2 + 1, pos2 + 1);
+		}
+		if(conf.wc != false) {
+			var pwc = WordCount - TextArea.value.length;
+			Controls.WordCount.innerHTML = 'remaining <span>' + pwc + '</span> chars';
 		}
   }
   

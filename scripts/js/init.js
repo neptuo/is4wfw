@@ -38,12 +38,14 @@ function initEditors(event) {
 				EdiConf.tiny = false;
 			}
 			if(tas[i].addEventListener) {
+				EdiConf.wc = 65535;
   	  	EdiConf.rows = true;
 	    	EdiConf.hide = true;
     		EdiConf.lnnm = true;
     		EdiConf.lineNumbers = string;
     		EdiConf.find = true;
     	} else {
+    		EdiConf.wc = false;
     		EdiConf.rows = false;
 	    	EdiConf.hide = true;
     		EdiConf.lnnm = false;

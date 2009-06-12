@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2008-05-16
+   *  @timestamp  2008-06-08
    * 
    */  
   class File extends BaseTagLib {
@@ -55,7 +55,7 @@
     }
     
     function __destruct() {
-    	unset($_SESSION['dir-id']);
+    	//unset($_SESSION['dir-id']);
     }
     
     /**
@@ -68,7 +68,7 @@
      *  @return   list of directories and files from FS.
      *
      */                   
-    public function showDirectory($dirId = false, $useFrames = false) {
+    public function showDirectory($dirId = false, $editable = false, $useFrames = false) {
       global $dbObject;
       global $loginObject;
       $return = "";
@@ -80,7 +80,7 @@
         
         //test na prava mazani z adresare
         $permission = $dbObject->fetchAll('SELECT `value` FROM `directory_right` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$directoryId.' AND `directory_right`.`type` = '.WEB_R_DELETE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
-        if(count($permission) > 0) {
+        if(count($permission) > 0 && $editable != "false") {
         	$subd = $dbObject->fetchAll("SELECT count(`id`) AS `count` FROM `directory` WHERE `parent_id` = ".$directoryId.";");
       	  $subf = $dbObject->fetchAll("SELECT count(`id`) AS `count` FROM `file` WHERE `dir_id` = ".$directoryId.";");
         
@@ -117,7 +117,7 @@
       }
       
       if($useFrames != 'false') {
-      	return parent::getFrame("File list :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, true), "", true);
+      	return parent::getFrame("File list :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable), "", true);
       } else {
 				return $return.self::getList($dirId, true);
 			}
@@ -148,7 +148,7 @@
           .'<th class="th-name">Name</th>'
           .'<th class="th-timestamp">Timestamp</th>'
           .'<th class="th-type">Type</th>'
-          .'<th class="th-edit">Action</th>'
+          .(($editable != "false") ? '<th class="th-edit">Action</th>' : '' )
         .'</tr>'
         .'<tr>'
           .'<td class="dir-icon"></td>'
@@ -161,7 +161,7 @@
           .'</td>'
           .'<td class="dir-timestamp"></td>'
           .'<td class="dir-type"></td>'
-          .'<td class="dir-edit"></td>'
+          .(($editable != "false") ? '<td class="dir-edit"></td>' : '' )
         .'</tr>';
         
       $n = 0;
@@ -179,7 +179,8 @@
             .'</form>'
           .'</td>'
           .'<td class="dir-timestamp">'.date('d:m:Y H:i:s', $dir['timestamp']).'</td>'
-          .'<td class="dir-type"></td>'
+          .'<td class="dir-type"></td>'	
+          .(($editable != "false") ? ''
           .'<td class="dir-edit">'
             .'<form name="dir-edit" method="post" action="">'
               .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
@@ -192,6 +193,7 @@
               .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-dir" value="Delete" title="Delete Directory" />'
             .'</form>'
           .'</td>'
+          : '' )
         .'</tr>';
         $n ++;
       }
@@ -209,6 +211,7 @@
           .'</td>'
           .'<td class="file-timestamp">'.date('d:m:Y H:i:s', $file['timestamp']).'</td>'
           .'<td class="file-type">'.$this->FileEx[$file['type']].'</td>'
+          .(($editable != "false") ? ''
           .'<td class="file-edit">'
             .'<form name="dir-edit" method="post" action="">'
               .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
@@ -216,6 +219,7 @@
               .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="Delete" title="Delete File" />'
             .'</form>'
           .'</td>'
+          : '' )
         .'</tr>';
         $n ++;
       }
@@ -291,7 +295,12 @@
    		          	  $dbObject->execute("INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES (".$directoryId.", ".$right.", ".WEB_R_READ.");");
 	 		            }
 		            }
-            	}
+            	} else {
+								$rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryParentId.' AND `type` = '.WEB_R_READ.';');
+								foreach($rights as $right) {
+									$dbObject->execute('INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES ('.$directoryId.', '.$right['gid'].', '.WEB_R_READ.');');
+								}
+							}
     	 	      if(count($write) != 0) {
     		       	$dbR = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `directory_right`.`did` = ".$directoryId." AND `type` = ".WEB_R_WRITE.";");
   	    	   	  foreach($dbR as $right) {
@@ -305,7 +314,12 @@
   	    	   	      $dbObject->execute("INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES (".$directoryId.", ".$right.", ".WEB_R_WRITE.");");
 	       		      }
 	     	    	  }
-		     	    }
+		     	    } else {
+								$rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryParentId.' AND `type` = '.WEB_R_WRITE.';');
+								foreach($rights as $right) {
+									$dbObject->execute('INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES ('.$directoryId.', '.$right['gid'].', '.WEB_R_WRITE.');');
+								}
+							}
   	   	      if(count($delete) != 0) {
 	  	 	        $dbR = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `directory_right`.`did` = '.$directoryId.' AND `type` = '.WEB_R_DELETE.';');
  		  	        foreach($dbR as $right) {
@@ -319,7 +333,12 @@
    	  		          $dbObject->execute("INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES (".$directoryId.", ".$right.", ".WEB_R_DELETE.");");
  	      		      }
           		  }
-          		}
+          		} else {
+								$rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryParentId.' AND `type` = '.WEB_R_DELETE.';');
+								foreach($rights as $right) {
+									$dbObject->execute('INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES ('.$directoryId.', '.$right['gid'].', '.WEB_R_DELETE.');');
+								}
+							}
       		  } else {
     		      $message = '<h4 class="error">Directory with this name already exists!</h4>';
   		        $return .= $message;//parent::getFrame("Error Message", $message, "", true);
@@ -580,7 +599,12 @@
    		          			  $dbObject->execute("INSERT INTO `file_right`(`fid`, `gid`, `type`) VALUES (".$fileId.", ".$right.", ".WEB_R_READ.");");
 		 		          	  }
 			          	  }
-    	        		}
+    	        		} else {
+										$rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$dirId.' AND `type` = '.WEB_R_READ.';');
+										foreach($rights as $right) {
+											$dbObject->execute('INSERT INTO `file_right`(`fid`, `gid`, `type`) VALUES ('.$fileId.', '.$right['gid'].', '.WEB_R_READ.');');
+										}
+									}
     		 	  	    if(count($write) != 0) {
     				       	$dbR = $dbObject->fetchAll("SELECT `gid` FROM `file_right` WHERE `file_right`.`fid` = ".$fileId." AND `type` = ".WEB_R_WRITE.";");
   	    			   	  foreach($dbR as $right) {
@@ -594,12 +618,17 @@
   	    			   	      $dbObject->execute("INSERT INTO `file_right`(`fid`, `gid`, `type`) VALUES (".$fileId.", ".$right.", ".WEB_R_WRITE.");");
 	       				      }
 	     		    		  }
-		  	   	    	}
+		  	   	    	} else {
+										$rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$dirId.' AND `type` = '.WEB_R_WRITE.';');
+										foreach($rights as $right) {
+											$dbObject->execute('INSERT INTO `file_right`(`fid`, `gid`, `type`) VALUES ('.$fileId.', '.$right['gid'].', '.WEB_R_WRITE.');');
+										}
+									}
 	  		   	      if(count($delete) != 0) {
 			  	 	        $dbR = $dbObject->fetchAll('SELECT `gid` FROM `file_right` WHERE `file_right`.`fid` = '.$fileId.' AND `type` = '.WEB_R_DELETE.';');
 	 			  	        foreach($dbR as $right) {
     		  	        	if(!in_array($right, $delete)) {
-      		  	    	   	$dbObject->execute("DELETE FROM `file_right` WHERE `fid` = ".$fileId." AND `type` = ".WEB_R_DELETE.";", true);
+      		  	    	   	$dbObject->execute("DELETE FROM `file_right` WHERE `fid` = ".$fileId." AND `type` = ".WEB_R_DELETE.";");
         		  		   	}
           			 		} 	
 		        	 		  foreach($delete as $right) {
@@ -608,7 +637,12 @@
    	  			          	$dbObject->execute("INSERT INTO `file_right`(`fid`, `gid`, `type`) VALUES (".$fileId.", ".$right.", ".WEB_R_DELETE.");");
 	 		      		      }
   		        		  }
-	    	      		}
+	    	      		} else {
+										$rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$dirId.' AND `type` = '.WEB_R_DELETE.';');
+										foreach($rights as $right) {
+											$dbObject->execute('INSERT INTO `file_right`(`fid`, `gid`, `type`) VALUES ('.$fileId.', '.$right['gid'].', '.WEB_R_DELETE.');');
+										}
+									}
 	  	          }
   	  	      } else {
         		    $return .= '<h4 class="error">Un-supported file type!</h4>';
@@ -897,18 +931,22 @@
      *  @param    dirId     directory id to show
      *
      */                        
-    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false) {
+    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false) {
       global $webObject;
       global $dbObject;
       $return = "";
     
       if($dirId == false) {
-        if(array_key_exists("dir-id", $_POST)) {
+        if(array_key_exists("dir-id", $_REQUEST)) {
           $dirId = $_REQUEST['dir-id'];
         } else {
-          $message = "DirId isn't set! [file:gallery]";
-          echo "<h4 class=\"error\">".$message."</h4>";
-          trigger_error($message, E_USER_ERROR);
+        	if($defaultDirId != false) {
+						$dirId = $defaultDirId;
+					} else {
+    	      $message = "DirId isn't set! [file:gallery]";
+  	        echo "<h4 class=\"error\">".$message."</h4>";
+	          trigger_error($message, E_USER_ERROR);
+          }
         }
       }
       
@@ -964,12 +1002,12 @@
       	if($lightbox == "true") {
       		$link = ''
        		.'<a href="'.FILE_PAGE_PATH.$image['id'].'-'.$image['name'].'?'.$lsize.'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
-        		.'<img src="'.FILE_PAGE_PATH.$image['id'].'-'.$image['name'].'?'.$size.'" alt="'.$image['title'].'" />'
+        		.'<img src="~/file.php?rid='.$image['id'].'&'.$size.'" alt="'.$image['title'].'" />'
         	.'</a>';
         } else {
         	$link = ''
 					.(($pageId != false) ? '<a href="'.$webObject->composeUrl($pageId, $langId).(($method == "dynamic") ? '/'.$image['id'].'-'.$image['name'] : '?file-id='.$image['id']).'">' : '')
-        		.'<img src="'.FILE_PAGE_PATH.$image['id'].'-'.$image['name'].'?'.$size.'" alt="'.$image['title'].'" />'
+        		.'<img src="~/file.php?rid='.$image['id'].'&'.$size.'" alt="'.$image['title'].'" />'
         	.(($pageId != false) ? '</a>' : '');
 				}
       
@@ -984,7 +1022,7 @@
       }
       
       $return .= ''
-	.'<div class="clear"></div>'
+				.'<div class="clear"></div>'
       .'</div>';
       
       return $return;
@@ -1012,7 +1050,7 @@
         $return .= ''
         .'<div class="gallery-detail">'
           .'<div class="gallery-detail-image">'
-            .'<img src="'.FILE_PAGE_PATH.$image[0]['id'].'-'.$image[0]['name'].'" alt="'.FILE_PAGE_PATH.$image[0]['id'].'-'.$image[0]['name'].'" />'
+            .'<img src="~/file.php?rid='.$image[0]['id'].'" alt="'.(strlen($image[0]['title']) != 0 ? $image[0]['title'] : $image[0]['name']).'" />'
           .'</div>'
           .(($showName == "true") ? '<div class="gallery-name">'.$image[0]['name'].'</div>' : '')
           .(($showTitle == "true") ? '<div class="gallery-title">'.$image[0]['title'].'</div>' : '')

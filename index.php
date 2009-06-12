@@ -38,11 +38,29 @@
 			??	lepsi pouziti web aliasu
 			ok	pro admina vypis logu uzivatelu a moznost jeho smazani.
 			ok	pocitadlo casu do odhlaseni
-			--	styly do Wysiwygu pro webovy projekt -> samostatnou tabulku! -> pripojovat pres samosattny php soubor, ten vybere style podle session selected project
-			!!	Page pos????
+			ok	styly do Wysiwygu pro webovy projekt -> samostatnou tabulku! -> pripojovat pres samosattny php soubor, ten vybere style podle session selected project
+			??	Page pos????
+			ok	priznak cachetime do editace stranky a do urlcache -> cachovat vygenerovane stranky ;) -> vyber z doby ulozeni cache, zkontrolovat reseni v parsePages
+			--	moznost vyrabet vlastni framy pres web:frame
+					- dodelat aby ten reg exp fungoval i pro obsah na vice radku ...
+			!!	odstranovani html znacek ve wysiwygu
+			ok	zobrazit pocet zbyvajicich znaku do max delky stranky
+			ok	spravne ukladani prav kdyz nemam pravo mazat !!!!!!!!!!!!!!!!!!!!!!!!!
+			--	templaty pro menu -> pak bude mozne injektovat treba rady clanku atd .
+			--	vypis obsahu logu (log pro jednotlive projekty zvlast)
+			ok	otestovat web:pair -> na galerii 
+			??	pridavani text filu se stejnym nazvem ... OK??
+			ok	do tempLoadedContent vybirat stranky ve spravnem poradi!
+			ok	BUG v pridavani clanku na papayateam ...
+			--	copy pages -> pouziti SELECT INTO ??
+			ok	deklarace chybovych stranek v editaci projektu
+			--	Knihovna JS, pro js utilitky ... napr. citac body do vyprseni prihlaseni
 	*/
   
   require_once("scripts/php/includes/settings.inc.php");
+  require_once("scripts/php/includes/database.inc.php");
+  require_once("scripts/php/includes/version.inc.php");
+  require_once("scripts/php/includes/extensions.inc.php");
   require_once("scripts/php/libs/DefaultPhp.class.php");
   require_once("scripts/php/libs/DefaultWeb.class.php");
   
@@ -51,7 +69,6 @@
   $phpObject = new DefaultPhp();
   $webObject = new DefaultWeb();
   
-  $webObject->loadPageContent();
-  $webObject->flush();
+  $webObject->processRequest();
 
 ?>

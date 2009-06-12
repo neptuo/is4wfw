@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.36</version>
+  <version>1.43</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -245,6 +245,35 @@
     <comment>
       Přesměruje uživatele na jeho jazykovou verzi, pokud neexistuje použije tu 
       zadanou v default, pageId je id stránky pro přesměrování.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>pair</tagname>
+    <function>makePair</function>
+    <attribute>
+      <attname>property</attname>
+      <attreq>requierd</attreq>
+    </attribute>
+    <attribute>
+      <attname>scope</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Nastaví podle UID PROPERTY v příslušném SCOPE (get, post, session, request).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>time</tagname>
+    <function>showTimestamp</function>
+    <comment>
+      Zobrazí aktuální timestamp.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>version</tagname>
+    <function>getVersion</function>
+    <comment>
+      Zobrazí web framework version.
     </comment>
   </tag>
 </taglib>

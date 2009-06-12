@@ -10,16 +10,22 @@
   /**
    * 
    *  Simple log class.
-   *  It logs passed string to log file in logs/   
+   *  It logs passed string to log file in logs   
    *  Default object.
    *  
    *  @objectname logObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2008-11-24
+   *  @timestamp  2009-06-12
    * 
    */              
   class Log extends BaseTagLib {
+  
+  	private $IsOpen = false;
+  	
+  	private $File = null;
+  	
+  	public static $LogFile = '';
   
     /**
      *
@@ -29,6 +35,12 @@
     public function __construct() {
       parent::setTagLibXml("xml/Log.xml");
     }
+    
+    public function __destruct() {
+			if($this->IsOpen == true) {
+      	fclose($this->File);
+			}
+		}
   
     /**
      *
@@ -39,14 +51,17 @@
      *
      */              
     public function write($msg) {
-      $logFile = "logs/".date("Y-m-d").".log";
-      if(is_file($logFile)) {
-        $file = fopen($logFile, "a");
-      } else {
-        $file = fopen($logFile, "w");
+      global $webObject;echo $webObject;
+    	$this->LogFile = "logs/".$webObject->getProjectId().'-'.date("Y-m-d").".log";
+      if($this->IsOpen == false) {
+	      if(is_file($this->LogFile)) {
+  	      $this->File = fopen($this->LogFile, "a");
+    	  } else {
+      	  $this->File = fopen($this->LogFile, "w");
+      	}
+      	$this->IsOpen = true;
       }
-      fwrite($file, date("H:i:s")."-".$msg."\r\n");
-      fclose($file);
+      fwrite($this->File, date("H:i:s")."\t".$msg."\r\n");
     }
   }
 

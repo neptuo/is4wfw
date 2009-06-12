@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Hotproject Lib</name>
+  <classname>Hotproject</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Třída pro Hotproject.
+  </comment>
+  <tag>
+    <tagname>projectionEdit</tagname>
+    <function>showProjectionEdit</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí výpis projekcí.	
+    </comment>
+  </tag>
+  <tag>
+    <tagname>projectionForm</tagname>
+    <function>showProjectionForm</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showErrors</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Editace projekce.	
+    </comment>
+  </tag>
+  <tag>
+    <tagname>projections</tagname>
+    <function>showProjections</function>
+    <attribute>
+      <attname>templateId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Výpis projekcí.	
+    </comment>
+  </tag>
+  <tag>
+    <tagname>projection</tagname>
+    <function>showProjectionDetail</function>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Výpis časti detailu projekce, type může být (name | subname | value).	
+    </comment>
+  </tag>
+  <tag>
+    <tagname>referenceEdit</tagname>
+    <function>showReferencenEdit</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí výpis referencí.	
+    </comment>
+  </tag>
+  <tag>
+    <tagname>referenceForm</tagname>
+    <function>showReferenceForm</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showErrors</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Editace reference.	
+    </comment>
+  </tag>
+  <tag>
+    <tagname>references</tagname>
+    <function>showReferences</function>
+    <attribute>
+      <attname>templateId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Výpis referencí.	
+    </comment>
+  </tag>
+  <tag>
+    <tagname>reference</tagname>
+    <function>showreferenceDetail</function>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Výpis časti detailu reference, type může být (name | subname | type | type-name).	
+    </comment>
+  </tag>
+</taglib>
+

@@ -17,6 +17,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>editable</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>useFrames</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -96,6 +100,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>defaultDirId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>showSubDirs</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -136,7 +144,7 @@
       <attreq>implied</attreq>
     </attribute>
     <comment>
-      Vrátí všechny obrázky z daného adresáře(přímo v tagu nebo v $_POST['dir-id']). 
+      Vrátí všechny obrázky z daného adresáře(přímo v tagu nebo v $_REQUEST['dir-id']). 
       Odkaz na skutečnou velikost fotky je v pageId, pokud není zadána, zobrazí se jen miniatury.
       Method může nabývat hodnot "static" nebo "dynamic" a určuje způvob předání fileId další stránce,
       pokud je "dynamic", musí mít strana "pageId" zapnutý dynamické překlad adres.

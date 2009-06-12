@@ -4,9 +4,9 @@
   <name>Log lib</name>
   <classname>Log</classname>
   <classpath>php.libs</classpath>
-  <version>1.02</version>
-  <count>1</count>
-  <commnet>
+  <version>1.03</version>
+  <count>*</count>
+  <comment>
     Logovací třída.
   </comment>
   <tag>
@@ -17,8 +17,7 @@
       <attreq>required</attreq>
     </attribute>
     <comment>
-      Zapíše zprávu do log souboru aplikace.
+      Zapíše zprávu do log souboru aplikace.	
     </comment>
   </tag>
 </taglib>
-

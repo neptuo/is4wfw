@@ -1,5 +1,0 @@
-21:05:31-ERROR: [256] Error while composing url! [pageId = 57 ; languageId = 2]! Fatal error on line 481 in file C:\webs\rssmm\wfw-wp\scripts\php\libs\DefaultWeb.class.php.
-21:27:40-ERROR: [256] Error while composing url! [pageId = 56 ; languageId = 3]! Fatal error on line 481 in file C:\webs\rssmm\wfw-wp\scripts\php\libs\DefaultWeb.class.php.
-21:30:14-ERROR: [256] Error while composing url! [pageId = 56 ; languageId = 3]! Fatal error on line 481 in file C:\webs\rssmm\wfw-wp\scripts\php\libs\DefaultWeb.class.php.
-21:34:52-WARNING: [512] Error while composing url! [pageId = 56 ; languageId = 3]. On line 481 in file C:\webs\rssmm\wfw-wp\scripts\php\libs\DefaultWeb.class.php.
-22:26:46-WARNING: [512] Permission denied when reading template id = 12!. On line 887 in file C:\webs\rssmm\wfw-wp\scripts\php\libs\DefaultWeb.class.php.

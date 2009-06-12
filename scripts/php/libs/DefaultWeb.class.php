@@ -16,7 +16,7 @@
    *  @objectname webObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2009-05-13	    
+   *  @timestamp  2009-06-12	    
    *
    */           
   class DefaultWeb extends BaseTagLib {
@@ -127,6 +127,14 @@
     
     private $TempLoadedContent = array();
     
+    private $CacheInfo = array();
+    
+    private $CacheTime = 10000000000;
+    
+    private $ServerName = '';
+    
+    private $Https = '';
+    
     /**
      *
      *  Regular expression for parsing c tag.     
@@ -161,6 +169,8 @@
       self::setTagLibXml("xml/DefaultWeb.xml");
       
       $this->PageTitle = $_SERVER['HTTP_HOST'];
+      $this->ServerName = $_SERVER['SERVER_NAME'];
+      $this->Https = $_SERVER['HTTPS'];
     }
     
     /**
@@ -171,7 +181,7 @@
      *  @return returns success, true if file exists               
      *
      */
-    public function loadPageContent() {
+    public function processRequest() {
       global $phpObject;
       global $dbObject;
       
@@ -183,22 +193,29 @@
         trigger_error($error, E_USER_ERROR);
       }
       
-      $domainUrl = $_SERVER['SERVER_NAME'];
-      $domainProtocol = $_SERVER['SERVER_PROTOCOL'];
-      if(substr($domainProtocol, 0, 5) == "HTTPS") {
+      $domainUrl = $this->ServerName;
+      $domainProtocol = $this->Https;
+      $otherProtocol = '';
+      
+      if($domainProtocol == "on") {
 				$domainProtocol = "https";
+      	$otherProtocol = "http";
 			} else {
 				$domainProtocol = "http";
+      	$otherProtocol = "https";
 			}
 			$this->Protocol = $domainProtocol;
       
-      $dbProject = $dbObject->fetchAll('SELECT `id` FROM `web_project` WHERE `url` = "'.$domainUrl.'" AND `'.$domainProtocol.'` = 1;');
-      if(count($dbProject) != 0) {
+      $dbProject = $dbObject->fetchAll('SELECT `id`, `http`, `https` FROM `web_project` WHERE `url` = "'.$domainUrl.'";');
+      if(count($dbProject) != 0 && $dbProject[0][$domainProtocol] == 1) {
       	$this->ProjectId = $dbProject[0]['id'];
       } else {
-				$dbProject = $dbObject->fetchAll('SELECT `project_id` FROM `web_alias` WHERE `url` = "'.$domainUrl.'" AND `'.$domainProtocol.'` = 1;');
-				if(count($dbProject) != 0) {
-      		$this->ProjectId = $dbProject[0]['project_id'];
+				$dbProjectA = $dbObject->fetchAll('SELECT `project_id`, `http`, `https` FROM `web_alias` WHERE `url` = "'.$domainUrl.'";');
+				if(count($dbProjectA) != 0 && $dbProjectA[0][$domainProtocol] == 1) {
+      		$this->ProjectId = $dbProjectA[0]['project_id'];
+      	} elseif($dbProject[0][$otherProtocol] == 1 || $dbProjectA[0][$otherProtocol] == 1) {
+      		header('Location: '.$otherProtocol.'://'.$domainUrl.'/'.$this->Path);
+      		exit;
       	} else {
 					header("HTTP/1.1 404 Not Found");
   	      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
@@ -215,15 +232,21 @@
         $return = $dbObject->fetchAll("SELECT `id` FROM `language` WHERE `language` = \"\";");
         if(count($return) == 1) {
           $this->LanguageId = $return[0]['id'];
-          $this->Path = $path[0]."/".$path[1];
+          if($path[1] != '') {
+          	$this->Path = $path[0]."/".$path[1];
+          } else {
+						$this->Path = $path[0];
+					}
         } else {
+        	// try to load setuped error page, else display "default"!
+        
           $error = "Sorry, but this language version doesn't exists!";
           echo "<h4 clas=\"error\">".$error."</h4>";
           trigger_error($error, E_USER_ERROR);
         }
       }
       
-      $ucache = $dbObject->fetchAll('SELECT `page-ids` FROM `urlcache` WHERE `url` = "'.$this->Path.'" AND `language_id` = '.$this->LanguageId.' AND `wp` = '.$this->ProjectId.';');
+      $ucache = $dbObject->fetchAll('SELECT `id`, `page-ids`, `cachetime`, `lastcache` FROM `urlcache` WHERE `url` = "'.$this->Path.'" AND `language_id` = '.$this->LanguageId.' AND `wp` = '.$this->ProjectId.';');
       if(count($ucache) == 0) {
       	self::parsePages($this->Path, 0);
       	
@@ -234,10 +257,18 @@
 						$pcache .= '-';
 					}
 				}
-				$dbObject->execute('INSERT INTO `urlcache` (`url`, `page-ids`, `language_id`, `wp`) VALUES ("'.$this->Path.'", "'.$pcache.'", '.$this->LanguageId.', '.$this->ProjectId.');');
+				$dbObject->execute('INSERT INTO `urlcache` (`url`, `page-ids`, `language_id`, `wp`, `lastcache`, `cachetime`) VALUES ("'.$this->Path.'", "'.$pcache.'", '.$this->LanguageId.', '.$this->ProjectId.', 0, '.$this->CacheTime.');');
       } else {
-				$pages = $ucache[0]['page-ids'];
-				$this->PagesId = $phpObject->str_tr($pages, '-');
+      	$this->CacheInfo['id'] = $ucache[0]['id'];
+      	$this->CacheInfo['cachetime'] = $ucache[0]['cachetime'];
+      	$this->CacheInfo['lastcache'] = $ucache[0]['lastcache'];
+      	$this->CacheInfo['path'] = "cache/pages/page-".$ucache[0]['page-ids'].".cache.html";
+      	if($ucache[0]['cachetime'] != -1 && ($ucache[0]['cachetime'] == 0 || $ucache[0]['lastcache'] > time()) && is_file($this->CacheInfo['path'])) {
+					self::tryToComprimeContent(file_get_contents($this->CacheInfo['path']));
+				} else {
+					$pages = $ucache[0]['page-ids'];
+					$this->PagesId = $phpObject->str_tr($pages, '-');
+				}
 			}
 			
 			$str = '';
@@ -269,15 +300,29 @@
 				}
 			}
 			
-			$this->TempLoadedContent = $dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `tag_lib_start`, `tag_lib_end`, `head`, `content` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`id` IN (".$str.") AND `page`.`wp` = ".$this->ProjectId.";");
+			$this->TempLoadedContent = self::sortPages($dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `tag_lib_start`, `tag_lib_end`, `head`, `content` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`id` IN (".$str.") AND `page`.`wp` = ".$this->ProjectId.";"), $this->PagesId);
 			if(count($this->TempLoadedContent) == count($this->PagesId)) {
       	$this->PageContent = self::getContent();
       } else {
-      	header("HTTP/1.1 404 Not Found");
-        echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-        exit;
+      	self::generateErrorPage($this->ProjectId, 404);
 			}
+			
+			self::flush();
     }
+    
+    public function sortPages($pages, $order) {
+			$return = array();
+			for($i = 0; $i < count($order); $i ++) {
+				foreach($pages as $pg) {
+					if($pg['id'] == $order[$i]) {
+						$return[$i] = $pg;
+						break;
+					}
+				}
+			}
+			
+			return $return;
+		}
     
     /**
      *
@@ -294,19 +339,42 @@
       global $loginObject;
       
       $path = $phpObject->str_tr($path, '/', 1);
-      $return = $dbObject->fetchAll("SELECT `info`.`page_id`, `info`.`href`, `content`.`tag_lib_start`, `content`.`tag_lib_end` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `content` ON `info`.`page_id` = `content`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `page`.`parent_id` = ".$parentId." AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`wp` = ".$this->ProjectId." ORDER BY `info`.`href` DESC;");
+      $return = $dbObject->fetchAll("SELECT `info`.`page_id`, `info`.`href` , `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `content` ON `info`.`page_id` = `content`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `page`.`parent_id` = ".$parentId." AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`wp` = ".$this->ProjectId." ORDER BY `info`.`href` DESC;");
       
       $this->CurrentDynamicPath = $path[0];
       $this->ParsingPages = true;
       if(count($return) == 0 && ($path[0] != "" || $path[1] != "")) {
-        header("HTTP/1.1 404 Not Found");
-        echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-        exit;
+        //header("HTTP/1.1 404 Not Found");
+        //echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+        //exit;
+        
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+
+        if($_REQUEST['temp-stop'] != 'stop') {
+        	//echo 'Generate err page!';
+        	$_REQUEST['temp-stop'] = 'stop';
+        	self::generateErrorPage($this->ProjectId, 404);
+        } else {
+					echo 'Bad!';exit;
+				}
+				
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------
+				
       } elseif(count($return) == 0 && $path[0] == "" && $path[1] == "") {
       	if(count($this->PagesId) == 0) {
-					header("HTTP/1.1 404 Not Found");
-  	      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-	        exit;
+					self::generateErrorPage($this->ProjectId, 404);
 				} else {
         	return;
         }
@@ -318,6 +386,15 @@
           	preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_start']);
         	  
       	    $this->PagesId[] = $return[$i]['page_id'];
+      	    // Otestovat!!!!!!!!!
+   	  	    if($this->CacheTime != -1 && ($return[$i]['cachetime'] < $this->CacheTime || $this->CacheTime == 0)) {
+   	  	    	if($return[$i]['cachetime'] != 0) {
+								$this->CacheTime = $return[$i]['cachetime'];
+							} elseif($this->CacheTime == 10000000000) {
+								$this->CacheTime = $return[$i]['cachetime'];
+							}
+						}
+      	    
     	      self::parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0].'/'.$path[1], $return[$i]['page_id']);
   	        
 	          preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_end']);
@@ -333,6 +410,15 @@
           	preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_start']);
         	  
       	    $this->PagesId[] = $return[$i]['page_id'];
+      	    // Otestovat!!!!!!!!!
+   	  	    if($this->CacheTime != -1 && ($return[$i]['cachetime'] < $this->CacheTime || $this->CacheTime == 0)) {
+   	  	    	if($return[$i]['cachetime'] != 0) {
+								$this->CacheTime = $return[$i]['cachetime'];
+							} elseif($this->CacheTime == 10000000000) {
+								$this->CacheTime = $return[$i]['cachetime'];
+							}
+						}
+						
     	      self::parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0].'/'.$path[1], $return[$i]['page_id']);
   	        
 	          preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_end']);
@@ -342,9 +428,7 @@
   	      }
 	      }
 	      
-	    	header("HTTP/1.1 404 Not Found");
-        echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-        exit;
+	    	self::generateErrorPage($this->ProjectId, 404);
       }
     }
     
@@ -410,9 +494,7 @@
       foreach($this->PagesId as $page) {
         $rights = $dbObject->fetchAll("SELECT `group`.`name` FROM `group` LEFT JOIN `page_right` ON `group`.`gid` = `page_right`.`gid` WHERE `page_right`.`pid` = ".$page." AND `type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString()."));");
         if(count($rights) == 0) {
-        	header("HTTP/1.1 403 Forbidden");
-          echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
-          exit;
+        	self::generateErrorPage($this->ProjectId, 403);
         }
       }
       
@@ -450,11 +532,40 @@
       
       $return = preg_replace_callback('(&web:page=([0-9]+))', array( &$this,'parseproperties'), $return);
       
-      //echo $return;
+      $return = preg_replace_callback('(<web:frame( title="([a-zA-Z0-9]*)")*( open="([a-z]*)")*>(.*)</web:frame>)', array( &$this,'parsepostframes'), $return);
+      
+      //echo $return; 
       //echo $this->PageContent;
       //return;
       
-      $acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
+      if($this->CacheInfo['cachetime'] != -1) {
+      	$dbObject->execute('UPDATE `urlcache` SET `lastcache` = '.(time() + $this->CacheInfo['cachetime']).' WHERE `id` = '.$this->CacheInfo['id'].';');
+				file_put_contents($this->CacheInfo['path'], $return);
+			}
+      
+      self::tryToComprimeContent($return);
+    }
+    
+    private function parseproperties($values) {
+    	$path = self::composeUrl($values[1], $this->LanguageId);
+			return $path;
+		}
+		
+		private function parsepostframes($values) {
+			$open = false;
+			if($values[4] == "true") {
+				$open = true;
+			}
+			
+			$title = ((strlen($values[2]) == 0) ? ' ' : $values[2]);
+			$content = $values[count($values) - 1];
+			
+			$path = parent::getFrame($title, $content, "", $open);
+			return $path;
+		}
+		
+		private function tryToComprimeContent($content) {
+			$acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
     	if(headers_sent()) {
         $encoding = false;
     	} elseif(strpos($acceptEnc, 'x-gzip') !== false) {
@@ -464,6 +575,8 @@
 	    } else {
         $encoding = false;
     	}
+    	
+    	$return = $content;
 
   	  if($encoding) {
         header('Content-Encoding: '.$encoding);
@@ -477,11 +590,6 @@
 	    	echo $return;
   	    exit();
 	    }
-    }
-    
-    private function parseproperties($values) {
-    	$path = self::composeUrl($values[1], $this->LanguageId);
-			return $path;
 		}
     
     /**
@@ -524,7 +632,7 @@
         
         $project = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`url`, `web_project`.`http`, `web_project`.`https` FROM `web_project` LEFT JOIN `page` ON `web_project`.`id` = `page`.`wp` WHERE `page`.`id` = '.$lastPageId.';');
         if(count($project) != 0) {
-        	if($project[0]['id'] == $this->ProjectId && !$absolutePath) {
+        	if(($project[0]['id'] == $this->ProjectId && !$absolutePath) || $absolutePath == 'no') {
         		return $tmpPath;
         	} else {
 						if($this->Protocol == 'http' && $project[0]['http'] == 1) {
@@ -622,7 +730,7 @@
         $this->PageTitle = $return['name']." - ".$this->PageTitle;
       }
       $this->PageHead .= $return['head'];
-      $this->Keywords .= $return['keywords'];
+      $this->Keywords .= ((strlen($return['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ','.$return['keywords'] : $return['keywords']) : '');
       
       $allHeaders = getallheaders();
 			$userBrowser = $allHeaders['User-Agent'];
@@ -1116,6 +1224,33 @@
 		
 		/**
 		 *
+		 *	Pair UID with property and set it in scope.
+		 *	C tag.
+		 *	
+		 *	@param		property					property name to pair
+		 *	@param		scope							scope to set property un		 		 		 		 
+		 *
+		 */		 		 		 		
+		public function makePair($property, $scope) {
+			global $dbObject;
+			global $loginObject;
+			
+			$props = $dbObject->fetchAll('SELECT `property_value` FROM `pair_uid_property` WHERE `uid` = '.$loginObject->getUserId().' AND `property_name` = "'.$property.'";');
+			if(count($props) != 0) {
+				$value = $props[0]['property_value'];
+				switch($scope) {
+					case 'get': $_GET[$property] = $value; break;
+					case 'post': $_POST[$property] = $value; break;
+					case 'request': $_REQUEST[$property] = $value; break;
+					case 'session': $_SESSION[$property] = $value; break;
+				}
+			}
+		
+			return;
+		}
+		
+		/**
+		 *
 		 *	Returns current page title.
 		 *	
 		 *	@return		page title		 		 
@@ -1127,13 +1262,24 @@
 		
 		/**
 		 *
-		 *	Returns http host name/
+		 *	Returns http host name
 		 *	
 		 *	@return		http host		 		 
 		 *
 		 */		 		 		 		
 		public function getHttpHost() {
 			return $_SERVER['HTTP_HOST'];
+		}
+		
+		/**
+		 *
+		 *	Return current project id.
+		 *	
+		 *	@return		project id		 		 		 
+		 *
+		 */		 		 		 		
+		public function getProjectId() {
+			return $this->ProjectId;
 		}
 		
 		/**
@@ -1145,6 +1291,87 @@
 		 */		 		 		
 		public function getCurrentRequestPath() {
 			return $_SERVER['HTTP_HOST'].'/'.$_REQUEST['WEB_PAGE_PATH'];
+		}
+		
+		/**
+		 *
+		 *	Current time stamp.		 
+		 *	C tag.
+		 *
+		 */		 		 		 		
+		public function showTimestamp() {
+			return time();
+		}
+		
+		/**
+		 *
+		 *	Returns web framewrok version.
+		 *	C tag.		 
+		 *
+		 */
+		public function getVersion() {
+			return WEB_VERSION;
+		}		 		 		 		
+		
+		/**
+		 *
+		 *	Try to find setuped error page or display default.
+		 *		 
+		 *	@param		projectId				project id
+		 *	@param		errorCode				error code, 403, 404, ... , all		 		 
+		 *
+		 */		 		 		 		
+		private function generateErrorPage($projectId, $errorCode) {
+			global $loginObject;
+			global $dbObject;
+			
+			$info = $dbObject->fetchAll('SELECT `url`, `http`, `https`, `error_all_pid`, `error_404_pid`, `error_403_pid` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) AND `id` = '.$projectId.';');
+			if(count($info) == 1) {
+				switch($errorCode) {
+					case 404: $pid = $info[0]['error_404_pid']; header("HTTP/1.1 404 Not Found"); break;
+					case 403: $pid = $info[0]['error_403_pid']; header("HTTP/1.1 403 Forbidden"); break;
+					case 'all': $pid = $info[0]['error_all_pid']; break;
+				}
+			}
+			
+			if($pid != 0) {
+				$wp = $dbObject->fetchAll('SELECT `url` FROM `web_project` LEFT JOIN `page` ON `web_project`.`id` = `page`.`wp` WHERE `page`.`id` = '.$pid.';');
+				$url = self::composeUrl($pid, false, 'no');
+				$_GET['WEB_PAGE_PATH'] = $url;
+				$this->ServerName = $wp[0]['url'];
+				if($_SERVER['HTTPS'] == 'on' && $info[0]['https'] == 1) { 
+					$this->Https = 'on';
+				} elseif($info[0]['http'] == 1) {
+					$this->Https = '';
+				} else {
+					if($errorCode == 404) {
+						header("HTTP/1.1 404 Not Found");
+  		      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+		        exit;
+					} elseif($errorCode == 403) {
+						header("HTTP/1.1 403 Forbidden");
+  	        echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
+	          exit;
+					} else {
+	  	      echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
+		        exit;			
+					}
+				}
+				self::processRequest();
+			} else {
+				if($errorCode == 404) {
+					header("HTTP/1.1 404 Not Found");
+ 		      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+	        exit;
+				} elseif($errorCode == 403) {
+					header("HTTP/1.1 403 Forbidden");
+ 	        echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
+          exit;
+				} else {
+  	      echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
+	        exit;			
+				}
+			}
 		}
   }
 
