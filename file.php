@@ -67,7 +67,7 @@
       
     if(count($file) == 1) {
 			$filePath = $_SERVER['DOCUMENT_ROOT'].$flObject->getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".$flObject->FileEx[$file[0]['type']];
-			echo $filePath;
+			//echo $filePath;
       $updTime = filemtime($filePath);
       
       // Try cached file ...  
