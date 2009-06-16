@@ -28,14 +28,14 @@
      *  Regular expression for parsing custom tag.     
      *
      */              
-    private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;/?-]+ *[a-zA-Z0-9\.\*`_;/?-]*)*" )*)\/>)';
+    private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.\*`_;:/?-]*)*" )*)\/>)';
     
     /**
      *
      *  Regular expression for parsing attribute.
      *
      */                   
-    private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;/?-]+ *[a-zA-Z0-9\.\*`_;/?-]*)*")';
+    private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.\*`_;:/?-]*)*")';
     
     /**
      *

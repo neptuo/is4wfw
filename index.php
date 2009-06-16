@@ -55,6 +55,7 @@
 			--	copy pages -> pouziti SELECT INTO ??
 			ok	deklarace chybovych stranek v editaci projektu
 			--	Knihovna JS, pro js utilitky ... napr. citac body do vyprseni prihlaseni
+			--	tag posledni update stranky, web:lastUpdate
 	*/
   
   require_once("scripts/php/includes/settings.inc.php");
