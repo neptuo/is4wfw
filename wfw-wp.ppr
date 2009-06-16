@@ -487,10 +487,9 @@ wfw-wp
 9=scripts\php\libs\Article.class.php
 10=scripts\php\libs\xml\Article.xml
 11=file.php
-12=scripts\php\classes\CustomTagParser.class.php
 [Selected Project Files]
 Main=index.php
-Selected=scripts\php\classes\CustomTagParser.class.php
+Selected=scripts\php\includes\version.inc.php
 [index.php]
 TopLine=22
 Caret=50,58
@@ -527,6 +526,3 @@ Caret=1,1
 [file.php]
 TopLine=44
 Caret=36,59
-[scripts\php\classes\CustomTagParser.class.php]
-TopLine=1
-Caret=60,38
