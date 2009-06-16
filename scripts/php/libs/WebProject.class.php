@@ -13,7 +13,7 @@
    * 	management of web projects	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-05-03
+   *  @timestamp  2009-06-16
    * 
    */  
   class WebProject extends BaseTagLib {
@@ -132,6 +132,7 @@
 						.'<th class="th-id">Id:</th>'
 						.'<th class="th-name">Name:</th>'
 						.'<th class="th-url">Url:</th>'
+						.'<th class="th-url">View:</th>'
 						.'<th class="th-protocol">Protocol:</th>'
 						.(($editable == "true") ? ''
 						.'<th class="th-edit">Edit:</th>'
@@ -160,6 +161,7 @@
 							.'<td class="td-id">'.$project['id'].'</td>'
 							.'<td class="td-name">'.$project['name'].'</td>'
 							.'<td class="td-url">'.$project['url'].'</td>'
+							.'<td class="td-url">'.(($project['http'] == 1 || $project['https'] == 1) ? '<a target="_blank" href="'.(($project['http'] == 1) ? 'http://' : 'https://').$project['url'].'">view</a>' : '').'</td>'
 							.'<td class="td-protocol">'
 								.(($project['http'] == 1) ? 'http ' : '')
 								.(($project['https'] == 1) ? 'https ' : '')
