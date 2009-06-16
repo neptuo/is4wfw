@@ -15,7 +15,7 @@ wfw-wp
 			-images
 			-pages
 		-data
-			-create
+			+create
 				data\create\article.php
 				data\create\article_content.php
 				data\create\article_line.php
@@ -73,11 +73,11 @@ wfw-wp
 		-logs
 			logs\2009-04-30.log
 		+scripts
-			+css
+			-css
 				scripts\css\cms.css
 				scripts\css\editor.css
 				scripts\js\domready.js
-			+js
+			-js
 				scripts\js\Closer.js
 				scripts\js\Confirm.js
 				scripts\js\Editor.js
@@ -86,8 +86,9 @@ wfw-wp
 				scripts\js\initTiny.js
 				scripts\js\CountDown.js
 			+php
-				-classes
-				+includes
+				+classes
+					scripts\php\classes\CustomTagParser.class.php
+				-includes
 					scripts\php\includes\settings.inc.php
 					scripts\php\includes\version.inc.php
 					scripts\php\includes\extensions.inc.php
@@ -486,22 +487,22 @@ wfw-wp
 9=scripts\php\libs\Article.class.php
 10=scripts\php\libs\xml\Article.xml
 11=file.php
-12=scripts\php\includes\settings.inc.php
+12=scripts\php\classes\CustomTagParser.class.php
 [Selected Project Files]
 Main=index.php
-Selected=scripts\php\includes\settings.inc.php
+Selected=scripts\php\classes\CustomTagParser.class.php
 [index.php]
 TopLine=22
-Caret=3,60
+Caret=50,58
 [scripts\css\cms.css]
 TopLine=410
 Caret=20,447
 [scripts\php\includes\version.inc.php]
 TopLine=1
-Caret=1,11
+Caret=34,8
 [scripts\php\libs\DefaultWeb.class.php]
-TopLine=1292
-Caret=11,1313
+TopLine=123
+Caret=29,19
 [scripts\php\libs\xml\DefaultWeb.xml]
 TopLine=1
 Caret=16,7
@@ -524,8 +525,8 @@ Caret=29,15
 TopLine=1
 Caret=1,1
 [file.php]
-TopLine=56
-Caret=19,69
-[scripts\php\includes\settings.inc.php]
+TopLine=44
+Caret=36,59
+[scripts\php\classes\CustomTagParser.class.php]
 TopLine=1
-Caret=31,20
+Caret=60,38

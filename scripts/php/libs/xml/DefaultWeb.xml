@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.43</version>
+  <version>1.44</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -185,17 +185,6 @@
     </attribute>
     <comment>
       Přesměruje užívatele na externí odkaz.
-    </comment>
-  </tag>
-  <tag>
-    <tagname>redirect</tagname>
-    <function>redirect</function>
-    <attribute>
-      <attname>path</attname>
-      <attreq>implied</attreq>
-    </attribute>
-    <comment>
-      Přesměruje uživatele na danou adresu. 
     </comment>
   </tag>
   <tag>
