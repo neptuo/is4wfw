@@ -9,12 +9,36 @@ form {
   display: inline;
 }
 
+input, select {
+	border: 2px solid #cccccc;
+}
+
+input.input-focused, select.input-focused {
+	border: 2px solid #04601C;
+}
+
+input[type=image] {
+	border: none !important;
+}
+
+input.confirm {
+	color: red;
+}
+
 textarea {
   width: 100%;
 }
 
 input[type=image] {
 	margin-bottom: -4px;
+}
+
+.add-rem-text-files-submit {
+	margin-top: 10px;
+}
+
+.break {
+	height: 10px;
 }
 
 .show-lines table input[type=image], .group-list table input[type=image], .user-log-list input[type=image], .languages-edit input[type=image], .show-projects input[type=image], .page-file-list input[type=image], .template-list input[type=image], .dir-list input[type=image] {
@@ -98,7 +122,7 @@ table.pages-table {
   border-collapse: collapse;
 }
 
-.show-lines table td, .group-list table td, .user-log-list td, .languages-edit td, .show-projects td, .user-list-table td, .dir-list td, .hp-projection-edit td, .references-edit td {
+.show-lines table td, .group-list table td, .user-log-list td, .languages-edit td, .show-projects td, .user-list-table td, .dir-list td, .hp-projection-edit td, .references-edit td, .url-cache-table td {
 	padding: 2px 10px;
   border-bottom: 1px solid #cccccc;
 }
@@ -172,6 +196,10 @@ div.login-in {
   /*background: url('/images/cms/login/login-body.png') no-repeat left bottom;*/
 }
 
+p.login-submit input[type=checkbox] {
+	margin-left: 10px;
+}
+
 div.login-form {
   margin: 0 10px;
   padding: 0 5px;
@@ -183,6 +211,10 @@ div.login-form form {
 
 div.login-form {
 	color: white;
+}
+
+div.login-form input.input-focused {
+	border-color: #CFBE0C;
 }
 
 div.login-form .login-head {
@@ -673,10 +705,30 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   width: 116px;
 }
 
-.edit-prop div, .project-prop div, .article-line-edit-name, .article-line-edit-submit, .move-branch, .up-file-name, .up-file-title, .up-file-rs, .up-file-submit, .directory-submit, .move-copy-branch, .new-group-name, .new-group-parent, .update-keywords, .clear-url-cache, .add-new-language, .user-log-truncate, .hp-projection-form div, .hp-reference-form div, .project-edit-error-all, .project-edit-error-404, .project-edit-error-403 {
+.edit-prop div, .project-prop div, .article-line-edit-name, .article-line-edit-submit, .move-branch, .up-file-name, 
+.up-file-title, .up-file-rs, .up-file-submit, .directory-submit, .move-copy-branch, .new-group-name, .new-group-parent, 
+.update-keywords, .add-new-language, .user-log-truncate, .hp-projection-form div, .hp-reference-form div, .project-edit-error-all, 
+.clear-url-cache .part-of-url, .clear-url-cache .page-id, .clear-url-cache .submit,  
+.project-edit-error-404, .project-edit-error-403 {
   padding: 6px 8px;
   margin: 2px;
   background: #eeeeee;
+}
+
+.clear-url-cache input[type=submit] {
+	margin: 0 5px;
+}
+
+.clear-url-cache .part-of-url, .clear-url-cache .page-id {
+	float: left;
+}
+
+.clear-url-cache .part-of-url input {
+	width: 400px;
+}
+
+.clear-url-cache .page-id input {
+	width: 37px;
 }
 
 .move-branch select {
@@ -712,11 +764,11 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   background: #eeeeee;
 }
 
-.languages-edit, .show-projects, .references-edit table {
+.languages-edit, .show-projects, .references-edit table, .url-cache-table {
 	border-collapse: collapse;
 }
 
-.languages-edit th, .show-projects th {
+.languages-edit th, .show-projects th, .url-cache-table th {
 	padding: 2px 10px;
 	background: #CCCCCC none repeat scroll 0 0;
 	border-bottom: 1px solid black;

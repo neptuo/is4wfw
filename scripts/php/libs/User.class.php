@@ -12,7 +12,7 @@
    *  user management class.
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-05-16
+   *  @timestamp  2009-06-18
    *
    */              
   class User extends BaseTagLib {
@@ -173,7 +173,7 @@
             .'<form name="user-list-edit2" method="post" action="">'
               .'<input type="hidden" name="user-list-uid" value="'.$user['this_uid'].'" />'
               .'<input type="hidden" name="user-list-delete" value="Delete" />'
-              .'<input class="confirm" type="image" src="~/images/page_del.png" name="user-list-delete" value="Delete" title="Delete user" />'
+              .'<input class="confirm" type="image" src="~/images/page_del.png" name="user-list-delete" value="Delete" title="Delete user, id('.$user['this_uid'].')" />'
             .'</form>'
           .'</td>'
         .'</tr>';
@@ -422,7 +422,7 @@
 								.'<form name="group-delete" method="post" action="">'
 									.'<input type="hidden" name="group-id" value="'.$group['gid'].'" />'
 									.'<input type="hidden" name="delete-group" value="Delete group" />'
-									.'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-group" value="Delete group" title="Delete group" />'
+									.'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-group" value="Delete group" title="Delete group, id('.$group['gid'].')" />'
 								.'</form>'
 							: '')
 							.'</td>'
@@ -490,7 +490,7 @@
 						.'<td class="user-log-name">'.$log['name'].'</td>'
 						.'<td class="user-log-surname">'.$log['surname'].'</td>'
 						.'<td class="user-log-login">'.$log['login'].'</td>'
-						.'<td class="user-log-logon">'.date('H:i:s d:m:Y', $log['login_timestamp']).'</td>'
+						.'<td class="user-log-logon">'.date('H:i:s d.m.Y', $log['login_timestamp']).'</td>'
 						.'<td class="user-log-logout">'.(($log['session_id'] != $loginObject->getSessionId()) ? (($log['logout_timestamp'] != 0) ? date('H:i:s d:m:Y', $log['logout_timestamp']) : 'No logout time') : 'Current session').'</td>'
 						.'<td class="user-log-login">'.$log['used_group'].'</td>'
 					.'</tr>';

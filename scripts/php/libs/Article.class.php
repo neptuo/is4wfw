@@ -12,7 +12,7 @@
    *  Article class
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-06-11
+   *  @timestamp  2009-06-18
    * 
    */  
   class Article extends BaseTagLib {
@@ -429,7 +429,7 @@
                 .'<input type="hidden" name="article-id" value="'.$article['id'].'" />'
                 .'<input type="hidden" name="line-id" value="'.$lineId.'" />'
                 .'<input type="hidden" name="article-delete" value="Delete Article" />'
-                .'<input type="image" src="~/images/page_del.png" class="confirm" name="article-delete" value="Delete Article" title="Delete Article" >'
+                .'<input type="image" src="~/images/page_del.png" class="confirm" name="article-delete" value="Delete Article" title="Delete Article, id('.$article['id'].')" >'
               .'</form>'
               .'</td>'
               : '')
@@ -456,7 +456,7 @@
                 .'<input type="hidden" name="language-id" value="'.$info['lang_id'].'" />'
                 .'<input type="hidden" name="line-id" value="'.$lineId.'" />'
                 .'<input type="hidden" name="article-delete-lang" value="Delete Lang" />'
-                .'<input type="image" src="~/images/lang_del.png" class="confirm" name="article-delete-lang" value="Delete Lang" title="Delete Article Language Version" />'
+                .'<input type="image" src="~/images/lang_del.png" class="confirm" name="article-delete-lang" value="Delete Lang" title="Delete Article Language Version, id('.$article['id'].')" />'
               .'</form>'
               .'</td>'
             .'</tr>';
@@ -706,7 +706,7 @@
                 .'<form name="article-line-delete" method="post" action="">'
                   .'<input type="hidden" name="delete-line-id" value="'.$line['id'].'" />'
                   .'<input type="hidden" name="article-line-delete" value="Delete" />'
-                  .'<input class="confirm" type="image" src="~/images/page_del.png" name="article-line-delete" value="Delete" title="Delete Article line!" />'
+                  .'<input class="confirm" type="image" src="~/images/page_del.png" name="article-line-delete" value="Delete" title="Delete Article line, id('.$line['id'].')" />'
                 .'</form>'
                 : '')
               .'</td>'

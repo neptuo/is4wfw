@@ -1,5 +1,9 @@
-// JavaScript Document
-
+/**
+ *
+ *  @author  Marek Fišera marek.fisera@email.cz
+ *  @date    2009/06/18
+ *
+ */
 function FileName(inputFile, inputText) {
   if(inputFile.type != "file") {
     alert("Passed object isn't input[type=file]!");

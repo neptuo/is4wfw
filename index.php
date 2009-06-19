@@ -27,7 +27,7 @@
 			ok	pro article template rozdelit datum a cas
 			ok	v template parsovat c-tagy (nepouzivat zadne "tpl:", ale skutecne tagy)
 			??	presmerovani po loginu (napuvodni adresu)
-			--	web:pair
+			ok	web:pair
 			ok	zaskrtavatko do user mgmt Enable/Disable
 			??	otevreni/zavreni framu pomoci cookies JS + Server Side
 			ok	k Move To jeste Copy To
@@ -55,7 +55,12 @@
 			--	copy pages -> pouziti SELECT INTO ??
 			ok	deklarace chybovych stranek v editaci projektu
 			--	Knihovna JS, pro js utilitky ... napr. citac body do vyprseni prihlaseni
-			--	tag posledni update stranky, web:lastUpdate
+			ok	tag posledni update stranky, web:lastPageUpdate
+			ok	copy right years - neco jako 2000 - 2009
+			??	"counter manager" -> implementovat pouze rucne ..
+			ok	zajistit "smazani" cachovaneho soubory pri clear url cache & cachovani stranky (nebo pri vytvoreni nove urlcache vytvaret take novy cache soubor, VZDY!)
+			--	web:currentUrl -> vrati aktualni adresu ;)
+			ok	slozkovani v PHP LIBS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	*/
   
   require_once("scripts/php/includes/settings.inc.php");

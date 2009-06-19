@@ -5,7 +5,7 @@
    *  Require base tag lib class.
    *
    */
-  require_once("BaseTagLib.class.php");
+  //require_once("BaseTagLib.class.php");
   
   /**
    * 
@@ -13,7 +13,7 @@
    * 	hp dynamics
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-05-20
+   *  @timestamp  2009-06-18
    * 
    */  
   class Hotproject extends BaseTagLib {
@@ -33,6 +33,10 @@
     public function showProjectionEdit($useFrames = false) {
 			global $dbObject;
 			$return = '';
+			
+			if($_POST['hp-projection-delete'] == "Delete projection") {
+				$dbObject->execute('DELETE FROM `w_projection` WHERE `id` = '.$_POST['hp-projection-id'].';');
+			}
 			
 			$return .= ''
 			.'<div class="hp-projection-edit">'
@@ -64,7 +68,7 @@
 						.'<form name="hp-projection-delete" method="post" action=""> '
 							.'<input type="hidden" name="hp-projection-id" value="'.$pr['id'].'" />'
 							.'<input type="hidden" name="hp-projection-delete" value="Delete projection" />'
-							.'<input type="image" src="~/images/page_del.png" name="hp-projection-delete" value="Delete projection" title="Delete projection" />'
+							.'<input class="confirm" type="image" src="~/images/page_del.png" name="hp-projection-delete" value="Delete projection" title="Delete projection, id('.$pr['id'].')" />'
 						.'</form>'
 					.'</td>'
 				.'</tr>';
@@ -246,6 +250,10 @@
 			global $dbObject;
 			$return = '';
 			
+			if($_POST['hp-reference-delete'] == "Delete reference") {
+				$dbObject->execute('DELETE FROM `w_reference` WHERE `id` = '.$_POST['hp-reference-id'].';');
+			}
+			
 			$references = $dbObject->fetchAll('SELECT `id`, `name`, `subname`, `type`, `visible` FROM `w_reference` ORDER BY `position`;');
 			if(count($references) > 0) {
 				$typeNames = array(0 => "Významní investoři", 1 => "Významné akce");
@@ -278,7 +286,7 @@
 							.'<form name="reference-edit-2" method="post" action="">'
 								.'<input type="hidden" name="hp-reference-id" value="'.$ref['id'].'" />'
 								.'<input type="hidden" name="hp-reference-delete" value="Delete reference" />'
-								.'<input type="image" src="~/images/page_del.png" name="hp-reference-delete" value="Delete reference" title="Delete reference" />'
+								.'<input class="confirm" type="image" src="~/images/page_del.png" name="hp-reference-delete" value="Delete reference" title="Delete reference, id('.$ref['id'].')" />'
 							.'</form>'
 						.'</td>'
 					.'</tr>';

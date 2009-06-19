@@ -16,7 +16,7 @@
    *  @objectname webObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2009-06-16	    
+   *  @timestamp  2009-06-19	    
    *
    */           
   class DefaultWeb extends BaseTagLib {
@@ -153,6 +153,8 @@
     private $PagesIdIndex = 0;
     private $ParsingPages = false;
     
+    private $CurrentPageTimestamp = 0;
+    
     /**
      *
      *	Keywords.
@@ -258,6 +260,10 @@
 					}
 				}
 				$dbObject->execute('INSERT INTO `urlcache` (`url`, `page-ids`, `language_id`, `wp`, `lastcache`, `cachetime`) VALUES ("'.$this->Path.'", "'.$pcache.'", '.$this->LanguageId.', '.$this->ProjectId.', 0, '.$this->CacheTime.');');
+				$oldCacheFile = "cache/pages/page-".$ucache[0]['page-ids'].".cache.html";
+				if(is_file($oldCacheFile)) {
+					unlink($oldCacheFile);
+				}
       } else {
       	$this->CacheInfo['id'] = $ucache[0]['id'];
       	$this->CacheInfo['cachetime'] = $ucache[0]['cachetime'];
@@ -300,7 +306,8 @@
 				}
 			}
 			
-			$this->TempLoadedContent = self::sortPages($dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `tag_lib_start`, `tag_lib_end`, `head`, `content` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`id` IN (".$str.") AND `page`.`wp` = ".$this->ProjectId.";"), $this->PagesId);
+			$this->TempLoadedContent = self::sortPages($dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `tag_lib_start`, `tag_lib_end`, `head`, `content`, `info`.`timestamp` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`id` IN (".$str.") AND `page`.`wp` = ".$this->ProjectId.";"), $this->PagesId);
+			$this->CurrentPageTimestamp = $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['timestamp'];
 			if(count($this->TempLoadedContent) == count($this->PagesId)) {
       	$this->PageContent = self::getContent();
       } else {
@@ -310,6 +317,15 @@
 			self::flush();
     }
     
+    /**
+     *
+     *	Sorts pages from sql select return to order defined in order.
+     *	
+     *	@param		pages						pages data
+     *	@param		order						array to sort data by
+     *	@return		sort data     
+     *
+     */		 		 		     
     public function sortPages($pages, $order) {
 			$return = array();
 			for($i = 0; $i < count($order); $i ++) {
@@ -344,17 +360,6 @@
       $this->CurrentDynamicPath = $path[0];
       $this->ParsingPages = true;
       if(count($return) == 0 && ($path[0] != "" || $path[1] != "")) {
-        //header("HTTP/1.1 404 Not Found");
-        //echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-        //exit;
-        
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
 
         if($_REQUEST['temp-stop'] != 'stop') {
         	//echo 'Generate err page!';
@@ -363,14 +368,6 @@
         } else {
 					echo 'Bad!';exit;
 				}
-				
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
 				
       } elseif(count($return) == 0 && $path[0] == "" && $path[1] == "") {
       	if(count($this->PagesId) == 0) {
@@ -722,6 +719,7 @@
       
       $path = $phpObject->str_tr($this->Path, '/', 1);
       $return = $this->TempLoadedContent[$this->PagesIdIndex];
+      //$this->CurrentPageTimestamp = $this->TempLoadedContent[$this->PagesIdIndex]['timestamp'];
       $this->CurrentDynamicPath = $path[0];
       $tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['href']);
       $this->ParentId = $this->PagesId[$this->PagesIdIndex];
@@ -1305,13 +1303,40 @@
 		
 		/**
 		 *
-		 *	Returns web framewrok version.
+		 *	Returns web framework version.
 		 *	C tag.		 
 		 *
 		 */
 		public function getVersion() {
 			return WEB_VERSION;
-		}		 		 		 		
+		}
+		
+		/**
+		 *
+		 *	Return last update of last page in requested url.
+		 *	C tag.		 
+		 *
+		 */		 		 		 		
+		public function getLastPageUpdate() {
+			return date('H:i:s d.m.Y' ,$this->CurrentPageTimestamp);
+		}
+		
+		/**
+		 *
+		 *	Returns years from start year.
+		 *	C tag.
+		 *	
+		 *	@param		year						start year
+		 *
+		 */
+		public function getYearsFrom($year) {
+			$thisYear = date('Y');
+			if($thisYear == $year) {
+				return $year;
+			} elseif($year < $thisYear) {
+				return $year.' - '.$thisYear;
+			}
+		}
 		
 		/**
 		 *

@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-05-12
+   *  @timestamp  2009-05-18
    * 
    */  
   class Page extends BaseTagLib {
@@ -664,9 +664,9 @@
           
           $show = array('read' => true, 'write' => true, 'delete' => false);
           $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
-          $groupSelectR = '<select name="right-edit-groups-r[]" multiple="multiple" size="5">';
-          $groupSelectW = '<select name="right-edit-groups-w[]" multiple="multiple" size="5">';
-          $groupSelectD = '<select name="right-edit-groups-d[]" multiple="multiple" size="5">';
+          $groupSelectR = '<select id="right-edit-groups-r" name="right-edit-groups-r[]" multiple="multiple" size="5">';
+          $groupSelectW = '<select id="right-edit-groups-w" name="right-edit-groups-w[]" multiple="multiple" size="5">';
+          $groupSelectD = '<select id="right-edit-groups-d" name="right-edit-groups-d[]" multiple="multiple" size="5">';
           foreach($allGroups as $group) {
             $selectedR = false;
             $selectedW = false;
@@ -749,8 +749,8 @@
             if($type == "add-new-page" || $type == "page-add-lang-ver") {
               $returnTmp .= 
                           '<div class="edit edit-language">'
-                          .'<label for="language">Laguage: </label>'
-                          .'<select name="language">';
+                          .'<label for="select-language">Laguage: </label>'
+                          .'<select id="select-language" name="language">';
               $parentPage = $dbObject->fetchAll('SELECT `parent_id` FROM `page` WHERE `id` = '.$pageId.';');
               if($type == "page-add-lang-ver" && $parentPage[0]['parent_id']) {
 								$langs = $dbObject->fetchAll("SELECT `language`.`id`, `language`.`language` FROM `language` LEFT JOIN `info` ON `language`.`id` = `info`.`language_id` WHERE `info`.`page_id` = ".$parentPage[0]['parent_id']." ORDER BY `language`.`language`;");
@@ -803,7 +803,7 @@
                         .'<div class="clear"></div>'
                         .'<div class="edit edit-keywords">'
                           .'<label for="edit-keywords">Key words:</label> '
-                          .'<input type="text" name="edit-keywords" value="'.$sql_return[0]['keywords'].'" />'
+                          .'<input id="edit-keywords" type="text" name="edit-keywords" value="'.$sql_return[0]['keywords'].'" />'
                         .'</div>'
                         .'<div class="clear"></div>'
                       .'</div>'
@@ -875,13 +875,27 @@
         }
       } 
 			
-			if($_POST['remove-file'] == "Remove") {
-        $fileId = $_POST['file-id'];
+			$returnTmp = '';
+			
+			if($_POST['remove-files'] == "Remove selected") {
+        $pageId = $_POST['page-id'];
+        $langId = $_POST['page-lang-id'];
+        $files = $_POST['files'];
+        
+        foreach($files as $file => $val) {
+          if($val = "on") {
+            //$dbObject->execute("INSERT INTO `page_file_inc`(`file_id`, `page_id`, `language_id`) VALUES (".$file.", ".$pageId.", ".$langId.");");
+            $dbObject->execute("DELETE FROM `page_file_inc` WHERE `file_id` = ".$file." AND `page_id` = ".$pageId." AND `language_id` = ".$langId.";");
+          }
+        }
+        
+        /*$fileId = $_POST['file-id'];
         $pageId = $_POST['page-id'];
         $langId = $_POST['page-lang-id'];
         
         $dbObject->execute("DELETE FROM `page_file_inc` WHERE `file_id` = ".$fileId." AND `page_id` = ".$pageId." AND `language_id` = ".$langId.";");
-        
+        */
+        $returnTmp = '<h4 class="success">Text files have been removed!</h4>';
         $_POST['added-files'] = "Added files";
       } elseif($_POST['add-files'] == "Add selected") {
         //print_r($_POST);
@@ -896,6 +910,7 @@
         }
         //$return .= parent::getFrame("Success Message", '<h4 class="success">Files successfully inserted!</h4>', "", true);
         
+        $returnTmp = '<h4 class="success">Text files have been added!</h4>';
         $_POST['added-files'] = "Added files";
       }
 			
@@ -908,12 +923,14 @@
         
         if(count($files) != 0) {
         	$returnTmp .= ''
+        				.'<form name="files-to-remove" method="post" action="">'
                 .'<table class="page-file-list">'
                   .'<tr class="file-tr">'
                     .'<th colspan="4" class="file-head-th">Added Files</th>'
                   .'</tr>';
+          $i = 1;
         	foreach($files as $file) {
-          $returnTmp .= '<tr class="file-tr">'
+          $returnTmp .= '<tr class="file-tr '.((($i % 2) == 0) ? 'even' : 'idle').'">'
                       .'<td class="file-name">'
                           .$file['name']
                       .'</td>'
@@ -923,7 +940,7 @@
                       .'<td class="file-type">'
                         .$filesEx[$file['type']]
                       .'</td>'
-                      .'<td>'
+                      /*.'<td>'
                         .(($editable) ? ''
                         .'<form name="process-file" method="post" action="">'
                           .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
@@ -933,10 +950,20 @@
                           .'<input type="image" src="'.WEB_ROOT.'images/page_del.png" name="remove-file" value="Remove" title="Remove file" />'
                         .'</form>'
                         : '')
+                      .'</td>'*/
+                      .'<td>'
+                        .'<input id="remove-text-files-files-'.$file['id'].'" type="checkbox" name="files['.$file['id'].']" />'
                       .'</td>'
                     .'</tr>';
+              $i ++;
       	  }
-    	    $returnTmp .= '</table>';
+    	    $returnTmp .= '</table>'
+	        				.'<div class="add-rem-text-files-submit">'
+    	              .'<input type="hidden" name="page-id" value="'.$pageId.'" />'
+  	                .'<input type="hidden" name="page-lang-id" value="'.$langId.'" />'
+	                  .'<input type="submit" name="remove-files" value="Remove selected" />'
+                  .'</div>'
+									.'</form><div class="break"></div>';
   	      //$return1 = parent::getFrame('Added files', $returnTmp, '');
 	        $return1 = $returnTmp;
         } else {
@@ -952,28 +979,30 @@
                   .'<tr class="file-tr">'
                     .'<th colspan="4" class="file-head-th">Files to Add</th>'
                   .'</tr>';
-	        $i = 0;
+	        $i = 1;
         	foreach($files as $file) {
-      	    $returnTmp .= '<tr class="file-tr">'
+      	    $returnTmp .= '<tr class="file-tr '.((($i % 2) == 0) ? 'even' : 'idle').'">'
                       .'<td class="file-name">'
-                          .$file['name']
+                          .'<label for="add-text-files-files-'.$file['id'].'">'.$file['name'].'</label>'
                       .'</td>'
                       .'<td class="file-content">'
-                        .'<div class="file-content-in"><div class="foo">'.substr($file['content'], 0, 130).'</div></div>'
+                        .'<div class="file-content-in"><div class="foo">'.'<label for="add-text-files-files-'.$file['id'].'">'.substr($file['content'], 0, 130).'</label>'.'</div></div>'
                       .'</td>'
                       .'<td class="file-type">'
-                        .$filesEx[$file['type']]
+                        .'<label for="add-text-files-files-'.$file['id'].'">'.$filesEx[$file['type']].'</label>'
                       .'</td>'
                       .'<td>'
-                        .'<input type="checkbox" name="files['.$file['id'].']" />'
+                        .'<input id="add-text-files-files-'.$file['id'].'" type="checkbox" name="files['.$file['id'].']" />'
                       .'</td>'
                     .'</tr>';
     	      $i ++;
   	      }
 	        $returnTmp .= '</table>'
-                  .'<input type="hidden" name="page-id" value="'.$pageId.'" />'
-                  .'<input type="hidden" name="page-lang-id" value="'.$langId.'" />'
-                  .'<input type="submit" name="add-files" value="Add selected" />'
+	        				.'<div class="add-rem-text-files-submit">'
+    	              .'<input type="hidden" name="page-id" value="'.$pageId.'" />'
+  	                .'<input type="hidden" name="page-lang-id" value="'.$langId.'" />'
+	                  .'<input type="submit" name="add-files" value="Add selected" />'
+                  .'</div>'
                   .'</form>';
         	//$return2 = parent::getFrame('Files to add', $returnTmp, '');
         	$return2 = $returnTmp;
@@ -1097,7 +1126,7 @@
                 .'<input type="hidden" name="parent-id" value="'.$tmp['id'].'" /> '
                 .'<input type="hidden" name="page-lang-id" value="'.$inf['lang_id'].'" /> '
                 .'<input type="hidden" name="delete" value="Delete" /> '
-                .'<input class="confirm" type="image" title="Delete language version" src="'.WEB_ROOT.'images/lang_del.png" name="delete" value="Delete" />'
+                .'<input class="confirm" type="image" title="Delete language version, id('.$tmp['id'].')" src="'.WEB_ROOT.'images/lang_del.png" name="delete" value="Delete" />'
               .'</form>'
               : '')
 						.'</div> } ';
@@ -1134,7 +1163,7 @@
 					.'<form name="page-add-lang2" method="post" action="">'
           	.'<input type="hidden" name="page-id" value="'.$tmp['id'].'" /> '
           	.'<input type="hidden" name="delete" value="Delete" /> '
-            .'<input class="confirm" type="image" title="Delete page" src="'.WEB_ROOT.'images/page_del.png" name="delete" value="Delete" />'
+            .'<input class="confirm" type="image" title="Delete page, id('.$tmp['id'].')" src="'.WEB_ROOT.'images/page_del.png" name="delete" value="Delete" />'
           .'</form>'
           : '')
           .' )</span>';
@@ -1350,7 +1379,7 @@
               .'<form name="process-file2" method="post" action="">'
               	.'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
                 .'<input type="hidden" name="delete-file" value="Delete" />'
-                .'<input class="confirm" type="image" src="'.WEB_ROOT.'images/page_del.png" name="delete-file" value="Delete" title="Delete file" />'
+                .'<input class="confirm" type="image" src="'.WEB_ROOT.'images/page_del.png" name="delete-file" value="Delete" title="Delete file, id('.$file['id'].')" />'
               .'</form>'
               : '')
             .'</td>'
@@ -1452,6 +1481,137 @@
 			
 			return $return.parent::getFrame("Clear Url Cache", $returnForm, "", true);
 		}
+    
+    /**
+     *
+     *	Edit & clear url cache.
+     *	C tag.     
+     *	
+     *	@return		form		      
+     *
+     */		 		 		 		     
+    public function manageUrlCache() {
+			global $dbObject;
+			$return = $msg = '';
+			$pageId = '';
+			$partOfUrl = '';
+			$urlCache = array();
+			$urlCacheReturn = '';
+			$sent = false;
+			
+			if($_POST['clear-url-cache'] == "Do \'Clear Url Cache\'") {
+				$dbObject->execute("TRUNCATE TABLE `urlcache`");
+				$msg = '<h4 class="success">Url cache cleared!</h4>';
+			}
+			
+			if($_POST['delete-from-url-cache'] == 'Delete selected') {
+				$delete = $_POST['url-cache-delete-checkbox'];
+				foreach($delete as $del) {
+					$dbObject->execute('DELETE FROM `urlcache` WHERE `id` = '.$del.';');
+				}
+				$msg = '<h4 class="success">Selected items have been deleted!</h4>';
+				$_POST['show-url-cache'] = 'Show url cache';
+				$sent = true;
+			}
+			
+			if($_POST['show-url-cache'] == 'Show url cache') {
+				$pageId = $_POST['page-id-url-cache'];
+				$partOfUrl = $_POST['part-of-url-url-cache'];
+				if(strlen($pageId) != 0 && strlen($partOfUrl) != 0) {
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") AND (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") ORDER BY `urlcache`.`id`;');
+				} elseif(strlen($partOfUrl) != 0) {
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") ORDER BY `urlcache`.`id`;');
+				} elseif(strlen($pageId) != 0) {
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") ORDER BY `urlcache`.`id`;');
+				} else {
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` ORDER BY `urlcache`.`id`;');
+				}
+				
+				if(count($urlCache) > 0) {
+					$urlCacheReturn .= ''
+					.'<table class="url-cache-table">'
+						.'<tr>'
+							.'<th class="url-cache-id">Id:</th>'
+							.'<th class="url-cache-name">Name:</th>'
+							.'<th class="url-cache-wp-url">Web project url:</th>'
+							.'<th class="url-cache-slash"></th>'
+							.'<th class="url-cache-url">Url:</th>'
+							.'<th class="url-cache-page">Page Ids:</th>'
+							.'<th class="url-cache-lang">Lang:</th>'
+							.'<th class="url-cache-cachetime">Cachetime:</th>'
+							.'<th class="url-cache-lastcache">Lastcache:</th>'
+							.'<th class="url-cache-edit">Edit:</th>'
+						.'</tr>';
+					
+					$i = 1;
+					foreach($urlCache as $url) {
+						$cacheTime = '';
+						if($url['cachetime'] == -1) {
+							$cacheTime = 'Don\'t use';
+						} elseif($url['cachetime'] == 60) {
+							$cacheTime = '1 minute';
+						} elseif($url['cachetime'] == 3600) {
+							$cacheTime = '1 hour';
+						} elseif($url['cachetime'] == 86400) {
+							$cacheTime = '1 day';
+						} elseif($url['cachetime'] == 0) {
+							$cacheTime = 'Unlimited';
+						}
+						
+						$urlCacheReturn .= ''
+						.'<tr class="'.((($i % 2) == 0) ? 'even' : 'idle').'">'
+							.'<td class="url-cache-id"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['id'].'</label></td>'
+							.'<td class="url-cache-name"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['name'].'</label></td>'
+							.'<td class="url-cache-wp-url"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['wp_url'].'</label></td>'
+							.'<td class="url-cache-slash"><label for="url-cache-delete-checkbox-'.$url['id'].'">/</label></td>'
+							.'<td class="url-cache-url"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['url'].'</label></td>'
+							.'<td class="url-cache-page"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['page-ids'].'</label></td>'
+							.'<td class="url-cache-lang"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['language'].'</label></td>'
+							.'<td class="url-cache-cachetime"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$cacheTime.'</label></td>'
+							.'<td class="url-cache-lastcache"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.(($url['lastcache'] > 0) ? date('H:i:s d.m.Y', $url['lastcache']) : '-').'</label></td>'
+							.'<td class="url-cache-edit">'
+								.'<input id="url-cache-delete-checkbox-'.$url['id'].'" type="checkbox" name="url-cache-delete-checkbox[]" value="'.$url['id'].'" />'
+							.'</td>'
+						.'</tr>';
+						$i ++;
+					}
+						
+					$urlCacheReturn .= '</table>';
+				}
+				$sent = true;
+			}
+			
+			$returnForm = ''
+			.((strlen($msg) > 0) ? $msg : '' )
+			.'<div class="clear-url-cache">'
+				.'<form name="clear-url-cache" method="post" action="">'
+					.'<div class="part-of-url">'
+						.'<label for="part-of-url-url-cache">Part of url:</label> '
+						.'<input id="part-of-url-url-cache" type="text" name="part-of-url-url-cache" value="'.$partOfUrl.'" />'
+					.'</div>'
+					.'<div class="page-id">'
+						.'<label for="page-id-url-cache">Page id:</label> '
+						.'<input id="page-id-url-cache" type="text" name="page-id-url-cache" value="'.$pageId.'" />'
+					.'</div>'
+					.'<div class="clear"></div>'
+					.'<div class="submit">'
+						.'<input type="submit" name="show-url-cache" value="Show url cache" />'
+						.((strlen($urlCacheReturn) > 0) ? ''
+						.'<input class="confirm" type="submit" name="delete-from-url-cache" value="Delete selected" title="Delete selected items from urlcache" />'
+						: '')
+						.'<input class="confirm" type="submit" name="clear-url-cache" value="Do \'Clear Url Cache\'" title="Clear whole url cache" />'
+						.(($sent) ? ''
+						.'<input type="submit" name="cancel-url-cache" value="Cancel" />'
+						: '')
+					.'</div>'
+					.'<div class="results">'
+						.$urlCacheReturn
+					.'</div>'
+				.'</form>'
+			.'</div>';
+			
+			return $return.parent::getFrame("Manage Url Cache", $returnForm, "", true);
+		}
 		
 		/**
 		 *
@@ -1538,7 +1698,7 @@
 						.'<form name="delete-lang" method="post" action="">'
 							.'<input type="hidden" name="language-id" value="'.$lang['id'].'" />'
 							.'<input type="hidden" name="delete-language" value="Delete language" />'
-							.'<input class="confirm" type="image" src="'.WEB_ROOT.'images/page_del.png" name="delete-language" value="Delete language" title="Delete language" />'
+							.'<input class="confirm" type="image" src="'.WEB_ROOT.'images/page_del.png" name="delete-language" value="Delete language" title="Delete language, id('.$lang['id'].')" />'
 						.'</form>'
 					.'</td>'
 					: '<td></td>' )
@@ -1633,7 +1793,7 @@
 							.'<form name="template-edit2" method="post" action="">'
 								.'<input type="hidden" name="template-id" value="'.$template['id'].'" />'
 								.'<input type="hidden" name="template-delete" value="Delete" />'
-								.'<input class="confirm" type="image" src="~/images/page_del.png" name="template-delete" value="Delete" title="Delete template" />'
+								.'<input class="confirm" type="image" src="~/images/page_del.png" name="template-delete" value="Delete" title="Delete template, id('.$template['id'].')" />'
 							.'</form>'
 						.'</td>'
 					.'</tr>';

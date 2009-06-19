@@ -1,7 +1,11 @@
 .editor-cover {
   padding: 5px;
-  background: #cccccc;
-  border: 1px solid black;
+  background: #dddddd;
+  border: 2px solid #cccccc;
+}
+
+.editor-cover.input-focused {
+  border: 2px solid #04601C;
 }
 
 .editor-cover textarea {
@@ -22,7 +26,7 @@
 
 .editor-panel input {
   background: white;
-  border: 1px solid black;
+  border: 2px solid #cccccc;
 }
 
 .editor-panel input[type=button], .editor-panel span {
@@ -52,7 +56,7 @@
 	padding: 0 4px 0 0;
 	text-align: right;
 	overflow: hidden;
-	background: #cccccc;
+	background: #dddddd;
 }
 
 .line-numbers-cover {

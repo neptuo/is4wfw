@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2008-06-08
+   *  @timestamp  2008-06-18
    * 
    */  
   class File extends BaseTagLib {
@@ -190,7 +190,7 @@
             .'<form name="dir-edit" method="post" action="">'
               .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
               .'<input type="hidden" name="delete-dir" value="Delete" />'
-              .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-dir" value="Delete" title="Delete Directory" />'
+              .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-dir" value="Delete" title="Delete Directory, id('.$dir['id'].')" />'
             .'</form>'
           .'</td>'
           : '' )
@@ -216,7 +216,7 @@
             .'<form name="dir-edit" method="post" action="">'
               .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
               .'<input type="hidden" name="delete-file" value="Delete" />'
-              .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="Delete" title="Delete File" />'
+              .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="Delete" title="Delete File, id('.$file['id'].')" />'
             .'</form>'
           .'</td>'
           : '' )

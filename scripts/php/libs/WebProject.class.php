@@ -177,7 +177,7 @@
 								.'<form name="edit-projects2" method="post" action=""> '
 									.'<input type="hidden" name="wp" value="'.$project['id'].'" />'
 									.'<input type="hidden" name="delete" value="Delete Project" />'
-									.'<input class="confirm" type="image" src="~/images/page_del.png" name="delete" value="Delete Project" title="Delete project" />'
+									.'<input class="confirm" type="image" src="~/images/page_del.png" name="delete" value="Delete Project" title="Delete project, id('.$project['id'].')" />'
 								.'</form>'
 								: '')
 							: '')

@@ -1,5 +1,9 @@
-// JavaScript Document
-
+/**
+ *
+ *  @author  Marek Fišera marek.fisera@email.cz
+ *  @date    2009/06/18
+ *
+ */
 function Closer(frameCover) {
   var Own = this;
   var FrameCover = frameCover;

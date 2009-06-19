@@ -1,3 +1,9 @@
+/**
+ *
+ *  @author  Marek Fišera marek.fisera@email.cz
+ *  @date    2009/06/18
+ *
+ */
 function addEvent (obj, ev, func, b) {
   if(obj.addEventListener) {
     obj.addEventListener(ev, func, b);
@@ -9,6 +15,7 @@ function addEvent (obj, ev, func, b) {
 Event.domReady.add(init);
 
 function init(event) {
+	initForms(document);
 	initEditors(event);
 	initClosers(event);
 	fileNameInit(event);
@@ -38,7 +45,7 @@ function initEditors(event) {
 				EdiConf.tiny = false;
 			}
 			if(tas[i].addEventListener) {
-				EdiConf.wc = 65535;
+				EdiConf.wc = 65527;
   	  	EdiConf.rows = true;
 	    	EdiConf.hide = true;
     		EdiConf.lnnm = true;

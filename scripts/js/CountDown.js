@@ -1,5 +1,9 @@
-// JavaScript Document
-
+/**
+ *
+ *  @author  Marek Fišera marek.fisera@email.cz
+ *  @date    2009/06/18
+ *
+ */
 function CountDown(label, sec, parentEl) {
 	var Id = 0;
 	if(!CountDown.Instances) {
