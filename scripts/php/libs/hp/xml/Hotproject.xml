@@ -3,8 +3,8 @@
 <taglib>
   <name>Hotproject Lib</name>
   <classname>Hotproject</classname>
-  <classpath>php.libs</classpath>
-  <version>1.00</version>
+  <classpath>php.libs.hp</classpath>
+  <version>1.01</version>
   <count>*</count>
   <comment>
     Třída pro Hotproject.

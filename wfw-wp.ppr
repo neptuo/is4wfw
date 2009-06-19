@@ -73,11 +73,11 @@ wfw-wp
 		-logs
 			logs\2009-04-30.log
 		+scripts
-			-css
+			+css
 				scripts\css\cms.css
 				scripts\css\editor.css
 				scripts\js\domready.js
-			-js
+			+js
 				scripts\js\Closer.js
 				scripts\js\Confirm.js
 				scripts\js\Editor.js
@@ -85,8 +85,10 @@ wfw-wp
 				scripts\js\init.js
 				scripts\js\initTiny.js
 				scripts\js\CountDown.js
+				scripts\js\domready.js
+				scripts\js\formFieldEffect.js
 			+php
-				+classes
+				-classes
 					scripts\php\classes\CustomTagParser.class.php
 				-includes
 					scripts\php\includes\settings.inc.php
@@ -484,45 +486,37 @@ wfw-wp
 6=scripts\php\libs\xml\Page.xml
 7=scripts\php\libs\WebProject.class.php
 8=scripts\php\libs\xml\WebProject.xml
-9=scripts\php\libs\Article.class.php
-10=scripts\php\libs\xml\Article.xml
-11=file.php
+9=..\..\..\Program Files\Servers\xampp\php\php.ini
 [Selected Project Files]
 Main=index.php
-Selected=scripts\php\includes\version.inc.php
+Selected=index.php
 [index.php]
-TopLine=22
-Caret=50,58
+TopLine=28
+Caret=33,58
 [scripts\css\cms.css]
-TopLine=410
-Caret=20,447
+TopLine=408
+Caret=2,434
 [scripts\php\includes\version.inc.php]
 TopLine=1
 Caret=34,8
 [scripts\php\libs\DefaultWeb.class.php]
-TopLine=123
-Caret=29,19
-[scripts\php\libs\xml\DefaultWeb.xml]
 TopLine=1
-Caret=16,7
+Caret=1,1
+[scripts\php\libs\xml\DefaultWeb.xml]
+TopLine=202
+Caret=1,270
 [scripts\php\libs\Page.class.php]
-TopLine=468
-Caret=11,500
+TopLine=1770
+Caret=155,1796
 [scripts\php\libs\xml\Page.xml]
 TopLine=1
 Caret=16,7
 [scripts\php\libs\WebProject.class.php]
-TopLine=419
-Caret=143,433
+TopLine=151
+Caret=45,178
 [scripts\php\libs\xml\WebProject.xml]
 TopLine=1
-Caret=1,53
-[scripts\php\libs\Article.class.php]
-TopLine=1
-Caret=29,15
-[scripts\php\libs\xml\Article.xml]
-TopLine=1
-Caret=1,1
-[file.php]
-TopLine=44
-Caret=36,59
+Caret=16,7
+[..\..\..\Program Files\Servers\xampp\php\php.ini]
+TopLine=265
+Caret=1,307

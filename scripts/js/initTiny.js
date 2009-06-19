@@ -1,3 +1,9 @@
+/**
+ *
+ *  @author  Marek Fišera marek.fisera@email.cz
+ *  @date    2009/06/18
+ *
+ */
 function initTiny(taId) {
 	tinyMCE.init({
 		// General options

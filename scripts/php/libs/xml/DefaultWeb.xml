@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.44</version>
+  <version>1.45</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -263,6 +263,24 @@
     <function>getVersion</function>
     <comment>
       Zobrazí web framework version.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>yearsFrom</tagname>
+    <function>getYearsFrom</function>
+    <attribute>
+      <attname>year</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zobrazí rozmezí zadaného roku a letošního roku.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>lastPageUpdate</tagname>
+    <function>getLastPageUpdate</function>
+    <comment>
+      Zobrazí čas a datum poslední úpravy stránky.
     </comment>
   </tag>
 </taglib>

@@ -16,7 +16,7 @@
    *  @objectname logObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2009-06-12
+   *  @timestamp  2009-06-18
    * 
    */              
   class Log extends BaseTagLib {
@@ -51,7 +51,7 @@
      *
      */              
     public function write($msg) {
-      global $webObject;echo $webObject;
+      global $webObject;
     	$this->LogFile = "logs/".$webObject->getProjectId().'-'.date("Y-m-d").".log";
       if($this->IsOpen == false) {
 	      if(is_file($this->LogFile)) {

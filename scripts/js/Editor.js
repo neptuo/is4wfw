@@ -1,5 +1,9 @@
-// JavaScript Document
-	
+/**
+ *
+ *  @author  Marek Fišera marek.fisera@email.cz
+ *  @date    2009/06/19
+ *
+ */	
 function Editor(conf) {
   var Own = this;
   var conf = conf;
@@ -207,12 +211,14 @@ function Editor(conf) {
         TextArea.focus();
       }
     }
+    Controls.Find.focus();
     LastSearchedValue = Controls.Find.value;
   }
   
   this.rowAddClick = function (event) {
     TextArea.rows += 2;
     Controls.LineNumbers.rows = TextArea.rows + 1;
+    TextArea.focus();
     
     if(Tiny) {
 			Own.openCloseTiny();
@@ -224,6 +230,7 @@ function Editor(conf) {
     if(TextArea.rows > 2) {
       TextArea.rows -= 2;
     	Controls.LineNumbers.rows = TextArea.rows + 1;
+    	TextArea.focus();
     
     	if(Tiny) {
 				Own.openCloseTiny();
@@ -241,6 +248,7 @@ function Editor(conf) {
 	      }
   	  } else {
     	  TextArea.style.display = "";
+    	  TextArea.focus();
       	if(conf.lnnm != false) {
       		Controls.LineNumbersCover.style.display = "";
       	}
