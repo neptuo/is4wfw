@@ -4,7 +4,7 @@
   <name>Page Lib</name>
   <classname>Page</classname>
   <classpath>php.libs</classpath>
-  <version>1.25</version>
+  <version>1.30</version>
   <count>*</count>
   <comment>
     Třída pro správu obsahu jednotlivých stránek.
@@ -36,6 +36,13 @@
     <function>clearUrlCache</function>
     <comment>
       Vyprázdní url cache.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>manageUrlCache</tagname>
+    <function>manageUrlCache</function>
+    <comment>
+      Práce s url cachí.
     </comment>
   </tag>
   <tag>
