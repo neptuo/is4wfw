@@ -87,6 +87,7 @@ wfw-wp
 				scripts\js\CountDown.js
 				scripts\js\domready.js
 				scripts\js\formFieldEffect.js
+				scripts\js\initLogin.js
 			+php
 				-classes
 					scripts\php\classes\CustomTagParser.class.php
@@ -480,34 +481,37 @@ wfw-wp
 0=index.php
 1=scripts\css\cms.css
 2=scripts\php\includes\version.inc.php
-3=scripts\php\libs\DefaultWeb.class.php
-4=scripts\php\libs\xml\DefaultWeb.xml
-5=scripts\php\libs\Page.class.php
-6=scripts\php\libs\xml\Page.xml
-7=scripts\php\libs\WebProject.class.php
-8=scripts\php\libs\xml\WebProject.xml
-9=..\..\..\Program Files\Servers\xampp\php\php.ini
+3=scripts\php\libs\Error.class.php
+4=scripts\php\libs\DefaultWeb.class.php
+5=scripts\php\libs\xml\DefaultWeb.xml
+6=scripts\php\libs\Page.class.php
+7=scripts\php\libs\xml\Page.xml
+8=scripts\php\libs\WebProject.class.php
+9=scripts\php\libs\xml\WebProject.xml
 [Selected Project Files]
 Main=index.php
-Selected=index.php
+Selected=scripts\css\cms.css
 [index.php]
-TopLine=28
-Caret=33,58
+TopLine=1
+Caret=6,62
 [scripts\css\cms.css]
-TopLine=408
-Caret=2,434
+TopLine=3
+Caret=1,11
 [scripts\php\includes\version.inc.php]
 TopLine=1
-Caret=34,8
+Caret=1,11
+[scripts\php\libs\Error.class.php]
+TopLine=18
+Caret=9,37
 [scripts\php\libs\DefaultWeb.class.php]
-TopLine=1
-Caret=1,1
+TopLine=1295
+Caret=6,1324
 [scripts\php\libs\xml\DefaultWeb.xml]
-TopLine=202
-Caret=1,270
+TopLine=233
+Caret=51,283
 [scripts\php\libs\Page.class.php]
-TopLine=1770
-Caret=155,1796
+TopLine=1514
+Caret=7,1551
 [scripts\php\libs\xml\Page.xml]
 TopLine=1
 Caret=16,7
@@ -517,6 +521,3 @@ Caret=45,178
 [scripts\php\libs\xml\WebProject.xml]
 TopLine=1
 Caret=16,7
-[..\..\..\Program Files\Servers\xampp\php\php.ini]
-TopLine=265
-Caret=1,307

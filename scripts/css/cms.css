@@ -11,6 +11,7 @@ form {
 
 input, select {
 	border: 2px solid #cccccc;
+	background: white;
 }
 
 input.input-focused, select.input-focused {
