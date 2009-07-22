@@ -174,8 +174,8 @@ function Editor(conf) {
 			TextArea.id = RandomId;
 			
 			// !!!!!!!! Important !!!!!!!!!!!!!!!!!!!!
-			TextArea.value = TextArea.value.replace(/</g, '&lt;&nbsp;');
-			TextArea.value = TextArea.value.replace(/>/g, '&gt;&nbsp;');
+			//TextArea.value = TextArea.value.replace(/</g, '&lt;&nbsp;');
+			//TextArea.value = TextArea.value.replace(/>/g, '&gt;&nbsp;');
 			
   		if(TinyFirst == false) {
 				initTiny(RandomId);

@@ -77,7 +77,7 @@ wfw-wp
 			-css
 				scripts\css\cms.css
 				scripts\css\editor.css
-			-js
+			+js
 				scripts\js\Closer.js
 				scripts\js\Confirm.js
 				scripts\js\Editor.js
@@ -503,7 +503,7 @@ wfw-wp
 13=..\..\samples\js\ajax-im-yui\install.php
 [Selected Project Files]
 Main=index.php
-Selected=..\..\samples\js\ajax-im-yui\install.php
+Selected=scripts\php\includes\version.inc.php
 [index.php]
 TopLine=35
 Caret=30,73
@@ -512,13 +512,13 @@ TopLine=1
 Caret=6,9
 [scripts\css\cms.css]
 TopLine=443
-Caret=2,469
+Caret=22,469
 [scripts\php\includes\version.inc.php]
 TopLine=1
-Caret=28,8
+Caret=34,8
 [scripts\php\libs\DefaultWeb.class.php]
-TopLine=351
-Caret=7,367
+TopLine=341
+Caret=1,367
 [scripts\php\libs\xml\DefaultWeb.xml]
 TopLine=243
 Caret=7,294
