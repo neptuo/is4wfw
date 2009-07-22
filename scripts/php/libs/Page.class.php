@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-07-21
+   *  @timestamp  2009-07-22
    * 
    */  
   class Page extends BaseTagLib {
@@ -495,6 +495,13 @@
 											}
 											self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
 										}
+										$page['tag_lib_start'] = addslashes($page['tag_lib_start']);
+										$page['tag_lib_end'] = addslashes($page['tag_lib_end']);
+										$page['head'] = addslashes($page['head']);
+										$page['content'] = addslashes($page['content']);
+										$page['name'] = addslashes($page['name']);
+										$page['href'] = addslashes($page['href']);
+										$page['keywords'] = addslashes($page['keywords']);
 										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$page['href'].'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
@@ -518,6 +525,13 @@
 											}
 											self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
 										}
+										$page['tag_lib_start'] = addslashes($page['tag_lib_start']);
+										$page['tag_lib_end'] = addslashes($page['tag_lib_end']);
+										$page['head'] = addslashes($page['head']);
+										$page['content'] = addslashes($page['content']);
+										$page['name'] = addslashes($page['name']);
+										$page['href'] = addslashes($page['href']);
+										$page['keywords'] = addslashes($page['keywords']);
 										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$randUrl.'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
@@ -544,6 +558,13 @@
 											}
 											self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
 										}
+										$page['tag_lib_start'] = addslashes($page['tag_lib_start']);
+										$page['tag_lib_end'] = addslashes($page['tag_lib_end']);
+										$page['head'] = addslashes($page['head']);
+										$page['content'] = addslashes($page['content']);
+										$page['name'] = addslashes($page['name']);
+										$page['href'] = addslashes($page['href']);
+										$page['keywords'] = addslashes($page['keywords']);
 										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$page['href'].'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
@@ -567,6 +588,13 @@
 											}
 											self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
 										}
+										$page['tag_lib_start'] = addslashes($page['tag_lib_start']);
+										$page['tag_lib_end'] = addslashes($page['tag_lib_end']);
+										$page['head'] = addslashes($page['head']);
+										$page['content'] = addslashes($page['content']);
+										$page['name'] = addslashes($page['name']);
+										$page['href'] = addslashes($page['href']);
+										$page['keywords'] = addslashes($page['keywords']);
 										$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$randUrl.'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
@@ -1221,6 +1249,13 @@
 						}
 						self::copyPagesRecursivly($page['id'], $newId, $projectId, $pageFileInc);
 					}
+					$page['tag_lib_start'] = addslashes($page['tag_lib_start']);
+					$page['tag_lib_end'] = addslashes($page['tag_lib_end']);
+					$page['head'] = addslashes($page['head']);
+					$page['content'] = addslashes($page['content']);
+					$page['name'] = addslashes($page['name']);
+					$page['href'] = addslashes($page['href']);
+					$page['keywords'] = addslashes($page['keywords']);
 					$dbObject->execute('INSERT INTO `info`(`page_id`, `language_id`, `name`, `in_title`, `href`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['name'].'", '.$page['in_title'].', "'.$page['href'].'", '.$page['in_menu'].', '.$newId.', '.$page['is_visible'].', "'.$page['keywords'].'", '.time().', '.$page['cachetime'].');');
 					$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 					
