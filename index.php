@@ -60,7 +60,17 @@
 			??	"counter manager" -> implementovat pouze rucne ..
 			ok	zajistit "smazani" cachovaneho soubory pri clear url cache & cachovani stranky (nebo pri vytvoreni nove urlcache vytvaret take novy cache soubor, VZDY!)
 			--	web:currentUrl -> vrati aktualni adresu ;)
-			ok	slozkovani v PHP LIBS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			ok	slozkovani v PHP LIBS 
+			!!	nahravani souboru se stejnym jmenem ale jinou koncovkou -> BUG
+			--	pres file.php pristup k templatum.
+			--	v url projektu "*" ... default pro vsechny url
+			--	v url projektu nebo stranky "/".
+			--	sprava pro web pairs.
+			--	v registraci noveho uzivatele asociace s pairs.
+			--	moznost mit ruzna url pro http a https
+			--	moznost mit nazev jazykove verze pred domenou ( cs.epapaya.cz )
+			ok	velka pismena v url stranky -> upravit Page.class.php -> pri uprave url velka zmensuje na mala!
+			--	menu, order by name ...
 	*/
   
   require_once("scripts/php/includes/settings.inc.php");

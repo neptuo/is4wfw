@@ -55,6 +55,10 @@
      */              
     private $PageHead = "";
     
+    private $PageScripts = "";
+    
+    private $PageStyles = "";
+    
     /**
      *
      *  Handle computed page content.
@@ -111,6 +115,8 @@
      */
     public $LanguageId = 0;
     
+    public $LanguageName = '';
+    
     /**
      *
      *  Holds parent page id to actually parsed page.
@@ -150,7 +156,9 @@
     private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.\*`_;:/?-]*)*")';
     
     private $PagesId = array();
+    
     private $PagesIdIndex = 0;
+    
     private $ParsingPages = false;
     
     private $CurrentPageTimestamp = 0;
@@ -228,6 +236,7 @@
       $path = $phpObject->str_tr($this->Path, '/', 1);
       $return = $dbObject->fetchAll("SELECT `id` FROM `language` WHERE `language` = \"".$path[0]."\";");
       if(count($return) == 1) {
+      	$this->LanguageName = $path[0];
         $this->LanguageId = $return[0]['id'];
         $this->Path = $path[1];
       } else {
@@ -360,7 +369,6 @@
       $this->CurrentDynamicPath = $path[0];
       $this->ParsingPages = true;
       if(count($return) == 0 && ($path[0] != "" || $path[1] != "")) {
-
         if($_REQUEST['temp-stop'] != 'stop') {
         	//echo 'Generate err page!';
         	$_REQUEST['temp-stop'] = 'stop';
@@ -500,7 +508,19 @@
       
       $keywords = file_get_contents("keywords.txt");
       
-      $return = 
+      if(strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
+      	$return = ''
+       	.'<rssmm:response>'
+      		.'<rssmm:head>'
+      			.'<rssmm:title>'.$this->PageTitle.'</rssmm:title>'
+      			.'<rssmm:keywords>'.((strlen($this->Keywords) > 0) ? $this->Keywords.',' : '').((strlen($keywords) > 0) ? $keywords.',' : '').'wfw,rssmm</rssmm:keywords>'
+      			.'<rssmm:styles>'.$this->PageStyles.'</rssmm:styles>'
+      			.'<rssmm:scripts>'.$this->PageScripts.'</rssmm:scripts>'
+      		.'</rssmm:head>'
+      		.'<rssmm:content>'.$this->PageContent.'</rssmm:content>'
+      	.'</rssmm:response>';
+      } else {
+	      $return = 
 			 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
@@ -511,11 +531,12 @@
   	    <meta name="robots" content="all, index, follow" />
   	    <meta name="author" content="WFW Group www.rssmm.wz.cz Marek Fišera" /> 
   	    <title>'.$this->PageTitle.'</title>
-        '.$this->PageHead.'
+        '.$this->PageHead.$this->PageStyles.$this->PageScripts.'
         </head>
         <body>'.$this->PageContent.'</body>
         </html>
-       ';
+        ';
+      }
       $return = str_replace("~/", WEB_ROOT, $return);
       //echo "<html>\n\t<head>\n<title>\n".$this->PageTitle."\n</title>\n".$this->PageHead."\n</head>\n<body>\n".$this->PageContent."\n</body>\n</html>"; 
     
@@ -752,8 +773,8 @@
         switch($file['type']) {
           //case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="'.WEB_ROOT.'css/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'" type="text/css" />'; break;
           //case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="'.WEB_ROOT.'js/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'"></script>'; break;
-          case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="~/file.php?fid='.$file['id'].'" type="text/css" />'; break;
-          case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="~/file.php?fid='.$file['id'].'"></script>'; break;
+          case WEB_TYPE_CSS: $this->PageStyles .= ((strtolower($_REQUEST['__TEMPLATE']) == 'xml') ? '<rssmm:link-ref>~/file.php?fid='.$file['id'].'</rssmm:link-ref>' : '<link rel="stylesheet" href="~/file.php?fid='.$file['id'].'" type="text/css" />'); break;
+          case WEB_TYPE_JS: $this->PageScripts .= ((strtolower($_REQUEST['__TEMPLATE']) == 'xml') ? '<rssmm:script-ref>~/file.php?fid='.$file['id'].'</rssmm:script-ref>' : '<script type="text/javascript" src="~/file.php?fid='.$file['id'].'"></script>'); break;
         }
       }
       
@@ -781,7 +802,7 @@
      *  @return generated menu                    
      *
      */              
-    public function getMenu($parentId = false, $inner = false, $classes = false, $template = false, $inn = false) {
+    public function getMenu($parentId = false, $inner = false, $classes = false, $rel = false, $template = false, $inn = false) {
       global $dbObject;
       global $loginObject;
       if($inn == false) {
@@ -819,7 +840,7 @@
           $content .= ''
 					.'<li class="menu-item li-'.$i.(($parent) ? ' active-parent' : '').(($active) ? ' active-item' : '').' '.((strlen($tmpContent) != 0) ? 'parent' : 'single').'">'
 						.'<div class="link'.(($parent) ? ' active-parent-link' : '').(($active) ? ' active-link' : '').'">'
-							.'<a href="'.$href.'">'
+							.'<a href="'.$href.'"'.(($rel != false) ? ' rel="'.$rel.'"' : '').'>'
 								.'<span>'.$lnk['name'].'</span>'
 							.'</a>'
 						.'</div>'
@@ -1397,6 +1418,10 @@
 	        exit;			
 				}
 			}
+		}
+		
+		public function language() {
+			return 'cs';
 		}
   }
 

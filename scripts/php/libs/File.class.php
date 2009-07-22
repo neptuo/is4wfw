@@ -558,7 +558,7 @@
     private function processFileUpload() {
       global $dbObject;
       global $loginObject;
-      $fileName = str_replace(".", "-", str_replace(" ", "-", strtolower($_POST['file-name'])));
+      $fileName = $_POST['file-name'];
       $dirId = $_POST['dir-id'];
       $fileTitle = $_POST['file-title'];
       $read = $_POST['file-right-edit-groups-r'];

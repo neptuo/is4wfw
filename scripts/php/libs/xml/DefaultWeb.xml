@@ -32,6 +32,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>rel</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>template</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -281,6 +285,13 @@
     <function>getLastPageUpdate</function>
     <comment>
       Zobrazí čas a datum poslední úpravy stránky.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>language</tagname>
+    <function>language</function>
+    <comment>
+      
     </comment>
   </tag>
 </taglib>

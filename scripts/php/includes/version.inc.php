@@ -5,6 +5,6 @@
 	 *	Web framework version.
 	 *
 	 */	 	 	 	
-	define("WEB_VERSION", "1.4.1.149");
+	define("WEB_VERSION", "1.5.1.153");
 
 ?>
