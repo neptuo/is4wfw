@@ -13,7 +13,7 @@
    *  User access counter.      
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-05-12
+   *  @timestamp  2009-07-02
    * 
    */  
   class Counter extends BaseTagLib {                      
@@ -74,7 +74,7 @@
      *  @return   values from 	table counter in template          
      *
      */                   
-    public function showTable($template = false, $templateId = false, $id = false) {
+    public function showTable($template = false, $templateId = false, $id = false, $leadingZeros = false) {
       global $dbObject;
       global $loginObject;
       $userIp = $_SERVER['REMOTE_ADDR'];
@@ -151,6 +151,16 @@
           }
         }
       }
+      
+      if($leadingZeros != false && $leadingZeros > 0 && $leadingZeros <= 10) {
+				foreach($_SESSION['counter'] as $key => $value) {
+					for($j = 0; $j < $leadingZeros; $j ++) {
+						if(strlen($_SESSION['counter'][$key]) <= $j) {
+							$_SESSION['counter'][$key] = '0'.$_SESSION['counter'][$key];
+						}
+					}
+				}
+			}
       
       /*foreach($counter as $key => $col) {
         $templateContent = str_replace('<tpl:'.$key.' />', $col, $templateContent);

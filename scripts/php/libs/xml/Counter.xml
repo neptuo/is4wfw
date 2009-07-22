@@ -4,7 +4,7 @@
   <name>Counter Lib</name>
   <classname>Counter</classname>
   <classpath>php.libs</classpath>
-  <version>1.10</version>
+  <version>1.11</version>
   <count>*</count>
   <comment>
     Třída pro počítající uživatelské přístupy.
@@ -40,9 +40,14 @@
       <attname>id</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>valueLength</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Počítá uživatelské přístupy.
       Template nebo templateId musí zadán.
+      'valueLength' je pocet znaku, na ktery je zarovnana vystupni hodnota.
     </comment>
   </tag>
   <tag>

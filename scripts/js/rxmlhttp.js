@@ -8,14 +8,15 @@ function Rxmlhttp () {
 	var method = "GET";
 	var async = true;
 	var action = null;
+	var error = null;
 	
 	/* create xmlhttp object */
 	try {
 		Rxmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-	} catch (e) {
+	} catch (e1) {
 		try {
 			Rxmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		} catch (E) {
+		} catch (e2) {
 			Rxmlhttp = false;
 		}
 	}
@@ -52,6 +53,16 @@ function Rxmlhttp () {
 	 */
 	this.onSuccess = function(newVal){
 		action = newVal;
+		return this;
+	}
+	
+	/**
+	 * Function to call on error in request
+	 * @param function newVal have to accept one argument - Rxmlhttp object
+	 * @return Rxmlhttp object 
+	 */
+	this.onError = function(newVal){
+		error = newVal;
 		return this;
 	}
 	
@@ -108,6 +119,8 @@ function Rxmlhttp () {
 				if (Rxmlhttp.responseText && action != null) {
 					action(Rxmlhttp);
 				}
+			} else {
+				error(Rxmlhttp);
 			}
 		}
 		return own;

@@ -12,7 +12,7 @@
    *  Class for working Database.
    *  
    *  @author     Marek SMM
-   *  @timestamp  2008-12-06
+   *  @timestamp  2009-07-17
    *   
    */              
   class Database extends BaseTagLib {
@@ -91,13 +91,19 @@
      *
      */                   
     public function execute($query, $showQuery = false, $notExecuteQuery = false) {
+    	global $logObject;
 			if($this->IsOpen) {
 			  if($showQuery) {
-          echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br />".$query."</div>";
+          echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
 			  }
 			  
 			  if(!$notExecuteQuery) {
   				$result = mysql_query($query);
+  				
+  				$errno = mysql_errno();
+  				if($errno != 0) {
+						$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
+					}
 				}
 				
 				return $return;
@@ -118,14 +124,20 @@
      *
      */                   
     public function fetchAll($query, $showQuery = false, $printOutput = false, $notExecuteQuery = false) {
+    	global $logObject;
 			if($this->IsOpen) {
 			  if($showQuery) {
-          echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br />".$query."</div>";
+          echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
 			  }
 			  
 			  if(!$notExecuteQuery) {
   				$result = mysql_query($query);
   				$return = array();
+  				
+  				$errno = mysql_errno();
+  				if($errno != 0) {
+						$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
+					}
   				
   				while($row = mysql_fetch_assoc($result)) {
   					$return[] = $row;

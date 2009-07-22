@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-05-18
+   *  @timestamp  2009-07-21
    * 
    */  
   class Page extends BaseTagLib {
@@ -51,7 +51,7 @@
 				if(array_key_exists('selected-project', $_SESSION)) {
 					$projectId = $_SESSION['selected-project'];
 				} else {
-					return parent::getFrame("Page List", '<h4 class="error">No pages to edit!</h4>', "", true);
+					return parent::getFrame("Page List", '<h4 class="error">No pages to edit!</h4>', "page-pagelist", true);
 				}
 			}
       
@@ -60,8 +60,8 @@
         $parentId = $_POST['parent-id'];
         $languageId = $_POST['language'];
         $name = $_POST['edit-name'];
-        $escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n", " " => "-");
-        $href = strtr(strtolower($_POST['edit-href']), $escapeChars);
+        $escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n", "." => "-");
+        $href = strtr($_POST['edit-href'], $escapeChars);
         $inTitle = ($_POST['edit-in-title'] == "on") ? 1 : 0;
         $visible = ($_POST['edit-visible'] == "on") ? 1 : 0;
         $menu = ($_POST['edit-menu'] == "on") ? 1 : 0;
@@ -185,7 +185,7 @@
 							}
 						}
             
-            $return .= parent::getFrame("Success Message", '<h4 class="success">New page added!</h4>', "", true);
+            $return .= parent::getFrame("Success Message", '<h4 class="success">New page added!</h4>', "page-listadded", true);
           } else if($type == "page-add-lang-ver") {
             
             $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(".$pageId.", \"".$tlStart."\", \"".$tlEnd."\", \"".$head."\", \"".$content."\", ".$languageId.");");
@@ -866,7 +866,7 @@
           //$returnTmp .= '</div>';
           
           if($langsCount) {
-          	$return .= parent::getFrame($frameTitle, $returnTmp, "");
+          	$return .= parent::getFrame($frameTitle, $returnTmp, "page-editpage");
           } else {
 						$return .= parent::getFrame($frameTitle, '<h4 class="error">You can\'t add more language versions at this moment! Please, first, add language version to parent page or if this is root page, create more language versions in web application!</h4>', "");
 					}
@@ -932,13 +932,17 @@
         	foreach($files as $file) {
           $returnTmp .= '<tr class="file-tr '.((($i % 2) == 0) ? 'even' : 'idle').'">'
                       .'<td class="file-name">'
-                          .$file['name']
+                          .'<label for="remove-text-files-files-'.$file['id'].'">'.$file['name'].'</label>'
                       .'</td>'
                       .'<td class="file-content">'
-                        .'<div class="file-content-in"><div class="foo">'.substr($file['content'], 0, 130).'</div></div>'
+                        .'<label for="remove-text-files-files-'.$file['id'].'">'
+													.'<div class="file-content-in"><div class="foo">'.substr($file['content'], 0, 130).'</div></div>'
+												.'</label>'
                       .'</td>'
                       .'<td class="file-type">'
-                        .$filesEx[$file['type']]
+                      	.'<label for="remove-text-files-files-'.$file['id'].'">'
+                        	.$filesEx[$file['type']]
+                        .'</label>'
                       .'</td>'
                       /*.'<td>'
                         .(($editable) ? ''
@@ -1009,7 +1013,7 @@
         } else {
 					$return2 = '<h4 class="warning">No files to add!</h4>';
 				}
-        $return .= parent::getFrame('Text Files', $return1.$return2, '');
+        $return .= parent::getFrame('Text Files', $return1.$return2, 'page-textfiles');
       }
       
       if($_POST['select-lang'] == "Select") {
@@ -1032,7 +1036,7 @@
       $returnTmp .= '<div class="pages-list-in">';
       $returnTmp .= self::generatePageList(0, $editable, 0, $projectId);
       $returnTmp .= '</div></div>';
-      $return .= parent::getFrame('Page List', $returnTmp, '');
+      $return .= parent::getFrame('Page List', $returnTmp, 'page-pagelist');
       
       if($_SESSION['selected-project'] != null) {
       	$returnTmp = ''
@@ -1042,7 +1046,7 @@
     	  		.'<input type="submit" name="add-new-page" value="Add new page" />'
     		  .'</form>'
   	    .'</div>';
-	      $return .= parent::getFrame('New Page', $returnTmp, '');
+	      $return .= parent::getFrame('New Page', $returnTmp, 'page-newlist');
       }
       
       return $return;
