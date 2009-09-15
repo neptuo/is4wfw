@@ -35,18 +35,40 @@
     		case WEB_TYPE_JS: $fileType = "application/x-javascript"; break;
   	  }
   	  
-  	  //require_once("scripts/php/classes/CustomTagParser.class.php");
-  	  /*$Parser = new CustomTagParser();
-			$Parser->setContent($file[0]['content']);
-			$Parser->startParsing();
- 			$file[0]['content'] = $Parser->getResult();*/
-  	  
-	    $file[0]['content'] = str_replace("~/", WEB_ROOT, $file[0]['content']);   
-    	header('Content-Type: '.$fileType);
-    	header('Content-Length: '.strlen($file[0]['content']));
-  	  header('Content-Transfer-Encoding: binary');
-	    echo $file[0]['content'];
-  		exit;
+	    $file[0]['content'] = str_replace("~/", WEB_ROOT, $file[0]['content']);
+			
+			// Zipovani ...
+			/*$acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
+    	if(headers_sent()) {
+        $encoding = false;
+    	} elseif(strpos($acceptEnc, 'x-gzip') !== false) {
+        $encoding = 'x-gzip';
+  	  } elseif(strpos($acceptEnc,'gzip') !== false) {
+        $encoding = 'gzip';
+	    } else {
+        $encoding = false;
+    	}*/
+    	
+    	$return = $file[0]['content'];
+
+      $size = strlen($return);
+      $return = gzcompress($return, 9);
+      $return = substr($return, 0, $size);
+			if($encoding) {
+	      header('Content-Encoding: '.$encoding);   
+  	  	header('Content-Type: '.$fileType);
+    		header('Content-Length: '.strlen($file[0]['content']));
+  	  	header('Content-Transfer-Encoding: binary');
+	      print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
+		    echo $file[0]['content'];
+  			exit;
+  		} else {
+				header('Content-Type: '.$fileType);
+    		header('Content-Length: '.strlen($file[0]['content']));
+  	  	header('Content-Transfer-Encoding: binary');
+  	  	echo $file[0]['content'];
+  			exit;
+			}
   	} else {
 	  	header("HTTP/1.1 404 Not Found");
     	echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';

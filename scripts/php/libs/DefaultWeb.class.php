@@ -16,7 +16,7 @@
    *  @objectname webObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2009-06-19	    
+   *  @timestamp  2009-09-10	    
    *
    */           
   class DefaultWeb extends BaseTagLib {
@@ -141,19 +141,33 @@
     
     private $Https = '';
     
+    private $ProjectUrlDef = '';
+    
+    private $ProjectUrl = '';
+    
+    private $UrlDef = '';
+    
+    private $Url = '';
+    
     /**
      *
      *  Regular expression for parsing c tag.     
      *
      */              
-    private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.\*`_;:/?-]*)*" )*)\/>)';
+    private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.,\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*" )*)\/>)';
+    
+    private $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
+    
+    private $PropertyUse = '';
+    
+    private $PropertyAttr = '';
     
     /**
      *
      *  Regular expression for parsing attribute.
      *
      */                   
-    private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.\*`_;:/?-]*)*")';
+    private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*")';
     
     private $PagesId = array();
     
@@ -215,50 +229,154 @@
       	$otherProtocol = "https";
 			}
 			$this->Protocol = $domainProtocol;
-      
-      $dbProject = $dbObject->fetchAll('SELECT `id`, `http`, `https` FROM `web_project` WHERE `url` = "'.$domainUrl.'";');
-      if(count($dbProject) != 0 && $dbProject[0][$domainProtocol] == 1) {
-      	$this->ProjectId = $dbProject[0]['id'];
-      } else {
-				$dbProjectA = $dbObject->fetchAll('SELECT `project_id`, `http`, `https` FROM `web_alias` WHERE `url` = "'.$domainUrl.'";');
-				if(count($dbProjectA) != 0 && $dbProjectA[0][$domainProtocol] == 1) {
-      		$this->ProjectId = $dbProjectA[0]['project_id'];
-      	} elseif($dbProject[0][$otherProtocol] == 1 || $dbProjectA[0][$otherProtocol] == 1) {
-      		header('Location: '.$otherProtocol.'://'.$domainUrl.'/'.$this->Path);
-      		exit;
-      	} else {
-					header("HTTP/1.1 404 Not Found");
-  	      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-	        exit;
-				}
-			}
-      
-      $path = $phpObject->str_tr($this->Path, '/', 1);
-      $return = $dbObject->fetchAll("SELECT `id` FROM `language` WHERE `language` = \"".$path[0]."\";");
-      if(count($return) == 1) {
-      	$this->LanguageName = $path[0];
-        $this->LanguageId = $return[0]['id'];
-        $this->Path = $path[1];
-      } else {
-        $return = $dbObject->fetchAll("SELECT `id` FROM `language` WHERE `language` = \"\";");
-        if(count($return) == 1) {
-          $this->LanguageId = $return[0]['id'];
-          if($path[1] != '') {
-          	$this->Path = $path[0]."/".$path[1];
-          } else {
-						$this->Path = $path[0];
-					}
-        } else {
-        	// try to load setuped error page, else display "default"!
-        
-          $error = "Sorry, but this language version doesn't exists!";
-          echo "<h4 clas=\"error\">".$error."</h4>";
-          trigger_error($error, E_USER_ERROR);
-        }
-      }
-      
-      $ucache = $dbObject->fetchAll('SELECT `id`, `page-ids`, `cachetime`, `lastcache` FROM `urlcache` WHERE `url` = "'.$this->Path.'" AND `language_id` = '.$this->LanguageId.' AND `wp` = '.$this->ProjectId.';');
+			
+			// Test url cache ...
+			$ucache = $dbObject->fetchAll('SELECT `id`, `project_url_def`, `project_url`, `url_def`, `url`, `page-ids`, `cachetime`, `lastcache`, `language_id`, `wp` FROM `urlcache` WHERE CONCAT(`project_url`, "/", `url`) = "'.$this->ServerName.'/'.$this->Path.'";');
       if(count($ucache) == 0) {
+      
+	      $dbProject = $dbObject->fetchAll('SELECT `id`, `http`, `https`, `url` FROM `web_project`;');
+  	    $ok = false;
+    	  $temp_req = $phpObject->str_tr($domainUrl, '.', 1);
+      	$prj_add_url = '';
+	      foreach($dbProject as $i => $project) {
+  	    	$ok = true;
+    	  	$prj_add_url = '';
+      		$parsed_url = $phpObject->str_tr($project['url'], '/', 1);
+      		$project['url'] = $parsed_url[0];
+	      	//$temp_url_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $project['url']);
+  		    $temp_url = $phpObject->str_tr($project['url'], '.');
+  		    for($j = 0; $j < count($temp_url); $j ++) {
+  	  	  	$this->PropertyAttr = $temp_req[0];
+						$this->PropertyUse = 'set';
+  	    		$temp_url_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_url[$j]);
+						if($temp_url_rrc == $temp_req[0]) {
+							$temp_req = $phpObject->str_tr($temp_req[1], '.', 1);
+						} else {
+							$ok = false;
+						}
+					}
+				
+					$path = $phpObject->str_tr($this->Path, '/', 1);
+					if($ok && $parsed_url[1] != '') {
+						$temp_path = $phpObject->str_tr($parsed_url[1], '/');
+      			for($j = 0; $j < count($temp_path); $j ++) {
+  	   				$this->PropertyAttr = $path[0];
+							$this->PropertyUse = 'set';
+	 		  	  	$temp_path_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_path[$j]);
+							if($temp_path_rrc == $path[0]) {
+    	  				$prj_add_url .= '/'.$temp_path_rrc;
+								$path = $phpObject->str_tr($path[1], '/', 1);
+							} else {
+								$ok = false;
+								break;
+							}
+						}
+					}
+					
+					if($ok) {
+						if($dbProject[$i][$domainProtocol] == 1) {
+							$this->ProjectId = $dbProject[$i]['id'];
+							$this->ProjectUrlDef = $parsed_url[0].'/'.$parsed_url[1];
+							$this->ProjectUrl = $this->ServerName.$prj_add_url;
+							break;
+						} elseif($dbProject[$i][$otherProtocol] == 1) {
+							header('Location: '.$otherProtocol.'://'.$domainUrl.'/'.$this->Path);
+						} else {
+							$ok = false;
+						}
+					}
+      	}
+      
+	      if($ok == false) {
+					$dbProject = $dbObject->fetchAll('SELECT `id`, `project_id`, `http`, `https`, `url` FROM `web_alias`;');
+  		    $temp_req = $phpObject->str_tr($domainUrl, '.', 1);
+	    	  foreach($dbProject as $i => $project) {
+      			$ok = true;
+      			$prj_add_url = '';
+	  	    	$parsed_url = $phpObject->str_tr($project['url'], '/', 1);
+		      	$project['url'] = $parsed_url[0];
+    		  	//$temp_url_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $project['url']);
+  			    $temp_url = $phpObject->str_tr($project['url'], '.');
+  		  	  for($j = 0; $j < count($temp_url); $j ++) {
+  		    		$this->PropertyAttr = $temp_req[0];
+							$this->PropertyUse = 'set';
+	  		    	$temp_url_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_url[$j]);
+							if($temp_url_rrc == $temp_req[0]) {
+								$ok = true;
+								$temp_req = $phpObject->str_tr($temp_req[1], '.', 1);
+							} else {
+								$ok = false;
+								break;
+							}
+						}
+					
+						$path = $phpObject->str_tr($this->Path, '/', 1);
+						if($ok && $parsed_url[1] != '') {
+							$temp_path = $phpObject->str_tr($parsed_url[1], '/');
+      				for($j = 0; $j < count($temp_path); $j ++) {
+  	  	 				$this->PropertyAttr = $path[0];
+								$this->PropertyUse = 'set';
+	 			  	  	$temp_path_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_path[$j]);
+								if($temp_path_rrc == $path[0]) {
+    	  					$prj_add_url .= '/'.$temp_path_rrc;
+									$path = $phpObject->str_tr($path[1], '/', 1);
+								} else {
+									$ok = false;
+									break;
+								}
+							}
+						}
+					
+						if($ok) {
+							if($dbProject[$i][$domainProtocol] == 1) {
+								$this->ProjectId = $dbProject[$i]['project_id'];
+								$this->ProjectUrlDef = $parsed_url[0].'/'.$parsed_url[1];
+								$this->ProjectUrl = $this->ServerName.$prj_add_url;
+								break;
+							} elseif($dbProject[$i][$otherProtocol] == 1) {
+								header('Location: '.$otherProtocol.'://'.$domainUrl.'/'.$this->Path);
+							} else {
+								$ok = false;
+							}
+						}
+		      }
+				}
+			
+				if($ok == false) {
+					header("HTTP/1.1 404 Not Found");
+  	    	echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+		      exit;
+				}
+			
+				if(strlen($path[1]) != 0) {
+					$this->Url = $path[0].'/'.$path[1];
+				} else {
+					$this->Url = $path[0];
+				}
+			
+				// Parsovat tag_lib_start + end!!!!!!!!!!!!!
+			
+      	$return = $dbObject->fetchAll("SELECT `id` FROM `language` WHERE `language` = \"".$path[0]."\";");
+	      if(count($return) == 1) {
+  	    	$this->LanguageName = $path[0];
+    	    $this->LanguageId = $return[0]['id'];
+      	  $this->Path = $path[1];
+	      } else {
+  	      $return = $dbObject->fetchAll("SELECT `id` FROM `language` WHERE `language` = \"\";");
+    	    if(count($return) == 1) {
+      	    $this->LanguageId = $return[0]['id'];
+        	  if($path[1] != '') {
+          		$this->Path = $path[0]."/".$path[1];
+	          } else {
+							$this->Path = $path[0];
+						}
+      	  } else {
+          	$error = "Sorry, but this language version doesn't exists!";
+	          echo "<h4 clas=\"error\">".$error."</h4>";
+  	        trigger_error($error, E_USER_ERROR);
+    	    }
+      	}
+      
       	self::parsePages($this->Path, 0);
       	
       	$pcache = '';
@@ -268,12 +386,60 @@
 						$pcache .= '-';
 					}
 				}
-				$dbObject->execute('INSERT INTO `urlcache` (`url`, `page-ids`, `language_id`, `wp`, `lastcache`, `cachetime`) VALUES ("'.$this->Path.'", "'.$pcache.'", '.$this->LanguageId.', '.$this->ProjectId.', 0, '.$this->CacheTime.');');
+				
+				$dbObject->execute('INSERT INTO `urlcache` (`project_url_def`, `project_url`, `url_def`, `url`, `page-ids`, `language_id`, `wp`, `lastcache`, `cachetime`) VALUES ("'.$this->ProjectUrlDef.'", "'.$this->ProjectUrl.'", "'.$this->UrlDef.'", "'.$this->Url.'", "'.$pcache.'", '.$this->LanguageId.', '.$this->ProjectId.', 0, '.$this->CacheTime.');');
 				$oldCacheFile = "cache/pages/page-".$ucache[0]['page-ids'].".cache.html";
 				if(is_file($oldCacheFile)) {
 					unlink($oldCacheFile);
 				}
       } else {
+      	// Setup globals ....
+      	$this->ProjectId = $ucache[0]['wp'];
+      	$this->ProjectUrlDef = $ucache[0]['project_url_def'];
+      	$this->ProjectUrl = $ucache[0]['project_url'];
+      	$this->UrlDef = $ucache[0]['url_def'];
+      	$this->Url = $ucache[0]['url'];
+      	$this->LanguageId = $ucache[0]['language_id'];
+      	
+      	// Parse domain for setup dynamic properties
+      	$temp_req = $phpObject->str_tr($this->ProjectUrl, '.', 1);
+      	$prj_add_url = '';
+     		$parsed_url = $phpObject->str_tr($this->ProjectUrlDef, '/', 1);
+     		$project['url'] = $parsed_url[0];
+ 		    $temp_url = $phpObject->str_tr($project['url'], '.');
+ 		    for($j = 0; $j < count($temp_url); $j ++) {
+ 	  	  	$this->PropertyAttr = $temp_req[0];
+					$this->PropertyUse = 'set';
+ 	    		$temp_url_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_url[$j]);
+					if($temp_url_rrc == $temp_req[0]) {
+						$temp_req = $phpObject->str_tr($temp_req[1], '.', 1);
+					} else {
+						$ok = false;
+					}
+				}
+			
+				$path = $phpObject->str_tr($this->Path, '/', 1);
+				if($ok && $parsed_url[1] != '') {
+					$temp_path = $phpObject->str_tr($parsed_url[1], '/');
+     			for($j = 0; $j < count($temp_path); $j ++) {
+ 	   				$this->PropertyAttr = $path[0];
+						$this->PropertyUse = 'set';
+ 		  	  	$temp_path_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_path[$j]);
+						$path = $phpObject->str_tr($path[1], '/', 1);
+					}
+				}
+      	
+      	// Parse url for setup dynamic properties
+      	$path = $phpObject->str_tr($this->Url, '/', 1);
+      	$temp_path = $phpObject->str_tr($this->UrlDef, '/');
+     		for($j = 0; $j < count($temp_path); $j ++) {
+     			$this->PropertyAttr = $path[0];
+					$this->PropertyUse = 'set';
+ 		    	$temp_path_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_path[$j]);
+					$path = $phpObject->str_tr($path[1], '/', 1);
+				}
+      	
+      	// Old code ...
       	$this->CacheInfo['id'] = $ucache[0]['id'];
       	$this->CacheInfo['cachetime'] = $ucache[0]['cachetime'];
       	$this->CacheInfo['lastcache'] = $ucache[0]['lastcache'];
@@ -385,8 +551,34 @@
         }
       } else {
       	for($i = 0; $i < count($return); $i ++) {
-    	    $tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['href']);
-  	      if($tmp_path == $path[0]) {
+      		$ok = true;
+      		//$temp_path_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['href']);
+      		$temp_path = $phpObject->str_tr($return[$i]['href'], '/');
+      		for($j = 0; $j < count($temp_path); $j ++) {
+      			//$temp_path_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $temp_path[$j]);
+      			$this->PropertyAttr = $path[0];
+						$this->PropertyUse = 'set';
+  		    	$temp_path_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_path[$j]);
+						if($temp_path_rrc == $path[0]) {
+							if(strlen($temp_path[$j]) != 0) {
+								if(strlen($this->UrlDef) == 0) {
+									$this->UrlDef .= $temp_path[$j];
+								} else {
+									$this->UrlDef .= '/'.$temp_path[$j];
+								}
+							}
+							$path = $phpObject->str_tr($path[1], '/', 1);
+						} else {
+							$ok = false;
+							break;
+						}
+					}
+					//exit;
+					// Dynamic rewrite ==== IMPORTANT ---------------
+    	    //$tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['href']);
+    	    // ----------------------------------------------
+  	      
+					if($ok/*$tmp_path == $path[0]*/) {
 	          $this->ParsingPages = true;
           	preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_start']);
         	  
@@ -399,8 +591,7 @@
 								$this->CacheTime = $return[$i]['cachetime'];
 							}
 						}
-      	    
-    	      self::parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0].'/'.$path[1], $return[$i]['page_id']);
+    	      self::parsePages($path[0].'/'.$path[1], $return[$i]['page_id']);
   	        
 	          preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['tag_lib_end']);
           	  
@@ -520,22 +711,21 @@
       		.'<rssmm:content>'.$this->PageContent.'</rssmm:content>'
       	.'</rssmm:response>';
       } else {
-	      $return = 
-			 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-        <html xmlns="http://www.w3.org/1999/xhtml">
-        <head>
-  	    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  	    <meta name="description" content="'.$this->PageTitle.'" />
-  	    <meta name="keywords" content="'.((strlen($this->Keywords) > 0) ? $this->Keywords.',' : '').((strlen($keywords) > 0) ? $keywords.',' : '').'wfw,rssmm" />
-  	    <meta http-equiv="Content-language" content="'.$lang.'" />
-  	    <meta name="robots" content="all, index, follow" />
-  	    <meta name="author" content="WFW Group www.rssmm.wz.cz Marek Fišera" /> 
-  	    <title>'.$this->PageTitle.'</title>
-        '.$this->PageHead.$this->PageStyles.$this->PageScripts.'
-        </head>
-        <body>'.$this->PageContent.'</body>
-        </html>
-        ';
+	      $return = ''
+			 .'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
+        .'<html xmlns="http://www.w3.org/1999/xhtml">'
+        	.'<head>'
+  	    		.'<meta http-equiv="content-type" content="text/html; charset=utf-8" />'
+  	    		.'<meta name="description" content="'.$this->PageTitle.'" />'
+		  	    .'<meta name="keywords" content="'.((strlen($this->Keywords) > 0) ? $this->Keywords.',' : '').((strlen($keywords) > 0) ? $keywords.',' : '').'wfw,rssmm" />'
+  	    		.'<meta http-equiv="Content-language" content="'.$lang.'" />'
+  			    .'<meta name="robots" content="all, index, follow" />'
+		  	    .'<meta name="author" content="Marek Fišera" />' 
+  	    		.'<title>'.$this->PageTitle.'</title>'
+    		    .$this->PageHead.$this->PageStyles.$this->PageScripts
+  	      .'</head>'
+	        .'<body>'.$this->PageContent.'</body>'
+        .'</html>';
       }
       $return = str_replace("~/", WEB_ROOT, $return);
       //echo "<html>\n\t<head>\n<title>\n".$this->PageTitle."\n</title>\n".$this->PageHead."\n</head>\n<body>\n".$this->PageContent."\n</body>\n</html>"; 
@@ -550,7 +740,7 @@
       
       $return = preg_replace_callback('(&web:page=([0-9]+))', array( &$this,'parseproperties'), $return);
       
-      $return = preg_replace_callback('(<web:frame( title="([a-zA-Z0-9]*)")*( open="([a-z]*)")*>(.*)</web:frame>)', array( &$this,'parsepostframes'), $return);
+      $return = preg_replace_callback('(<web:frame( title="(([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.\*`_;:/?-]*)*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array( &$this,'parsepostframes'), $return);
       
       //echo $return; 
       //echo $this->PageContent;
@@ -571,14 +761,14 @@
 		
 		private function parsepostframes($values) {
 			$open = false;
-			if($values[4] == "true") {
+			if($values[5] == "true") {
 				$open = true;
 			}
 			
-			$title = ((strlen($values[2]) == 0) ? ' ' : $values[2]);
-			$content = $values[count($values) - 1];
+			$title = $values[2];
+			$content = $values[6];
 			
-			$path = parent::getFrame($title, $content, "", $open);
+			$path = getFrame($title, $content, "", $open);
 			return $path;
 		}
 		
@@ -622,12 +812,15 @@
      */
     public function composeUrl($pageId, $languageId = false, $absolutePath = false) {
       global $dbObject;
+      global $phpObject;
       $languageId = ($languageId === false) ? $this->LanguageId : $languageId;
       $lastPageId = 0;
+      
       while($pageId != 0) {
         $return = $dbObject->fetchAll("SELECT `parent_id`, `href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = ".$pageId." AND `info`.`language_id` = ".$languageId.";");
         if(count($return) == 1) {
           if(strlen($return[0]['href']) != 0 && !preg_match($this->TAG_RE, $return[0]['href'])) {
+            $return[0]['href'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $return[0]['href']);
             $this->CurrentPath = "/".$return[0]['href'].$this->CurrentPath;
           }
           $lastPageId = $pageId; 
@@ -651,15 +844,37 @@
         $project = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`url`, `web_project`.`http`, `web_project`.`https` FROM `web_project` LEFT JOIN `page` ON `web_project`.`id` = `page`.`wp` WHERE `page`.`id` = '.$lastPageId.';');
         if(count($project) != 0) {
         	if(($project[0]['id'] == $this->ProjectId && !$absolutePath) || $absolutePath == 'no') {
-        		return $tmpPath;
+        		$prjUrl = $phpObject->str_tr($this->ProjectUrlDef, '/', 1);
+        		$prjUrlPart = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $prjUrl[1]);
+        		if(strlen($prjUrlPart) != 0) {
+        			return '/'.$prjUrlPart.$tmpPath;
+        		} else {
+							return $tmpPath;
+						}
         	} else {
 						if($this->Protocol == 'http' && $project[0]['http'] == 1) {
+  			    	$this->PropertyAttr = $project[0]['url'];
+							$this->PropertyUse = 'get';
+	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
+	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
 							return 'http://'.$project[0]['url'].$tmpPath;
 						} elseif($this->Protocol == 'https' && $project[0]['https'] == 1) {
+  			    	$this->PropertyAttr = $project[0]['url'];
+							$this->PropertyUse = 'get';
+	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
+	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
 							return 'https://'.$project[0]['url'].$tmpPath;
 						} elseif($project[0]['http'] == 1) {
+  			    	$this->PropertyAttr = $project[0]['url'];
+							$this->PropertyUse = 'get';
+	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
+	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
 							return 'http://'.$project[0]['url'].$tmpPath;
 						} elseif($project[0]['https'] == 1) {
+  			    	$this->PropertyAttr = $project[0]['url'];
+							$this->PropertyUse = 'get';
+	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
+	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
 							return 'https://'.$project[0]['url'].$tmpPath;
 						}
 					}
@@ -698,6 +913,9 @@
       foreach($this->Attributes as $tmp) {
         $att = explode("=", $tmp);
         if(strlen($att[0]) > 0) {
+      		$this->PropertyAttr = '';
+					$this->PropertyUse = 'get';
+        	$att[1] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $att[1]);
           $attributes[$att[0]] = str_replace("\"", "", $att[1]);
         }
       }
@@ -721,6 +939,31 @@
           eval('$return =  ${$object[0]."Object"}->{$func}('.$attstring.');');
           return $return;
         }  
+      } else {
+        echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
+        return "";
+      }
+    }
+    
+    /**
+     *
+     *  Function parses custom property, call right function & return content.
+     *  
+     *  @param  cprop  custom property as string
+     *  @return return of custom property function     
+     *
+     */
+    private function parsecproperty($cprop) {
+      $object = explode(":", $cprop[1]);
+      $attributes = array();
+      $this->Attributes = array();
+      
+      global $phpObject;
+      if($phpObject->isRegistered($object[0]) && $phpObject->isProperty($object[0], $object[1])) {
+        global ${$object[0]."Object"};
+        $func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
+        eval('$return =  ${$object[0]."Object"}->{$func}("'.$this->PropertyAttr.'");');
+        return $return;
       } else {
         echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
         return "";
@@ -1082,16 +1325,18 @@
      *	@param		pageId		page id to redirect
      *	@parem		langId		language id of page
      *	@param		browser		browser name
+     *	@param		ip				client ip addresses separed by comma
      *	@return		none
      *
      */		 		 		     
-    public function redirectTo($pageId, $langId = false, $browser = false) {
+    public function redirectTo($pageId, $langId = false, $browser = false, $ip = false) {
     	global $webObject;
+    	global $phpObject;
     
 			if($langId != false) {
 				$href = $webObject->composeUrl($pageId, $langId);
 			} else {
-				$href = $webObject->composeUrl($pageId, $langId);
+				$href = $webObject->composeUrl($pageId, false);
 			}
 			
 			$redirect = true;
@@ -1106,8 +1351,16 @@
 					$redirect = false;
 				}
 			}
+			if(strlen($ip) > 0) {
+				$ips = $phpObject->str_tr($ip, ',');
+				if(in_array($_SERVER['REMOTE_ADDR'], $ips)) {
+					$redirect = true;
+				} else {
+					$redirect = false;
+				}
+			}
 			
-			if($redirect) {
+			if($redirect && $href != '#') {
 				header("Location: ".$href);
 				exit;
 			}
@@ -1418,10 +1671,6 @@
 	        exit;			
 				}
 			}
-		}
-		
-		public function language() {
-			return 'cs';
 		}
   }
 

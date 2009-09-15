@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-07-22
+   *  @timestamp  2009-07-25
    * 
    */  
   class Page extends BaseTagLib {
@@ -1532,6 +1532,7 @@
     public function manageUrlCache() {
 			global $dbObject;
 			$return = $msg = '';
+			$projectId = 0;
 			$pageId = '';
 			$partOfUrl = '';
 			$urlCache = array();
@@ -1555,13 +1556,20 @@
 			
 			if($_POST['show-url-cache'] == 'Show url cache') {
 				$pageId = $_POST['page-id-url-cache'];
+				$projectId = $_POST['project-id-url-cache'];
 				$partOfUrl = $_POST['part-of-url-url-cache'];
-				if(strlen($pageId) != 0 && strlen($partOfUrl) != 0) {
+				if(strlen($pageId) != 0 && strlen($partOfUrl) != 0 && $projectId != 0) {
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") AND (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") AND `web_project`.`id` = '.$projectId.' ORDER BY `urlcache`.`id`;');
+				} elseif(strlen($pageId) != 0 && strlen($partOfUrl) != 0) {
 					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") AND (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") ORDER BY `urlcache`.`id`;');
+				} elseif(strlen($partOfUrl) != 0 && $projectId != 0) {
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") AND `web_project`.`id` = '.$projectId.' ORDER BY `urlcache`.`id`;');
 				} elseif(strlen($partOfUrl) != 0) {
 					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") ORDER BY `urlcache`.`id`;');
 				} elseif(strlen($pageId) != 0) {
 					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") ORDER BY `urlcache`.`id`;');
+				} elseif($projectId != 0) {
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE `web_project`.`id` = '.$projectId.' ORDER BY `urlcache`.`id`;');
 				} else {
 					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` ORDER BY `urlcache`.`id`;');
 				}
@@ -1620,6 +1628,12 @@
 				$sent = true;
 			}
 			
+			$projectsDb = $dbObject->fetchAll('SELECT `id`, `name` FROM `web_project` ORDER BY `name`;');
+			$projects = '';
+			foreach($projectsDb as $prj) {
+				$projects .= '<option value="'.$prj['id'].'"'.(($projectId == $prj['id']) ? 'selected="selected"' : '').'>'.$prj['name'].'</option>';
+			}
+			
 			$returnForm = ''
 			.((strlen($msg) > 0) ? $msg : '' )
 			.'<div class="clear-url-cache">'
@@ -1627,6 +1641,13 @@
 					.'<div class="part-of-url">'
 						.'<label for="part-of-url-url-cache">Part of url:</label> '
 						.'<input id="part-of-url-url-cache" type="text" name="part-of-url-url-cache" value="'.$partOfUrl.'" />'
+					.'</div>'
+					.'<div class="project-id">'
+						.'<label for="project-id-url-cache">Project:</label> '
+						.'<select id="project-id-url-cache" type="text" name="project-id-url-cache">'
+							.'<option value="0">All</option>'
+							.$projects
+						.'</select>'
 					.'</div>'
 					.'<div class="page-id">'
 						.'<label for="page-id-url-cache">Page id:</label> '

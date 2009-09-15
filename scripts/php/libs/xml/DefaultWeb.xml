@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.45</version>
+  <version>1.55</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -80,19 +80,19 @@
     </attribute>
     <attribute>
       <attname>languageId</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>notParseCTag</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>whenLogged</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>whenNotLogged</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vloží do stránky další stránku specifikovanou v "pageId". Pokud je nastaveno
@@ -110,11 +110,11 @@
     </attribute>
     <attribute>
       <attname>whenLogged</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>whenNotLogged</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vloží do stránky template.  
@@ -133,23 +133,23 @@
     </attribute>
     <attribute>
       <attname>languageId</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>class</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>id</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>target</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>rel</attname>
-      <attreq>imlied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 
@@ -174,7 +174,7 @@
     </attribute>
     <attribute>
       <attname>fileId</attname>
-      <attreq>imlpied</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrací 'text file' v binární podobě.
@@ -206,9 +206,13 @@
       <attname>browser</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>ip</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Přesměruje uživatele na danou stranku, pokud je zadán 'browser', přesměruje pouze uživatele
-			používající odpovídající prohlížeč. 
+			používající odpovídající prohlížeč. Parametr IP: klientova ip adresa ( více odělených čárkou ). 
     </comment>
   </tag>
   <tag>
@@ -285,13 +289,6 @@
     <function>getLastPageUpdate</function>
     <comment>
       Zobrazí čas a datum poslední úpravy stránky.
-    </comment>
-  </tag>
-  <tag>
-    <tagname>language</tagname>
-    <function>language</function>
-    <comment>
-      
     </comment>
   </tag>
 </taglib>

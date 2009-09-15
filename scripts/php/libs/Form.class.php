@@ -12,7 +12,7 @@
    *  Form class.
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-04-17
+   *  @timestamp  2009-09-10
    *
    */              
   class Form extends BaseTagLib {
@@ -83,7 +83,7 @@
 				}
 				
 				if(count($errors) == 0) {
-					$dbObject->execute('INSERT INTO `form_order1`(`comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `door_type`, `cover`, `fill_in`, `comment`) VALUES("'.$compName.'", "'.$contPerson.'", "'.$contEmail.'", "'.$contPhone.'", "'.$contAddress.'", '.$width.', '.$height.', '.$doorType.', '.$cover.', '.$fillIn.', "'.$comment.'");');
+					$dbObject->execute('INSERT INTO `form_order1`(`comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `door_type`, `cover`, `fill_in`, `comment`, `timestamp`, `ip`) VALUES("'.$compName.'", "'.$contPerson.'", "'.$contEmail.'", "'.$contPhone.'", "'.$contAddress.'", '.$width.', '.$height.', '.$doorType.', '.$cover.', '.$fillIn.', "'.$comment.'", '.time().', "'.$_SERVER['REMOTE_ADDR'].'");');
 					$oid = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `form_order1`;');
 					$oid = $oid[0]['id'];
 					$_GET['order1-id'] = $oid;
@@ -95,8 +95,8 @@
   				$message .= $objCon;
   				
   				$headers = "From: info@plasticport.cz\n";
-				  $headers .= "CONTENT-TYPE: text/plain; CHARSET=windows-utf-8";
-  				mail("info@plasticport.cz, petr.dasek@portaflex.cz", "Nová poptávka", $message, $headers );
+				  $headers .= "CONTENT-TYPE: text/html; CHARSET=utf-8";
+  				mail("info@plasticport.cz, petr.dasek@portaflex.cz", "Nova poptavka ma www.plasticport.cz", $message, $headers );
 					
 					$success = true;
 					$compName = "";
@@ -292,7 +292,7 @@
 				}
 				
 				if(count($errors) == 0) {
-					$dbObject->execute('INSERT INTO `form_order2`(`comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `fixture`, `draught`, `transit`, `heating`, `gripping_1`, `gripping_2`, `comment`) VALUES("'.$compName.'", "'.$contPerson.'", "'.$contEmail.'", "'.$contPhone.'", "'.$contAddress.'", '.$width.', '.$height.', '.$fixture.', '.$draught.', '.$transitDb.', '.$heating.', '.$gripping1.', '.$gripping2.', "'.$comment.'");');
+					$dbObject->execute('INSERT INTO `form_order2`(`comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `fixture`, `draught`, `transit`, `heating`, `gripping_1`, `gripping_2`, `comment`, `timestamp`, `ip`) VALUES("'.$compName.'", "'.$contPerson.'", "'.$contEmail.'", "'.$contPhone.'", "'.$contAddress.'", '.$width.', '.$height.', '.$fixture.', '.$draught.', '.$transitDb.', '.$heating.', '.$gripping1.', '.$gripping2.', "'.$comment.'", '.time().', "'.$_SERVER['REMOTE_ADDR'].'");');
 					$oid = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `form_order2`;');
 					$oid = $oid[0]['id'];
 					$_GET['order2-id'] = $oid;
@@ -300,12 +300,12 @@
 					$objCon = self::showOrder2Detail();
 					
 					$obsah = "Vaše poptávka byla zaznamenána";
-  				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Kyvná vrata\"\n\n");
+  				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Kyvná vrata\"<br /><br />");
   				$message .= $objCon;
   				
   				$headers = "From: info@plasticport.cz\n";
-				  $headers .= "CONTENT-TYPE: text/plain; CHARSET=windows-utf-8";
-  				mail("info@plasticport.cz, petr.dasek@portaflex.cz", "Nová poptávka", $message, $headers );
+				  $headers .= "CONTENT-TYPE: text/html; CHARSET=utf-8";
+  				mail("info@plasticport.cz, petr.dasek@portaflex.cz", "Nova poptavka ma www.plasticport.cz", $message, $headers );
 					
 					$success = true;
 					$compName = "";
@@ -331,7 +331,7 @@
       
       $return .= ''
       .'<div class="order-form-2">'
-      	.(($submitted) ? ($success) ? '<h4 class="success">Objednávka byla odeslána</h4>' : '<h4 class="error">Prosíme, doplňte povinná pole.</h4><div class="errors">'.$errString.'</div>' : '')
+      	.(($submitted) ? ($success) ? '<h4 class="success">Poptávka byla odeslána</h4>' : '<h4 class="error">Prosíme, doplňte povinná pole.</h4><div class="errors">'.$errString.'</div>' : '')
       	.'<form name="order-form-2" method="post" action="">'
       		.'<div class="comment-1">Povinné údaje jsou tučně.</div>'
       		.'<div class="comment-2">'
@@ -520,12 +520,14 @@
 				$return .= '<h4 class="success">Objednavka smazana!</h4>';
 			}
 			
-			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `door_type`, `cover`, `fill_in`, `comment` FROM `form_order1` ORDER BY `id` DESC;');
+			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `door_type`, `cover`, `fill_in`, `comment`, `timestamp`, `ip` FROM `form_order1` ORDER BY `id` DESC;');
 			if(count($orders1) > 0) {
 				$return .= ''
 				.'<table class="form-orders">'
 					.'<tr>'
 						.'<th class="order-id">Id:</th>'
+						.'<th class="order-name">Datum a čas:</th>'
+						.'<th class="order-name">Z IP adresy:</th>'
 						.'<th class="order-name">Společnost:</th>'
 						.'<th class="order-person">Osoba:</th>'
 						.'<th class="order-email">Email:</th>'
@@ -538,6 +540,8 @@
 					$return .= ''
 					.'<tr class="'.((($i % 2) == 1) ? 'even' : 'idle').'">'
 						.'<td class="order-id">'.$order['id'].'</td>'
+						.'<td class="order-id">'.(($order['timestamp'] != 0) ? date("d.m.Y H.i.s", $order['timestamp']) : 'Není zadáno.').'</td>'
+						.'<td class="order-id">'.$order['ip'].'</td>'
 						.'<td class="order-name">'.$order['comp_name'].'</td>'
 						.'<td class="order-person">'.$order['cont_person'].'</td>'
 						.'<td class="order-email">'.$order['cont_email'].'</td>'
@@ -580,15 +584,17 @@
 				$oId = $_POST['order2-id'];
 				
 				$dbObject->execute('DELETE FROM `form_order2` WHERE `id` = '.$oId.';');
-				$return .= parent::getFrame('Objednavka '.$oId, '<h4 class="success">Objednavka smazana!</h4>', '', true);
+				$return .= '<h4 class="success">Objednavka smazana!</h4>';
 			}
 			
-			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `fixture`, `draught`, `transit`, `heating`, `gripping_1`, `gripping_2`, `comment` FROM `form_order2` ORDER BY `id` DESC;');
+			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `fixture`, `draught`, `transit`, `heating`, `gripping_1`, `gripping_2`, `comment`, `timestamp`, `ip` FROM `form_order2` ORDER BY `id` DESC;');
 			if(count($orders1) > 0) {
 				$return .= ''
 				.'<table class="form-orders">'
 					.'<tr>'
 						.'<th class="order-id">Id:</th>'
+						.'<th class="order-name">Datum a čas:</th>'
+						.'<th class="order-name">Z IP adresy:</th>'
 						.'<th class="order-name">Společnost:</th>'
 						.'<th class="order-person">Osoba:</th>'
 						.'<th class="order-email">Email:</th>'
@@ -601,6 +607,8 @@
 					$return .= ''
 					.'<tr class="'.((($i % 2) == 1) ? 'even' : 'idle').'">'
 						.'<td class="order-id">'.$order['id'].'</td>'
+						.'<td class="order-id">'.(($order['timestamp'] != 0) ? date("d.m.Y H.i.s", $order['timestamp']) : 'Není zadáno.').'</td>'
+						.'<td class="order-id">'.$order['ip'].'</td>'
 						.'<td class="order-name">'.$order['comp_name'].'</td>'
 						.'<td class="order-person">'.$order['cont_person'].'</td>'
 						.'<td class="order-email">'.$order['cont_email'].'</td>'
@@ -633,7 +641,7 @@
 			global $dbObject;
 			$return = '';
 			
-			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `door_type`, `cover`, `fill_in`, `comment` FROM `form_order1` WHERE `id` = '.$_GET['order1-id'].' ORDER BY `id` DESC;');
+			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `door_type`, `cover`, `fill_in`, `comment`, `timestamp` FROM `form_order1` WHERE `id` = '.$_GET['order1-id'].' ORDER BY `id` DESC;');
 			if(count($orders1) > 0) {
 				$order = $orders1[0];
 				
@@ -660,6 +668,10 @@
 				$return .= ''
 				.'<div class="order-form-2">'
       		.'<table class="comment-2">'
+      			.'<tr class="comment-2-0">'
+      				.'<td class="lab">Datum a čas:</td>'
+      				.'<td class="val">'.(($order['timestamp'] != 0) ? date("d.m.Y H.i.s", $order['timestamp']) : 'Není zadáno.').'</td>'
+      			.'</tr>'
       			.'<tr class="comment-2-1">'
       				.'<td class="lab">Název společnosti:</td>'
       				.'<td class="val">'.$order['comp_name'].'</td>'
@@ -715,7 +727,7 @@
 			global $dbObject;
 			$return = '';
 			
-			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `fixture`, `draught`, `transit`, `heating`, `gripping_1`, `gripping_2`, `comment` FROM `form_order2` WHERE `id` = '.$_GET['order2-id'].' ORDER BY `id` DESC;');
+			$orders1 = $dbObject->fetchAll('SELECT `id`, `comp_name`, `cont_person`, `cont_email`, `cont_phone`, `cont_address`, `width`, `height`, `fixture`, `draught`, `transit`, `heating`, `gripping_1`, `gripping_2`, `comment`, `timestamp` FROM `form_order2` WHERE `id` = '.$_GET['order2-id'].' ORDER BY `id` DESC;');
 			if(count($orders1) > 0) {
 				$order = $orders1[0];
 				$trans = $order['transit'];
@@ -819,6 +831,10 @@
 				$return .= ''
 				.'<div class="order-form-2">'
       		.'<table class="comment-2">'
+      			.'<tr class="comment-2-0">'
+      				.'<td class="lab">Datum a čas:</td>'
+      				.'<td class="val">'.(($order['timestamp'] != 0) ? date("d.m.Y H.i.s", $order['timestamp']) : 'Není zadáno.').'</td>'
+      			.'</tr>'
       			.'<tr class="comment-2-1">'
       				.'<td class="lab">Název společnosti:</td>'
       				.'<td class="val">'.$order['comp_name'].'</td>'
