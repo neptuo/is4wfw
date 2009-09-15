@@ -15,7 +15,7 @@
    *  @objectname phpObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2008-11-24
+   *  @timestamp  2009-07-25
    *
    */        
   class DefaultPhp extends BaseTagLib {
@@ -283,6 +283,48 @@
     
     /**
      *
+     *  Check if passed values are valid property of library.
+     *  
+     *  @param  tagPrefix library object name
+     *  @param  propName name of required tag
+     *  @return true is passed values are valid tagPrefix and property name, false other wise
+     *
+     */                   
+    public function isProperty($tagPrefix, $propName) {
+      if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+        global ${$tagPrefix."Object"};
+        $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+      } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+        global ${$tagPrefix."Object"};
+        $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+      }
+      
+      if(isset($xmlPath)) {
+        if(is_file(SCRIPTS.$xmlPath)) {
+          $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+          
+          foreach($xml->property as $prop) {
+            if($prop->propname == $propName) {
+            	 return true;
+            }
+          }
+          return false;
+        } else {
+          $str = "Xml library definition doesn't exists! [".$xmlPath."]";
+          trigger_error($str , E_USER_WARNING);
+          echo "<h4 class=\"error\">".$str."</h4>";
+          return false;
+        }
+        
+      } else {
+        return false;
+      }
+      
+      return true;
+    }
+    
+    /**
+     *
      *  Compare actual count and max count for passed class.
      *  Return true if max count is "*" or actual count is lower than max,
      *  false otherwise.
@@ -394,6 +436,60 @@
           foreach($xml->tag as $tag) {
             if($tag->tagname == $tagName) {
               return (string)$tag->function;
+            }
+          }
+          
+          $str = "Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]";
+          trigger_error($str , E_USER_WARNING);
+          echo "<h4 class=\"error\">".$str."</h4>";
+          return false;
+        } else {
+          $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
+          trigger_error($str , E_USER_WARNING);
+          echo "<h4 class=\"error\">".$str."</h4>";
+          return false;
+        }
+        
+      } else {
+        $str = "Tag prefix isn't registered! [".$tagPrefix."]";
+        trigger_error($str , E_USER_WARNING);
+        echo "<h4 class=\"error\">".$str."</h4>";
+        return false;
+      }
+    }
+    
+    /**
+     *
+     *  Return function name to passed tag name.
+     *  
+     *  @return function name          
+     *
+     */                   
+    public function getFuncToProperty($tagPrefix, $propName, $use) {
+      if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+        global ${$tagPrefix."Object"};
+        $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+      } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+        global ${$tagPrefix."Object"};
+        $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+      }
+      
+      if(isset($xmlPath)) {
+        if(is_file(SCRIPTS.$xmlPath)) {
+          $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+          
+          foreach($xml->property as $prop) {
+            if($prop->propname == $propName) {
+            	if(strtolower($use) == 'set') {
+              	return (string)$prop->setfunction;
+              } elseif(strtolower($use) == 'get') {
+              	return (string)$prop->getfunction;
+              } else {
+								$str = "Bad use!";
+          			trigger_error($str , E_USER_WARNING);
+      		    	echo "<h4 class=\"error\">".$str."</h4>";
+			          return false;			
+							}
             }
           }
           

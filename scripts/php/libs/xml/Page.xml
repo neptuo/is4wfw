@@ -4,7 +4,7 @@
   <name>Page Lib</name>
   <classname>Page</classname>
   <classpath>php.libs</classpath>
-  <version>1.32</version>
+  <version>1.33</version>
   <count>*</count>
   <comment>
     Třída pro správu obsahu jednotlivých stránek.

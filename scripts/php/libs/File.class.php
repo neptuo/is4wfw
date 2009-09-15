@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2008-06-18
+   *  @timestamp  2009-08-07
    * 
    */  
   class File extends BaseTagLib {
@@ -1001,7 +1001,7 @@
       foreach($images as $image) {
       	if($lightbox == "true") {
       		$link = ''
-       		.'<a href="'.FILE_PAGE_PATH.$image['id'].'-'.$image['name'].'?'.$lsize.'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
+       		.'<a href="~/file.php?rid='.$image['id'].'&'.$lsize.'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
         		.'<img src="~/file.php?rid='.$image['id'].'&'.$size.'" alt="'.$image['title'].'" />'
         	.'</a>';
         } else {
@@ -1059,6 +1059,21 @@
       
       return $return;
     }
+    
+    // ----------- PROPERTIES --------------------------- //
+    
+    public function setFileId($fileId) {
+    	if(is_numeric($fileId)) {
+				$_SESSION['file']['current_id'] = $fileId;
+				return $fileId;
+			} else {
+				return 'wrong-file-id';
+			}
+		}
+		
+		public function getFileId() {
+			return $_SESSION['file']['current_id'];
+		}
     
   }
 

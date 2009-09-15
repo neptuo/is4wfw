@@ -77,7 +77,7 @@ wfw-wp
 			-css
 				scripts\css\cms.css
 				scripts\css\editor.css
-			+js
+			-js
 				scripts\js\Closer.js
 				scripts\js\Confirm.js
 				scripts\js\Editor.js
@@ -90,8 +90,9 @@ wfw-wp
 				scripts\js\initLogin.js
 			+php
 				-bundles
-					scripts\bundles\seasons_en.properties
-				-classes
+					scripts\bundles\sport_cs.properties
+					scripts\bundles\hint_cs.properties
+				+classes
 					scripts\php\classes\CustomTagParser.class.php
 					scripts\php\classes\ResourceBundle.class.php
 				-includes
@@ -119,6 +120,7 @@ wfw-wp
 						scripts\php\libs\xml\Page.xml
 						scripts\php\libs\xml\User.xml
 						scripts\php\libs\xml\Sport.xml
+						scripts\php\libs\xml\WebProject.xml
 					scripts\php\libs\Article.class.php
 					scripts\php\libs\BaseTagLib.class.php
 					scripts\php\libs\Counter.class.php
@@ -134,10 +136,11 @@ wfw-wp
 					scripts\php\libs\Page.class.php
 					scripts\php\libs\User.class.php
 					scripts\php\libs\Sport.class.php
+					scripts\php\libs\WebProject.class.php
 		-tiny-mce
 			-langs
 				tiny-mce\langs\en.js
-			-plugins
+			+plugins
 				-advhr
 					-css
 						tiny-mce\plugins\advhr\css\advhr.css
@@ -185,8 +188,8 @@ wfw-wp
 				-directionality
 					tiny-mce\plugins\directionality\editor_plugin.js
 					tiny-mce\plugins\directionality\editor_plugin_src.js
-				-emotions
-					-img
+				+emotions
+					+img
 						tiny-mce\plugins\emotions\img\smiley-cool.gif
 						tiny-mce\plugins\emotions\img\smiley-cry.gif
 						tiny-mce\plugins\emotions\img\smiley-embarassed.gif
@@ -491,58 +494,22 @@ wfw-wp
 1=..\..\..\Users\Marek SMM\Desktop\TODO.txt
 2=scripts\css\cms.css
 3=scripts\php\includes\version.inc.php
-4=scripts\php\libs\DefaultWeb.class.php
-5=scripts\php\libs\xml\DefaultWeb.xml
-6=scripts\php\libs\Sport.class.php
-7=scripts\php\libs\xml\Sport.xml
-8=scripts\bundles\sport_cs.properties
-9=scripts\bundles\sport_en.properties
-10=data\insert\sport-select-players_2009-07-16.sql
-11=..\..\samples\ajax-links\js\links.js
-12=..\..\samples\jquery\samples-1\index.html
-13=..\..\samples\js\ajax-im-yui\install.php
+4=scripts\php\libs\Form.class.php
 [Selected Project Files]
 Main=index.php
-Selected=scripts\php\includes\version.inc.php
+Selected=scripts\php\libs\Form.class.php
 [index.php]
 TopLine=35
 Caret=30,73
 [..\..\..\Users\Marek SMM\Desktop\TODO.txt]
 TopLine=1
-Caret=6,9
+Caret=4,32
 [scripts\css\cms.css]
-TopLine=443
-Caret=22,469
+TopLine=1046
+Caret=25,1050
 [scripts\php\includes\version.inc.php]
 TopLine=1
 Caret=34,8
-[scripts\php\libs\DefaultWeb.class.php]
-TopLine=341
-Caret=1,367
-[scripts\php\libs\xml\DefaultWeb.xml]
-TopLine=243
-Caret=7,294
-[scripts\php\libs\Sport.class.php]
-TopLine=1260
-Caret=7,1286
-[scripts\php\libs\xml\Sport.xml]
-TopLine=349
-Caret=17,429
-[scripts\bundles\sport_cs.properties]
-TopLine=55
-Caret=29,82
-[scripts\bundles\sport_en.properties]
-TopLine=1
-Caret=1,1
-[data\insert\sport-select-players_2009-07-16.sql]
-TopLine=1
-Caret=1,35
-[..\..\samples\ajax-links\js\links.js]
-TopLine=350
-Caret=3,402
-[..\..\samples\jquery\samples-1\index.html]
-TopLine=66
-Caret=105,86
-[..\..\samples\js\ajax-im-yui\install.php]
-TopLine=113
-Caret=37,135
+[scripts\php\libs\Form.class.php]
+TopLine=308
+Caret=80,339

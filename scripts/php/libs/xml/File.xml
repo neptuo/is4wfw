@@ -4,7 +4,7 @@
   <name>File Lib</name>
   <classname>File</classname>
   <classpath>php.libs</classpath>
-  <version>1.11</version>
+  <version>1.12</version>
   <count>*</count>
   <comment>
     Třída pro správu souborů.
@@ -172,5 +172,13 @@
       v proměnné CurrentId (pokud je volán přes dynamický překlad adres).
     </comment>
   </tag>
+  <property>
+  	<propname>fileId</propname>
+  	<setfunction>setFileId</setfunction>
+  	<getfunction>getFileId</getfunction>
+    <comment>
+      Vlastnost aktuálního souboru.
+    </comment>
+  </property>
 </taglib>
 
