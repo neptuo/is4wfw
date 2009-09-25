@@ -236,7 +236,6 @@
       
 	      $dbProject = $dbObject->fetchAll('SELECT `id`, `http`, `https`, `url` FROM `web_project`;');
   	    $ok = false;
-    	  $temp_req = $phpObject->str_tr($domainUrl, '.', 1);
       	$prj_add_url = '';
 	      foreach($dbProject as $i => $project) {
   	    	$ok = true;
@@ -245,6 +244,7 @@
       		$project['url'] = $parsed_url[0];
 	      	//$temp_url_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $project['url']);
   		    $temp_url = $phpObject->str_tr($project['url'], '.');
+    	  	$temp_req = $phpObject->str_tr($domainUrl, '.', 1);
   		    for($j = 0; $j < count($temp_url); $j ++) {
   	  	  	$this->PropertyAttr = $temp_req[0];
 						$this->PropertyUse = 'set';
