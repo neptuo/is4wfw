@@ -768,7 +768,7 @@
 			$title = $values[2];
 			$content = $values[6];
 			
-			$path = getFrame($title, $content, "", $open);
+			$path = parent::getFrame($title, $content, "", $open);
 			return $path;
 		}
 		
