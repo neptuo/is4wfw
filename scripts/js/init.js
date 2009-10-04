@@ -1,7 +1,7 @@
 /**
  *
  *  @author  Marek Fišera marek.fisera@email.cz
- *  @date    2009/06/18
+ *  @date    2009/10/04
  *
  */
 function addEvent (obj, ev, func, b) {
@@ -20,6 +20,7 @@ function init(event) {
 	initClosers(event);
 	fileNameInit(event);
 	initCountDown(event);
+	initClearCache(event);
 }
 
 //addEvent(window, "load", initEditors, false);
@@ -113,4 +114,44 @@ function initCountDown(event) {
 	cdl.innerHTML = '';
 	var cd = new CountDown('Login session <br />expires in: ', 15 * 60, cdl);
 	cd.start();
+}
+
+function initClearCache(event) {
+	var cover = document.getElementById('clear-url-cache');
+	if(cover != null) {
+		var submit = document.getElementById('clear-url-cache-submit');
+		var selectAll = document.createElement('input');
+		selectAll.type = 'button';
+		selectAll.name = 'clear-url-cache-select-all';
+		selectAll.value = 'Select All';
+		var unselectAll = document.createElement('input');
+		unselectAll.type = 'button';
+		unselectAll.name = 'clear-url-cache-unselect-all';
+		unselectAll.value = 'Unselect All';
+		
+		inputs = cover.getElementsByTagName('input');
+		checkboxes = new Array();
+		for(var i = 0; i < inputs.length; i ++) {
+			if(inputs[i].type == 'checkbox') {
+				checkboxes[checkboxes.length] = inputs[i];
+			}
+		}
+		
+		function clickClearCacheSelectAll(event) {
+			for(var i = 0; i < checkboxes.length; i ++) {
+				checkboxes[i].checked = 'checked';
+			}
+		}
+		
+		function clickClearCacheUnselectAll(event) {
+			for(var i = 0; i < checkboxes.length; i ++) {
+				checkboxes[i].checked = '';
+			}
+		}
+		
+		addEvent(selectAll, 'click', clickClearCacheSelectAll, false);
+		addEvent(unselectAll, 'click', clickClearCacheUnselectAll, false);
+		submit.appendChild(selectAll);
+		submit.appendChild(unselectAll);
+	}
 }

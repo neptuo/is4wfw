@@ -4,7 +4,7 @@
   <name>File Lib</name>
   <classname>File</classname>
   <classpath>php.libs</classpath>
-  <version>1.12</version>
+  <version>1.13</version>
   <count>*</count>
   <comment>
     Třída pro správu souborů.
@@ -143,13 +143,17 @@
       <attname>lightId</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>useDirectLink</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vrátí všechny obrázky z daného adresáře(přímo v tagu nebo v $_REQUEST['dir-id']). 
       Odkaz na skutečnou velikost fotky je v pageId, pokud není zadána, zobrazí se jen miniatury.
       Method může nabývat hodnot "static" nebo "dynamic" a určuje způvob předání fileId další stránce,
       pokud je "dynamic", musí mít strana "pageId" zapnutý dynamické překlad adres.
       Atributy s prefixem light, slouzi pro lightbox, je ovsem nutne lightbox samostny (JS + CSS) prilozit 
-			ke strance
+			ke strance, pro useDirectLink="true", zobrazi u lightbox galerie primy odkaz na soubor.
     </comment>
   </tag>
   <tag>

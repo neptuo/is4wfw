@@ -345,6 +345,10 @@ th.file-head-th {
   width: 100px;
 }
 
+.dir-list .th-dir-physical-path {
+	width: 60px;
+}
+
 .dir-list .th-edit {
   width: 50px;
 }
@@ -567,7 +571,7 @@ body {
 }
 
 .cms .body {
-	margin: 60px; 100px 30px 100px;
+	margin: 60px 60px 10px 60px;
 }
 
 .article-mgm-td.article-mgm-id {
