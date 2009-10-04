@@ -74,10 +74,10 @@ wfw-wp
 		-logs
 			logs\2009-04-30.log
 		+scripts
-			-css
+			+css
 				scripts\css\cms.css
 				scripts\css\editor.css
-			-js
+			+js
 				scripts\js\Closer.js
 				scripts\js\Confirm.js
 				scripts\js\Editor.js
@@ -492,24 +492,16 @@ wfw-wp
 [Open project files]
 0=index.php
 1=..\..\..\Users\Marek SMM\Desktop\TODO.txt
-2=scripts\css\cms.css
-3=scripts\php\includes\version.inc.php
-4=scripts\php\libs\Form.class.php
+2=scripts\php\includes\version.inc.php
 [Selected Project Files]
 Main=index.php
-Selected=scripts\php\libs\Form.class.php
+Selected=scripts\php\includes\version.inc.php
 [index.php]
 TopLine=35
-Caret=30,73
+Caret=34,76
 [..\..\..\Users\Marek SMM\Desktop\TODO.txt]
 TopLine=1
 Caret=4,32
-[scripts\css\cms.css]
-TopLine=1046
-Caret=25,1050
 [scripts\php\includes\version.inc.php]
 TopLine=1
-Caret=34,8
-[scripts\php\libs\Form.class.php]
-TopLine=308
-Caret=80,339
+Caret=4,6

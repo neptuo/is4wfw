@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-07-25
+   *  @timestamp  2009-10-04
    * 
    */  
   class Page extends BaseTagLib {
@@ -1636,7 +1636,7 @@
 			
 			$returnForm = ''
 			.((strlen($msg) > 0) ? $msg : '' )
-			.'<div class="clear-url-cache">'
+			.'<div id="clear-url-cache" class="clear-url-cache">'
 				.'<form name="clear-url-cache" method="post" action="">'
 					.'<div class="part-of-url">'
 						.'<label for="part-of-url-url-cache">Part of url:</label> '
@@ -1654,7 +1654,7 @@
 						.'<input id="page-id-url-cache" type="text" name="page-id-url-cache" value="'.$pageId.'" />'
 					.'</div>'
 					.'<div class="clear"></div>'
-					.'<div class="submit">'
+					.'<div id="clear-url-cache-submit" class="submit">'
 						.'<input type="submit" name="show-url-cache" value="Show url cache" />'
 						.((strlen($urlCacheReturn) > 0) ? ''
 						.'<input class="confirm" type="submit" name="delete-from-url-cache" value="Delete selected" title="Delete selected items from urlcache" />'

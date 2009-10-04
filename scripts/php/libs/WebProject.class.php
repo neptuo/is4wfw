@@ -13,7 +13,7 @@
    * 	management of web projects	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-06-16
+   *  @timestamp  2009-10-04
    * 
    */  
   class WebProject extends BaseTagLib {
@@ -64,7 +64,7 @@
 				.'<form name="select-project" method="post" action="">'
 					.'<label for="select-project">Select web project:</label> '
 					.'<select id="select-project" name="project-id">';
-			$projects = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `id`;');
+			$projects = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `web_project`.`name`;');
 			foreach($projects as $project) {
 				$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = '.$project['id'].' AND `type` = '.WEB_R_WRITE.' ORDER BY `value` DESC;');
 				if(count($permission)) {

@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-08-07
+   *  @timestamp  2009-10-04
    * 
    */  
   class File extends BaseTagLib {
@@ -146,6 +146,7 @@
           .'<th class="th-icon"></th>'
           .'<th class="th-id"><span>ID</span></th>'
           .'<th class="th-name">Name</th>'
+          .'<th class="th-dir-physical-path">Direct link:</th>'
           .'<th class="th-timestamp">Timestamp</th>'
           .'<th class="th-type">Type</th>'
           .(($editable != "false") ? '<th class="th-edit">Action</th>' : '' )
@@ -159,6 +160,7 @@
               .'<input type="submit" name="ch-dir" value=".." />'
             .'</form>'
           .'</td>'
+          .'<td class="dir-physical-path"></td>'
           .'<td class="dir-timestamp"></td>'
           .'<td class="dir-type"></td>'
           .(($editable != "false") ? '<td class="dir-edit"></td>' : '' )
@@ -178,6 +180,7 @@
               .'<input type="submit" name="ch-dir" value="'.$dir['name'].'" />'
             .'</form>'
           .'</td>'
+          .'<td class="dir-physical-path"></td>'
           .'<td class="dir-timestamp">'.date('d:m:Y H:i:s', $dir['timestamp']).'</td>'
           .'<td class="dir-type"></td>'	
           .(($editable != "false") ? ''
@@ -209,6 +212,9 @@
           .'<td class="file-name">'
             .'<a target="_blank" title="'.$file['title'].'" href="~/file.php?rid='.$file['id'].'">'.$file['name'].'</a>'
           .'</td>'
+          .'<td class="dir-physical-path">'
+						.'<a href="'.self::getPhysicalPathTo($dirId, false).$file['name'].".".$this->FileEx[$file['type']].'" target="_blank">open</a>'
+					.'</td>'
           .'<td class="file-timestamp">'.date('d:m:Y H:i:s', $file['timestamp']).'</td>'
           .'<td class="file-type">'.$this->FileEx[$file['type']].'</td>'
           .(($editable != "false") ? ''
@@ -931,7 +937,7 @@
      *  @param    dirId     directory id to show
      *
      */                        
-    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false) {
+    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false) {
       global $webObject;
       global $dbObject;
       $return = "";
@@ -996,12 +1002,12 @@
       } else {
         $lsize = '';
       }
-      $images = $dbObject->fetchAll("SELECT `id`, `name`, `title` FROM `file` WHERE `dir_id` = ".$dirId." AND (`type` = ".WEB_TYPE_JPG." OR `type` = ".WEB_TYPE_GIF." OR `type` = ".WEB_TYPE_PNG.") ORDER BY `timestamp`;");
+      $images = $dbObject->fetchAll("SELECT `id`, `name`, `title`, `type` FROM `file` WHERE `dir_id` = ".$dirId." AND (`type` = ".WEB_TYPE_JPG." OR `type` = ".WEB_TYPE_GIF." OR `type` = ".WEB_TYPE_PNG.") ORDER BY `timestamp`;");
       
       foreach($images as $image) {
       	if($lightbox == "true") {
       		$link = ''
-       		.'<a href="~/file.php?rid='.$image['id'].'&'.$lsize.'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
+       		.'<a href="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$lsize : self::getPhysicalPathTo($dirId, false).$image['name'].".".$this->FileEx[$image['type']]).'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
         		.'<img src="~/file.php?rid='.$image['id'].'&'.$size.'" alt="'.$image['title'].'" />'
         	.'</a>';
         } else {
