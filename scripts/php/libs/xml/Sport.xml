@@ -32,6 +32,21 @@
     </comment>
   </tag>
   <tag>
+    <tagname>selectTable</tagname>
+    <function>selectTable</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showMsg</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Výber tabluky.
+    </comment>
+  </tag>
+  <tag>
     <tagname>selectTeam</tagname>
     <function>selectTeam</function>
     <attribute>
@@ -243,6 +258,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>tableId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>useFrames</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -366,6 +385,10 @@
       <attreq>required</attreq>
     </attribute>
     <attribute>
+      <attname>tableId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>teamId</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -413,6 +436,10 @@
     </attribute>
     <attribute>
       <attname>playerId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>tableId</attname>
       <attreq>implied</attreq>
     </attribute>
     <attribute>
