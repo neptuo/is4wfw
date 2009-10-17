@@ -13,7 +13,7 @@
    * 	all about sport	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-07-09
+   *  @timestamp  2009-10-10
    * 
    */  
   class Sport extends BaseTagLib {
@@ -103,6 +103,48 @@
 				return $return;
 			} else {
 				return parent::getFrame($rb->get('seasons.title'), $return, "", true);
+			}
+		}
+    
+    /**
+     *
+     *	Show select table form.
+     *		      
+     *	@param		useFrames				use frames in output
+     *	@param		showMsg					show messages in output
+     *	     
+     */		 		 		     
+    public function selectTable($useFrames = false, $showMsg = false) {
+			global $dbObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			
+			if($_POST['select-table-submit'] == $rb->get('tables.select')) {
+				$tableId = $_POST['select-table'];
+				if($tableId == 0) {
+					$_SESSION['sport']['table-id'] = '';
+				} else {
+					$_SESSION['sport']['table-id'] = $tableId;
+				} 
+			}
+			
+			$return .= ''
+			.'<div class="select-table">'
+				.'<form name="select-table" method="post" action="">'
+					.'<label for="select-table">'.$rb->get('tables.selectlab').':</label> '
+					.'<select name="select-table" id="select-table">'
+						.'<option value="0">'.$rb->get('tables.all').'</option>'
+						.self::getTablesOptions($_SESSION['sport']['table-id'])
+					.'</select> '
+					.'<input type="submit" name="select-table-submit" value="'.$rb->get('tables.select').'" />'
+				.'</form>'
+			.'</div>';
+			
+			if($useFrames == "false") {
+				return $return;
+			} else {
+				return parent::getFrame($rb->get('tables.title'), $return, "", true);
 			}
 		}
     
@@ -951,7 +993,7 @@
 				$match['a_shoots'] = $_POST['match-edit-ashoots'];
 				$match['a_penalty'] = $_POST['match-edit-apenalty'];
 				$match['a_extratime'] = ($_POST['match-edit-aextratime'] == 'on') ? 1 : 0;
-				$match['in_table'] = ($_POST['match-edit-in-table'] == 'on') ? 1 : 0;
+				$match['in_table'] = $_POST['match-edit-in-table'];
 				$match['comment'] = $_POST['match-edit-comment'];
 				$match['round'] = $_POST['match-edit-round'];
 				$match['season'] = $_SESSION['sport']['season-id'];
@@ -981,8 +1023,8 @@
 					$tmpma = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season` FROM `w_sport_match` WHERE `id` = '.$match['id'].' AND `season` = '.$match['season'].';');
 					if(count($tmpma) != 0) {
 						if($tmpma[0]['in_table'] != 0) {
-							$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].';');
-							$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].';');
+							$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `table_id` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$tmpma[0]['in_table'] .';');
+							$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `table_id` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$tmpma[0]['in_table'] .';');
 							if(count($team1) > 0 && count($team2) > 0) {
 								$team1 = $team1[0];
 								$team2 = $team2[0];
@@ -1017,8 +1059,8 @@
 								$team2['s_score'] -= $tmpma[0]['a_score'];
 								$team2['r_score'] -= $tmpma[0]['h_score'];
 						
-								$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team1['matches'].', `wins` = '.$team1['wins'].', `draws` = '.$team1['draws'].', `loses` = '.$team1['loses'].', `s_score` = '.$team1['s_score'].', `r_score` = '.$team1['r_score'].', `points` = '.$team1['points'].' WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].';');
-								$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team2['matches'].', `wins` = '.$team2['wins'].', `draws` = '.$team2['draws'].', `loses` = '.$team2['loses'].', `s_score` = '.$team2['s_score'].', `r_score` = '.$team2['r_score'].', `points` = '.$team2['points'].' WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].';');
+								$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team1['matches'].', `wins` = '.$team1['wins'].', `draws` = '.$team1['draws'].', `loses` = '.$team1['loses'].', `s_score` = '.$team1['s_score'].', `r_score` = '.$team1['r_score'].', `points` = '.$team1['points'].' WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$team1['table_id'].';');
+								$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team2['matches'].', `wins` = '.$team2['wins'].', `draws` = '.$team2['draws'].', `loses` = '.$team2['loses'].', `s_score` = '.$team2['s_score'].', `r_score` = '.$team2['r_score'].', `points` = '.$team2['points'].' WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$team2['table_id'].';');
 							} else {
 								$return .= '<h4 class="error">'.$rb->get('match.error.teamsnotintable').'</h4>';
 							}
@@ -1027,48 +1069,52 @@
 					} else {
 						$dbObject->execute('INSERT INTO `w_sport_match`(`h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season`) VALUES ('.$match['h_team'].', '.$match['a_team'].', '.$match['h_score'].', '.$match['a_score'].', '.$match['h_shoots'].', '.$match['a_shoots'].', '.$match['h_penalty'].', '.$match['a_penalty'].', '.$match['h_extratime'].', '.$match['a_extratime'].', "'.$match['comment'].'", '.$match['round'].', '.$match['in_table'].', '.$match['season'].');');
 					}
-					if($match['in_table'] == 1) {
-						$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['h_team'].' AND `season` = '.$match['season'].';');
-						$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['a_team'].' AND `season` = '.$match['season'].';');
-						if(count($team1) > 0 && count($team2) > 0) {
-							$team1 = $team1[0];
-							$team2 = $team2[0];
-							$team1['matches'] ++;
-							$team2['matches'] ++;
-							if($match['h_score'] > $match['a_score']) {
-								$team1['wins'] ++;
-								$team2['loses'] ++;
-								$team1['points'] += 3;
-							} elseif($match['a_score'] > $match['h_score']) {
-								$team2['wins'] ++;
-								$team1['loses'] ++;
-								$team2['points'] += 3;
-							} elseif($match['h_score'] == $match['a_score'] && $match['h_extratime'] == 1) {
-								$team1['draws'] ++;
-								$team2['draws'] ++;
-								$team1['points'] += 2;
-								$team2['points'] ++;
-							} elseif($match['h_score'] == $match['a_score'] && $match['a_extratime'] == 1) {
-								$team1['draws'] ++;
-								$team2['draws'] ++;
-								$team2['points'] += 2;
-								$team1['points'] ++;
-							} else {
-								$team1['draws'] ++;
-								$team2['draws'] ++;
-								$team1['points'] ++;
-								$team2['points'] ++;
-							}
-							$team1['s_score'] += $match['h_score'];
-							$team1['r_score'] += $match['a_score'];
-							$team2['s_score'] += $match['a_score'];
-							$team2['r_score'] += $match['h_score'];
-						
-							$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team1['matches'].', `wins` = '.$team1['wins'].', `draws` = '.$team1['draws'].', `loses` = '.$team1['loses'].', `s_score` = '.$team1['s_score'].', `r_score` = '.$team1['r_score'].', `points` = '.$team1['points'].' WHERE `team` = '.$match['h_team'].' AND `season` = '.$match['season'].';');
-							$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team2['matches'].', `wins` = '.$team2['wins'].', `draws` = '.$team2['draws'].', `loses` = '.$team2['loses'].', `s_score` = '.$team2['s_score'].', `r_score` = '.$team2['r_score'].', `points` = '.$team2['points'].' WHERE `team` = '.$match['a_team'].' AND `season` = '.$match['season'].';');
-						} else {
-							$return .= '<h4 class="error">'.$rb->get('match.warning.teamsnotintable').'</h4>';
+					if($match['in_table'] != 0) {
+						$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
+						$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
+						if(count($team1) <= 0 || count($team2) <= 0) {
+							$dbObject->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`) VALUES ('.$match['h_team'].', 0, 0, 0, 0, 0, 0, 0, '.$match['season'].', '.$match['in_table'].');');
+							$dbObject->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`) VALUES ('.$match['a_team'].', 0, 0, 0, 0, 0, 0, 0, '.$match['season'].', '.$match['in_table'].');');
+							$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
+							$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
+							//$return .= '<h4 class="errpr">'.$rb->get('match.warning.teamsnotintable').'</h4>';
 						}
+						$team1 = $team1[0];
+						$team2 = $team2[0];
+						$team1['matches'] ++;
+						$team2['matches'] ++;
+						if($match['h_score'] > $match['a_score']) {
+							$team1['wins'] ++;
+							$team2['loses'] ++;
+							$team1['points'] += 3;
+						} elseif($match['a_score'] > $match['h_score']) {
+							$team2['wins'] ++;
+							$team1['loses'] ++;
+							$team2['points'] += 3;
+						} elseif($match['h_score'] == $match['a_score'] && $match['h_extratime'] == 1) {
+							$team1['draws'] ++;
+							$team2['draws'] ++;
+							$team1['points'] += 2;
+							$team2['points'] ++;
+						} elseif($match['h_score'] == $match['a_score'] && $match['a_extratime'] == 1) {
+							$team1['draws'] ++;
+							$team2['draws'] ++;
+							$team2['points'] += 2;
+							$team1['points'] ++;
+						} else {
+							$team1['draws'] ++;
+							$team2['draws'] ++;
+							$team1['points'] ++;
+							$team2['points'] ++;
+						}
+						$team1['s_score'] += $match['h_score'];
+						$team1['r_score'] += $match['a_score'];
+						$team2['s_score'] += $match['a_score'];
+						$team2['r_score'] += $match['h_score'];
+					
+						$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team1['matches'].', `wins` = '.$team1['wins'].', `draws` = '.$team1['draws'].', `loses` = '.$team1['loses'].', `s_score` = '.$team1['s_score'].', `r_score` = '.$team1['r_score'].', `points` = '.$team1['points'].' WHERE `team` = '.$match['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
+						$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team2['matches'].', `wins` = '.$team2['wins'].', `draws` = '.$team2['draws'].', `loses` = '.$team2['loses'].', `s_score` = '.$team2['s_score'].', `r_score` = '.$team2['r_score'].', `points` = '.$team2['points'].' WHERE `team` = '.$match['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
+						$dbObject->execute('UPDATE `w_sport_stats` SET `table_id` = '.$match['in_table'].' WHERE `mid` = '.$match['id'].'');
 					}
 				} else {
 					$_POST['match-new'] = $rb->get('matches.new');
@@ -1081,7 +1127,7 @@
 					$match = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season` FROM `w_sport_match` WHERE `id` = '.$matchId.';');
 					$match = $match[0];
 				} else {
-					$match['in_table'] = 1;
+					//$match['in_table'] = 1;
 				}
 			
 				$return .= ''
@@ -1149,8 +1195,12 @@
 						.'<div class="match-edit-round">'
 							.'<label for="match-edit-round">'.$rb->get('match.round').':</label> '
 							.'<input type="text" name="match-edit-round" id="match-edit-round" value="'.$match['round'].'" />'
-							.'<input type="checkbox" name="match-edit-in-table" id="match-edit-in-table"'.(($match['in_table'] == 0) ? '' : ' checked="checked"').'" />'
 							.'<label for="match-edit-in-table">'.$rb->get('match.intable').':</label> '
+							.'<select name="match-edit-in-table" id="match-edit-in-table">'
+										.'<option value="0">'.$rb->get('matches.nottotable').'</option>'
+								.self::getTablesOptions($match['in_table'])
+							.'</select>'
+							/*.'<input type="checkbox" name="match-edit-in-table" id="match-edit-in-table"'.(($match['in_table'] == 0) ? '' : ' checked="checked"').'" />'*/
 						.'</div>'
 						.'<div class="match-edit-submit">'
 							.'<input type="hidden" name="match-id" value="'.$match['id'].'" />'
@@ -1557,19 +1607,22 @@
      *	@param		showMsg					show messages in output
 		 *
 		 */		 		 		 		 		 		
-		public function showTable($templateId = false, $seasonId = false, $useFrames = false, $showMsg = false) {
+		public function showTable($templateId = false, $seasonId = false, $tableId, $useFrames = false, $showMsg = false) {
 			global $dbObject;
 			global $loginObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
-			if($seasonId != '' || $_SESSION['sport']['season-id'] != '') {
+			if(($seasonId != '' || $_SESSION['sport']['season-id'] != '') && ($tableId != '' || $_SESSION['sport']['table-id'] != '')) {
 				if($seasonId == '') {
 					$seasonId = $_SESSION['sport']['season-id'];
 				}
+				if($tableId == '') {
+					$tableId = $_SESSION['sport']['table-id'];
+				}
 				
-				$table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = '.$seasonId.' AND `w_sport_team`.`season` = '.$seasonId.' ORDER BY `points` DESC, (`w_sport_table`.`s_score` - `w_sport_table`.`r_score`) DESC, `w_sport_table`.`s_score` DESC, `w_sport_table`.`wins` DESC;');
+				$table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = '.$seasonId.' AND `w_sport_team`.`season` = '.$seasonId.' AND `w_sport_table`.`table_id` = '.$tableId.' ORDER BY `points` DESC, (`w_sport_table`.`s_score` - `w_sport_table`.`r_score`) DESC, `w_sport_table`.`s_score` DESC, `w_sport_table`.`wins` DESC;');
 				
 				if(count($table) > 0) {
 					if($templateId == false) {
@@ -1964,14 +2017,14 @@
 		 *	@param		limit		 
 		 *
 		 */		 		 		 		 		
-		public function showPlayers($templateId, $sorting, $sortBy, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false) {
+		public function showPlayers($templateId, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false) {
 			global $dbObject;
 			global $loginObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
-			$players = self::getPlayersFrom('id', $sorting, $sortBy, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, $limit, $playerId);
+			$players = self::getPlayersFrom('id', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, $limit, $playerId);
 			//echo $_SESSION['sport']['match-id'];
 			//unset($_SESSION['sport']['match-id']);
 				
@@ -2025,7 +2078,7 @@
 		 *	@param		errMsg					error message		 
 		 *
 		 */		 		 		 		 		
-		public function showPlayer($field, $playerId = false, $teamId = false, $seasonId = false, $errMsg = false) {
+		public function showPlayer($field, $playerId = false, $tableId = false, $teamId = false, $seasonId = false, $errMsg = false) {
 			global $dbObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -2042,7 +2095,7 @@
 			}
 			
 			$player = array();
-			$player = self::getPlayersFrom('most', $sorting, $sortBy, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, 1, $playerId);
+			$player = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, 1, $playerId);
 			
 			if(count($player) > 0) {
 				$player = $player[0];
@@ -2110,6 +2163,18 @@
 			return $return;
 		}
 		
+		public function getTablesOptions($tabselId) {
+			global $dbObject;
+			$return = '';
+			
+			$tabsql = $dbObject->fetchAll('SELECT `id`, `name` FROM `w_sport_tables` ORDER BY `name` DESC;');
+			foreach($tabsql as $tab) {
+				$return .= '<option value="'.$tab['id'].'"'.(($tab['id'] == $tabselId) ? 'selected="selectd"' : '').'>'.$tab['name'].'</option>';
+			}
+			
+			return $return;
+		}
+		
 		public function getTeamsOptions($teaselId) {
 			global $dbObject;
 			$return = '';
@@ -2122,7 +2187,9 @@
 			return $return;
 		}
 		
-		public function getPlayersFrom($type, $sorting, $sortBy, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $playerId = false) {
+		// ------------------------------------------------------------------------------------------------------------------- \\
+		
+		public function getPlayersFrom($type, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $playerId = false) {
 			global $dbObject;
 			
 			$cols = '';
@@ -2138,6 +2205,9 @@
 			//unset($_SESSION['sport']['match-id']);
 			if($seasonId == false) {
 				$seasonId = $_SESSION['sport']['season-id'];
+			}
+			if($tableId == false) {
+				$tableId = $_SESSION['sport']['table-id'];
 			}
 			if($teamId == false) {
 				$teamId = $_SESSION['sport']['team-id'];
@@ -2291,6 +2361,13 @@
 					}
 					$subqueriessql .= ', (SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_matches`, (SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_goals`, (SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_assists`, (SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_penalty`, (SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_shoots`, (SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_percentage`,(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_average`, (SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_points`';
 				}
+				if($tableId != '') {
+					if(strlen($conditionssql) != 0) {
+						$conditionssql .= ' AND `w_sport_stats`.`table_id` = '.$tableId;
+					} else {
+						$conditionssql .= ' `w_sport_stats`.`table_id` = '.$tableId;
+					}
+				}
 				if(strlen($matchsql) != 0) {
 					if(strlen($conditionssql) != 0) {
 						$conditionssql .= ' AND '.$matchsql;
@@ -2330,7 +2407,7 @@
 					$cols = '`player`.`id`, `w_sport_team`.`id` AS `team-id`';
 				}
 			
-				$players = $dbObject->fetchAll('SELECT DISTINCT '.$cols.', '.$subqueriessql.' FROM `w_sport_player` AS `player` LEFT JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`'.((strlen($joinstatssql) != 0) ? ' '.$joinstatssql : '').''.((strlen($conditionssql) != 0) ? ' WHERE '.$conditionssql : '').' ORDER BY `'.$sortBy.'` '.$sorting.((strlen($limitsql) != 0) ? ' '.$limitsql : '').';');
+				$players = $dbObject->fetchAll('SELECT DISTINCT '.$cols.', '.$subqueriessql.' FROM `w_sport_player` AS `player` LEFT JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`'.((strlen($joinstatssql) != 0) ? ' '.$joinstatssql : '').''.((strlen($conditionssql) != 0) ? ' WHERE '.$conditionssql : '').' ORDER BY `'.$sortBy.'` '.$sorting.((strlen($limitsql) != 0) ? ' '.$limitsql : '').';', true, true);
 				$_SESSION['sport']['players']['from']['type'] = $type;
 				$_SESSION['sport']['players']['from']['sorting'] = $sorting;
 				$_SESSION['sport']['players']['from']['sortBy'] = $sortBy;
