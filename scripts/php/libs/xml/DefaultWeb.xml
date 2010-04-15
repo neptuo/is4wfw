@@ -237,7 +237,7 @@
     <function>redirectToRightLangVersion</function>
     <attribute>
       <attname>default</attname>
-      <attreq>requierd</attreq>
+      <attreq>required</attreq>
     </attribute>
     <attribute>
       <attname>pageId</attname>

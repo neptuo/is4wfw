@@ -577,7 +577,7 @@ WFW-WP
 						-xml
 							scripts\php\libs\hp\xml\Hotproject.xml
 						scripts\php\libs\hp\Hotproject.class.php
-					-xml
+					+xml
 						scripts\php\libs\xml\Article.xml
 						scripts\php\libs\xml\Counter.xml
 						scripts\php\libs\xml\Database.xml
@@ -975,18 +975,15 @@ WFW-WP
 0=scripts\php\includes\version.inc.php
 1=scripts\css\cms.css
 2=scripts\php\libs\DefaultWeb.class.php
-3=scripts\php\libs\xml\DefaultWeb.xml
-4=scripts\php\libs\Js.class.php
-5=scripts\php\libs\xml\Js.xml
-6=Novy3.html
-7=Novy4.html
-8=scripts\php\libs\System.class.php
-9=scripts\php\libs\xml\System.xml
-10=scripts\php\libs\Page.class.php
-11=scripts\js\init_nowindows.js
+3=scripts\php\libs\Js.class.php
+4=scripts\php\libs\xml\Js.xml
+5=scripts\php\libs\System.class.php
+6=scripts\php\libs\xml\System.xml
+7=scripts\php\libs\Page.class.php
+8=scripts\js\init_nowindows.js
 [Selected Project Files]
 Main=
-Selected=Novy4.html
+Selected=scripts\js\init_nowindows.js
 [scripts\php\includes\version.inc.php]
 TopLine=1
 Caret=35,8
@@ -996,21 +993,12 @@ Caret=24,430
 [scripts\php\libs\DefaultWeb.class.php]
 TopLine=1006
 Caret=25,1050
-[scripts\php\libs\xml\DefaultWeb.xml]
-TopLine=289
-Caret=28,299
 [scripts\php\libs\Js.class.php]
 TopLine=2
 Caret=37,29
 [scripts\php\libs\xml\Js.xml]
 TopLine=1
 Caret=26,13
-[Novy3.html]
-TopLine=15
-Caret=72,67
-[Novy4.html]
-TopLine=1
-Caret=72,21
 [scripts\php\libs\System.class.php]
 TopLine=372
 Caret=36,395
