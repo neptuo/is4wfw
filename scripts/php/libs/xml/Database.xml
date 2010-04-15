@@ -4,7 +4,7 @@
   <name>Database lib</name>
   <classname>Database</classname>
   <classpath>php.libs</classpath>
-  <version>1.07</version>
+  <version>1.08</version>
   <count>*</count>
   <comment>
     Třída pro práci s databází.
@@ -27,6 +27,18 @@
       Vrátí je v defaultním templatu (tabulce) pokud není specifikovám soubor
       s templatem. Ten definuje strukturu pro jeden řádek vracených dat. Místo
       kam se mají vložit data je specifikováno jako "<tpl:nazev_slopce />".
+    </comment>
+  </tag>
+  <tag>
+    <tagname>useConnection</tagname>
+    <function>useConnection</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Pokusí se použít spojení do databáze pro zadaný název. Slouží pro obsah 
+			stránek, výběr stránek je vždy výbírán podle "default" spojení. (settings.inc)
     </comment>
   </tag>
 </taglib>

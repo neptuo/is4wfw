@@ -12,7 +12,7 @@
    *  Article class
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-06-18
+   *  @timestamp  2009-10-28
    * 
    */  
   class Article extends BaseTagLib {
@@ -41,10 +41,11 @@
      *  @param		pageLangId		language id     
      *  @param		articleLangId	language id     
      *  @param    method    		method for passing detail id
-     *  @return   list of articles                                        
+     *  @param		sort					asc (default) / desc
+     *  @return   list of articles
      *
      */                   
-    public function showLine($lineId, $template = fales, $templateId = false, $pageId = false, $pageLangId = false, $articleLangId = false, $method = false) {
+    public function showLine($lineId, $template = fales, $templateId = false, $pageId = false, $pageLangId = false, $articleLangId = false, $method = false, $sort = false) {
       global $webObject;
       global $dbObject;
       global $loginObject;
@@ -85,7 +86,8 @@
     	  return;
 			}
         
-      $articles = $dbObject->fetchAll("SELECT `article`.`id`, `article_content`.`name`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article`.`line_id` = ".$lineId." AND `article_content`.`language_id` = ".$articleLangId." AND `article_line_right`.`type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString()."));");
+      $sort = (strtolower($sort) == 'desc' ? 'DESC' : 'ASC'); 
+      $articles = $dbObject->fetchAll("SELECT `article`.`id`, `article_content`.`name`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article`.`line_id` = ".$lineId." AND `article_content`.`language_id` = ".$articleLangId." AND `article_line_right`.`type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString().")) ORDER BY `article_content`.`timestamp` " . $sort . ";");
       if(count($articles) > 0) {
       	$flink = '';
         require_once("scripts/php/classes/CustomTagParser.class.php");
@@ -353,7 +355,7 @@
       global $loginObject;
       global $webObject;
       $return = '';
-			$actionUrl = '';
+			$actionUrl = $_SERVER['REDIRECT_URL'];
       
       if($detailPageId != false) {
 				$actionUrl = $webObject->composeUrl($detailPageId);
@@ -403,12 +405,15 @@
         $returnTmp .= ''
         .'<div class="article-mgm-show">'
           .'<table class="article-mgm-table">'
-            .'<tr class="article-mgm-tr article-mgm-tr-head">'
-              .'<th class="article-mgm-th article-mgm-id">Id</th>'
-              .'<th class="article-mgm-th article-mgm-lang">Lang</th>'
-              .'<th class="article-mgm-th article-mgm-head">Head</th>'
-              .'<th class="article-mgm-th article-mgm-edit">Edit</th>'
-            .'</tr>';
+          	.'<thead>'
+	            .'<tr class="article-mgm-tr article-mgm-tr-head">'
+  	            .'<th class="article-mgm-th article-mgm-id">Id</th>'
+    	          .'<th class="article-mgm-th article-mgm-lang">Lang</th>'
+      	        .'<th class="article-mgm-th article-mgm-head">Head</th>'
+        	      .'<th class="article-mgm-th article-mgm-edit">Edit</th>'
+          	  .'</tr>'
+						.'</thead>'
+						.'<tbody>';
         foreach($articles as $article) {
           $infos = $dbObject->fetchAll("SELECT `article_content`.`name`, `article_content`.`head`, `language`.`id` AS `lang_id`, `language`.`language` FROM `article_content` LEFT JOIN `language` ON `article_content`.`language_id` = `language`.`id` WHERE `article_content`.`article_id` = ".$article['id']." ORDER BY `language`.`language`;");
           $lnVersions = count($infos);
@@ -425,7 +430,7 @@
                 .'<input type="hidden" name="article-add-lang" value="Add Lang" />'
                 .'<input type="image" src="~/images/lang_add.png" name="article-add-lang" value="Add Lang" title="Add Language Version" />'
               .'</form>'
-              .'<form name="article-add-lang2" method="post" action="">'
+              .'<form name="article-add-lang2" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
                 .'<input type="hidden" name="article-id" value="'.$article['id'].'" />'
                 .'<input type="hidden" name="line-id" value="'.$lineId.'" />'
                 .'<input type="hidden" name="article-delete" value="Delete Article" />'
@@ -451,7 +456,7 @@
                 .'<input type="hidden" name="article-edit" value="Edit" />'
                 .'<input type="image" src="~/images/page_edi.png" name="article-edit" value="Edit" title="Edit Article" /> '
               .'</form>'
-              .'<form name="article-edit" method="post" action="">'
+              .'<form name="article-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
                 .'<input type="hidden" name="article-id" value="'.$article['id'].'" />'
                 .'<input type="hidden" name="language-id" value="'.$info['lang_id'].'" />'
                 .'<input type="hidden" name="line-id" value="'.$lineId.'" />'
@@ -464,6 +469,7 @@
           }
         }
         $returnTmp .= ''
+        		.'</tbody>'
           .'</table>'
         .'</div>';
       } else {
@@ -494,7 +500,7 @@
     	global $loginObject;
     	global $webObject;
     	$return = '';
-			$actionUrl = '';
+			$actionUrl = $_SERVER['REDIRECT_URL'];
 			
 			if($lineId == false) {
       	if($method == "get" || $method == "post") {
@@ -530,7 +536,7 @@
     
       
       if($useFrames != "false") {
-      	return parent::getFrame("New Article", $return, "");
+      	return parent::getFrame("Create New Article", $return, "");
       } else {
 				return $return;
 			}
@@ -575,9 +581,18 @@
       }
       $lineSelect .= '</select>';
       
+      include_once('System.class.php');
+    
+			$name = 'Article.editors';
+    	$system = new System();
+		  $propertyEditors = $system->getPropertyValue($name);
+		  $editAreaContentRows = $system->getPropertyValue('Article.editAreaContentRows');
+		  $editAreaHeadRows = $system->getPropertyValue('Article.editAreaHeadRows');
+      
+      
       $return .= ''
       .'<div class="article-mgm-edit">'
-        .'<form name="article-edit" method="post" action="">'
+        .'<form name="article-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
           .'<div class="article-prop">'
             .'<div class="article-name">'
               .'<label for="article-name">Name:</label> '
@@ -596,7 +611,22 @@
               .'<input type="text" name="article-author" value="'.$articleContent['author'].'" />'
             .'</div>'
             .'<div class="clear"></div>'
-          .'</div>'
+          .'</div>';
+      if($propertyEditors == 'edit_area') {
+				$return .= ''
+					.'<div id="editors" class="editors edit-area-editors">'
+						.'<div id="editors-tab" class="editors-tab"></div>'
+						.'<div id="cover-article-head">'
+							.'<label for="article-head">Article Head</label>'
+							.'<textarea id="article-head" class="edit-area html" name="article-head" rows="'.($editAreaHeadRows > 0 ? $editAreaHeadRows : 10).'">'.$articleContent['head'].'</textarea>'
+						.'</div>'
+						.'<div id="cover-article-content">'
+							.'<label for="article-content">Article Content</label>'
+							.'<textarea id="article-content" class="edit-area html" name="article-content" rows="'.($editAreaContentRows > 0 ? $editAreaContentRows : 20).'">'.$articleContent['content'].'</textarea>'
+						.'</div>'
+					.'</div>';
+			} else {  
+      	$return .= ''
           .'<div class="article-head">'
             .'<label for="article-head">Head:</label> '
             .'<div class="editor-cover">'
@@ -614,7 +644,9 @@
     	        .'</div>'
               .'<div class="clear"></div>'
             .'</div>'
-          .'</div>'
+          .'</div>';
+      }
+      $return .= ''
           .'<div class="article-bottom">'
             .'<div class="article-submit">'
               .'<input type="hidden" name="article-id" value="'.$article['id'].'" />'
@@ -679,11 +711,14 @@
         $return .= ''
         .'<div class="show-lines"> '
           .'<table>'
+          	.'<thead>'
           	.'<tr>'
           		.'<th class="show-lines-id">Id:</th>'
           		.'<th class="show-lines-name">Name:</th>'
           		.'<th class="show-lines-edit">Edit:</th>'
-          	.'</tr>';
+          	.'</tr>'
+						.'</thead>'
+						.'<tbody>';
         $i = 1;
         foreach($lines as $line) {
         	$artcs = $dbObject->fetchAll('SELECT `id` FROM `article` WHERE `line_id` = '.$line['id'].';');
@@ -703,7 +738,7 @@
                   .'<input type="image" src="~/images/page_edi.png" name="article-line-edit" value="Edit" title="Edit Article line" />'
                 .'</form> '
                 .((count($artcs) == 0) ? ''
-                .'<form name="article-line-delete" method="post" action="">'
+                .'<form name="article-line-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
                   .'<input type="hidden" name="delete-line-id" value="'.$line['id'].'" />'
                   .'<input type="hidden" name="article-line-delete" value="Delete" />'
                   .'<input class="confirm" type="image" src="~/images/page_del.png" name="article-line-delete" value="Delete" title="Delete Article line, id('.$line['id'].')" />'
@@ -715,6 +750,7 @@
             $i ++;
         }
         $return .= ''
+        		.'</tbody>'
           .'</table>'
         .'</div>';
       } else {
@@ -769,7 +805,7 @@
       $lines = $dbObject->fetchAll('SELECT `article_line`.`id`, `article_line`.`name` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `id`;');
       if(count($lines) > 0) {
         $return .= ''
-        .'<form name="article-select-line" method="'.(($method == "get") ? 'get' : 'post').'">'
+        .'<form name="article-select-line" method="'.(($method == "get") ? 'get' : 'post').'" action="'.$_SERVER['REDIRECT_URL'].'">'
         	.'<label for="select-line">Select article line: </label>'
           .'<select id="select-line" name="line-id">';
         foreach($lines as $line) {
@@ -805,7 +841,7 @@
     public function createLine($detailPageId = false, $useFrames = false) {
     	global $webObject;
       $return = '';
-      $actionUrl = '';
+      $actionUrl = $_SERVER['REDIRECT_URL'];
       
       if($detailPageId != false) {
 				$actionUrl = $webObject->composeUrl($detailPageId);
@@ -829,7 +865,7 @@
     	global $webObject;
     	global $loginObject;
 			$return = '';
-			$actionUrl = '';
+			$actionUrl = $_SERVER['REDIRECT_URL'];
 			
 			// Save article .... ;)
 			if($_POST['article-save'] == "Save") {
@@ -938,6 +974,14 @@
       if($submitPageId != false) {
 				$actionUrl = $webObject->composeUrl($submitPageId);
 			}
+			
+			include_once('System.class.php');
+    
+			$name = 'Article.editors';
+    	$system = new System();
+		  $propertyEditors = $system->getPropertyValue($name);
+		  $editAreaContentRows = $system->getPropertyValue('Article.editAreaContentRows');
+		  $editAreaHeadRows = $system->getPropertyValue('Article.editAreaHeadRows');
       
       $return .= ''
       .'<div class="article-mgm-edit">'
@@ -960,7 +1004,22 @@
               .'<input type="text" id="article-author" name="article-author" value="'.$article['author'].'" />'
             .'</div>'
             .'<div class="clear"></div>'
-          .'</div>'
+          .'</div>';
+      if($propertyEditors == 'edit_area') {
+				$return .= ''
+					.'<div id="editors" class="editors edit-area-editors">'
+						.'<div id="editors-tab" class="editors-tab"></div>'
+						.'<div id="cover-article-head">'
+							.'<label for="article-head">Article Head</label>'
+							.'<textarea id="article-head" class="edit-area html" name="article-head" rows="'.($editAreaHeadRows > 0 ? $editAreaHeadRows : 10).'">'.$article['head'].'</textarea>'
+						.'</div>'
+						.'<div id="cover-article-content">'
+							.'<label for="article-content">Article Content</label>'
+							.'<textarea id="article-content" class="edit-area html" name="article-content" rows="'.($editAreaContentRows > 0 ? $editAreaContentRows : 20).'">'.$article['content'].'</textarea>'
+						.'</div>'
+					.'</div>';
+			} else {  
+      	$return .= ''
           .'<div class="article-head">'
             .'<label for="article-head">Head:</label> '
             .'<div class="editor-cover">'
@@ -978,7 +1037,9 @@
     	        .'</div>'
               .'<div class="clear"></div>'
             .'</div>'
-          .'</div>'
+          .'</div>';
+      }
+      $return .= ''
           .'<div class="article-bottom">'
             .'<div class="article-submit">'
               .'<input type="hidden" name="article-id" value="'.$article['article_id'].'" />'
@@ -1018,7 +1079,7 @@
     	global $webObject;
     	global $loginObject;
 			$return = '';
-			$actionUrl = '';
+			$actionUrl = $_SERVER['REDIRECT_URL'];
 			
 			$lineId = ((array_key_exists('edit-line-id', $_POST)) ? $_POST['edit-line-id'] : 0);
 			// test na prava zapisu do rady clanku

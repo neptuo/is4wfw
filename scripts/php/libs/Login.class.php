@@ -15,7 +15,7 @@
    *  @objectname loginObject     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-06-03
+   *  @timestamp  2009-12-02
    *
    *
    */              
@@ -158,8 +158,14 @@
      * @return  html login form     
      *
      */
-    public function showLoginForm($group, $pageId) {
+    public function showLoginForm($group, $pageId, $autoLoginUser = false, $autoLoginPasswd = false) {
       if(!self::isLogged()) {
+      	if($_POST['login'] != "Log in" && !array_key_exists('auto-login-ignore', $_REQUEST) && $autoLoginUser != false && $autoLoginPasswd != false) {
+					$_POST['username'] = $autoLoginUser;
+					$_POST['password'] = $autoLoginPasswd;
+					$_POST['login'] = "Log in";
+				}
+      
         if($_POST['login'] == "Log in") {
           global $dbObject;
           global $webObject;
@@ -187,7 +193,9 @@
               $this->LoggedIn = true;
               
               $link = $webObject->composeUrl($pageId);
-              $link = $link;
+              if(array_key_exists('auto-login-ignore', $_REQUEST)) {
+								$link .= '?auto-login-ignore';
+							}
               header("Location: ".$link);
               $a = $webObject->makeAnchor($pageId, "Redirect");
               echo $a;
@@ -201,7 +209,7 @@
         }
       
         $return = '<div class="login-form">'.
-                    '<form name="login" method="post" action="">'.
+                    '<form name="login" method="post" action="'.$_SERVER['REDIRECT_URL'].(array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '').'">'.
                       ((strlen($message) > 0) ? '<p class="login-message">'.$message.'</p>' : '').
                       '<p class="login-head">Login</p>'.
                       '<p class="login-user">'.
@@ -221,9 +229,11 @@
         return $return;
       } else {
         global $webObject;
-              
+        
         $link = $webObject->composeUrl($pageId);
-        $link = $link;
+        if(array_key_exists('auto-login-ignore', $_REQUEST)) {
+					$link .= '?auto-login-ignore';
+				}
         header("Location: ".$link);
               
         $a = $webObject->makeAnchor($pageId, "Redirect");
@@ -244,7 +254,16 @@
      */              
     public function showLogoutForm($group, $pageId) {
       if(self::isLogged()) {
-        if($_POST['logout'] == "Log out" || ($this->Logtime + 60 * 15) < time()) {
+      	require_once('System.class.php');	
+				$name = 'Login.session';
+    		$system = new System();
+				$sessionTime = $system->getPropertyValue($name);
+				
+				if($sessionTime < 0) {
+					$sessionTime = 15;
+				}
+      
+        if($_POST['logout'] == "Log out" || ($this->Logtime + 60 * $sessionTime ) < time()) {
           // process logout
           global $dbObject;
           global $webObject;
@@ -255,9 +274,10 @@
           unset($_SESSION[$group.'_session_id']);
           //session_destroy();
           
-              
           $link = $webObject->composeUrl($pageId);
-          $link = $link;
+          if(array_key_exists('auto-login-ignore', $_REQUEST)) {
+						$link .= '?auto-login-ignore';
+					}
           header("Location: ".$link);
           
           $a = $webObject->makeAnchor($pageId, "Redirect");
@@ -268,9 +288,9 @@
 	        $this->Logtime = time();
 	        $dbObject->execute("UPDATE `user_log` SET `timestamp` = ".$this->Logtime." WHERE `session_id` = ".$this->SessionId.";");
 	      }
-      
+      	
         $return = '<div class="logout-form">'.
-                    '<form name="logout" method="post" action="">'.
+                    '<form name="logout" method="post" action="'.$_SERVER['REDIRECT_URL'].(array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '').'">'.
                       '<p class="logout-submit">'.
                         '<input type="submit" name="logout" value="Log out" />'.
                       '</p>'.
@@ -282,7 +302,9 @@
         global $webObject;
               
         $link = $webObject->composeUrl($pageId);
-        $link = $link;
+        if(array_key_exists('auto-login-ignore', $_REQUEST)) {
+					$link .= '?auto-login-ignore';
+				}
         header("Location: ".$link);
           
         $a = $webObject->makeAnchor($pageId, "Redirect");
@@ -440,6 +462,17 @@
      */		 		 		     
     public function getUserId() {
 			return $this->UserId;
+		}
+    
+    /**
+     *
+     *	Not implemented yet!
+     *	
+     *	@return	user id
+     *
+     */		 		 		     
+    public function setUserId($uid) {
+			return $uid;
 		}
 		
 		/**

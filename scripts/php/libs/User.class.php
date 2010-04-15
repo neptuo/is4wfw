@@ -12,7 +12,7 @@
    *  user management class.
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-06-18
+   *  @timestamp  2009-11-29
    *
    */              
   class User extends BaseTagLib {
@@ -26,10 +26,16 @@
       self::setTagLibXml("xml/User.xml");
     }
     
-    public function showUserManagement() {
+    public function showUserManagement($attUserId = false) {
       global $dbObject;
       global $loginObject;
       $return = '';
+      
+      if($attUserId == false) {
+				echo "Att User Id is FALSE";
+			} else {
+				echo "Att User Id is TRUE";
+			}
       
       if($_POST['user-edit-save'] == "Save") {
         $uid = $_POST['user-edit-uid'];
@@ -95,6 +101,11 @@
         }
       }
       
+      if($attUserId != false) {
+      	$_POST['user-list-edit'] = "Edit";
+      	$_POST['user-list-uid'] = $attUserId;
+      }
+      
       if($_POST['user-list-edit'] == "Edit") {
         $uid = $_POST['user-list-uid'];
         $permission = $dbObject->fetchAll('SELECT DISTINCT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE (`group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `user`.`uid` = '.$loginObject->getUserId().') AND `user`.`uid` = '.$uid.' ORDER BY `user`.`uid`;');
@@ -122,75 +133,73 @@
         $return .= parent::getFrame('Edit User', self::editForm(array(), array()), '');
       }
       
-      $n = 1;
-      $returnTmp = ''
-      .'<div class="user-management">'
-        .'<table class="user-list-table">'
-          .'<tr>'
-            .'<th class="user-list-th user-list-id">Uid</th>'
-            .'<th class="user-list-th user-list-login">Login</th>'
-            .'<th class="user-list-th user-list-name">Name</th>'
-            .'<th class="user-list-th user-list-surname">Surname</th>'
-            .'<th class="user-list-th user-list-group">Group</th>'
-            .'<th class="user-list-th user-list-edit">Edit</th>'
-          .'</tr>';
-      //$users = $dbObject->fetchAll("SELECT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname`, (SELECT MIN(`value`) FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE `user`.`uid` = `this_uid`) AS `min_value` FROM `user` ORDER BY `user`.`uid`;");
-      $users = $dbObject->fetchAll('SELECT DISTINCT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `user`.`uid` = '.$loginObject->getUserId().' ORDER BY `user`.`uid`;');
-      foreach($users as $user) {
-        //if($user['min_value'] < $loginObject->getGroupValue()) {
-        //  continue;
-        //}
-        $groups = $dbObject->fetchAll("SELECT `group`.`name` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `user_in_group`.`uid` = ".$user['this_uid'].";");
+      if($attUserId == false) {
+	      $n = 1;
+  	    $returnTmp = ''
+    	  .'<div class="user-management">'
+      	  .'<table class="user-list-table">'
+        	  .'<tr>'
+          	  .'<th class="user-list-th user-list-id">Uid</th>'
+            	.'<th class="user-list-th user-list-login">Login</th>'
+	            .'<th class="user-list-th user-list-name">Name</th>'
+  	          .'<th class="user-list-th user-list-surname">Surname</th>'
+    	        .'<th class="user-list-th user-list-group">Group</th>'
+      	      .'<th class="user-list-th user-list-edit">Edit</th>'
+        	  .'</tr>';
+  	    $users = $dbObject->fetchAll('SELECT DISTINCT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `user`.`uid` = '.$loginObject->getUserId().' ORDER BY `user`.`uid`;');
+    	  foreach($users as $user) {
+	        $groups = $dbObject->fetchAll("SELECT `group`.`name` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `user_in_group`.`uid` = ".$user['this_uid'].";");
         
-        $groupList = '';
-        foreach($groups as $group) {
-          $groupList .= $group['name'].', ';
-        }
-        $groupList = substr($groupList, 0, strlen($groupList) - 2);
-        $returnTmp .= ''
-        .'<tr class="'.((($n % 2) == 0) ? 'even' : 'idle').'">'
-          .'<td class="user-list-td user-list-id">'
-            .$user['this_uid']
-          .'</td>'
-          .'<td class="user-list-td user-list-login">'
-            .$user['login']
-          .'</td>'
-          .'<td class="user-list-td user-list-name">'
-            .$user['name']
-          .'</td>'
-          .'<td class="user-list-td user-list-surname">'
-            .$user['surname']
-          .'</td>'
-          .'<td class="user-list-td user-list-group">'
-            .$groupList
-          .'</td>'
-          .'<td class="user-list-td user-list-edit">'
-            .'<form name="user-list-edit1" method="post" action="">'
-              .'<input type="hidden" name="user-list-uid" value="'.$user['this_uid'].'" />'
-              .'<input type="hidden" name="user-list-edit" value="Edit" />'
-              .'<input type="image" src="~/images/page_edi.png" name="user-list-edit" value="Edit" title="Edit user" /> '
-            .'</form>'
-            .'<form name="user-list-edit2" method="post" action="">'
-              .'<input type="hidden" name="user-list-uid" value="'.$user['this_uid'].'" />'
-              .'<input type="hidden" name="user-list-delete" value="Delete" />'
-              .'<input class="confirm" type="image" src="~/images/page_del.png" name="user-list-delete" value="Delete" title="Delete user, id('.$user['this_uid'].')" />'
-            .'</form>'
-          .'</td>'
-        .'</tr>';
-        $n ++;
-      }
-      $returnTmp .= ''
-        .'</table>'
-      .'</div>';
-      $return .= parent::getFrame('User List', $returnTmp, '');
+  	      $groupList = '';
+    	    foreach($groups as $group) {
+      	    $groupList .= $group['name'].', ';
+        	}
+	        $groupList = substr($groupList, 0, strlen($groupList) - 2);
+  	      $returnTmp .= ''
+    	    .'<tr class="'.((($n % 2) == 0) ? 'even' : 'idle').'">'
+      	    .'<td class="user-list-td user-list-id">'
+        	    .$user['this_uid']
+          	.'</td>'
+	          .'<td class="user-list-td user-list-login">'
+  	          .$user['login']
+    	      .'</td>'
+      	    .'<td class="user-list-td user-list-name">'
+        	    .$user['name']
+          	.'</td>'
+	          .'<td class="user-list-td user-list-surname">'
+  	          .$user['surname']
+    	      .'</td>'
+      	    .'<td class="user-list-td user-list-group">'
+        	    .$groupList
+          	.'</td>'
+	          .'<td class="user-list-td user-list-edit">'
+  	          .'<form name="user-list-edit1" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+    	          .'<input type="hidden" name="user-list-uid" value="'.$user['this_uid'].'" />'
+      	        .'<input type="hidden" name="user-list-edit" value="Edit" />'
+        	      .'<input type="image" src="~/images/page_edi.png" name="user-list-edit" value="Edit" title="Edit user" /> '
+          	  .'</form>'
+            	.'<form name="user-list-edit2" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+              	.'<input type="hidden" name="user-list-uid" value="'.$user['this_uid'].'" />'
+	              .'<input type="hidden" name="user-list-delete" value="Delete" />'
+  	            .'<input class="confirm" type="image" src="~/images/page_del.png" name="user-list-delete" value="Delete" title="Delete user, id('.$user['this_uid'].')" />'
+    	        .'</form>'
+      	    .'</td>'
+        	.'</tr>';
+	        $n ++;
+  	    }
+    	  $returnTmp .= ''
+      	  .'</table>'
+	      .'</div>';
       
-      $returnTmp = ''
-      .'<div class="user-management-new-user">'
-        .'<form name="user-new-user" method="post" action="">'
-          .'<input type="submit" name="new-user" value="New User" />'
-        .'</form>'
-      .'</div>';
-      $return .= parent::getFrame('New User', $returnTmp, '');
+	      $returnTmp .= ''
+  	    .'<hr />'
+    	  .'<div class="user-management-new-user">'
+      	  .'<form name="user-new-user" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+        	  .'<input type="submit" name="new-user" value="New User" />'
+	        .'</form>'
+  	    .'</div>';
+    	  $return .= parent::getFrame('User List', $returnTmp, '');
+    	}
       
       return $return;
     }
@@ -230,7 +239,7 @@
       
       $return .= ''
       .'<div class="user-edit-cover">'
-        .'<form name="user-edit-form" method="post" action="">'
+        .'<form name="user-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
           .'<div class="user-edit-prop">'
             .'<div class="user-edit-login">'
               .'<label for="user-edit-login">Login: <span>*</span></label> '
@@ -335,7 +344,7 @@
 			
 				$return .= ''
 				.'<div class="add-new-group">'
-					.'<form name="add-new-group" method="post" action="">'
+					.'<form name="add-new-group" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<div class="new-group-name">'
 							.'<label for="new-group-name">Group name: (<span>at least 2 characters</span>)</label> '
 							.'<input type="text" id="new-group-name" name="new-group-name" value="'.$groupName.'" />'
@@ -419,7 +428,7 @@
 							.'<td class="group-list-parent">'.$parentName.'</td>'
 							.'<td class="group-list-action">'
 							.(((count($dbObject->fetchAll('SELECT `gid` FROM `user_in_group` WHERE `gid` = '.$group['gid'].';')) == 0) && (count($dbObject->fetchAll('SELECT `gid` FROM `group` WHERE `parent_gid` = '.$group['gid'].';')) == 0)) ? ''	
-								.'<form name="group-delete" method="post" action="">'
+								.'<form name="group-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 									.'<input type="hidden" name="group-id" value="'.$group['gid'].'" />'
 									.'<input type="hidden" name="delete-group" value="Delete group" />'
 									.'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-group" value="Delete group" title="Delete group, id('.$group['gid'].')" />'
@@ -499,7 +508,8 @@
 				
 				$return .= ''
 				.'<div class="user-log-list">'
-					.'<table>'
+					.'<table class="data-table">'
+						.'<thead>'
 						.'<tr>'
 							.'<th class="user-log-id">Id:</th>'
 							.'<th class="user-log-uid">Uid:</th>'
@@ -510,7 +520,10 @@
 							.'<th class="user-log-logout">Logout:</th>'
 							.'<th class="user-log-logout">used group:</th>'
 						.'</tr>'
+						.'</thead>'
+						.'<tbody>'
 						.$rows
+						.'</tbody>'
 					.'</table>'
 				.'</div>';
 			} else {
@@ -554,8 +567,8 @@
 				
 				$return .= ''
 				.'<div class="user-log-truncate">'
-					.'<form name="user-log-truncate" method="post" action="">'
-						.'<input type="submit" name="user-log-truncate" value="Clear user log!" />'
+					.'<form name="user-log-truncate" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<input class="confirm" type="submit" name="user-log-truncate" value="Clear user log!" title="Clear user log" />'
 					.'</form>'
 				.'</div>';
 			} else {
@@ -565,8 +578,14 @@
 			if($useFrames == "false") {
 					return $return;
 			} else {
-					return parent::getFrame('User log', $return, "", true);
+					return parent::getFrame('Truncate user log', $return, "", true);
 			}
+		}
+		
+		public function getUserId() {
+			global $loginObject;
+			
+			return $loginObject->getUserId();
 		}
 
   }

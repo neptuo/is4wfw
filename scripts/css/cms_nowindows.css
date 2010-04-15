@@ -1,0 +1,29 @@
+body {
+	overflow: auto;
+}
+
+.cms .head {
+	position: fixed;
+}
+
+.cms .body {
+	position: static;
+	height: auto !important;
+	margin: 60px 40px 30px;
+}
+
+.cms .dock-bar {
+	display: none;
+}
+
+.loading {
+	display: none;
+}
+
+.cms .data-table {
+	border: none;
+}
+
+.cms .data-table th {
+	background: #cccccc;
+}

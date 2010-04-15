@@ -59,8 +59,8 @@
 				$contEmail = $_POST['cont-email'];
 				$contPhone = $_POST['cont-phone'];
 				$contAddress = $_POST['cont-address'];
-				$width = (int) $_POST['width'];
-				$height = (int) $_POST['height'];
+				$width = (float) str_replace(',', '.', $_POST['width']);
+				$height = (float) str_replace(',', '.', $_POST['height']);
 				$doorType = $_POST['door-type'];
 				$cover = $_POST['cover'];
 				$fillIn = $_POST['fill-in'];
@@ -91,7 +91,7 @@
 					$objCon = self::showOrder1Detail();
 					
 					$obsah = "Vaše poptávka byla zaznamenána";
-  				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Lamelové clony\"\n\n");
+  				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Kyvná vrata\"\n\n");
   				$message .= $objCon;
   				
   				$headers = "From: info@plasticport.cz\n";
@@ -258,8 +258,8 @@
 				$contEmail = $_POST['cont-email'];
 				$contPhone = $_POST['cont-phone'];
 				$contAddress = $_POST['cont-address'];
-				$width = (int) $_POST['width'];
-				$height = (int) $_POST['height'];
+				$width = (float) str_replace(',', '.', $_POST['width']);
+				$height = (float) str_replace(',', '.', $_POST['height']);
 				$fixture = $_POST['fixture'];
 				$draught = $_POST['draught'];
 				$transit1 = $_POST['transit'];
@@ -300,7 +300,7 @@
 					$objCon = self::showOrder2Detail();
 					
 					$obsah = "Vaše poptávka byla zaznamenána";
-  				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Kyvná vrata\"<br /><br />");
+  				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Lamelové clony\"<br /><br />");
   				$message .= $objCon;
   				
   				$headers = "From: info@plasticport.cz\n";
@@ -549,7 +549,7 @@
 						.'<td class="order-address">'.$order['cont_address'].'</td>'
 						.'<td class="order-action">'
 							.'<a target="_blank" href="'.$actionUrl.'?order1-id='.$order['id'].'">náhled celé objednávky</a> '
-							.'<form name="order-delete" method="post" action="">'
+							.'<form name="order-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 								.'<input type="hidden" name="order1-id" value="'.$order['id'].'" />'
 	      				.'<input type="hidden" name="delete-order-form-1" value="Smazat" />'
 	      				.'<input type="image" src="~/images/page_del.png" name="delete-order-form-1" value="Smazat" />'
@@ -616,7 +616,7 @@
 						.'<td class="order-address">'.$order['cont_address'].'</td>'
 						.'<td class="order-action">'
 							.'<a target="_blank" href="'.$actionUrl.'?order2-id='.$order['id'].'">náhled celé objednávky</a> '
-							.'<form name="order-delete" method="post" action="">'
+							.'<form name="order-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 								.'<input type="hidden" name="order2-id" value="'.$order['id'].'" />'
 	      				.'<input type="hidden" name="delete-order-form-2" value="Smazat" />'
 	      				.'<input type="image" src="~/images/page_del.png" name="delete-order-form-2" value="Smazat" />'

@@ -64,7 +64,7 @@
 			!!	nahravani souboru se stejnym jmenem ale jinou koncovkou -> BUG
 			--	pres file.php pristup k templatum.
 			--	v url projektu "*" ... default pro vsechny url
-			--	v url projektu nebo stranky "/".
+			ok	v url projektu nebo stranky "/".
 			--	sprava pro web pairs.
 			--	v registraci noveho uzivatele asociace s pairs.
 			--	moznost mit ruzna url pro http a https

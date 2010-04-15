@@ -1,7 +1,9 @@
 /* CSS Document */
 
 body {
+	min-width: 1200px;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 form {
@@ -112,37 +114,49 @@ table.pages-table {
   font-weight: bold;
 }
 
-.page-file-list, .template-list {
+.page-file-list, .template-list, .system-properties table, .system-notes table {
   width: 100%;
   border-top: 1px solid #cccccc;
   border-collapse: collapse;
 }
 
 .show-lines table, .group-list table, .user-log-list table, .hp-projection-edit table, 
-table.seasons-list, table.teams-list, table.players-list, table.table, table.match-edit-table, table.matches-table, table.match-stats-table {
+table.seasons-list, table.teams-list, table.players-list, table.table, table.match-edit-table, table.matches-table, table.match-stats-table,
+.db-connection table {
   border-top: 1px solid #cccccc;
   border-collapse: collapse;
 }
 
+.dir-list th {
+	height: 20px;
+}
+
+.dir-list td {
+	height: 27px;
+}
+
 .show-lines table td, .group-list table td, .user-log-list td, .languages-edit td, .show-projects td, 
 .user-list-table td, .dir-list td, .hp-projection-edit td, .references-edit td, .url-cache-table td, 
-table.seasons-list td, table.teams-list td, table.players-list td, table.table td, table.matches-table td, table.match-stats-table td {
+table.seasons-list td, table.teams-list td, table.players-list td, table.table td, table.matches-table td, table.match-stats-table td,
+.system-properties table td, .system-notes table td, .db-connection table td {
 	padding: 2px 10px;
   border-bottom: 1px solid #cccccc;
 }
 
 .group-list table th, .show-lines table th, .user-log-list th, .user-list-table th, .dir-list th, 
 .hp-projection-edit th, .references-edit th, table.seasons-list th, table.teams-list th, table.players-list th, table.table th,
-table.match-edit-table th, table.matches-table th, table.match-stats-table th {
+table.match-edit-table th, table.matches-table th, table.match-stats-table th, .system-properties th, .system-notes th,
+.db-connection table th {
 	padding: 0 10px;
 	text-align: left;
 }
 
 .file-tr th, .dir-list th, .show-lines th, .template-list th, .group-list th, .user-log-list th, .hp-projection-edit th, 
 .references-edit th, table.seasons-list th, table.teams-list th, table.players-list th, table.table th,
-table.match-edit-table th, table.matches-table th, table.match-stats-table th {
+table.match-edit-table th, table.matches-table th, table.match-stats-table th, .system-properties th, .system-notes th,
+.db-connection table th {
   text-align: left;
-  background: #cccccc;
+  background-color: #cccccc;
   border-bottom: 1px solid black;
 }
 
@@ -281,7 +295,7 @@ div.login-form p.login-message {
 
 .frame-head {
 	width: 100%;
-	background: #04601C;
+	background-color: #04601C;
 }
 
 .frame-cover .frame-head .click-able-roll {
@@ -298,6 +312,10 @@ div.login-form p.login-message {
 
 .frame-cover .frame-head .click-able-roll span {
   display: none;
+}
+
+.frame-cover.closed-frame .frame-body {
+	display: none;
 }
 
 .frame-head .frame-label {
@@ -321,7 +339,7 @@ div.login-form p.login-message {
 }
 
 th.file-head-th {
-	background: #cccccc;
+	background-color: #cccccc;
 }
 
 .dir-list {
@@ -354,7 +372,7 @@ th.file-head-th {
 }
 
 .dir-list tr.even, .dir-list tr.even .dir-name input {
-	background: #eeeeee;
+	background-color: #eeeeee;
 }
 
 .edit-prop, .edit-rights {
@@ -365,7 +383,7 @@ th.file-head-th {
   float: left;
   padding: 6px 8px;
   margin: 2px;
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .edit-prop .edit-in-title input, .edit-prop .edit-menu input, .edit-prop .edit-visible input, .edit-prop .edit-clear-cache input, .edit-prop .edit-language select, .project-edit-http, .project-edit-https, .edit-cache-time select {
@@ -388,10 +406,14 @@ th.file-head-th {
   width: 116px;
 }
 
-.edit-prop div {
+.edit-prop div, .edit-area-editors {
   padding: 6px 8px;
   margin: 2px;
-  background: #eeeeee;
+  background-color: #eeeeee;
+}
+
+.editors .editors-tab {
+	padding-bottom: 10px;
 }
 
 .edit-rights label {
@@ -404,17 +426,18 @@ th.file-head-th {
   margin: 0;
 }
 
-.edit-tl-start, .edit-tl-end, .edit-content .edit-head, .edit-content .edit-content, .text-file-content, .user-edit-login, .user-edit-name, .user-edit-surname, .user-edit-password, .user-edit-password-again, .user-edit-submit, .user-edit-info, .user-edit-groups, .directory-name, .user-edit-enable {
+.edit-tl-start, .edit-tl-end, .edit-content .edit-head, .edit-content .edit-content, .text-file-content, .user-edit-login, .user-edit-name, .user-edit-surname, .user-edit-password, .user-edit-password-again, .user-edit-submit, .user-edit-info, .user-edit-groups, .directory-name, .user-edit-enable,
+.db-connection-edit div {
   padding: 6px 8px;
   margin: 2px;
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .edit-submit, .text-file-submit {
   padding: 6px 8px;
   margin: 2px;
   text-align: right;
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .user-edit-cover span, .directory-name span, .new-group-name span {
@@ -443,21 +466,27 @@ th.file-head-th {
   display: block;
 }
 
-.frame-body .error {
+.error {
+	font-family: Times;
+	font-size: 15px;
 	margin: 2px 0;
 	padding: 0 0 1px 18px;
 	color: white;
 	background: url('/images/error.png') #bd2828 no-repeat 1px 3px;
 }
 
-.frame-body .success {
+.success {
+	font-family: Times;
+	font-size: 15px;
 	margin: 2px 0;
 	padding: 0 0 1px 18px;
 	color: white;
 	background: url('/images/success.png') #38cb35 no-repeat 1px 3px;
 }
 
-.frame-body .warning {
+.warning {
+	font-family: Times;
+	font-size: 15px;
 	margin: 2px 0;
 	padding: 0 0 1px 18px;
 	color: black;
@@ -466,17 +495,32 @@ th.file-head-th {
 
 body {
   overflow: -moz-scrollbars-vertical;
-	background: #cccccc;
+	background-color: #cccccc;
+	/*background: url('/file.php?rid=155') no-repeat left top;*/
 }
 
 .cms .head {
-	position: fixed;
+	position: absolute;
 	width: 100%;
 	top: 0;
 	left: 0;
 	height: 50px;
 	padding: 1px;
+	z-index: 200000;
 	background: url('/images/cms/design/head-line.png') repeat-x;
+}
+
+.cms .template-submit {
+	text-align: right;
+}
+
+.cms .head .refresh-cover {
+	float: right;
+	margin-top: -3px;
+}
+
+.cms .head .refresh-cover input[type=checkbox] {
+	margin: 0;
 }
 
 .cms .head .logout-form {
@@ -500,7 +544,7 @@ body {
 	border: none;
 }
 
-.cms .head .user-info, .cms .head .select-project, .cms .head .logon-count-down, .cms .web-version {
+.cms .head .user-info, .cms .head .select-project, .cms .head .logon-count-down, .cms .head .refresh-session, .cms .web-version {
 	font-size: 11px;
 	float: right;
 	margin: 2px 10px 0 2px;
@@ -510,13 +554,33 @@ body {
 	height: 28px;
 }
 
+.cms .head .refresh-session {
+	height: 24px;
+	padding: 4px;
+}
+
+.cms .head .select-project label {
+	display: none;
+}
+
+.hidden {
+	display: none;
+}
+
+.cms .loading {
+	height: 20px;
+	font-weight: bold;
+	font-size: 16px;
+	padding: 6px;
+}
+
 .cms .web-version .value {
 	text-align: center;
 	font-weight: bold;
 }
 
 /* Pro prvni "bublinu" */
-.cms .head .logon-count-down {
+.cms .head .refresh-session {
 	margin-right: 20px;
 }
 
@@ -571,7 +635,122 @@ body {
 }
 
 .cms .body {
-	margin: 60px 60px 10px 60px;
+	position: relative;
+	margin: 47px 5px 30px 5px;
+	/*margin: 60px 60px 40px 60px;*/
+}
+
+.cms .body .home-cover {
+	padding: 10px 55px 10px 55px;
+}
+
+.cms .dock-bar {
+	bottom: 0;
+	height: 30px;
+	left: 0;
+	position: fixed;
+	width: 100%;
+	z-index: 100000;
+}
+
+.cms .dock-in {
+	height: 30px;
+	margin: 0 30px;
+	background-color: #eeeeee;
+	border-top: 1px solid #888888;
+	border-left: 1px solid #888888;
+	border-right: 1px solid #888888;
+}
+
+.cms .dock-item {
+	border-right: 1px solid #aaaaaa;
+	color:	#000000;
+	float:	left;
+	font-size:	14px;
+	height:	21px;
+	line-height:	22px;
+	/*margin: 3px 5px 0 5px;*/
+	padding: 4px 10px;
+	cursor: Pointer;
+}
+
+.cms .dock-left {
+	float: left;
+	padding: 5px 5px;
+	border-right: 1px solid #888888;
+	/*margin: 0 10px 0 0;*/
+}
+
+.cms .dock-item:hover, .cms .dock-right .web-ajax-log-cover:hover {
+	background-color: #ffffff !important;
+}
+
+.cms .dock-left img {
+	margin: 0 5px;
+	cursor: Pointer;
+	float: left;
+}
+
+.cms .dock-right {
+	float: right;
+}
+
+.cms .dock-mid {
+	font-family: Arial;
+}
+
+.cms .dock-mid .dock-item {
+	background-color: #dddddd;
+}
+
+.cms .dock-mid .dock-item img {
+	margin: 3px 5px 0 0;
+	float: left;
+}
+
+.cms .dock-mid .dock-item .dock-close-x {
+	margin: 3px 0 0 5px;
+	float: right;
+}
+
+.cms .clock, .cms .web-ajax-log-cover {
+	padding: 5px 10px;
+	border-left: 1px solid #888888;
+	margin: 0;
+	float: left;
+	height: 26px;
+	cursor: Pointer;
+}
+
+.cms .run-cover {
+	display: none;
+}
+
+.cms .run-input {
+	margin: 0;
+	padding: 0;
+	float: left;
+}
+
+.cms .shown {
+	display: inline !important;
+}
+
+.cms .web-ajax-log-date {
+	color: #333333;
+	font-weight: bold;
+}
+
+.cms .web-ajax-log-cover {
+	padding: 5px 10px 0 10px;
+}
+
+.cms .clock div {
+	display: inline;
+}
+
+.cms .refresh-session form {
+	float: left;
 }
 
 .article-mgm-td.article-mgm-id {
@@ -607,7 +786,7 @@ table.article-mgm-table {
 }
 
 table.article-mgm-table th {
-	background: #cccccc;
+	background-color: #cccccc;
 }
 
 table.article-mgm-table td {
@@ -645,14 +824,14 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .article-name, .article-line, .article-lang, .article-head, .article-content, .article-author {
   padding: 6px 8px;
   margin: 2px;
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .article-submit {
   padding: 6px 8px;
   margin: 2px;
   text-align: right;
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .guestbook-line {
@@ -661,7 +840,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .guestbook-head {
-	background: #cccccc;
+	background-color: #cccccc;
 	clear: both;
 }
 
@@ -688,7 +867,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .even {
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .user-list-table {
@@ -697,7 +876,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .user-list-table th {
   text-align: left;
-  background: #cccccc;
+  background-color: #cccccc;
   border-bottom: 1px solid black;
 }
 
@@ -714,7 +893,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   float: left;
   padding: 6px 8px;
   margin: 2px;
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .edit-prop .edit-name, .edit-prop .edit-href, 
@@ -787,13 +966,18 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .edit-prop div, .project-prop div, .article-line-edit-name, .article-line-edit-submit, .move-branch, .up-file-name, 
 .up-file-title, .up-file-rs, .up-file-submit, .directory-submit, .move-copy-branch, .new-group-name, .new-group-parent, 
 .update-keywords, .add-new-language, .user-log-truncate, .hp-projection-form div, .hp-reference-form div, .project-edit-error-all, 
-.clear-url-cache .part-of-url, .clear-url-cache .page-id, .clear-url-cache .project-id, .clear-url-cache .submit,  
+.clear-url-cache .part-of-url, .clear-url-cache .page-id, .clear-url-cache .project-id, .clear-url-cache .submit, .clear-url-cache .results, 
 .project-edit-error-404, .project-edit-error-403,
 .season-edit-id, .season-edit-start, .season-edit-end, .season-edit-submit, .team-edit-form div, .player-edit-form div, .match-edit-form div,
 .select-class-path {
   padding: 6px 8px;
   margin: 2px;
-  background: #eeeeee;
+  background-color: #eeeeee;
+}
+
+.clear-url-cache .results table {
+	background: white;
+	border: 1px solid #cccccc;
 }
 
 .season-edit-id, .season-edit-start, .season-edit-end, .season-edit-submit, .player-edit-submit, .match-edit-submit {
@@ -837,16 +1021,16 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .edit-tl-start, .edit-tl-end, .edit-content .edit-head, .edit-content .edit-content, .text-file-content, .template-edit-content, .template-submit {
   padding: 6px 8px;
   margin: 2px;
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
-.file-submit, .select-season, .select-team {
+.file-submit, .select-season, .select-table, .select-team {
   padding: 6px 8px;
   margin: 2px;
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
-.select-season select, .match-edit-form select, .select-team select {
+.select-season select, .match-edit-form select, .select-team select, .select-table select {
 	width: 200px;
 }
 
@@ -854,7 +1038,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   padding: 6px 8px;
   margin: 2px;
   text-align: right;
-  background: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .languages-edit, .show-projects, .references-edit table, .url-cache-table {
@@ -863,7 +1047,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .languages-edit th, .show-projects th, .url-cache-table th {
 	padding: 2px 10px;
-	background: #CCCCCC none repeat scroll 0 0;
+	background-color: #CCCCCC none repeat scroll 0 0;
 	border-bottom: 1px solid black;
 	text-align: left;
 }
@@ -881,7 +1065,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .select-webproject .webproject {
-	background: #cccccc;
+	background-color: #cccccc;
 }
 
 /* ----------------- Hint ----------------------- */
@@ -889,7 +1073,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .lib-head, .tag-h2, .lib-tag {
   padding: 6px 8px;
   margin: 4px 2px;
-  background: #eeeeee;	
+  background-color: #eeeeee;	
 }
 
 .lib-tag {
@@ -939,6 +1123,68 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .hint-lib table th {
   text-align: left;
   border-bottom: 1px solid black;
+}
+
+.system-properties, .system-notes {
+	margin: 0 10px;
+}
+
+.system-properties table, .system-notes table {
+	width: 100%;
+}
+
+.system-properties .system-properties-delete, .system-notes .system-note-delete {
+	width: 40px;
+}
+
+.system-properties input[type=text], .system-notes input[type=text] {
+	width: 94%;
+}
+
+.cms .head .refresh-session-button {
+	width: 30px;
+	height: 30px;
+	font-size: 1px;
+	color: transparent;
+	background: url('/images/cms/design/refresh-icon.png') no-repeat left top;
+	border: none !important;
+}
+
+.cms .system-properties-submit, .cms .system-note-submit {
+	margin-top: 10px;
+}
+
+.cms .dataTables_wrapper {
+	padding: 4px;
+	background-color: #eeeeee;
+}
+
+.cms .dataTables_length, .cms .dataTables_filter {
+	float: left;
+	margin: 2px 4px 2px 0;
+}
+
+.cms .dataTables_info {
+	display: inline;
+	margin: 2px 4px 2px 0;
+}
+
+.cms .dataTables_paginate {
+	height: 16px;
+	float: right;
+	margin: 2px 0 2px 4px;
+}
+
+.cms .dataTables_paginate div {
+	width: 16px;
+	height: 16px;
+	float: left;
+	margin: 0 0 0 2px;
+}
+
+.cms .data-table {
+	background: white;
+	border: 2px solid #cccccc;
 }
 
 
@@ -1054,6 +1300,20 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 	margin: 10px 0pt 0pt 210px;
 }
 
+.cms .head .cms-menu.cms-menu-4 {
+	position: absolute;
+	margin: 10px 0pt 0pt 290px;
+}
+
+.cms .head .cms-menu.cms-menu-5 {
+	position: absolute;
+	margin: 10px 0pt 0pt 430px;
+}
+
+.cms .head .cms-menu-4 .menu-root, .cms .head .cms-menu-5 .menu-root {
+	width: 120px;
+}
+
 .cms .head .cms-menu .menu-root a {
 	padding: 1px 0 1px 24px;
 	background: url('/images/icons/at.png') no-repeat 4px 3px;
@@ -1067,6 +1327,16 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .cms .head .cms-menu.cms-menu-3 .menu-root a {
 	padding: 1px 0 1px 24px;
 	background: url('/images/icons/hint.png') no-repeat 4px 3px;
+}
+
+.cms .head .cms-menu.cms-menu-4 .menu-root a {
+	padding: 1px 0 1px 24px;
+	background: url('/images/icons/radioactive.png') no-repeat 4px 3px;
+}
+
+.cms .head .cms-menu.cms-menu-5 .menu-root a {
+	padding: 1px 0 1px 24px;
+	background: url('/images/icons/cog.png') no-repeat 4px 3px;
 }
 
 .cms .head .cms-menu .menu {
@@ -1136,10 +1406,6 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 	background: url('/images/icons/building.png') no-repeat 4px center;
 }
 
-.cms-menu li.menu-item.li-9 a {
-	background: url('/images/icons/cog.png') no-repeat 4px center;
-}
-
 
 
 .cms-menu-2 li.menu-item.li-1 a {
@@ -1160,4 +1426,20 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .cms-menu-2 li.menu-item.li-5 a {
 	background: url('/images/icons/floorball/table.png') no-repeat 4px center;
+}
+
+
+
+.cms-menu-4 li.menu-item.li-1 a {
+	background: url('/images/icons/properties.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-2 a {
+	background: url('/images/page_edi.png') no-repeat 4px center;
+}
+
+
+
+.cms-menu-5 li.menu-item a {
+	background-image: url('/images/icons/cog.png') !important;
 }

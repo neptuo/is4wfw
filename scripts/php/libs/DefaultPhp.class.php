@@ -286,7 +286,7 @@
      *  Check if passed values are valid property of library.
      *  
      *  @param  tagPrefix library object name
-     *  @param  propName name of required tag
+     *  @param  propName name of required property
      *  @return true is passed values are valid tagPrefix and property name, false other wise
      *
      */                   
@@ -312,7 +312,7 @@
         } else {
           $str = "Xml library definition doesn't exists! [".$xmlPath."]";
           trigger_error($str , E_USER_WARNING);
-          echo "<h4 class=\"error\">".$str."</h4>";
+          //echo "<h4 class=\"error\">".$str."</h4>";
           return false;
         }
         

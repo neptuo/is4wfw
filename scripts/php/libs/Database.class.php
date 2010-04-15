@@ -12,7 +12,7 @@
    *  Class for working Database.
    *  
    *  @author     Marek SMM
-   *  @timestamp  2009-07-17
+   *  @timestamp  2009-11-26
    *   
    */              
   class Database extends BaseTagLib {
@@ -83,18 +83,49 @@
     
     /**
      *
+     *	Closes current opened connection and one, defined by name.
+     *	
+     *	@param	name						database connection name		      
+     *  
+     *	@return	none     
+     *
+     */		 		 		     
+    public function useConnection($name) {
+			if($name == 'default') {
+				self::close();
+				self::connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE);
+			} elseif(strlen($name) != 0) {
+				$conn = self::fetchAll('select `hostname`, `user`, `password`, `database`, `fs_root` from `db_connection` where `name` = "'.$name.'"');
+				if(count($conn) > 0) {
+					$conn = $conn[0];
+					self::close();
+					self::connect($conn['hostname'], $conn['user'], $conn['password'], $conn['database']);
+				} else {
+					// bad conn name!
+				}
+			}
+		}
+    
+    /**
+     *
      *  Execute SQL query.
      *  
      *  @param  query           sql query
      *  @param  showQuery       shows input sql query on output
      *  @param  notExecuteQuery if true, doesn't execute query
+     *  @param	forceImmediateOutput  if previsou is true, it immediatly output query
      *
      */                   
-    public function execute($query, $showQuery = false, $notExecuteQuery = false) {
+    public function execute($query, $showQuery = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
     	global $logObject;
+    	global $webObject;
 			if($this->IsOpen) {
 			  if($showQuery) {
-          echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
+          if($forceImmediateOutput) {
+				  	echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
+			  	} else {
+	          $webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
+          }
 			  }
 			  
 			  if(!$notExecuteQuery) {
@@ -102,11 +133,15 @@
   				
   				$errno = mysql_errno();
   				if($errno != 0) {
-						$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
+						if(is_object($logObject)) {
+							$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
+						} else {
+							echo 'Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'';
+						}
 					}
 				}
 				
-				return $return;
+				return ;
 			} else {
         trigger_error("Connection is closed, cannot fetch data!", E_USER_WARNING);
       }
@@ -116,18 +151,24 @@
      *
      *  Returns all rows fetched by database.
      *  
-     *  @param  query           sql query
-     *  @param  showQuery       shows input sql query on output
-     *  @param  printOutput     shows return from database through print_r function
-     *  @param  notExecuteQuery if true, doesn't execute query
+     *  @param  query           			sql query
+     *  @param  showQuery       			shows input sql query on output
+     *  @param  printOutput     			shows return from database through print_r function
+     *  @param  notExecuteQuery 			if true, doesn't execute query
+     *  @param	forceImmediateOutput  if previsou 2 are true, it immediatly output query & result
      *  @return returns all rows fetched by database
      *
      */                   
-    public function fetchAll($query, $showQuery = false, $printOutput = false, $notExecuteQuery = false) {
+    public function fetchAll($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
     	global $logObject;
+    	global $webObject;
 			if($this->IsOpen) {
 			  if($showQuery) {
-          echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
+			  	if($forceImmediateOutput) {
+				  	echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
+			  	} else {
+	          $webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
+          }
 			  }
 			  
 			  if(!$notExecuteQuery) {
@@ -136,7 +177,11 @@
   				
   				$errno = mysql_errno();
   				if($errno != 0) {
-						$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
+  					if(is_object($logObject)) {
+							$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
+						} else {
+							echo 'Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'';
+						}
 					}
   				
   				while($row = mysql_fetch_assoc($result)) {
@@ -145,10 +190,17 @@
 				}
 				
 				if($printOutput) {
-          echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px; overflow: auto;\"><strong style=\"color: red;\">SQL output:</strong><pre>";
-          $str = print_r($return, true);
-          echo htmlentities($str);
-          echo "</pre></div>";
+					if($forceImmediateOutput) {
+						echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px; overflow: auto;\"><strong style=\"color: red;\">SQL output:</strong><pre>";
+    	      $str = print_r($return, true);
+  	        echo htmlentities($str);
+	          echo "</pre></div>";
+					} else {
+      	    $webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px; overflow: auto;\"><strong style=\"color: red;\">SQL output:</strong><pre>";
+    	      $str = print_r($return, true);
+  	        $webObject->PageLog .= htmlentities($str);
+	          $webObject->PageLog .= "</pre></div>";
+          }
         }
 				
 				return $return;

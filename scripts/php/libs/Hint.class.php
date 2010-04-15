@@ -10,7 +10,7 @@
   /**
    * 
    *  Class Hint.
-   * 	Manul for custom tags	     
+   * 	Manual for custom tags	     
    *      
    *  @author     Marek SMM
    *  @timestamp  2009-07-25
@@ -20,7 +20,7 @@
   
   	private $BundleName = 'hint';
   	
-  	private $BundleLang = 'cs';
+  	private $BundleLang = 'en';
   
     public function __construct() {
     	global $webObject;
@@ -162,7 +162,7 @@
 			
 			$return .= ''
 			.'<div class="select-class-path">'
-				.'<form name="select-class-path" method="post" action="">'
+				.'<form name="select-class-path" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 					.'<label for="select-class-path-select">'.$rb->get('select-class-path.label').':</label> '
 					.'<select id="select-class-path-select" name="select-class-path-select">'
 						.'<option value="php.libs.Article"'.($_SESSION['select-class-path'] == 'php.libs.Article' ? 'selected="selected"' : '').'>php.libs.Article</option>'
@@ -179,10 +179,12 @@
 						.'<option value="php.libs.Log"'.($_SESSION['select-class-path'] == 'php.libs.Log' ? 'selected="selected"' : '').'>php.libs.Log</option>'
 						.'<option value="php.libs.Login"'.($_SESSION['select-class-path'] == 'php.libs.Login' ? 'selected="selected"' : '').'>php.libs.Login</option>'
 						.'<option value="php.libs.Page"'.($_SESSION['select-class-path'] == 'php.libs.Page' ? 'selected="selected"' : '').'>php.libs.Page</option>'
+						.'<option value="php.libs.PageNG"'.($_SESSION['select-class-path'] == 'php.libs.PageNG' ? 'selected="selected"' : '').'>php.libs.PageNG</option>'
 						.'<option value="php.libs.Sport"'.($_SESSION['select-class-path'] == 'php.libs.Sport' ? 'selected="selected"' : '').'>php.libs.Sport</option>'
+						.'<option value="php.libs.System"'.($_SESSION['select-class-path'] == 'php.libs.System' ? 'selected="selected"' : '').'>php.libs.System</option>'
 						.'<option value="php.libs.user"'.($_SESSION['select-class-path'] == 'php.libs.User' ? 'selected="selected"' : '').'>php.libs.User</option>'
 						.'<option value="php.libs.WebProject"'.($_SESSION['select-class-path'] == 'php.libs.WebProject' ? 'selected="selected"' : '').'>php.libs.WebProject</option>'
-					.'</select>'
+					.'</select> '
 					.'<input type="submit" name="select-class-path-submit" value="'.$rb->get('select-class-path.submit').'" />'
 				.'</form>'
 			.'</div>';
@@ -190,7 +192,7 @@
 			if($useFrames == "false") {
 				return $return;
 			} else {
-				return parent::getFrame($rb->get('lib.title').': '.$classPath, $return, "", true);
+				return parent::getFrame($rb->get('lib.title2').': '.$classPath, $return, "", true);
 			}
 		}
 		

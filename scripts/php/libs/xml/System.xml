@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>System setup lib</name>
+  <classname>System</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Třída pro správu webového frameworku.
+  </comment>
+  <tag>
+    <tagname>manageProperties</tagname>
+    <function>manageProperties</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showMsg</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro nastavení uživatelsky závislých systémových proměnných.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>manageNotes</tagname>
+    <function>manageNotes</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showMsg</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro editaci uživatelských poznámek.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>printNotes</tagname>
+    <function>printNotes</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showMsg</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí uživatelské poznámky.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>editConnection</tagname>
+    <function>editConnection</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showMsg</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí editaci připojení k db.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>listConnections</tagname>
+    <function>listCOnnections</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showMsg</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí výpis připojení k db.
+    </comment>
+  </tag>
+  <property>
+  	<propname>cmsWindowsStyle</propname>
+  	<setfunction>setCmsWindowsStyle</setfunction>
+  	<getfunction>getCmsWindowsStyle</getfunction>
+    <comment>
+      Vlastnost cmsWindowsStyle, v system.properties s klicem System.cms.windowsstyle.
+    </comment>
+  </property>
+</taglib>
+

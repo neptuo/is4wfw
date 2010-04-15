@@ -16,7 +16,7 @@
    *  @objectname webObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2009-09-10	    
+   *  @timestamp  2009-11-09	    
    *
    */           
   class DefaultWeb extends BaseTagLib {
@@ -58,6 +58,8 @@
     private $PageScripts = "";
     
     private $PageStyles = "";
+    
+    public $PageLog = "";
     
     /**
      *
@@ -289,27 +291,30 @@
       
 	      if($ok == false) {
 					$dbProject = $dbObject->fetchAll('SELECT `id`, `project_id`, `http`, `https`, `url` FROM `web_alias`;');
-  		    $temp_req = $phpObject->str_tr($domainUrl, '.', 1);
 	    	  foreach($dbProject as $i => $project) {
       			$ok = true;
       			$prj_add_url = '';
 	  	    	$parsed_url = $phpObject->str_tr($project['url'], '/', 1);
 		      	$project['url'] = $parsed_url[0];
     		  	//$temp_url_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $project['url']);
+    		  	//echo $project['url'].'<br />';
   			    $temp_url = $phpObject->str_tr($project['url'], '.');
+  			    $temp_req = $phpObject->str_tr($domainUrl, '.', 1);
   		  	  for($j = 0; $j < count($temp_url); $j ++) {
   		    		$this->PropertyAttr = $temp_req[0];
 							$this->PropertyUse = 'set';
 	  		    	$temp_url_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_url[$j]);
+	  		    	//echo $temp_url_rrc . " == " . $temp_req[0] . "<br />";
 							if($temp_url_rrc == $temp_req[0]) {
 								$ok = true;
 								$temp_req = $phpObject->str_tr($temp_req[1], '.', 1);
 							} else {
 								$ok = false;
-								break;
+								//break;
 							}
 						}
-					
+						//echo "<br /><br />";
+						
 						$path = $phpObject->str_tr($this->Path, '/', 1);
 						if($ok && $parsed_url[1] != '') {
 							$temp_path = $phpObject->str_tr($parsed_url[1], '/');
@@ -317,6 +322,7 @@
   	  	 				$this->PropertyAttr = $path[0];
 								$this->PropertyUse = 'set';
 	 			  	  	$temp_path_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_path[$j]);
+	 			  	  	//echo $temp_path_rrc." == ".$path[0].'<br />';
 								if($temp_path_rrc == $path[0]) {
     	  					$prj_add_url .= '/'.$temp_path_rrc;
 									$path = $phpObject->str_tr($path[1], '/', 1);
@@ -326,6 +332,7 @@
 								}
 							}
 						}
+						//echo "<br /><br />";
 					
 						if($ok) {
 							if($dbProject[$i][$domainProtocol] == 1) {
@@ -400,23 +407,6 @@
       	$this->UrlDef = $ucache[0]['url_def'];
       	$this->Url = $ucache[0]['url'];
       	$this->LanguageId = $ucache[0]['language_id'];
-      	
-      	// Parse domain for setup dynamic properties
-      	$temp_req = $phpObject->str_tr($this->ProjectUrl, '.', 1);
-      	$prj_add_url = '';
-     		$parsed_url = $phpObject->str_tr($this->ProjectUrlDef, '/', 1);
-     		$project['url'] = $parsed_url[0];
- 		    $temp_url = $phpObject->str_tr($project['url'], '.');
- 		    for($j = 0; $j < count($temp_url); $j ++) {
- 	  	  	$this->PropertyAttr = $temp_req[0];
-					$this->PropertyUse = 'set';
- 	    		$temp_url_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_url[$j]);
-					if($temp_url_rrc == $temp_req[0]) {
-						$temp_req = $phpObject->str_tr($temp_req[1], '.', 1);
-					} else {
-						$ok = false;
-					}
-				}
 			
 				$path = $phpObject->str_tr($this->Path, '/', 1);
 				if($ok && $parsed_url[1] != '') {
@@ -427,16 +417,6 @@
  		  	  	$temp_path_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_path[$j]);
 						$path = $phpObject->str_tr($path[1], '/', 1);
 					}
-				}
-      	
-      	// Parse url for setup dynamic properties
-      	$path = $phpObject->str_tr($this->Url, '/', 1);
-      	$temp_path = $phpObject->str_tr($this->UrlDef, '/');
-     		for($j = 0; $j < count($temp_path); $j ++) {
-     			$this->PropertyAttr = $path[0];
-					$this->PropertyUse = 'set';
- 		    	$temp_path_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_path[$j]);
-					$path = $phpObject->str_tr($path[1], '/', 1);
 				}
       	
       	// Old code ...
@@ -484,6 +464,47 @@
 			$this->TempLoadedContent = self::sortPages($dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `tag_lib_start`, `tag_lib_end`, `head`, `content`, `info`.`timestamp` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`id` IN (".$str.") AND `page`.`wp` = ".$this->ProjectId.";"), $this->PagesId);
 			$this->CurrentPageTimestamp = $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['timestamp'];
 			if(count($this->TempLoadedContent) == count($this->PagesId)) {
+				foreach($this->TempLoadedContent as $page) {
+					preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $page['tag_lib_start']);					
+				}
+			
+      	// Parse domain for setup dynamic properties
+      	$temp_req = $phpObject->str_tr($this->ProjectUrl, '.', 1);
+      	$prj_add_url = '';
+     		$parsed_url = $phpObject->str_tr($this->ProjectUrlDef, '/', 1);
+     		$project['url'] = $parsed_url[0];
+ 		    $temp_url = $phpObject->str_tr($project['url'], '.');
+ 		    for($j = 0; $j < count($temp_url); $j ++) {
+ 	  	  	$this->PropertyAttr = $temp_req[0];
+					$this->PropertyUse = 'set';
+ 	    		$temp_url_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_url[$j]);
+					if($temp_url_rrc == $temp_req[0]) {
+						$temp_req = $phpObject->str_tr($temp_req[1], '.', 1);
+					} else {
+						$ok = false;
+					}
+				}
+				
+				// Kvuli jazyku s neprazdnou url!!!
+				if($this->LanguageId != 1) {
+					$this->Url = $phpObject->str_tr($this->Url, '/', 1);
+					$this->Url = $this->Url[1];
+				}
+      	
+      	// Parse url for setup dynamic properties
+      	$path = $phpObject->str_tr($this->Url, '/', 1);
+      	$temp_path = $phpObject->str_tr($this->UrlDef, '/');
+     		for($j = 0; $j < count($temp_path); $j ++) {
+     			$this->PropertyAttr = $path[0];
+					$this->PropertyUse = 'set';
+ 		    	$temp_path_rrc = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $temp_path[$j]);
+					$path = $phpObject->str_tr($path[1], '/', 1);
+				}
+				
+				foreach($this->TempLoadedContent as $page) {
+					preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $page['tag_lib_end']);					
+				}
+			
       	$this->PageContent = self::getContent();
       } else {
       	self::generateErrorPage($this->ProjectId, 404);
@@ -702,6 +723,13 @@
       if(strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
       	$return = ''
        	.'<rssmm:response>'
+       	  .((strlen($this->PageLog) != 0) ? ''
+       	  	.'<rssmm:log>'
+       	  		.$this->PageLog
+       	  	.'</rssmm:log>'
+       	  	:
+       	  	''
+       	  )
       		.'<rssmm:head>'
       			.'<rssmm:title>'.$this->PageTitle.'</rssmm:title>'
       			.'<rssmm:keywords>'.((strlen($this->Keywords) > 0) ? $this->Keywords.',' : '').((strlen($keywords) > 0) ? $keywords.',' : '').'wfw,rssmm</rssmm:keywords>'
@@ -727,24 +755,18 @@
 	        .'<body>'.$this->PageContent.'</body>'
         .'</html>';
       }
-      $return = str_replace("~/", WEB_ROOT, $return);
-      //echo "<html>\n\t<head>\n<title>\n".$this->PageTitle."\n</title>\n".$this->PageHead."\n</head>\n<body>\n".$this->PageContent."\n</body>\n</html>"; 
+      $return = str_replace("~/", WEB_ROOT, $return); 
     
       if($this->IsCached) {
         $path = $_SERVER['DOCUMENT_ROOT'].WEB_ROOT.$this->CacheDir.'/pages/';
         $name = $this->CacheFile;
-        //$cacheMTime = filemtime($path.$name);
-        //echo $cacheMTime;
         file_put_contents($path.$name, $return);
       }
       
+      // Rewrite anchors
       $return = preg_replace_callback('(&web:page=([0-9]+))', array( &$this,'parseproperties'), $return);
-      
+      // Generate web:frames
       $return = preg_replace_callback('(<web:frame( title="(([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.\*`_;:/?-]*)*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array( &$this,'parsepostframes'), $return);
-      
-      //echo $return; 
-      //echo $this->PageContent;
-      //return;
       
       if($this->CacheInfo['cachetime'] != -1) {
       	$dbObject->execute('UPDATE `urlcache` SET `lastcache` = '.(time() + $this->CacheInfo['cachetime']).' WHERE `id` = '.$this->CacheInfo['id'].';');
@@ -965,7 +987,7 @@
         eval('$return =  ${$object[0]."Object"}->{$func}("'.$this->PropertyAttr.'");');
         return $return;
       } else {
-        echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
+        //echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
         return "";
       }
     }
@@ -991,7 +1013,7 @@
       if($return['in_title'] == 1) {
         $this->PageTitle = $return['name']." - ".$this->PageTitle;
       }
-      $this->PageHead .= $return['head'];
+      //$this->PageHead .= $return['head'];
       $this->Keywords .= ((strlen($return['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ','.$return['keywords'] : $return['keywords']) : '');
       
       $allHeaders = getallheaders();
@@ -1024,6 +1046,8 @@
       $this->Path = $path[1];
             
       preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['tag_lib_start']);
+      
+      $this->PageHead .= preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['head']);
       
       $pageContent = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['content']);
       
@@ -1267,15 +1291,29 @@
      *  @param  pageId        id of other page in web page    
      *  @param	whenLogged		include only when true and user is logged
      * 	@param	whenNotLogged	include only when true and user is not logged
+     * 	@param	browser				include only in passed browser     
      *  @return content of requested template     
      *
      */
-    public function includeTemplate($templateId, $whenLogged = false, $whenNotLogged = false) {
+    public function includeTemplate($templateId, $whenLogged = false, $whenNotLogged = false, $browser = false) {
       global $dbObject;
       global $loginObject;
       $languageId = (!$languageId) ? $this->LanguageId : $languageId;
       
-      if(($whenLogged == true && $loginObject->isLogged() == true) || ($whenNotLogged == true && $loginObject->isLogged() == false) || ($whenLogged == false && $whenNotLogged == false)) {
+      $incForBrowser = true;
+			if(strlen($browser) > 0) {
+				$allHeaders = getallheaders();
+				$userBrowser = $allHeaders['User-Agent'];
+				
+				// Takhle ne!!!
+				if(strstr(strtolower($userBrowser), strtolower($browser)) != false) {
+					$incForBrowser = true;
+				} else {
+					$incForBrowser = false;
+				} 
+			}
+      
+      if(($whenLogged == true && $loginObject->isLogged() == true) || ($whenNotLogged == true && $loginObject->isLogged() == false) || ($whenLogged == false && $whenNotLogged == false && $browser == false) || $incForBrowser) {
 	      $template = $dbObject->fetchAll('SELECT `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
 	      if(count($template) == 1) {
 	      	require_once("scripts/php/classes/CustomTagParser.class.php");
@@ -1360,8 +1398,23 @@
 				}
 			}
 			
+			$i = 0;
+			if(count($_GET) > 1) {
+				foreach($_GET as $key => $param) {
+					if($key != 'WEB_PAGE_PATH') {
+						if($i == 0) {
+							$href .= '?'.$key.'='.$param;
+						} else {
+							$href .= '&'.$key.'='.$param;
+						}
+						$i ++;
+					}
+				}
+			}
+			
 			if($redirect && $href != '#') {
 				header("Location: ".$href);
+				echo '<a href="'.$href.'">redirect to ...</a>';
 				exit;
 			}
 		}
@@ -1587,6 +1640,16 @@
 		
 		/**
 		 *
+		 *	Returns cms framework version.
+		 *	C tag.		 
+		 *
+		 */
+		public function getCmsVersion() {
+			return CMS_VERSION;
+		}
+		
+		/**
+		 *
 		 *	Return last update of last page in requested url.
 		 *	C tag.		 
 		 *
@@ -1610,6 +1673,65 @@
 			} elseif($year < $thisYear) {
 				return $year.' - '.$thisYear;
 			}
+		}
+		
+		/**
+		 *
+		 *	Returns value of system property.
+		 *	C tag.
+		 *	
+		 *	@param		name						system property name		 		 		 
+		 *
+		 */		 		 		 		
+		public function getSystemPropertyValue($name) {
+			require_once('System.class.php');
+			$system = new System();
+			return $system->getPropertyValue($name);
+		}
+		
+		/**
+		 *
+		 *	Returns current page language id.
+		 *
+		 */		 		 		 		 		
+		public function getLanguageId() {
+			return $this->LanguageId;
+		}
+		
+		/**
+		 *
+		 *	Return template content.
+		 *
+		 */		 		 		 		 		
+		public function getTemplateContent($templateId) {
+			global $dbObject;
+			global $loginObject;
+		
+			$templateContent = '';
+      if($templateId != false) {
+      	// ziskani templatu ...
+				$rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
+				if(count($rights) > 0 && $templateId > 0) {
+					$template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = '.$templateId.';');
+					$templateContent = $template[0]['content'];
+				} else {
+					$message = "Permission Denied when reading template[templateId = ".$templateId."]!";
+    	  	trigger_error($message, E_USER_WARNING);
+    	  	return;
+				}
+			}
+			
+			return $templateContent;
+		}
+		
+		public function setProperty($prefix, $name, $value) {
+			$this->PropertyAttr = $value;
+			$this->PropertyUse = 'set';
+  	  $name = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $prefix.':'.$name);
+		}
+		
+		public function getProperty($name) {
+			return $name;
 		}
 		
 		/**

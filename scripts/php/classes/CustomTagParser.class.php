@@ -37,6 +37,12 @@
      */                   
     private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.,\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*")';
     
+    private $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
+    
+    private $PropertyAttr = '';
+    
+		private $PropertyUse = '';
+    
     /**
      *
      *  Parse all attributes to array.
@@ -67,6 +73,9 @@
       foreach($this->Attributes as $tmp) {
         $att = explode("=", $tmp);
         if(strlen($att[0]) > 0) {
+					$this->PropertyAttr = '';
+					$this->PropertyUse = 'get';
+        	$att[1] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $att[1]);
           $attributes[$att[0]] = str_replace("\"", "", $att[1]);
         }
       }
@@ -92,6 +101,31 @@
         }  
       } else {
         echo '<h4 class="error">This tag isn\'t registered! ['.$object[0].']</h4>';
+        return "";
+      }
+    }
+    
+    /**
+     *
+     *  Function parses custom property, call right function & return content.
+     *  
+     *  @param  cprop  custom property as string
+     *  @return return of custom property function     
+     *
+     */
+    private function parsecproperty($cprop) {
+      $object = explode(":", $cprop[1]);
+      $attributes = array();
+      $this->Attributes = array();
+      
+      global $phpObject;
+      if($phpObject->isRegistered($object[0]) && $phpObject->isProperty($object[0], $object[1])) {
+        global ${$object[0]."Object"};
+        $func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
+        eval('$return =  ${$object[0]."Object"}->{$func}("'.$this->PropertyAttr.'");');
+        return $return;
+      } else {
+        echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
         return "";
       }
     }

@@ -13,13 +13,28 @@
    * 	management of web projects	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-10-04
+   *  @timestamp  2009-12-31
    * 
    */  
   class WebProject extends BaseTagLib {
   
+  	private $BundleName = 'webproject';
+  	
+  	private $BundleLang = 'cs';
+  
     public function __construct() {
+    	global $webObject;
+    	
       parent::setTagLibXml("xml/WebProject.xml");
+      
+      if($webObject->LanguageName != '') {
+				$rb = new ResourceBundle();
+				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
+					$BundleLang = $webObject->LanguageName;
+				}
+			}
+      
+      require_once("scripts/php/classes/ResourceBundle.class.php");
     }
 		
 		/**
@@ -31,19 +46,21 @@
 		public function selectProject($useFrames = false, $showMsg = false) {
 			global $dbObject;
 			global $loginObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
-			if($_POST['select-project'] == "Select") {
+			if($_POST['select-project'] == $rb->get('selectproject.submit')) {
 				$projectId = $_POST['project-id'];
 				$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = '.$projectId.' AND `type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
 				if(count($permission) > 0) {
 					$_SESSION['selected-project'] = $projectId;
 					if($showMsg != 'false') {
-						$return .= '<h4 class="success">Project selected!</h4>';
+						$return .= '<h4 class="success">'.$rb->get('selectproject.success').'</h4>';
 					}
 				} else {
 					if($showMsg != 'false') {
-						$return .= '<h4 class="error">Can\'t select project!</h4>';
+						$return .= '<h4 class="error">'.$rb->get('selectproject.failed').'</h4>';
 					}
 				}
 			} else {
@@ -61,10 +78,10 @@
 			
 			$return .= ''
 			.'<div class="select-project">'
-				.'<form name="select-project" method="post" action="">'
-					.'<label for="select-project">Select web project:</label> '
+				.'<form name="select-project" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<label for="select-project">'.$rb->get('selectproject.label').'</label> '
 					.'<select id="select-project" name="project-id">';
-			$projects = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `web_project`.`name`;');
+			$projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `web_project`.`name`;');
 			foreach($projects as $project) {
 				$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = '.$project['id'].' AND `type` = '.WEB_R_WRITE.' ORDER BY `value` DESC;');
 				if(count($permission)) {
@@ -73,14 +90,14 @@
 			}
 			$return .= ''
 					.'</select> '
-					.'<input type="submit" name="select-project" value="Select" />'
+					.'<input type="submit" name="select-project" value="'.$rb->get('selectproject.submit').'" />'
 				.'</form>'
 			.'</div>';
 			
 			if($useFrames == "false") {
 				return $return;
 			} else {
-				return parent::getFrame('Select Web project', $return, "", true);
+				return parent::getFrame($rb->get('selectproject.label'), $return, "", true);
 			}
 		}
 		
@@ -116,28 +133,31 @@
 				}
 			}
 			
-			$actionUrl = '';
+			$actionUrl = $_SERVER['REDIRECT_URL'];
 			if($editable == "true" && $detailPageId != false) {
 				$actionUrl = $webObject->composeUrl($detailPageId);
 			}
 			
-			$projects = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`name`, `web_project`.`url`, `web_project`.`http`, `web_project`.`https` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `id`;');
+			$projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name`, `web_project`.`url`, `web_project`.`http`, `web_project`.`https` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `id`;');
 			
 			if(count($projects) == 0) {
 				$return .= '<h4 class="error">No projects to show!</h4>';
 			} else {
 				$return .= ''
-				.'<table class="show-projects">'
-					.'<tr>'
-						.'<th class="th-id">Id:</th>'
-						.'<th class="th-name">Name:</th>'
-						.'<th class="th-url">Url:</th>'
-						.'<th class="th-url">View:</th>'
-						.'<th class="th-protocol">Protocol:</th>'
-						.(($editable == "true") ? ''
-						.'<th class="th-edit">Edit:</th>'
-						: '')
-					.'</tr>';
+				.'<table class="show-projects data-table">'
+					.'<thead>'
+						.'<tr>'
+							.'<th class="th-id">Id:</th>'
+							.'<th class="th-name">Name:</th>'
+							.'<th class="th-url">Url:</th>'
+							.'<th class="th-url">View:</th>'
+							.'<th class="th-protocol">Protocol:</th>'
+							.(($editable == "true") ? ''
+							.'<th class="th-edit">Edit:</th>'
+							: '')
+						.'</tr>'
+					.'</thead>'
+					.'<tbody>';
 			
 				$i = 1;
 				foreach($projects as $project) {
@@ -174,7 +194,7 @@
 									.'<input type="image" src="~/images/page_edi.png" name="edit" value="Edit Project" title="Edit project" />'
 								.'</form>'
 								.((count($pages) == 0) ? ''
-								.'<form name="edit-projects2" method="post" action=""> '
+								.'<form name="edit-projects2" method="post" action="'.$_SERVER['REDIRECT_URL'].'"> '
 									.'<input type="hidden" name="wp" value="'.$project['id'].'" />'
 									.'<input type="hidden" name="delete" value="Delete Project" />'
 									.'<input class="confirm" type="image" src="~/images/page_del.png" name="delete" value="Delete Project" title="Delete project, id('.$project['id'].')" />'
@@ -189,6 +209,7 @@
 				}
 			
 				$return .= ''
+					.'</tbody>'
 				.'</table>';
 			}	
 
@@ -470,7 +491,7 @@
         
 				// Vytvorit formular ....
 				$return .= ''
-				.'<form name="project-edit-detail" method="post" action="">'
+				.'<form name="project-edit-detail" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 					.'<div class="project-prop">'
 						.'<div class="project-edit-name">'
 							.'<label for="project-edit-name'.$project['id'].'">Name:</label> '
@@ -551,6 +572,15 @@
 			}
 			
 			return parent::getFrame('Edit Web project', $return, '', true);
+		}
+		
+		public function setSelectedProject($selProject) {
+			$_SESSION['selected-project'] = $selProject;
+			return $selProject;
+		}
+		
+		public function getSelectedProject() {
+			return $_SESSION['selected-project'];
 		}
   }
 

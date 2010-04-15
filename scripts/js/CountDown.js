@@ -40,11 +40,30 @@ function CountDown(label, sec, parentEl) {
 		Seconds --;
 		HTML.Counter.innerHTML = Seconds + 's';
 		if(Seconds == 0) {
+			This.onReachZero();
 			window.clearInterval(Interval);
+		} else if(Seconds == 5) {
+			This.onReachFive();
 		}
 	}
 	
 	this.start = function() {
 		Interval = window.setInterval ('CountDown.Instances['+Id+'].count()', 1000);
+	}
+	
+	this.restart = function() {
+		Seconds = sec;
+	}
+	
+	this.getCount = function() {
+		return Seconds;
+	}
+	
+	this.onReachZero = function() {
+		
+	}
+	
+	this.onReachFive = function() {
+		
 	}
 }

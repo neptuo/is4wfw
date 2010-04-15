@@ -12,7 +12,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-10-04
+   *  @timestamp  2009-12-12
    * 
    */  
   class File extends BaseTagLib {
@@ -91,7 +91,7 @@
         	  // take smazat fyzicky adresar!!
       	    rmdir($_SERVER['DOCUMENT_ROOT'].$path);
     	    } else {
-  	        $return .= parent::getFrame('Error Message', '<h4 class="error">Directory isn\'t empty!</h4>', '', true);
+  	        $return .= '<h4 class="error">Directory isn\'t empty!</h4>';
 	        }
         } else {
 					$return .= '<h4 class="error">Permission Denied!</h4>';
@@ -155,7 +155,7 @@
           .'<td class="dir-icon"></td>'
           .'<td class="dir-id"></td>'
           .'<td class="dir-name">'
-            .'<form name="dir-form" method="post" action="">'
+            .'<form name="dir-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
               .'<input type="hidden" name="dir-id" value="'.(($dirId != 0) ? $dir[0]['parent_id'] : $dirId).'" />'
               .'<input type="submit" name="ch-dir" value=".." />'
             .'</form>'
@@ -175,7 +175,7 @@
           .'<td class="dir-icon dir"></td>'
           .'<td class="dir-id dir"><span>'.$dir['id'].'</span></td>'
           .'<td class="dir-name">'
-            .'<form name="dir-form" method="post" action="">'
+            .'<form name="dir-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
               .'<input type="hidden" name="dir-id" value="'.$dir['id'].'" />'
               .'<input type="submit" name="ch-dir" value="'.$dir['name'].'" />'
             .'</form>'
@@ -185,12 +185,12 @@
           .'<td class="dir-type"></td>'	
           .(($editable != "false") ? ''
           .'<td class="dir-edit">'
-            .'<form name="dir-edit" method="post" action="">'
+            .'<form name="dir-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
               .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
               .'<input type="hidden" name="edit-dir" value="Edit" />'
               .'<input type="image" src="~/images/page_edi.png" name="edit-dir" value="Edit" title="Edit Directory" />'
             .'</form> '
-            .'<form name="dir-edit" method="post" action="">'
+            .'<form name="dir-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
               .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
               .'<input type="hidden" name="delete-dir" value="Delete" />'
               .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-dir" value="Delete" title="Delete Directory, id('.$dir['id'].')" />'
@@ -219,7 +219,12 @@
           .'<td class="file-type">'.$this->FileEx[$file['type']].'</td>'
           .(($editable != "false") ? ''
           .'<td class="file-edit">'
-            .'<form name="dir-edit" method="post" action="">'
+            .'<form name="dir-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+              .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
+              .'<input type="hidden" name="edit-file" value="Edit" />'
+              .'<input type="image" src="~/images/page_edi.png" name="edit-file" value="Edit" title="Edit File" />'
+            .'</form> '
+            .'<form name="dir-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
               .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
               .'<input type="hidden" name="delete-file" value="Delete" />'
               .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="Delete" title="Delete File, id('.$file['id'].')" />'
@@ -255,6 +260,7 @@
       if($_POST['new-directory'] == "Create directory" || $_POST['edit-directory'] == "Edit directory") {
         $directoryParentId = $_POST['directory-parent-id'];
         $directoryName = $_POST['directory-name'];
+        $directoryUrl = $_POST['directory-url'];
         $read = $_POST['directory-right-edit-groups-r'];
         $write = $_POST['directory-right-edit-groups-w'];
         $delete = $_POST['directory-right-edit-groups-d'];
@@ -272,7 +278,7 @@
   		      
 		        if(($_POST['new-directory'] == "Create directory" && $sib[0]['count'] == 0) || ($_POST['edit-directory'] == "Edit directory" && (($par[0]['name'] == $directoryName && $sib[0]['count'] == 1) || ($par[0]['name'] != $directoryName && $sib[0]['count'] == 0)))) {
 		        	if($_POST['new-directory'] == "Create directory") {
-        		  	$dbObject->execute("INSERT INTO `directory`(`parent_id`, `name`, `timestamp`) VALUES(".$directoryParentId.", \"".$directoryName."\", ".time().");");
+        		  	$dbObject->execute("INSERT INTO `directory`(`parent_id`, `name`, `url`, `timestamp`) VALUES(".$directoryParentId.", \"".$directoryName."\", \"".$directoryUrl."\", ".time().");");
       	  	  	$directoryId = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `directory`;');
     	    	  	$directoryId = $directoryId[0]['id'];
 								$path = self::getPhysicalPathTo($directoryParentId).$directoryName;
@@ -282,7 +288,7 @@
 								$path1 = substr(self::getPhysicalPathTo($oldName[0]['parent_id']).$oldName[0]['name'].'/', 1);
 								$path2 = substr(self::getPhysicalPathTo($oldName[0]['parent_id']).$directoryName.'/', 1);
 								rename($path1, $path2);
-								$dbObject->execute('UPDATE `directory` SET `name` = "'.$directoryName.'", `timestamp` = "'.time().'" WHERE `id` = '.$directoryParentId.';');
+								$dbObject->execute('UPDATE `directory` SET `name` = "'.$directoryName.'", `url` = "'.$directoryUrl.'", `timestamp` = "'.time().'" WHERE `id` = '.$directoryParentId.';');
 								$directoryId = $directoryParentId;
 							} else {
 								return;
@@ -364,10 +370,11 @@
       $dirName = '';
       if($_POST['edit-dir'] == 'Edit') {
       	$direcId = $_POST['directory-id'];
-				$permission = $dbObject->fetchAll('SELECT `directory`.`name`, `group`.`value` FROM `directory` LEFT JOIN `directory_right` ON `directory`.`id` = `directory_right`.`did` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$direcId.' AND `directory_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+				$permission = $dbObject->fetchAll('SELECT `directory`.`name`, `directory`.`url`, `group`.`value` FROM `directory` LEFT JOIN `directory_right` ON `directory`.`id` = `directory_right`.`did` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$direcId.' AND `directory_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
         if(count($permission) > 0) {
         	$dirId = $direcId;
         	$dirName = $permission[0]['name'];
+        	$dirUrl = $permission[0]['url'];
         }
 			}
       
@@ -411,11 +418,15 @@
       $groupSelectD .= '</select>';
       
       $return .= ''
-      .'<form name="new-directory" method="post" action="">'
+      .'<form name="new-directory" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
         .'<input type="hidden" name="directory-parent-id" value="'.$dirId.'" />'
         .'<div class="directory-name">'
   	      .'<label for="directory-name">Directory name (<span>at least 1 character</span>):</label> '
 	        .'<input type="text" id="directory-name" name="directory-name" value="'.$dirName.'" />'
+        .'</div>'
+        .'<div class="directory-name">'
+  	      .'<label for="directory-name">Directory rewrite url (<span>at least 1 char</span>):</label> '
+	        .'<input type="text" id="directory-url" name="directory-url" value="'.$dirUrl.'" />'
         .'</div>'
         .'<div class="directory-rights">'
   	      .'<div class="directory-right-r">'
@@ -470,15 +481,26 @@
       $return = "";
       $dirId = self::setDirId($dirId);
       
-      if($_POST['new-file'] == "Upload") {
+      if(array_key_exists('file-name', $_POST)) {
         $return .= self::processFileUpload();
       }
       
       // Ziskat prava ....
 			$show = array('read' => true, 'write' => true, 'delete' => false);
-			$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_READ.";");
-      $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_WRITE.";");
-      $groupsD = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_DELETE.";");
+			if($_POST['edit-file'] != 'Edit') {
+				$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_READ.";");
+  	    $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_WRITE.";");
+	      $groupsD = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_DELETE.";");
+      } else {
+      	$fileId = $_POST['file-id'];
+      	$file = $dbObject->fetchAll('SELECT `id`, `name`, `title` FROM `file` WHERE `id` = '.$fileId.';');
+      	$fileName = $file[0]['name'];
+      	$fileTitle = $file[0]['title'];
+      	$fileId = $file[0]['id'];
+				$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `file_right` WHERE `fid` = ".$fileId." AND `type` = ".WEB_R_READ.";");
+  	    $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `file_right` WHERE `fid` = ".$fileId." AND `type` = ".WEB_R_WRITE.";");
+	      $groupsD = $dbObject->fetchAll("SELECT `gid` FROM `file_right` WHERE `fid` = ".$fileId." AND `type` = ".WEB_R_DELETE.";");
+	    }
       $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
       $groupSelectR = '<select id="file-right-edit-groups-r" name="file-right-edit-groups-r[]" multiple="multiple" size="5">';
       $groupSelectW = '<select id="file-right-edit-groups-w" name="file-right-edit-groups-w[]" multiple="multiple" size="5">';
@@ -514,16 +536,18 @@
       $groupSelectD .= '</select>';
       
       $return .= ''
-      .'<form name="new-file" method="post" action="'.$_SERVER['REQUEST_URI'].'" enctype="multipart/form-data">'
+      .'<form name="new-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'" enctype="multipart/form-data">'
+      	.'<!--<a href="http://www.google.cz/" target="ajaxFileUploadIFrame">Google</a>'
+      	.'<iframe id="ajaxFileUploadIFrame" name="ajaxFileUploadIFrame" src=""></iframe>-->'
         .'<input type="hidden" name="dir-id" value="'.$dirId.'" />'
         .'<div class="up-file-prop">'
       		.'<div class="up-file-name">'
   	    	  .'<label for="file-name">File name:</label> '
-	    	    .'<input type="text" id="file-name" name="file-name" value="'."file".rand(1000, 9999).rand(1000, 9999).'" /> '
+	    	    .'<input type="text" id="file-name" name="file-name" value="'.((strlen($fileName) != 0) ? $fileName : 'file'.rand(1000, 9999).rand(1000, 9999)).'" /> '
     	    .'</div>'
   	      .'<div class="up-file-title">'
 	  	      .'<label for="file-title">File title:</label> '
-	        	.'<input type="text" id="file-title" name="file-title" value="" /> '
+	        	.'<input type="text" id="file-title" name="file-title" value="'.$fileTitle.'" /> '
         	.'</div>'
       	  .'<div class="up-file-rs">'
     	    	.'<label for="file-rs">Select file:</label> '
@@ -549,13 +573,18 @@
         : '')
 	      .'<div class="clear"></div>'
         .'<div class="up-file-submit">'
+        	.(($_POST['edit-file'] == 'Edit') ? ''
+        	.'<input type="hidden" name="file-id" value="'.$fileId.'" />'
+        	.'<input type="submit" name="edit-upload-file" value="Upload new version" title="Upload new version" />'
+        	: ''
         	.'<input type="submit" name="new-file" value="Upload" title="Upload File" />'
+        	)
         .'</div>'
 	      .'<div class="clear"></div>'
       .'</form>';
       
       if($useFrames != 'false') {
-      	return parent::getFrame("New file", $return, "", true);
+      	return parent::getFrame((($_POST['edit-file'] == 'Edit') ? 'Edit file' : "New file"), $return, "", true);
       } else {
       	return $return;
       }
@@ -567,9 +596,12 @@
       $fileName = $_POST['file-name'];
       $dirId = $_POST['dir-id'];
       $fileTitle = $_POST['file-title'];
+      $fileId = $_POST['file-id'];
       $read = $_POST['file-right-edit-groups-r'];
       $write = $_POST['file-right-edit-groups-w'];
       $delete = $_POST['file-right-edit-groups-d'];
+      $extType = self::getWebFileType($_FILES['file-rs']['name']);
+      $oldFile = null;
       
       if(is_uploaded_file($_FILES['file-rs']['tmp_name'])) {
         $original = $_FILES['file-rs']['tmp_name'];
@@ -577,23 +609,44 @@
           $fileName = "file".rand(1000, 9999).rand(1000, 9999);
         }
         
-        $permission = $dbObject->fetchAll('SELECT `value` FROM `directory_right` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$dirId.' AND `directory_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+        if(array_key_exists('file-id', $_POST)) {
+					$permission = $dbObject->fetchAll('SELECT `value` FROM `file_right` LEFT JOIN `group` ON `file_right`.`gid` = `group`.`gid` WHERE `file_right`.`fid` = '.$fileId.' AND `file_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+        } else {
+        	$permission = $dbObject->fetchAll('SELECT `value` FROM `directory_right` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$dirId.' AND `directory_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+        }
         if(count($permission) > 0) {
 					if(strlen($fileName) > 0) {
-        		$files = $dbObject->fetchAll("SELECT `id` FROM `file` WHERE `dir_id` = ".$dirId." AND `name` = \"".$fileName."\";");
+						if(array_key_exists('file-id', $_POST)) {
+        			$files = $dbObject->fetchAll("SELECT `id` FROM `file` WHERE `dir_id` = ".$dirId." AND `name` = \"".$fileName."\" AND `type` = ".$extType." AND `id` != ".$fileId.";");
+        		} else {
+							$files = $dbObject->fetchAll("SELECT `id` FROM `file` WHERE `dir_id` = ".$dirId." AND `name` = \"".$fileName."\" AND `type` = ".$extType.";");
+						}
 		        if(count($files) == 0) {
-    		      $extType = self::getWebFileType($_FILES['file-rs']['name']);
         		  if($extType > 0) {
             		$path = self::getPhysicalPathTo($dirId);
 		            $moved = move_uploaded_file($original, $_SERVER['DOCUMENT_ROOT'].$path.$fileName.".".$this->FileEx[$extType]);
     		        
         		    if($moved) {
-            		  $dbObject->execute("INSERT INTO `file`(`dir_id`, `name`, `title`, `type`, `timestamp`) VALUES (".$dirId.", \"".$fileName."\", \"".$fileTitle."\", ".$extType.", ".time().");");
-	  	          	$fileId = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `file`;');
-	  	          	$fileId = $fileId[0]['id'];
+        		    	if(array_key_exists('file-id', $_POST)) {
+        		    		$files = $dbObject->fetchAll("SELECT `id`, `name`, `type`, `dir_id` FROM `file` WHERE `dir_id` = ".$dirId." AND `id` = ".$fileId.";");
+        		    		$oldFile = $files[0];
+      	  		    	$path = self::getPhysicalPathTo($oldFile['dir_id']);
+				        	  $filePath = $_SERVER['DOCUMENT_ROOT'].$path.$oldFile['name'].".".$this->FileEx[$oldFile['type']];
+				          	//echo $filePath;
+				          	if($fileName != $oldFile['name'] || $extType != $oldFile['type']) {
+						          unlink($filePath);
+					          }
+					          $dbObject->execute('UPDATE `file` SET `name` = "'.$fileName.'", `title` = "'.$fileTitle.'", `timestamp` = '.time().' WHERE `id` = '.$fileId.';');
+        		    	} else {
+    	        		  $dbObject->execute("INSERT INTO `file`(`dir_id`, `name`, `title`, `type`, `timestamp`) VALUES (".$dirId.", \"".$fileName."\", \"".$fileTitle."\", ".$extType.", ".time().");");
+		  	          	$fileId = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `file`;');
+		  	          	$fileId = $fileId[0]['id'];
+	  	          	}
 	  	          	
+	  	          	
+	  	          	// NEFUNGUJE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	  	          	if(count($read) != 0) {
-										$dbR = $dbObject->fetchAll("SELECT `gid` FROM `file_right` WHERE `file_right`.`fid` = ".$fileId." AND `type` = ".WEB_R_READ.";");
+										$dbR = $dbObject->fetchAll("SELECT `gid` FROM `file_right` WHERE `file_right`.`fid` = ".$fileId." AND `type` = ".WEB_R_READ.";", true, true);
 		 		      	    foreach($dbR as $right) {
 			      	        if(!in_array($right, $read)) {
     		  	         		$dbObject->execute("DELETE FROM `file_right` WHERE `fid` = ".$fileId." AND `type` = ".WEB_R_READ.";");
@@ -654,7 +707,7 @@
         		    $return .= '<h4 class="error">Un-supported file type!</h4>';
 		          }
     		    } else {
-        		  $return .= '<h4 class="error">File with this name already exists!</h4>';
+	        		$return .= '<h4 class="error">File with this name already exists!</h4>';
         		}		
         	} else {
 						$return .= '<h4 class="error">File name must contain at least one character!</h4>';
@@ -937,7 +990,7 @@
      *  @param    dirId     directory id to show
      *
      */                        
-    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false) {
+    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $orderFilesBy = false, $orderDirsBy = false, $desc = false) {
       global $webObject;
       global $dbObject;
       $return = "";
@@ -969,16 +1022,34 @@
         .'';
       
       if($showSubDirs == "true") {
-        $dirs = $dbObject->fetchAll("SELECT `id`, `name` FROM `directory` WHERE `parent_id` = ".$dirId." ORDER BY `timestamp`");
+      	$order = "name";
+      	switch(strtolower($orderDirsBy)) {
+					case "id": $order = "id"; break;
+					case "url": $order = "url"; break;
+					case "timestamp": $order = "timestamp"; break;
+				}
+        $dirs = $dbObject->fetchAll("SELECT `id`, `name`, `url` FROM `directory` WHERE `parent_id` = ".$dirId." ORDER BY `".$order."`".(($desc == true) ? " DESC" : "").";");
         
+        //print_r($_REQUEST);
+        
+        $tmpDirId = $_REQUEST['dir-id'];
+        $tmpDirUrl = $_REQUEST['dir-url'];
         foreach($dirs as $dir) {
+        	if($pageId != false) {
+						$_REQUEST['dir-id'] = $dir['id'];
+						$_REQUEST['dir-url'] = $dir['url'];
+						$url = $webObject->composeUrl($pageId);
+					}
+        
           $return .= ''
             .'<div class="gallery-item gallery-dir">'
               .'<div class="gallery-thumb">'
               .'</div>'
-              .'<div class="gallery-name">'.$dir['name'].'</div>'
+              .'<div class="gallery-name">'.((strlen($url) != 0) ? '<a href="'.$url.'">'.$dir['name'].'</a> ' : $dir['name']).'</div>'
             .'</div>';
         }
+        $_REQUEST['dir-id'] = $tmpDirId;
+        $_REQUEST['dir-url'] = $tmpDirUrl;
       }
       
       $size = '';
@@ -1002,18 +1073,24 @@
       } else {
         $lsize = '';
       }
-      $images = $dbObject->fetchAll("SELECT `id`, `name`, `title`, `type` FROM `file` WHERE `dir_id` = ".$dirId." AND (`type` = ".WEB_TYPE_JPG." OR `type` = ".WEB_TYPE_GIF." OR `type` = ".WEB_TYPE_PNG.") ORDER BY `timestamp`;");
+      $order = "name";
+      switch(strtolower($orderFilesBy)) {
+				case "id": $order = "id"; break;
+				case "type": $order = "type"; break;
+				case "timestamp": $order = "timestamp"; break;
+			}
+      $images = $dbObject->fetchAll("SELECT `id`, `name`, `title`, `type` FROM `file` WHERE `dir_id` = ".$dirId." AND (`type` = ".WEB_TYPE_JPG." OR `type` = ".WEB_TYPE_GIF." OR `type` = ".WEB_TYPE_PNG.") ORDER BY `".$order."` ".(($desc == true) ? " DESC" : "").";");
       
-      foreach($images as $image) {
+			foreach($images as $image) {
       	if($lightbox == "true") {
       		$link = ''
        		.'<a href="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$lsize : self::getPhysicalPathTo($dirId, false).$image['name'].".".$this->FileEx[$image['type']]).'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
-        		.'<img src="~/file.php?rid='.$image['id'].'&'.$size.'" alt="'.$image['title'].'" />'
+        		.'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalPathTo($dirId, false).$image['name'].".".$this->FileEx[$image['type']]).'" alt="'.$image['title'].'" />'
         	.'</a>';
         } else {
         	$link = ''
 					.(($pageId != false) ? '<a href="'.$webObject->composeUrl($pageId, $langId).(($method == "dynamic") ? '/'.$image['id'].'-'.$image['name'] : '?file-id='.$image['id']).'">' : '')
-        		.'<img src="~/file.php?rid='.$image['id'].'&'.$size.'" alt="'.$image['title'].'" />'
+        		.'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalPathTo($dirId, false).$image['name'].".".$this->FileEx[$image['type']]).'" alt="'.$image['title'].'" />'
         	.(($pageId != false) ? '</a>' : '');
 				}
       
@@ -1079,6 +1156,35 @@
 		
 		public function getFileId() {
 			return $_SESSION['file']['current_id'];
+		}
+    
+    public function setDirectoryId($dirId) {
+    	if(is_numeric($dirId)) {
+				$_REQUEST['dir-id'] = $dirId;
+				return $dirId;
+			} else {
+				return 'wrong-dir-id';
+			}
+		}
+		
+		public function getDirectoryId() {
+			return $_REQUEST['dir-id'];
+		}
+    
+    public function setDirectoryIdFromUrl($dirUrl) {
+    	global $dbObject;
+    	$dirs = $dbObject->fetchAll('SELECT `id` FROM `directory` WHERE `url` = "'.$dirUrl.'";');
+    	if(count($dirs) > 0) {
+				$_REQUEST['dir-id'] = $dirs[0]['id'];
+				$_REQUEST['dir-url'] = $dirUrl;
+				return $dirUrl;
+			} else {
+				return 'wrong-dir-url';
+			}
+		}
+		
+		public function getDirectoryUrl() {
+			return $_REQUEST['dir-url'];
 		}
     
   }

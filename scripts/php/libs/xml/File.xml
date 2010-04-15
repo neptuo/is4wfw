@@ -4,7 +4,7 @@
   <name>File Lib</name>
   <classname>File</classname>
   <classpath>php.libs</classpath>
-  <version>1.13</version>
+  <version>1.14</version>
   <count>*</count>
   <comment>
     Třída pro správu souborů.
@@ -147,6 +147,18 @@
       <attname>useDirectLink</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>orderFilesBy</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>orderDirsBy</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>desc</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vrátí všechny obrázky z daného adresáře(přímo v tagu nebo v $_REQUEST['dir-id']). 
       Odkaz na skutečnou velikost fotky je v pageId, pokud není zadána, zobrazí se jen miniatury.
@@ -154,6 +166,7 @@
       pokud je "dynamic", musí mít strana "pageId" zapnutý dynamické překlad adres.
       Atributy s prefixem light, slouzi pro lightbox, je ovsem nutne lightbox samostny (JS + CSS) prilozit 
 			ke strance, pro useDirectLink="true", zobrazi u lightbox galerie primy odkaz na soubor.
+			Atributy "orderFilesBy" a "orderDirsBy" určují řazení, "desc" pokud je true, pak desc, jinak asc.
     </comment>
   </tag>
   <tag>
@@ -182,6 +195,22 @@
   	<getfunction>getFileId</getfunction>
     <comment>
       Vlastnost aktuálního souboru.
+    </comment>
+  </property>
+  <property>
+  	<propname>dirId</propname>
+  	<setfunction>setDirectoryId</setfunction>
+  	<getfunction>getDirectoryId</getfunction>
+    <comment>
+      Vlastnost aktuálního adresáře, používá pro uchování hodnoty $_REQUEST['dir-id']. Očekává id adresáře.
+    </comment>
+  </property>
+  <property>
+  	<propname>dirUrl</propname>
+  	<setfunction>setDirectoryIdFromUrl</setfunction>
+  	<getfunction>getDirectoryUrl</getfunction>
+    <comment>
+      Vlastnost aktuálního adresáře, používá pro uchování hodnoty $_REQUEST['dir-id']. Očekává url adresáře
     </comment>
   </property>
 </taglib>

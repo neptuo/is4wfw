@@ -12,6 +12,10 @@
   <tag>
     <tagname>management</tagname>
     <function>showUserManagement</function>
+    <attribute>
+      <attname>userId</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Správa uživatelů.
     </comment>
@@ -60,4 +64,12 @@
       Smaže log uživatelů.
     </comment>
   </tag>
+  <property>
+  	<propname>userId</propname>
+  	<setfunction>setUserId</setfunction>
+  	<getfunction>getUserId</getfunction>
+    <comment>
+      Uchovává hodnotu Id aktuálního uživatele.
+    </comment>
+  </property>
 </taglib>
