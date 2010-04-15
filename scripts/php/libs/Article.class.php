@@ -870,7 +870,7 @@
 			// Save article .... ;)
 			if($_POST['article-save'] == "Save") {
 				$article = array('id' => $_POST['article-id'], 'line_id' => $_POST['line-id']);
-				$articleContent = array('article_id' => $_POST['article-id'], 'name' => $_POST['article-name'], 'head' => $_POST['article-head'], 'content' => $_POST['article-content'], 'author' => $_POST['article-author'], 'timestamp' => time(), 'language_id' => $_POST['language-id'], 'language_old_id' => $_POST['article-old-lang-id'], 'line_old_id' => $_POST['line-old-id']);
+				$articleContent = array('article_id' => $_POST['article-id'], 'name' => str_replace('"', '\"', $_POST['article-name']), 'head' => str_replace('"', '\"', $_POST['article-head']), 'content' => str_replace('"', '\"', $_POST['article-content']), 'author' => $_POST['article-author'], 'timestamp' => time(), 'language_id' => $_POST['language-id'], 'language_old_id' => $_POST['article-old-lang-id'], 'line_old_id' => $_POST['line-old-id']);
 				
 				$permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = '.$article['line_id'].' AND `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
 				if(count($permission) > 0) {

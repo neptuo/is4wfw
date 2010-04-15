@@ -2067,6 +2067,7 @@
 			if($_POST['template-submit'] == "Save") {
 				$templateId = $_POST['template-id'];
 				$templateContent = $_POST['template-content'];
+				$templateContent = str_replace('"', '\"', $templateContent);
 				$templateR = $_POST['template-right-edit-groups-r'];
 				$templateW = $_POST['template-right-edit-groups-w'];
 				$templateD = $_POST['template-right-edit-groups-d'];
