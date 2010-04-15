@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Js Lib</name>
+  <classname>Js</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Třída pro systémové javascripty.
+  </comment>
+  <tag>
+    <tagname>cmsResources</tagname>
+    <function>getCmsResources</function>
+    <attribute>
+      <attname>useWindows</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Vkládá do stránky zdroje pro cms, pokud je useWindows true, pak vloží verzi pro windows cms.
+    </comment>
+  </tag>
+</taglib>
+

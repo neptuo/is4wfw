@@ -5,8 +5,8 @@
    *  Base class for all tag libs.
    *  
    *  @author     Marek SMM
-   *  @timestamp  2009-01-24
-   *  @version    1.06
+   *  @timestamp  2009-10-21
+   *  @version    1.07
    *
    */           
   class BaseTagLib {
@@ -76,8 +76,34 @@
      *
      */                   
     public function getFrame($label, $content, $classes, $ignoreFirstFrame = false) {
+    	global $phpObject;
+    	global $dbObject;
+    	global $loginObject;
+    	include_once('System.class.php');
+    
+	    $escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n");
+    	$name = 'Frame.'.strtolower(str_replace(' ', '', $label));
+    	$name = $phpObject->str_tr($name, ':');
+    	$name = $name[0];
+    	$name = strtr($name, $escapeChars); 
+    	
+    	$system = new System();
+    	$value = $system->getPropertyValue($name);
+    	$closed = false;
+    	if($value == 'true') {
+				$closed = true;
+			}
+			
+			$addAttrs;
+			if($_REQUEST['__TEMPLATE'] == 'xml') {
+				$props = $dbObject->fetchAll('SELECT `left`, `top`, `width`, `height`, `maximized` FROM `window_properties` WHERE `frame_id` = "'.$name.'" AND `user_id` = '.$loginObject->getUserId().';');
+				if(count($props) == 1) {
+					$addAttrs = 'left="'.$props[0]['left'].'" top="'.$props[0]['top'].'" width="'.$props[0]['width'].'" height="'.$props[0]['height'].'" maximized="'.($props[0]['maximized'] ? "true" : "false").'"';
+				}
+			}
+    
       $return = ''
-      .'<div class="frame frame-cover'.((strlen($classes)) ? ' '.$classes : '').((!$this->FirstFrame && !$ignoreFirstFrame) ? ' closed-frame' : '').'">'
+      .'<div id="'.$name.'" class="frame frame-cover '.$name.''.((strlen($classes)) ? ' '.$classes : '').(((!$this->FirstFrame && !$ignoreFirstFrame) || $closed) ? ' closed-frame' : '').'"'.(($addAttrs != "") ? ' '.$addAttrs : '').'>'
         .'<div class="frame frame-head">'
           .'<div class="frame-label">'
             .$label
@@ -87,7 +113,7 @@
           .'</div>'
           .'<div class="clear"></div>'
         .'</div>'
-        .'<div class="frame frame-body"'.((!$this->FirstFrame && !$ignoreFirstFrame) ? ' style="display: none;"' : '').'>'
+        .'<div class="frame frame-body">'
           .$content
         .'</div>'
       .'</div>';

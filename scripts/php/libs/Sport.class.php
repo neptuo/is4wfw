@@ -89,7 +89,7 @@
 			
 			$return .= ''
 			.'<div class="select-season">'
-				.'<form name="select-season" method="post" action="">'
+				.'<form name="select-season" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 					.'<label for="select-season">'.$rb->get('season.selectlab').':</label> '
 					.'<select name="select-season" id="select-season">'
 						.'<option value="0">'.$rb->get('season.all').'</option>'
@@ -131,7 +131,7 @@
 			
 			$return .= ''
 			.'<div class="select-table">'
-				.'<form name="select-table" method="post" action="">'
+				.'<form name="select-table" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 					.'<label for="select-table">'.$rb->get('tables.selectlab').':</label> '
 					.'<select name="select-table" id="select-table">'
 						.'<option value="0">'.$rb->get('tables.all').'</option>'
@@ -173,7 +173,7 @@
 			
 			$return .= ''
 			.'<div class="select-team">'
-				.'<form name="select-team" method="post" action="">'
+				.'<form name="select-team" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 					.'<label for="select-team">'.$rb->get('team.selectlab').':</label> '
 					.'<select name="select-team" id="select-team">'
 						.'<option value="0">'.$rb->get('team.all').'</option>'
@@ -305,7 +305,7 @@
 				
 				$return .= ''
 				.'<div class="season-edit-form">'
-					.'<form name="season-edit-form" method="post" action="">'
+					.'<form name="season-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<div class="season-edit-start">'
 							.'<label for="season-edit-start">'.$rb->get('seasons.form.startyear').':</label> '
 							.'<input type="text" name="season-edit-start" id="season-edit-start" value="'.$season['start_year'].'" />'
@@ -497,7 +497,7 @@
 				
 				$return .= ''
 				.'<div class="team-edit-form">'
-					.'<form name="team-edit-form" method="post" action="">'
+					.'<form name="team-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<div class="team-edit-name">'
 							.'<label for="team-edit-name">'.$rb->get('teams.name').'</label> '
 							.'<input type="text" name="team-edit-name" id="team-edit-name" value="'.$team['name'].'" />'
@@ -545,6 +545,7 @@
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$retrun = '';
+			$actionUrl = $_SERVER['REDIRECT_URL'];
 			
 			if($pageId != false) {
 				$url = $webObject->composeUrl($pageId);
@@ -611,7 +612,7 @@
 							.'<input type="hidden" name="player-edit" value="'.$rb->get('players.edit').'" />'
 							.'<input type="image" src="~/images/page_edi.png" name="player-edit" value="'.$rb->get('players.edit').'" title="'.$rb->get('players.editcap').'" />'
 						.'</form> '
-						.'<form name="player-delete" method="post" action="">'
+						.'<form name="player-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 							.'<input type="hidden" name="player-id" value="'.$pl['id'].'" />'
 							.'<input type="hidden" name="season-id" value="'.$sea['sid'].'" />'
 							.'<input type="hidden" name="team-id" value="'.$sea['tid'].'" />'
@@ -626,7 +627,7 @@
 						.'<input type="hidden" name="player-add" value="'.$rb->get('players.add').'" />'
 						.'<input type="image" src="~/images/page_add.png" name="player-add" value="'.$rb->get('players.add').'" title="'.$rb->get('players.addcap').'" />'
 					.'</form> '
-					.'<form name="player-deletewhole" method="post" action="">'
+					.'<form name="player-deletewhole" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<input type="hidden" name="player-id" value="'.$pl['id'].'" />'
 						.'<input type="hidden" name="player-deletewhole" value="'.$rb->get('players.deletewhole').'" />'
 						.'<input class="confirm" type="image" src="~/images/page_del.png" name="player-deletewhole" value="'.$rb->get('players.deletewhole').'" title="'.$rb->get('players.deletewholecap').', id ('.$pl['id'].')" />'
@@ -732,7 +733,7 @@
 				
 				$return .= ''
 				.'<div class="player-edit-form">'
-					.'<form name="player-edit-form" method="post" action="">'
+					.'<form name="player-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<div class="player-edit-name">'
 							.'<label for="player-edit-name">'.$rb->get('players.form.name').'</label>'
 							.'<input type="text" name="player-edit-name" id="player-edit-name" value="'.$player['name'].'" />'
@@ -1132,7 +1133,7 @@
 			
 				$return .= ''
 				.'<div class="match-edit-form">'
-					.'<form name="match-edit-form" method="post" action="">'
+					.'<form name="match-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<table class="match-edit-table">'
 							.'<tr>'
 								.'<th class="match-table-team"> </th>'
@@ -1417,7 +1418,7 @@
 				
 				$return .= ''
 				.'<div class="match-edit-form">'
-					.'<form name="match-edit-form" method="post" action="">'
+					.'<form name="match-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<table class="match-edit-table">'
 							.'<tr>'
 								.'<th class="match-table-team"> </th>'

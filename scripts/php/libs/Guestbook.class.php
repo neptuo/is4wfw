@@ -157,7 +157,7 @@
       $rows = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `timestamp` FROM `guestbook` WHERE `guestbook_id` = ".$guestbookId." AND `parent_id` = ".$parentId." ORDER BY `timestamp` DESC;");
       
       if($answerPageId == false) {
-        $answerHref = "";
+        $answerHref = $_SERVER['REDIRECT_URL'];
       } else {
         $answerHref = $webObject->composeUrl($answerPageId);
       }
@@ -168,7 +168,7 @@
           .'<div class="guestbook-head">'
             .(($editable == "true") ? ''
             .'<div class="guestbook-editable">'
-              .'<form name="guestbook-editable" method="post" action="">'
+              .'<form name="guestbook-editable" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
                 .'<input type="hidden" name="guestbook-editable-gbid" value="'.$guestbookId.'" />'
                 .'<input type="hidden" name="guestbook-editable-id" value="'.$row['id'].'" />'
                 .'<input type="hidden" name="guestbook-editable-delete" value="Delete Entry" />'

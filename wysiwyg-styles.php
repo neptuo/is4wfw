@@ -6,6 +6,7 @@
 		$projectId = $_SESSION['selected-project'];
 		
 		require_once("scripts/php/includes/settings.inc.php");
+		require_once("scripts/php/includes/database.inc.php");
   	require_once("scripts/php/libs/Database.class.php");
 	  $dbObject = new Database();
 	  
@@ -26,7 +27,7 @@
 			$browser = 'for_safari';
 		}
 	  
-		$styles = $dbObject->fetchAll('SELECT `page_file`.`content` FROM `wp_wysiwyg_file` LEFT JOIN `page_file` ON `wp_wysiwyg_file`.`tf_id` = `page_file`.`id` WHERE `wp_wysiwyg_file`.`wp` = '.$projectId.' AND `page_file`.`for_all` = 1 OR `page_file`.`'.$browser.'` = 1;');
+		$styles = $dbObject->fetchAll('SELECT `page_file`.`content` FROM `wp_wysiwyg_file` LEFT JOIN `page_file` ON `wp_wysiwyg_file`.`tf_id` = `page_file`.`id` WHERE `wp_wysiwyg_file`.`wp` = '.$projectId.' AND `page_file`.`for_all` = 1 OR `page_file`.`'.$browser.'` = 1 ORDER BY `page_file`.`id`;');
 		
 		$return = '';
 		foreach($styles as $css) {

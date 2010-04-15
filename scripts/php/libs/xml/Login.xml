@@ -32,6 +32,14 @@
       <attname>pageId</attname>
       <attreq>required</attreq>
     </attribute>
+    <attribute>
+      <attname>autoLoginUserName</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>autoLoginPassword</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Zobrazí formulář pro přihlášení a po jeho odeslání se pokusí uživatele 
       přihlásit do skupiny specifikované atributem "group".
@@ -83,4 +91,12 @@
       Přesměruje užívatele pokud není přihlášen na stránku "pageId".
     </comment>
   </tag>
+  <property>
+  	<propname>loggedUserId</propname>
+  	<setfunction>setUserId</setfunction>
+  	<getfunction>getUserId</getfunction>
+    <comment>
+      Uchovává hodnotu Id aktuálního uživatele. Zatím implentován jen getter.
+    </comment>
+  </property>
 </taglib>

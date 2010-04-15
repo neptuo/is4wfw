@@ -4,11 +4,18 @@
   <name>Page Lib</name>
   <classname>Page</classname>
   <classpath>php.libs</classpath>
-  <version>1.33</version>
+  <version>1.39</version>
   <count>*</count>
   <comment>
     Třída pro správu obsahu jednotlivých stránek.
   </comment>
+  <tag>
+    <tagname>showEditPage</tagname>
+    <function>showEditPage</function>
+    <comment>
+      Zobrazí formulář pro editaci vybrané stránky.
+    </comment>
+  </tag>
   <tag>
     <tagname>showList</tagname>
     <function>showPages</function>
@@ -17,7 +24,7 @@
       <attreq>implied</attreq>
     </attribute>
     <comment>
-      Zobrazí kompletní administrační výpis stránek ( případně formulář ).
+      Zobrazí kompletní administrační výpis stránek. Navazující prvek pro editaci je <strong>showEditPage</strong>.
     </comment>
   </tag>
   <tag>
@@ -28,7 +35,14 @@
       <attreq>implied</attreq>
     </attribute>
     <comment>
-      Zobrazí kompletní administrační výpis souborů ( případně formulář ).
+      Zobrazí kompletní administrační výpis souborů .Navazující prvek pro editaci je <strong>showEditPage</strong>.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showEditFile</tagname>
+    <function>showEditPageFile</function>
+    <comment>
+      Zobrazí formulář pro editaci vzbraného souboru.
     </comment>
   </tag>
   <tag>

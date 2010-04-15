@@ -6,34 +6,40 @@
    *
    */
   require_once("BaseTagLib.class.php");
+
+  require_once("scripts/php/classes/ResourceBundle.class.php");
   
   /**
    * 
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-10-04
+   *  @timestamp  2009-12-05
    * 
    */  
   class Page extends BaseTagLib {
   
+  	private $BundleName = 'page';
+  	
+  	private $BundleLang = 'en';
+  
     public function __construct() {
       parent::setTagLibXml("xml/Page.xml");
+      
+      if($webObject->LanguageName != '') {
+				$rb = new ResourceBundle();
+				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
+					$BundleLang = $webObject->LanguageName;
+				}
+			}
     }
     
-    /**
-     *
-     *  Generates table with informations about web pages.
-     *  C tag.     
-     *  
-     *  @param  editable  if true, it shows also form editing
-     *  @return formed list of web pages               
-     *
-     */                   
-    public function showPages($editable = false) {
-      global $dbObject;
+    public function showEditPage() {
+			global $dbObject;
       global $loginObject;
       global $webObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
       $return = '';
       
       $projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
@@ -51,11 +57,11 @@
 				if(array_key_exists('selected-project', $_SESSION)) {
 					$projectId = $_SESSION['selected-project'];
 				} else {
-					return parent::getFrame("Page List", '<h4 class="error">No pages to edit!</h4>', "page-pagelist", true);
+					// dont care.
 				}
 			}
       
-      if($_POST['edit-save'] == "Save" || $_POST['edit-save'] == "Save and Close") {
+      if($_POST['edit-save'] == $rb->get('page.action.save') || $_POST['edit-save'] == $rb->get('page.action.saveandclose')) {
         $pageId = $_POST['page-id'];
         $parentId = $_POST['parent-id'];
         $languageId = $_POST['language'];
@@ -73,30 +79,37 @@
         $content = str_replace('&#126', '~', $content);
         $tlStart = str_replace('&#126', '~', $tlStart);
         $tlEnd = str_replace('&#126', '~', $tlEnd);
+        // Surely???
+        $head = str_replace('"', '\"', $head);
+        $content = str_replace('"', '\"', $content);
+        $tlStart = str_replace('"', '\"', $tlStart);
+        $tlEnd = str_replace('"', '\"', $tlEnd);
+        // --
         $type = $_POST['type'];
         $keywords = $_POST['edit-keywords'];
         $clearUrlCache = $_POST['edit-clearurlcache'];
         $cacheTime = $_POST['edit-cachetime'];
         $errors = array();
         
+        $forSaveNewPageId = 0;
+        
         $pageRightR = $_POST['right-edit-groups-r'];
         $pageRightW = $_POST['right-edit-groups-w'];
         $pageRightD = $_POST['right-edit-groups-d'];
         
         if(strlen($name) < 2) {
-          $errors[] = 'Page name must have at least 2 chars!';
+          $errors[] = $rb->get('page.error.nametooshort');
         }
         
 	      if($type != "page-edit") {
 	        $tmpPages = $dbObject->fetchAll("SELECT `id` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` WHERE `info`.`href` = \"".$href."\" AND `page`.`parent_id` = ".$parentId." AND `info`.`language_id` = ".$languageId." AND `page`.`wp` = ".$projectId.";");
 	        if(count($tmpPages) != 0) {
-	          $errors[] = 'Page with this href already exists in this branch!';
+	          $errors[] = $rb->get('page.error.urlused');
 	        }
 	      }
-        
         if(count($errors) == 0) {
           if($type == "page-edit") {
-            $dbObject->execute("UPDATE `content` SET `tag_lib_start` = \"".$tlStart."\", `tag_lib_end` = \"".$tlEnd."\", `head` = \"".$head."\", `content` = \"".$content."\" WHERE `page_id` = ".$pageId." AND `language_id` = ".$languageId.";");
+            $dbObject->execute("UPDATE `content` SET `tag_lib_start` = \"".$tlStart."\", `tag_lib_end` = \"".$tlEnd."\", `head` = \"".$head."\", `content` = \"".$content."\" WHERE `page_id` = ".$pageId." AND `language_id` = ".$languageId.";", true);
             $dbObject->execute("UPDATE `info` SET `name` = \"".$name."\", `href` = \"".$href."\", `in_title` = \"".$inTitle."\", `in_menu` = ".$menu.", `is_visible` = ".$visible.", `keywords` = \"".$keywords."\", `timestamp` = ".time().", `cachetime` = ".$cacheTime." WHERE `page_id` = ".$pageId." AND `language_id` = ".$languageId.";");
       
      	    	if(count($pageRightR) != 0) {
@@ -147,6 +160,7 @@
             $sql_return = $dbObject->fetchAll("SELECT MAX(`id`) AS `id` FROM `page`");
             
             $pageId = $sql_return[0]['id'] + 1;
+            $forSaveNewPageId = $pageId;
             $_POST['page-id'] = $pageId;
             $languageId = $_POST['language'];
             
@@ -185,13 +199,13 @@
 							}
 						}
             
-            $return .= parent::getFrame("Success Message", '<h4 class="success">New page added!</h4>', "page-listadded", true);
+            $return .= '<h4 class="success">'.$rb->get('page.success.added').'</h4>';
           } else if($type == "page-add-lang-ver") {
             
             $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(".$pageId.", \"".$tlStart."\", \"".$tlEnd."\", \"".$head."\", \"".$content."\", ".$languageId.");");
             $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `timestamp`, `cachetime`) VALUES(".$pageId.", ".$languageId.", \"".$name."\", \"".$href."\", ".$inTitle.", ".$menu.", ".$pageId.", ".$visible.", \"".$keywords."\", ".time().", ".$cacheTime.");");
             
-            $return .= parent::getFrame("Success Message" ,'<h4 class="success">Language version added!</h4>', "", true);
+           $return .= '<h4 class="success">'.$rb->get('page.success.langadded').'</h4>';
           } else if($type == "page-add-sub") {
             $sql_return = $dbObject->fetchAll("SELECT MAX(`id`) AS `id` FROM `page`");
             
@@ -218,7 +232,7 @@
             	}
             }
             
-            $return .= parent::getFrame("Success Message", '<h4 class="success">Sub page added!</h4>', "", true);
+            $return .= '<h4 class="success">'.$rb->get('page.success.added').'</h4>';
           }
           
           if($clearUrlCache) {
@@ -228,8 +242,11 @@
 						$dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` = \"".$pageId."\" AND `language_id` = ".$languageId.";");
 					}
         
-          if($_POST['edit-save'] == "Save") {
-            $_POST['page-edit'] = "Edit";
+          if($_POST['edit-save'] == $rb->get('page.action.save')) {
+          	if($_POST['type'] == 'add-new-page') {
+          		$_POST['page-id'] = $forSaveNewPageId;
+          	}
+            $_POST['page-edit'] = $rb->get('page.action.edit');
             $_POST['page-lang-id'] = $_POST['language'];
           }
         } else {
@@ -238,23 +255,385 @@
             $errorList .= '<h4 class="error">'.$error.'</h4>';
           }
           //$errorList .= '</ul>';
-          $return .= parent::getFrame("Error Message", $errorList, "", true);
+          $return .= parent::getFrame($rb->get('page.error.listlabel'), $errorList, "", true);
           
           $errorOccurs = "true";
           
           if($_POST['type'] == 'add-new-page') {
-            $_POST['add-new-page'] = "Add new page";
+            $_POST['add-new-page'] = $rb->get('page.action.addpage');
           } else if($_POST['type'] == 'page-add-sub') {
-            $_POST['page-add-sub'] = "Add sub page";
+            $_POST['page-add-sub'] = $rb->get('page.action.addsubpage');
           } else if($_POST['type'] == 'page-add-lang-ver') {
-            $_POST['page-add-lang-ver'] = "Add Language version";
+            $_POST['page-add-lang-ver'] = $rb->get('page.action.addlang');;
           } else if($_POST['type'] == 'page-edit') {
             $_POST['page-edit'] = "Edit";
           }
         }
       }
       
-      if($_POST['delete'] == "Delete") {
+      if($_POST['page-edit'] == $rb->get('page.action.edit') || $_POST['add-new-page'] == $rb->get('page.action.addpage') || $_POST['page-add-sub'] == $rb->get('page.action.addsubpage') || $_POST['page-add-lang-ver'] == $rb->get('page.action.addlang') || $errorOccurs == "true") {
+        $usedLangs = array();
+        $pageId = $_POST['page-id'] | 0;
+        $parentId = $_POST['parent-id'];
+        $langId = $_POST['page-lang-id'];
+        $langsCount = true;
+        
+        $rights = $dbObject->fetchAll('SELECT `group`.`name` FROM `group` LEFT JOIN `page_right` ON `group`.`gid` = `page_right`.`gid` WHERE `page_right`.`pid` = '.$pageId.' AND `page_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
+        
+				$ok = true;
+				if(count($rights) == 0) {
+					$ok = false;
+				}
+        
+        if($ok) {
+          $right_pid = $pageId;
+          if($_POST['page-edit'] == $rb->get('page.action.edit')) {
+            $type = "page-edit";
+          } else if($_POST['add-new-page'] == $rb->get('page.action.addpage')) {
+            $type = "add-new-page";
+            $right_pid = $parentId;
+            $frameTitle = $rb->get('page.title.addpage');
+          } else if($_POST['page-add-sub'] == $rb->get('page.action.addsubpage')) {
+            $type = "page-add-sub";
+            $frameTitle = $rb->get('page.title.addsubpage');
+          } else if($_POST['page-add-lang-ver'] == $rb->get('page.action.addlang')) {
+            $type = "page-add-lang-ver";
+            $parentId = $pageId;
+            $usedLangs = $dbObject->fetchAll("SELECT `language_id` FROM `info` WHERE `page_id` = ".$pageId.";");
+            $frameTitle = $rb->get('page.title.addlang');
+          } else {
+            $type = "undefined";
+          }
+          if($_POST['page-edit'] == $rb->get('page.action.edit')) {
+            $sql_return = $dbObject->fetchAll("SELECT `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content`, `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`cachetime` FROM `content` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `info`.`page_id` = ".$pageId." AND `info`.`language_id` = ".$langId.";");
+            $frameTitle = $rb->get('page.action.editation').' :: '.$sql_return[0]['name'].' ( '.$pageId.' )';
+          } else {
+            $sql_return = array();
+            $sql_return[0]['in_title'] = 1;
+            $sql_return[0]['is_visible'] = 1;
+            $sql_return[0]['cachetime'] = -1;
+          }
+          
+          if($errorOccurs == "true") {
+            $sql_return[0]['name'] = $name;
+            $sql_return[0]['href'] = $href;
+            $sql_return[0]['in_title'] = $inTitle;
+            $sql_return[0]['in_menu'] = $inMenu;
+            $sql_return[0]['is_visible'] = $isVisible;
+            $sql_return[0]['head'] = $head;
+            $sql_return[0]['content'] = $content;
+            $sql_return[0]['tag_lib_start'] = $tlStart;
+            $sql_return[0]['tag_lib_end'] = $tlEnd;
+            $sql_return[0]['cachetime'] = $cacheTime;
+            $langId = $languageId;
+          }
+          
+          if($type == $rb->get('page.action.addpage')) {
+  	        $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$projectId." AND `type` = ".WEB_R_READ.";");
+	          $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$projectId." AND `type` = ".WEB_R_WRITE.";");
+          	$groupsD = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$projectId." AND `type` = ".WEB_R_DELETE.";");
+					} else {
+    	      $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$right_pid." AND `type` = ".WEB_R_READ.";");
+  	        $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$right_pid." AND `type` = ".WEB_R_WRITE.";");
+	          $groupsD = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$right_pid." AND `type` = ".WEB_R_DELETE.";");
+					}
+          
+          $show = array('read' => true, 'write' => true, 'delete' => false);
+          $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
+          $groupSelectR = '<select id="right-edit-groups-r" name="right-edit-groups-r[]" multiple="multiple" size="5">';
+          $groupSelectW = '<select id="right-edit-groups-w" name="right-edit-groups-w[]" multiple="multiple" size="5">';
+          $groupSelectD = '<select id="right-edit-groups-d" name="right-edit-groups-d[]" multiple="multiple" size="5">';
+          foreach($allGroups as $group) {
+            $selectedR = false;
+            $selectedW = false;
+            $selectedD = false;
+            foreach($groupsR as $gp) {
+              if($gp['gid'] == $group['gid']) {
+                $selectedR = true;
+                $show['read'] = true;
+              }
+            }
+            foreach($groupsW as $gp) {
+              if($gp['gid'] == $group['gid']) {
+                $selectedW = true;
+                $show['write'] = true;
+              }
+            }
+            foreach($groupsD as $gp) {
+              if($gp['gid'] == $group['gid']) {
+                $selectedD = true;
+                $show['delete'] = true;
+              }
+            }
+            $groupSelectR .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+            $groupSelectW .= '<option'.(($selectedW) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+            $groupSelectD .= '<option'.(($selectedD) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+          }
+          $groupSelectR .= '</select>';
+          $groupSelectW .= '</select>';
+          $groupSelectD .= '</select>';
+          
+          $return .= '';
+          if(($type != "undefined" && (count($sql_return) == 1) || $type != "Edit")) {
+            $sql_return[0]['tag_lib_start'] = str_replace("&", "&amp;", $sql_return[0]['tag_lib_start']);
+            $sql_return[0]['tag_lib_end'] = str_replace("&", "&amp;", $sql_return[0]['tag_lib_end']);
+            $sql_return[0]['head'] = str_replace("&", "&amp;", $sql_return[0]['head']);
+            $sql_return[0]['content'] = str_replace("&", "&amp;", $sql_return[0]['content']);
+            $sql_return[0]['head'] = str_replace(">", "&gt;", $sql_return[0]['head']);
+            $sql_return[0]['head'] = str_replace("<", "&lt;", $sql_return[0]['head']);
+            $sql_return[0]['content'] = str_replace(">", "&gt;", $sql_return[0]['content']);
+            $sql_return[0]['content'] = str_replace("<", "&lt;", $sql_return[0]['content']);
+            
+            $returnTmp .= ''
+                      .'<form name="page-edit-detail" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+                      .'<div class="edit edit-page-info">'
+                        .'<div class="edit edit-prop">'
+                          .'<div class="edit edit-name">'
+                            .'<label for="edit-name">'.$rb->get('page.field.namelabel').':</label> '
+                            .'<input type="text" name="edit-name" id="edit-name" value="'.$sql_return[0]['name'].'" />'
+                          .'</div>'
+                          .'<div class="edit edit-href">'
+                            .'<label for="edit-href">'.$rb->get('page.field.urllabel').':</label> '
+                            .'<input type="text" name="edit-href" id="edit-href" value="'.$sql_return[0]['href'].'" />'
+                          .'</div>'
+                          .'<div class="edit edit-in-title">'
+                            .'<label for="edit-in-title">'.$rb->get('page.field.intitlelabel').':</label> '
+                            .'<input type="checkbox" name="edit-in-title" id="edit-in-title"'.(($sql_return[0]['in_title'] == 1) ? 'checked="checked"' : '').' />'
+                          .'</div>'
+                          .'<div class="edit edit-menu">'
+                            .'<label for="edit-menu">'.$rb->get('page.field.inmenulabel').':</label> '
+                            .'<input type="checkbox" name="edit-menu" id="edit-menu"'.(($sql_return[0]['in_menu'] == 1) ? 'checked="checked"' : '').' />'
+                          .'</div>'
+                          .'<div class="edit edit-visible">'
+                            .'<label for="edit-visible">'.$rb->get('page.field.isvisiblelabel').':</label> '
+                            .'<input type="checkbox" name="edit-visible" id="edit-visible"'.(($sql_return[0]['is_visible'] == 1) ? 'checked="checked"' : '').' />'
+                          .'</div>'
+                          .'<div class="edit edit-clear-cache">'
+                            .'<label for="edit-clearurlcache">'.$rb->get('page.field.clearcachelabel').':</label> '
+                            .'<input type="checkbox" name="edit-clearurlcache" id="edit-clearurlcache" />'
+                          .'</div>'
+                          .'<div class="edit edit-cache-time">'
+                            .'<label for="edit-cachetime">'.$rb->get('page.field.cachetimelabel').':</label>'
+                            .'<select id="edit-cachetime" name="edit-cachetime">'
+                            	.'<option value="-1"'.(($sql_return[0]['cachetime'] == -1) ? 'selected="selected"' : '').'>Don\'t use</option>'
+                            	.'<option value="60"'.(($sql_return[0]['cachetime'] == 60) ? 'selected="selected"' : '').'>1 minute</option>'
+                            	.'<option value="3600"'.(($sql_return[0]['cachetime'] == 3600) ? 'selected="selected"' : '').'>1 hour</option>'
+                            	.'<option value="86400"'.(($sql_return[0]['cachetime'] == 86400) ? 'selected="selected"' : '').'>1 day</option>'
+                            	.'<option value="0"'.(($sql_return[0]['cachetime'] == 0) ? 'selected="selected"' : '').'>Unlimited</option>'
+                            .'</select>'
+                          .'</div>';
+            if($type == 'add-new-page' || $type == 'page-add-lang-ver') {
+              $returnTmp .= 
+                          '<div class="edit edit-language">'
+                          .'<label for="select-language">'.$rb->get('page.field.languagelabel').': </label>'
+                          .'<select id="select-language" name="language">';
+              $parentPage = $dbObject->fetchAll('SELECT `parent_id` FROM `page` WHERE `id` = '.$pageId.';');
+              if($type == "page-add-lang-ver" && $parentPage[0]['parent_id']) {
+								$langs = $dbObject->fetchAll("SELECT `language`.`id`, `language`.`language` FROM `language` LEFT JOIN `info` ON `language`.`id` = `info`.`language_id` WHERE `info`.`page_id` = ".$parentPage[0]['parent_id']." ORDER BY `language`.`language`;");
+							} else {
+              	$langs = $dbObject->fetchAll("SELECT `language`.`id`, `language`.`language` FROM `language` ORDER BY `language`.`language`;");
+              	
+							} 
+							$iOk = 0; 
+              foreach($langs as $lang) {
+                $ok = true;
+                foreach($usedLangs as $usedLang) {
+                  if(in_array($lang['id'], $usedLang)) {
+                    $ok = false;
+                  }
+                }
+                if($ok) {
+                  $returnTmp .= '<option value="'.$lang['id'].'">'.$lang['language'].'</option>';
+                  $iOk ++;
+                }
+              }
+              
+              if($iOk == 0) {
+								$langsCount = false;
+							}
+              $returnTmp .= '</select></div>';
+            }
+            
+            include_once('System.class.php');
+    
+			    	$name = 'Page.editors';
+    				$system = new System();
+		  	  	$propertyEditors = $system->getPropertyValue($name);
+		  	  	$editAreaContentRows = $system->getPropertyValue('Page.editAreaContentRows');
+		  	  	$editAreaHeadRows = $system->getPropertyValue('Page.editAreaHeadRows');
+		  	  	$editAreaTLStartRows = $system->getPropertyValue('Page.editAreaTLStartRows');
+		  	  	$editAreaTLendRows = $system->getPropertyValue('Page.editAreaTLEndRows');
+		  	  	
+            $returnTmp .= ''
+                        .'</div>'
+                        .'<div class="edit edit-rights">'
+                        	.(($show['read']) ? ''
+                          .'<div class="edit edit-right-read">'
+                            .'<label for="right-edit-groups-r">'.$rb->get('page.field.rreadlabel').':</label>'
+                            .$groupSelectR
+                          .'</div>'
+                          : '')
+                          .(($show['write']) ? ''
+                          .'<div class="edit edit-right-write">'
+                            .'<label for="right-edit-groups-w">'.$rb->get('page.field.rwritelabel').':</label>'
+                            .$groupSelectW
+                          .'</div>'
+                          : '')
+                          .(($show['delete']) ? ''
+                          .'<div class="edit edit-right-delete">'
+                            .'<label for="right-edit-groups-d">'.$rb->get('page.field.rdeletelabel').':</label>'
+                            .$groupSelectD
+                          .'</div>'
+                          : '')
+                          .'<div class="clear"></div>'
+                        .'</div>'
+                        .'<div class="clear"></div>'
+                        .'<div class="edit edit-keywords">'
+                          .'<label for="edit-keywords">'.$rb->get('page.field.keywordslabel').':</label> '
+                          .'<input id="edit-keywords" type="text" name="edit-keywords" value="'.$sql_return[0]['keywords'].'" />'
+                        .'</div>'
+                        .'<div class="clear"></div>'
+                      .'</div>'
+                      .'<div class="clear"></div>';
+                      
+            if($propertyEditors == 'edit_area') {
+							$returnTmp .= ''
+							.'<div id="editors" class="editors edit-area-editors">'
+							  .'<div id="editors-tab" class="editors-tab"></div>'
+								.'<div id="cover-page-edit-tag-lib-start">'
+									.'<label for="page-edit-tag-lib-start">'.$rb->get('page.field.tlstartlabel').':</label>'
+								  .'<textarea id="page-edit-tag-lib-start" class="edit-area html" name="edit-tl-start" rows="'.($editAreaTLStartRows > 0 ? $editAreaTLStartRows : 20).'">'.str_replace('~', '&#126', $sql_return[0]['tag_lib_start']).'</textarea>'
+								.'</div>'
+								.'<div id="cover-page-edit-tag-lib-end">'
+									.'<label for="page-edit-tag-lib-end">'.$rb->get('page.field.tlendlabel').':</label>'
+									.'<textarea id="page-edit-tag-lib-end" class="edit-area html" name="edit-tl-end" rows="'.($editAreaTLEndRows > 0 ? $editAreaTLEndRows : 20).'">'.str_replace('~', '&#126', $sql_return[0]['tag_lib_end']).'</textarea>'
+								.'</div>'
+								.'<div id="cover-page-edit-head">'
+									.'<label for="page-edit-head">'.$rb->get('page.field.headlabel').':</label>'
+									.'<textarea id="page-edit-head" class="edit-area html" name="edit-head" rows="'.($editAreaHeadRows > 0 ? $editAreaHeadRows : 20).'">'.str_replace('~', '&#126', $sql_return[0]['head']).'</textarea>'
+								.'</div>'
+								.'<div id="cover-page-edit-content">'
+									.'<label for="page-edit-content">'.$rb->get('page.field.contentlabel').':</label>'
+									.'<textarea id="page-edit-content" class="edit-area html" name="edit-content" rows="'.($editAreaContentRows > 0 ? $editAreaContentRows : 20).'">'.str_replace('~', '&#126', $sql_return[0]['content']).'</textarea>'
+								.'</div>'
+							.'</div>';
+						} else {  
+	            $returnTmp .= ''
+                      .'<div class="edit edit-tag-lib">'
+                          .'<div class="edit edit-tl-start">'
+                            .'<label for="edit-tl-start">'.$rb->get('page.field.tlstartlabel').':</label>'
+                            .'<div class="editor-cover">'
+                            	.'<div class="textarea-cover">'
+                            		.'<textarea name="edit-tl-start" class="editor-textarea editor-closed" wrap="off" rows="4">'.str_replace('~', '&#126', $sql_return[0]['tag_lib_start']).'</textarea>'
+                            	.'</div>'
+                            	.'<div class="clear"></div>'
+                            .'</div>'
+                          .'</div>'
+                          .'<div class="edit edit-tl-end">'
+                            .'<label for="edit-tl-end">'.$rb->get('page.field.tlendlabel').':</label>'
+                            .'<div class="editor-cover">'
+                            	.'<div class="textarea-cover">'
+                            		.'<textarea name="edit-tl-end" class="editor-textarea editor-closed" wrap="off" rows="4">'.str_replace('~', '&#126', $sql_return[0]['tag_lib_end']).'</textarea>'
+                            	.'</div>'
+                            	.'<div class="clear"></div>'
+                            .'</div>'
+                          .'</div>'
+                      .'</div>'
+                      .'<div class="edit edit-content">'
+                          .'<div class="edit edit-head">'
+                            .'<label for="edit-head">'.$rb->get('page.field.headlabel').':</label>'
+                            .'<div class="editor-cover">'
+                            	.'<div class="textarea-cover">'
+                            		.'<textarea name="edit-head" class="editor-textarea editor-closed" wrap="off" rows="4">'.str_replace('~', '&#126', $sql_return[0]['head']).'</textarea>'
+                            	.'</div>'
+                            	.'<div class="clear"></div>'
+                            .'</div>'
+                          .'</div>'
+                          .'<div class="edit edit-content">'
+                            .'<label for="edit-content">'.$rb->get('page.field.contentlabel').':</label>'
+                            .'<div class="editor-cover">'
+                            	.'<div class="textarea-cover">'
+                            		.'<textarea name="edit-content" class="editor-textarea editor-tiny" wrap="off" rows="15">'.str_replace('~', '&#126', $sql_return[0]['content']).'</textarea>'
+                            	.'</div>'
+                            	.'<div class="clear"></div>'
+                            .'</div>'
+                          .'</div>'
+                      .'</div>';
+            }
+                      
+            $returnTmp .= ''
+                      .'<div class="edit edit-submit">'
+                        .'<input type="hidden" name="parent-id" value="'.$parentId.'" />'
+                        .'<input type="hidden" name="page-id" value="'.$pageId.'" />';
+            if($type != "add-new-page" && $type != "page-add-lang-ver") {
+              $returnTmp .= '<input type="hidden" name="language" value="'.$langId.'" />';
+            }
+            $returnTmp .= '<input type="hidden" name="type" value="'.$type.'" />'
+                        .'<input type="submit" name="edit-save" value="'.$rb->get('page.action.save').'" /> '
+                        .'<input type="submit" name="edit-save" value="'.$rb->get('page.action.saveandclose').'" /> '
+                        .'<input type="submit" name="edit-close" value="'.$rb->get('page.action.close').'" /> '
+                      .'</div>'
+                    .' </form>';
+          } else {
+            $returnTmp .= '<h4 class="warning">'.$rb->get('page.warning.nopage').'</h4>';
+          }
+          //$returnTmp .= '</div>';
+          
+          if($langsCount) {
+          	$return .= parent::getFrame($frameTitle, $returnTmp, "page-editpage");
+          } else {
+						//$return .= parent::getFrame($frameTitle, '<h4 class="error">You can\'t add more language versions at this moment! Please, first, add language version to parent page or if this is root page, create more language versions in web application!</h4>', "");
+						$return .= parent::getFrame($frameTitle, '<h4 class="error">'.$rb-get('page.error.alllangversionsused').'</h4>', "");
+					}
+        } else {
+          $return .= parent::getFrame($frameTitle, '<h4 class="error">'.$rb->get('page.error.permissiondenied').'</h4>', "", true);
+        }
+      }
+      
+      return $return;
+		}
+    
+    /**
+     *
+     *  Generates table with informations about web pages.
+     *  C tag.     
+     *  
+     *  @param  editable  if true, it shows also form editing
+     *  @return formed list of web pages               
+     *
+     */                   
+    public function showPages($editable = false) {
+      global $dbObject;
+      global $loginObject;
+      global $webObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+      $return = '';
+      
+      $webObject->PageLog .= $_SERVER['REQUEST_URI'];
+      
+      $projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
+      if(count($projects) != 0) {
+      	if(array_key_exists('selected-project', $_SESSION)) {
+					$projectId = $_SESSION['selected-project'];
+					$test = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project`.`id` = '.$projectId.' AND `web_project_right`.`type` = '.WEB_R_WRITE.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
+					if(count($test) == 0) {
+						$projectId = $projects[0]['id']; 
+					}
+				} else {
+					$projectId = $projects[0]['id'];
+				}
+			} else {
+				if(array_key_exists('selected-project', $_SESSION)) {
+					$projectId = $_SESSION['selected-project'];
+				} else {
+					return parent::getFrame($rb->get('pagelist.title'), '<h4 class="warning">'.$rb->get('pagelist.warning.nopages').'</h4>', "page-pagelist", true);
+				}
+			}
+			
+			// save block ------------------------ 
+      
+      if($_POST['delete'] == $rb->get('pagelist.action.delete')) {
         $pageId = $_POST['page-id'];
         $languageId = $_POST['page-lang-id'];
           
@@ -307,14 +686,14 @@
 						$dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"%-".$pageId."\";");
 						$dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` = \"".$pageId."\";");
             
-            $return .= parent::getFrame("Success Message", '<h4 class="success">Page deleted!</h4>', "success", true);
+            $return .= '<h4 class="success">'.$rb->get('pagelist.success.deleted').'!</h4>';
           }
         } else {
-          $return .= parent::getFrame('Error Message', '<h4 class="error">Permission denied</h4><div>You can\'t delete this page.</div>', "", true);
+          $return .= '<h4 class="error">'.$rb->get('page.error.permissiondenied').'</h4>';
         }
       }
       
-      if($_POST['move-up'] == "Up") {
+      if($_POST['move-up'] == $rb->get('pagelist.action.up')) {
         $pageId = $_POST['page-id'];
         $pagePos = 0;
         
@@ -339,7 +718,7 @@
         } else {
           $return .= parent::getFrame('Error Message', '<h4 class="error">Position can\'t be updated!</h4>', '', true);
         }
-      } elseif($_POST['move-down'] == "Down") {
+      } elseif($_POST['move-down'] == $rb->get('pagelist.action.down')) {
         $pageId = $_POST['page-id'];
         $pagePos = 0;
         
@@ -362,15 +741,15 @@
           $dbObject->execute("UPDATE `info` SET `page_pos` = ".$prevSibPos." WHERE `page_id` = ".$pageId.";");
           $dbObject->execute("UPDATE `info` SET `page_pos` = ".$pagePos." WHERE `page_id` = ".$prevSibling.";");
         } else {
-          $return .= parent::getFrame('Error Message', '<h4 class="error">Position can\'t be updated!</h4>', '', true);
+          $return .= '<h4 class="error">'.$rb->get('pagelist.error.changeposition').'</h4>';
         }
-      } elseif($_POST['move-branch'] == "Move" || $_POST['copy-branch'] == "Copy") {
+      } elseif($_POST['move-branch'] == $rb->get('pagelist.action.move') || $_POST['copy-branch'] == $rb->get('pagelist.action.copy')) {
       	$pageId = $_POST['page-id'];
       	// test na prava!!!!!!!!!!!!!!!!!!!
       	
 				$returnMove = '';
 				
-				$projects = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `id`;');
+				$projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `id`;');
 				
 				$strProjects = '';
 				foreach($projects as $project) {
@@ -385,22 +764,22 @@
 				
 				$returnMove .= ''
 				.'<div class="move-copy-branch">'
-					.'<form name="move-copy-branch" method="post" action="">'
-						.'<label for="select-parent">Select parent page of branch:</label> '
+					.'<form name="move-copy-branch" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<label for="select-parent">'.$rb->get('pagelist.field.movecopyparent').':</label> '
 						.'<select class="select-webproject" name="select-parent" id="select-parent">'
 							.$strProjects
 						.'</select> '
 						.'<input type="hidden" name="page-id" value="'.$pageId.'" />'
-						.(($_POST['move-branch'] == "Move") ? ''
-						.'<input type="submit" name="move-branch-to" value="Move to" />'
+						.(($_POST['move-branch'] == $rb->get('pagelist.action.move')) ? ''
+						.'<input type="submit" name="move-branch-to" value="'.$rb->get('pagelist.action.moveto').'" />'
 						: ''
-						.'<input type="submit" name="copy-branch-to" value="Copy to" />'
+						.'<input type="submit" name="copy-branch-to" value="'.$rb->get('pagelist.action.copyto').'" />'
 						)
 					.'</form>'
 				.'</div>';
 				
-				$return .= parent::getFrame((($_POST['move-branch'] == "Move") ? 'Move branch' : 'Copy branch'), $returnMove, '', true);
-			} elseif($_POST['move-branch-to'] == "Move to") {
+				$return .= parent::getFrame((($_POST['move-branch'] == $rb->get('pagelist.action.move')) ? $rb->get('pagelist.action.moveto') : $rb->get('pagelist.action.copyto')), $returnMove, '', true);
+			} elseif($_POST['move-branch-to'] == $rb->get('pagelist.action.moveto')) {
 				$selectParent = $_POST['select-parent'];
 				$pageId = $_POST['page-id'];
       	// test na prava zapisu stranky !!!!!!!!!!!!!!!!!!!
@@ -431,15 +810,15 @@
 								self::rewriteProjectIdRecursivly($pageId, $projectID);
 							}
 						} else {
-							$return .= parent::getFrame('Error Message', '<h4 class="error">Permission Denied!</h4>', '', true);
+							$return .= '<h4 class="error">'.$rb->get('page.error.permissiondenied').'</h4>';
 						}
 					} else {
-						$return .= parent::getFrame('Error Message', '<h4 class="error">Some error ocurs!</h4>', '', true);
+						$return .= '<h4 class="error">'.$rb->get('pagelist.error.someerror').'!</h4>';
 					}
 				} else {
-					$return .= parent::getFrame('Error Message', '<h4 class="error">Permission Denied!</h4>', '', true);
+					$return .= '<h4 class="error">'.$rb->get('page.error.permissiondenied').'</h4>';
 				}
-			} elseif($_POST['copy-branch-to'] == "Copy to") {
+			} elseif($_POST['copy-branch-to'] == $rb->get('pagelist.action.copyto')) {
 				// Code for copying pages!! ;)
 			
 				$selectParent = $_POST['select-parent'];
@@ -506,7 +885,7 @@
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
-									$return .= parent::getFrame('Copied', '<h4 class="success">Pages have been copied!</h4>', '', true);
+									$return .= '<h4 class="success">'.$prb->get('pagelist.success.copied').'</h4>';
 								} else {
 									// zmenit url na nahodnou a vypsat ji.
 									// rekurzivne zkopirovat vsechny stranky atd.
@@ -536,7 +915,7 @@
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
-									$return .= parent::getFrame('Copied', '<h4 class="success">Pages have been copied!</h4><h4 class="warning">Url has been changed to "'.$randUrl.'"</h4>', '', true);
+									$return .= '<h4 class="success">'.$prb->get('pagelist.success.copied').'</h4><h4 class="warning">'.$rb->get('pagelist.warning.urlchanged').' "'.$randUrl.'"</h4>';
 								}
 							} else {
 								// Testovat url v dane parent vetvi, nekopirovat vazby na TF
@@ -569,7 +948,7 @@
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
-									$return .= parent::getFrame('Copied', '<h4 class="success">Pages have been copied!</h4>', '', true);
+									$return .= '<h4 class="success">'.$prb->get('pagelist.success.copied').'</h4>';
 								} else {
 									// zmenit url na nahodnou a vypsat ji.
 									// rekurzivne zkopirovat vsechny stranky atd.
@@ -599,313 +978,25 @@
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
-									$return .= parent::getFrame('Copied', '<h4 class="success">Pages have been copied!</h4><h4 class="warning">Url has been changed to "'.$randUrl.'"</h4>', '', true);
+									$return .= '<h4 class="success">'.$prb->get('pagelist.success.copied').'</h4><h4 class="warning">'.$rb->get('pagelist.warning.urlchanged').' "'.$randUrl.'"</h4>';
 								}
 							}
 						} else {
-							$return .= parent::getFrame('Error Message', '<h4 class="error">Permission Denied!</h4>', '', true);
+							$return .= '<h4 class="error">'.$rb->get('page.error.permissiondenied').'</h4>';
 						}
 					} else {
-						$return .= parent::getFrame('Error Message', '<h4 class="error">Some error ocurs!</h4>', '', true);
+						$return .= '<h4 class="error">'.$rb->get('pagelist.error.someerror').'!</h4>';
 					}
 				} else {
-					$return .= parent::getFrame('Error Message', '<h4 class="error">Permission Denied!</h4>', '', true);
+					$return .= '<h4 class="error">'.$rb->get('page.error.permissiondenied').'</h4>';
 				}
 			}
       
-      if($_POST['page-edit'] == "Edit" || $_POST['add-new-page'] == "Add new page" || $_POST['page-add-sub'] == "Add sub page" || $_POST['page-add-lang-ver'] == "Add Language version" || $errorOccurs == "true") {
-        $usedLangs = array();
-        $pageId = $_POST['page-id'] | 0;
-        $parentId = $_POST['parent-id'];
-        $langId = $_POST['page-lang-id'];
-        $langsCount = true;
-        
-        $rights = $dbObject->fetchAll('SELECT `group`.`name` FROM `group` LEFT JOIN `page_right` ON `group`.`gid` = `page_right`.`gid` WHERE `page_right`.`pid` = '.$pageId.' AND `page_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
-        
-				$ok = true;
-				if(count($rights) == 0) {
-					$ok = false;
-				}
-        /*if(count($rights) > 0) {
-          $ok = false;
-          foreach($rights as $right) {
-            foreach($loginObject->getGroups() as $u_gp) {
-              if($right['name'] == $u_gp['name']) {
-                $ok = true;
-              }
-            }
-          }
-        }*/
-        
-        if($ok) {
-          $right_pid = $pageId;
-          if($_POST['page-edit'] == "Edit") {
-            $type = "page-edit";
-          } else if($_POST['add-new-page'] == "Add new page") {
-            $type = "add-new-page";
-            $right_pid = $parentId;
-            $frameTitle = 'Add new page';
-          } else if($_POST['page-add-sub'] == "Add sub page") {
-            $type = "page-add-sub";
-            $frameTitle = 'Add sub page';
-          } else if($_POST['page-add-lang-ver'] == "Add Language version") {
-            $type = "page-add-lang-ver";
-            $parentId = $pageId;
-            $usedLangs = $dbObject->fetchAll("SELECT `language_id` FROM `info` WHERE `page_id` = ".$pageId.";");
-            $frameTitle = 'Add language version';
-          } else {
-            $type = "undefined";
-          }
-          if($_POST['page-edit'] == "Edit") {
-            $sql_return = $dbObject->fetchAll("SELECT `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content`, `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`cachetime` FROM `content` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `info`.`page_id` = ".$pageId." AND `info`.`language_id` = ".$langId.";");
-            $frameTitle = 'Edit page :: '.$sql_return[0]['name'];
-          } else {
-            $sql_return = array();
-            $sql_return[0]['in_title'] = 1;
-            $sql_return[0]['is_visible'] = 1;
-            $sql_return[0]['cachetime'] = -1;
-          }
-          
-          if($errorOccurs == "true") {
-            $sql_return[0]['name'] = $name;
-            $sql_return[0]['href'] = $href;
-            $sql_return[0]['in_title'] = $inTitle;
-            $sql_return[0]['in_menu'] = $inMenu;
-            $sql_return[0]['is_visible'] = $isVisible;
-            $sql_return[0]['head'] = $head;
-            $sql_return[0]['content'] = $content;
-            $sql_return[0]['tag_lib_start'] = $tlStart;
-            $sql_return[0]['tag_lib_end'] = $tlEnd;
-            $sql_return[0]['cachetime'] = $cacheTime;
-            $langId = $languageId;
-          }
-          
-          if($type == 'add-new-page') {
-  	        $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$projectId." AND `type` = ".WEB_R_READ.";");
-	          $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$projectId." AND `type` = ".WEB_R_WRITE.";");
-          	$groupsD = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$projectId." AND `type` = ".WEB_R_DELETE.";");
-					} else {
-    	      $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$right_pid." AND `type` = ".WEB_R_READ.";");
-  	        $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$right_pid." AND `type` = ".WEB_R_WRITE.";");
-	          $groupsD = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$right_pid." AND `type` = ".WEB_R_DELETE.";");
-					}
-          
-          $show = array('read' => true, 'write' => true, 'delete' => false);
-          $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
-          $groupSelectR = '<select id="right-edit-groups-r" name="right-edit-groups-r[]" multiple="multiple" size="5">';
-          $groupSelectW = '<select id="right-edit-groups-w" name="right-edit-groups-w[]" multiple="multiple" size="5">';
-          $groupSelectD = '<select id="right-edit-groups-d" name="right-edit-groups-d[]" multiple="multiple" size="5">';
-          foreach($allGroups as $group) {
-            $selectedR = false;
-            $selectedW = false;
-            $selectedD = false;
-            foreach($groupsR as $gp) {
-              if($gp['gid'] == $group['gid']) {
-                $selectedR = true;
-                $show['read'] = true;
-              }
-            }
-            foreach($groupsW as $gp) {
-              if($gp['gid'] == $group['gid']) {
-                $selectedW = true;
-                $show['write'] = true;
-              }
-            }
-            foreach($groupsD as $gp) {
-              if($gp['gid'] == $group['gid']) {
-                $selectedD = true;
-                $show['delete'] = true;
-              }
-            }
-            $groupSelectR .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-            $groupSelectW .= '<option'.(($selectedW) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-            $groupSelectD .= '<option'.(($selectedD) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-          }
-          $groupSelectR .= '</select>';
-          $groupSelectW .= '</select>';
-          $groupSelectD .= '</select>';
-          
-          $return .= '';
-          if(($type != "undefined" && (count($sql_return) == 1) || $type != "Edit")) {
-            $sql_return[0]['tag_lib_start'] = str_replace("&", "&amp;", $sql_return[0]['tag_lib_start']);
-            $sql_return[0]['tag_lib_end'] = str_replace("&", "&amp;", $sql_return[0]['tag_lib_end']);
-            $sql_return[0]['head'] = str_replace("&", "&amp;", $sql_return[0]['head']);
-            $sql_return[0]['content'] = str_replace("&", "&amp;", $sql_return[0]['content']);
-            $sql_return[0]['head'] = str_replace(">", "&gt;", $sql_return[0]['head']);
-            $sql_return[0]['head'] = str_replace("<", "&lt;", $sql_return[0]['head']);
-            $sql_return[0]['content'] = str_replace(">", "&gt;", $sql_return[0]['content']);
-            $sql_return[0]['content'] = str_replace("<", "&lt;", $sql_return[0]['content']);
-            
-            $returnTmp .= ''
-                      .'<form name="edit" method="post" action="">'
-                      .'<div class="edit edit-page-info">'
-                        .'<div class="edit edit-prop">'
-                          .'<div class="edit edit-name">'
-                            .'<label for="edit-name">Name:</label> '
-                            .'<input type="text" name="edit-name" id="edit-name" value="'.$sql_return[0]['name'].'" />'
-                          .'</div>'
-                          .'<div class="edit edit-href">'
-                            .'<label for="edit-href">Href:</label> '
-                            .'<input type="text" name="edit-href" id="edit-href" value="'.$sql_return[0]['href'].'" />'
-                          .'</div>'
-                          .'<div class="edit edit-in-title">'
-                            .'<label for="edit-in-title">in title:</label> '
-                            .'<input type="checkbox" name="edit-in-title" id="edit-in-title"'.(($sql_return[0]['in_title'] == 1) ? 'checked="checked"' : '').' />'
-                          .'</div>'
-                          .'<div class="edit edit-menu">'
-                            .'<label for="edit-menu">in menu:</label> '
-                            .'<input type="checkbox" name="edit-menu" id="edit-menu"'.(($sql_return[0]['in_menu'] == 1) ? 'checked="checked"' : '').' />'
-                          .'</div>'
-                          .'<div class="edit edit-visible">'
-                            .'<label for="edit-visible">is visible:</label> '
-                            .'<input type="checkbox" name="edit-visible" id="edit-visible"'.(($sql_return[0]['is_visible'] == 1) ? 'checked="checked"' : '').' />'
-                          .'</div>'
-                          .'<div class="edit edit-clear-cache">'
-                            .'<label for="edit-clearurlcache">clear urlcache:</label> '
-                            .'<input type="checkbox" name="edit-clearurlcache" id="edit-clearurlcache" />'
-                          .'</div>'
-                          .'<div class="edit edit-cache-time">'
-                            .'<label for="edit-cachetime">cache time:</label>'
-                            .'<select id="edit-cachetime" name="edit-cachetime">'
-                            	.'<option value="-1"'.(($sql_return[0]['cachetime'] == -1) ? 'selected="selected"' : '').'>Don\'t use</option>'
-                            	.'<option value="60"'.(($sql_return[0]['cachetime'] == 60) ? 'selected="selected"' : '').'>1 minute</option>'
-                            	.'<option value="3600"'.(($sql_return[0]['cachetime'] == 3600) ? 'selected="selected"' : '').'>1 hour</option>'
-                            	.'<option value="86400"'.(($sql_return[0]['cachetime'] == 86400) ? 'selected="selected"' : '').'>1 day</option>'
-                            	.'<option value="0"'.(($sql_return[0]['cachetime'] == 0) ? 'selected="selected"' : '').'>Unlimited</option>'
-                            .'</select>'
-                          .'</div>';
-            if($type == "add-new-page" || $type == "page-add-lang-ver") {
-              $returnTmp .= 
-                          '<div class="edit edit-language">'
-                          .'<label for="select-language">Laguage: </label>'
-                          .'<select id="select-language" name="language">';
-              $parentPage = $dbObject->fetchAll('SELECT `parent_id` FROM `page` WHERE `id` = '.$pageId.';');
-              if($type == "page-add-lang-ver" && $parentPage[0]['parent_id']) {
-								$langs = $dbObject->fetchAll("SELECT `language`.`id`, `language`.`language` FROM `language` LEFT JOIN `info` ON `language`.`id` = `info`.`language_id` WHERE `info`.`page_id` = ".$parentPage[0]['parent_id']." ORDER BY `language`.`language`;");
-							} else {
-              	$langs = $dbObject->fetchAll("SELECT `language`.`id`, `language`.`language` FROM `language` ORDER BY `language`.`language`;");
-              	
-							} 
-							$iOk = 0; 
-              foreach($langs as $lang) {
-                $ok = true;
-                foreach($usedLangs as $usedLang) {
-                  if(in_array($lang['id'], $usedLang)) {
-                    $ok = false;
-                  }
-                }
-                if($ok) {
-                  $returnTmp .= '<option value="'.$lang['id'].'">'.$lang['language'].'</option>';
-                  $iOk ++;
-                }
-              }
-              
-              if($iOk == 0) {
-								$langsCount = false;
-							}
-              $returnTmp .= '</select></div>';
-            }
-                $returnTmp .= ''
-                        .'</div>'
-                        .'<div class="edit edit-rights">'
-                        	.(($show['read']) ? ''
-                          .'<div class="edit edit-right-read">'
-                            .'<label for="right-edit-groups-r">Read</label>'
-                            .$groupSelectR
-                          .'</div>'
-                          : '')
-                          .(($show['write']) ? ''
-                          .'<div class="edit edit-right-write">'
-                            .'<label for="right-edit-groups-w">Write</label>'
-                            .$groupSelectW
-                          .'</div>'
-                          : '')
-                          .(($show['delete']) ? ''
-                          .'<div class="edit edit-right-delete">'
-                            .'<label for="right-edit-groups-d">Delete</label>'
-                            .$groupSelectD
-                          .'</div>'
-                          : '')
-                          .'<div class="clear"></div>'
-                        .'</div>'
-                        .'<div class="clear"></div>'
-                        .'<div class="edit edit-keywords">'
-                          .'<label for="edit-keywords">Key words:</label> '
-                          .'<input id="edit-keywords" type="text" name="edit-keywords" value="'.$sql_return[0]['keywords'].'" />'
-                        .'</div>'
-                        .'<div class="clear"></div>'
-                      .'</div>'
-                      .'<div class="clear"></div>'
-                      .'<div class="edit edit-tag-lib">'
-                          .'<div class="edit edit-tl-start">'
-                            .'<label for="edit-tl-start">Tag lib start:</label>'
-                            .'<div class="editor-cover">'
-                            	.'<div class="textarea-cover">'
-                            		.'<textarea name="edit-tl-start" class="editor-textarea editor-closed" wrap="off" rows="4">'.str_replace('~', '&#126', $sql_return[0]['tag_lib_start']).'</textarea>'
-                            	.'</div>'
-                            	.'<div class="clear"></div>'
-                            .'</div>'
-                          .'</div>'
-                          .'<div class="edit edit-tl-end">'
-                            .'<label for="edit-tl-end">Tag lib end:</label>'
-                            .'<div class="editor-cover">'
-                            	.'<div class="textarea-cover">'
-                            		.'<textarea name="edit-tl-end" class="editor-textarea editor-closed" wrap="off" rows="4">'.str_replace('~', '&#126', $sql_return[0]['tag_lib_end']).'</textarea>'
-                            	.'</div>'
-                            	.'<div class="clear"></div>'
-                            .'</div>'
-                          .'</div>'
-                      .'</div>'
-                      .'<div class="edit edit-content">'
-                          .'<div class="edit edit-head">'
-                            .'<label for="edit-head">Head:</label>'
-                            .'<div class="editor-cover">'
-                            	.'<div class="textarea-cover">'
-                            		.'<textarea name="edit-head" class="editor-textarea editor-closed" wrap="off" rows="4">'.str_replace('~', '&#126', $sql_return[0]['head']).'</textarea>'
-                            	.'</div>'
-                            	.'<div class="clear"></div>'
-                            .'</div>'
-                          .'</div>'
-                          .'<div class="edit edit-content">'
-                            .'<label for="edit-content">Content:</label>'
-                            .'<div class="editor-cover">'
-                            	.'<div class="textarea-cover">'
-                            		.'<textarea name="edit-content" class="editor-textarea editor-tiny" wrap="off" rows="15">'.str_replace('~', '&#126', $sql_return[0]['content']).'</textarea>'
-                            	.'</div>'
-                            	.'<div class="clear"></div>'
-                            .'</div>'
-                          .'</div>'
-                      .'</div>'
-                      .'<div class="edit edit-submit">'
-                        .'<input type="hidden" name="parent-id" value="'.$parentId.'" />'
-                        .'<input type="hidden" name="page-id" value="'.$pageId.'" />';
-            if($type != "add-new-page" && $type != "page-add-lang-ver") {
-              $returnTmp .= '<input type="hidden" name="language" value="'.$langId.'" />';
-            }
-            $returnTmp .= '<input type="hidden" name="type" value="'.$type.'" />'
-                        .'<input type="submit" name="edit-save" value="Save" /> '
-                        .'<input type="submit" name="edit-save" value="Save and Close" /> '
-                        .'<input type="submit" name="edit-close" value="Close" /> '
-                      .'</div>'
-                    .' </form>';
-          } else {
-            $returnTmp .= '<h4 class="error">No page selected!</h4>';
-          }
-          //$returnTmp .= '</div>';
-          
-          if($langsCount) {
-          	$return .= parent::getFrame($frameTitle, $returnTmp, "page-editpage");
-          } else {
-						$return .= parent::getFrame($frameTitle, '<h4 class="error">You can\'t add more language versions at this moment! Please, first, add language version to parent page or if this is root page, create more language versions in web application!</h4>', "");
-					}
-        } else {
-          $return .= parent::getFrame('Error Message', '<h4 class="error">Permission denied</h4><div>You can\'t write this page.</div>', "", true);
-        }
-      } 
+      // edit block -------------- 
 			
 			$returnTmp = '';
 			
-			if($_POST['remove-files'] == "Remove selected") {
+			if($_POST['remove-files'] == $rb->get('pagelist.action.removeselected')) {
         $pageId = $_POST['page-id'];
         $langId = $_POST['page-lang-id'];
         $files = $_POST['files'];
@@ -923,9 +1014,9 @@
         
         $dbObject->execute("DELETE FROM `page_file_inc` WHERE `file_id` = ".$fileId." AND `page_id` = ".$pageId." AND `language_id` = ".$langId.";");
         */
-        $returnTmp = '<h4 class="success">Text files have been removed!</h4>';
-        $_POST['added-files'] = "Added files";
-      } elseif($_POST['add-files'] == "Add selected") {
+        //$returnTmp = '<h4 class="success">'.$rb->get('pagelist.success.removed').'</h4>';
+        $_POST['added-files'] = $rb->get('pagelist.action.addedfiles');
+      } elseif($_POST['add-files'] == $rb->get('pagelist.action.addselected')) {
         //print_r($_POST);
         $pageId = $_POST['page-id'];
         $langId = $_POST['page-lang-id'];
@@ -938,11 +1029,11 @@
         }
         //$return .= parent::getFrame("Success Message", '<h4 class="success">Files successfully inserted!</h4>', "", true);
         
-        $returnTmp = '<h4 class="success">Text files have been added!</h4>';
-        $_POST['added-files'] = "Added files";
+        //$returnTmp = '<h4 class="success">'.$rb->get('pagelist.success.added').'</h4>';
+        $_POST['added-files'] = $rb->get('pagelist.action.addedfiles');
       }
 			
-			if($_POST['added-files'] == "Added files") {
+			if($_POST['added-files'] == $rb->get('pagelist.action.addedfiles')) {
         $pageId = $_POST['page-id'];
         $langId = $_POST['page-lang-id'];
         $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
@@ -951,10 +1042,10 @@
         
         if(count($files) != 0) {
         	$returnTmp .= ''
-        				.'<form name="files-to-remove" method="post" action="">'
+        				.'<form name="files-to-remove" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
                 .'<table class="page-file-list">'
                   .'<tr class="file-tr">'
-                    .'<th colspan="4" class="file-head-th">Added Files</th>'
+                    .'<th colspan="4" class="file-head-th">'.$rb->get('pagelist.field.addedfiles').':</th>'
                   .'</tr>';
           $i = 1;
         	foreach($files as $file) {
@@ -974,7 +1065,7 @@
                       .'</td>'
                       /*.'<td>'
                         .(($editable) ? ''
-                        .'<form name="process-file" method="post" action="">'
+                        .'<form name="process-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
                           .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
                           .'<input type="hidden" name="page-id" value="'.$pageId.'" />'
                           .'<input type="hidden" name="page-lang-id" value="'.$langId.'" />'
@@ -993,23 +1084,23 @@
 	        				.'<div class="add-rem-text-files-submit">'
     	              .'<input type="hidden" name="page-id" value="'.$pageId.'" />'
   	                .'<input type="hidden" name="page-lang-id" value="'.$langId.'" />'
-	                  .'<input type="submit" name="remove-files" value="Remove selected" />'
+	                  .'<input type="submit" name="remove-files" value="'.$rb->get('pagelist.action.removeselected').'" />'
                   .'</div>'
 									.'</form><div class="break"></div>';
   	      //$return1 = parent::getFrame('Added files', $returnTmp, '');
 	        $return1 = $returnTmp;
         } else {
-					$return1 = '<h4 class="warning">No files added!</h4>';
+					$return1 = '<h4 class="warning">'.$rb->get('pagelist.warning.nofilesadded').'</h4>';
 				}
                   
         
         $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` LEFT JOIN `page_file_inc` ON `page_file`.`id` = `page_file_inc`.`file_id` WHERE `id` NOT IN (SELECT `file_id` FROM `page_file_inc` WHERE `page_id` = ".$pageId." AND `language_id` = ".$langId.") AND `wp` = ".$_SESSION['selected-project']." ORDER BY `id`;");
         if(count($files) != 0) {
   	      $returnTmp = ''
-                .'<form name="files-to-add" method="post" action="">'
+                .'<form name="files-to-add" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
                 .'<table class="page-file-list">'
                   .'<tr class="file-tr">'
-                    .'<th colspan="4" class="file-head-th">Files to Add</th>'
+                    .'<th colspan="4" class="file-head-th">'.$rb->get('pagelist.field.filestoadd').'</th>'
                   .'</tr>';
 	        $i = 1;
         	foreach($files as $file) {
@@ -1033,15 +1124,15 @@
 	        				.'<div class="add-rem-text-files-submit">'
     	              .'<input type="hidden" name="page-id" value="'.$pageId.'" />'
   	                .'<input type="hidden" name="page-lang-id" value="'.$langId.'" />'
-	                  .'<input type="submit" name="add-files" value="Add selected" />'
+	                  .'<input type="submit" name="add-files" value="'.$rb->get('pagelist.action.addselected').'" />'
                   .'</div>'
                   .'</form>';
         	//$return2 = parent::getFrame('Files to add', $returnTmp, '');
         	$return2 = $returnTmp;
         } else {
-					$return2 = '<h4 class="warning">No files to add!</h4>';
+					$return2 = '<h4 class="warning">'.$rb->get('pagelist.warning.nofilestoadd').'</h4>';
 				}
-        $return .= parent::getFrame('Text Files', $return1.$return2, 'page-textfiles');
+        $return .= parent::getFrame($rb->get('pagelist.textfilestitle'), $return1.$return2, 'page-textfiles');
       }
       
       if($_POST['select-lang'] == "Select") {
@@ -1064,18 +1155,27 @@
       $returnTmp .= '<div class="pages-list-in">';
       $returnTmp .= self::generatePageList(0, $editable, 0, $projectId);
       $returnTmp .= '</div></div>';
-      $return .= parent::getFrame('Page List', $returnTmp, 'page-pagelist');
+      //$return .= parent::getFrame($rb->get('pagelist.title'), $returnTmp, 'page-pagelist');
       
       if($_SESSION['selected-project'] != null) {
       	$returnTmp = ''
 				.'<div class="add-page">'
-	        .'<form name="add-page" method="post" action="">'
-  	      	.'<input type="hidden" name="parent-id" value="0" />'
-    	  		.'<input type="submit" name="add-new-page" value="Add new page" />'
-    		  .'</form>'
-  	    .'</div>';
-	      $return .= parent::getFrame('New Page', $returnTmp, 'page-newlist');
+					.'<ul>'
+						.'<li>'
+							.$rb->get('page.newpagecaption')
+	    			    .'<form name="add-page" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+			  	      	.'<input type="hidden" name="parent-id" value="0" />'
+			  	      	.'<input type="hidden" name="add-new-page" value="'.$rb->get('page.action.addpage').'" />'
+    	  					.'<input type="image" src="~/images/page_add.png" name="add-new-page" value="'.$rb->get('page.action.addpage').'" />'
+		  	  		  .'</form>'
+    			  	.'</li>'
+    		  	.'</ul>'
+  	    .'</div>'
+				.'<hr />'
+				.$returnTmp;
+	      //$return .= parent::getFrame($rb->get('pagelist.newtitle'), $returnTmp, 'page-newlist');
       }
+      $return .= parent::getFrame($rb->get('pagelist.title'), $returnTmp, 'page-pagelist');
       
       return $return;
     }
@@ -1094,10 +1194,12 @@
     private function generatePageList($parentId, $editable, $inn, $projectId) {
       global $dbObject;
       global $webObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
       
       $sql_return = $dbObject->fetchAll("SELECT `page`.`parent_id`, `page`.`id` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = ".$parentId." AND `page`.`wp` = ".$projectId." GROUP BY `page`.`id` ORDER BY `info`.`page_pos`;");
       if(count($sql_return) == 0 && $parentId == 0) {
-				return '<h4 class="error">No pages to show!</h4>';
+				return '<h4 class="warning">'.$rb->get('pagelist.warning.nopages').'</h4>';
 			}
       if(count($sql_return) > 0) $return .= '<ul class="inn-'.$inn.'">';
       $count = 0;
@@ -1131,71 +1233,71 @@
 							.'<span class="page-language">'
 								.'<a target="_blank" href="'.$webObject->composeUrl($tmp['id'], $inf['lang_id']).'">'.((strlen($inf['language']) != 0) ? $inf['language'] : "-").'</a>'
 							.'</span>'
-							.'<form name="page1" method="post" action="">'
+							.'<form name="page1" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="form-page1">'
                 .'<input type="hidden" name="page-id" value="'.$tmp['id'].'" /> '
                 .'<input type="hidden" name="parent-id" value="'.$tmp['id'].'" /> '
                 .'<input type="hidden" name="page-lang-id" value="'.$inf['lang_id'].'" /> '
-                .'<input type="hidden" name="page-edit" value="Edit" /> '
-                .'<input type="image" title="Edit" src="'.WEB_ROOT.'images/page_edi.png" name="page-edit" value="Edit" /> '
+                .'<input type="hidden" name="page-edit" value="'.$rb->get('pagelist.field.edit').'" /> '
+                .'<input type="image" title="'.$rb->get('pagelist.field.edit').'" src="'.WEB_ROOT.'images/page_edi.png" name="page-edit" value="'.$rb->get('page.action.edit').'" /> '
               .'</form>'
-							.'<form name="page2" method="post" action="">'
+							.'<form name="page2" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="form-page2">'
                 .'<input type="hidden" name="page-id" value="'.$tmp['id'].'" /> '
                 .'<input type="hidden" name="parent-id" value="'.$tmp['id'].'" /> '
                 .'<input type="hidden" name="page-lang-id" value="'.$inf['lang_id'].'" /> '
-                .'<input type="hidden" name="page-add-sub" value="Add sub page" /> '
-                .'<input type="image" title="Add sub page" src="'.WEB_ROOT.'images/page_add.png" name="page-add-sub" value="Add sub page" /> '
+                .'<input type="hidden" name="page-add-sub" value="'.$rb->get('page.action.addsubpage').'" /> '
+                .'<input type="image" title="'.$rb->get('page.action.addsubpage').'" src="'.WEB_ROOT.'images/page_add.png" name="page-add-sub" value="'.$rb->get('page.action.addsubpage').'" /> '
               .'</form>'
-							.'<form name="page3" method="post" action="">'
+							.'<form name="page3" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="form-page3">'
                 .'<input type="hidden" name="page-id" value="'.$tmp['id'].'" /> '
                 .'<input type="hidden" name="parent-id" value="'.$tmp['id'].'" /> '
                 .'<input type="hidden" name="page-lang-id" value="'.$inf['lang_id'].'" /> '
-                .'<input type="hidden" name="added-files" value="Added files" /> '
-                .'<input type="image" title="Included files" src="'.WEB_ROOT.'images/file_bws.png" name="added-files" value="Added files" /> '
+                .'<input type="hidden" name="added-files" value="'.$rb->get('pagelist.field.addedfiles').'" /> '
+                .'<input type="image" title="'.$rb->get('pagelist.field.addedfiles').'" src="'.WEB_ROOT.'images/file_bws.png" name="added-files" value="'.$rb->get('pagelist.action.addedfiles').'" /> '
               .'</form>'
               .((!$parent || !$thisParent) ? ''
-							.'<form name="page4" method="post" action="">'
+							.'<form name="page4" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="form-page4">'
                 .'<input type="hidden" name="page-id" value="'.$tmp['id'].'" /> '
                 .'<input type="hidden" name="parent-id" value="'.$tmp['id'].'" /> '
                 .'<input type="hidden" name="page-lang-id" value="'.$inf['lang_id'].'" /> '
-                .'<input type="hidden" name="delete" value="Delete" /> '
-                .'<input class="confirm" type="image" title="Delete language version, id('.$tmp['id'].')" src="'.WEB_ROOT.'images/lang_del.png" name="delete" value="Delete" />'
+                .'<input type="hidden" name="delete" value="'.$rb->get('pagelist.action.delete').'" /> '
+                .'<input class="confirm" type="image" title="'.$rb->get('pagelist.field.delete2').', id('.$tmp['id'].')" src="'.WEB_ROOT.'images/lang_del.png" name="delete" value="'.$rb->get('pagelist.action.delete').'" />'
               .'</form>'
               : '')
 						.'</div> } ';
           }
           $innText .= ''
           .'[ '
-					.'<form name="page-move1" method="post" action="">'
+					.'<form name="page-move1" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="page-move1">'
           	.'<input type="hidden" name="page-id" value="'.$tmp['id'].'" />'
-          	.'<input type="hidden" name="move-branch" value="Move" />'
-            .'<input type="image" src="'.WEB_ROOT.'images/page_mov.png" title="Move Branch" name="move-branch" value="Move" />'
+          	.'<input type="hidden" name="move-branch" value="'.$rb->get('pagelist.action.move').'" />'
+            .'<input type="image" src="'.WEB_ROOT.'images/page_mov.png" title="'.$rb->get('pagelist.field.move').'" name="move-branch" value="'.$rb->get('pagelist.action.move').'" />'
           .'</form> '
-					.'<form name="page-move2" method="post" action="">'
+					.'<form name="page-move2" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="page-move2">'
           	.'<input type="hidden" name="page-id" value="'.$tmp['id'].'" />'
-          	.'<input type="hidden" name="copy-branch" value="Copy" />'
-            .'<input type="image" src="'.WEB_ROOT.'images/page_cop.png" title="Copy Branch" name="copy-branch" value="Copy" />'
+          	.'<input type="hidden" name="copy-branch" value="'.$rb->get('pagelist.action.copy').'" />'
+            .'<input type="image" src="'.WEB_ROOT.'images/page_cop.png" title="'.$rb->get('pagelist.field.copy').'" name="copy-branch" value="'.$rb->get('pagelist.action.copy').'" />'
           .'</form> '
-					.'<form name="page-move3" method="post" action="">'
+					.'<form name="page-move3" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="page-move3">'
           	.'<input type="hidden" name="page-id" value="'.$tmp['id'].'" /> '
-          	.'<input type="hidden" name="move-up" value="Up" /> '
-            .'<input type="image" src="'.WEB_ROOT.'images/arro_up.png" title="Move Page Up" name="move-up" value="Up" />'
+          	.'<input type="hidden" name="move-up" value="'.$rb->get('pagelist.action.up').'" /> '
+            .'<input type="image" src="'.WEB_ROOT.'images/arro_up.png" title="'.$rb->get('pagelist.field.up').'" name="move-up" value="'.$rb->get('pagelist.action.up').'" />'
           .'</form>'
-					.'<form name="page-move4" method="post" action="">'
+					.'<form name="page-move4" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="page-move4">'
           	.'<input type="hidden" name="page-id" value="'.$tmp['id'].'" /> '
-          	.'<input type="hidden" name="move-down" value="Down" /> '
-            .'<input type="image" src="'.WEB_ROOT.'images/arro_do.png" title="Move Page Down" name="move-down" value="Down" />'
+          	.'<input type="hidden" name="move-down" value="'.$rb->get('pagelist.action.down').'" /> '
+            .'<input type="image" src="'.WEB_ROOT.'images/arro_do.png" title="'.$rb->get('pagelist.field.down').'" name="move-down" value="'.$rb->get('pagelist.action.down').'" />'
           .'</form>'
           .'] '
-					.'<form name="page-add-lang1" method="post" action="">'
+					.'<form name="page-add-lang1" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="page-add-lang1">'
           	.'<input type="hidden" name="page-id" value="'.$tmp['id'].'" /> '
-          	.'<input type="hidden" name="page-add-lang-ver" value="Add Language version" /> '
-            .'<input type="image" title="Add language version" src="'.WEB_ROOT.'images/lang_add.png" name="page-add-lang-ver" value="Add Language version" /> '
+          	.'<input type="hidden" name="page-add-lang-ver" value="'.$rb->get('page.action.addlang').'" /> '
+            .'<input type="image" title="'.$rb->get('pagelist.field.addlang').'" src="'.WEB_ROOT.'images/lang_add.png" name="page-add-lang-ver" value="'.$rb->get('page.action.addlang').'" /> '
           .'</form>'
           .((count($dbObject->fetchAll("SELECT `id` FROM `page` WHERE `parent_id` = ".$tmp['id'].";")) == 0) ? ''
-					.'<form name="page-add-lang2" method="post" action="">'
+					.'<form name="page-add-lang2" method="post" action="'.$_SERVER['REDIRECT_URL'].'" class="page-add-lang2">'
           	.'<input type="hidden" name="page-id" value="'.$tmp['id'].'" /> '
-          	.'<input type="hidden" name="delete" value="Delete" /> '
-            .'<input class="confirm" type="image" title="Delete page, id('.$tmp['id'].')" src="'.WEB_ROOT.'images/page_del.png" name="delete" value="Delete" />'
+          	.'<input type="hidden" name="delete" value="'.$rb->get('pagelist.action.delete').'" /> '
+            .'<input class="confirm" type="image" title="'.$rb->get('pagelist.field.delete').', id('.$tmp['id'].')" src="'.WEB_ROOT.'images/page_del.png" name="delete" value="'.$rb->get('pagelist.action.delete').'" />'
           .'</form>'
           : '')
           .' )</span>';
@@ -1265,20 +1367,10 @@
 			
 			}
 		}
-    
-    /**
-     *
-     *  Generates table with informations about page files.
-     *  C tag.     
-     *  
-     *  @param  editable  if true, it shows also form editing
-     *  @return formed list of page files
-     *
-     */                        
-    public function showPageFiles($editable = false) {
+		
+		public function showEditPageFile() {
       global $dbObject;
       global $loginObject;
-      $editable = (strtolower($editable) == "true") ? true : false;
       $return = "";
       $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
       
@@ -1286,12 +1378,6 @@
       if(count($projects) != 0) {
       	if(array_key_exists('selected-project', $_SESSION)) {
 					$projectId = $_SESSION['selected-project'];
-					/*$test = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project`.`id` = '.$projectId.' AND `web_project_right`.`type` = '.WEB_R_WRITE.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
-					if(count($test) == 0) {
-						$projectId = $_SESSION['selected-project'];
-					} else {
-						$projectId = $projects[0]['id'];
-					}*/
 				} else {
 					$projectId = $projects[0]['id'];
 				}
@@ -1299,11 +1385,11 @@
 				if(array_key_exists('selected-project', $_SESSION)) {
 					$projectId = $_SESSION['selected-project'];
 				} else {
-					return parent::getFrame("Text file list", '<h4 class="error">No files to edit!</h4>', "", true);
+					// dont care.
 				}
 			}
       
-      if($_POST['add-file'] == "New file") {
+			if($_POST['add-file'] == "New file") {
         $fileTypesOpt = "";
         foreach($filesEx as $key => $ext) {
           $fileTypesOpt .= '<option value="'.$key.'">'.$ext.'</option>';
@@ -1375,6 +1461,48 @@
         }
       }
       
+      return $return;
+		}
+    
+    /**
+     *
+     *  Generates table with informations about page files.
+     *  C tag.     
+     *  
+     *  @param  editable  if true, it shows also form editing
+     *  @return formed list of page files
+     *
+     */                        
+    public function showPageFiles($editable = false) {
+      global $dbObject;
+      global $loginObject;
+      $editable = (strtolower($editable) == "true") ? true : false;
+      $return = "";
+      $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
+      
+      $projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
+      if(count($projects) != 0) {
+      	if(array_key_exists('selected-project', $_SESSION)) {
+					$projectId = $_SESSION['selected-project'];
+					/*$test = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project`.`id` = '.$projectId.' AND `web_project_right`.`type` = '.WEB_R_WRITE.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
+					if(count($test) == 0) {
+						$projectId = $_SESSION['selected-project'];
+					} else {
+						$projectId = $projects[0]['id'];
+					}*/
+				} else {
+					$projectId = $projects[0]['id'];
+				}
+			} else {
+				if(array_key_exists('selected-project', $_SESSION)) {
+					$projectId = $_SESSION['selected-project'];
+				} else {
+					return parent::getFrame("Text file list", '<h4 class="error">No files to edit!</h4>', "", true);
+				}
+			}
+      
+      // text file form block ---------------------
+      
       if($_POST['delete-file'] == "Delete") {
         $fileId = $_POST['file-id'];
         $dbObject->execute("DELETE FROM `page_file_inc` WHERE `file_id` = ".$fileId.";");
@@ -1385,14 +1513,17 @@
       $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` WHERE `wp` = ".$projectId." ORDER BY `id`;");
       if(count($files) != 0) {
 	      $returnTmp .= ''
-  	    .'<table class="page-file-list">'
+  	    .'<table class="page-file-list data-table">'
+  	    	.'<thead>'
     	  	.'<tr class="file-tr">'
       			.'<th class="">Id</th>'
       			.'<th class="">Name</th>'
       			.'<th class="">Content</th>'
 	      		.'<th class="">Type</th>'
   	    		.'<th class="">Edit</th>'
-					.'</tr>';     
+					.'</tr>'
+					.'</thead>'
+					.'<tbody>';     
       	foreach($files as $file) {
         	$returnTmp .= '' 
 					.'<tr class="file-tr '.(($n % 2) ? 'idle' : 'even').'">'
@@ -1410,12 +1541,12 @@
             .'</td>'
             .'<td>'
             	.(($editable) ? ''
-              .'<form name="process-file1" method="post" action="">'
+              .'<form name="process-file1" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
               	.'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
                 .'<input type="hidden" name="edit-file" value="Edit" />'
                 .'<input type="image" src="'.WEB_ROOT.'images/page_edi.png" name="edit-file" value="Edit" title="Edit file" /> '
               .'</form>'
-              .'<form name="process-file2" method="post" action="">'
+              .'<form name="process-file2" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
               	.'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
                 .'<input type="hidden" name="delete-file" value="Delete" />'
                 .'<input class="confirm" type="image" src="'.WEB_ROOT.'images/page_del.png" name="delete-file" value="Delete" title="Delete file, id('.$file['id'].')" />'
@@ -1425,17 +1556,19 @@
           .'</tr>';
         	$n ++;
       	}
-      	$returnTmp .= '</table>';
-      	$return .= parent::getFrame('Text files', $returnTmp, '');
+      	$returnTmp .= '</tbody></table>';
+      	//$return .= parent::getFrame('Text files', $returnTmp, '');
       } else {
-				$return .= parent::getFrame('Text files', '<h4 class="error">No files to edit!</h4>', '');
+				//$return .= parent::getFrame('Text files', '<h4 class="error">No files to edit!</h4>', '');
+				$returnTmp .= '<h4 class="error">No files to edit!</h4>';
 			}
       
-      $returnTmp = ''
-      .'<form name="add-file" method="post" action="">'
+      $returnTmp .= ''
+      .'<hr />'
+      .'<form name="add-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
       	.'<input type="submit" name="add-file" value="New file" title="Create new file" />'
       .'</form>';
-      $return .= parent::getFrame('New Text File', $returnTmp, '');
+      $return .= parent::getFrame('Text Files', $returnTmp, '');
       return $return;
     }
     
@@ -1445,6 +1578,7 @@
      *
      */                        
     private function getFileUpdateForm($fileId, $fileName, $fileContent, $browsers, $fileTypes) {
+    	include_once('System.class.php');
     	$htmlBrowsers = '';
     	foreach($browsers as $browser => $value) {
 				$htmlBrowsers .= ''
@@ -1455,7 +1589,7 @@
 			}
     
       $returnTmp = ''
-                .'<form name="edit-file" method="post" action="">'
+                .'<form name="edit-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
                   .'<div class="edit-file-name">'
                     .'<div class="text-file-prop">'
                       .'<div class="text-file-name">'
@@ -1473,14 +1607,32 @@
                       .'</div>'
                       .'<div class="clear"></div>'
                     .'</div>'
-                    .'<div class="text-file-content">'
+                    .'<div class="text-file-content">';
+			
+      $name = 'Page.editors';
+    	$system = new System();
+			$propertyEditors = $system->getPropertyValue($name);
+		  $editAreaTextFileRows = $system->getPropertyValue('Page.editAreaTextFileRows');
+		  
+		  if($propertyEditors == "edit_area") {
+		  	$returnTmp .= ''
+					.'<div id="editors" class="editors edit-area-editors">'
+						.'<div id="cover-page-file-content">'
+							.'<label for="file-content">File content:</label>'
+							.'<textarea id="file-content" class="edit-area html" name="file-content" rows="'.($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30).'" wrap="off">'.str_replace('~', '&#126', $fileContent).'</textarea>'
+						.'</div>'
+					.'</div>';
+			} else {
+      	$returnTmp .= ''
                       .'<label for="file-content">Content:</label> '
                       .'<div class="editor-cover">'
                       	.'<div class="textarea-cover">'
                       		.'<textarea name="file-content" class="editor-textarea" rows="15" wrap="off">'.str_replace('~', '&#126', $fileContent).'</textarea> '
                       	.'</div>'
                       	.'<div class="clear"></div>'
-                      .'</div>'
+                      .'</div>';
+      } 
+      $returnTmp .= ''
                     .'</div>'
                     .'<div class="text-file-submit">'
                       .(($fileId != -1) ? '<input type="hidden" name="file-id" value="'.$fileId.'" />' : '')
@@ -1490,7 +1642,7 @@
                     .'</div>'
                   .'</div>'
                 .'</form>';
-      return parent::getFrame('Edit file'.((strlen($fileName) != 0) ? ' :: '.$fileName : ''), $returnTmp, '');
+      return parent::getFrame('Edit file'.((strlen($fileName) != 0) ? ' :: '.$fileName.' ( '.$fileId.' )' : ''), $returnTmp, '');
     }
     
     /**
@@ -1513,7 +1665,7 @@
 			$returnForm = ''
 			.((strlen($msg) > 0) ? $msg : '' )
 			.'<div class="clear-url-cache">'
-				.'<form name="clear-url-cache" method="post" action="">'
+				.'<form name="clear-url-cache" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 					.'<input type="submit" name="clear-url-cache" value="Do \'Clear Url Cache\'" />'
 				.'</form>'
 			.'</div>';
@@ -1559,26 +1711,28 @@
 				$projectId = $_POST['project-id-url-cache'];
 				$partOfUrl = $_POST['part-of-url-url-cache'];
 				if(strlen($pageId) != 0 && strlen($partOfUrl) != 0 && $projectId != 0) {
-					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") AND (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") AND `web_project`.`id` = '.$projectId.' ORDER BY `urlcache`.`id`;');
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`project_url`, `urlcache`.`page-ids`, `language`.`language`, `language`.`id` as `lang-id`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") AND (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") AND `web_project`.`id` = '.$projectId.' ORDER BY `urlcache`.`id`;');
 				} elseif(strlen($pageId) != 0 && strlen($partOfUrl) != 0) {
-					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") AND (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") ORDER BY `urlcache`.`id`;');
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`project_url`, `urlcache`.`page-ids`, `language`.`language`, `language`.`id` as `lang-id`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") AND (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") ORDER BY `urlcache`.`id`;');
 				} elseif(strlen($partOfUrl) != 0 && $projectId != 0) {
-					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") AND `web_project`.`id` = '.$projectId.' ORDER BY `urlcache`.`id`;');
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`project_url`, `urlcache`.`page-ids`, `language`.`language`, `language`.`id` as `lang-id`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") AND `web_project`.`id` = '.$projectId.' ORDER BY `urlcache`.`id`;');
 				} elseif(strlen($partOfUrl) != 0) {
-					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") ORDER BY `urlcache`.`id`;');
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`project_url`, `urlcache`.`page-ids`, `language`.`language`, `language`.`id` as `lang-id`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`url` LIKE "%'.$partOfUrl.'%") ORDER BY `urlcache`.`id`;');
 				} elseif(strlen($pageId) != 0) {
-					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") ORDER BY `urlcache`.`id`;');
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`project_url`, `urlcache`.`page-ids`, `language`.`language`, `language`.`id` as `lang-id`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE (`urlcache`.`page-ids` LIKE "'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'-%" OR `urlcache`.`page-ids` LIKE "%-'.$pageId.'") ORDER BY `urlcache`.`id`;');
 				} elseif($projectId != 0) {
-					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE `web_project`.`id` = '.$projectId.' ORDER BY `urlcache`.`id`;');
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`project_url`, `urlcache`.`page-ids`, `language`.`language`, `language`.`id` as `lang-id`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` WHERE `web_project`.`id` = '.$projectId.' ORDER BY `urlcache`.`id`;');
 				} else {
-					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`page-ids`, `language`.`language`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` ORDER BY `urlcache`.`id`;');
+					$urlCache = $dbObject->fetchAll('SELECT `urlcache`.`id`, `urlcache`.`url`, `urlcache`.`project_url`, `urlcache`.`page-ids`, `language`.`language`, `language`.`id` as `lang-id`, `urlcache`.`cachetime`, `urlcache`.`lastcache`, `web_project`.`http`, `web_project`.`https`, `web_project`.`url` as `wp_url`, `web_project`.`name` FROM `urlcache` LEFT JOIN `language` ON `urlcache`.`language_id` = `language`.`id` LEFT JOIN `web_project` ON `urlcache`.`wp` = `web_project`.`id` ORDER BY `urlcache`.`id`;');
 				}
 				
 				if(count($urlCache) > 0) {
 					$urlCacheReturn .= ''
-					.'<table class="url-cache-table">'
+					.'<table class="url-cache-table data-table">'
+						.'<thead>'
 						.'<tr>'
 							.'<th class="url-cache-id">Id:</th>'
+							.'<th class="url-cache-link">Link:</th>'
 							.'<th class="url-cache-name">Name:</th>'
 							.'<th class="url-cache-wp-url">Web project url:</th>'
 							.'<th class="url-cache-slash"></th>'
@@ -1588,7 +1742,9 @@
 							.'<th class="url-cache-cachetime">Cachetime:</th>'
 							.'<th class="url-cache-lastcache">Lastcache:</th>'
 							.'<th class="url-cache-edit">Edit:</th>'
-						.'</tr>';
+						.'</tr>'
+						.'</thead>'
+						.'<tbody>';
 					
 					$i = 1;
 					foreach($urlCache as $url) {
@@ -1608,11 +1764,12 @@
 						$urlCacheReturn .= ''
 						.'<tr class="'.((($i % 2) == 0) ? 'even' : 'idle').'">'
 							.'<td class="url-cache-id"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['id'].'</label></td>'
+							.'<td class="url-cache-id"><a target="_blank" href="http://'.$url['project_url'].'/'.$url['url'].'">view</a></td>'
 							.'<td class="url-cache-name"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['name'].'</label></td>'
-							.'<td class="url-cache-wp-url"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['wp_url'].'</label></td>'
+							.'<td class="url-cache-wp-url"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['project_url'].'</label></td>'
 							.'<td class="url-cache-slash"><label for="url-cache-delete-checkbox-'.$url['id'].'">/</label></td>'
 							.'<td class="url-cache-url"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['url'].'</label></td>'
-							.'<td class="url-cache-page"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['page-ids'].'</label></td>'
+							.'<td class="url-cache-page"><label for="url-cache-delete-checkbox-'.$url['id'].'" langid="'.$url['lang-id'].'">'.$url['page-ids'].'</label></td>'
 							.'<td class="url-cache-lang"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$url['language'].'</label></td>'
 							.'<td class="url-cache-cachetime"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.$cacheTime.'</label></td>'
 							.'<td class="url-cache-lastcache"><label for="url-cache-delete-checkbox-'.$url['id'].'">'.(($url['lastcache'] > 0) ? date('H:i:s d.m.Y', $url['lastcache']) : '-').'</label></td>'
@@ -1623,7 +1780,7 @@
 						$i ++;
 					}
 						
-					$urlCacheReturn .= '</table>';
+					$urlCacheReturn .= '</tbody></table>';
 				}
 				$sent = true;
 			}
@@ -1637,7 +1794,7 @@
 			$returnForm = ''
 			.((strlen($msg) > 0) ? $msg : '' )
 			.'<div id="clear-url-cache" class="clear-url-cache">'
-				.'<form name="clear-url-cache" method="post" action="">'
+				.'<form name="clear-url-cache" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 					.'<div class="part-of-url">'
 						.'<label for="part-of-url-url-cache">Part of url:</label> '
 						.'<input id="part-of-url-url-cache" type="text" name="part-of-url-url-cache" value="'.$partOfUrl.'" />'
@@ -1693,7 +1850,7 @@
 			$returnForm = ''
 			.((strlen($msg) > 0) ? $msg : '' )
 			.'<div class="update-keywords">'
-				.'<form class="update-keywords" name="update-keywords" method="post" action="">'
+				.'<form class="update-keywords" name="update-keywords" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 					.'<label for="keywords">Set keywords of whole web app:</label> '
 					.'<input class="keywords-input" type="text" name="keywords" value="'.$keywords.'" /> '
 					.'<input type="submit" name="save-keywords" value="Save" >'
@@ -1755,7 +1912,7 @@
 					.'<td class="langs-language">'.$lang['language'].'</td>'
 					.(($editable && (count($dbObject->fetchAll('SELECT `page_id` FROM `info` WHERE `language_id` = '.$lang['id'].';')) == 0)) ? ''
 					.'<td class="langs-delete">'
-						.'<form name="delete-lang" method="post" action="">'
+						.'<form name="delete-lang" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 							.'<input type="hidden" name="language-id" value="'.$lang['id'].'" />'
 							.'<input type="hidden" name="delete-language" value="Delete language" />'
 							.'<input class="confirm" type="image" src="'.WEB_ROOT.'images/page_del.png" name="delete-language" value="Delete language" title="Delete language, id('.$lang['id'].')" />'
@@ -1771,7 +1928,7 @@
 				$returnNewForm = ''
 				.((strlen($msgNew) > 0) ? $msgNew : '' )
 				.'<div class="add-new-language">'
-					.'<form name="add-new-language" method="post" action="">'
+					.'<form name="add-new-language" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<label for="langauge-name">Type new language name:</label> '
 						.'<input type="text" name="langauge-name" /> '
 						.'<input type="submit" name="add-new-language" value="Add" />'
@@ -1825,12 +1982,15 @@
 			
 			if(count($templates) > 0) {
 				$return .= ''
-				.'<table class="template-list">'
+				.'<table class="template-list data-table">'
+					.'<thead>'
 					.'<tr>'
 						.'<th class="template-id">Id:</th>'
 						.'<th class="template-content">Content:</th>'
 						.'<th class="template-edit">Edit:</th>'
-					.'</tr>';
+					.'</tr>'
+					.'</thead>'
+					.'<tbody>';
 				$i = 1;
 				foreach($templates as $template) {
 					//$template['content'] = str_replace('&amp;web:page', '&web:page', $template['content']);
@@ -1850,7 +2010,7 @@
 								.'<input type="hidden" name="template-edit" value="Edit" />'
 								.'<input type="image" src="~/images/page_edi.png" name="template-edit" value="Edit" title="Edit template" />'
 							.'</form> '
-							.'<form name="template-edit2" method="post" action="">'
+							.'<form name="template-edit2" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 								.'<input type="hidden" name="template-id" value="'.$template['id'].'" />'
 								.'<input type="hidden" name="template-delete" value="Delete" />'
 								.'<input class="confirm" type="image" src="~/images/page_del.png" name="template-delete" value="Delete" title="Delete template, id('.$template['id'].')" />'
@@ -1860,6 +2020,7 @@
 					$i ++;
 				}
 				$return .= ''
+					.'</tbody>'
 				.'</table>';
 			} else {
 				if($showError != 'false') {
@@ -1898,7 +2059,7 @@
 			global $loginObject;
 			global $dbObject;
 			$return = '';
-			$actionUrl = '';
+			$actionUrl = $_SERVER['REDIRECT_URL'];
 			if($submitPageId != false) {
 				$actionUrl = $webObject->composeUrl($submitPageId);
 			}
@@ -2049,7 +2210,24 @@
 						: '')
 						.'<div class="clear"></div>'
 					.'</div>'
-					.'<div class="clear"></div>'
+					.'<div class="clear"></div>';
+				
+				require_once('System.class.php');	
+				$name = 'Page.editors';
+    		$system = new System();
+				$propertyEditors = $system->getPropertyValue($name);
+		  	$editAreaTextFileRows = $system->getPropertyValue('Page.editAreaTextFileRows');
+		  
+		  	if($propertyEditors == "edit_area") {
+		  		$return .= ''
+					.'<div id="editors" class="editors edit-area-editors">'
+						.'<div id="template-edit-detail-content">'
+							.'<label for="template-edit-detail-content">Template content:</label>'
+							.'<textarea id="template-content" class="edit-area html" name="template-content" rows="'.($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30).'" wrap="off">'.str_replace('~', '&#126', $template['content']).'</textarea>'
+						.'</div>'
+					.'</div>';
+				} else {
+					$return .= ''
 					.'<div class="template-edit-content">'
 						.'<label for="template-edit-detail-content">Content:</label>'
 						.'<div class="editor-cover">'
@@ -2057,7 +2235,9 @@
 								.'<textarea id="template-edit-detail-content" class="editor-textarea" name="template-content" rows="15" wrap="off">'.$template['content'].'</textarea>'
 							.'</div>'
 						.'</div>'
-					.'</div>'
+					.'</div>';
+				}
+				$return .= ''
 					.'<div class="template-submit">'
 						.'<input type="hidden" name="template-id" value="'.$templateId.'" />'
 						.'<input type="submit" name="template-submit" value="Save" />'

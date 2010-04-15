@@ -9,11 +9,66 @@ LogtoEnd=1
 DontOpen=0
 FileFormat=0
 [Project tree]
-wfw-wp
-	+wfw-wp
+WFW-WP
+	+wfw-wp-2svn
 		-cache
 			-images
+				cache\images\16-10-rhonamitra1666qz_400x640.jpg
+				cache\images\16-10-rhonamitra1666qz_94x150.jpg
+				cache\images\24-21-2copyvd1_109x150.jpg
+				cache\images\24-21-2copyvd1_73x100.jpg
+				cache\images\24-22-02fv4_103x150.jpg
+				cache\images\24-22-02fv4_69x100.jpg
+				cache\images\24-23-15f99f2165aa8c8l_112x150.jpg
+				cache\images\24-23-15f99f2165aa8c8l_75x100.jpg
+				cache\images\24-24-91_104x150.jpg
+				cache\images\24-24-91_69x100.jpg
+				cache\images\24-43-Fox_Megan001_160x100.jpg
+				cache\images\24-43-Fox_Megan001_240x150.jpg
+				cache\images\25-25-adriana_lima33_100x150.jpg
+				cache\images\25-26-adrianalima2bo9_94x150.jpg
+				cache\images\25-27-adrianalima918hw7_98x150.jpg
+				cache\images\25-28-d8d943984b_108x150.jpg
+				cache\images\30-157-file82605733_133x100.jpg
+				cache\images\30-157-file82605733_600x450.jpg
+				cache\images\30-157-file82605733_800x600.jpg
+				cache\images\30-158-file92668661_430x600.jpg
+				cache\images\30-158-file92668661_72x100.jpg
+				cache\images\30-45-file42392709_200x300.jpg
+				cache\images\30-45-file42392709_400x600.jpg
+				cache\images\30-45-file42392709_600x900.jpg
+				cache\images\30-45-file42392709_67x100.jpg
+				cache\images\52-136-ambrosio91280x960_133x100.jpg
+				cache\images\52-136-ambrosio91280x960_600x450.jpg
+				cache\images\52-137-ambrosio361600x1200_133x100.jpg
+				cache\images\52-137-ambrosio361600x1200_600x450.jpg
+				cache\images\52-138-ambrosio651600x1200_133x100.jpg
+				cache\images\52-138-ambrosio651600x1200_600x450.jpg
+				cache\images\52-139-ambrosio1011280x960_133x100.jpg
+				cache\images\52-139-ambrosio1011280x960_600x450.jpg
+				cache\images\53-142-bellcatherinefhm20020743qe_600x837.jpg
+				cache\images\53-142-bellcatherinefhm20020743qe_72x100.jpg
+				cache\images\53-143-rbullnak300qb_600x744.jpg
+				cache\images\53-143-rbullnak300qb_81x100.jpg
+				cache\images\54-140-machado71920x1440_133x100.jpg
+				cache\images\54-140-machado71920x1440_600x450.jpg
+				cache\images\54-141-machado141920x1440_133x100.jpg
+				cache\images\54-141-machado141920x1440_600x450.jpg
+				cache\images\55-144-lamiraqui11920x1440_133x100.jpg
+				cache\images\55-144-lamiraqui11920x1440_600x450.jpg
+				cache\images\55-145-lamiraqui271920x1440_133x100.jpg
+				cache\images\55-145-lamiraqui271920x1440_600x450.jpg
+				cache\images\55-146-lamiraqui321920x1440_133x100.jpg
+				cache\images\55-146-lamiraqui321920x1440_600x450.jpg
+				cache\images\55-147-lamiraqui121920x1440_133x100.jpg
+				cache\images\55-147-lamiraqui121920x1440_600x450.jpg
+				cache\images\55-148-lamiraqui631920x1440_133x100.jpg
+				cache\images\55-148-lamiraqui631920x1440_600x450.jpg
+				cache\images\55-149-lamiraqui1111920x1440_133x100.jpg
+				cache\images\55-149-lamiraqui1111920x1440_600x450.jpg
 			-pages
+				cache\pages\page-121-123.cache.html
+				cache\pages\page-66-70.cache.html
 		-data
 			-create
 				data\create\article.php
@@ -45,67 +100,484 @@ wfw-wp
 				data\insert\default-insert_2009-02-04-191800.sql
 				data\insert\default-insert_2009-02-12-214600.sql
 				data\insert\default-insert_2009-02-27-222500.sql
+				data\insert\default-insert_2009-05-18-000000.sql
 				data\insert\sport-insert_2009-07-15.sql
+				data\insert\sport-select-players_2009-07-16.sql
+		-edit_area
+			-images
+				edit_area\images\autocompletion.gif
+				edit_area\images\close.gif
+				edit_area\images\fullscreen.gif
+				edit_area\images\go_to_line.gif
+				edit_area\images\help.gif
+				edit_area\images\highlight.gif
+				edit_area\images\load.gif
+				edit_area\images\move.gif
+				edit_area\images\newdocument.gif
+				edit_area\images\opacity.png
+				edit_area\images\processing.gif
+				edit_area\images\redo.gif
+				edit_area\images\reset_highlight.gif
+				edit_area\images\save.gif
+				edit_area\images\search.gif
+				edit_area\images\smooth_selection.gif
+				edit_area\images\spacer.gif
+				edit_area\images\statusbar_resize.gif
+				edit_area\images\undo.gif
+				edit_area\images\word_wrap.gif
+			-langs
+				edit_area\langs\bg.js
+				edit_area\langs\cs.js
+				edit_area\langs\de.js
+				edit_area\langs\dk.js
+				edit_area\langs\en.js
+				edit_area\langs\eo.js
+				edit_area\langs\es.js
+				edit_area\langs\fi.js
+				edit_area\langs\fr.js
+				edit_area\langs\hr.js
+				edit_area\langs\it.js
+				edit_area\langs\ja.js
+				edit_area\langs\mk.js
+				edit_area\langs\nl.js
+				edit_area\langs\pl.js
+				edit_area\langs\pt.js
+				edit_area\langs\ru.js
+				edit_area\langs\sk.js
+				edit_area\langs\zh.js
+			-plugins
+				-charmap
+					-css
+						edit_area\plugins\charmap\css\charmap.css
+					-images
+						edit_area\plugins\charmap\images\charmap.gif
+					-jscripts
+						edit_area\plugins\charmap\jscripts\map.js
+					-langs
+						edit_area\plugins\charmap\langs\bg.js
+						edit_area\plugins\charmap\langs\cs.js
+						edit_area\plugins\charmap\langs\de.js
+						edit_area\plugins\charmap\langs\dk.js
+						edit_area\plugins\charmap\langs\en.js
+						edit_area\plugins\charmap\langs\eo.js
+						edit_area\plugins\charmap\langs\es.js
+						edit_area\plugins\charmap\langs\fr.js
+						edit_area\plugins\charmap\langs\hr.js
+						edit_area\plugins\charmap\langs\it.js
+						edit_area\plugins\charmap\langs\ja.js
+						edit_area\plugins\charmap\langs\mk.js
+						edit_area\plugins\charmap\langs\nl.js
+						edit_area\plugins\charmap\langs\pl.js
+						edit_area\plugins\charmap\langs\pt.js
+						edit_area\plugins\charmap\langs\ru.js
+						edit_area\plugins\charmap\langs\sk.js
+						edit_area\plugins\charmap\langs\zh.js
+					edit_area\plugins\charmap\charmap.js
+					edit_area\plugins\charmap\popup.html
+				-test
+					-css
+						edit_area\plugins\test\css\test.css
+					-images
+						edit_area\plugins\test\images\test.gif
+						edit_area\plugins\test\images\Thumbs.db
+					-langs
+						edit_area\plugins\test\langs\bg.js
+						edit_area\plugins\test\langs\cs.js
+						edit_area\plugins\test\langs\de.js
+						edit_area\plugins\test\langs\dk.js
+						edit_area\plugins\test\langs\en.js
+						edit_area\plugins\test\langs\eo.js
+						edit_area\plugins\test\langs\es.js
+						edit_area\plugins\test\langs\fr.js
+						edit_area\plugins\test\langs\hr.js
+						edit_area\plugins\test\langs\it.js
+						edit_area\plugins\test\langs\ja.js
+						edit_area\plugins\test\langs\mk.js
+						edit_area\plugins\test\langs\nl.js
+						edit_area\plugins\test\langs\pl.js
+						edit_area\plugins\test\langs\pt.js
+						edit_area\plugins\test\langs\ru.js
+						edit_area\plugins\test\langs\sk.js
+						edit_area\plugins\test\langs\zh.js
+					edit_area\plugins\test\test.js
+					edit_area\plugins\test\test2.js
+			-reg_syntax
+				edit_area\reg_syntax\basic.js
+				edit_area\reg_syntax\brainfuck.js
+				edit_area\reg_syntax\c.js
+				edit_area\reg_syntax\coldfusion.js
+				edit_area\reg_syntax\cpp.js
+				edit_area\reg_syntax\css.js
+				edit_area\reg_syntax\html.js
+				edit_area\reg_syntax\java.js
+				edit_area\reg_syntax\js.js
+				edit_area\reg_syntax\pas.js
+				edit_area\reg_syntax\perl.js
+				edit_area\reg_syntax\php.js
+				edit_area\reg_syntax\python.js
+				edit_area\reg_syntax\robotstxt.js
+				edit_area\reg_syntax\ruby.js
+				edit_area\reg_syntax\sql.js
+				edit_area\reg_syntax\tsql.js
+				edit_area\reg_syntax\vb.js
+				edit_area\reg_syntax\xml.js
+			edit_area\autocompletion.js
+			edit_area\edit_area.css
+			edit_area\edit_area.js
+			edit_area\edit_area_compressor.php
+			edit_area\edit_area_full.gz
+			edit_area\edit_area_full.js
+			edit_area\edit_area_full_with_plugins.gz
+			edit_area\edit_area_full_with_plugins.js
+			edit_area\edit_area_functions.js
+			edit_area\edit_area_loader.js
+			edit_area\elements_functions.js
+			edit_area\highlight.js
+			edit_area\keyboard.js
+			edit_area\license_apache.txt
+			edit_area\license_bsd.txt
+			edit_area\license_lgpl.txt
+			edit_area\manage_area.js
+			edit_area\reg_syntax.js
+			edit_area\regexp.js
+			edit_area\resize_area.js
+			edit_area\search_replace.js
+			edit_area\template.html
 		-files
+			-Adriana
+				files\Adriana\adriana_lima33.jpg
+				files\Adriana\adrianalima2bo9.jpg
+				files\Adriana\adrianalima918hw7.jpg
+				files\Adriana\d8d943984b.jpg
+			-File edit testing
+				files\File edit testing\Desert Landscape.jpg
+				files\File edit testing\Dock.jpg
+				files\File edit testing\Forest.jpg
+				files\File edit testing\Winter Leaves.jpg
+			-Galerie Upload
+				files\Galerie Upload\file42392709.jpg
+				files\Galerie Upload\file82605733.jpg
+				files\Galerie Upload\file92668661.jpg
+			-GalleryTest
+				-Alessandra Ambrosio
+					files\GalleryTest\Alessandra Ambrosio\ambrosio1011280x960.jpg
+					files\GalleryTest\Alessandra Ambrosio\ambrosio361600x1200.jpg
+					files\GalleryTest\Alessandra Ambrosio\ambrosio651600x1200.jpg
+					files\GalleryTest\Alessandra Ambrosio\ambrosio91280x960.jpg
+				-Alicia Machado
+					files\GalleryTest\Alicia Machado\machado141920x1440.jpg
+					files\GalleryTest\Alicia Machado\machado71920x1440.jpg
+				-Catherine Bell
+					files\GalleryTest\Catherine Bell\bellcatherinefhm20020743qe.jpg
+					files\GalleryTest\Catherine Bell\rbullnak300qb.jpg
+				-Jennifer Lamiraqui
+					files\GalleryTest\Jennifer Lamiraqui\lamiraqui1111920x1440.jpg
+					files\GalleryTest\Jennifer Lamiraqui\lamiraqui11920x1440.jpg
+					files\GalleryTest\Jennifer Lamiraqui\lamiraqui121920x1440.jpg
+					files\GalleryTest\Jennifer Lamiraqui\lamiraqui271920x1440.jpg
+					files\GalleryTest\Jennifer Lamiraqui\lamiraqui321920x1440.jpg
+					files\GalleryTest\Jennifer Lamiraqui\lamiraqui631920x1440.jpg
+			-Megan
+				files\Megan\02fv4.jpg
+				files\Megan\15f99f2165aa8c8l.jpg
+				files\Megan\2copyvd1.jpg
+				files\Megan\91.jpg
+				files\Megan\Fox_Megan001.jpg
+			-Papaya
+				-Banners
+					files\Papaya\Banners\kostal.png
+					files\Papaya\Banners\lfp.png
+				-Menu
+					files\Papaya\Menu\dido-league.gif
+					files\Papaya\Menu\guestbook.gif
+					files\Papaya\Menu\home.gif
+					files\Papaya\Menu\news.gif
+					files\Papaya\Menu\players.gif
+					files\Papaya\Menu\sponsors.gif
+				-Players
+					files\Papaya\Players\dvorka.png
+				files\Papaya\h-background.png
+				files\Papaya\Head.png
+				files\Papaya\loading.gif
+				files\Papaya\Logo animation.gif
+				files\Papaya\Logo small.png
+			-Pokus
+				files\Pokus\gravel11600x1200.jpg
+				files\Pokus\jewelstaite1.jpg
+				files\Pokus\karima391920x1440.jpg
+			-ProWeb1
+			-Rhona
+				files\Rhona\rhonamitra1082ht.jpg
+			-Rhona1
+				files\Rhona1\rhonamitra11rq.jpg
+				files\Rhona1\rhonamitra13thannualeltonjohno.jpg
+				files\Rhona1\rhonamitra1666qz.jpg
+			-Tester
+				files\Tester\54887adrianalima95pz.jpg
+				files\Tester\Adriana_Lima33.jpg
+				files\Tester\d8d943984b.jpg
+				files\Tester\hotlima.jpg
+				files\Tester\rbullnak300qb.jpg
+			-TestUrl
 		-images
 			-cms
 				-design
 					images\cms\design\dot-transparent.png
 					images\cms\design\head-line.png
+					images\cms\design\home.png
+					images\cms\design\internet.png
+					images\cms\design\kterm.png
 					images\cms\design\logout-icon.png
+					images\cms\design\logout-icon-2.png
 					images\cms\design\menu-background.png
+					images\cms\design\notepad.png
+					images\cms\design\refresh-icon.png
+					images\cms\design\run.png
+					images\cms\design\web-ajax-log.png
 				-login
 					images\cms\login\login-body.png
 					images\cms\login\login-body-top.png
 					images\cms\login\login-head.jpg
 					images\cms\login\login-head.png
+				-window
+					images\cms\window\button-1.gif
+					images\cms\window\button-2.gif
+					images\cms\window\button-3.gif
+					images\cms\window\button-4.gif
+					images\cms\window\buttons.gif
+			-icons
+				-floorball
+					images\icons\floorball\ball.png
+					images\icons\floorball\matches.png
+					images\icons\floorball\players.png
+					images\icons\floorball\seasons.png
+					images\icons\floorball\table.png
+					images\icons\floorball\teams.png
+				-service
+					images\icons\service\1024768.gif
+					images\icons\service\12801024.gif
+					images\icons\service\16001200.gif
+					images\icons\service\button_gmail.gif
+					images\icons\service\ctags_php.png
+					images\icons\service\firefox_copy2.gif
+					images\icons\service\opera.gif
+					images\icons\service\rssmm_wfw.png
+					images\icons\service\safari_copy2.gif
+					images\icons\service\valid_css.png
+					images\icons\service\valid_xhtml.png
+				-test
+					images\icons\test\brick.png
+					images\icons\test\error.png
+					images\icons\test\feed.png
+					images\icons\test\Shutdown_Gloss.png
+				images\icons\at.png
+				images\icons\book_open.png
+				images\icons\building.png
+				images\icons\cog.png
+				images\icons\comment.png
+				images\icons\drive.png
+				images\icons\excel-file.gif
+				images\icons\file.gif
+				images\icons\film.png
+				images\icons\flash-file.gif
+				images\icons\folder-orange.gif
+				images\icons\hint.png
+				images\icons\image.gif
+				images\icons\mp3-music-file.gif
+				images\icons\ms-word.gif
+				images\icons\page_attachment.gif
+				images\icons\page_code.png
+				images\icons\page_html.gif
+				images\icons\page_java.gif
+				images\icons\page_php.gif
+				images\icons\page_script.gif
+				images\icons\page_tag_red.gif
+				images\icons\page_user_dark.gif
+				images\icons\page_video.gif
+				images\icons\page_white_office.png
+				images\icons\page_white_powerpoint.png
+				images\icons\page_word.png
+				images\icons\pdf.gif
+				images\icons\photoshop-file.gif
+				images\icons\properties.png
+				images\icons\radioactive.png
+				images\icons\text-file.gif
+				images\icons\user.png
+				images\icons\web-page-blue.gif
+				images\icons\web-page-green.gif
+				images\icons\web-page-grey.gif
+				images\icons\web-page-orange.gif
+				images\icons\zip-file.gif
 			images\arro_do.png
 			images\arro_up.png
 			images\error.png
 			images\file_bws.png
 			images\lang_add.png
 			images\lang_del.png
+			images\loader.gif
 			images\minus.png
 			images\page_add.png
+			images\page_cop.png
 			images\page_del.png
 			images\page_edi.png
+			images\page_mov.png
 			images\plus.png
 			images\success.png
+			images\warning.png
 		-logs
-			logs\2009-04-30.log
+			logs\17-2009-07-15.log
+			logs\17-2009-07-16.log
+			logs\17-2009-07-17.log
+			logs\17-2009-07-19.log
+			logs\17-2009-07-20.log
+			logs\17-2009-07-25.log
+			logs\17-2009-08-06.log
+			logs\17-2009-09-03.log
+			logs\17-2009-10-10.log
+			logs\18-2009-09-10.log
+			logs\18-2009-10-06.log
+			logs\18-2009-10-13.log
+			logs\18-2009-11-02.log
+			logs\18-2009-11-09.log
+			logs\19-2009-08-06.log
+			logs\19-2009-11-26.log
+			logs\19-2009-11-27.log
+			logs\-2009-07-17.log
+			logs\-2009-07-24.log
+			logs\-2009-07-25.log
+			logs\-2009-08-22.log
+			logs\-2009-08-23.log
+			logs\-2009-08-25.log
+			logs\-2009-09-02.log
+			logs\-2009-09-04.log
+			logs\-2009-09-08.log
+			logs\-2009-09-10.log
+			logs\-2009-11-26.log
+			logs\20-2009-09-28.log
+			logs\21-2009-10-13.log
+			logs\22-2009-10-29.log
+			logs\22-2009-10-30.log
+			logs\22-2009-10-31.log
+			logs\22-2009-11-01.log
+			logs\22-2009-11-02.log
+			logs\23-2009-11-03.log
+			logs\23-2009-11-09.log
+			logs\6-2009-07-18.log
+			logs\6-2009-07-20.log
+			logs\6-2009-07-21.log
+			logs\6-2009-07-22.log
+			logs\6-2009-07-24.log
+			logs\6-2009-07-25.log
+			logs\6-2009-08-06.log
+			logs\6-2009-09-03.log
+			logs\6-2009-09-10.log
+			logs\6-2009-09-28.log
+			logs\6-2009-10-04.log
+			logs\6-2009-10-06.log
+			logs\6-2009-10-07.log
+			logs\6-2009-10-10.log
+			logs\6-2009-10-11.log
+			logs\6-2009-10-12.log
+			logs\6-2009-10-13.log
+			logs\6-2009-10-14.log
+			logs\6-2009-10-17.log
+			logs\6-2009-10-21.log
+			logs\6-2009-10-22.log
+			logs\6-2009-10-23.log
+			logs\6-2009-10-24.log
+			logs\6-2009-10-25.log
+			logs\6-2009-10-28.log
+			logs\6-2009-10-29.log
+			logs\6-2009-10-30.log
+			logs\6-2009-11-02.log
+			logs\6-2009-11-03.log
+			logs\6-2009-11-09.log
+			logs\6-2009-11-14.log
+			logs\6-2009-11-15.log
+			logs\6-2009-11-16.log
+			logs\6-2009-11-17.log
+			logs\6-2009-11-22.log
+			logs\6-2009-11-24.log
+			logs\6-2009-11-25.log
+			logs\6-2009-11-26.log
+			logs\6-2009-11-27.log
+			logs\6-2009-12-02.log
+			logs\6-2009-12-03.log
+			logs\8-2009-06-12.log
+			logs\8-2009-06-16.log
+			logs\8-2009-06-19.log
+			logs\8-2009-07-08.log
+			logs\8-2009-07-16.log
+			logs\8-2009-07-21.log
+			logs\8-2009-07-24.log
+			logs\8-2009-07-25.log
+			logs\8-2009-08-05.log
+			logs\8-2009-08-06.log
+			logs\8-2009-09-10.log
+			logs\8-2009-10-03.log
+			logs\8-2009-10-04.log
+			logs\8-2009-11-09.log
+			logs\8-2009-11-16.log
+			logs\8-2009-11-26.log
 		+scripts
-			+css
+			-bundles
+				scripts\bundles\hint_cs.properties
+				scripts\bundles\hint_en.properties
+				scripts\bundles\page_cs.properties
+				scripts\bundles\page_en.properties
+				scripts\bundles\pageng_cs.properties
+				scripts\bundles\sport_cs.properties
+				scripts\bundles\webproject_cs.properties
+				scripts\bundles\webproject_en.properties
+			-css
 				scripts\css\cms.css
+				scripts\css\cms_nowindows.css
+				scripts\css\demo_table.css
+				scripts\css\edit-area.css
 				scripts\css\editor.css
+				scripts\css\jquery-autocomplete.css
+				scripts\css\window.css
+			-files
 			+js
+				-jquery
+					scripts\js\jquery\jquery.js
+					scripts\js\jquery\jquery-autocomplete-pack.js
+					scripts\js\jquery\jquery-blockui.js
+					scripts\js\jquery\jquery-dataTables.js
+					scripts\js\jquery\jquery-dataTables-min.js
+					scripts\js\jquery\jquery-wysiwyg.js
+				scripts\js\clock.js
 				scripts\js\Closer.js
 				scripts\js\Confirm.js
-				scripts\js\Editor.js
-				scripts\js\FileName.js
-				scripts\js\init.js
-				scripts\js\initTiny.js
 				scripts\js\CountDown.js
 				scripts\js\domready.js
+				scripts\js\Editor.js
+				scripts\js\FileName.js
 				scripts\js\formFieldEffect.js
+				scripts\js\functions.js
+				scripts\js\init_nowindows.js
+				scripts\js\init.js
 				scripts\js\initLogin.js
+				scripts\js\initTiny.js
+				scripts\js\links.js
+				scripts\js\processform.js
+				scripts\js\rxmlhttp.js
+				scripts\js\window.js
 			+php
-				-bundles
-					scripts\bundles\sport_cs.properties
-					scripts\bundles\hint_cs.properties
-				+classes
+				-classes
 					scripts\php\classes\CustomTagParser.class.php
 					scripts\php\classes\ResourceBundle.class.php
 				-includes
+					scripts\php\includes\database.inc.php
+					scripts\php\includes\extensions.inc.php
 					scripts\php\includes\settings.inc.php
 					scripts\php\includes\version.inc.php
-					scripts\php\includes\extensions.inc.php
-					scripts\php\includes\database.inc.php
 				+libs
 					-hp
-						+xml
+						-xml
 							scripts\php\libs\hp\xml\Hotproject.xml
 						scripts\php\libs\hp\Hotproject.class.php
-					+xml
+					-xml
 						scripts\php\libs\xml\Article.xml
 						scripts\php\libs\xml\Counter.xml
 						scripts\php\libs\xml\Database.xml
@@ -115,11 +587,15 @@ wfw-wp
 						scripts\php\libs\xml\File.xml
 						scripts\php\libs\xml\Form.xml
 						scripts\php\libs\xml\Guestbook.xml
+						scripts\php\libs\xml\Hint.xml
+						scripts\php\libs\xml\Js.xml
 						scripts\php\libs\xml\Log.xml
 						scripts\php\libs\xml\Login.xml
 						scripts\php\libs\xml\Page.xml
-						scripts\php\libs\xml\User.xml
+						scripts\php\libs\xml\PageNG.xml
 						scripts\php\libs\xml\Sport.xml
+						scripts\php\libs\xml\System.xml
+						scripts\php\libs\xml\User.xml
 						scripts\php\libs\xml\WebProject.xml
 					scripts\php\libs\Article.class.php
 					scripts\php\libs\BaseTagLib.class.php
@@ -131,16 +607,20 @@ wfw-wp
 					scripts\php\libs\File.class.php
 					scripts\php\libs\Form.class.php
 					scripts\php\libs\Guestbook.class.php
+					scripts\php\libs\Hint.class.php
+					scripts\php\libs\Js.class.php
 					scripts\php\libs\Log.class.php
 					scripts\php\libs\Login.class.php
 					scripts\php\libs\Page.class.php
-					scripts\php\libs\User.class.php
+					scripts\php\libs\PageNG.class.php
 					scripts\php\libs\Sport.class.php
+					scripts\php\libs\System.class.php
+					scripts\php\libs\User.class.php
 					scripts\php\libs\WebProject.class.php
 		-tiny-mce
 			-langs
 				tiny-mce\langs\en.js
-			+plugins
+			-plugins
 				-advhr
 					-css
 						tiny-mce\plugins\advhr\css\advhr.css
@@ -188,8 +668,8 @@ wfw-wp
 				-directionality
 					tiny-mce\plugins\directionality\editor_plugin.js
 					tiny-mce\plugins\directionality\editor_plugin_src.js
-				+emotions
-					+img
+				-emotions
+					-img
 						tiny-mce\plugins\emotions\img\smiley-cool.gif
 						tiny-mce\plugins\emotions\img\smiley-cry.gif
 						tiny-mce\plugins\emotions\img\smiley-embarassed.gif
@@ -483,25 +963,65 @@ wfw-wp
 			tpls\defaultArticleDetail.tpl.php
 			tpls\defaultArticleLine.tpl.php
 			tpls\defaultCounter.tpl.php
+		file.php
 		index.php
 		keywords.txt
+		parsing.php
 		robots.txt
-		file.php
-		.htaccess
+		window-property.php
 		wysiwyg-styles.php
+		url-composer.php
 [Open project files]
-0=index.php
-1=..\..\..\Users\Marek SMM\Desktop\TODO.txt
-2=scripts\php\includes\version.inc.php
+0=scripts\php\includes\version.inc.php
+1=scripts\css\cms.css
+2=scripts\php\libs\DefaultWeb.class.php
+3=scripts\php\libs\xml\DefaultWeb.xml
+4=scripts\php\libs\Js.class.php
+5=scripts\php\libs\xml\Js.xml
+6=Novy3.html
+7=Novy4.html
+8=scripts\php\libs\System.class.php
+9=scripts\php\libs\xml\System.xml
+10=scripts\php\libs\Page.class.php
+11=scripts\js\init_nowindows.js
 [Selected Project Files]
-Main=index.php
-Selected=scripts\php\includes\version.inc.php
-[index.php]
-TopLine=35
-Caret=34,76
-[..\..\..\Users\Marek SMM\Desktop\TODO.txt]
-TopLine=1
-Caret=4,32
+Main=
+Selected=Novy4.html
 [scripts\php\includes\version.inc.php]
 TopLine=1
-Caret=4,6
+Caret=35,8
+[scripts\css\cms.css]
+TopLine=420
+Caret=24,430
+[scripts\php\libs\DefaultWeb.class.php]
+TopLine=1006
+Caret=25,1050
+[scripts\php\libs\xml\DefaultWeb.xml]
+TopLine=289
+Caret=28,299
+[scripts\php\libs\Js.class.php]
+TopLine=2
+Caret=37,29
+[scripts\php\libs\xml\Js.xml]
+TopLine=1
+Caret=26,13
+[Novy3.html]
+TopLine=15
+Caret=72,67
+[Novy4.html]
+TopLine=1
+Caret=72,21
+[scripts\php\libs\System.class.php]
+TopLine=372
+Caret=36,395
+[scripts\php\libs\xml\System.xml]
+TopLine=45
+Caret=64,92
+[scripts\php\libs\Page.class.php]
+TopLine=75
+Caret=9,83
+[scripts\js\init_nowindows.js]
+TopLine=660
+Caret=63,681
+Mark1=28,203
+Mark2=28,954

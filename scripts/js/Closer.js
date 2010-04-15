@@ -42,7 +42,7 @@ function Closer(frameCover) {
   }
   
   this.headClick = function(event) {
-    if(Content.style.display == "none") {
+    if(FrameCover.className.indexOf(" closed-frame") != -1) {
       Own.openFrame();
     } else {
       Own.closeFrame();
@@ -51,7 +51,7 @@ function Closer(frameCover) {
   }
   
   this.openFrame = function() {
-		if(FrameCover.className.indexOf(" closed-frame") != -1) {       
+		if(FrameCover.className.indexOf(" closed-frame") != -1) {
         FrameCover.className = FrameCover.className.substring(0,FrameCover.className.indexOf(" closed-frame"));
     }
     Content.style.display = "block";

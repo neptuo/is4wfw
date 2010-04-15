@@ -12,7 +12,20 @@ function addEvent (obj, ev, func, b) {
   }
 }
 
-addEvent(window, "load", initConfirm, false);
+function stopEvent (event) {
+  if(navigator.appName != "Microsoft Internet Explorer") {
+    event.preventDefault();
+    window.event.returnValue=false;
+  } else {
+    event.preventDefault();
+    event.stopPropagation();
+    event.cancelBubble = true;
+    event.returnValue = false;
+    window.event.returnValue=false;
+  }
+}
+
+//addEvent(window, "load", initConfirm, false);
 
 function initConfirm(event) {
   confs = document.getElementsByTagName('input');
@@ -20,14 +33,20 @@ function initConfirm(event) {
   for(var i = 0; i < confs.length; i ++) {
     if(confs[i].className == "confirm") {
       cofs[cofs.length] = confs[i];
-      confs[i].onclick = function(event) {
+      function onClickConfirm(event) {
 				var elm = ((event.srcElement) ? event.srcElement : event.target);
 				var title = 'this';
 				if(elm && elm.title && elm.title.length != 0) {
 					title = '\n\n\t"' + elm.title + '"\n\n';
-				} 
-				return confirm("Do you really want to do " + title + "?"); 
+				}
+				//stopEvent(event); 
+				if(!confirm("Do you really want to do " + title + "?")) {
+					stopEvent(event);
+				}
+				return false; 
 			}
+			
+			addEvent(confs[i], 'click', onClickConfirm, false);
     }
   }
 }

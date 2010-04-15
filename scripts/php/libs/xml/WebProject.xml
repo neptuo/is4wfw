@@ -4,7 +4,7 @@
   <name>WebProject Lib</name>
   <classname>WebProject</classname>
   <classpath>php.libs</classpath>
-  <version>1.02</version>
+  <version>1.03</version>
   <count>*</count>
   <comment>
     Třída pro správu webových projektů.
@@ -48,5 +48,13 @@
       Zobrazí formulář pro úpravu nebo vytvoření projektu.
     </comment>
   </tag>
+  <property>
+  	<propname>selectedProject</propname>
+  	<setfunction>setSelectedProject</setfunction>
+  	<getfunction>getSelectedProject</getfunction>
+    <comment>
+      Aktuálně vybraný projekt.
+    </comment>
+  </property>
 </taglib>
 
