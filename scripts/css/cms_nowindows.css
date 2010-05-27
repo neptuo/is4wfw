@@ -7,7 +7,7 @@ body {
 }
 
 .cms .body {
-	position: static;
+	position: fixed;
 	height: auto !important;
 	margin: 60px 40px 30px;
 }
