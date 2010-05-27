@@ -3,11 +3,11 @@ body {
 }
 
 .cms .head {
-	position: static;
+	position: fixed;
 }
 
 .cms .body {
-	position: fixed;
+	position: static;
 	height: auto !important;
 	margin: 60px 40px 30px;
 }
