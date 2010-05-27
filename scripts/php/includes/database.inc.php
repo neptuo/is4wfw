@@ -10,7 +10,6 @@
    define("WEB_DB_PASSWORD", "31root3112");
    //define("WEB_DB_DATABASE", "tmp_wfw_wp");
    //define("WEB_DB_DATABASE", "tmp_wfw_wp_091231");
-   //define("WEB_DB_DATABASE", "tmp_wfw_wp_100323");
-   define("WEB_DB_DATABASE", "tmp_wfw_wp_neptuo_20100527");
+   define("WEB_DB_DATABASE", "tmp_wfw_wp_100323");
 
 ?>

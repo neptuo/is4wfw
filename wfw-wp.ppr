@@ -539,6 +539,8 @@ WFW-WP
 				scripts\css\window.css
 			-files
 			+js
+				+web
+					scripts\js\web\ajaxWebInit.js
 				-jquery
 					scripts\js\jquery\jquery.js
 					scripts\js\jquery\jquery-autocomplete-pack.js
@@ -567,7 +569,7 @@ WFW-WP
 				-classes
 					scripts\php\classes\CustomTagParser.class.php
 					scripts\php\classes\ResourceBundle.class.php
-				-includes
+				+includes
 					scripts\php\includes\database.inc.php
 					scripts\php\includes\extensions.inc.php
 					scripts\php\includes\settings.inc.php
@@ -974,32 +976,62 @@ WFW-WP
 [Open project files]
 0=scripts\php\includes\version.inc.php
 1=scripts\css\cms.css
-2=scripts\php\libs\DefaultWeb.class.php
-3=scripts\php\libs\Js.class.php
-4=scripts\php\libs\xml\Js.xml
-5=scripts\php\libs\System.class.php
-6=scripts\php\libs\xml\System.xml
+2=scripts\css\cms_nowindows.css
+3=scripts\php\libs\DefaultWeb.class.php
+4=scripts\php\libs\xml\DefaultWeb.xml
+5=scripts\php\libs\Js.class.php
+6=scripts\php\libs\xml\Js.xml
+7=scripts\js\web\ajaxWebInit.js
+8=scripts\php\libs\System.class.php
+9=scripts\php\libs\xml\System.xml
+10=scripts\js\init.js
+11=scripts\js\init_nowindows.js
+12=scripts\php\classes\CustomTagParser.class.php
+13=scripts\php\includes\database.inc.php
 [Selected Project Files]
 Main=
-Selected=scripts\php\includes\version.inc.php
+Selected=scripts\php\libs\DefaultWeb.class.php
 [scripts\php\includes\version.inc.php]
 TopLine=1
 Caret=32,15
 [scripts\css\cms.css]
-TopLine=420
-Caret=24,430
+TopLine=475
+Caret=2,503
+[scripts\css\cms_nowindows.css]
+TopLine=1
+Caret=18,6
 [scripts\php\libs\DefaultWeb.class.php]
-TopLine=1029
-Caret=10,1029
+TopLine=1049
+Caret=10,1065
+[scripts\php\libs\xml\DefaultWeb.xml]
+TopLine=292
+Caret=9,304
 [scripts\php\libs\Js.class.php]
-TopLine=2
-Caret=37,29
+TopLine=51
+Caret=35,73
 [scripts\php\libs\xml\Js.xml]
 TopLine=1
-Caret=26,13
+Caret=34,37
+[scripts\js\web\ajaxWebInit.js]
+TopLine=27
+Caret=49,39
 [scripts\php\libs\System.class.php]
 TopLine=372
 Caret=36,395
 [scripts\php\libs\xml\System.xml]
-TopLine=45
-Caret=64,92
+TopLine=41
+Caret=31,62
+[scripts\js\init.js]
+TopLine=974
+Caret=35,1030
+[scripts\js\init_nowindows.js]
+TopLine=24
+Caret=21,45
+Mark1=28,203
+Mark2=28,954
+[scripts\php\classes\CustomTagParser.class.php]
+TopLine=21
+Caret=56,40
+[scripts\php\includes\database.inc.php]
+TopLine=1
+Caret=60,14
