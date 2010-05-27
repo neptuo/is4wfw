@@ -51,8 +51,8 @@ function init(event) {
 	initClearCache(event);
 	initClearCacheDone = false;
 	initRefreshButton(event);
+	initConfirm(event);
 	//initDataTables(event);
-	//initConfirm(event);
 	
 	initWebprojectSelectButton(event);
 	//initAjaxMenu(event).loadDefault();

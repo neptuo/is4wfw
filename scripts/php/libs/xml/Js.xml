@@ -20,5 +20,22 @@
       Vkládá do stránky zdroje pro cms, pokud je useWindows true, pak vloží verzi pro windows cms.
     </comment>
   </tag>
+  <tag>
+    <tagname>ajaxWeb</tagname>
+    <function>getAjaxWeb</function>
+    <attribute>
+      <attname>webContentRootElId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>rootPageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Vloří do stránky potřebný skripty pro ajax fukčnost, "webContentRootElId" je id hmtl element pro vkladání obsahu, 
+			vše mimo něj zůstane neměnné. "rootPageId" je id stránky od které se bude na serveru stránka vykreslovat.
+			!!! Nezpracovává formuláře !!!
+    </comment>
+  </tag>
 </taglib>
 

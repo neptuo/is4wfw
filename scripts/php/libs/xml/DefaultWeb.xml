@@ -343,5 +343,13 @@
       Nastaví hodnotu dané proměnné.
     </comment>
   </tag>
+  <property>
+  	<propname>childPage</propname>
+  	<setfunction>setChildPage</setfunction>
+  	<getfunction>getChildPage</getfunction>
+    <comment>
+      Vrátí ID další vykreslovaní stránky. Pokud bude PAGES={1,2,3,4}, a aktuálně se bude vykreslovat stránka ID=3, pak property web:childPage bude mít hodnotu 4.
+    </comment>
+  </property>
 </taglib>
 

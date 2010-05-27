@@ -179,6 +179,8 @@
     
     private $CurrentPageTimestamp = 0;
     
+    private $ChildPageId = 0;
+    
     /**
      *
      *	Keywords.
@@ -1005,6 +1007,12 @@
       
       $path = $phpObject->str_tr($this->Path, '/', 1);
       $return = $this->TempLoadedContent[$this->PagesIdIndex];
+      
+      if(count($this->PagesId) > ($this->PagesIdIndex + 1)) {
+      	self::setChildPage($this->PagesId[$this->PagesIdIndex + 1]);
+      } else {
+      	self::setChildPage(-1);
+      }
       //$this->CurrentPageTimestamp = $this->TempLoadedContent[$this->PagesIdIndex]['timestamp'];
       $this->CurrentDynamicPath = $path[0];
       $tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['href']);
@@ -1794,6 +1802,18 @@
 				}
 			}
 		}
+		
+		// PROPERTIES
+		
+		public function setChildPage($pageId) {
+			$this->ChildPageId = $pageId;
+			return $pageId;
+		}
+		
+		public function getChildPage() {
+			return $this->ChildPageId;
+		}
+		
   }
 
 ?>

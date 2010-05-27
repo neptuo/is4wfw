@@ -315,6 +315,11 @@
           }
           
           if($errorOccurs == "true") {
+  	    	  $head = str_replace('\"', '"', $head);
+    	  	  $content = str_replace('\"', '"', $content);
+  	      	$tlStart = str_replace('\"', '"', $tlStart);
+		        $tlEnd = str_replace('\"', '"', $tlEnd);
+		        
             $sql_return[0]['name'] = $name;
             $sql_return[0]['href'] = $href;
             $sql_return[0]['in_title'] = $inTitle;
@@ -1690,8 +1695,8 @@
 			$urlCache = array();
 			$urlCacheReturn = '';
 			$sent = false;
-			
-			if($_POST['clear-url-cache'] == "Do \'Clear Url Cache\'") {
+			print_r($_POST);
+			if($_POST['clear-url-cache'] == "Do 'Clear Url Cache'") {
 				$dbObject->execute("TRUNCATE TABLE `urlcache`");
 				$msg = '<h4 class="success">Url cache cleared!</h4>';
 			}
