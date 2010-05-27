@@ -290,7 +290,7 @@
 						}
 					}
       	}
-      
+      	
 	      if($ok == false) {
 					$dbProject = $dbObject->fetchAll('SELECT `id`, `project_id`, `http`, `https`, `url` FROM `web_alias`;');
 	    	  foreach($dbProject as $i => $project) {
@@ -1013,6 +1013,7 @@
       } else {
       	self::setChildPage(-1);
       }
+      
       //$this->CurrentPageTimestamp = $this->TempLoadedContent[$this->PagesIdIndex]['timestamp'];
       $this->CurrentDynamicPath = $path[0];
       $tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['href']);
@@ -1063,6 +1064,14 @@
       //$return = preg_replace_callback('(&web:pathToId=([0-9]+))', array( &$this,'parseproperties'), $return);
 			      
       preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['tag_lib_end']);
+      
+      $this->PagesIdIndex --;
+      
+      if($this->PagesIdIndex > 0) {
+      	self::setChildPage($this->PagesId[$this->PagesIdIndex]);
+      } else {
+      	self::setChildPage(-1);
+      }
         
       return $pageContent;
     }

@@ -1695,7 +1695,7 @@
 			$urlCache = array();
 			$urlCacheReturn = '';
 			$sent = false;
-			print_r($_POST);
+			
 			if($_POST['clear-url-cache'] == "Do 'Clear Url Cache'") {
 				$dbObject->execute("TRUNCATE TABLE `urlcache`");
 				$msg = '<h4 class="success">Url cache cleared!</h4>';
