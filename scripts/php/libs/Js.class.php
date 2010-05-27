@@ -89,6 +89,22 @@
     	
     	return $return;
     }
+    
+    public function getAjaxWeb($webContentRootElId, $rootPageId) {
+    	$return = '';
+    	
+    	$return .= '<script type="text/javascript" src="~/js/domready.js"></script>';
+    	$return .= '<script type="text/javascript" src="~/js/rxmlhttp.js"></script>';
+    	$return .= '<script type="text/javascript" src="~/js/links.js"></script>';
+    	
+    	$content = file_get_contents("scripts/js/web/ajaxWebInit.js");
+    	$content = str_replace("{web-content}", $webContentRootElId, $content);
+    	$content = str_replace("{root-page}", $rootPageId, $content); 
+    	
+    	$return .= '<script type="text/javascript">'.$content.'</script>';
+    	
+    	return $return;
+    }
   }
 
 ?>

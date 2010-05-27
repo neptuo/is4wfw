@@ -577,7 +577,7 @@ WFW-WP
 						-xml
 							scripts\php\libs\hp\xml\Hotproject.xml
 						scripts\php\libs\hp\Hotproject.class.php
-					+xml
+					-xml
 						scripts\php\libs\xml\Article.xml
 						scripts\php\libs\xml\Counter.xml
 						scripts\php\libs\xml\Database.xml
@@ -979,20 +979,18 @@ WFW-WP
 4=scripts\php\libs\xml\Js.xml
 5=scripts\php\libs\System.class.php
 6=scripts\php\libs\xml\System.xml
-7=scripts\php\libs\Page.class.php
-8=scripts\js\init_nowindows.js
 [Selected Project Files]
 Main=
-Selected=scripts\js\init_nowindows.js
+Selected=scripts\php\includes\version.inc.php
 [scripts\php\includes\version.inc.php]
 TopLine=1
-Caret=35,8
+Caret=32,15
 [scripts\css\cms.css]
 TopLine=420
 Caret=24,430
 [scripts\php\libs\DefaultWeb.class.php]
-TopLine=1006
-Caret=25,1050
+TopLine=1029
+Caret=10,1029
 [scripts\php\libs\Js.class.php]
 TopLine=2
 Caret=37,29
@@ -1005,11 +1003,3 @@ Caret=36,395
 [scripts\php\libs\xml\System.xml]
 TopLine=45
 Caret=64,92
-[scripts\php\libs\Page.class.php]
-TopLine=75
-Caret=9,83
-[scripts\js\init_nowindows.js]
-TopLine=660
-Caret=63,681
-Mark1=28,203
-Mark2=28,954
