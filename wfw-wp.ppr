@@ -320,6 +320,12 @@ WFW-WP
 				files\Tester\rbullnak300qb.jpg
 			-TestUrl
 		-images
+			-lightbox
+				images\lightbox\lightbox-blank.gif
+				images\lightbox\lightbox-btn-close.gif
+				images\lightbox\lightbox-btn-next.gif
+				images\lightbox\lightbox-btn-prev.gif
+				images\lightbox\lightbox-ico-loading.gif
 			-cms
 				-design
 					images\cms\design\dot-transparent.png
@@ -533,10 +539,14 @@ WFW-WP
 			-css
 				scripts\css\cms.css
 				scripts\css\cms_nowindows.css
+				scripts\css\demo_page.css
 				scripts\css\demo_table.css
+				scripts\css\demo_table_jui.css
 				scripts\css\edit-area.css
 				scripts\css\editor.css
 				scripts\css\jquery-autocomplete.css
+				scripts\css\jquery-lightbox.css
+				scripts\css\jquery-wysiwyg.css
 				scripts\css\window.css
 			-files
 			-js
@@ -548,6 +558,7 @@ WFW-WP
 					scripts\js\jquery\jquery-blockui.js
 					scripts\js\jquery\jquery-dataTables.js
 					scripts\js\jquery\jquery-dataTables-min.js
+					scripts\js\jquery\jquery-lightbox-pack.js
 					scripts\js\jquery\jquery-wysiwyg.js
 				scripts\js\clock.js
 				scripts\js\Closer.js
@@ -567,7 +578,7 @@ WFW-WP
 				scripts\js\rxmlhttp.js
 				scripts\js\window.js
 			+php
-				-classes
+				+classes
 					scripts\php\classes\CustomTagParser.class.php
 					scripts\php\classes\ResourceBundle.class.php
 				-includes
@@ -580,7 +591,7 @@ WFW-WP
 						-xml
 							scripts\php\libs\hp\xml\Hotproject.xml
 						scripts\php\libs\hp\Hotproject.class.php
-					+xml
+					-xml
 						scripts\php\libs\xml\Article.xml
 						scripts\php\libs\xml\Counter.xml
 						scripts\php\libs\xml\Database.xml
@@ -978,39 +989,23 @@ WFW-WP
 0=scripts\php\includes\version.inc.php
 1=scripts\css\cms.css
 2=scripts\css\cms_nowindows.css
-3=scripts\php\libs\DefaultWeb.class.php
-4=scripts\php\libs\xml\DefaultWeb.xml
-5=scripts\php\libs\xml\Js.xml
-6=scripts\php\libs\Js.class.php
-7=scripts\js\web\ajaxWebInit.js
-8=scripts\js\init.js
+3=scripts\php\libs\xml\DefaultWeb.xml
+4=scripts\php\libs\Guestbook.class.php
 [Selected Project Files]
 Main=
-Selected=scripts\php\includes\version.inc.php
+Selected=scripts\php\libs\Guestbook.class.php
 [scripts\php\includes\version.inc.php]
 TopLine=1
-Caret=35,8
+Caret=12,14
 [scripts\css\cms.css]
 TopLine=461
 Caret=6,487
 [scripts\css\cms_nowindows.css]
 TopLine=1
 Caret=12,6
-[scripts\php\libs\DefaultWeb.class.php]
-TopLine=1046
-Caret=7,1058
 [scripts\php\libs\xml\DefaultWeb.xml]
 TopLine=292
-Caret=9,304
-[scripts\php\libs\xml\Js.xml]
-TopLine=1
-Caret=16,7
-[scripts\php\libs\Js.class.php]
-TopLine=1
-Caret=29,16
-[scripts\js\web\ajaxWebInit.js]
-TopLine=27
-Caret=49,39
-[scripts\js\init.js]
-TopLine=974
-Caret=35,1030
+Caret=16,308
+[scripts\php\libs\Guestbook.class.php]
+TopLine=23
+Caret=7,33

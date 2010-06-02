@@ -34,7 +34,7 @@
       if($webObject->LanguageName != '') {
 				$rb = new ResourceBundle();
 				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-					$BundleLang = $webObject->LanguageName;
+					$this->BundleLang = $webObject->LanguageName;
 				}
 			}
       
