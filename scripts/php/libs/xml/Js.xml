@@ -4,11 +4,32 @@
   <name>Js Lib</name>
   <classname>Js</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
+  <version>1.03</version>
   <count>*</count>
   <comment>
     Třída pro systémové javascripty.
   </comment>
+  <tag>
+    <tagname>resources</tagname>
+    <function>addResourcesToPage</function>
+    <attribute>
+      <attname>names</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>as</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vkládá do stránky skripty z scripts/js, "names" je seznam jmen bez koncovky oddělený čárkami, 
+			"type" definuje jestli se jednaá o "css" (Cascade StyleSheet) nebo "js" (Javascript),
+			"as" může být buď "resource" (default), nebo "inline", podle tohoto atributu se buď vloži odkazy na skripty nebo přímo inline obsah skriptů do stránky.
+    </comment>
+  </tag>
   <tag>
     <tagname>cmsResources</tagname>
     <function>getCmsResources</function>
