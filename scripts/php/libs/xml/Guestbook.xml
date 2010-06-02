@@ -4,7 +4,7 @@
   <name>Guestbook Lib</name>
   <classname>Guestbook</classname>
   <classpath>php.libs</classpath>
-  <version>1.02</version>
+  <version>1.05</version>
   <count>*</count>
   <comment>
     Uživatelská kniha návštěv.
@@ -24,16 +24,11 @@
       <attname>pageId</attname>
       <attreq>implied</attreq>
     </attribute>
-    <attribute>
-      <attname>smilies</attname>
-      <attreq>implied</attreq>
-    </attribute>
     <comment>
       Zobrazí formulář pro vložení nového příspěvku. Kde guestbookId je Id návštěvní knihy 
       a parentId je Id rodičovského příspěvku(defaultně 0). ParentId je také možné 
       předávat přes _POST['guestbook-parent-id']. Pokud je nastaven pageId, po odeslání
-      dat bude uživatel přesměrován na tuto stránku. Pokud je 'smilies' true, zobrazí
-      se smajlíci.
+      dat bude uživatel přesměrován na tuto stránku.
     </comment>
   </tag>
   <tag>
@@ -65,5 +60,31 @@
       stránky s formulářem pro zadání odpovědi. Pokud je 'useFrames' true, odpoved bude zobrazena do framu.
     </comment>
   </tag>
+  <tag>
+    <tagname>listAll</tagname>
+    <function>showListOfGuestbooks</function>
+    <attribute>
+      <attname>useFrame</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vypíše seznam všech knih.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>setIdFromList</tagname>
+    <function>setIdFromList</function>
+    <comment>
+      Nastaví id knihy z get proměnné z listAll
+    </comment>
+  </tag>
+  <property>
+  	<propname>id</propname>
+  	<setfunction>setGuestbookId</setfunction>
+  	<getfunction>getGuestbookId</getfunction>
+    <comment>
+      Vrací id vybrané knihy.
+    </comment>
+  </property>
 </taglib>
 

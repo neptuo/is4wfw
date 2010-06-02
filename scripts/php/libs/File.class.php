@@ -1016,9 +1016,22 @@
       if($langId == false) {
 				$langId = $webObject->LanguageId;
 			}
+			
+			if($lightbox == "true") {
+				// Include scripts and styles
+				$return .= ''
+				.'<link type="text/css" rel="stylesheet" href="~/css/jquery-lightbox.css" />'
+				.'<script type="text/javascript" src="~/js/jquery/jquery.js"></script>'
+				.'<script type="text/javascript" src="~/js/jquery/jquery-lightbox-pack.js"></script>'
+				.'<script type="text/javascript">'."\n"
+				.'$(function() {'
+					.'$("#light-gallery-'.$lightId.' a").lightBox({fixedNavigation:true});'
+				.'});'
+				.'</script>';
+			}
       
       $return .= ''
-      .'<div class="gallery-cover">'
+      .'<div '.(($lightbox == "true") ? 'id="light-gallery-'.$lightId.'"' : "").' class="gallery-cover">'
         .'';
       
       if($showSubDirs == "true") {

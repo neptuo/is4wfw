@@ -13,7 +13,7 @@
    * 	System javascripts	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-04-15
+   *  @timestamp  2010-06-02
    * 
    */  
   class Js extends BaseTagLib {
@@ -102,6 +102,29 @@
     	$content = str_replace("{root-page}", $rootPageId, $content); 
     	
     	$return .= '<script type="text/javascript">'.$content.'</script>';
+    	
+    	return $return;
+    }
+    
+    public function addResourcesToPage($names, $type, $as = fale) {
+    	global $phpObject;
+    	$return .= '';  
+    	
+    	if($type != "js" && $type != "css") {
+    		$type = "js";
+    	}
+    	
+    	$namesAsArray = $phpObject->str_tr($names, ',');
+    	foreach($namesAsArray as $name) {
+    		$path = $type == "js" ? "js/".trim($name).".js" : "css/".trim($name).".css";
+    		if(file_exists("scripts/".$path)) {
+    			if($as == 'inline') {
+    				$return .= ($type == "js") ? '<script type="text/javascript">'."\n".file_get_contents("scripts/".$path)."\n".'</script>' : '<style type="text/css">'."\n".file_get_contents("scripts/".$path)."\n".'</style>';
+    			} else {
+    				$return .= ($type == "js") ? '<script type="text/javascript" src="~/'.$path.'"></script>' : '<link rel="stylesheet" href="~/'.$path.'" type="text/css" />';
+    			}
+    		}
+    	}
     	
     	return $return;
     }

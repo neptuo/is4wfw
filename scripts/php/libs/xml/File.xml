@@ -4,7 +4,7 @@
   <name>File Lib</name>
   <classname>File</classname>
   <classpath>php.libs</classpath>
-  <version>1.14</version>
+  <version>1.15</version>
   <count>*</count>
   <comment>
     Třída pro správu souborů.
