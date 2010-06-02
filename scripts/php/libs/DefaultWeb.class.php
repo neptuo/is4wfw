@@ -364,7 +364,6 @@
 				}
 			
 				// Parsovat tag_lib_start + end!!!!!!!!!!!!!
-			
       	$return = $dbObject->fetchAll("SELECT `id` FROM `language` WHERE `language` = \"".$path[0]."\";");
 	      if(count($return) == 1) {
   	    	$this->LanguageName = $path[0];
@@ -409,6 +408,8 @@
       	$this->UrlDef = $ucache[0]['url_def'];
       	$this->Url = $ucache[0]['url'];
       	$this->LanguageId = $ucache[0]['language_id'];
+				$name = $dbObject->fetchAll("select `language` from `language` where `id` = ".$this->LanguageId.";");
+      	$this->LanguageName = $name[0]['language'];
 			
 				$path = $phpObject->str_tr($this->Path, '/', 1);
 				if($ok && $parsed_url[1] != '') {

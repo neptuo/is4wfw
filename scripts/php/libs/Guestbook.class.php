@@ -26,12 +26,14 @@
   	private $GuestbookId = 0;
   
     public function __construct() {
+    	global $webObject;
+    
       parent::setTagLibXml("xml/Guestbook.xml");
       
       if($webObject->LanguageName != '') {
 				$rb = new ResourceBundle();
 				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-					$BundleLang = $webObject->LanguageName;
+					$this->BundleLang = $webObject->LanguageName;
 				}
 			}
     }
@@ -254,7 +256,7 @@
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			
       $return = "";
-      if($guestbookId == 'false') {echo 'blabla';
+      if($guestbookId == 'false') {
         $guestbookId = 1;
       }
       
