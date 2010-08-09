@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu>
+	<item name="Url cache" url="~/in/url-cache.view" security:requireGroup="admins" />
+	<item name="Languages" url="~/in/languages.view" security:requireGroup="admins" />
+	<item name="Keywords &amp; robots.txt" url="~/in/keywords.view" security:requireGroup="admins" />
+	<item name="Users &amp; Roles" url="~/in/users.view" security:requireGroup="admins" />
+	<item name="User log" url="~/in/user-log.view" security:requireGroup="admins" />
+	<item name="Application log" url="~/in/application-log.view" security:requireGroup="admins" />
+	<item name="Database connections" url="~/in/database-connections.view" security:requireGroup="admins" />
+	<item name="Personal properties" url="~/in/personal-properties.view" />
+	<item name="Personal notes" url="~/in/personal-notes.view" />
+</menu>

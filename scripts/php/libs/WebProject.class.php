@@ -6,6 +6,7 @@
    *
    */
   require_once("BaseTagLib.class.php");
+  require_once("System.class.php");
   
   /**
    * 
@@ -13,7 +14,7 @@
    * 	management of web projects	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-12-31
+   *  @timestamp  2010-08-08
    * 
    */  
   class WebProject extends BaseTagLib {
@@ -72,27 +73,42 @@
 					}
 				}
 				if(!$ok) {
-					$_SESSION['selected-project'] = $projects[0]['id'];
+					$sys = new System();
+					$val = $sys->getPropertyValue('WebProject.defaultProjectId');
+					$proj = parent::db()->fetchSingle('select `id` from `web_project` where `id` = '.$val.';');
+					if($val > 0 && $proj != array()) {
+							$_SESSION['selected-project'] = $val;
+					} elseif(count($projects) > 0) {
+						$_SESSION['selected-project'] = $projects[0]['id'];
+					} else {
+						$_SESSION['selected-project'] = '';
+					}
 				}
 			}
 			
-			$return .= ''
-			.'<div class="select-project">'
-				.'<form name="select-project" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-					.'<label for="select-project">'.$rb->get('selectproject.label').'</label> '
-					.'<select id="select-project" name="project-id">';
-			$projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `web_project`.`name`;');
-			foreach($projects as $project) {
-				$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = '.$project['id'].' AND `type` = '.WEB_R_WRITE.' ORDER BY `value` DESC;');
-				if(count($permission)) {
-					$return .= '<option value="'.$project['id'].'"'.(($_SESSION['selected-project'] == $project['id']) ? ' selected="selected"' : '').'>'.$project['name'].'</option>';
+			$projectId = $_SESSION['selected-project'];
+			
+			if(count($projects) > 0) {
+				$return .= ''
+				.'<div class="select-project">'
+					.'<form name="select-project" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<label for="select-project">'.$rb->get('selectproject.label').'</label> '
+						.'<select id="select-project" name="project-id">';
+				$projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `web_project`.`name`;');
+				foreach($projects as $project) {
+					$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = '.$project['id'].' AND `type` = '.WEB_R_WRITE.' ORDER BY `value` DESC;');
+					if(count($permission)) {
+						$return .= '<option value="'.$project['id'].'"'.(($projectId == $project['id']) ? ' selected="selected"' : '').'>'.$project['name'].'</option>';
+					}
 				}
+				$return .= ''
+						.'</select> '
+						.'<input type="submit" name="select-project" value="'.$rb->get('selectproject.submit').'" />'
+					.'</form>'
+				.'</div>';
+			} else {
+				$return .= '<div class="select-project">'.parent::getWarning('No projects').'</div>';
 			}
-			$return .= ''
-					.'</select> '
-					.'<input type="submit" name="select-project" value="'.$rb->get('selectproject.submit').'" />'
-				.'</form>'
-			.'</div>';
 			
 			if($useFrames == "false") {
 				return $return;
@@ -153,7 +169,7 @@
 							.'<th class="th-url">View:</th>'
 							.'<th class="th-protocol">Protocol:</th>'
 							.(($editable == "true") ? ''
-							.'<th class="th-edit">Edit:</th>'
+							.'<th class="th-edit"></th>'
 							: '')
 						.'</tr>'
 					.'</thead>'
@@ -237,7 +253,7 @@
 		 *	C tag.		 
 		 *
 		 */		 		 		 		
-		public function showEditForm() {
+		public function showEditForm($showNotSelectedError = false) {
 			global $webObject;
 			global $dbObject;
 			global $loginObject;
@@ -251,7 +267,7 @@
 			
 			
 			if($_POST['save-project'] == 'Save') {
-				$project = array('id' => $_POST['wp'], 'name' => $_POST['project-name'], 'url' => $_POST['project-url'], 'http' => $_POST['project-http'], 'https' => $_POST['project-https'], 'alias1' => $_POST['project-alias1'], 'alias2' => $_POST['project-alias2'], 'alias3' => $_POST['project-alias3'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d'], 'wysiwyg' => $_POST['project-edit-styles-wysiwyg'], 'error_all_pid' => $_POST['project-errors-all'], 'error_404_pid' => $_POST['project-errors-404'], 'error_403_pid' => $_POST['project-errors-403']);
+				$project = array('id' => $_POST['project-id'], 'name' => $_POST['project-name'], 'url' => $_POST['project-url'], 'http' => $_POST['project-http'], 'https' => $_POST['project-https'], 'alias1' => $_POST['project-alias1'], 'alias2' => $_POST['project-alias2'], 'alias3' => $_POST['project-alias3'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d'], 'wysiwyg' => $_POST['project-edit-styles-wysiwyg'], 'error_all_pid' => $_POST['project-errors-all'], 'error_404_pid' => $_POST['project-errors-404'], 'error_403_pid' => $_POST['project-errors-403']);
 				$errors = array();
 				
 				$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`wp` = '.$project['id'].' AND `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
@@ -391,7 +407,8 @@
 				} else {
 					$return .= '<h4 class="error">Permission Denied!</h4>';
 				}
-			} 
+			}
+			
 			if($_POST['edit'] == "Edit Project" || $_POST['new-project'] == "New Project") {
 				if($fromSave) {
 					$project = $projectData;
@@ -562,13 +579,15 @@
           .'<div class="clear"></div>'
           .'<hr />'
           .'<div class="project-edit-submit">'
-          	.'<input type="hidden" name="wp" value="'.$project['id'].'" />'
+          	.'<input type="hidden" name="project-id" value="'.$project['id'].'" />'
           	.'<input type="submit" name="save-project" value="Save" />'
           .'</div>'
 				.'</from>';
 				
 			} else {
-				$return .= '<h4 class="error">Please return to previous page and select project to edit.</h4>';
+				if($showNotSelectedError != 'false') {
+					$return .= '<h4 class="error">Please return to previous page and select project to edit.</h4>';
+				}
 			}
 			
 			return parent::getFrame('Edit Web project', $return, '', true);

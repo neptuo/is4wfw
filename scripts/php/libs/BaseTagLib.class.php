@@ -79,13 +79,19 @@
     	global $phpObject;
     	global $dbObject;
     	global $loginObject;
+    	
+    	if(strlen($content) == 0) {
+    		return '';
+    	}
+    	
     	include_once('System.class.php');
     
-	    $escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n");
+	    //$escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n");
     	$name = 'Frame.'.strtolower(str_replace(' ', '', $label));
     	$name = $phpObject->str_tr($name, ':');
     	$name = $name[0];
-    	$name = strtr($name, $escapeChars); 
+    	//$name = strtr($name, $escapeChars); 
+    	$name = self::convertToUrlValid($name);
     	
     	$system = new System();
     	$value = $system->getPropertyValue($name);
@@ -121,6 +127,72 @@
         $this->FirstFrame = false;
       }
       return $return;
+    }
+    
+    public function getError($msg) {
+    	return strlen($msg) == 0 ? '' : '<h4 class="error">'.$msg.'</h4>';
+    }
+    
+    public function getSuccess($msg) {
+    	return strlen($msg) == 0 ? '' : '<h4 class="success">'.$msg.'</h4>';
+    }
+    
+    public function getWarning($msg) {
+    	return strlen($msg) == 0 ? '' : '<h4 class="warning">'.$msg.'</h4>';
+    }
+    
+    public function getTemplateContent($templateId) {
+    	global $webObject;
+      global $dbObject;
+      global $loginObject;
+      $templateContent = "";
+      
+    	$rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
+			if(count($rights) > 0 && $templateId > 0) {
+				$template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = '.$templateId.';');
+				$templateContent = $template[0]['content'];
+			} else {
+				$message = "Permission denied when reading template[templateId = ".$templateId."]!";
+    	  trigger_error($message, E_USER_WARNING);
+    	  return;
+			}
+			
+			return $templateContent;
+    }
+    
+    protected function db() {
+    	global $dbObject;
+    	return $dbObject;
+    }
+    
+    protected function login() {
+    	global $loginObject;
+    	return $loginObject;
+    }
+    
+    protected function request() {
+    	global $requestStorage;
+    	return $requestStorage;
+    }
+    
+    protected function session() {
+    	global $sessionStorage;
+    	return $sessionStorage;
+    }
+    
+    protected function query() {
+    	global $queryStorage;
+    	return $queryStorage;
+    }
+    
+    protected function convertToUrlValid($value) {
+    	$escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n", "Ě" => "E", "É" => "E", "Ř" => "R", "Ť" => "T", "Ý" => "Y", "Ú" => "U", "Ů" => "U", "Í" => "I", "Ó" => "O", "Á" => "A", "Š" => "S", "Ď" => "D", "Ž" => "Z", "Č" => "C", "Ň" => "N", "." => "-", " " => '-');
+      $value = strtr($value, $escapeChars);
+      return $value;
+    }
+    
+    protected function convertToValidUrl($value) {
+    	return self::convertToUrlValid($value);
     }
   }
 

@@ -4,7 +4,7 @@
   <name>Login lib</name>
   <classname>Login</classname>
   <classpath>php.libs</classpath>
-  <version>1.12</version>
+  <version>1.13</version>
   <count>1</count>
   <comment>
     Třída pro logování užívatelů, je defaultním objektem a maximálně jedna instance.

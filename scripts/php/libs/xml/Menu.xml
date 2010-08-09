@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Menu Lib</name>
+  <classname>Menu</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    "Menu"
+  </comment>
+  <tag>
+    <tagname>xmlMenu</tagname>
+    <function>showXmlMenu</function>
+    <attribute>
+      <attname>file</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zobrazí menu ze zadaného xml souboru.
+    </comment>
+  </tag>
+</taglib>
+

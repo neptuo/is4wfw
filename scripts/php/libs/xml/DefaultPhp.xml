@@ -4,7 +4,7 @@
   <name>Default php lib</name>
   <classname>DefaultPhp</classname>
   <classpath>php.libs</classpath>
-  <version>1.10</version>
+  <version>1.13</version>
   <count>1</count>
   <comment>
     Defaultní třída pro registrování a rušení c tag libs.
@@ -22,9 +22,9 @@
       <attreq>required</attreq>
     </attribute>
     <comment>
-      Zaregistruje tag lig na základě předaných parametrů, kde:
+      Zaregistruje tag lib na základě předaných parametrů, kde:
       tagPrefix je prefix (př.: moje) pro nový objekt a classPath je cesta k souboru
-      s požadovanou třídou (př.: php.libs.Moje).
+      s požadovanou třídou (př.: php.libs.MyClass).
     </comment>
   </tag>
   <tag>
@@ -49,5 +49,20 @@
       Nastaví cachování v aplikaci.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>using</tagname>
+    <function>usingObject</function>
+    <attribute>
+      <attname>prefix</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>class</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zaregistruje tag lib, který je možný používat v těle tagu, za ukončovací značkou ho zase zruší.
+    </comment>
+  </fulltag>
 </taglib>
 

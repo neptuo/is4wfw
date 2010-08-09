@@ -6,13 +6,14 @@
    *
    */
   require_once("BaseTagLib.class.php");
+  require_once("scripts/php/classes/CustomTagParser.class.php");
   
   /**
    * 
    *  Article class
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-10-28
+   *  @timestamp  2010-08-08
    * 
    */  
   class Article extends BaseTagLib {
@@ -87,10 +88,9 @@
 			}
         
       $sort = (strtolower($sort) == 'desc' ? 'DESC' : 'ASC'); 
-      $articles = $dbObject->fetchAll("SELECT `article`.`id`, `article_content`.`name`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article`.`line_id` = ".$lineId." AND `article_content`.`language_id` = ".$articleLangId." AND `article_line_right`.`type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString().")) ORDER BY `article_content`.`timestamp` " . $sort . ";");
+      $articles = $dbObject->fetchAll("SELECT `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article`.`line_id` = ".$lineId." AND `article_content`.`language_id` = ".$articleLangId." AND `article_line_right`.`type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString().")) ORDER BY `article_content`.`timestamp` " . $sort . ";");
       if(count($articles) > 0) {
       	$flink = '';
-        require_once("scripts/php/classes/CustomTagParser.class.php");
         foreach($articles as $article) {
           /*$templateContentRow = $templateContent;
           $article['timestamp'] = date("H:i:s d:m:Y", $article['timestamp']);
@@ -112,13 +112,23 @@
           $return .= $templateContentRow;
           */
           
-          $_SESSION['article-id'] = $article['id'];
+          /*$_SESSION['article-id'] = $article['id'];
           $_SESSION['current-article']['date'] = date("d.m.Y", $article['timestamp']);
           $_SESSION['current-article']['time'] = date("H:i:s", $article['timestamp']);
           $_SESSION['current-article']['name'] = $article['name'];
           $_SESSION['current-article']['author'] = $article['author'];
           $_SESSION['current-article']['head'] = $article['head'];
-          $_SESSION['current-article']['content'] = $article['content'];
+          $_SESSION['current-article']['content'] = $article['content'];*/
+          
+          parent::request()->set('id', $article['id'], 'current-article');
+	        parent::request()->set('date', $article['timestamp'], 'current-article');
+        	parent::request()->set('time', $article['timestamp'], 'current-article');
+      	  parent::request()->set('name', $article['name'], 'current-article');
+    	    parent::request()->set('author', $article['author'], 'current-article');
+  	      parent::request()->set('head', $article['head'], 'current-article');
+	        parent::request()->set('content', $article['content'], 'current-article');
+          
+          self::setUrl($article['url']);
           if($detail) {
             if($method == "static") {
               $flink = $link.'?article-id='.$article['id'];
@@ -231,7 +241,7 @@
      *  @return   article id in template
      *
      */                        
-    public function showDetail($template = false, $templateId = false, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false) {
+    public function showDetail($template = false, $templateId = false, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = false) {
       global $webObject;
       global $dbObject;
       global $loginObject;
@@ -249,7 +259,21 @@
 					$articleId = $defaultArticleId;
 				} elseif($this->CurrentId != 0) {
           $articleId = $this->CurrentId;
-        } else {
+        } elseif(self::getUrl() != '') { 
+					$url = self::getUrl();
+					$sql = 'select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "'.$url.'"'.($lineId != '' && is_numeric($lineId) ? ' and `line_id` = '.$lineId : '').';';
+					$arid = parent::db()->fetchAll($sql);
+					if(count($arid) == 1) {
+						$articleId = $arid[0]['article_id'];
+					} else {
+						if($showError != 'false') {
+    	  	    $message = 'Missing argument [article-id]!';
+  	  	      echo '<h4 class="error">'.$message.'</h4>';
+	  	        trigger_error($messgae, E_USER_WARNING);
+  	        }
+		        return;
+					}
+				} else {
         	if($showError != 'false') {
     	      $message = 'Missing argument [article-id]!';
   	        echo '<h4 class="error">'.$message.'</h4>';
@@ -287,7 +311,6 @@
       
       $article = $dbObject->fetchAll("SELECT `name`, `head`, `content`, `author`, `timestamp` FROM `article_content` WHERE `article_id` = ".$articleId." AND `language_id` = ".$articleLangId.";");
       if(count($article) == 1) {
-      	require_once("scripts/php/classes/CustomTagParser.class.php");
         /*$article[0]['timestamp'] = date("H:i:s d:m:Y", $article[0]['timestamp']);
         
         foreach($article[0] as $key => $val) {
@@ -295,12 +318,21 @@
         }
         $return .= $templateContent;*/
         
-        $_SESSION['current-article']['date'] = date("d.m.Y", $article[0]['timestamp']);
+        /*$_SESSION['current-article']['date'] = date("d.m.Y", $article[0]['timestamp']);
         $_SESSION['current-article']['time'] = date("H:i:s", $article[0]['timestamp']);
         $_SESSION['current-article']['name'] = $article[0]['name'];
         $_SESSION['current-article']['author'] = $article[0]['author'];
         $_SESSION['current-article']['head'] = $article[0]['head'];
-        $_SESSION['current-article']['content'] = $article[0]['content'];
+        $_SESSION['current-article']['content'] = $article[0]['content'];*/
+        
+        
+        parent::request()->set('id', $articleId, 'current-article');
+        parent::request()->set('date', $article[0]['timestamp'], 'current-article');
+        parent::request()->set('time', $article[0]['timestamp'], 'current-article');
+        parent::request()->set('name', $article[0]['name'], 'current-article');
+        parent::request()->set('author', $article[0]['author'], 'current-article');
+        parent::request()->set('head', $article[0]['head'], 'current-article');
+        parent::request()->set('content', $article[0]['content'], 'current-article');
         
 				$Parser = new CustomTagParser();
 			  $Parser->setContent($templateContent);
@@ -444,7 +476,7 @@
               .'<td class="article-mgm-td article-mgm-head">'
                 .'<div class="article-head-cover">'
                   .'<span class="article-head-in">'
-                    .htmlspecialchars($info['head'])
+                    .htmlspecialchars($info['name'].' - '.$info['head'])
                   .'</span>'
                 .'</div>'
               .'</td>'
@@ -611,7 +643,10 @@
               .'<input type="text" name="article-author" value="'.$articleContent['author'].'" />'
             .'</div>'
             .'<div class="clear"></div>'
-          .'</div>';
+          .'</div>'
+					.'<div class="gray-box">'
+						.'<input type="text" class="long-input" name="article-url" value="'.$article['url'].'" />'
+					.'</div>';
       if($propertyEditors == 'edit_area') {
 				$return .= ''
 					.'<div id="editors" class="editors edit-area-editors">'
@@ -805,16 +840,18 @@
       $lines = $dbObject->fetchAll('SELECT `article_line`.`id`, `article_line`.`name` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `id`;');
       if(count($lines) > 0) {
         $return .= ''
-        .'<form name="article-select-line" method="'.(($method == "get") ? 'get' : 'post').'" action="'.$_SERVER['REDIRECT_URL'].'">'
-        	.'<label for="select-line">Select article line: </label>'
-          .'<select id="select-line" name="line-id">';
+        .'<div class="gray-box">'
+	        .'<form name="article-select-line" method="'.(($method == "get") ? 'get' : 'post').'" action="'.$_SERVER['REDIRECT_URL'].'">'
+        		.'<label for="select-line" class="padded">Select article line: </label>'
+      	    .'<select id="select-line" name="line-id" class="w200">';
         foreach($lines as $line) {
           $return .= '<option value="'.$line['id'].'"'.(($actualiLineId == $line['id']) ? ' selected="selected"' : '').'>'.$line['name'].'</option>';
         }
         $return .= ''
-          .'</select> '
-          .'<input type="submit"'.(($method == "get") ? '' : ' name="select-article-line"').' value="Select" />'
-        .'</form>';
+    	      .'</select> '
+  	        .'<input type="submit"'.(($method == "get") ? '' : ' name="select-article-line"').' value="Select" />'
+	        .'</form>'
+				.'</div>';
       } else {
       	if($showError != 'false') {
         	$return .= '<h4 class="error">No lines to select!</h4>';
@@ -866,76 +903,96 @@
     	global $loginObject;
 			$return = '';
 			$actionUrl = $_SERVER['REDIRECT_URL'];
+			$article = array();
+			$articleContent = array();
 			
 			// Save article .... ;)
 			if($_POST['article-save'] == "Save") {
 				$article = array('id' => $_POST['article-id'], 'line_id' => $_POST['line-id']);
-				$articleContent = array('article_id' => $_POST['article-id'], 'name' => str_replace('"', '\"', $_POST['article-name']), 'head' => str_replace('"', '\"', $_POST['article-head']), 'content' => str_replace('"', '\"', $_POST['article-content']), 'author' => $_POST['article-author'], 'timestamp' => time(), 'language_id' => $_POST['language-id'], 'language_old_id' => $_POST['article-old-lang-id'], 'line_old_id' => $_POST['line-old-id']);
+				$articleContent = array('article_id' => $_POST['article-id'], 'name' => str_replace('"', '\"', $_POST['article-name']), 'head' => str_replace('"', '\"', $_POST['article-head']), 'content' => str_replace('"', '\"', $_POST['article-content']), 'author' => $_POST['article-author'], 'timestamp' => time(), 'language_id' => $_POST['language-id'], 'language_old_id' => $_POST['article-old-lang-id'], 'line_old_id' => $_POST['line-old-id'], 'url' => $_POST['article-url']);
 				
-				$permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = '.$article['line_id'].' AND `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
-				if(count($permission) > 0) {
-					$permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = '.$articleContent['line_old_id'].' AND `article_line_right`.`type` = '.WEB_R_WRITE.' ORDER BY `value` DESC;');
-					if(count($permission) > 0 && ($permission[0]['value'] >= $loginObject->getGroupValue())) {
-	    	  	$artc = $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = ".$article['id']." AND `language_id` = ".$articleContent['language_old_id'].";");
-  		  	  if(count($artc) == 0) {
-  			      $artc = $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = ".$article['id'].";");
-		    	    if(count($artc) == 0) {
-        			  $ac = $articleContent;
-        			  $maxId = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `article`;');
-        			  $article['id'] = $ac['article_id'] = $maxId[0]['id'] + 1;
-      	  		  $dbObject->execute("INSERT INTO `article`(`id`, `line_id`) VALUES (".$article['id'].", ".$article['line_id'].");");
-    	  	    	$dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `head`, `content`, `author`, `timestamp`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", ".$ac['language_id'].");");
-	  		        $return .= '<h4 class="success">New Article Added!</h4>';
-	  		        $_POST['article-id'] = $article['id'];
-	  		        $_POST['language-id'] = $ac['language_id'];
-			        } else {
-  	  	    	  $ac = $articleContent;
-	      		    $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `head`, `content`, `author`, `timestamp`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", ".$ac['language_id'].");");
-    	  	    	$return .= '<h4 class="success">Article Language Version Added!</h4>';
-    	  	    	$_POST['article-id'] = $article['id'];
-	  		        $_POST['language-id'] = $ac['language_id'];
-  	      		}
-		      	} else {
-  	    	  	$ac = $articleContent;
-    		  	  $dbObject->execute("UPDATE `article` SET `line_id` = ".$article['line_id']." WHERE `id` = ".$article['id'].";");
-    			    $dbObject->execute("UPDATE `article_content` SET `name` = \"".$ac['name']."\", `head` = \"".$ac['head']."\", `content` = \"".$ac['content']."\", `author` = \"".$ac['author']."\", `timestamp` = ".$ac['timestamp'].", `language_id` = ".$ac['language_id']." WHERE `article_id` = ".$ac['article_id']." AND `language_id` = ".$ac['language_old_id'].";");
-    			    $_POST['article-id'] = $article['id'];
-	  		      $_POST['language-id'] = $ac['language_id'];
-  		    	  $return .= '<h4 class="success">Article Updated!</h4>';
-		      	}
-	      	}
-				} else {
-					$return .= '<h4 class="error">Permission Denied!</h4>';
+				
+				if($articleContent['url'] == '') {
+					$articleContent['url'] = $articleContent['name'];
 				}
-      }
+				$articleContent['url'] = parent::convertToUrlValid($articleContent['url']);
+				$urls = parent::db()->fetchAll('select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "'.$articleContent['url'].'" and `line_id` = '.$article['line_id'].';');
+				if(count($urls) == 0) {
+					$permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = '.$article['line_id'].' AND `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+					if(count($permission) > 0) {
+						$permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = '.$articleContent['line_old_id'].' AND `article_line_right`.`type` = '.WEB_R_WRITE.' ORDER BY `value` DESC;');
+						if(count($permission) > 0 && ($permission[0]['value'] >= $loginObject->getGroupValue())) {
+	    		  	$artc = $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = ".$article['id']." AND `language_id` = ".$articleContent['language_old_id'].";");
+  		  		  if(count($artc) == 0) {
+  			    	  $artc = $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = ".$article['id'].";");
+		    	    	if(count($artc) == 0) {
+        			  	$ac = $articleContent;
+	        			  $maxId = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `article`;');
+  	      			  $article['id'] = $ac['article_id'] = $maxId[0]['id'] + 1;
+    	  	  		  // Ulozeni - NOVY clanek
+									$dbObject->execute("INSERT INTO `article`(`id`, `line_id`) VALUES (".$article['id'].", ".$article['line_id'].");");
+    	  		    	$dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `head`, `content`, `author`, `timestamp`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['url']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", ".$ac['language_id'].");");
+	  		  	      $return .= '<h4 class="success">New Article Added!</h4>';
+	  		    	    $_POST['article-id'] = $article['id'];
+	  		      	  $_POST['language-id'] = $ac['language_id'];
+				        } else {
+  		  	    	  $ac = $articleContent;
+  		  	    	  // Ulozeni - NOVA jaz.verze
+	    	  		    $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `head`, `content`, `author`, `timestamp`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['url']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", ".$ac['language_id'].");");
+    	  		    	$return .= '<h4 class="success">Article Language Version Added!</h4>';
+    	  		    	$_POST['article-id'] = $article['id'];
+	  		    	    $_POST['language-id'] = $ac['language_id'];
+	  	      		}
+			      	} else {
+  		    	  	$ac = $articleContent;
+    			  	  $dbObject->execute("UPDATE `article` SET `line_id` = ".$article['line_id']." WHERE `id` = ".$article['id'].";");
+    				    $dbObject->execute("UPDATE `article_content` SET `name` = \"".$ac['name']."\", `url` = \"".$ac['url']."\", `head` = \"".$ac['head']."\", `content` = \"".$ac['content']."\", `author` = \"".$ac['author']."\", `timestamp` = ".$ac['timestamp'].", `language_id` = ".$ac['language_id']." WHERE `article_id` = ".$ac['article_id']." AND `language_id` = ".$ac['language_old_id'].";");
+    				    $_POST['article-id'] = $article['id'];
+	  		    	  $_POST['language-id'] = $ac['language_id'];
+  		    	  	$return .= '<h4 class="success">Article Updated!</h4>';
+			      	}
+		      	}
+					} else {
+						$return .= '<h4 class="error">Permission Denied!</h4>';
+					}
+	      } else {
+					$return .= parent::getError('This url already exists!');
+				}
+			}
 			
-			
-			if(array_key_exists('article-id', $_POST) && array_key_exists('language-id', $_POST)) {
+			if(array_key_exists('article-id', $_POST) && $_POST['article-id'] != '' && array_key_exists('language-id', $_POST)) {
 				$articleId = $_POST['article-id'];
 				$languageId = $_POST['language-id'];
 				
-				// test na prava pro cteni z prislusne rady!
-				$article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article`.`line_id` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) AND `article_content`.`article_id` = '.$articleId.' AND `article_content`.`language_id` = '.$languageId.' ORDER BY `id`;');
-				if(count($article) != 0) {
-					$article = $article[0];
-				} else {
-					$return .= '<h4 class="error">No article selected!</h4>';
-    		  if($useFrames != "false") {
-						return parent::getFrame('Edit Article', $return, '');
+				if($_POST['article-id'] != '') {
+					// test na prava pro cteni z prislusne rady!
+					$article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article`.`line_id` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) AND `article_content`.`article_id` = '.$articleId.' AND `article_content`.`language_id` = '.$languageId.' ORDER BY `id`;');
+					if(count($article) != 0) {
+						$article = $article[0];
 					} else {
-						return $return;
+						$return .= '<h4 class="error">No article selected!</h4>';
+    			  if($useFrames != "false") {
+							return parent::getFrame('Edit Article', $return, '');
+						} else {
+							return $return;
+						}
 					}
+					$new = false;
+				} elseif(array_key_exists('article-id', $_POST)) {
+					$article['article_id'] = $_POST['article-id'];
+					$articleId = $_POST['article-id'];
+					$new = true;
+				} else {
+					$new = true;
 				}
-				$new = false;
-			} elseif(array_key_exists('article-id', $_POST)) {
-				$article['article_id'] = $_POST['article-id'];
-				$articleId = $_POST['article-id'];
-				$new = true;
+				$usedLangs = $dbObject->fetchAll("SELECT `language_id` FROM `article_content` WHERE `article_id` = ".$article['article_id'].";");
 			} else {
 				$new = true;
+				$userLangs = array();
+				$article = $articleContent;
 			}
       
-      $usedLangs = $dbObject->fetchAll("SELECT `language_id` FROM `article_content` WHERE `article_id` = ".$article['article_id'].";");
+      
       $langs = $dbObject->fetchAll("SELECT `id`, `language` FROM `language` ORDER BY `language`;");
       
       $langSelect = '<select id="language-id" name="language-id">';
@@ -965,7 +1022,7 @@
       
       // Testovat prava zapisu do rady!!!
       $lines = $dbObject->fetchAll('SELECT DISTINCT `article_line`.`id`, `article_line`.`name` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
-      $lineSelect = '<select id="line-id" name="line-id">';
+      $lineSelect = '<select id="line-id" name="line-id" class="w160">';
       foreach($lines as $line) {
         $lineSelect .= '<option value="'.$line['id'].'"'.(($line['id'] == $article['line_id']) ? ' selected="selected"' : '').'>'.$line['name'].'</option>';
       }
@@ -987,24 +1044,28 @@
       .'<div class="article-mgm-edit">'
         .'<form name="article-edit" method="post" action="'.$actionUrl.'">'
           .'<div class="article-prop">'
-            .'<div class="article-name">'
-              .'<label for="article-name">Name:</label> '
-              .'<input type="text" id="article-name" name="article-name" value="'.$article['name'].'" />'
+            .'<div class="article-name gray-box-float">'
+              .'<label for="article-name" class="w60">Name:</label> '
+              .'<input type="text" id="article-name" name="article-name" value="'.$article['name'].'" class="w300" />'
             .'</div>'
-            .'<div class="article-line">'
-              .'<label for="line-id">Article Line:</label> '
+            .'<div class="article-line gray-box-float">'
+              .'<label for="line-id" class="padded">Article Line:</label> '
               .$lineSelect
             .'</div>'
-            .'<div class="article-lang">'
-              .'<label for="language-id">Language:</label> '
+            .'<div class="article-lang gray-box-float">'
+              .'<label for="language-id" class="padded">Language:</label> '
               .$langSelect
             .'</div>'
-            .'<div class="article-author">'
-              .'<label for="article-author">Author:</label> '
-              .'<input type="text" id="article-author" name="article-author" value="'.$article['author'].'" />'
+            .'<div class="article-author gray-box-float">'
+              .'<label for="article-author" class="padded">Author:</label> '
+              .'<input type="text" id="article-author" name="article-author" value="'.$article['author'].'" class="w200" />'
             .'</div>'
             .'<div class="clear"></div>'
-          .'</div>';
+          .'</div>'
+					.'<div class="gray-box">'
+						.'<label for="article-url" class="w60">Url:</label> '
+						.'<input type="text" class="long-input" name="article-url" id="article-url" value="'.$article['url'].'" />'
+					.'</div>';
       if($propertyEditors == 'edit_area') {
 				$return .= ''
 					.'<div id="editors" class="editors edit-area-editors">'
@@ -1255,32 +1316,53 @@
 			}
 		}
 		
-		public function showDate() {
-			return $_SESSION['current-article']['date'];
+		public function showId() {
+			return parent::request()->get('id', 'current-article');
 		}
 		
-		public function showTime() {
-			return $_SESSION['current-article']['time'];
+		public function showDate($format = 'd.m.Y') {
+			if($format == '') {
+				$format = 'd.m.Y';
+			}
+			return date($format, parent::request()->get('date', 'current-article'));
+		}
+		
+		public function showTime($format = 'H:i:s') {
+			if($format == '') {
+				$format = 'H:i:s';
+			}
+			return parent::request()->get('time', 'current-article');
 		}
 		
 		public function showName() {
-			return $_SESSION['current-article']['name'];
+			return parent::request()->get('name', 'current-article');
 		}
 		
 		public function showAuthor() {
-			return $_SESSION['current-article']['author'];
+			return parent::request()->get('author', 'current-article');
 		}
 		
 		public function showHead() {
-			return $_SESSION['current-article']['head'];
+			return parent::request()->get('head', 'current-article');
 		}
 		
 		public function showContent() {
-			return $_SESSION['current-article']['content'];
+			return parent::request()->get('content', 'current-article');
 		}
 		
 		public function showLink() {
-			return $_SESSION['current-article']['link'];
+			return parent::request()->get('link', 'current-article');
+		}
+		
+		// =============== PROPERTIES ======================================
+		
+		public function setUrl($url) {
+			parent::request()->set('article-url', $url);
+			return $url;
+		}
+		
+		public function getUrl() {
+			return parent::request()->get('article-url');
 		}
     
   }

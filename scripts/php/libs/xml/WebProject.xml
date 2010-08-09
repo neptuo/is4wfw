@@ -4,10 +4,11 @@
   <name>WebProject Lib</name>
   <classname>WebProject</classname>
   <classpath>php.libs</classpath>
-  <version>1.03</version>
+  <version>1.06</version>
   <count>*</count>
   <comment>
-    Třída pro správu webových projektů.
+    Třída pro správu webových projektů. 
+		System property "WebProject.defaultProjectId" může uchovávat id projekt zobrazeného po přihlášení
   </comment>
   <tag>
     <tagname>selectProject</tagname>
@@ -44,6 +45,10 @@
   <tag>
     <tagname>showEditForm</tagname>
     <function>showEditForm</function>
+    <attribute>
+      <attname>showNotSelectedError</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Zobrazí formulář pro úpravu nebo vytvoření projektu.
     </comment>

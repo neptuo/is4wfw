@@ -31,11 +31,11 @@
       global $loginObject;
       $return = '';
       
-      if($attUserId == false) {
+      /*if($attUserId == false) {
 				echo "Att User Id is FALSE";
 			} else {
 				echo "Att User Id is TRUE";
-			}
+			}*/
       
       if($_POST['user-edit-save'] == "Save") {
         $uid = $_POST['user-edit-uid'];
@@ -336,7 +336,7 @@
 					}
 				}
 				
-				$groupsForParent = '<select id="new-group-parent" name="new-group-parent">';
+				$groupsForParent = '<select id="new-group-parent" name="new-group-parent" class="w200">';
 				foreach($loginObject->getGroups() as $group) {
 					$groupsForParent .= '<option value="'.$group['gid'].'"'.(($parentGid == $group['gid']) ? 'selected="selected"' : '').'>'.$group['name'].'</option>';
 				}
@@ -345,16 +345,18 @@
 				$return .= ''
 				.'<div class="add-new-group">'
 					.'<form name="add-new-group" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-						.'<div class="new-group-name">'
-							.'<label for="new-group-name">Group name: (<span>at least 2 characters</span>)</label> '
-							.'<input type="text" id="new-group-name" name="new-group-name" value="'.$groupName.'" />'
+						.'<div class="gray-box-float">'
+							.'<label for="new-group-name" class="w300">Group name: (<span>at least 2 characters</span>)</label> '
+							.'<input type="text" id="new-group-name" name="new-group-name" value="'.$groupName.'" class="w200" />'
 						.'</div>'
-						.'<div class="new-group-parent">'
-							.'<label for="new-group-parent">Select parent group:</label> '
+						.'<div class="clear"></div>'
+						.'<div class="gray-box-float">'
+							.'<label for="new-group-parent" class="w300">Select parent group:</label> '
 							.$groupsForParent
 						.'</div>'
+						.'<div class="clear"></div>'
 						.'<hr />'
-						.'<div class="new-group-submit">'
+						.'<div class="gray-box">'
 							.'<input type="submit" name="new-group-submit" value="Save" />'
 						.'</div>'
 					.'</form>'

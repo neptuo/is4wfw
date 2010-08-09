@@ -3,6 +3,7 @@ body {
 }
 
 .cms .head {
+	/*position: static;*/
 	position: fixed;
 }
 

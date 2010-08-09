@@ -14,7 +14,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-12-05
+   *  @timestamp  2010-08-08
    * 
    */  
   class Page extends BaseTagLib {
@@ -66,8 +66,7 @@
         $parentId = $_POST['parent-id'];
         $languageId = $_POST['language'];
         $name = $_POST['edit-name'];
-        $escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n", "." => "-");
-        $href = strtr($_POST['edit-href'], $escapeChars);
+        $href = parent::convertToUrlValid($_POST['edit-href']);
         $inTitle = ($_POST['edit-in-title'] == "on") ? 1 : 0;
         $visible = ($_POST['edit-visible'] == "on") ? 1 : 0;
         $menu = ($_POST['edit-menu'] == "on") ? 1 : 0;
@@ -324,7 +323,7 @@
             $sql_return[0]['href'] = $href;
             $sql_return[0]['in_title'] = $inTitle;
             $sql_return[0]['in_menu'] = $inMenu;
-            $sql_return[0]['is_visible'] = $isVisible;
+            $sql_return[0]['is_visible'] = $visible;
             $sql_return[0]['head'] = $head;
             $sql_return[0]['content'] = $content;
             $sql_return[0]['tag_lib_start'] = $tlStart;
@@ -588,7 +587,7 @@
           	$return .= parent::getFrame($frameTitle, $returnTmp, "page-editpage");
           } else {
 						//$return .= parent::getFrame($frameTitle, '<h4 class="error">You can\'t add more language versions at this moment! Please, first, add language version to parent page or if this is root page, create more language versions in web application!</h4>', "");
-						$return .= parent::getFrame($frameTitle, '<h4 class="error">'.$rb-get('page.error.alllangversionsused').'</h4>', "");
+						$return .= parent::getFrame($frameTitle, '<h4 class="error">'.$rb->get('page.error.alllangversionsused').'</h4>', "");
 					}
         } else {
           $return .= parent::getFrame($frameTitle, '<h4 class="error">'.$rb->get('page.error.permissiondenied').'</h4>', "", true);
@@ -920,7 +919,7 @@
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
-									$return .= '<h4 class="success">'.$prb->get('pagelist.success.copied').'</h4><h4 class="warning">'.$rb->get('pagelist.warning.urlchanged').' "'.$randUrl.'"</h4>';
+									$return .= '<h4 class="success">'.$rb->get('pagelist.success.copied').'</h4><h4 class="warning">'.$rb->get('pagelist.warning.urlchanged').' "'.$randUrl.'"</h4>';
 								}
 							} else {
 								// Testovat url v dane parent vetvi, nekopirovat vazby na TF
@@ -1099,7 +1098,7 @@
 				}
                   
         
-        $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` LEFT JOIN `page_file_inc` ON `page_file`.`id` = `page_file_inc`.`file_id` WHERE `id` NOT IN (SELECT `file_id` FROM `page_file_inc` WHERE `page_id` = ".$pageId." AND `language_id` = ".$langId.") AND `wp` = ".$_SESSION['selected-project']." ORDER BY `id`;");
+        $files = $dbObject->fetchAll("SELECT DISTINCT `id`, `name`, `content`, `type` FROM `page_file` LEFT JOIN `page_file_inc` ON `page_file`.`id` = `page_file_inc`.`file_id` WHERE `id` NOT IN (SELECT `file_id` FROM `page_file_inc` WHERE `page_id` = ".$pageId." AND `language_id` = ".$langId.") AND `wp` = ".$_SESSION['selected-project']." ORDER BY `id`;");
         if(count($files) != 0) {
   	      $returnTmp = ''
                 .'<form name="files-to-add" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
@@ -1161,8 +1160,7 @@
       $returnTmp .= self::generatePageList(0, $editable, 0, $projectId);
       $returnTmp .= '</div></div>';
       //$return .= parent::getFrame($rb->get('pagelist.title'), $returnTmp, 'page-pagelist');
-      
-      if($_SESSION['selected-project'] != null) {
+      if($_SESSION['selected-project'] != '') {
       	$returnTmp = ''
 				.'<div class="add-page">'
 					.'<ul>'
@@ -1565,14 +1563,16 @@
       	//$return .= parent::getFrame('Text files', $returnTmp, '');
       } else {
 				//$return .= parent::getFrame('Text files', '<h4 class="error">No files to edit!</h4>', '');
-				$returnTmp .= '<h4 class="error">No files to edit!</h4>';
+				$returnTmp .= parent::getWarning('No files to edit!');
 			}
       
-      $returnTmp .= ''
-      .'<hr />'
-      .'<form name="add-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-      	.'<input type="submit" name="add-file" value="New file" title="Create new file" />'
-      .'</form>';
+      if($_SESSION['selected-project'] != '') {
+	      $returnTmp .= ''
+      	.'<hr />'
+    	  .'<form name="add-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+  	    	.'<input type="submit" name="add-file" value="New file" title="Create new file" />'
+	      .'</form>';
+      }
       $return .= parent::getFrame('Text Files', $returnTmp, '');
       return $return;
     }
@@ -1597,9 +1597,9 @@
                 .'<form name="edit-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
                   .'<div class="edit-file-name">'
                     .'<div class="text-file-prop">'
-                      .'<div class="text-file-name">'
+                      .'<div class="text-file-name gray-box">'
                         .'<label for="file-name">Name:</label> '
-                        .'<input type="text" name="file-name" value="'.$fileName.'" /> '
+                        .'<input type="text" name="file-name" value="'.$fileName.'" class="w300" /> '
                       .'</div>'
                       .'<div class="text-file-type">'
                         .'<label for="file-type">Type:</label> '
@@ -1854,15 +1854,51 @@
 			$keywords = file_get_contents("keywords.txt");
 			$returnForm = ''
 			.((strlen($msg) > 0) ? $msg : '' )
-			.'<div class="update-keywords">'
-				.'<form class="update-keywords" name="update-keywords" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-					.'<label for="keywords">Set keywords of whole web app:</label> '
-					.'<input class="keywords-input" type="text" name="keywords" value="'.$keywords.'" /> '
-					.'<input type="submit" name="save-keywords" value="Save" >'
+				.'<form name="update-keywords" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<div class="gray-box">'
+						.'<label for="keywords">Set keywords of whole web app:</label> '
+						.'<input type="text" name="keywords" value="'.$keywords.'" class="wmax" /> '
+					.'</div>'
+					.'<div class="gray-box font-right">'
+						.'<input type="submit" name="save-keywords" value="Save" >'
+					.'</div>'
+				.'</form>';
+			
+			return parent::getFrame("Manage keywords", $returnForm, "", true);
+		}
+		
+		/**
+		 *
+		 *	Setups robots.txt of whole web app.
+		 *	C tag.
+		 *	
+		 *	return form		 		 		 		 		 
+		 *
+		 */		 		 		 		
+		public function updateRobots() {
+			$return = $msg = '';
+			
+			if($_POST['save-robots'] == "Save") {
+				file_put_contents("robots.txt", $_POST['robots']);
+				$msg = parent::getSuccess('Robots.txt file saved!');
+			}
+			
+			$robots = file_get_contents("robots.txt");
+			$returnForm = ''
+			.((strlen($msg) > 0) ? $msg : '' )
+			.'<div id="editors" class="update-robots editors">'
+				.'<form class="update-robots" name="update-robots" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<div class="gray-box">'
+						.'<label for="robots">Robots.txt:</label> '
+						.'<textarea class="edit-area html" id="robots" name="robots" rows="20">'.$robots.'</textarea>'
+					.'</div>'
+					.'<div class="gray-box font-right">'
+						.'<input type="submit" name="save-robots" value="Save" >'
+					.'</div>'
 				.'</form>'
 			.'</div>';
 			
-			return parent::getFrame("Manage keywords", $returnForm, "", true);
+			return parent::getFrame("Manage robots.txt", $returnForm, "", true);
 		}
 		
 		/**
@@ -1903,7 +1939,8 @@
 			$langs = $dbObject->fetchAll('SELECT `id`, `language` FROM `language` ORDER BY `id`;');
 			$returnForm = ''
 			.((strlen($msg) > 0) ? $msg : '' )
-			.'<table class="languages-edit">'
+			.parent::getWarning('Language version can deleted only when doesn\'t at least one page that uses it!')
+			.'<table class="languages-edit standart">'
 				.'<tr>'
 					.'<th>Id</th>'
 					.'<th>Name</th>'
@@ -1982,15 +2019,50 @@
 				}
 			}
 			
+			if($_POST['template-search-submit'] == 'Search') {
+				$name = $_POST['template-search-name'];
+				$content = $_POST['template-search-content'];
+				
+				parent::session()->set('name', $name, 'template-search');
+				parent::session()->set('content', $content, 'template-search');
+			} elseif($_POST['template-search-clear'] == 'Clear') {
+				parent::session()->delete('name', 'template-search');
+				parent::session()->delete('content', 'template-search');
+			}
+			
+			$return .= ''
+			.'<form name="template-search" method="post" action"'.$_SERVER['REDIRECT_URL'].'">'
+				.'<div class="gray-box">'
+					.'<label form="template-search-name" class="w100">Name:</label>'
+					.'<input class="w300" type="text" name="template-search-name" id="template-search-name" value="'.parent::session()->get('name', 'template-search').'" />'
+				.'</div>'
+				.'<div class="gray-box">'
+					.'<label form="template-search-content" class="w100">Content:</label>'
+					.'<input class="w300" type="text" name="template-search-content" id="template-search-content" value="'.parent::session()->get('content', 'template-search').'" />'
+				.'</div>'
+				.'<div class="gray-box">'
+					.'<input type="submit" name="template-search-submit" value="Search" /> '
+					.'<input type="submit" name="template-search-clear" value="Clear" />'
+				.'</div>'
+			.'</form>';
+			
 			// Vyber templatu do kterych smim zapisovat
-			$templates = $dbObject->fetchAll('SELECT `template`.`id`, `template`.`content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `template`.`id`;');
+			$searchPara = '';
+			if(parent::session()->exists('name', 'template-search')) {
+				$searchPara .= ' and `template`.`name` like "%'.parent::session()->get('name', 'template-search').'%"';
+			}
+			if(parent::session()->exists('content', 'template-search')) {
+				$searchPara .= ' and `template`.`content` like "%'.parent::session()->get('content', 'template-search').'%"';
+			}
+			$templates = $dbObject->fetchAll('SELECT `template`.`id`, `template`.`name`, `template`.`content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'))'.$searchPara.' ORDER BY `template`.`id`;');
 			
 			if(count($templates) > 0) {
 				$return .= ''
-				.'<table class="template-list data-table">'
+				.'<table class="template-list data-table standart">'
 					.'<thead>'
 					.'<tr>'
 						.'<th class="template-id">Id:</th>'
+						.'<th class="template-name">Name:</th>'
 						.'<th class="template-content">Content:</th>'
 						.'<th class="template-edit">Edit:</th>'
 					.'</tr>'
@@ -2006,7 +2078,8 @@
 					$return .= ''
 					.'<tr class="'.((($i % 2) == 0) ? 'even' : 'idle').'">'
 						.'<td class="template-id">'.$template['id'].'</td>'
-						.'<td class="template-content">'
+						.'<td class="template-name">'.$template['name'].'</td>'
+						.'<td class="template-content" style="overflow:hidden;">'
 							.'<div class="file-content-in"><div class="foo">'.substr($template['content'], 0, 130).'</div></div>'
 						.'</td>'
 						.'<td class="template-edit">'
@@ -2029,7 +2102,7 @@
 				.'</table>';
 			} else {
 				if($showError != 'false') {
-					$return .= '<h4 class="error">No templates to show!</h4>';
+					$return .= parent::getWarning('No templates to show!');
 				}
 			}
 			
@@ -2071,6 +2144,7 @@
 			
 			if($_POST['template-submit'] == "Save") {
 				$templateId = $_POST['template-id'];
+				$templateName = $_POST['template-name'];
 				$templateContent = $_POST['template-content'];
 				$templateContent = str_replace('"', '\"', $templateContent);
 				$templateR = $_POST['template-right-edit-groups-r'];
@@ -2083,7 +2157,7 @@
 				if(count($rights) > 0) {
 	        $template = $dbObject->fetchAll('SELECT `id` FROM `template` WHERE `id` = '.$templateId.';');
   	      if(count($template) == 0) {
-						$dbObject->execute('INSERT INTO `template`(`content`) VALUES ("'.$templateContent.'");');
+						$dbObject->execute('INSERT INTO `template`(`name`, `content`) VALUES ("'.$templateName.'", "'.$templateContent.'");');
 						$last = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `template`;');
 						$templateId = $last[0]['id'];
 						$_POST['template-id'] = $templateId;
@@ -2091,7 +2165,7 @@
 							$return .= '<h4 class="success">Template added!</h4>';
 						}
 					} else {
-						$dbObject->execute('UPDATE `template` SET `content` = "'.$templateContent.'" WHERE `id` = '.$templateId.';');
+						$dbObject->execute('UPDATE `template` SET `name` = "'.$templateName.'", `content` = "'.$templateContent.'" WHERE `id` = '.$templateId.';');
 						if($showError != 'false') {
 							$return .= '<h4 class="success">Template updated!</h4>';
 						}
@@ -2146,9 +2220,13 @@
 				}
 			}
 			
+			if($_POST['template-edit'] != 'Edit' && $_POST['template-submit'] != "Save" && $_POST['template-new'] != "New Template") {
+				return '';
+			}
+			
 			// Pokud je v postu template-id, vyber template, testuj prava, pokud, testuj prava pro template-id 0
 			$templateId = ((array_key_exists('template-id', $_POST)) ? $_POST['template-id'] : 0);
-			$template = $dbObject->fetchAll('SELECT `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+			$template = $dbObject->fetchAll('SELECT `template`.`name`, `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
 			if(count($template) > 0 || $templateId == 0) {
 				$show = array('read' => true, 'write' => true, 'delete' => false);
 				$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `tid` = ".$templateId." AND `type` = ".WEB_R_READ.";");
@@ -2195,6 +2273,10 @@
     	  $template['content'] = str_replace("<", "&lt;", $template['content']);
 				$return .= ''
 				.'<form name="template-edit-detail" method="post" action="'.$actionUrl.'">'
+					.'<div class="gray-box">'
+						.'<label for="template-name" class="padded">Name:</label>'
+						.'<input class="w300" type="text" name="template-name" id="template-name" value="'.$template['name'].'" />'
+					.'</div>'
 					.'<div class="template-rights">'
 						.(($show['read']) ? ''
 						.'<div class="template-right-r">'

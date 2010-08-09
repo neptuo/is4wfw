@@ -15,7 +15,7 @@
    *  @objectname loginObject     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-12-02
+   *  @timestamp  2010-08-02
    *
    *
    */              
@@ -172,10 +172,9 @@
           $username = $_POST['username'];
           $password = sha1($username.$_POST['password']);
           
-          $return = $dbObject->fetchAll("SELECT `gid` FROM `group` WHERE `name` = \"".$group."\";");
+          $return = $dbObject->fetchAll('SELECT `gid` FROM `group` WHERE `name` = "'.mysql_escape_string($group).'";');
           $group_id = $return[0]['gid'];
-          
-          $return = $dbObject->fetchAll("SELECT `user`.`uid`, `user`.`name`, `user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` WHERE `user`.`login` = \"".$username."\" AND `user`.`password` = \"".$password."\" AND `user_in_group`.`gid` = ".$group_id." AND `enable` = 1;");
+          $return = $dbObject->fetchAll('SELECT `user`.`uid`, `user`.`name`, `user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` WHERE `user`.`login` = "'.mysql_escape_string($username).'" AND `user`.`password` = "'.mysql_escape_string($password).'" AND `user_in_group`.`gid` = '.$group_id.' AND `enable` = 1;');
           if(count($return) == 1) {
             $uid = $return[0]['uid'];
             $this->UserLogin = $username;
@@ -193,9 +192,9 @@
               $this->LoggedIn = true;
               
               $link = $webObject->composeUrl($pageId);
-              if(array_key_exists('auto-login-ignore', $_REQUEST)) {
-								$link .= '?auto-login-ignore';
-							}
+              //if(array_key_exists('auto-login-ignore', $_REQUEST)) {
+							//	$link .= '?auto-login-ignore';
+							//}
               header("Location: ".$link);
               $a = $webObject->makeAnchor($pageId, "Redirect");
               echo $a;
@@ -231,9 +230,9 @@
         global $webObject;
         
         $link = $webObject->composeUrl($pageId);
-        if(array_key_exists('auto-login-ignore', $_REQUEST)) {
-					$link .= '?auto-login-ignore';
-				}
+        //if(array_key_exists('auto-login-ignore', $_REQUEST)) {
+				//	$link .= '?auto-login-ignore';
+				//}
         header("Location: ".$link);
               
         $a = $webObject->makeAnchor($pageId, "Redirect");
@@ -275,9 +274,9 @@
           //session_destroy();
           
           $link = $webObject->composeUrl($pageId);
-          if(array_key_exists('auto-login-ignore', $_REQUEST)) {
-						$link .= '?auto-login-ignore';
-					}
+          //if(array_key_exists('auto-login-ignore', $_REQUEST)) {
+					//	$link .= '?auto-login-ignore';
+					//}
           header("Location: ".$link);
           
           $a = $webObject->makeAnchor($pageId, "Redirect");
@@ -302,9 +301,9 @@
         global $webObject;
               
         $link = $webObject->composeUrl($pageId);
-        if(array_key_exists('auto-login-ignore', $_REQUEST)) {
-					$link .= '?auto-login-ignore';
-				}
+        //if(array_key_exists('auto-login-ignore', $_REQUEST)) {
+				//	$link .= '?auto-login-ignore';
+				//}
         header("Location: ".$link);
           
         $a = $webObject->makeAnchor($pageId, "Redirect");

@@ -5,13 +5,13 @@
 	 *	Web framework version.
 	 *
 	 */	 	 	 	
-	define("WEB_VERSION", "1.9.20.201");
+	define("WEB_VERSION", "1.9.24.221");
 
 	/**
 	 *
 	 *	Cms framework version.
 	 *
 	 */	 	 	 	
-	define("CMS_VERSION", "5.01");
+	define("CMS_VERSION", "5.02");
 
 ?>

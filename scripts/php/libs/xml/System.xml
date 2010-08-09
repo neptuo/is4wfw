@@ -4,7 +4,7 @@
   <name>System setup lib</name>
   <classname>System</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
+  <version>1.03</version>
   <count>*</count>
   <comment>
     Třída pro správu webového frameworku.

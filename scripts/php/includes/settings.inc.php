@@ -18,5 +18,7 @@
    define("WEB_R_DELETE", 103);
 
    define("WEB_GROUP", "web");
+   
+   define("VIEW_ROOT", 'admin');
 
 ?>
