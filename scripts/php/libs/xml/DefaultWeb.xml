@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.63</version>
+  <version>1.67</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -155,11 +155,16 @@
       <attname>rel</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>type</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 
       "text" je text v html odkazu, "languageId" je jazyková verze požadované
       stránky, defaultně aktuální jazyková verze. Zbytek jsou standartní html 
       atributy.
+      "type" = link(default) nebo button.
     </comment>
   </tag>
   <tag>
@@ -343,12 +348,65 @@
       Nastaví hodnotu dané proměnné.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>frame</tagname>
+    <function>getFrame</function>
+    <attribute>
+      <attname>title</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>open</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí rámec jako je používaný v RS.
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>genRandNum</tagname>
+    <function>generateRandomNumber</function>
+    <attribute>
+      <attname>min</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>max</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Nastaví session hodnotu na náhodné číslo [mezi min a max pokud jsou zadané].
+    </comment>
+  </tag>
+  <tag>
+    <tagname>plain</tagname>
+    <function>plainFunction</function>
+    <comment>
+      Testovací tag.
+    </comment>
+  </tag>
   <property>
   	<propname>childPage</propname>
   	<setfunction>setChildPage</setfunction>
   	<getfunction>getChildPage</getfunction>
     <comment>
       Vrátí ID další vykreslovaní stránky. Pokud bude PAGES={1,2,3,4}, a aktuálně se bude vykreslovat stránka ID=3, pak property web:childPage bude mít hodnotu 4.
+    </comment>
+  </property>
+  <property>
+  	<propname>currentTime</propname>
+  	<setfunction>setCurrentTime</setfunction>
+  	<getfunction>getCurrentTime</getfunction>
+    <comment>
+      Vrátí aktuální čas (timestamp)
+    </comment>
+  </property>
+  <property>
+  	<propname>randNum</propname>
+  	<setfunction>setRandomNumber</setfunction>
+  	<getfunction>getRandomNumber</getfunction>
+    <comment>
+      Vrácí / Nastavuje náhodné číslo v session, pro nastavení lépe použít web:genRandNum
     </comment>
   </property>
 </taglib>

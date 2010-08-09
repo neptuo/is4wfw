@@ -13,7 +13,7 @@
    * 	management of web framework.	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-10-28
+   *  @timestamp  2010-08-08
    * 
    */  
   class System extends BaseTagLib {
@@ -90,7 +90,7 @@
 							.'<td>&nbsp;</td>'
 						.'</tr>'
 					.'</table>'
-					.'<div class="system-properties-submit">'
+					.'<div class="system-properties-submit gray-box">'
 						.'<input type="submit" name="system-properties-save" value="Save" /> '
 						.'<input type="submit" name="system-properties-delete" value="Delete selected" />'
 					.'</div>'
@@ -116,17 +116,17 @@
 			$return = '';
 			
 			$userId = $loginObject->getUserId();
-			$typeId = 1;
 			
 			if($_POST['system-note-save'] == 'Save') {
 				foreach($_POST['system-note-value'] as $id => $name) {
-					$dbObject->execute('UPDATE `personal_note` SET `value` = "'.$name.'" WHERE `id` = '.$id.';');
+					$type = $_POST['system-note-type'][$id];
+					$dbObject->execute('UPDATE `personal_note` SET `value` = "'.$name.'", `type` = '.$type.' WHERE `id` = '.$id.';');
 				}
 				
-				print_r($_POST);
 				if($_POST['system-note-value-new'] != '') {
 					$value = $_POST['system-note-value-new'];
-					$dbObject->execute('INSERT INTO `personal_note` (`value`, `type`, `user_id`) VALUES ("'.$value.'", '.$typeId.', '.$userId.');', true, false);
+					$type = $_POST['system-note-type-new'];
+					$dbObject->execute('INSERT INTO `personal_note` (`value`, `type`, `user_id`) VALUES ("'.$value.'", '.$type.', '.$userId.');');
 				}
 			} elseif($_POST['system-note-delete'] == 'Delete selected') {
 				foreach($_POST['system-note-delete-item'] as $id => $val) {
@@ -134,7 +134,7 @@
 				}
 			}
 			
-			$properties = $dbObject->fetchAll('SELECT `id`, `value` FROM `personal_note` WHERE `user_id` = '.$userId.' AND `type` = '.$typeId.' ORDER BY `id`;');
+			$properties = $dbObject->fetchAll('SELECT `id`, `value`, `type` FROM `personal_note` WHERE `user_id` = '.$userId.' ORDER BY `id`;');
 			
 			$return .= '' 
 			.'<div class="system-notes">'
@@ -142,6 +142,7 @@
 					.'<table>'
 						.'<tr>'
 							.'<th class="system-note-value">Value:</th>'
+							.'<th class="system-note-delete">Type:</th>'
 							.'<th class="system-note-delete">Delete:</th>';
 			$i = 0;
 			foreach($properties as $prop) {
@@ -149,6 +150,15 @@
 						.'<tr class="'.(($i % 2) == 1 ? 'even' : 'idle').'">'
 							.'<td>'
 								.'<input type="text" value="'.$prop['value'].'" name="system-note-value['.$prop['id'].']" id="system-note-value-'.$prop['id'].'" />'
+							.'</td>'
+							.'<td>'
+								.'<select name="system-note-type['.$prop['id'].']">'
+									.'<option value="1"'.($prop['type'] == 1 ? ' selected="selected"' : '').'>Note</opion>'
+									.'<option value="2"'.($prop['type'] == 2 ? ' selected="selected"' : '').'>Warning</opion>'
+									.'<option value="3"'.($prop['type'] == 3 ? ' selected="selected"' : '').'>Error</opion>'
+									.'<option value="4"'.($prop['type'] == 4 ? ' selected="selected"' : '').'>Fatal</opion>'
+									.'<option value="5"'.($prop['type'] == 5 ? ' selected="selected"' : '').'>Success</opion>'
+								.'</select>'
 							.'</td>'
 							.'<td>'
 								.'<input type="checkbox" name="system-note-delete-item['.$prop['id'].']" />'
@@ -161,10 +171,19 @@
 							.'<td>'
 								.'<input type="text" value="" name="system-note-value-new" id="system-note-value-new" />'
 							.'</td>'
+							.'<td>'
+								.'<select name="system-note-type-new">'
+									.'<option value="1">Note</opion>'
+									.'<option value="2">Warning</opion>'
+									.'<option value="3">Error</opion>'
+									.'<option value="4">Fatal</opion>'
+									.'<option value="5">Success</opion>'
+								.'</select>'
+							.'</td>'
 							.'<td>&nbsp;</td>'
 						.'</tr>'
 					.'</table>'
-					.'<div class="system-note-submit">'
+					.'<div class="system-note-submit gray-box">'
 						.'<input type="submit" name="system-note-save" value="Save" /> '
 						.'<input type="submit" name="system-note-delete" value="Delete selected" />'
 					.'</div>'
@@ -190,21 +209,19 @@
 			$return = '';
 			
 			$userId = $loginObject->getUserId();
-			$typeId = 1;
+			$types = array('', 'note', 'warning', 'error', 'fatal', 'success');
 			
-			$properties = $dbObject->fetchAll('SELECT `value` FROM `personal_note` WHERE `user_id` = '.$userId.' AND `type` = '.$typeId.' ORDER BY `id`;');
+			$properties = $dbObject->fetchAll('SELECT `value`, `type` FROM `personal_note` WHERE `user_id` = '.$userId.' ORDER BY `id`;');
 			
 			$return .= '' 
-			.'<div class="system-note-print">'
-				.'<ul>';
+			.'<div class="system-note-print">';
 			$i = 0;
 			foreach($properties as $prop) {
 				$return .= ''
-						.'<li class="system-note-item system-note-item-'.$i.' system-note-item-'.($i % 2 == 0 ? "idle" : "even").'">'.$prop['value'].'</li>';
+						.'<h4 class="system-note-item system-note-item-'.$i.' system-note-item-'.($i % 2 == 0 ? "idle" : "even").' '.$types[$prop['type']].'">'.$prop['value'].'</h4>';
 				$i ++;
 			}
 			$return .= ''
-				.'</ul>'
 			.'</div>';
 			
 			if($useFrames == "false") {
@@ -225,47 +242,53 @@
 			}
 			
 			$conns = $dbObject->fetchAll('SELECT `id`, `name`, `hostname`, `user`, `password`, `database` FROM `db_connection` ORDER BY `id`;');
-			$return .= ''
-			.'<div class="db-connection">'
-				.'<table>'
-					.'<tr>'
-						.'<th class="db-connection-id">Id:</th>'
-						.'<th class="db-connection-name">Name:</th>'
-						.'<th class="db-connection-hostname">Hostname:</th>'
-						.'<th class="db-connection-database">DB:</th>'
-						.'<th class="db-connection-edit">Edit:</th>'
-					.'</tr>';
-			$i = 1;
-			foreach($conns as $conn) {
+			if(count($conns)) {
 				$return .= ''
-					.'<tr class="'.((($i % 2) == 0) ? 'even' : 'idle').'">'
-						.'<td>'.$conn['id'].'</td>'
-						.'<td>'.$conn['name'].'</td>'
-						.'<td>'.$conn['hostname'].'</td>'
-						.'<td>'.$conn['database'].'</td>'
-						.'<td>'
-							.'<form name="db-connection-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-								.'<input type="hidden" name="db-connection-conn-id" value="'.$conn['id'].'" />'
-								.'<input type="hidden" name="db-connection-conn-edit" value="Edit connection" />'
-								.'<input type="image" src="~/images/page_edi.png" name="db-connection-conn-edit" value="Edit connection" title="Edit connection, id '.$conn['id'].'" />'
-							.'</form>'
-							.'<form name="db-connection-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-								.'<input type="hidden" name="db-connection-conn-id" value="'.$conn['id'].'" />'
-								.'<input type="hidden" name="db-connection-conn-delete" value="Delete connection" />'
-								.'<input class="confirm" type="image" src="~/images/page_del.png" name="db-connection-conn-delete" value="Delete connection" title="Delete connection, id '.$conn['id'].'" />'
-							.'</form>'
-						.'</td>'
-					.'</tr>';
-				$i ++;
+				.'<div class="db-connection">'
+					.'<table>'
+						.'<tr>'
+							.'<th class="db-connection-id">Id:</th>'
+							.'<th class="db-connection-name">Name:</th>'
+							.'<th class="db-connection-hostname">Hostname:</th>'
+							.'<th class="db-connection-database">DB:</th>'
+							.'<th class="db-connection-edit">Edit:</th>'
+						.'</tr>';
+				$i = 1;
+				foreach($conns as $conn) {
+					$return .= ''
+						.'<tr class="'.((($i % 2) == 0) ? 'even' : 'idle').'">'
+							.'<td>'.$conn['id'].'</td>'
+							.'<td>'.$conn['name'].'</td>'
+							.'<td>'.$conn['hostname'].'</td>'
+							.'<td>'.$conn['database'].'</td>'
+							.'<td>'
+								.'<form name="db-connection-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+									.'<input type="hidden" name="db-connection-conn-id" value="'.$conn['id'].'" />'
+									.'<input type="hidden" name="db-connection-conn-edit" value="Edit connection" />'
+									.'<input type="image" src="~/images/page_edi.png" name="db-connection-conn-edit" value="Edit connection" title="Edit connection, id '.$conn['id'].'" />'
+								.'</form> '
+								.'<form name="db-connection-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+									.'<input type="hidden" name="db-connection-conn-id" value="'.$conn['id'].'" />'
+									.'<input type="hidden" name="db-connection-conn-delete" value="Delete connection" />'
+									.'<input class="confirm" type="image" src="~/images/page_del.png" name="db-connection-conn-delete" value="Delete connection" title="Delete connection, id '.$conn['id'].'" />'
+								.'</form>'
+							.'</td>'
+						.'</tr>';
+					$i ++;
+				}
+			} else {
+				$return .= parent::getWarning('No connections.');
 			}
 			$return .= ''
 				.'</table>'
 				.'<hr />'
-				.'<form name="db-connection-new" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-					.'<span>Create new database connection</span> '
-					.'<input type="hidden" name="db-connection-conn-new" value="Create connection" />'
-					.'<input type="image" src="~/images/page_add.png" name="db-connection-conn-new" value="Create connection" title="Create connection" />'
-				.'</form>'
+				.'<div class="gray-box">'
+					.'<form name="db-connection-new" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<span>Create new database connection</span> '
+						.'<input type="hidden" name="db-connection-conn-new" value="Create connection" />'
+						.'<input type="image" src="~/images/page_add.png" name="db-connection-conn-new" value="Create connection" title="Create connection" />'
+					.'</form>'
+				.'</div>'
 			.'</div>';
 			
 		
@@ -273,7 +296,7 @@
 				return $return;
 			} else {
 				if($return != '') {
-					return parent::getFrame('List Database Connection', $return, "", true);
+					return parent::getFrame('List Database Connections', $return, "", true);
 				}
 			}		
 		}
@@ -338,27 +361,28 @@
 			$return = ''
 			.'<div class="db-connection-edit">'
 				.'<form name="db-connection-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-					.'<div class="db-connection-name">'
-						.'<label for="db-connection-name">Name:</label>'
+					.parent::getWarning('Passwords are stored and displayed as plain text!')
+					.'<div class="gray-box">'
+						.'<label for="db-connection-name" class="w160">Name:</label>'
 						.'<input type="text" id="db-connection-name" name="db-connection-name" value="'.$name.'" />'
 					.'</div>'
-					.'<div class="db-connection-hostname">'
-						.'<label for="db-connection-hostname">Hostname:</label>'
-						.'<input type="text" id="db-connection-hostname" name="db-connection-hostname" value="'.$hostname.'" />'
+					.'<div class="gray-box">'
+						.'<label for="db-connection-hostname" class="w160">Hostname:</label>'
+						.'<input type="text" id="db-connection-hostname" name="db-connection-hostname" value="'.$hostname.'" class="w200" />'
 					.'</div>'
-					.'<div class="db-connection-user">'
-						.'<label for="db-connection-user">Username:</label>'
+					.'<div class="gray-box">'
+						.'<label for="db-connection-user" class="w160">Username:</label>'
 						.'<input type="text" id="db-connection-user" name="db-connection-user" value="'.$user.'" />'
 					.'</div>'
-					.'<div class="db-connection-password">'
-						.'<label for="db-connection-password">Password:</label>'
+					.'<div class="gray-box">'
+						.'<label for="db-connection-password" class="w160">Password:</label>'
 						.'<input type="text" id="db-connection-password" name="db-connection-password" value="'.$password.'" />'
 					.'</div>'
-					.'<div class="db-connection-database">'
-						.'<label for="db-connection-database">Database:</label>'
+					.'<div class="gray-box">'
+						.'<label for="db-connection-database" class="w160">Database:</label>'
 						.'<input type="text" id="db-connection-database" name="db-connection-database" value="'.$database.'" />'
 					.'</div>'
-					.'<div class="db-connection-submit">'
+					.'<div class="gray-box">'
 						.'<input type="hidden" name="db-connection-id" value="'.$id.'" />'
 						.'<input type="submit" name="db-connection-save" value="Save" />'
 					.'</div>'

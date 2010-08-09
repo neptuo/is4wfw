@@ -6,6 +6,12 @@
    *
    */
   require_once("BaseTagLib.class.php");
+  require_once("scripts/php/classes/RequestStorage.class.php");
+  require_once("scripts/php/classes/SessionStorage.class.php");
+  require_once("scripts/php/classes/QueryStorage.class.php");
+  require_once("scripts/php/classes/Diagnostics.class.php");
+  require_once("scripts/php/classes/FullTagParser.class.php");
+  require_once("scripts/php/classes/UniversalPermission.class.php");
   
   /**
    *
@@ -16,7 +22,7 @@
    *  @objectname webObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2009-11-09	    
+   *  @timestamp  2010-08-08
    *
    */           
   class DefaultWeb extends BaseTagLib {
@@ -156,7 +162,8 @@
      *  Regular expression for parsing c tag.     
      *
      */              
-    private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.,\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*" )*)\/>)';
+		//private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.,\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*" )*)\/>)';
+    private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="[^"]*" )*)\/>)';
     
     private $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
     
@@ -169,7 +176,8 @@
      *  Regular expression for parsing attribute.
      *
      */                   
-    private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*")';
+    //private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*")';
+    private $ATT_RE = '(([a-zA-Z0-9]+)="([^"]*)")';
     
     private $PagesId = array();
     
@@ -180,6 +188,8 @@
     private $CurrentPageTimestamp = 0;
     
     private $ChildPageId = 0;
+    
+    public $Diagnostics;
     
     /**
      *
@@ -199,6 +209,19 @@
       $this->PageTitle = $_SERVER['HTTP_HOST'];
       $this->ServerName = $_SERVER['SERVER_NAME'];
       $this->Https = $_SERVER['HTTPS'];
+      
+      global $requestStorage;
+      $requestStorage = new RequestStorage();
+      global $sessionStorage;
+      $sessionStorage = new SessionStorage();
+      global $queryStorage;
+      $queryStorage = new QueryStorage();
+      
+      $this->Diagnostics = new Diagnostics();
+      
+      //print_r(UniversalPermission::getPermissions(1, 1));
+      //UniversalPermission::setPermissions('pes', 1, array(array('group' => 'admins', 'type' => WEB_R_READ), array('group' => 'web-admins', 'type' => WEB_R_WRITE)));
+      //echo UniversalPermission::showPermissionsFormPart('pes', 1, array('admins'), WEB_R_READ);
     }
     
     /**
@@ -723,6 +746,22 @@
       
       $keywords = file_get_contents("keywords.txt");
       
+      // Diagnostics
+      $diacont = "";
+      if(array_key_exists('mem-stats', $_GET)) {
+  			$diacont = $this->Diagnostics->printMemoryStats();
+  		}
+  		if(array_key_exists('duration-stats', $_GET)) {
+		  	$diacont .= $this->Diagnostics->printDuration();
+		  }
+  		if(array_key_exists('query-stats', $_GET)) {
+  			$diacont .= ''
+  			.'<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
+					.'<div style="color: red; font-weight: bold;">Database queries:</div>'
+					.'<div>'.parent::db()->getQueriesPerRequest().'</div>'
+				.'</div>';
+		  }
+      
       if(strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
       	$return = ''
        	.'<rssmm:response>'
@@ -755,10 +794,10 @@
   	    		.'<title>'.$this->PageTitle.'</title>'
     		    .$this->PageHead.$this->PageStyles.$this->PageScripts
   	      .'</head>'
-	        .'<body>'.$this->PageContent.'</body>'
+	        .'<body>'.$this->PageContent.$diacont.'</body>'
         .'</html>';
       }
-      $return = str_replace("~/", WEB_ROOT, $return); 
+      $return = str_replace("~/", WEB_ROOT, $return);
     
       if($this->IsCached) {
         $path = $_SERVER['DOCUMENT_ROOT'].WEB_ROOT.$this->CacheDir.'/pages/';
@@ -769,7 +808,7 @@
       // Rewrite anchors
       $return = preg_replace_callback('(&web:page=([0-9]+))', array( &$this,'parseproperties'), $return);
       // Generate web:frames
-      $return = preg_replace_callback('(<web:frame( title="(([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.\*`_;:/?-]*)*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array( &$this,'parsepostframes'), $return);
+      $return = preg_replace_callback('(<web:frame( title="([^"]*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array( &$this,'parsepostframes'), $return);
       
       if($this->CacheInfo['cachetime'] != -1) {
       	$dbObject->execute('UPDATE `urlcache` SET `lastcache` = '.(time() + $this->CacheInfo['cachetime']).' WHERE `id` = '.$this->CacheInfo['id'].';');
@@ -791,7 +830,7 @@
 			}
 			
 			$title = $values[2];
-			$content = $values[6];
+			$content = $values[5];
 			
 			$path = parent::getFrame($title, $content, "", $open);
 			return $path;
@@ -808,6 +847,8 @@
 	    } else {
         $encoding = false;
     	}
+    	
+    	//file_put_contents('databasequeries.txt', parent::db()->getQueriesPerRequest());
     	
     	$return = $content;
 
@@ -828,6 +869,7 @@
     /**
      *
      *  Compose url recursivly from passed pageId to root page[0].
+     *  If pageId is url, this simply returns it :)
      *  
      *  @param  pageId      	page id of required page path
      *  @param  languageId  	language id
@@ -840,6 +882,9 @@
       global $phpObject;
       $languageId = ($languageId === false) ? $this->LanguageId : $languageId;
       $lastPageId = 0;
+      if(!is_numeric($pageId)) {
+      	return str_replace('~/', WEB_ROOT, $pageId);
+      }
       
       while($pageId != 0) {
         $return = $dbObject->fetchAll("SELECT `parent_id`, `href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = ".$pageId." AND `info`.`language_id` = ".$languageId.";");
@@ -872,8 +917,11 @@
         		$prjUrl = $phpObject->str_tr($this->ProjectUrlDef, '/', 1);
         		$prjUrlPart = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $prjUrl[1]);
         		if(strlen($prjUrlPart) != 0) {
-        			return '/'.$prjUrlPart.$tmpPath;
+        			$url = '/'.$prjUrlPart.$tmpPath;
+        			$url = self::addSpecialParams($url);
+        			return $url;
         		} else {
+        			$tmpPath = self::addSpecialParams($tmpPath);
 							return $tmpPath;
 						}
         	} else {
@@ -882,30 +930,66 @@
 							$this->PropertyUse = 'get';
 	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
 	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
-							return 'http://'.$project[0]['url'].$tmpPath;
+	  		    	$url = 'http://'.$project[0]['url'].$tmpPath;
+        			$url = self::addSpecialParams($url);
+							return $url;
 						} elseif($this->Protocol == 'https' && $project[0]['https'] == 1) {
   			    	$this->PropertyAttr = $project[0]['url'];
 							$this->PropertyUse = 'get';
 	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
 	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
-							return 'https://'.$project[0]['url'].$tmpPath;
+							$url = 'https://'.$project[0]['url'].$tmpPath;
+        			$url = self::addSpecialParams($url);
+							return $url;
 						} elseif($project[0]['http'] == 1) {
   			    	$this->PropertyAttr = $project[0]['url'];
 							$this->PropertyUse = 'get';
 	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
 	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
-							return 'http://'.$project[0]['url'].$tmpPath;
+							$url = 'http://'.$project[0]['url'].$tmpPath;
+        			$url = self::addSpecialParams($url);
+							return $url;
 						} elseif($project[0]['https'] == 1) {
   			    	$this->PropertyAttr = $project[0]['url'];
 							$this->PropertyUse = 'get';
 	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
 	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
-							return 'https://'.$project[0]['url'].$tmpPath;
+							$url = 'https://'.$project[0]['url'].$tmpPath;
+        			$url = self::addSpecialParams($url);
+							return $url;
 						}
 					}
 				}
         
       }
+    }
+    
+    public function addParamToUrl($url, $param, $value) {
+    	$pair = ($value != '') ? $param.'='.$value : $param;
+    	if(strpos($url, '?') == '') {
+    		$url .= '?'.$pair;
+    	} else {
+    		if(strpos($url, $param, strpos($url, '?')) == '') {
+	    		$url .= '&'.$pair;
+    		}
+    	}
+    	return $url;
+    }
+    
+    private function addSpecialParams($url) {
+    	if(array_key_exists('mem-stats', $_GET)) {
+    		$url = self::addParamToUrl($url, 'mem-stats', '');
+    	}
+    	if(array_key_exists('duration-stats', $_GET)) {
+    		$url = self::addParamToUrl($url, 'duration-stats', '');
+    	}
+    	if(array_key_exists('query-stats', $_GET)) {
+    		$url = self::addParamToUrl($url, 'query-stats', '');
+    	}
+    	if(array_key_exists('auto-login-ignore', $_GET)) {
+    		$url = self::addParamToUrl($url, 'auto-login-ignore', '');
+    	}
+    	return $url;
     }
     
     /**
@@ -991,7 +1075,7 @@
         return $return;
       } else {
         //echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
-        return "";
+        return $cprop;
       }
     }
     
@@ -1234,14 +1318,16 @@
      *  @return html anchor               
      *
      */            
-    public function makeAnchor($pageId, $text = false, $languageId = false, $class = "", $id = "", $target = "", $rel = "") {
+    public function makeAnchor($pageId, $text = false, $languageId = false, $class = "", $id = "", $target = "", $rel = "", $type = '') {
       global $dbObject;
       $languageId = (!$languageId) ? $this->LanguageId : $languageId;
       
-      $sql_return = $dbObject->fetchAll("SELECT `href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = ".$pageId." AND `info`.`language_id` = ".$languageId.";");
-      if(count($sql_return) == 1) {
+			if(is_numeric($pageId)) {
+      	$sql_return = $dbObject->fetchAll("SELECT `href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = ".$pageId." AND `info`.`language_id` = ".$languageId.";");
+      }
+      if(count($sql_return) == 1 || !is_numeric($pageId)) {
         $url = self::composeUrl($pageId, $languageId);
-        $return = "<a href=\"".$url."\"";
+        $return = $type == 'button' ? '<button' : '<a href="'.$url.'"';
         if($class) {
           $return .= " class=\"".$class."\"";
         }
@@ -1255,7 +1341,7 @@
           $return .= " rel=\"".$rel."\"";
         }
         if($text != false) {
-        	$return .= ">".$text."</a>";
+        	$return .= $type == 'button' ? ' onclick="window.location.href=\''.$url.'\';">'.$text.'</button>' : ">".$text."</a>";
         } else {
 					$return .= ">";
 				}
@@ -1752,6 +1838,72 @@
 			return $name;
 		}
 		
+		// min, max, scope + property pro jeho vypsani!!!!
+		public function generateRandomNumber($min = false, $max = false) {
+			$min = is_numeric($min) ? $min : 0;
+			$max = (is_numeric($max) && $max > $min) ? $max : 99999999;
+			$r = rand($min, $max);
+			
+			parent::session()->set('web-rand', $r);
+			return;
+		}
+		
+		/**
+		 *
+		 *	C fulltag.
+		 *
+		 */		 		 		 		
+		public function getFrame($content, $title, $open = false) {
+			$parser = new FullTagParser();
+    	$parser->setContent($content);
+    	$parser->startParsing();
+    	$return = $parser->getResult();
+    	$return = parent::getFrame($title, $content, '', $open == 'true' ? true : false);
+			
+			return $return;
+		}
+		
+		/**
+		 *
+		 *	Plain C tag for testing things ...		 
+		 *
+		 */	 		 		
+		public function plainFunction() {
+			$return = '';
+			
+			//parent::db()->fetchAll(parent::query()->get('selectProjects', array(0 => 5, 1 => 6), 'sport'), true, true, true);
+			
+		  require_once("/scripts/php/classes/ui/BaseGrid.class.php");
+		  require_once("/scripts/php/classes/ui/BaseForm.class.php");
+		  
+		  $form = new BaseForm();
+		  $form->setFormAttrs('text-form', 'post', $_SERVER['REDIRECT_URL'], 'text-form-class-name');
+		  $form->addField('text', 'name', 'Name:', 'Your name ...', 'w160', 'w300');
+		  $form->addField('textarea', 'content', 'Content:', '', 'w160', 'w300');
+		  $form->addDropDown('type', 'Type:', array(array('key' => 0, 'value' => 'Comment'), array('key' => 1, 'value' => 'New topic'), array('key' => 2, 'value' => 'Note')), 2, 'w160', 'w200');
+		  $form->addSubmit('save', 'Save', 'save-button');
+		  
+		  if($form->isSubmited()) {
+		  	echo 'Submited ...<br />';
+		  	if($form->pressed('save')) {
+		  		echo 'Pressed "Save" ... <br />';
+		  		print_r($_POST);
+		  		
+		  		$types = array('Comment', 'New topic', 'Note');
+		  		
+		  		$grid = new BaseGrid();
+		  		$grid->setHeader(array('name' => 'Name:', 'content' => 'Content:', 'type' => 'Type:'));
+		  		$grid->addRow(array('name' => $form->getValue('name'), 'content' => $form->getValue('content'), 'type' => $types[$form->getValue('type')]));
+		  		$return .= $grid->render();
+		  	}
+		  }
+		  
+		  
+		  $return .= $form->render();
+			
+			return $return;
+		}
+		
 		/**
 		 *
 		 *	Try to find setuped error page or display default.
@@ -1777,7 +1929,7 @@
 				$wp = $dbObject->fetchAll('SELECT `url` FROM `web_project` LEFT JOIN `page` ON `web_project`.`id` = `page`.`wp` WHERE `page`.`id` = '.$pid.';');
 				$url = self::composeUrl($pid, false, 'no');
 				$_GET['WEB_PAGE_PATH'] = $url;
-				$this->ServerName = $wp[0]['url'];
+				$this->ServerName = substr($wp[0]['url'], 0, strpos($wp[0]['url'], '/'));
 				if($_SERVER['HTTPS'] == 'on' && $info[0]['https'] == 1) { 
 					$this->Https = 'on';
 				} elseif($info[0]['http'] == 1) {
@@ -1800,7 +1952,7 @@
 			} else {
 				if($errorCode == 404) {
 					header("HTTP/1.1 404 Not Found");
- 		      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+ 		      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exist.</p>';
 	        exit;
 				} elseif($errorCode == 403) {
 					header("HTTP/1.1 403 Forbidden");
@@ -1822,6 +1974,27 @@
 		
 		public function getChildPage() {
 			return $this->ChildPageId;
+		}
+		
+		public function setCurrentTime($time) {
+			return $time;
+		}
+		
+		public function getCurrentTime() {
+			return time();
+		}
+		
+		public function setRandomNumber($val) {
+			parent::session()->set('web-rand', $val);
+			return $val;
+		}
+		
+		public function getRandomNumber() {
+			if(parent::session()->exists('web-rand')) {
+				return parent::session()->get('web-rand');
+			} else {
+				return parent::getError('Random number is not set!');
+			}
 		}
 		
   }

@@ -1,0 +1,1 @@
+ALTER TABLE  `template` ADD  `name` TINYTEXT NOT NULL DEFAULT  '' AFTER  `id`;

@@ -11,6 +11,46 @@ FileFormat=0
 [Project tree]
 WFW-WP
 	+wfw-wp-2svn
+		-admin
+			-in
+				-floorball
+					admin\in\floorball\matches.view.php
+					admin\in\floorball\players.view.php
+					admin\in\floorball\projects.view.php
+					admin\in\floorball\rounds.view.php
+					admin\in\floorball\seasons.view.php
+					admin\in\floorball\tables.view.php
+					admin\in\floorball\teams.view.php
+				admin\in\article-detail.view.php
+				admin\in\article-line-detail.view.php
+				admin\in\article-lines.view.php
+				admin\in\articles.view.php
+				admin\in\custom-forms.view.php
+				admin\in\database-connections.view.php
+				admin\in\files.view.php
+				admin\in\hint.view.php
+				admin\in\index.view.php
+				admin\in\keywords.view.php
+				admin\in\languages.view.php
+				admin\in\pages.view.php
+				admin\in\personal-properties.view.php
+				admin\in\templates.view.php
+				admin\in\text-files.view.php
+				admin\in\url-cache.view.php
+				admin\in\user-groups.view.php
+				admin\in\user-log.view.php
+				admin\in\users.view.php
+				admin\in\web-projects.view.php
+			+templates
+				+menus
+					admin\templates\menus\floorball.xml
+					admin\templates\menus\settings.xml
+					admin\templates\menus\web.xml
+				admin\templates\article-template.view.php
+				admin\templates\floorball-template.view.php
+				admin\templates\in-template.view.php
+				admin\templates\template.view.php
+			admin\login.view.php
 		-cache
 			-images
 				cache\images\16-10-rhonamitra1666qz_400x640.jpg
@@ -70,6 +110,11 @@ WFW-WP
 				cache\pages\page-121-123.cache.html
 				cache\pages\page-66-70.cache.html
 		-data
+			-dbdump
+				data\dbdump\2010-08-08.sql
+			-alter
+				data\alter\2010-07-19_sport.sql
+				data\alter\2010-07-23_template.sql
 			-create
 				data\create\article.php
 				data\create\article_content.php
@@ -244,88 +289,7 @@ WFW-WP
 			edit_area\search_replace.js
 			edit_area\template.html
 		-files
-			-Adriana
-				files\Adriana\adriana_lima33.jpg
-				files\Adriana\adrianalima2bo9.jpg
-				files\Adriana\adrianalima918hw7.jpg
-				files\Adriana\d8d943984b.jpg
-			-File edit testing
-				files\File edit testing\Desert Landscape.jpg
-				files\File edit testing\Dock.jpg
-				files\File edit testing\Forest.jpg
-				files\File edit testing\Winter Leaves.jpg
-			-Galerie Upload
-				files\Galerie Upload\file42392709.jpg
-				files\Galerie Upload\file82605733.jpg
-				files\Galerie Upload\file92668661.jpg
-			-GalleryTest
-				-Alessandra Ambrosio
-					files\GalleryTest\Alessandra Ambrosio\ambrosio1011280x960.jpg
-					files\GalleryTest\Alessandra Ambrosio\ambrosio361600x1200.jpg
-					files\GalleryTest\Alessandra Ambrosio\ambrosio651600x1200.jpg
-					files\GalleryTest\Alessandra Ambrosio\ambrosio91280x960.jpg
-				-Alicia Machado
-					files\GalleryTest\Alicia Machado\machado141920x1440.jpg
-					files\GalleryTest\Alicia Machado\machado71920x1440.jpg
-				-Catherine Bell
-					files\GalleryTest\Catherine Bell\bellcatherinefhm20020743qe.jpg
-					files\GalleryTest\Catherine Bell\rbullnak300qb.jpg
-				-Jennifer Lamiraqui
-					files\GalleryTest\Jennifer Lamiraqui\lamiraqui1111920x1440.jpg
-					files\GalleryTest\Jennifer Lamiraqui\lamiraqui11920x1440.jpg
-					files\GalleryTest\Jennifer Lamiraqui\lamiraqui121920x1440.jpg
-					files\GalleryTest\Jennifer Lamiraqui\lamiraqui271920x1440.jpg
-					files\GalleryTest\Jennifer Lamiraqui\lamiraqui321920x1440.jpg
-					files\GalleryTest\Jennifer Lamiraqui\lamiraqui631920x1440.jpg
-			-Megan
-				files\Megan\02fv4.jpg
-				files\Megan\15f99f2165aa8c8l.jpg
-				files\Megan\2copyvd1.jpg
-				files\Megan\91.jpg
-				files\Megan\Fox_Megan001.jpg
-			-Papaya
-				-Banners
-					files\Papaya\Banners\kostal.png
-					files\Papaya\Banners\lfp.png
-				-Menu
-					files\Papaya\Menu\dido-league.gif
-					files\Papaya\Menu\guestbook.gif
-					files\Papaya\Menu\home.gif
-					files\Papaya\Menu\news.gif
-					files\Papaya\Menu\players.gif
-					files\Papaya\Menu\sponsors.gif
-				-Players
-					files\Papaya\Players\dvorka.png
-				files\Papaya\h-background.png
-				files\Papaya\Head.png
-				files\Papaya\loading.gif
-				files\Papaya\Logo animation.gif
-				files\Papaya\Logo small.png
-			-Pokus
-				files\Pokus\gravel11600x1200.jpg
-				files\Pokus\jewelstaite1.jpg
-				files\Pokus\karima391920x1440.jpg
-			-ProWeb1
-			-Rhona
-				files\Rhona\rhonamitra1082ht.jpg
-			-Rhona1
-				files\Rhona1\rhonamitra11rq.jpg
-				files\Rhona1\rhonamitra13thannualeltonjohno.jpg
-				files\Rhona1\rhonamitra1666qz.jpg
-			-Tester
-				files\Tester\54887adrianalima95pz.jpg
-				files\Tester\Adriana_Lima33.jpg
-				files\Tester\d8d943984b.jpg
-				files\Tester\hotlima.jpg
-				files\Tester\rbullnak300qb.jpg
-			-TestUrl
 		-images
-			-lightbox
-				images\lightbox\lightbox-blank.gif
-				images\lightbox\lightbox-btn-close.gif
-				images\lightbox\lightbox-btn-next.gif
-				images\lightbox\lightbox-btn-prev.gif
-				images\lightbox\lightbox-ico-loading.gif
 			-cms
 				-design
 					images\cms\design\dot-transparent.png
@@ -414,6 +378,12 @@ WFW-WP
 				images\icons\web-page-grey.gif
 				images\icons\web-page-orange.gif
 				images\icons\zip-file.gif
+			-lightbox
+				images\lightbox\lightbox-blank.gif
+				images\lightbox\lightbox-btn-close.gif
+				images\lightbox\lightbox-btn-next.gif
+				images\lightbox\lightbox-btn-prev.gif
+				images\lightbox\lightbox-ico-loading.gif
 			images\arro_do.png
 			images\arro_up.png
 			images\error.png
@@ -422,6 +392,7 @@ WFW-WP
 			images\lang_del.png
 			images\loader.gif
 			images\minus.png
+			images\note.png
 			images\page_add.png
 			images\page_cop.png
 			images\page_del.png
@@ -527,6 +498,8 @@ WFW-WP
 			logs\8-2009-11-26.log
 		+scripts
 			-bundles
+				scripts\bundles\customform_cs.properties
+				scripts\bundles\customform_en.properties
 				scripts\bundles\guestbook_cs.properties
 				scripts\bundles\guestbook_en.properties
 				scripts\bundles\hint_en.properties
@@ -546,12 +519,11 @@ WFW-WP
 				scripts\css\editor.css
 				scripts\css\jquery-autocomplete.css
 				scripts\css\jquery-lightbox.css
+				scripts\css\jquery-ui-theme.css
 				scripts\css\jquery-wysiwyg.css
 				scripts\css\window.css
 			-files
 			-js
-				-web
-					scripts\js\web\ajaxWebInit.js
 				-jquery
 					scripts\js\jquery\jquery.js
 					scripts\js\jquery\jquery-autocomplete-pack.js
@@ -559,41 +531,174 @@ WFW-WP
 					scripts\js\jquery\jquery-dataTables.js
 					scripts\js\jquery\jquery-dataTables-min.js
 					scripts\js\jquery\jquery-lightbox-pack.js
+					scripts\js\jquery\jquery-maskedinput.js
+					scripts\js\jquery\jquery-ui-core.js
+					scripts\js\jquery\jquery-ui-datepicker.js
 					scripts\js\jquery\jquery-wysiwyg.js
+				-jquery-ui
+					-css
+						-images
+							scripts\js\jquery-ui\css\images\ui-anim_basic_16x16.gif
+							scripts\js\jquery-ui\css\images\ui-bg_flat_0_aaaaaa_40x100.png
+							scripts\js\jquery-ui\css\images\ui-bg_flat_75_ffffff_40x100.png
+							scripts\js\jquery-ui\css\images\ui-bg_glass_55_fbf9ee_1x400.png
+							scripts\js\jquery-ui\css\images\ui-bg_glass_65_ffffff_1x400.png
+							scripts\js\jquery-ui\css\images\ui-bg_glass_75_dadada_1x400.png
+							scripts\js\jquery-ui\css\images\ui-bg_glass_75_e6e6e6_1x400.png
+							scripts\js\jquery-ui\css\images\ui-bg_glass_95_fef1ec_1x400.png
+							scripts\js\jquery-ui\css\images\ui-bg_highlight-soft_75_cccccc_1x100.png
+							scripts\js\jquery-ui\css\images\ui-icons_222222_256x240.png
+							scripts\js\jquery-ui\css\images\ui-icons_2e83ff_256x240.png
+							scripts\js\jquery-ui\css\images\ui-icons_454545_256x240.png
+							scripts\js\jquery-ui\css\images\ui-icons_888888_256x240.png
+							scripts\js\jquery-ui\css\images\ui-icons_cd0a0a_256x240.png
+						scripts\js\jquery-ui\css\jquery.ui.accordion.css
+						scripts\js\jquery-ui\css\jquery.ui.all.css
+						scripts\js\jquery-ui\css\jquery.ui.autocomplete.css
+						scripts\js\jquery-ui\css\jquery.ui.base.css
+						scripts\js\jquery-ui\css\jquery.ui.button.css
+						scripts\js\jquery-ui\css\jquery.ui.core.css
+						scripts\js\jquery-ui\css\jquery.ui.datepicker.css
+						scripts\js\jquery-ui\css\jquery.ui.dialog.css
+						scripts\js\jquery-ui\css\jquery.ui.progressbar.css
+						scripts\js\jquery-ui\css\jquery.ui.resizable.css
+						scripts\js\jquery-ui\css\jquery.ui.selectable.css
+						scripts\js\jquery-ui\css\jquery.ui.slider.css
+						scripts\js\jquery-ui\css\jquery.ui.tabs.css
+						scripts\js\jquery-ui\css\jquery.ui.theme.css
+					-i18n
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-af.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-ar.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-az.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-bg.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-bs.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-ca.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-cs.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-da.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-de.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-el.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-en.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-eo.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-es.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-et.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-eu.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-fa.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-fi.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-fo.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-fr.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-fr-CH.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-he.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-hr.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-hu.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-hy.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-id.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-is.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-it.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-ja.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-ko.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-lt.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-lv.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-ms.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-nl.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-no.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-pl.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-pt-BR.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-ro.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-ru.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-sk.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-sl.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-sq.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-sr.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-sr-SR.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-sv.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-ta.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-th.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-tr.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-uk.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-vi.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-zh-CN.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-zh-HK.js
+						scripts\js\jquery-ui\i18n\jquery.ui.datepicker-zh-TW.js
+						scripts\js\jquery-ui\i18n\jquery-ui-i18n.js
+					scripts\js\jquery-ui\jquery.effects.blind.min.js
+					scripts\js\jquery-ui\jquery.effects.bounce.min.js
+					scripts\js\jquery-ui\jquery.effects.clip.min.js
+					scripts\js\jquery-ui\jquery.effects.core.min.js
+					scripts\js\jquery-ui\jquery.effects.drop.min.js
+					scripts\js\jquery-ui\jquery.effects.explode.min.js
+					scripts\js\jquery-ui\jquery.effects.fold.min.js
+					scripts\js\jquery-ui\jquery.effects.highlight.min.js
+					scripts\js\jquery-ui\jquery.effects.pulsate.min.js
+					scripts\js\jquery-ui\jquery.effects.scale.min.js
+					scripts\js\jquery-ui\jquery.effects.shake.min.js
+					scripts\js\jquery-ui\jquery.effects.slide.min.js
+					scripts\js\jquery-ui\jquery.effects.transfer.min.js
+					scripts\js\jquery-ui\jquery.ui.accordion.min.js
+					scripts\js\jquery-ui\jquery.ui.autocomplete.min.js
+					scripts\js\jquery-ui\jquery.ui.button.min.js
+					scripts\js\jquery-ui\jquery.ui.core.min.js
+					scripts\js\jquery-ui\jquery.ui.datepicker.min.js
+					scripts\js\jquery-ui\jquery.ui.dialog.min.js
+					scripts\js\jquery-ui\jquery.ui.draggable.min.js
+					scripts\js\jquery-ui\jquery.ui.droppable.min.js
+					scripts\js\jquery-ui\jquery.ui.mouse.min.js
+					scripts\js\jquery-ui\jquery.ui.position.min.js
+					scripts\js\jquery-ui\jquery.ui.progressbar.min.js
+					scripts\js\jquery-ui\jquery.ui.resizable.min.js
+					scripts\js\jquery-ui\jquery.ui.selectable.min.js
+					scripts\js\jquery-ui\jquery.ui.slider.min.js
+					scripts\js\jquery-ui\jquery.ui.sortable.min.js
+					scripts\js\jquery-ui\jquery.ui.tabs.min.js
+					scripts\js\jquery-ui\jquery.ui.widget.min.js
+				-web
+					scripts\js\web\ajaxWebInit.js
 				scripts\js\clock.js
 				scripts\js\Closer.js
 				scripts\js\Confirm.js
+				scripts\js\cookies.js
 				scripts\js\CountDown.js
 				scripts\js\domready.js
 				scripts\js\Editor.js
 				scripts\js\FileName.js
 				scripts\js\formFieldEffect.js
 				scripts\js\functions.js
-				scripts\js\init_nowindows.js
 				scripts\js\init.js
+				scripts\js\init_nowindows.js
 				scripts\js\initLogin.js
 				scripts\js\initTiny.js
 				scripts\js\links.js
 				scripts\js\processform.js
 				scripts\js\rxmlhttp.js
+				scripts\js\sportMatchCheckbox.js
 				scripts\js\window.js
 			+php
-				+classes
+				-classes
+					-ui
+						scripts\php\classes\ui\BaseForm.class.php
+						scripts\php\classes\ui\BaseGrid.class.php
 					scripts\php\classes\CustomTagParser.class.php
+					scripts\php\classes\Diagnostics.class.php
+					scripts\php\classes\FullTagParser.class.php
+					scripts\php\classes\QueryStorage.class.php
+					scripts\php\classes\RequestStorage.class.php
 					scripts\php\classes\ResourceBundle.class.php
-				-includes
+					scripts\php\classes\SessionStorage.class.php
+					scripts\php\classes\UniversalPermission.class.php
+					scripts\php\classes\ViewHelper.class.php
+				+includes
 					scripts\php\includes\database.inc.php
 					scripts\php\includes\extensions.inc.php
 					scripts\php\includes\settings.inc.php
 					scripts\php\includes\version.inc.php
-				+libs
+				-libs
 					-hp
 						-xml
 							scripts\php\libs\hp\xml\Hotproject.xml
 						scripts\php\libs\hp\Hotproject.class.php
-					-xml
+					+xml
 						scripts\php\libs\xml\Article.xml
 						scripts\php\libs\xml\Counter.xml
+						scripts\php\libs\xml\CustomForm.xml
 						scripts\php\libs\xml\Database.xml
 						scripts\php\libs\xml\DefaultPhp.xml
 						scripts\php\libs\xml\DefaultWeb.xml
@@ -605,15 +710,18 @@ WFW-WP
 						scripts\php\libs\xml\Js.xml
 						scripts\php\libs\xml\Log.xml
 						scripts\php\libs\xml\Login.xml
+						scripts\php\libs\xml\Menu.xml
 						scripts\php\libs\xml\Page.xml
 						scripts\php\libs\xml\PageNG.xml
 						scripts\php\libs\xml\Sport.xml
 						scripts\php\libs\xml\System.xml
 						scripts\php\libs\xml\User.xml
+						scripts\php\libs\xml\View.xml
 						scripts\php\libs\xml\WebProject.xml
 					scripts\php\libs\Article.class.php
 					scripts\php\libs\BaseTagLib.class.php
 					scripts\php\libs\Counter.class.php
+					scripts\php\libs\CustomForm.class.php
 					scripts\php\libs\Database.class.php
 					scripts\php\libs\DefaultPhp.class.php
 					scripts\php\libs\DefaultWeb.class.php
@@ -625,11 +733,13 @@ WFW-WP
 					scripts\php\libs\Js.class.php
 					scripts\php\libs\Log.class.php
 					scripts\php\libs\Login.class.php
+					scripts\php\libs\Menu.class.php
 					scripts\php\libs\Page.class.php
 					scripts\php\libs\PageNG.class.php
 					scripts\php\libs\Sport.class.php
 					scripts\php\libs\System.class.php
 					scripts\php\libs\User.class.php
+					scripts\php\libs\View.class.php
 					scripts\php\libs\WebProject.class.php
 		-tiny-mce
 			-langs
@@ -977,35 +1087,49 @@ WFW-WP
 			tpls\defaultArticleDetail.tpl.php
 			tpls\defaultArticleLine.tpl.php
 			tpls\defaultCounter.tpl.php
+		.htaccess
 		file.php
 		index.php
 		keywords.txt
 		parsing.php
 		robots.txt
+		url-composer.php
+		view.php
 		window-property.php
 		wysiwyg-styles.php
-		url-composer.php
 [Open project files]
 0=scripts\php\includes\version.inc.php
 1=scripts\css\cms.css
 2=scripts\css\cms_nowindows.css
-3=scripts\php\libs\xml\DefaultWeb.xml
-4=scripts\php\libs\Guestbook.class.php
+3=scripts\php\libs\View.class.php
+4=scripts\php\libs\xml\View.xml
+5=admin\templates\in-template.view.php
+6=data\dbdump\2010-08-08.sql
+7=scripts\php\includes\database.inc.php
 [Selected Project Files]
 Main=
-Selected=scripts\php\libs\Guestbook.class.php
+Selected=scripts\php\includes\database.inc.php
 [scripts\php\includes\version.inc.php]
 TopLine=1
-Caret=12,14
+Caret=35,8
 [scripts\css\cms.css]
-TopLine=461
-Caret=6,487
+TopLine=1551
+Caret=2,1584
 [scripts\css\cms_nowindows.css]
 TopLine=1
-Caret=12,6
-[scripts\php\libs\xml\DefaultWeb.xml]
-TopLine=292
-Caret=16,308
-[scripts\php\libs\Guestbook.class.php]
-TopLine=23
-Caret=7,33
+Caret=4,6
+[scripts\php\libs\View.class.php]
+TopLine=1
+Caret=29,18
+[scripts\php\libs\xml\View.xml]
+TopLine=45
+Caret=24,84
+[admin\templates\in-template.view.php]
+TopLine=1
+Caret=79,14
+[data\dbdump\2010-08-08.sql]
+TopLine=1137
+Caret=1,1188
+[scripts\php\includes\database.inc.php]
+TopLine=1
+Caret=1,17

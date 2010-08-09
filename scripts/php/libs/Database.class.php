@@ -12,7 +12,7 @@
    *  Class for working Database.
    *  
    *  @author     Marek SMM
-   *  @timestamp  2009-11-26
+   *  @timestamp  2010-07-25
    *   
    */              
   class Database extends BaseTagLib {
@@ -30,6 +30,20 @@
      *
      */
     private $conn;
+    
+    /**
+     *
+     *	If true, none of calls to execute executes and fetchAll shows query and result.     
+     *
+     */		 		     
+    private $mockMode = false;
+    
+    /**
+     *
+     *	Simply counts db queries per 1 request     
+     *
+     */		 		     
+    private $queriesPerRequest = 0;
     
     /**
      *
@@ -83,7 +97,7 @@
     
     /**
      *
-     *	Closes current opened connection and one, defined by name.
+     *	Closes current opened connection and opens one, defined by name.
      *	
      *	@param	name						database connection name		      
      *  
@@ -119,16 +133,17 @@
     public function execute($query, $showQuery = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
     	global $logObject;
     	global $webObject;
+    	$this->queriesPerRequest ++;
 			if($this->IsOpen) {
-			  if($showQuery) {
-          if($forceImmediateOutput) {
+			  if($showQuery || $this->mockMode) {
+          if($forceImmediateOutput || $this->mockMode) {
 				  	echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
 			  	} else {
 	          $webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
           }
 			  }
 			  
-			  if(!$notExecuteQuery) {
+			  if(!$notExecuteQuery && !$this->mockMode) {
   				$result = mysql_query($query);
   				
   				$errno = mysql_errno();
@@ -162,9 +177,10 @@
     public function fetchAll($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
     	global $logObject;
     	global $webObject;
+    	$this->queriesPerRequest ++;
 			if($this->IsOpen) {
-			  if($showQuery) {
-			  	if($forceImmediateOutput) {
+			  if($showQuery || $this->mockMode) {
+			  	if($forceImmediateOutput || $this->mockMode) {
 				  	echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
 			  	} else {
 	          $webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
@@ -189,8 +205,8 @@
   				}
 				}
 				
-				if($printOutput) {
-					if($forceImmediateOutput) {
+				if($printOutput || $this->mockMode) {
+					if($forceImmediateOutput || $this->mockMode) {
 						echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px; overflow: auto;\"><strong style=\"color: red;\">SQL output:</strong><pre>";
     	      $str = print_r($return, true);
   	        echo htmlentities($str);
@@ -208,6 +224,27 @@
         trigger_error("Connection is closed, cannot fetch data!", E_USER_WARNING);
       }
 		}
+		
+		/**
+     *
+     *  Returns single row fetched by database.
+     *  
+     *  @param  query           			sql query
+     *  @param  showQuery       			shows input sql query on output
+     *  @param  printOutput     			shows return from database through print_r function
+     *  @param  notExecuteQuery 			if true, doesn't execute query
+     *  @param	forceImmediateOutput  if previsou 2 are true, it immediatly output query & result
+     *  @return returns all rows fetched by database
+     *
+     */                   
+    public function fetchSingle($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
+    	$data = self::fetchAll($query, $showQuery, $printOutput, $forceImmediateOutput, $notExecuteQuery);
+    	if(count($data) > 0) {
+    		return $data[0];
+    	} else {
+    		return array();
+    	}
+    }
 		
 		/**
 		 *
@@ -262,6 +299,30 @@
 		
 		/**
 		 *
+		 *	Returns id of last inserted row
+		 *
+		 */		 		 		 		
+		public function getLastId() {
+			return mysql_insert_id();
+		}
+		
+		/***
+		 *
+		 *	Sets mockmode, means that none of calls to execute executes and fetchAll shows query and result.
+		 *
+		 */		 		 		 		
+		public function setMockMode($enabled) {
+			if($enabled == true) {
+				$this->mockMode = true;
+				echo '<div style="color: white; margin: 5px; padding: 5px; border: 2px solid gray;"><div style="background: red; padding: 2px 5px; font-weight: bold;">Using mock mode ...</div></div>';
+			} else {
+				$this->mockMode = false;
+				echo '<div style="color: white; margin: 5px; padding: 5px; border: 2px solid gray;"><div style="background: red; padding: 2px; font-weight: bold;">Stopped using mock mode ...</div></div>';
+			}
+		}
+		
+		/**
+		 *
 		 *  Returns true if connection with database is opened, false otherwise.
 		 *  
 		 *  @return returns true if connection with database is opened, false otherwise     		 
@@ -269,6 +330,15 @@
 		 */               		
 		public function isOpen() {
 			return $this->IsOpen;
+		}
+		
+		/**
+		 *
+		 *	Returns queriesPerRequest.		 
+		 *
+		 */		 		 		
+		public function getQueriesPerRequest() {
+			return $this->queriesPerRequest;
 		}
     
   }

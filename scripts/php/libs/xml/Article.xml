@@ -4,7 +4,7 @@
   <name>Article Lib</name>
   <classname>Article</classname>
   <classpath>php.libs</classpath>
-  <version>1.24</version>
+  <version>1.26</version>
   <count>*</count>
   <comment>
     Třída pro články.
@@ -105,9 +105,13 @@
       <attname>showError</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>lineId</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Zobrazí detail článku do templatu. Parametr 'articleId' může být také zadán jako
-      _REQUEST['article-id'].
+      _REQUEST['article-id']. "lineId" je doplňující informace při novém použití article:url! (pro jednoznačnost výběru článku - není povinná, ale vhodná)
     </comment>
   </tag>
   <tag>
@@ -248,17 +252,32 @@
     </comment>
   </tag>
   <tag>
+    <tagname>id</tagname>
+    <function>showId</function>
+    <comment>
+      Zobrazí id.
+    </comment>
+  </tag>
+  <tag>
     <tagname>date</tagname>
     <function>showDate</function>
+    <attribute>
+      <attname>format</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
-      Zobrazí datum. 
+      Zobrazí datum. "format" je formát.
     </comment>
   </tag>
   <tag>
     <tagname>time</tagname>
     <function>showTime</function>
+    <attribute>
+      <attname>format</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
-      Zobrazí čas.
+      Zobrazí čas. "format" je formát.
     </comment>
   </tag>
   <tag>
@@ -296,5 +315,13 @@
       Zobrazí odkaz.
     </comment>
   </tag>
+  <property>
+  	<propname>url</propname>
+  	<setfunction>setUrl</setfunction>
+  	<getfunction>getUrl</getfunction>
+    <comment>
+      Vrací / Nastavuje url článku
+    </comment>
+  </property>
 </taglib>
 

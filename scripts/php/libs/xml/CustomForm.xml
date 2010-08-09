@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Custom Form Lib</name>
+  <classname>CustomForm</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro tvorbu formulářů
+  </comment>
+  <tag>
+    <tagname>list</tagname>
+    <function>listRows</function>
+    <attribute>
+      <attname>formId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>templateId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>rowId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>sortBy</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>desc</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>noDataMessage</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí seznam dat z formuláře "formId", "templateId" je id šablony, "rowId" je id řádku (pak zobrazuje pouze jeden řádek),
+      "sortBy" jméno sloupce podle kterého řadit, "desc" pokud je 'true', pak se řadí desc, jinak asc. "noDataMessage" je zpráva,
+      která se zobrazí pokud neodpovídají žádné řádky.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>form</tagname>
+    <function>form</function>
+    <attribute>
+      <attname>formId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>templateId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>rowId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>emailTemplateId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>emailAddresses</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář, "formId" je identifikátor formuláře, "templateId" je id šablony
+      s formulářem, "pageId" je id stránky po přesměrování po vyplnění, "rowId" slouží pro editaci již existujícího záznamu.
+      "type" je 'db' nebo 'email', pokud je 'email', tak nemusí být formulář registrovaný, v tom případě
+      jsou pak atributy "emailTemplateId" a "emailAddresses" (seznam emailových adres oddělený čárkami) povinné!
+    </comment>
+  </tag>
+  <tag>
+    <tagname>formValidation</tagname>
+    <function>formValidationTag</function>
+    <attribute>
+      <attname>errorMessage</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zobrazí zadanou zprávu pokud uživatel odešle nevalidně vyplněný formulář.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>field</tagname>
+    <function>field</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>viewType</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>type</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>required</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>validation</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>elementId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>transformation</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>default</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>errorMessage</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>requiredValue</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>transient</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>data</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí jedno pole z formuláře s daným "name", "viewType" udává zda zobrazit
+      editační pole či jen hodnotu (defaultně se řídí rodičovským prvkem, tedy pokud
+      je uvnitř c:form, pak je defaultně viewType="edit", pokud je v c:list, pak viewType="value",
+      "type" je datový typ členu, pro viewType="edit" je povinný, "required" je bool, pokud je true,
+      pak musí splnit validaci, viz dále, "validation" je vzor používaný pro validaci.
+      "elementId" nastavuje id html elementu, "transformation" je atribut pro "viewType"='value'
+      a je to seznam funkcí které se na hodnotu aplikují. "default" defaultní hodnota.
+      "errorMessage" je chybová hláška při nevalidních datech.
+      "requiredValue" je povinná hodnota políčka.
+      "transient" je políčko, které se neukládá do db ani neposílá e-mailem, ale musí projít definovanou validací (např.: captcha).
+      "data" je čárkami oddělený seznam hodnot pro type="dropdown". 
+      "validation" funkce:
+      min(NUMBER),max(NUMBER) - pro type='number', minimální a maximální hodnota, 'string' minimální a maximální délka.
+      mask(9.a.*) - pro type='string', vstup musí přesně odpovídat masce, 9 - nahrazuje 1..9, a - nahrazuje a..z,A..Z, * - nahrazuje cokoli.
+      Může být kombinace výše uvedených: validation="min(10),max(20)" (oddělovač ",")
+      "transformation" funkce:
+      format(d.m.Y) - pro type='date', transformuje timestamp na zadané datum/čas, formát odpovídá php standartu.
+      toUpper() - pro type='string', převede na upper-case znaky.
+      toLower() - pro type='string', převede na lower-case znaky.
+      substr(SIZE) - pro type='string', zobrazí jen SIZE prvních znaků řetězce. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>button</tagname>
+    <function>button</function>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>elementId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí odesílací tlačítko, "type" je typ (submit|clear|delete), "value" je zobrazený text na tlačítku, "elementId" nastavuje id html elementu
+    </comment>
+  </tag>
+  <tag>
+    <tagname>formList</tagname>
+    <function>formList</function>
+    <attribute>
+      <attname>userFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+    	Zobrazí seznam všech uživatelských formulářu s možností smazání.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>formCreator</tagname>
+    <function>formCreator</function>
+    <attribute>
+      <attname>userFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+    	Zobrazí formulář pro vytvoření uživatelského formuláře.
+    </comment>
+  </tag>
+  <property>
+  	<propname>rowId</propname>
+  	<setfunction>setRowId</setfunction>
+  	<getfunction>getRowId</getfunction>
+    <comment>
+      Vrací id vybraného řádku při procházení seznamu.
+    </comment>
+  </property>
+</taglib>
+

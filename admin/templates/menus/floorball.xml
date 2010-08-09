@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu>
+	<item name="Projects" url="~/in/floorball/projects.view" security:requireGroup="admins" />
+	<item name="Seasons" url="~/in/floorball/seasons.view" />
+	<item name="Tables" url="~/in/floorball/tables.view" />
+	<item name="Rounds" url="~/in/floorball/rounds.view" />
+	<item name="Teams" url="~/in/floorball/teams.view" />
+	<item name="Players" url="~/in/floorball/players.view" />
+	<item name="Matches" url="~/in/floorball/matches.view" />
+</menu>

@@ -6,6 +6,10 @@
    *
    */
   require_once("BaseTagLib.class.php");
+  require_once("/scripts/php/classes/ui/BaseGrid.class.php");
+  require_once("/scripts/php/classes/ui/BaseForm.class.php");
+  require_once("scripts/php/classes/CustomTagParser.class.php");
+  require_once("scripts/php/classes/ResourceBundle.class.php");
   
   /**
    * 
@@ -13,7 +17,7 @@
    * 	all about sport	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-10-10
+   *  @timestamp  2010-08-08
    * 
    */  
   class Sport extends BaseTagLib {
@@ -25,6 +29,12 @@
   	private $SubQueriesSQL = '';
   	
   	private $ConditionsSQL = '';
+  	
+  	private $UPDisc = 'sport_proj';
+  	
+  	private $UsedFields = array();
+  	
+  	private $ViewPhase = 0;
   
     public function __construct() {
     	global $webObject;
@@ -37,9 +47,6 @@
 					$this->BundleLang = $webObject->LanguageName;
 				}
 			}
-      
-      require_once("scripts/php/classes/CustomTagParser.class.php");
-      require_once("scripts/php/classes/ResourceBundle.class.php");
     }
     
     /**
@@ -48,6 +55,7 @@
      *	     
      */		 		 		     
     public function setFromRequest() {
+    	// TODO: opravit
 			if($_REQUEST['season-id'] != '') {
 				$_SESSION['sport']['season-id'] = $_REQUEST['season-id'];
 			}
@@ -81,23 +89,29 @@
 			if($_POST['select-season-submit'] == $rb->get('season.select')) {
 				$seasonId = $_POST['select-season'];
 				if($seasonId == 0) {
-					$_SESSION['sport']['season-id'] = '';
+					self::setSeasonId('-1');
 				} else {
-					$_SESSION['sport']['season-id'] = $seasonId;
+					self::setSeasonId($seasonId);
 				} 
 			}
 			
-			$return .= ''
-			.'<div class="select-season">'
-				.'<form name="select-season" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-					.'<label for="select-season">'.$rb->get('season.selectlab').':</label> '
-					.'<select name="select-season" id="select-season">'
-						.'<option value="0">'.$rb->get('season.all').'</option>'
-						.self::getSeasonsOptions(0, 0, $_SESSION['sport']['season-id'])
-					.'</select> '
-					.'<input type="submit" name="select-season-submit" value="'.$rb->get('season.select').'" />'
-				.'</form>'
-			.'</div>';
+			if(self::isSetProjectId()) {
+				$return .= ''
+				.'<div class="select-season">'
+					.'<form name="select-season" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<label for="select-season">'.$rb->get('season.selectlab').':</label> '
+						.'<select name="select-season" id="select-season">'
+							.'<option value="0">'.$rb->get('season.all').'</option>'
+							.self::getSeasonsOptions(0, 0, self::getSeasonId())
+						.'</select> '
+						.'<input type="submit" name="select-season-submit" value="'.$rb->get('season.select').'" />'
+					.'</form>'
+				.'</div>';
+			} else {
+				if($showMsg != 'false') {
+					$return .= parent::getError($rb->get('project.notset'));
+				}
+			}
 			
 			if($useFrames == "false") {
 				return $return;
@@ -123,23 +137,29 @@
 			if($_POST['select-table-submit'] == $rb->get('tables.select')) {
 				$tableId = $_POST['select-table'];
 				if($tableId == 0) {
-					$_SESSION['sport']['table-id'] = '';
+					self::setTableId('-1');
 				} else {
-					$_SESSION['sport']['table-id'] = $tableId;
+					self::setTableId($tableId);
 				} 
 			}
 			
-			$return .= ''
-			.'<div class="select-table">'
-				.'<form name="select-table" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-					.'<label for="select-table">'.$rb->get('tables.selectlab').':</label> '
-					.'<select name="select-table" id="select-table">'
-						.'<option value="0">'.$rb->get('tables.all').'</option>'
-						.self::getTablesOptions($_SESSION['sport']['table-id'])
-					.'</select> '
-					.'<input type="submit" name="select-table-submit" value="'.$rb->get('tables.select').'" />'
-				.'</form>'
-			.'</div>';
+			if(self::isSetProjectId()) {
+				$return .= ''
+				.'<div class="select-table">'
+					.'<form name="select-table" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<label for="select-table">'.$rb->get('tables.selectlab').':</label> '
+						.'<select name="select-table" id="select-table">'
+							.'<option value="0">'.$rb->get('tables.all').'</option>'
+							.self::getTablesOptions(self::getTableId())
+						.'</select> '
+						.'<input type="submit" name="select-table-submit" value="'.$rb->get('tables.select').'" />'
+					.'</form>'
+				.'</div>';
+			} else {
+				if($showMsg != 'false') {
+					$return .= parent::getError($rb->get('project.notset'));
+				}
+			}
 			
 			if($useFrames == "false") {
 				return $return;
@@ -165,23 +185,29 @@
 			if($_POST['select-team-submit'] == $rb->get('team.select')) {
 				$teamId = $_POST['select-team'];
 				if($teamId == 0) {
-					$_SESSION['sport']['team-id'] = '';
+					self::setTeamId('-1');
 				} else {
-					$_SESSION['sport']['team-id'] = $teamId;
+					self::setTeamId($teamId);
 				} 
 			}
 			
-			$return .= ''
-			.'<div class="select-team">'
-				.'<form name="select-team" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-					.'<label for="select-team">'.$rb->get('team.selectlab').':</label> '
-					.'<select name="select-team" id="select-team">'
-						.'<option value="0">'.$rb->get('team.all').'</option>'
-						.self::getTeamsOptions($_SESSION['sport']['team-id'])
-					.'</select> '
-					.'<input type="submit" name="select-team-submit" value="'.$rb->get('team.select').'" />'
-				.'</form>'
-			.'</div>';
+			if(self::isSetProjectId()) {
+				$return .= ''
+				.'<div class="select-team">'
+					.'<form name="select-team" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<label for="select-team">'.$rb->get('team.selectlab').':</label> '
+						.'<select name="select-team" id="select-team">'
+							.'<option value="0">'.$rb->get('team.all').'</option>'
+							.self::getTeamsOptions(self::getTeamId())
+						.'</select> '
+						.'<input type="submit" name="select-team-submit" value="'.$rb->get('team.select').'" />'
+					.'</form>'
+				.'</div>';
+			} else {
+				if($showMsg != 'false') {
+					$return .= parent::getError($rb->get('project.notset'));
+				}
+			}
 			
 			if($useFrames == "false") {
 				return $return;
@@ -189,6 +215,217 @@
 				return parent::getFrame($rb->get('teams.title'), $return, "", true);
 			}
 		}
+    
+    /**
+     *
+     *	Show select project form.
+     *		      
+     *	@param		useFrames				use frames in output
+     *	@param		showMsg					show messages in output
+     *	     
+     */		 		 		     
+    public function selectProject($useFrames = false, $showMsg = false) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			
+			if($_POST['select-project-submit'] == $rb->get('project.select')) {
+				$projectId = $_POST['select-project'];
+				if($projectId != '') {
+					self::setProjectId($projectId);
+				}
+			}
+			
+			$return .= ''
+			.'<div class="gray-box-float">'
+				.'<form name="select-project" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<label for="select-project">'.$rb->get('project.selectlab').':</label> '
+					.'<select name="select-project" id="select-project" class="w160">'
+						.self::getProjectsOptions(self::getProjectId(), WEB_R_READ)
+					.'</select> '
+					.'<input type="submit" name="select-project-submit" value="'.$rb->get('project.select').'" />'
+				.'</form>'
+			.'</div>';
+			
+			if($useFrames == "false") {
+				return $return;
+			} else {
+				return parent::getFrame($rb->get('projects.title'), $return, "", true);
+			}
+		}
+		
+		/**
+		 *
+		 *	List of projects		 
+		 *
+		 */		 		 		 		 		 		
+		public function showEditProjects($pageId = false, $useFrames = false, $showMsg = false) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$retrun = '';
+		
+			if($pageId != false) {
+				$actionUrl = $webObject->composeUrl($pageId);
+			} else {
+				$actionUrl = $_SERVER['REDIRECT_URL'];
+			}
+			
+			if($_POST['project-delete'] == $rb->get('projects.delete')) {
+				$projectId = $_POST['project-id'];
+				
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, $projectId, WEB_R_DELETE)) {
+					parent::db()->execute(parent::query()->get('deleteProject', array('id' => $projectId), 'sport'));
+					UniversalPermission::deletePermissions($this->UPDisc, $projectId);
+					$return .= parent::getSuccess($rb->get('projects.delete.success'));
+				} else {
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+				}
+			}
+			
+			// test prav!!
+			$projects = parent::db()->fetchAll(parent::query()->get('selectProjects', array(), 'sport'));
+			if(count($projects) > 0) {
+				$return .= ''
+				.'<table class="standart">'
+					.'<tr>'
+						.'<th>'.$rb->get('projects.id').':</th>'
+						.'<th>'.$rb->get('projects.name').':</th>'
+						.'<th>'.$rb->get('projects.url').':</th>'
+						.'<th>'.$rb->get('projects.actions').':</th>'
+					.'</tr>';
+				for($i = 0; $i < count($projects); $i ++) {
+					$can = UniversalPermission::checkUserPermissions($this->UPDisc, $projects[$i]['id'], WEB_R_DELETE);
+					$return .= ''
+					.'<tr class="'.((($i % 2) == 1) ? 'even' : 'idle').'">'
+						.'<td>'.$projects[$i]['id'].'</td>'
+						.'<td>'.$projects[$i]['name'].'</td>'
+						.'<td>'.$projects[$i]['url'].'</td>'
+						.'<td>'
+							.($can ? ''
+							.'<form name="projects-edit" action="'.$actionUrl.'" method="post">'
+								.'<input type="hidden" name="project-id" value="'.$projects[$i]['id'].'" />'
+								.'<input type="image" src="~/images/page_edi.png" name="project-edit" value="'.$rb->get('projects.edit').'" title="'.$rb->get('projects.edit.title').'" />'
+							.'</form> '
+							: '')
+							.($can ? ''
+							.'<form name="projects-delete" action="" method="post">'
+								.'<input type="hidden" name="project-id" value="'.$projects[$i]['id'].'" />'
+								.'<input class="confirm" type="image" src="~/images/page_del.png" name="project-delete" value="'.$rb->get('projects.delete').'" title="'.$rb->get('projects.delete.title').', id '.$projects[$i]['id'].'" />'
+							.'</form>'
+							: '')
+						.'</td>'
+					.'</tr>';
+				}
+				$return .= ''
+				.'</table>';
+			} else {
+				$return .= parent::getWarning($rb->get('projects.nodata'));
+			}
+			
+			$return .= ''
+			.'<hr />'
+			.'<form name="projects-create" action="'.$ationUrl.'" method="post">'
+				.'<input type="submit" name="project-create" value="'.$rb->get('projects.create').'" />'
+			.'</form>';
+			
+			if($useFrames == "false") {
+				return $return;
+			} else {
+				return parent::getFrame($rb->get('projects.title'), $return, "", true);
+			}
+		}
+		
+		/**
+		 *
+		 *	Edit project
+		 *
+		 */		 		 		 		
+		public function showEditProjectForm($useFrames = false, $showMsg = false) {
+			global $dbObject;
+			$return = '';
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			
+			if($_POST['project-submit'] == $rb->get('project.submit')) {
+				$projectId = $_POST['project-id'];
+				$name = $_POST['project-name'];
+				$url = parent::convertToUrlValid($_POST['project-url']);
+				
+				
+				if($projectId == '') {
+					$usedName = parent::db()->fetchAll(parent::query()->get('selectProjectByName', array('name' => $name), 'sport'));
+					if(count($usedName) > 0) {
+						$return .= parent::getError($rb->get('project.nameused'));
+					} else {
+						parent::db()->execute(parent::query()->get('insertProject', array('name' => $name, 'url' => $url), 'sport'));
+						$maxId = parent::db()->getLastId();
+						
+						// pridat prava
+						UniversalPermission::savePermissionsFromForm($this->UPDisc, $maxId, WEB_R_READ);
+						UniversalPermission::savePermissionsFromForm($this->UPDisc, $maxId, WEB_R_WRITE);
+						UniversalPermission::savePermissionsFromForm($this->UPDisc, $maxId, WEB_R_DELETE);
+					}
+				} else {
+					if(UniversalPermission::checkUserPermissions($this->UPDisc, $projectId, WEB_R_WRITE)) {
+						parent::db()->execute(parent::query()->get('updateProjectById', array('name' => $name, 'url' => $url, 'id' => $projectId), 'sport'));
+						
+						// upravit prava
+						UniversalPermission::savePermissionsFromForm($this->UPDisc, $projectId, WEB_R_READ);
+						UniversalPermission::savePermissionsFromForm($this->UPDisc, $projectId, WEB_R_WRITE);
+						UniversalPermission::savePermissionsFromForm($this->UPDisc, $projectId, WEB_R_DELETE);
+					} else {
+						$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+					}
+				}
+			}
+			
+			if($_POST['project-create'] == $rb->get('projects.create') || $_POST['project-edit'] == $rb->get('projects.edit')) {
+				$projectId = $_POST['project-id'];
+				if($projectId == '' || UniversalPermission::checkUserPermissions($this->UPDisc, $projectId, WEB_R_DELETE)) {
+					$project = array();
+					if($projectId != '') {
+						$project = parent::db()->fetchAll(parent::query()->get('selectProjectById', array('id' => $projectId), 'sport'));
+						$project = $project[0];
+					}
+					$return .= ''
+					.'<form name="project-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<div class="gray-box">'
+							.'<label for="project-name" class="w160">'.$rb->get('projects.name').'</label>'
+							.'<input class="w200" type="text" name="project-name" id="project-name" value="'.$project['name'].'" />'
+						.'</div>'
+						.'<div class="gray-box">'
+							.'<label for="project-url" class="w160">'.$rb->get('projects.url').'</label>'
+							.'<input class="w200" type="text" name="project-url" id="project-url" value="'.$project['url'].'" />'
+						.'</div>'
+						.'<div class="gray-box gray-box-float">'
+							.'<label for="universal-permissions-sport_proj-r" class="block">'.$rb->get('project.permission.r').'</label>'
+							.UniversalPermission::showPermissionsFormPart($this->UPDisc, ($projectId != '' ? $projectId : 'new'), parent::login()->getGroups(), WEB_R_READ)
+						.'</div>'
+						.'<div class="gray-box gray-box-float">'
+							.'<label for="universal-permissions-sport_proj-w" class="block">'.$rb->get('project.permission.w').'</label>'
+							.UniversalPermission::showPermissionsFormPart($this->UPDisc, ($projectId != '' ? $projectId : 'new'), parent::login()->getGroups(), WEB_R_WRITE)
+						.'</div>'
+						.'<div class="gray-box gray-box-float">'
+							.'<label for="universal-permissions-sport_proj-d" class="block">'.$rb->get('project.permission.d').'</label>'
+							.UniversalPermission::showPermissionsFormPart($this->UPDisc, ($projectId != '' ? $projectId : 'new'), parent::login()->getGroups(), WEB_R_DELETE)
+						.'</div>'
+						.'<div class="clear"></div>'
+						.'<div class="gray-box">'
+							.'<input type="hidden" name="project-id" value="'.$project['id'].'" />'
+							.'<input type="submit" name="project-submit" value="'.$rb->get('project.submit').'" />'
+						.'</div>'
+					.'</form>';
+			
+					if($useFrames == "false") {
+						return $return;
+					} else {
+						return parent::getFrame($rb->get('project.title').' :: ('.($projectId == '' ? 'new' : $projectId).')', $return, "", true);
+					}
+				}
+			}
+		}
+			
     
     /**
      *
@@ -206,59 +443,66 @@
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$retrun = '';
-			
-			if($pageId != false) {
-				$url = $webObject->composeUrl($pageId);
-			} else {
-				$url = '';
-			}
-			
-			if($_POST['season-delete'] == $rb->get('seasons.delete')) {
-				$seasonId = $_POST['season-id'];
-				$dbObject->execute('DELETE FROM `w_sport_season` WHERE `id` = '.$seasonId.';');
-			}
-			
-			$seasons = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` ORDER BY `id`;');
-			if(count($seasons) > 0) {
-				$return .= ''
-				.'<table class="seasons-list">'
-					.'<tr>'
-						.'<th class="seasons-list-id">'.$rb->get('seasons.id').':</th>'
-						.'<th class="seasons-list-start">'.$rb->get('seasons.startyear').':</th>'
-						.'<th class="seasons-list-end">'.$rb->get('seasons.endyear').':</th>'
-						.'<th class="seasons-list-edit">'.$rb->get('seasons.edit').':</th>'
-					.'</tr>';
-				for($i = 0; $i < count($seasons); $i ++) {
-					$return .= ''
-					.'<tr class="'.((($i % 2) == 0 ) ? 'idle' : 'even').'">'
-						.'<td class="seasons-list-id">'.$seasons[$i]['id'].'</td>'
-						.'<td class="seasons-list-start">'.$seasons[$i]['start_year'].'</td>'
-						.'<td class="seasons-list-end">'.$seasons[$i]['end_year'].'</td>'
-						.'<td class="seasons-list-edit">'
-							.'<form name="seasons-edit" method="post" action="'.$actionUrl.'">'
-								.'<input type="hidden" name="season-id" value="'.$seasons[$i]['id'].'" />'
-								.'<input type="hidden" name="season-edit" value="'.$rb->get('seasons.edit').'" />'
-								.'<input type="image" src="~/images/page_edi.png" name="season-edit" value="'.$rb->get('seasons.edit').'" title="'.$rb->get('seasons.editcap').'" />'
-							.'</form> '
-							.'<form name="seasons-delete" method="post">'
-								.'<input type="hidden" name="season-id" value="'.$seasons[$i]['id'].'" />'
-								.'<input type="hidden" name="season-delete" value="'.$rb->get('seasons.delete').'" />'
-								.'<input class="confirm" type="image" src="~/images/page_del.png" name="season-delete" value="'.$rb->get('seasons.delete').'" title="'.$rb->get('seasons.deletecap').', id ('.$seasons[$i]['id'].')" />'
-							.'</form>'
-						.'</td>'
-					.'</tr>';
+
+			if(self::isSetProjectId()) {			
+				if($pageId != false) {
+					$actionUrl = $webObject->composeUrl($pageId);
+				} else {
+					$actionUrl = $_SERVER['REDIRECT_URL'];
 				}
-			
-				$return .=''
-				.'</table>';
+				if($_POST['season-delete'] == $rb->get('seasons.delete')) {			
+					if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+						$seasonId = $_POST['season-id'];
+						$dbObject->execute(parent::query()->get('deleteSeason', array('id' => $seasonId), 'sport'));
+					} else {
+						$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+					}
+				}
+				
+				$seasons = $dbObject->fetchAll(parent::query()->get('selectSeasonsByProjectId', array('projectId' => self::getProjectId()), 'sport'));
+				if(count($seasons) > 0) {
+					$return .= ''
+					.'<table class="seasons-list">'
+						.'<tr>'
+							.'<th class="seasons-list-id">'.$rb->get('seasons.id').':</th>'
+							.'<th class="seasons-list-start">'.$rb->get('seasons.startyear').':</th>'
+							.'<th class="seasons-list-end">'.$rb->get('seasons.endyear').':</th>'
+							.'<th class="seasons-list-edit">'.$rb->get('seasons.edit').':</th>'
+						.'</tr>';
+					for($i = 0; $i < count($seasons); $i ++) {
+						$return .= ''
+						.'<tr class="'.((($i % 2) == 0 ) ? 'idle' : 'even').'">'
+							.'<td class="seasons-list-id">'.$seasons[$i]['id'].'</td>'
+							.'<td class="seasons-list-start">'.$seasons[$i]['start_year'].'</td>'
+							.'<td class="seasons-list-end">'.$seasons[$i]['end_year'].'</td>'
+							.'<td class="seasons-list-edit">'
+								.'<form name="seasons-edit" method="post" action="'.$actionUrl.'">'
+									.'<input type="hidden" name="season-id" value="'.$seasons[$i]['id'].'" />'
+									.'<input type="hidden" name="season-edit" value="'.$rb->get('seasons.edit').'" />'
+										.'<input type="image" src="~/images/page_edi.png" name="season-edit" value="'.$rb->get('seasons.edit').'" title="'.$rb->get('seasons.editcap').'" />'
+								.'</form> '
+								.'<form name="seasons-delete" method="post">'
+									.'<input type="hidden" name="season-id" value="'.$seasons[$i]['id'].'" />'
+									.'<input type="hidden" name="season-delete" value="'.$rb->get('seasons.delete').'" />'
+									.'<input class="confirm" type="image" src="~/images/page_del.png" name="season-delete" value="'.$rb->get('seasons.delete').'" title="'.$rb->get('seasons.deletecap').', id ('.$seasons[$i]['id'].')" />'
+								.'</form>'
+							.'</td>'
+						.'</tr>';
+					}
+				
+					$return .=''
+					.'</table>';
+				} else {
+					$return .= '<h4 class="warning">'.$rb->get('seasons.warning.nodata').'</h4>';
+				}
+				$return .= ''
+				.'<hr />'
+				.'<form name="season-new" method="post" action="'.$actionUrl.'">'
+					.'<input type="submit" name="season-new" value="'.$rb->get('seasons.new').'" title="'.$rb->get('seasons.newcap').'" />'
+				.'</form>';
 			} else {
-				$return .= '<h4 class="warning">'.$rb->get('seasons.warning.nodata').'</h4>';
+				$return .= parent::getError($rb->get('project.notset'));
 			}
-			$return .= ''
-			.'<hr />'
-			.'<form name="season-new" method="post" action="'.$actionUrl.'">'
-				.'<input type="submit" name="season-new" value="'.$rb->get('seasons.new').'" title="'.$rb->get('seasons.newcap').'" />'
-			.'</form>';
 			
 			if($useFrames == "false") {
 				return $return;
@@ -281,46 +525,60 @@
 			$return = '';
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$season = array();
+			
 			
 			if($_POST['season-save'] == $rb->get('seasons.form.save')) {
-				$seasonId = $_POST['season-id'];
-				$seasonStart = $_POST['season-edit-start'];
-				$seasonEnd = $_POST['season-edit-end'];
-				$season = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` WHERE `id` = '.$seasonId.';');
-				if(count($season) > 0) {
-					$dbObject->execute('UPDATE `w_sport_season` SET `start_year` = '.$seasonStart.', `end_year` = '.$seasonEnd.' WHERE `id` = '.$seasonId.';');
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					$seasonId = $_POST['season-id'];
+					$seasonStart = $_POST['season-edit-start'];
+					$seasonEnd = $_POST['season-edit-end'];
+					if($seasonStart < $seasonEnd) {
+						$season = $dbObject->fetchAll(parent::query()->get('selectSeasonById', array('id' => $seasonId), 'sport'));
+						if(count($season) > 0) {
+							$dbObject->execute(parent::query()->get('updateSeasonById', array('startYear' => $seasonStart, 'endYear' => $seasonEnd, 'id' => $seasonId), 'sport'));
+						} else {
+							$dbObject->execute(parent::query()->get('insertSeason', array('startYear' => $seasonStart, 'endYear' => $seasonEnd, 'projectId' => self::getProjectId()), 'sport'));
+						}
+					} else {
+						$return .= parent::getError($rb->get('season.error.startgtend'));
+						$season['start_year'] = $seasonStart;
+						$season['end_year'] = $seasonEnd;
+						$season['id'] = $seasonId;
+						$_POST['season-new'] = $rb->get('seasons.new');
+					}
 				} else {
-					$dbObject->execute('INSERT INTO `w_sport_season`(`start_year`, `end_year`) VALUES ('.$seasonStart.', '.$seasonEnd.');');
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
 				}
 			}
 			
 			if($_POST['season-new'] == $rb->get('seasons.new') || $_POST['season-edit'] == $rb->get('seasons.edit')) {
-				if($_POST['season-edit'] == $rb->get('seasons.edit')) {
-					$seasonId = $_POST['season-id'];
-					$season = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` WHERE `id` = '.$seasonId.';');
-					$season = $season[0];
+				if(self::isSetProjectId()) {
+					if($_POST['season-edit'] == $rb->get('seasons.edit')) {
+						$seasonId = $_POST['season-id'];
+						$season = $dbObject->fetchSingle(parent::query()->get('selectSeasonById', array('id' => $seasonId), 'sport'));
+					}
+					$return .= ''
+					.'<div class="season-edit-form">'
+						.'<form name="season-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+							.'<div class="season-edit-start">'
+								.'<label for="season-edit-start">'.$rb->get('seasons.form.startyear').':</label> '
+								.'<input type="text" name="season-edit-start" id="season-edit-start" value="'.$season['start_year'].'" />'
+							.'</div>'
+							.'<div class="season-edit-end">'
+								.'<label for="season-edit-end">'.$rb->get('seasons.form.endyear').':</label> '
+								.'<input type="text" name="season-edit-end" id="season-edit-end" value="'.$season['end_year'].'" />'
+							.'</div>'
+							.'<div class="season-edit-submit">'
+								.'<input type="hidden" name="season-id" value="'.$season['id'].'" />'
+								.'<input type="submit" name="season-save" value="'.$rb->get('seasons.form.save').'" />'
+							.'</div>'
+						.'</form>'
+					.'</div>'
+					.'<div class="clear"></div>';
 				} else {
-					$season = array();
+					$return .= parent::getError($rb->get('project.notset'));
 				}
-				
-				$return .= ''
-				.'<div class="season-edit-form">'
-					.'<form name="season-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-						.'<div class="season-edit-start">'
-							.'<label for="season-edit-start">'.$rb->get('seasons.form.startyear').':</label> '
-							.'<input type="text" name="season-edit-start" id="season-edit-start" value="'.$season['start_year'].'" />'
-						.'</div>'
-						.'<div class="season-edit-end">'
-							.'<label for="season-edit-end">'.$rb->get('seasons.form.endyear').':</label> '
-							.'<input type="text" name="season-edit-end" id="season-edit-end" value="'.$season['end_year'].'" />'
-						.'</div>'
-						.'<div class="season-edit-submit">'
-							.'<input type="hidden" name="season-id" value="'.$season['id'].'" />'
-							.'<input type="submit" name="season-save" value="'.$rb->get('seasons.form.save').'" />'
-						.'</div>'
-					.'</form>'
-				.'</div>'
-				.'<div class="clear"></div>';
 				
 				if($useFrames == "false") {
 					return $return;
@@ -347,107 +605,135 @@
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$retrun = '';
 			
-			if($pageId != false) {
-				$url = $webObject->composeUrl($pageId);
-			} else {
-				$url = '';
-			}
-			
-			if($_POST['team-add-season-submit'] == $rb->get('teams.addseasonsubmit')) {
-				$addteam = $_POST['teams-add-season-team'];
-				$addseason = $_POST['teams-add-season-season'];
-				
-				$retsql = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE `id` = '.$addteam.' AND `season` = '.$addseason.';');
-				if(count($retsql) == 0) {
-					$reteam = $dbObject->fetchAll('SELECT `name`, `logo` FROM `w_sport_team` WHERE `id` = '.$addteam.' ORDER BY `season` ASC;');
-					$dbObject->execute('INSERT INTO `w_sport_team`(`id`, `name`, `logo`, `season`) VALUES('.$addteam.', "'.$reteam[0]['name'].'", "'.$reteam[0]['logo'].'", '.$addseason.');');
-					$dbObject->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`) VALUES('.$addteam.', 0, 0, 0, 0, 0, 0, 0, '.$addseason.');');
+			if(self::isSetProjectId()) {
+				if($pageId != false) {
+					$actionUrl = $webObject->composeUrl($pageId);
 				} else {
-					if($showMsg != 'false') {
-						$return .= '<h4 class="error">'.$rb->get('teams.addseasonerr').'</h4>';
+					$actionUrl = $_SERVER['REDIRECT_URL'];
+				}
+				
+				if($_POST['team-add-season-submit'] == $rb->get('teams.addseasonsubmit')) {
+					if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+						$addteam = $_POST['teams-add-season-team'];
+						$addseason = $_POST['teams-add-season-season'];
+					
+						$retsql = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE `id` = '.$addteam.' AND `season` = '.$addseason.';');
+						if(count($retsql) == 0) {
+							//parent::db()->setMockMode(true);
+							$reteam = $dbObject->fetchAll('SELECT `name`, `logo`, `url`, `season` FROM `w_sport_team` WHERE `id` = '.$addteam.' ORDER BY `season` desc;');
+							$dbObject->execute('INSERT INTO `w_sport_team`(`id`, `name`, `logo`, `url`, `season`, `project_id`) VALUES('.$addteam.', "'.$reteam[0]['name'].'", "'.$reteam[0]['logo'].'", "'.$reteam[0]['url'].'", '.$addseason.', '.self::getProjectId().');');
+							$tables = parent::db()->fetchAll('select `table_id` from `w_sport_table` where `team` = '.$addteam.' and `season` = '.$reteam[0]['season'].';');
+							foreach($tables as $table) {
+								parent::db()->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `project_id`, `table_id`) VALUES('.$addteam.', 0, 0, 0, 0, 0, 0, 0, '.$addseason.', '.self::getProjectId().', '.$table['table_id'].');');
+							}
+							//parent::db()->setMockMode(false);
+							//$dbObject->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `project_id`) VALUES('.$addteam.', 0, 0, 0, 0, 0, 0, 0, '.$addseason.', '.self::getProjectId().');');
+						} else {
+							if($showMsg != 'false') {
+								$return .= '<h4 class="error">'.$rb->get('teams.addseasonerr').'</h4>';
+							}
+						}
+					} else {
+						$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
 					}
 				}
-			}
-			
-			if($_POST['team-delete'] == $rb->get('teams.delete')) {
-				$teamId = $_POST['team-id'];
-				$seasonId = $_POST['season-id'];
-				$dbObject->execute('DELETE FROM `w_sport_team` WHERE `id` = '.$teamId.' AND `season` = '.$seasonId.';');
-				$dbObject->execute('DELETE FROM `w_sport_table` WHERE `team` = '.$teamId.' AND `season` = '.$seasonId.';');
-			}
-			
-			if($_SESSION['sport']['season-id'] != '') {
-				if($_SESSION['sport']['team-id'] != '') {
-					$teams = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_team`.`season`, `w_sport_team`.`logo`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_team` LEFT JOIN `w_sport_season` ON `w_sport_team`.`season` = `w_sport_season`.`id` WHERE `w_sport_team`.`season` = '.$_SESSION['sport']['season-id'].' AND `w_sport_team`.`id` = '.$_SESSION['sport']['team-id'].' ORDER BY `w_sport_season`.`start_year` DESC;');	
-				} else {
-					$teams = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_team`.`season`, `w_sport_team`.`logo`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_team` LEFT JOIN `w_sport_season` ON `w_sport_team`.`season` = `w_sport_season`.`id` WHERE `w_sport_team`.`season` = '.$_SESSION['sport']['season-id'].' ORDER BY `w_sport_season`.`start_year` DESC;');
+				
+				if($_POST['team-delete'] == $rb->get('teams.delete')) {
+					if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+						$teamId = $_POST['team-id'];
+						$seasonId = $_POST['season-id'];
+						$dbObject->execute('DELETE FROM `w_sport_team` WHERE `id` = '.$teamId.' AND `season` = '.$seasonId.';');
+						$dbObject->execute('DELETE FROM `w_sport_table` WHERE `team` = '.$teamId.' AND `season` = '.$seasonId.';');
+					} else {
+						$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+					}
 				}
-			} else {
-				if($_SESSION['sport']['team-id'] != '') {
-					$teams = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_team`.`season`, `w_sport_team`.`logo`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_team` LEFT JOIN `w_sport_season` ON `w_sport_team`.`season` = `w_sport_season`.`id` WHERE `w_sport_team`.`id` = '.$_SESSION['sport']['team-id'].' ORDER BY `w_sport_season`.`start_year` DESC;');
-				} else {
-					$teams = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_team`.`season`, `w_sport_team`.`logo`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_team` LEFT JOIN `w_sport_season` ON `w_sport_team`.`season` = `w_sport_season`.`id` ORDER BY `w_sport_season`.`start_year` DESC;');
+				
+				$tablesql = '';
+				$tablewhere = '';
+				if(self::getTableId() != '-1') {
+					$tablesql = ' join `w_sport_table` on `w_sport_team`.`id` = `w_sport_table`.`team`';
+					$tablewhere = ' and `w_sport_table`.`table_id` = '.self::getTableId();
 				}
-			}
-			if(count($teams) > 0) {
-				$return .= ''
-				.'<table class="teams-list">'
-					.'<tr>'
-						.'<th class="teams-list-id">'.$rb->get('teams.id').':</th>'
-						.'<th class="teams-list-name">'.$rb->get('teams.name').':</th>'
-						.'<th class="teams-list-logo">'.$rb->get('teams.logo').':</th>'
-						.'<th class="teams-list-season">'.$rb->get('teams.season').':</th>'
-						.'<th class="teams-list-edit">'.$rb->get('teams.edit').':</th>'
-					.'</tr>';
-				for($i = 0; $i < count($teams); $i ++) {
-					$teams[$i]['logo'] = str_replace('~', '&#126', $teams[$i]['logo']);
+				
+				if(self::getSeasonId() != '-1') {
+					if(self::getTeamId() != '-1') {
+						$teams = $dbObject->fetchAll('SELECT distinct `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_team`.`season`, `w_sport_team`.`logo`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_team` LEFT JOIN `w_sport_season` ON `w_sport_team`.`season` = `w_sport_season`.`id`'.$tablesql.' WHERE `w_sport_team`.`season` = '.self::getSeasonId().' AND `w_sport_team`.`id` = '.self::getTeamId().' and `w_sport_team`.`project_id` = '.self::getProjectId().$tablewhere.' ORDER BY `w_sport_season`.`start_year` DESC;');	
+					} else {
+						$teams = $dbObject->fetchAll('SELECT distinct `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_team`.`season`, `w_sport_team`.`logo`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_team` LEFT JOIN `w_sport_season` ON `w_sport_team`.`season` = `w_sport_season`.`id`'.$tablesql.'  WHERE `w_sport_team`.`season` = '.self::getSeasonId().' and `w_sport_team`.`project_id` = '.self::getProjectId().$tablewhere.' ORDER BY `w_sport_season`.`start_year` DESC;');
+					}
+				} else {
+					if(self::getTeamId() != '-1') {
+						$teams = $dbObject->fetchAll('SELECT distinct `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_team`.`season`, `w_sport_team`.`logo`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_team` LEFT JOIN `w_sport_season` ON `w_sport_team`.`season` = `w_sport_season`.`id`'.$tablesql.'  WHERE `w_sport_team`.`id` = '.self::getTeamId().' and `w_sport_team`.`project_id` = '.self::getProjectId().$tablewhere.' ORDER BY `w_sport_season`.`start_year` DESC;');
+					} else {
+						$teams = $dbObject->fetchAll('SELECT distinct `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_team`.`season`, `w_sport_team`.`logo`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_team` LEFT JOIN `w_sport_season` ON `w_sport_team`.`season` = `w_sport_season`.`id`'.$tablesql.'  where `w_sport_team`.`project_id` = '.self::getProjectId().$tablewhere.' ORDER BY `w_sport_season`.`start_year` DESC;');
+					}
+				}
+				if(count($teams) > 0) {
 					$return .= ''
-					.'<tr class="'.((($i % 2) == 0 ) ? 'idle' : 'even').'">'
-						.'<td class="teams-list-id">'.$teams[$i]['id'].'</td>'
-						.'<td class="teams-list-name">'.$teams[$i]['name'].'</td>'
-						.'<td class="teams-list-logo">'.$teams[$i]['logo'].'</td>'
-						.'<td class="teams-list-season">'.$teams[$i]['start_year'].' - '.$teams[$i]['end_year'].'</td>'
-						.'<td class="teams-list-edit">'
-							.'<form name="teams-edit" method="post" action="'.$actionUrl.'">'
-								.'<input type="hidden" name="team-id" value="'.$teams[$i]['id'].'" />'
-								.'<input type="hidden" name="season-id" value="'.$teams[$i]['season'].'" />'
-								.'<input type="hidden" name="team-edit" value="'.$rb->get('teams.edit').'" />'
-								.'<input type="image" src="~/images/page_edi.png" name="team-edit" value="'.$rb->get('teams.edit').'" title="'.$rb->get('teams.editcap').'" />'
-							.'</form> '
-							.'<form name="teams-delete" method="post">'
-								.'<input type="hidden" name="team-id" value="'.$teams[$i]['id'].'" />'
-								.'<input type="hidden" name="season-id" value="'.$teams[$i]['season'].'" />'
-								.'<input type="hidden" name="team-delete" value="'.$rb->get('teams.delete').'" />'
-								.'<input class="confirm" type="image" src="~/images/page_del.png" name="team-delete" value="'.$rb->get('teams.delete').'" title="'.$rb->get('teams.deletecap').', id ('.$teams[$i]['id'].'), season ('.$teams[$i]['start_year'].' - '.$teams[$i]['end_year'].')" />'
-							.'</form>'
-						.'</td>'
-					.'</tr>';
-				}
-			
+					//.parent::getWarning('Do formuláře pro editaci týmu přidat checkboxy pro výběr v jakých tabulkách bude zařazen!')
+					.'<table class="teams-list">'
+						.'<tr>'
+							.'<th class="teams-list-id">'.$rb->get('teams.id').':</th>'
+							.'<th class="teams-list-name">'.$rb->get('teams.name').':</th>'
+							.'<th class="teams-list-logo">'.$rb->get('teams.logo').':</th>'
+							.'<th class="teams-list-season">'.$rb->get('teams.season').':</th>'
+							.'<th class="teams-list-edit">'.$rb->get('teams.edit').':</th>'
+						.'</tr>';
+					for($i = 0; $i < count($teams); $i ++) {
+						$teams[$i]['logo'] = str_replace('~', '&#126', $teams[$i]['logo']);
+						$return .= ''
+						.'<tr class="'.((($i % 2) == 0 ) ? 'idle' : 'even').'">'
+							.'<td class="teams-list-id">'.$teams[$i]['id'].'</td>'
+							.'<td class="teams-list-name">'.$teams[$i]['name'].'</td>'
+							.'<td class="teams-list-logo">'.$teams[$i]['logo'].'</td>'
+							.'<td class="teams-list-season">'.$teams[$i]['start_year'].' - '.$teams[$i]['end_year'].'</td>'
+							.'<td class="teams-list-edit">'
+								.'<form name="teams-edit" method="post" action="'.$actionUrl.'">'
+									.'<input type="hidden" name="team-id" value="'.$teams[$i]['id'].'" />'
+									.'<input type="hidden" name="season-id" value="'.$teams[$i]['season'].'" />'
+									.'<input type="hidden" name="team-edit" value="'.$rb->get('teams.edit').'" />'
+									.'<input type="image" src="~/images/page_edi.png" name="team-edit" value="'.$rb->get('teams.edit').'" title="'.$rb->get('teams.editcap').'" />'
+								.'</form> '
+								.'<form name="teams-delete" method="post">'
+									.'<input type="hidden" name="team-id" value="'.$teams[$i]['id'].'" />'
+									.'<input type="hidden" name="season-id" value="'.$teams[$i]['season'].'" />'
+									.'<input type="hidden" name="team-delete" value="'.$rb->get('teams.delete').'" />'
+									.'<input class="confirm" type="image" src="~/images/page_del.png" name="team-delete" value="'.$rb->get('teams.delete').'" title="'.$rb->get('teams.deletecap').', id ('.$teams[$i]['id'].'), season ('.$teams[$i]['start_year'].' - '.$teams[$i]['end_year'].')" />'
+								.'</form>'
+							.'</td>'
+						.'</tr>';
+					}
+				
 				$return .=''
-				.'</table>';
+					.'</table>';
+				} else {
+					$return .= '<h4 class="warning">'.$rb->get('teams.warning.nodata').'</h4>';
+				}
+				$return .= ''
+				.'<hr />'
+				.'<form name="team-new" method="post" action="'.$actionUrl.'">'
+					.'<div class="gray-box">'
+						.'<input type="submit" name="team-new" value="'.$rb->get('teams.new').'" title="'.$rb->get('teams.newcap').'" /> '
+						.' | '
+						.'<select name="teams-add-season-team">'
+							.self::getTeamsOptions()
+						.'</select> '
+						.'<select name="teams-add-season-season">'
+							.self::getSeasonsOptions()
+						.'</select> '
+						.'<input type="submit" name="team-add-season-submit" value="'.$rb->get('teams.addseasonsubmit').'" title="'.$rb->get('teams.addseasonsubmitcap').'" />'
+						//.'<span class="red">*</span> <span class="small-font">'.$rb->get('teams.copynotenotaddtotable').'</span> '
+					.'</div>'
+				.'</form>';
 			} else {
-				$return .= '<h4 class="warning">'.$rb->get('teams.warning.nodata').'</h4>';
+				$return .= parent::getError($rb->get('project.notset'));
 			}
-			$return .= ''
-			.'<hr />'
-			.'<form name="team-new" method="post" action="'.$actionUrl.'">'
-				.'<input type="submit" name="team-new" value="'.$rb->get('teams.new').'" title="'.$rb->get('teams.newcap').'" /> '
-				.'<span class="team-add-season">'
-					.'<select name="teams-add-season-team">'
-						.self::getTeamsOptions()
-					.'</select> '
-					.'<select name="teams-add-season-season">'
-						.self::getSeasonsOptions()
-					.'</select> '
-					.'<input type="submit" name="team-add-season-submit" value="'.$rb->get('teams.addseasonsubmit').'" title="'.$rb->get('teams.addseasonsubmitcap').'" />'
-				.'</span>'
-			.'</form>';
 			
 			if($useFrames == "false") {
 				return $return;
 			} else {
-				return parent::getFrame($rb->get('seasons.title'), $return, "", true);
+				return parent::getFrame($rb->get('teams.title'), $return, "", true);
 			}
 		}
 		
@@ -465,62 +751,147 @@
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
+			$team = array();
 			
 			if($_POST['team-save'] == $rb->get('teams.form.save')) {
-				$seasonId = $_POST['season-id'];
-				$teamId = $_POST['team-id'];
-				$name = $_POST['team-edit-name'];
-				$logo = $_POST['team-edit-logo'];
-				$season = $_POST['team-edit-season'];
-				$seasql = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE `id` = '.$teamId.' AND `season` = '.$seasonId.';');
-				if(count($seasql) > 0) {
-					$dbObject->execute('UPDATE `w_sport_team` SET `name` = '.$name.', `logo` = '.$logo.', `season` = '.$season.' WHERE `id` = '.$teamId.' AND `season` = '.$seasonId.';');
-				} else {
-					$dbObject->execute('INSERT INTO `w_sport_team`(`name`, `logo`, `season`) VALUES ("'.$name.'", "'.$logo.'", '.$season.');');
-					$tea = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `w_sport_team`;');
-					$dbObject->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`) VALUES('.$tea[0]['id'].', 0, 0, 0, 0, 0, 0, 0, '.$season.');');
-				}
-			}
-			
-			if($_POST['team-new'] == $rb->get('teams.new') || $_POST['team-edit'] == $rb->get('teams.edit')) {
-				if($_POST['team-edit'] == $rb->get('teams.edit')) {
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
 					$seasonId = $_POST['season-id'];
 					$teamId = $_POST['team-id'];
-					$team = $dbObject->fetchAll('SELECT `id`, `name`, `logo`, `season` FROM `w_sport_team` WHERE `season` = '.$seasonId.' AND `id` = '.$teamId.';');
-					$team = $team[0];
-					$team['logo'] = str_replace('~', '&#126', $team['logo']);
+					$name = trim($_POST['team-edit-name']);
+					$logo = $_POST['team-edit-logo'];
+					$season = $_POST['team-edit-season'];
+					$tables = $_POST['tables-list'];
+					$url = trim(parent::convertToUrlValid($_POST['team-edit-url']));
+					if($url == '') {
+						$url = strtolower(parent::convertToUrlValid($name));
+					}
+					$urls = parent::db()->fetchAll('select `url` from `w_sport_team` where `url` = "'.$url.'" and `project_id` = '.self::getProjectId().($teamId != '' ? ' and `id` != '.$teamId : '').';');
+					if($name != '' && count($urls) == 0) {
+						//parent::db()->setMockMode(true);
+					
+						$seasql = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE `id` = '.$teamId.' AND `season` = '.$seasonId.';');
+						if(count($seasql) > 0) {
+							$dbObject->execute('UPDATE `w_sport_team` SET `name` = "'.$name.'", `logo` = "'.$logo.'", `url` = "'.$url.'", `season` = '.$season.' WHERE `id` = '.$teamId.' AND `season` = '.$seasonId.';');
+						} else {
+							$dbObject->execute('INSERT INTO `w_sport_team`(`name`, `logo`, `url`, `season`, `project_id`) VALUES ("'.$name.'", "'.$logo.'", "'.$url.'", '.$season.', '.self::getProjectId().');');
+							$tea = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `w_sport_team`;');
+							$teamId = $tea[0]['id'];
+							//$dbObject->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `project_id`) VALUES('.$tea[0]['id'].', 0, 0, 0, 0, 0, 0, 0, '.$season.', '.self::getProjectId().');');
+						}
+						
+						$olduint = parent::db()->fetchAll('select `table_id` from `w_sport_table` where `team` = '.$teamId.' and `season` = '.$season.';');
+						foreach($olduint as $oldid) {
+							if(!in_array($oldid['table_id'], $tables)) {
+								parent::db()->execute('delete from `w_sport_table` where `team` = '.$teamId.' and `season` = '.$season.' and `table_id` = '.$oldid['table_id'].';');
+							} else {
+								foreach($tables as $key => $newid) {
+									if($oldid['table_id'] == $newid) {
+										unset($tables[$key]);
+									}
+								}
+							}
+						}
+						
+						$values = '';
+						foreach($tables as $tbl) {
+							if($values != '') {
+								$values .= ', ';
+							}
+							$values .= '('.$teamId.', 0, 0, 0, 0, 0, 0, 0, '.$season.', '.$tbl.', '.self::getProjectId().')';
+						}
+						parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`, `project_id`) values '.$values);
+						
+						//parent::db()->setMockMode(false);
+					} else {
+						$return .= parent::getError($rb->get('teams.error.nameemptyurlunique'));
+						$team['name'] = $name;
+						$team['logo'] = $logo;
+						$team['url'] = $url;
+						$seasonId = $season;
+						$team['season'] = $season;
+						$team['id'] = $teamId;
+						$_POST['team-new'] = $rb->get('teams.new');
+					}
 				} else {
-					$team = array();
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
 				}
+			}
 				
-				$seasons = self::getSeasonsOptions($teamId, $seasonId);
-				
-				$return .= ''
-				.'<div class="team-edit-form">'
-					.'<form name="team-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-						.'<div class="team-edit-name">'
-							.'<label for="team-edit-name">'.$rb->get('teams.name').'</label> '
-							.'<input type="text" name="team-edit-name" id="team-edit-name" value="'.$team['name'].'" />'
-						.'</div>'
-						.'<div class="team-edit-logo">'
-							.'<label for="team-edit-logo">'.$rb->get('teams.logo').'</label> '
-							.'<input type="text" name="team-edit-logo" id="team-edit-logo" value="'.$team['logo'].'" />'
-						.'</div>'
-						.'<div class="team-edit-season">'
-							.'<label for="team-edit-season">'.$rb->get('teams.season').'</label> '
-							.'<select name="team-edit-season" id="team-edit-season">'
-								.$seasons
-							.'</select>'
-						.'</div>'
-						.'<div class="team-edit-submit">'
-							.'<input type="hidden" name="season-id" value="'.$team['season'].'" />'
-							.'<input type="hidden" name="team-id" value="'.$team['id'].'" />'
-							.'<input type="submit" name="team-save" value="'.$rb->get('teams.form.save').'" />'
-						.'</div>'
-					.'</form>'
-				.'</div>'
-				.'<div class="clear"></div>';
-				
+			if($_POST['team-new'] == $rb->get('teams.new') || $_POST['team-edit'] == $rb->get('teams.edit')) {
+				if(self::isSetProjectId()) {
+					if($_POST['team-edit'] == $rb->get('teams.edit')) {
+						$seasonId = $_POST['season-id'];
+						$teamId = $_POST['team-id'];
+						$team = $dbObject->fetchAll('SELECT `id`, `name`, `url`, `logo`, `season` FROM `w_sport_team` WHERE `season` = '.$seasonId.' AND `id` = '.$teamId.';');
+						$team = $team[0];
+						$team['logo'] = str_replace('~', '&#126', $team['logo']);
+					}
+					
+					$seasons = self::getSeasonsOptions($teamId, $seasonId, $team['season']);
+					
+					$usedTables = array();
+					if($team['id'] != '') {
+						$usedTables = parent::db()->fetchAll('select `table_id` from `w_sport_table` where `team` = '.$team['id'].' and `season` = '.$team['season'].';');
+					}
+					
+					$tables = '';
+					$tbls = parent::db()->fetchAll('select `id`, `name` from `w_sport_tables` where `project_id` = '.self::getProjectId().' order by `id`;');
+					$i = 1;
+					$tables .= '<div class="ml160">';
+					foreach($tbls as $table) {
+						$in = false;
+						foreach($usedTables as $utb) {
+							if($table['id'] == $utb['table_id']) {
+								$in = true;
+								break;
+							}
+						}
+					
+						$tables .= ''
+							.'<input type="checkbox" id="tables-list-'.$i.'" name="tables-list[]" value="'.$table['id'].'"'.($in ? ' checked="checked"' : '').' />'
+							.'<label for="tables-list-'.$i.'">'.$table['name'].'</label>'
+							.'<br />';
+						$i ++;
+					}
+					$tables .= '</div>';
+					
+					$return .= ''
+					.'<div class="team-edit-form">'
+						.'<form name="team-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+							.'<div class="gray-box">'
+								.'<label class="w160" for="team-edit-name">'.$rb->get('teams.name').':</label> '
+								.'<input class="w200" type="text" name="team-edit-name" id="team-edit-name" value="'.$team['name'].'" />'
+							.'</div>'
+							.'<div class="gray-box">'
+								.'<label class="w160" for="team-edit-logo">'.$rb->get('teams.logo').':</label> '
+								.'<input class="w200" type="text" name="team-edit-logo" id="team-edit-logo" value="'.$team['logo'].'" />'
+							.'</div>'
+							.'<div class="gray-box">'
+								.'<label class="w160" for="team-edit-url">'.$rb->get('teams.url').':</label> '
+								.'<input class="w200" type="text" name="team-edit-url" id="team-edit-url" value="'.$team['url'].'" />'
+							.'</div>'
+							.'<div class="gray-box">'
+								.'<label class="floatedl" for="team-edit-tables">'.$rb->get('teams.intables').':</label> '
+								.$tables
+							.'</div>'
+							.'<div class="gray-box">'
+								.'<label class="w160" for="team-edit-season">'.$rb->get('teams.season').'</label> '
+								.'<select class="w200" name="team-edit-season" id="team-edit-season">'
+									.$seasons
+								.'</select>'
+							.'</div>'
+							.'<div class="gray-box">'
+								.'<input type="hidden" name="season-id" value="'.$team['season'].'" />'
+								.'<input type="hidden" name="team-id" value="'.$team['id'].'" />'
+								.'<input type="submit" name="team-save" value="'.$rb->get('teams.form.save').'" />'
+							.'</div>'
+						.'</form>'
+					.'</div>'
+					.'<div class="clear"></div>';
+				} else {
+					$return .= parent::getError($rb->get('project.notset'));
+				}
+					
 				if($useFrames == "false") {
 					return $return;
 				} else {
@@ -540,7 +911,6 @@
      *
      */		 		 		 		     
     public function showEditPlayers($pageId = false, $useFrames = false, $showMsg = false) {
-    	global $dbObject;
     	global $webObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -548,36 +918,49 @@
 			$actionUrl = $_SERVER['REDIRECT_URL'];
 			
 			if($pageId != false) {
-				$url = $webObject->composeUrl($pageId);
+				$actionUrl = $webObject->composeUrl($pageId);
 			} else {
-				$url = '';
+				$actionUrl = $_SERVER['REDIRECT_URL'];
 			}
 			
 			if($_POST['player-delete'] == $rb->get('players.delete')) {
-				$seasonId = $_POST['season-id'];
-				$playerId = $_POST['player-id'];
-				$teamId = $_POST['team-id'];
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					$seasonId = $_POST['season-id'];
+					$playerId = $_POST['player-id'];
+					$teamId = $_POST['team-id'];
 				
-				$dbObject->execute('DELETE FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `team` = '.$teamId.' AND `season` = '.$seasonId.';');
-				$return .= '<h4 class="success">'.$rb->get('players.success.delete').'</h4>';
+					parent::db()->execute('DELETE FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `team` = '.$teamId.' AND `season` = '.$seasonId.';');
+					parent::db()->execute('delete from `w_sport_stats` where `pid` = '.$playerId.' and `season` = '.$seasonId.';');
+					$return .= '<h4 class="success">'.$rb->get('players.success.delete').'</h4>';
+				} else {
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+				}
 			} elseif($_POST['player-deletewhole'] == $rb->get('players.deletewhole')) {
-				$playerId = $_POST['player-id'];
-				
-				$dbObject->execute('DELETE FROM `w_sport_player` WHERE `id` = '.$playerId.';');
-				$return .= '<h4 class="success">'.$rb->get('players.success.deletewhole').'</h4>';
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					$playerId = $_POST['player-id'];			
+					parent::db()->execute('DELETE FROM `w_sport_player` WHERE `id` = '.$playerId.';');
+					parent::db()->execute('delete from `w_sport_stats` where `pid` = '.$playerId.';');
+					// mazat i statistiky ??
+					$return .= '<h4 class="success">'.$rb->get('players.success.deletewhole').'</h4>';
+				} else {
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+				}
 			}
 			
-			if($_SESSION['sport']['season-id'] != '') {
-				if($_SESSION['sport']['team-id'] != '') {
-					$players = $dbObject->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`season` = '.$_SESSION['sport']['season-id'].' AND `w_sport_player`.`team` = '.$_SESSION['sport']['team-id'].' ORDER BY `w_sport_player`.`id` ASC;');
+			$return .= self::showPlayerSearchForm('', "false");
+			
+			$search = self::getPlayerSearchAsPartSql();
+			if(self::getSeasonId() != '-1') {
+				if(self::getTeamId() != '-1') {
+					$players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`season` = '.self::getSeasonId().' AND `w_sport_player`.`team` = '.self::getTeamId().' and `project_id` = '.self::getProjectId().($search != '' ? ' and '.$search : '').' ORDER BY `w_sport_player`.`id` ASC;');
 				} else {
-					$players = $dbObject->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`season` = '.$_SESSION['sport']['season-id'].' ORDER BY `w_sport_player`.`id` ASC;');
+					$players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`season` = '.self::getSeasonId().' and `project_id` = '.self::getProjectId().($search != '' ? ' and '.$search : '').' ORDER BY `w_sport_player`.`id` ASC;');
 				}
 			} else {
-				if($_SESSION['sport']['team-id'] != '') {
-					$players = $dbObject->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`team` = '.$_SESSION['sport']['team-id'].' ORDER BY `w_sport_player`.`id` ASC;');
+				if(self::getTeamId() != '-1') {
+					$players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`team` = '.self::getTeamId().' and `project_id` = '.self::getProjectId().($search != '' ? ' and '.$search : '').' ORDER BY `w_sport_player`.`id` ASC;');
 				} else {
-					$players = $dbObject->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` ORDER BY `w_sport_player`.`id` ASC;');
+					$players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` where `project_id` = '.self::getProjectId().($search != '' ? ' and '.$search : '').' ORDER BY `w_sport_player`.`id` ASC;');
 				}
 				//$players = $dbObject->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` ORDER BY `w_sport_player`.`id` ASC;');
 			}
@@ -593,10 +976,10 @@
 				
 				$i = 1;
 				foreach($players as $pl) {
-					if($_SESSION['sport']['season-id'] != '') {
-						$seasons = $dbObject->fetchAll('SELECT DISTINCT `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' AND `w_sport_player`.`season` = '.$_SESSION['sport']['season-id'].' ORDER BY `w_sport_season`.`start_year` DESC;');
+					if(self::getSeasonId() != '-1') {
+						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' AND `w_sport_player`.`season` = '.self::getSeasonId().' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
 					} else {
-						$seasons = $dbObject->fetchAll('SELECT DISTINCT `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' ORDER BY `w_sport_season`.`start_year` DESC;');
+						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
 					}
 					
 					$teaseastr = '';
@@ -634,7 +1017,7 @@
 					.'</form> ';
 				
 					$return .= ''
-					.'<tr class="'.((($i % 2) == 0) ? 'idle' : 'even').'">'
+					.'<tr class="'.((($i % 2) == 1) ? 'idle' : 'even').'">'
 						.'<td class="players-list-id">'.$pl['id'].'</td>'
 						.'<td class="players-list-name">'.$pl['name'].'</td>'
 						.'<td class="players-list-surname">'.$pl['surname'].'</td>'
@@ -679,39 +1062,63 @@
 			$return = '';
 			
 			if($_POST['player-save'] == $rb->get('player.form.save')) {
-				$seasonId = $_POST['season-id'];
-				$playerId = $_POST['player-id'];
-				$teamId = $_POST['team-id'];
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					$seasonId = $_POST['season-id'];
+					$playerId = $_POST['player-id'];
+					$teamId = $_POST['team-id'];
 				
-				$player['name'] = $_POST['player-edit-name'];
-				$player['surname'] = $_POST['player-edit-surname'];
-				$player['birthyear'] = $_POST['player-edit-birthyear'];
-				$player['number'] = $_POST['player-edit-number'];
-				$player['position'] = $_POST['player-edit-position'];
-				$player['photo'] = $_POST['player-edit-photo'];
-				$player['season'] = $_POST['player-edit-season'];
-				$player['team'] = $_POST['player-edit-team'];
+					$player['name'] = $_POST['player-edit-name'];
+					$player['surname'] = $_POST['player-edit-surname'];
+					$player['url'] = parent::convertToValidUrl($_POST['player-edit-url']);
+					$player['birthyear'] = $_POST['player-edit-birthyear'];
+					$player['number'] = $_POST['player-edit-number'];
+					$player['position'] = $_POST['player-edit-position'];
+					$player['photo'] = $_POST['player-edit-photo'];
+					$player['season'] = $_POST['player-edit-season'];
+					$player['team'] = $_POST['player-edit-team'];
+					
+					if($player['url'] == '') {
+						$player['url'] = strtolower(parent::convertToValidUrl($player['name'].'-'.$player['surname']));
+					}
+					
+					if(strlen(trim($player['name'])) == 0) {
+						$return .= '<h4 class="error">'.$rb->get('player.form.error.name').'</h4>';
+						$ok = false;
+					}
+					if(strlen(trim($player['surname'])) == 0) {
+						$return .= '<h4 class="error">'.$rb->get('player.form.error.surname').'</h4>';
+						$ok = false;
+					}
+					if(strlen(trim($player['birthyear'])) == 0 || !is_numeric($player['birthyear'])) {
+						$return .= '<h4 class="error">'.$rb->get('player.form.error.birthyear').'</h4>';
+						$ok = false;
+					}
+					if(strlen(trim($player['number'])) == 0 || !is_numeric($player['number'])) {
+						$return .= '<h4 class="error">'.$rb->get('player.form.error.number').'</h4>';
+						$ok = false;
+					}
+					$plsu = parent::db()->fetchAll('select `id` from `w_sport_player` where `url` = "'.$player['url'].'" and `project_id` = '.self::getProjectId().''.($playerId != '' ? ' and `id` != '.$playerId : '').';');
+					if(count($plsu) != 0) {
+						$return .= parent::getError($rb->get('player.form.error.uniqueurl'));
+						$ok = false;
+					}
 				
-				if(strlen(trim($player['name'])) == 0) {
-					$return .= '<h4 class="error">'.$rb->get('player.form.error.name').'</h4>';
-					$ok = false;
-				}
-				if(strlen(trim($player['surname'])) == 0) {
-					$return .= '<h4 class="error">'.$rb->get('player.form.error.surname').'</h4>';
-					$ok = false;
-				}
-				
-				if($ok) {
-					$pl = $dbObject->fetchAll('SELECT `id` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.';');
-					if(count($pl) == 1) {
-						$dbObject->execute('UPDATE `w_sport_player` SET `name` = "'.$player['name'].'", `surname` = "'.$player['surname'].'", `birthyear` = '.$player['birthyear'].', `number` = '.$player['number'].', `photo` = "'.$player['photo'].'", `season` = '.$player['season'].', `team` = '.$player['team'].' WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.';');
-					} else {
-						if($playerId == '') {
-							$dbObject->execute('INSERT INTO `w_sport_player`(`name`, `surname`, `birthyear`, `number`, `position`, `photo`, `season`, `team`) VALUES ("'.$player['name'].'", "'.$player['surname'].'", '.$player['birthyear'].', '.$player['number'].', '.$player['position'].', "'.$player['photo'].'", '.$player['season'].', '.$player['team'].');');
+					//parent::db()->setMockMode(true);
+					if($ok) {
+						$pl = $dbObject->fetchAll('SELECT `id` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.';');
+						if(count($pl) == 1) {
+							$dbObject->execute('UPDATE `w_sport_player` SET `name` = "'.$player['name'].'", `surname` = "'.$player['surname'].'", `url` = "'.$player['url'].'", `birthyear` = '.$player['birthyear'].', `number` = '.$player['number'].', `photo` = "'.$player['photo'].'", `position` = '.$player['position'].', `season` = '.$player['season'].', `team` = '.$player['team'].' WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.';');
 						} else {
-							$dbObject->execute('INSERT INTO `w_sport_player`(`id`, `name`, `surname`, `birthyear`, `number`, `position`, `photo`, `season`, `team`) VALUES ('.$playerId.', "'.$player['name'].'", "'.$player['surname'].'", '.$player['birthyear'].', '.$player['number'].', '.$player['position'].', "'.$player['photo'].'", '.$player['season'].', '.$player['team'].');');
+							if($playerId == '') {
+								$dbObject->execute('INSERT INTO `w_sport_player`(`name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team`, `project_id`) VALUES ("'.$player['name'].'", "'.$player['surname'].'", "'.$player['url'].'", '.$player['birthyear'].', '.$player['number'].', '.$player['position'].', "'.$player['photo'].'", '.$player['season'].', '.$player['team'].', '.self::getProjectId().');');
+							} else {
+								$dbObject->execute('INSERT INTO `w_sport_player`(`id`, `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team`, `project_id`) VALUES ('.$playerId.', "'.$player['name'].'", "'.$player['surname'].'", "'.$player['url'].'", '.$player['birthyear'].', '.$player['number'].', '.$player['position'].', "'.$player['photo'].'", '.$player['season'].', '.$player['team'].', '.self::getProjectId().');');
+							}
 						}
 					}
+					//parent::db()->setMockMode(false);
+				} else {
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
 				}
 			}
 			
@@ -722,37 +1129,45 @@
 					$seasonId = $_POST['season-id'];
 					$playerId = $_POST['player-id'];
 					$teamId = $_POST['team-id'];
-					$player = $dbObject->fetchAll('SELECT `name`, `surname`, `birthyear`, `number`, `position`, `photo`, `season`, `team` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `team` = '.$teamId.' AND `season` = '.$seasonId.';');
+					$player = $dbObject->fetchAll('SELECT `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `team` = '.$teamId.' AND `season` = '.$seasonId.';');
 					$player = $player[0];
 					$player['photo'] = str_replace('~', '&#126', $player['photo']);
 				} elseif ($_POST['player-add'] ==  $rb->get('players.add')) {
 					$playerId = $_POST['player-id'];
-					$player = $dbObject->fetchAll('SELECT `name`, `surname`, `birthyear`, `number`, `position`, `photo` FROM `w_sport_player` WHERE `id` = '.$playerId.' ORDER BY `season` DESC;');
-					$player = $player[0];
+					$player = $dbObject->fetchSingle('SELECT `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `team` FROM `w_sport_player` WHERE `id` = '.$playerId.' ORDER BY `season` DESC;');
+					$teamId = $player['team'];
 				}
 				
 				$return .= ''
 				.'<div class="player-edit-form">'
 					.'<form name="player-edit-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<div class="player-edit-name">'
-							.'<label for="player-edit-name">'.$rb->get('players.form.name').'</label>'
+							.'<label for="player-edit-name">'.$rb->get('players.form.name').':</label>'
 							.'<input type="text" name="player-edit-name" id="player-edit-name" value="'.$player['name'].'" />'
 						.'</div>'
 						.'<div class="player-edit-surname">'
-							.'<label for="player-edit-surname">'.$rb->get('players.form.surname').'</label>'
+							.'<label for="player-edit-surname">'.$rb->get('players.form.surname').':</label>'
 							.'<input type="text" name="player-edit-surname" id="player-edit-surname" value="'.$player['surname'].'" />'
 						.'</div>'
+						.'<div class="player-edit-surname">'
+							.'<label for="player-edit-url">'.$rb->get('players.form.url').':</label>'
+							.'<input type="text" name="player-edit-url" id="player-edit-url" value="'.$player['url'].'" />'
+						.'</div>'
 						.'<div class="player-edit-birthyear">'
-							.'<label for="player-edit-birthyear">'.$rb->get('players.form.birthyear').'</label>'
+							.'<label for="player-edit-birthyear">'.$rb->get('players.form.birthyear').':</label>'
 							.'<input type="text" name="player-edit-birthyear" id="player-edit-birthyear" value="'.$player['birthyear'].'" />'
 						.'</div>'
 						.'<div class="player-edit-number">'
-							.'<label for="player-edit-number">'.$rb->get('players.form.number').'</label>'
+							.'<label for="player-edit-number">'.$rb->get('players.form.number').':</label>'
 							.'<input type="text" name="player-edit-number" id="player-edit-number" value="'.$player['number'].'" />'
 						.'</div>'
 						.'<div class="player-edit-position">'
-							.'<label for="player-edit-position">'.$rb->get('players.form.position').'</label>'
-							.'<input type="text" name="player-edit-position" id="player-edit-position" value="'.$player['position'].'" />'
+							.'<label for="player-edit-position">'.$rb->get('players.form.position').':</label>'
+							.'<select name="player-edit-position" id="player-edit-position">'
+								.'<option value="1"'.($player['position'] == 1 ? ' selected="selected"' : '').'>'.$rb->get('player.position-goa').'</option>'
+								.'<option value="2"'.($player['position'] == 2 ? ' selected="selected"' : '').'>'.$rb->get('player.position-def').'</option>'
+								.'<option value="3"'.($player['position'] == 3 ? ' selected="selected"' : '').'>'.$rb->get('player.position-att').'</option>'
+							.'</select>'
 						.'</div>'
 						.'<div class="player-edit-photo">'
 							.'<label for="player-edit-photo">'.$rb->get('players.form.photo').'</label>'
@@ -789,6 +1204,215 @@
 		}
 		
 		/**
+		 *
+		 *	Player search filter, applies to sport:editPlayers, sport:players
+		 *
+		 */		 		 		 		
+		public function showPlayerSearchForm($pageId = false, $useFrames = false, $showMsg = false) {
+			global $webObject;
+			$return = '';
+			$player = array();
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			
+			if($_POST['player-search-submit'] == $rb->get('player.search.submit')) {
+				$name = $_POST['player-search-name'];
+				$surname = $_POST['player-search-surname'];
+				$position = $_POST['player-search-position'];
+				
+				if($name != '') {
+					parent::session()->set('name', $name, 'player-search');
+				} else {
+					parent::session()->delete('name', 'player-search');
+				}
+				if($surname != '') {
+					parent::session()->set('surname', $surname, 'player-search');
+				} else {
+					parent::session()->delete('surname', 'player-search');
+				}
+				if($position != '0') {
+					parent::session()->set('position', $position, 'player-search');
+				} else {
+					parent::session()->delete('position', 'player-search');
+				}
+				
+				if($pageId != '') {
+					$webObject->redirectTo($pageId);
+				}
+			} elseif($_POST['player-search-clear'] == $rb->get('player.search.clear')) {
+				parent::session()->clear('player-search');
+			}
+			
+			$return .= ''
+			.'<form name="player-search" method="post" action="'.$_SEVER['REDIRECT_URL'].'">'
+				.'<div class="player-search-name gray-box">'
+					.'<label for="player-search-name" class="w100">'.$rb->get('players.form.name').'</label>'
+					.'<input class="w200" type="text" name="player-search-name" id="player-search-name" value="'.parent::session()->get('name', 'player-search').'" />'
+				.'</div>'
+				.'<div class="player-search-surname gray-box">'
+					.'<label for="player-search-surname" class="w100">'.$rb->get('players.form.surname').'</label>'
+					.'<input class="w200" type="text" name="player-search-surname" id="player-search-surname" value="'.parent::session()->get('surname', 'player-search').'" />'
+				.'</div>'
+				.'<div class="player-search-position gray-box">'
+					.'<label for="player-search-position" class="w100">'.$rb->get('players.form.position').'</label>'
+					.'<select class="w200" name="player-search-position" id="player-search-position">'
+						.'<option value="0">'.$rb->get('player.position-all').'</option>'
+						.'<option value="1"'.(parent::session()->get('position', 'player-search') == 1 ? ' selected="selected"' : '').'>'.$rb->get('player.position-goa').'</option>'
+						.'<option value="2"'.(parent::session()->get('position', 'player-search') == 2 ? ' selected="selected"' : '').'>'.$rb->get('player.position-def').'</option>'
+						.'<option value="3"'.(parent::session()->get('position', 'player-search') == 3 ? ' selected="selected"' : '').'>'.$rb->get('player.position-att').'</option>'
+					.'</select>'
+				.'</div>'
+				.'<div class="player-search-submit gray-box">'
+					.'<input type="submit" name="player-search-submit" id="player-search-submit" value="'.$rb->get('player.search.submit').'" />'
+					.'<input type="submit" name="player-search-clear" id="player-search-clear" value="'.$rb->get('player.search.clear').'" />'
+				.'</div>'
+			.'</form>';
+	
+			if($useFrames == "false") {
+				return $return;
+			} else {
+				return parent::getFrame($rb->get('players.form.title'), $return, "", true);
+			}
+		}
+		
+		private function getPlayerSearchAsPartSql() {
+			$return = '';
+			$values = array('name' => 'string', 'surname' => 'string', 'position' => 'number');
+			foreach($values as $key => $value) {
+				if(parent::session()->exists($key, 'player-search')) {
+					if($return != '') {
+						$return .= ' and ';
+					}
+					$return .= '`'.$key.'` like ';
+					switch($value) {
+						case 'string': $return .= '"%'.parent::session()->get($key, 'player-search').'%"'; break;
+						case 'number': $return .= parent::session()->get($key, 'player-search'); break;
+					}
+				}
+			}
+			return $return;
+		}
+		
+		/**
+		 *
+		 *	Shows current tables in project
+		 *
+		 */		 		 		 		
+		public function showEditTables($pageId = false, $useFrames = false, $showMsg = false) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$retrun = '';
+			
+			if($_POST['table-delete'] == $rb->get('tables.delete')) {
+				$tableId = $_POST['table-id'];
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					parent::db()->execute('delete from `w_sport_tables` where `id` = '.$tableId.';');
+				} else {
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+				}
+			}
+			
+			$tables = parent::db()->fetchAll('select `id`, `name` from `w_sport_tables` where `project_id` = '.self::getProjectId().' order by `id`;');
+			
+			$return .= ''
+			.'<table class="standart">'
+				.'<tr>'
+					.'<th>'.$rb->get('tables.id').':</th>'
+					.'<th>'.$rb->get('tables.name').':</th>'
+					.'<th></th>'
+				.'</tr>';
+			
+			$i = 0;
+			foreach($tables as $table) {
+				$return .= ''
+				.'<tr class="'.((($i % 2) == 0) ? 'idle' : 'even').'">'
+					.'<td>'.$table['id'].'</td>'
+					.'<td>'.$table['name'].'</td>'
+					.'<td>'
+						.'<form name="tables-edit" action="'.$_SERVER['REDIRECT_URL'].'" method="post">'
+							.'<input type="hidden" name="table-id" value="'.$table['id'].'" />'
+							.'<input type="hidden" name="table-edit" value="'.$rb->get('tables.edit').'" />'
+							.'<input type="image" src="~/images/page_edi.png" name="table-edit" value="'.$rb->get('tables.edit').'" title="'.$rb->get('tables.edittitle').'" />'
+						.'</form> '
+						.'<form name="tables-delete" action="'.$_SERVER['REDIRECT_URL'].'" method="post">'
+							.'<input type="hidden" name="table-id" value="'.$table['id'].'" />'
+							.'<input type="hidden" name="table-delete" value="'.$rb->get('tables.delete').'" />'
+							.'<input class="confirm" type="image" src="~/images/page_del.png" name="table-delete" value="'.$rb->get('tables.delete').'" title="'.$rb->get('tables.deletetitle').', id('.$table['id'].')" />'
+						.'</form>'
+					.'</td>'
+				.'</tr>';
+				$i ++;
+			}
+			
+			$return .= ''
+			.'</table>'
+			.'<hr />'
+			.'<form name="tables-add" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+				.'<input type="submit" name="tables-add" value="'.$rb->get('tables.add').'" />'
+			.'</form>';
+			
+			if($useFrames == "false") {
+				return $return;
+			} else {
+				return parent::getFrame($rb->get('tables.title'), $return, "", true);
+			}
+		}
+		
+		public function showEditTableForm($pageId = false, $useFrames = false, $showMsg = false) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$retrun = '';
+			$table = array();
+			
+			if($_POST['table-submit'] == $rb->get('table.submit')) {
+				$tableId = $_POST['table-id'];
+				$name = trim($_POST['table-detail-name']);
+				
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					$tables = parent::db()->fetchAll('select `id` from `w_sport_table` where `name` = "'.$name.'" and `project_id` = '.self::getProjectId().';');
+					if($name == '' || count($tables) > 0) {
+						$return .= parent::getError($rb->get('table.error.namemustbeunique'));
+					} else {
+						$tables = parent::db()->fetchAll('select `id` from `w_sport_tables` where `id` = '.$tableId.';');
+						if(count($tables) == 1) {
+							parent::db()->execute('update `w_sport_tables` set `name` = "'.$name.'" where `id` = '.$tableId.';');
+						} else {
+							parent::db()->execute('insert into `w_sport_tables`(`name`, `project_id`) values ("'.$name.'", '.self::getProjectId().');');
+						}
+					}
+				} else {
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+				}
+			}
+			
+			if($_POST['table-edit'] == $rb->get('tables.edit') || $_POST['tables-add'] == $rb->get('tables.add')) {
+				$tableId = $_POST['table-id'];
+				$curTable = parent::db()->fetchAll('select `id`, `name` from `w_sport_tables` where `id` = '.$tableId.';');
+				if(count($curTable) == 1) {
+					$table = $curTable[0];
+				}
+				
+				$return .= ''
+				.'<form name="table-detaill-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<div class="gray-box">'
+						.'<label for="table-detail-name" class="w100">'.$rb->get('tables.name').':</label>'
+						.'<input type="text" name="table-detail-name" id="table-detail-name" value="'.$table['name'].'" />'
+					.'</div>'
+					.'<div class="gray-box">'
+						.'<input type="hidden" name="table-id" value="'.$table['id'].'" />'
+						.'<input type="submit" name="table-submit" value="'.$rb->get('table.submit').'" />'
+					.'</div>'
+				.'</form>';
+			
+				if($useFrames == "false") {
+					return $return;
+				} else {
+					return parent::getFrame($rb->get('table.title'), $return, "", true);
+				}
+			}
+		}
+		
+		/**
      *
      *	List of matches for editing.
      *	C tag.
@@ -806,78 +1430,82 @@
 			$retrun = '';
 			
 			if($pageId != false) {
-				$url = $webObject->composeUrl($pageId);
+				$actionUrl = $webObject->composeUrl($pageId);
 			} else {
-				$url = '';
+				$actionUrl = $_SERVER['REDIRECT_URL'];
 			}
 			
 			if($_POST['match-delete'] == $rb->get('matches.delete')) {
-				$match['id'] = $_POST['match-id'];
-				$match['season'] = $_SESSION['sport']['season-id'];
-				$tmpma = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season` FROM `w_sport_match` WHERE `id` = '.$match['id'].' AND `season` = '.$match['season'].';');
-				if(count($tmpma) != 0) {
-					if($tmpma[0]['in_table'] == 1) {
-						$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].';');
-						$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].';');
-						if(count($team1) > 0 && count($team2) > 0) {
-							$team1 = $team1[0];
-							$team2 = $team2[0];
-							$team1['matches'] --;
-							$team2['matches'] --;
-							if($tmpma[0]['h_score'] > $tmpma[0]['a_score']) {
-								$team1['wins'] --;
-								$team2['loses'] --;
-								$team1['points'] -= 3;
-							} elseif($tmpma[0]['a_score'] > $tmpma[0]['h_score']) {
-								$team2['wins'] --;
-								$team1['loses'] --;
-								$team2['points'] -= 3;
-							} elseif($tmpma[0]['h_score'] == $tmpma[0]['a_score'] && $tmpma[0]['h_extratime'] == 1) {
-								$team1['draws'] --;
-								$team2['draws'] --;
-								$team1['points'] -= 2;
-								$team2['points'] --;
-							} elseif($tmpma[0]['h_score'] == $tmpma[0]['a_score'] && $tmpma[0]['a_extratime'] == 1) {
-								$team1['draws'] --;
-								$team2['draws'] --;
-								$team2['points'] -= 2;
-								$team1['points'] --;
-							} else {
-								$team1['draws'] --;
-								$team2['draws'] --;
-								$team1['points'] --;
-								$team2['points'] --;
-							}
-							$team1['s_score'] -= $tmpma[0]['h_score'];
-							$team1['r_score'] -= $tmpma[0]['a_score'];
-							$team2['s_score'] -= $tmpma[0]['a_score'];
-							$team2['r_score'] -= $tmpma[0]['h_score'];
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					$match['id'] = $_POST['match-id'];
+					$match['season'] = self::getSeasonId();
+					$tmpma = $dbObject->fetchAll(parent::query()->get('selectMatchByIdSeasonId', array('id' => $match['id'], 'seasonId' => $match['season']), 'sport'));
+					if(count($tmpma) != 0) {
+						if($tmpma[0]['in_table'] == 1 && $tmpma[0]['notplayed'] != 1) {
+							$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].';');
+							$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].';');
+							if(count($team1) > 0 && count($team2) > 0) {
+								$team1 = $team1[0];
+								$team2 = $team2[0];
+								$team1['matches'] --;
+								$team2['matches'] --;
+								if($tmpma[0]['h_score'] > $tmpma[0]['a_score']) {
+									$team1['wins'] --;
+									$team2['loses'] --;
+									$team1['points'] -= 3;
+								} elseif($tmpma[0]['a_score'] > $tmpma[0]['h_score']) {
+									$team2['wins'] --;
+									$team1['loses'] --;
+									$team2['points'] -= 3;
+								} elseif($tmpma[0]['h_score'] == $tmpma[0]['a_score'] && $tmpma[0]['h_extratime'] == 1) {
+									$team1['draws'] --;
+									$team2['draws'] --;
+									$team1['points'] -= 2;
+									$team2['points'] --;
+								} elseif($tmpma[0]['h_score'] == $tmpma[0]['a_score'] && $tmpma[0]['a_extratime'] == 1) {
+									$team1['draws'] --;
+									$team2['draws'] --;
+									$team2['points'] -= 2;
+									$team1['points'] --;
+								} else {
+									$team1['draws'] --;
+									$team2['draws'] --;
+									$team1['points'] --;
+									$team2['points'] --;
+								}
+								$team1['s_score'] -= $tmpma[0]['h_score'];
+								$team1['r_score'] -= $tmpma[0]['a_score'];
+								$team2['s_score'] -= $tmpma[0]['a_score'];
+								$team2['r_score'] -= $tmpma[0]['h_score'];
 					
-							$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team1['matches'].', `wins` = '.$team1['wins'].', `draws` = '.$team1['draws'].', `loses` = '.$team1['loses'].', `s_score` = '.$team1['s_score'].', `r_score` = '.$team1['r_score'].', `points` = '.$team1['points'].' WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].';');
-							$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team2['matches'].', `wins` = '.$team2['wins'].', `draws` = '.$team2['draws'].', `loses` = '.$team2['loses'].', `s_score` = '.$team2['s_score'].', `r_score` = '.$team2['r_score'].', `points` = '.$team2['points'].' WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].';');
-						} else {
-							$return .= '<h4 class="error">'.$rb->get('match.warning.teamsnotintable').'</h4>';
+								$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team1['matches'].', `wins` = '.$team1['wins'].', `draws` = '.$team1['draws'].', `loses` = '.$team1['loses'].', `s_score` = '.$team1['s_score'].', `r_score` = '.$team1['r_score'].', `points` = '.$team1['points'].' WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].';');
+								$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team2['matches'].', `wins` = '.$team2['wins'].', `draws` = '.$team2['draws'].', `loses` = '.$team2['loses'].', `s_score` = '.$team2['s_score'].', `r_score` = '.$team2['r_score'].', `points` = '.$team2['points'].' WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].';');
+							} else {
+								$return .= '<h4 class="error">'.$rb->get('match.warning.teamsnotintable').'</h4>';
+							}
 						}
+						$dbObject->execute('DELETE FROM `w_sport_match` WHERE `id` = '.$match['id'].' AND `season` = '.$match['season'].';');
+						$dbObject->execute('DELETE FROM `w_sport_stats` WHERE `mid` = '.$match['id'].' AND `season` = '.$match['season'].';');
+						$return .= '<h4 class="success">'.$rb->get('matches.success.deleted').'</h4>';
+					} else {
+						$return .= '<h4 class="error">'.$rb->get('matches.error.deletingerror').'</h4>';
 					}
-					$dbObject->execute('DELETE FROM `w_sport_match` WHERE `id` = '.$match['id'].' AND `season` = '.$match['season'].';');
-					$dbObject->execute('DELETE FROM `w_sport_stats` WHERE `mid` = '.$match['id'].' AND `season` = '.$match['season'].';');
-					$return .= '<h4 class="success">'.$rb->get('matches.success.deleted').'</h4>';
 				} else {
-					$return .= '<h4 class="error">'.$rb->get('matches.error.deletingerror').'</h4>';
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
 				}
 			}
 			
 			if($_POST['match-stats-delete'] == $rb->get('matches.stats.delete')) {
 				$matchId = $_POST['match-id'];
-				$seasonId = $_SESSION['sport']['season-id'];
-				$dbObject->execute('DELETE FROM `w_sport_stats` WHERE `mid` = '.$matchId.' AND `season` = '.$seasonId.';');
+				$seasonId = self::getSeasonId();
+				parent::db()->execute('DELETE FROM `w_sport_stats` WHERE `mid` = '.$matchId.' AND `season` = '.$seasonId.';');
 			}
 			
-			if($_SESSION['sport']['season-id'] != '') {
-				if($_SESSION['sport']['team-id'] != '') {
-					$matches = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `round`, `season` FROM `w_sport_match` WHERE `season` = '.$_SESSION['sport']['season-id'].' AND (`w_sport_match`.`h_team` = '.$_SESSION['sport']['team-id'].' OR `w_sport_match`.`a_team` = '.$_SESSION['sport']['team-id'].') ORDER BY `round`, `id` DESC;');
+			if(self::getSeasonId() != '-1') {
+				if(self::getTeamId() != '-1') {
+					$matches = parent::db()->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `round`, `season`, `notplayed` FROM `w_sport_match` WHERE `season` = '.self::getSeasonId().' AND `project_id` = '.self::getProjectId().' and (`w_sport_match`.`h_team` = '.self::getTeamId().' OR `w_sport_match`.`a_team` = '.self::getTeamId().')'.(self::getTableId() != '-1' ? ' and `in_table` = '.self::getTableId() : '').' ORDER BY `round` desc, `id` DESC;');
 				} else {
-					$matches = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `round`, `season` FROM `w_sport_match` WHERE `season` = '.$_SESSION['sport']['season-id'].' ORDER BY `round`, `id` DESC;');
+					$matches = parent::db()->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `round`, `season`, `notplayed` FROM `w_sport_match` WHERE `season` = '.self::getSeasonId().' and `project_id` = '.self::getProjectId().(self::getTableId() != '-1' ? ' and `in_table` = '.self::getTableId() : '').' ORDER BY `round` desc, `id` DESC;');
 				}
 				
 				if(count($matches) > 0) {
@@ -897,14 +1525,26 @@
 					
 					$i = 1;
 					foreach($matches as $match) {
-						$home = $dbObject->fetchAll('SELECT `name` FROM `w_sport_team` WHERE `id` = '.$match['h_team'].';');
-						$away = $dbObject->fetchAll('SELECT `name` FROM `w_sport_team` WHERE `id` = '.$match['a_team'].';');
-						$stats = $dbObject->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `mid` = '.$match['id'].' AND `season` = '.$match['season'].';');
+						$home = parent::db()->fetchAll('SELECT `name` FROM `w_sport_team` WHERE `id` = '.$match['h_team'].';');
+						$away = parent::db()->fetchAll('SELECT `name` FROM `w_sport_team` WHERE `id` = '.$match['a_team'].';');
+						$stats = parent::db()->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `mid` = '.$match['id'].' AND `season` = '.$match['season'].';');
 						$extime = ($match['h_extratime'] == 1) ? $rb->get('matches.form.homeexwin') : (($match['a_extratime'] == 1) ? $rb->get('matches.form.awayexwin') : '');
+						
+						if($match['notplayed'] == 1) {
+							$match['h_score'] = '-';
+							$match['h_shoots'] = '-';
+							$match['h_penalty'] = '-';
+							$match['a_score'] = '-';
+							$match['a_shoots'] = '-';
+							$match['a_penalty'] = '-';	
+						}
+						
+						$round = parent::db()->fetchSingle(parent::query()->get('roundById', array('id' => $match['round']), 'sport'));
+						
 						$return .= ''
 						.'<tr class="'.((($i % 2) == 1) ? 'idle' : 'even').'">'
 							.'<td class="matches-table-id">'.$match['id'].'</td>'
-							.'<td class="matches-table-round">'.$match['round'].'</td>'
+							.'<td class="matches-table-round">'.$round['name'].'</td>'
 							.'<td class="matches-table-home">'.$home[0]['name'].'</td>'
 							.'<td class="matches-table-away">'.$away[0]['name'].'</td>'
 							.'<td class="matches-table-score">'.$match['h_score'].' : '.$match['a_score'].'</td>'
@@ -918,11 +1558,13 @@
 									.'<input type="image" src="~/images/page_edi.png" name="match-edit" value="'.$rb->get('matches.edit').'" title="'.$rb->get('matches.editcap').'" />'
 								.'</form> -'
 								.((count($stats) == 0) ? ''
+								.(($match['notplayed'] != 1) ? ''
 								.' <form name="matches-stats-add" method="post" action="'.$actionUrl.'">'
 									.'<input type="hidden" name="match-id" value="'.$match['id'].'" />'
 									.'<input type="hidden" name="match-stats-add" value="'.$rb->get('matches.statsadd').'" />'
 									.'<input type="image" src="~/images/page_add.png" name="match-stats-add" value="'.$rb->get('matches.statsadd').'" title="'.$rb->get('matches.statsaddcap').'" />'
 								.'</form> -'
+								: '')
 								: ''
 								.' <form name="matches-stats-edit" method="post" action="'.$actionUrl.'">'
 									.'<input type="hidden" name="match-id" value="'.$match['id'].'" />'
@@ -976,159 +1618,188 @@
 		 */		 		 		 		 		
 		public function showEditMatchForm($useFrames = false, $showMsg = false) {
 			global $dbObject;
+			global $webObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$match = array();
 			$return = '';
 			
 			if($_POST['match-edit-save'] == $rb->get('matches.save')) {
-				$match = array();
-				$match['id'] = $_POST['match-id'];
-				$match['h_team'] = $_POST['match-edit-hteam'];
-				$match['h_score'] = $_POST['match-edit-hscore'];
-				$match['h_shoots'] = $_POST['match-edit-hshoots'];
-				$match['h_penalty'] = $_POST['match-edit-hpenalty'];
-				$match['h_extratime'] = ($_POST['match-edit-hextratime'] == 'on') ? 1 : 0;
-				$match['a_team'] = $_POST['match-edit-ateam'];
-				$match['a_score'] = $_POST['match-edit-ascore'];
-				$match['a_shoots'] = $_POST['match-edit-ashoots'];
-				$match['a_penalty'] = $_POST['match-edit-apenalty'];
-				$match['a_extratime'] = ($_POST['match-edit-aextratime'] == 'on') ? 1 : 0;
-				$match['in_table'] = $_POST['match-edit-in-table'];
-				$match['comment'] = $_POST['match-edit-comment'];
-				$match['round'] = $_POST['match-edit-round'];
-				$match['season'] = $_SESSION['sport']['season-id'];
-				
-				$ok = true;
-				if($match['h_team'] == $match['a_team']) {
-					$ok = false;
-					$return .= '<h4 class="error">'.$rb->get('match.error.sameteams').'</h4>';
-				}
-				if(!is_numeric($match['h_score']) || !is_numeric($match['a_score']) || !is_numeric($match['h_shoots']) || !is_numeric($match['a_shoots']) || !is_numeric($match['h_penalty']) || !is_numeric($match['a_penalty']) || !is_numeric($match['round'])) {
-					$ok = false;
-					$return .= '<h4 class="error">'.$rb->get('match.error.isnotnumber').'</h4>';
-					if($match['h_score'] < 1 || $match['a_score'] < 1 || $match['h_shoots'] < 1 || $match['a_shoots'] < 1 || $match['h_penalty'] < 1 || $match['a_penalty'] < 1 || $match['round'] < 1) {
-						$return .= '<h4 class="error">'.$rb->get('match.error.islessthanone').'</h4>';
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					$match = array();
+					$match['id'] = $_POST['match-id'];
+					$match['h_team'] = $_POST['match-edit-hteam'];
+					$match['h_score'] = $_POST['match-edit-hscore'];
+					$match['h_shoots'] = $_POST['match-edit-hshoots'];
+					$match['h_penalty'] = $_POST['match-edit-hpenalty'];
+					$match['h_extratime'] = ($_POST['match-edit-hextratime'] == 'on') ? 1 : 0;
+					$match['a_team'] = $_POST['match-edit-ateam'];
+					$match['a_score'] = $_POST['match-edit-ascore'];
+					$match['a_shoots'] = $_POST['match-edit-ashoots'];
+					$match['a_penalty'] = $_POST['match-edit-apenalty'];
+					$match['a_extratime'] = ($_POST['match-edit-aextratime'] == 'on') ? 1 : 0;
+					$match['in_table'] = $_POST['match-edit-in-table'];
+					$match['comment'] = $_POST['match-edit-comment'];
+					$match['datetime'] = $_POST['match-edit-datetime'];
+					$match['refs'] = $_POST['match-edit-refs'];
+					$match['place'] = $_POST['match-edit-place'];
+					$match['round'] = $_POST['match-edit-round'];
+					$match['notplayed'] = $_POST['match-edit-notplayed'] == 'on' ? 1 : 0;
+					$match['season'] = self::getSeasonId();
+					
+					if($match['notplayed'] == 1) {
+						$match['h_score'] = -1;
+						$match['h_shoots'] = -1;
+						$match['h_penalty'] = -1;
+						$match['a_score'] = -1;
+						$match['a_shoots'] = -1;
+						$match['a_penalty'] = -1;	
 					}
-				}
-				if($match['h_extratime'] == 1 && $match['a_extratime'] == 1) {
-					$ok = false;
-					$return .= '<h4 class="error">'.$rb->get('match.error.bothexwin').'</h4>';
-				}
-				if(($match['h_extratime'] == 1 || $match['a_extratime'] == 1) && $match['h_score'] != $match['a_score']) {
-					$ok = false;
-					$return .= '<h4 class="error">'.$rb->get('match.error.exwinsamescore').'</h4>';
-				}
-				
-				if($ok) {
-					$tmpma = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season` FROM `w_sport_match` WHERE `id` = '.$match['id'].' AND `season` = '.$match['season'].';');
-					if(count($tmpma) != 0) {
-						if($tmpma[0]['in_table'] != 0) {
-							$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `table_id` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$tmpma[0]['in_table'] .';');
-							$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `table_id` FROM `w_sport_table` WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$tmpma[0]['in_table'] .';');
-							if(count($team1) > 0 && count($team2) > 0) {
-								$team1 = $team1[0];
-								$team2 = $team2[0];
-								$team1['matches'] --;
-								$team2['matches'] --;
-								if($tmpma[0]['h_score'] > $tmpma[0]['a_score']) {
-									$team1['wins'] --;
-									$team2['loses'] --;
-									$team1['points'] -= 3;
-								} elseif($tmpma[0]['a_score'] > $tmpma[0]['h_score']) {
-									$team2['wins'] --;
-									$team1['loses'] --;
-									$team2['points'] -= 3;
-								} elseif($tmpma[0]['h_score'] == $tmpma[0]['a_score'] && $tmpma[0]['h_extratime'] == 1) {
-									$team1['draws'] --;
-									$team2['draws'] --;
-									$team1['points'] -= 2;
-									$team2['points'] --;
-								} elseif($tmpma[0]['h_score'] == $tmpma[0]['a_score'] && $tmpma[0]['a_extratime'] == 1) {
-									$team1['draws'] --;
-									$team2['draws'] --;
-									$team2['points'] -= 2;
-									$team1['points'] --;
-								} else {
-									$team1['draws'] --;
-									$team2['draws'] --;
-									$team1['points'] --;
-									$team2['points'] --;
-								}
-								$team1['s_score'] -= $tmpma[0]['h_score'];
-								$team1['r_score'] -= $tmpma[0]['a_score'];
-								$team2['s_score'] -= $tmpma[0]['a_score'];
-								$team2['r_score'] -= $tmpma[0]['h_score'];
-						
-								$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team1['matches'].', `wins` = '.$team1['wins'].', `draws` = '.$team1['draws'].', `loses` = '.$team1['loses'].', `s_score` = '.$team1['s_score'].', `r_score` = '.$team1['r_score'].', `points` = '.$team1['points'].' WHERE `team` = '.$tmpma[0]['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$team1['table_id'].';');
-								$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team2['matches'].', `wins` = '.$team2['wins'].', `draws` = '.$team2['draws'].', `loses` = '.$team2['loses'].', `s_score` = '.$team2['s_score'].', `r_score` = '.$team2['r_score'].', `points` = '.$team2['points'].' WHERE `team` = '.$tmpma[0]['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$team2['table_id'].';');
-							} else {
-								$return .= '<h4 class="error">'.$rb->get('match.error.teamsnotintable').'</h4>';
+					
+					$ok = true;
+					if($match['h_team'] == $match['a_team']) {
+						$ok = false;
+						$return .= parent::getError($rb->get('match.error.sameteams'));
+					}
+					if($match['notplayed'] == 0) {
+						if(!is_numeric($match['h_score']) || !is_numeric($match['a_score']) || !is_numeric($match['h_shoots']) || !is_numeric($match['a_shoots']) || !is_numeric($match['h_penalty']) || !is_numeric($match['a_penalty']) || !is_numeric($match['round'])) {
+							$ok = false;
+							$return .= parent::getError($rb->get('match.error.isnotnumber'));
+							if($match['h_score'] < 1 || $match['a_score'] < 1 || $match['h_shoots'] < 1 || $match['a_shoots'] < 1 || $match['h_penalty'] < 1 || $match['a_penalty'] < 1 || $match['round'] < 1) {
+								$return .= parent::getError($rb->get('match.error.islessthanone'));
 							}
 						}
-						$dbObject->execute('UPDATE `w_sport_match` SET `h_team` = '.$match['h_team'].', `a_team` = '.$match['a_team'].', `h_score` = '.$match['h_score'].', `a_score` = '.$match['a_score'].', `h_shoots` = '.$match['h_shoots'].', `a_shoots` = '.$match['a_shoots'].', `h_penalty` = '.$match['h_penalty'].', `a_penalty` = '.$match['a_penalty'].', `h_extratime` = '.$match['h_extratime'].', `a_extratime` = '.$match['a_extratime'].', `comment` = "'.$match['comment'].'", `round` = '.$match['round'].', `in_table` = '.$match['in_table'].', `season` = '.$match['season'].' WHERE `id` = '.$match['id'].';');
-					} else {
-						$dbObject->execute('INSERT INTO `w_sport_match`(`h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season`) VALUES ('.$match['h_team'].', '.$match['a_team'].', '.$match['h_score'].', '.$match['a_score'].', '.$match['h_shoots'].', '.$match['a_shoots'].', '.$match['h_penalty'].', '.$match['a_penalty'].', '.$match['h_extratime'].', '.$match['a_extratime'].', "'.$match['comment'].'", '.$match['round'].', '.$match['in_table'].', '.$match['season'].');');
+						if($match['h_extratime'] == 1 && $match['a_extratime'] == 1) {
+							$ok = false;
+							$return .= parent::getError($rb->get('match.error.bothexwin'));
+						}
+						if(($match['h_extratime'] == 1 || $match['a_extratime'] == 1) && $match['h_score'] != $match['a_score']) {
+							$ok = false;
+							$return .= parent::getError($rb->get('match.error.exwinsamescore'));
+						}
 					}
-					if($match['in_table'] != 0) {
-						$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
-						$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
-						if(count($team1) <= 0 || count($team2) <= 0) {
-							$dbObject->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`) VALUES ('.$match['h_team'].', 0, 0, 0, 0, 0, 0, 0, '.$match['season'].', '.$match['in_table'].');');
-							$dbObject->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`) VALUES ('.$match['a_team'].', 0, 0, 0, 0, 0, 0, 0, '.$match['season'].', '.$match['in_table'].');');
-							$team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
-							$team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = '.$match['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
-							//$return .= '<h4 class="errpr">'.$rb->get('match.warning.teamsnotintable').'</h4>';
-						}
-						$team1 = $team1[0];
-						$team2 = $team2[0];
-						$team1['matches'] ++;
-						$team2['matches'] ++;
-						if($match['h_score'] > $match['a_score']) {
-							$team1['wins'] ++;
-							$team2['loses'] ++;
-							$team1['points'] += 3;
-						} elseif($match['a_score'] > $match['h_score']) {
-							$team2['wins'] ++;
-							$team1['loses'] ++;
-							$team2['points'] += 3;
-						} elseif($match['h_score'] == $match['a_score'] && $match['h_extratime'] == 1) {
-							$team1['draws'] ++;
-							$team2['draws'] ++;
-							$team1['points'] += 2;
-							$team2['points'] ++;
-						} elseif($match['h_score'] == $match['a_score'] && $match['a_extratime'] == 1) {
-							$team1['draws'] ++;
-							$team2['draws'] ++;
-							$team2['points'] += 2;
-							$team1['points'] ++;
-						} else {
-							$team1['draws'] ++;
-							$team2['draws'] ++;
-							$team1['points'] ++;
-							$team2['points'] ++;
-						}
-						$team1['s_score'] += $match['h_score'];
-						$team1['r_score'] += $match['a_score'];
-						$team2['s_score'] += $match['a_score'];
-						$team2['r_score'] += $match['h_score'];
 					
-						$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team1['matches'].', `wins` = '.$team1['wins'].', `draws` = '.$team1['draws'].', `loses` = '.$team1['loses'].', `s_score` = '.$team1['s_score'].', `r_score` = '.$team1['r_score'].', `points` = '.$team1['points'].' WHERE `team` = '.$match['h_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
-						$dbObject->execute('UPDATE `w_sport_table` SET `matches` = '.$team2['matches'].', `wins` = '.$team2['wins'].', `draws` = '.$team2['draws'].', `loses` = '.$team2['loses'].', `s_score` = '.$team2['s_score'].', `r_score` = '.$team2['r_score'].', `points` = '.$team2['points'].' WHERE `team` = '.$match['a_team'].' AND `season` = '.$match['season'].' AND `table_id` = '.$match['in_table'].';');
-						$dbObject->execute('UPDATE `w_sport_stats` SET `table_id` = '.$match['in_table'].' WHERE `mid` = '.$match['id'].'');
+					if($match['in_table'] != 0) {
+						$team1intable = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+						$team2intable = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+						if($team1intable == array() || $team2intable == array()) {
+							$ok = false;
+							$return .= parent::getError($rb->get('match.error.teamsnotintable'));
+						}
 					}
+					
+					//parent::db()->setMockMode(true);
+					if($ok) {
+						$tmpma = parent::db()->fetchSingle(parent::query()->get('selectMatchByIdSeasonId', array('id' => $match['id'], 'seasonId' => $match['season']), 'sport'));
+						if($tmpma != array()) {
+							if($tmpma['in_table'] != 0 && $tmpma['notplayed'] != 1) {
+								$team1 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $tmpma['h_team'], 'seasonId' => $match['season'], 'tableId' => $tmpma['in_table']), 'sport'));
+								$team2 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $tmpma['a_team'], 'seasonId' => $match['season'], 'tableId' => $tmpma['in_table']), 'sport'));
+								if($team1 != array() && $team2 != array()) {
+									$team1['matches'] --;
+									$team2['matches'] --;
+									if($tmpma['h_score'] > $tmpma['a_score']) {
+										$team1['wins'] --;
+										$team2['loses'] --;
+										$team1['points'] -= 3;
+									} elseif($tmpma['a_score'] > $tmpma['h_score']) {
+										$team2['wins'] --;
+										$team1['loses'] --;
+										$team2['points'] -= 3;
+									} elseif($tmpma['h_score'] == $tmpma['a_score'] && $tmpma['h_extratime'] == 1) {
+										$team1['draws'] --;
+										$team2['draws'] --;
+										$team1['points'] -= 2;
+										$team2['points'] --;
+									} elseif($tmpma['h_score'] == $tmpma['a_score'] && $tmpma['a_extratime'] == 1) {
+										$team1['draws'] --;
+										$team2['draws'] --;
+										$team2['points'] -= 2;
+										$team1['points'] --;
+									} else {
+										$team1['draws'] --;
+										$team2['draws'] --;
+										$team1['points'] --;
+										$team2['points'] --;
+									}
+									$team1['s_score'] -= $tmpma['h_score'];
+									$team1['r_score'] -= $tmpma['a_score'];
+									$team2['s_score'] -= $tmpma['a_score'];
+									$team2['r_score'] -= $tmpma['h_score'];
+							
+									parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team1['matches'], 'wins' => $team1['wins'], 'draws' => $team1['draws'], 'loses' => $team1['loses'], 'sScore' => $team1['s_score'], 'rScore' => $team1['r_score'], 'points' => $team1['points'], 'teamId' => $tmpma['h_team'], 'seasonId' => $match['season'], 'tableId' => $team1['table_id']), 'sport'));
+									parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team2['matches'], 'wins' => $team2['wins'], 'draws' => $team2['draws'], 'loses' => $team2['loses'], 'sScore' => $team2['s_score'], 'rScore' => $team2['r_score'], 'points' => $team2['points'], 'teamId' => $tmpma['a_team'], 'seasonId' => $match['season'], 'tableId' => $team2['table_id']), 'sport'));
+								} else {
+									$return .= parent::getError($rb->get('match.error.teamsnotintable'));
+								}
+							}
+							parent::db()->execute(parent::query()->get('updateMatchById', array('hTeamId' => $match['h_team'], 'aTeamId' => $match['a_team'], 'hScore' => $match['h_score'], 'aScore' => $match['a_score'], 'hShoots' => $match['h_shoots'], 'aShoots' => $match['a_shoots'], 'hPenalty' => $match['h_penalty'], 'aPenalty' => $match['a_penalty'], 'hExtratime' => $match['h_extratime'], 'aExtratime' => $match['a_extratime'], 'comment' => $match['comment'], 'round' => $match['round'], 'tableId' => $match['in_table'], 'seasonId' => $match['season'], 'id' => $match['id'], 'datetime' => $match['datetime'], 'refs' => $match['refs'], 'place' => $match['place'], 'notplayed' => $match['notplayed']), 'sport'));
+						} else {
+							parent::db()->execute(parent::query()->get('insertMatch', array('hTeamId' => $match['h_team'], 'aTeamId' => $match['a_team'], 'hScore' => $match['h_score'], 'aScore' => $match['a_score'], 'hShoots' => $match['h_shoots'], 'aShoots' => $match['a_shoots'], 'hPenalty' => $match['h_penalty'], 'aPenalty' => $match['a_penalty'], 'hExtratime' => $match['h_extratime'], 'aExtratime' => $match['a_extratime'], 'comment' => $match['comment'], 'round' => $match['round'], 'tableId' => $match['in_table'], 'seasonId' => $match['season'], 'projectId' => self::getProjectId(), 'datetime' => $match['datetime'], 'refs' => $match['refs'], 'place' => $match['place'], 'notplayed' => $match['notplayed']), 'sport'));
+						}
+						if($match['in_table'] != 0 && $match['notplayed'] != 1) {
+							$team1 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+							$team2 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+							$team1['matches'] ++;
+							$team2['matches'] ++;
+							if($match['h_score'] > $match['a_score']) {
+								$team1['wins'] ++;
+								$team2['loses'] ++;
+								$team1['points'] += 3;
+							} elseif($match['a_score'] > $match['h_score']) {
+								$team2['wins'] ++;
+								$team1['loses'] ++;
+								$team2['points'] += 3;
+							} elseif($match['h_score'] == $match['a_score'] && $match['h_extratime'] == 1) {
+								$team1['draws'] ++;
+								$team2['draws'] ++;
+								$team1['points'] += 2;
+								$team2['points'] ++;
+							} elseif($match['h_score'] == $match['a_score'] && $match['a_extratime'] == 1) {
+								$team1['draws'] ++;
+								$team2['draws'] ++;
+								$team2['points'] += 2;
+								$team1['points'] ++;
+							} else {
+								$team1['draws'] ++;
+								$team2['draws'] ++;
+								$team1['points'] ++;
+								$team2['points'] ++;
+							}
+							$team1['s_score'] += $match['h_score'];
+							$team1['r_score'] += $match['a_score'];
+							$team2['s_score'] += $match['a_score'];
+							$team2['r_score'] += $match['h_score'];
+							
+							parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team1['matches'], 'wins' => $team1['wins'], 'draws' => $team1['draws'], 'loses' => $team1['loses'], 'sScore' => $team1['s_score'], 'rScore' => $team1['r_score'], 'points' => $team1['points'], 'teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+							parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team2['matches'], 'wins' => $team2['wins'], 'draws' => $team2['draws'], 'loses' => $team2['loses'], 'sScore' => $team2['s_score'], 'rScore' => $team2['r_score'], 'points' => $team2['points'], 'teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+							parent::db()->execute(parent::query()->get('updateTableIdInStatsByMid', array('tableId' => $match['in_table'], 'mid' => $match['id']), 'sport'));
+						}
+					} else {
+						$_POST['match-new'] = $rb->get('matches.new');
+					}	
+					//parent::db()->setMockMode(false);	
 				} else {
-					$_POST['match-new'] = $rb->get('matches.new');
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
 				}
 			}
 			
 			if($_POST['match-edit'] == $rb->get('matches.edit') || $_POST['match-new'] == $rb->get('matches.new')) {
 				if($_POST['match-edit'] == $rb->get('matches.edit')) {
 					$matchId = $_POST['match-id'];
-					$match = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season` FROM `w_sport_match` WHERE `id` = '.$matchId.';');
-					$match = $match[0];
+					$match = parent::db()->fetchSingle(parent::query()->get('selectMatchByIdProjectId', array('id' => $matchId, 'projectId' => self::getProjectId()), 'sport'));
+					
+					if($match['notplayed'] == 1) {
+						$match['h_score'] = '';
+						$match['h_shoots'] = '';
+						$match['h_penalty'] = '';
+						$match['a_score'] = '';
+						$match['a_shoots'] = '';
+						$match['a_penalty'] = '';	
+					}
 				} else {
-					//$match['in_table'] = 1;
+					$match['in_table'] = self::getTableId();
+					$match['notplayed'] = 1;
 				}
 			
 				$return .= ''
@@ -1188,20 +1859,59 @@
 								.'</td>'
 							.'</tr>'
 						.'</table>'
+						.'<div class="gray-box">'
+							.'<label class="w160" for="match-edit-notplayed">'.$rb->get('match.notplayedyet').': <span class="red">*</span></label>'
+							.'<input type="checkbox" name="match-edit-notplayed" id="match-edit-notplayed" '.($match['notplayed'] == 1 ? 'checked="checked" ' : '').'/>'
+							.'<script type="text/javascript" src="~/js/sportMatchCheckbox.js"></script>'
+						.'</div>'
 						.'<div class="match-edit-comment">'
+							.'<label form="match-edit-comment">'.$rb->get('match.comment').':</label>'
 							.'<textarea name="match-edit-comment" id="match-edit-comment" rows="4">'
 								.$match['comment']
 							.'</textarea>'
 						.'</div>'
-						.'<div class="match-edit-round">'
-							.'<label for="match-edit-round">'.$rb->get('match.round').':</label> '
-							.'<input type="text" name="match-edit-round" id="match-edit-round" value="'.$match['round'].'" />'
-							.'<label for="match-edit-in-table">'.$rb->get('match.intable').':</label> '
+						.'<div class="match-edit-round gray-box">'
+							.'<label for="match-edit-round" class="w160">'.$rb->get('match.round').':</label> '
+							//.'<input type="text" name="match-edit-round" id="match-edit-round" value="'.$match['round'].'" />'
+							.'<select name="match-edit-round" id="match-edit-round">'
+								.self::getRoundsOptions($match['round'])
+							.'</select>'
+						.'</div>'
+						.'<div class="gray-box">'
+							.'<label for="match-edit-in-table" class="w160">'.$rb->get('match.intable').':</label> '
 							.'<select name="match-edit-in-table" id="match-edit-in-table">'
-										.'<option value="0">'.$rb->get('matches.nottotable').'</option>'
+								.'<option value="0">'.$rb->get('matches.nottotable').'</option>'
 								.self::getTablesOptions($match['in_table'])
 							.'</select>'
 							/*.'<input type="checkbox" name="match-edit-in-table" id="match-edit-in-table"'.(($match['in_table'] == 0) ? '' : ' checked="checked"').'" />'*/
+						.'</div>'
+						.'<div class="gray-box">'
+							.'<label class="w160" for="match-edit-datetime">'.$rb->get('match.datetime').':</label>'
+							.'<input type="text" name="match-edit-datetime" id="match-edit-datetime" value="'.$match['datetime'].'" />'
+							/*.'<link rel="stylesheet" type="text/css"  href="~/scripts/js/jquery-ui/css/jquery.ui.all.css" />'
+							.'<script type="text/javascript" src="~/scripts/js/jquery/jquery.js"></stript>'
+							.'<script type="text/javascript" src="~/scripts/js/jquery-ui/jquery.ui.core.min.js"></stript>'
+							.'<script type="text/javascript" src="~/scripts/js/jquery-ui/jquery.ui.widget.min.js"></stript>'
+							.'<script type="text/javascript" src="~/scripts/js/jquery-ui/jquery.ui.datepicker.min.js"></stript>'
+							.'<script type="text/javascript">'
+								.'$(function() { '
+									.'var dp = $("#match-edit-datetime");'
+									.'dp.datepicker();'
+									.'dp.datepicker("option", {dateFormat: "dd.mm.yy"});'
+									.($webObject->LanguageName != '' ? '$.datepicker.setDefaults($.datepicker.regional["'.$webObject->LanguageName.'"]);' : '')
+								.' });'
+							.'</script>'*/
+						.'</div>'
+						.'<div class="gray-box">'
+							.'<label class="w160" for="match-edit-refs">'.$rb->get('match.refs').':</label>'
+							.'<input class="w400" type="text" name="match-edit-refs" id="match-edit-refs" value="'.$match['refs'].'" />'
+						.'</div>'
+						.'<div class="gray-box">'
+							.'<label class="w160" for="match-edit-place">'.$rb->get('match.place').':</label>'
+							.'<input class="w400" type="text" name="match-edit-place" id="match-edit-place" value="'.$match['place'].'" />'
+						.'</div>'
+						.'<div class="gray-box">'
+							.'<span class="red">*</span> '.$rb->get('match.notplayedyetcap')
 						.'</div>'
 						.'<div class="match-edit-submit">'
 							.'<input type="hidden" name="match-id" value="'.$match['id'].'" />'
@@ -1236,100 +1946,104 @@
 			$return = '';
 			
 			if($_POST['match-stats-save'] == $rb->get('matches.stats.save')) {
-				//echo '<pre>';
-				//print_r($_POST);
-				//echo '</pre>';
-				
-				$matchId = $_POST['match-id'];
-				$playerId1 = $_POST['match-stats-player-id1'];
-				$inmatch1 = $_POST['match-stats-inmatch1'];
-				$goals1 = $_POST['match-stats-goals1'];
-				$assists1 = $_POST['match-stats-assists1'];
-				$shoots1 = $_POST['match-stats-shoots1'];
-				$penalty1 = $_POST['match-stats-penalty1'];
-				
-				$playerId2 = $_POST['match-stats-player-id2'];
-				$inmatch2 = $_POST['match-stats-inmatch2'];
-				$goals2 = $_POST['match-stats-goals2'];
-				$assists2 = $_POST['match-stats-assists2'];
-				$shoots2 = $_POST['match-stats-shoots2'];
-				$penalty2 = $_POST['match-stats-penalty2'];
-				
-				$match = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `season` FROM `w_sport_match` WHERE `id` = '.$matchId.';');
-				if(count($match) > 0) {
-					$match = $match[0];
-					// Kontrola integrity dat: ---
-					/*$goa1 = 0;
-					foreach($goals1 as $gl) {
-						$goa1 += $gl;
-					}
-					$goa2 = 0;
-					foreach($goals2 as $gl) {
-						$goa2 += $gl;
-					}
-					if($goa1 != $match['h_team']) {
-						$ok = false;
-						$return .= '<h4 class="error">'.$rb->get('matches.stats.error.wronggoalscounth').'</h4>';
-					}
-					if($goa2 != $match['a_team']) {
-						$ok = false;
-						$return .= '<h4 class="error">'.$rb->get('matches.stats.error.wronggoalscounta').'</h4>';
-					}
-					$pen1 = 0;
-					foreach($penalty1 as $pe) {
-						$pen1 += $pe;
-					}
-					$pen2 = 0;
-					foreach($penalty2 as $pe) {
-						$pen2 += $pe;
-					}
-					if($pen1 != $match['h_penalty']) {
-						$ok = false;
-						$return .= '<h4 class="error">'.$rb->get('matches.stats.error.wrongpenaltycounth').'</h4>';
-					}
-					if($goa2 != $match['a_penalty']) {
-						$ok = false;
-						$return .= '<h4 class="error">'.$rb->get('matches.stats.error.wrongpenaltycounta').'</h4>';
-					}*/
-					// Konec ---
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					//echo '<pre>';
+					//print_r($_POST);
+					//echo '</pre>';
 					
-					if($ok) {
-						$dbObject->execute('DELETE FROM `w_sport_stats` WHERE `mid` = '.$match['id'].' AND `season` = '.$_SESSION['sport']['season-id'].';');
-						foreach($playerId1 as $key => $pl) {
-							if($pl != '' && $inmatch1[$key] == 'on') {
-								$goals = (($goals1[$key] != '') ? $goals1[$key] : 0);
-								$assists = (($assists1[$key] != '') ? $assists1[$key] : 0);
-								$shoots = (($shoots1[$key] != '') ? $shoots1[$key] : 0);
-								$penalty = (($penalty1[$key] != '') ? $penalty1[$key] : 0);
-								
-								$stats = $dbObject->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `pid` = '.$pl.' AND `mid` = '.$match['id'].' AND `season` = '.$_SESSION['sport']['season-id'].';');
-								if(count($stats) == 0) {
-									$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`) VALUES ('.$pl.', '.$match['id'].', '.$_SESSION['sport']['season-id'].', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.');');
-									$return .= '<h4 class="success">Saved!</h4>';
-								} else {
-								
+					$matchId = $_POST['match-id'];
+					$playerId1 = $_POST['match-stats-player-id1'];
+					$inmatch1 = $_POST['match-stats-inmatch1'];
+					$goals1 = $_POST['match-stats-goals1'];
+					$assists1 = $_POST['match-stats-assists1'];
+					$shoots1 = $_POST['match-stats-shoots1'];
+					$penalty1 = $_POST['match-stats-penalty1'];
+				
+					$playerId2 = $_POST['match-stats-player-id2'];
+					$inmatch2 = $_POST['match-stats-inmatch2'];
+					$goals2 = $_POST['match-stats-goals2'];
+					$assists2 = $_POST['match-stats-assists2'];
+					$shoots2 = $_POST['match-stats-shoots2'];
+					$penalty2 = $_POST['match-stats-penalty2'];
+				
+					$match = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `season` FROM `w_sport_match` WHERE `id` = '.$matchId.';');
+					if(count($match) > 0) {
+						$match = $match[0];
+						// Kontrola integrity dat: ---
+						/*$goa1 = 0;
+						foreach($goals1 as $gl) {
+							$goa1 += $gl;
+						}
+						$goa2 = 0;
+						foreach($goals2 as $gl) {
+							$goa2 += $gl;
+						}
+						if($goa1 != $match['h_team']) {
+							$ok = false;
+							$return .= '<h4 class="error">'.$rb->get('matches.stats.error.wronggoalscounth').'</h4>';
+						}
+						if($goa2 != $match['a_team']) {
+							$ok = false;
+							$return .= '<h4 class="error">'.$rb->get('matches.stats.error.wronggoalscounta').'</h4>';
+						}
+						$pen1 = 0;
+						foreach($penalty1 as $pe) {
+							$pen1 += $pe;
+						}
+						$pen2 = 0;
+						foreach($penalty2 as $pe) {
+							$pen2 += $pe;
+						}
+						if($pen1 != $match['h_penalty']) {
+							$ok = false;
+							$return .= '<h4 class="error">'.$rb->get('matches.stats.error.wrongpenaltycounth').'</h4>';
+						}
+						if($goa2 != $match['a_penalty']) {
+							$ok = false;
+							$return .= '<h4 class="error">'.$rb->get('matches.stats.error.wrongpenaltycounta').'</h4>';
+						}*/
+						// Konec ---
+						
+						if($ok) {
+							$dbObject->execute('DELETE FROM `w_sport_stats` WHERE `mid` = '.$match['id'].' AND `season` = '.self::getSeasonId().';');
+							foreach($playerId1 as $key => $pl) {
+								if($pl != '' && $inmatch1[$key] == 'on') {
+									$goals = (($goals1[$key] != '') ? $goals1[$key] : 0);
+									$assists = (($assists1[$key] != '') ? $assists1[$key] : 0);
+									$shoots = (($shoots1[$key] != '') ? $shoots1[$key] : 0);
+									$penalty = (($penalty1[$key] != '') ? $penalty1[$key] : 0);
+									
+									$stats = $dbObject->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `pid` = '.$pl.' AND `mid` = '.$match['id'].' AND `season` = '.self::getSeasonId().';');
+									if(count($stats) == 0) {
+										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`, `project_id`) VALUES ('.$pl.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.', '.self::getProjectId().');');
+										$return .= '<h4 class="success">Saved!</h4>';
+									} else {
+									
+									}
 								}
 							}
-						}
-						foreach($playerId2 as $key => $pl) {
-							if($pl != '' && $inmatch2[$key] == 'on') {
-								$goals = (($goals2[$key] != '') ? $goals2[$key] : 0);
-								$assists = (($assists2[$key] != '') ? $assists2[$key] : 0);
-								$shoots = (($shoots2[$key] != '') ? $shoots2[$key] : 0);
-								$penalty = (($penalty2[$key] != '') ? $penalty2[$key] : 0);
-								
-								$stats = $dbObject->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `pid` = '.$pl.' AND `mid` = '.$match['id'].' AND `season` = '.$_SESSION['sport']['season-id'].';');
-								if(count($stats) == 0) {
-									$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`) VALUES ('.$pl.', '.$match['id'].', '.$_SESSION['sport']['season-id'].', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.');');
-									$return .= '<h4 class="success">Saved!</h4>';
-								} else {
-								
+							foreach($playerId2 as $key => $pl) {
+								if($pl != '' && $inmatch2[$key] == 'on') {
+									$goals = (($goals2[$key] != '') ? $goals2[$key] : 0);
+									$assists = (($assists2[$key] != '') ? $assists2[$key] : 0);
+									$shoots = (($shoots2[$key] != '') ? $shoots2[$key] : 0);
+									$penalty = (($penalty2[$key] != '') ? $penalty2[$key] : 0);
+									
+									$stats = $dbObject->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `pid` = '.$pl.' AND `mid` = '.$match['id'].' AND `season` = '.self::getSeasonId().';');
+									if(count($stats) == 0) {
+										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`) VALUES ('.$pl.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.');');
+										$return .= '<h4 class="success">Saved!</h4>';
+									} else {
+									
+									}
 								}
 							}
+						} else {
+							$_POST['match-stats-add'] = $rb->get('matches.statsadd');
 						}
-					} else {
-						$_POST['match-stats-add'] = $rb->get('matches.statsadd');
 					}
+				} else {
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
 				}
 			}
 			
@@ -1337,7 +2051,7 @@
 				//$return .= '<h4 class="warning">Coming soon ...</h4>';
 				
 				$matchId = $_POST['match-id'];
-				$seasonId = $_SESSION['sport']['season-id'];
+				$seasonId = self::getSeasonId();
 				$match = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `season` FROM `w_sport_match` WHERE `id` = '.$matchId.';');
 				$match = $match[0];
 				$home = $dbObject->fetchAll('SELECT `name` FROM `w_sport_team` WHERE `id` = '.$match['h_team'].';');
@@ -1482,7 +2196,154 @@
 				if($useFrames == "false") {
 					return $return;
 				} else {
-					return parent::getFrame($rb->get('matches.stats.title').', '.$rb->get('match.round').': '.$match['round'].', '.$home[0]['name'].' : '.$away[0]['name'], $return, "", true);
+					$round = parent::db()->fetchSingle(parent::query()->get('roundById', array('id' => $match['round']), 'sport'));
+					return parent::getFrame($rb->get('matches.stats.title').', '.$rb->get('match.round').': '.$round['name'].', '.$home[0]['name'].' : '.$away[0]['name'], $return, "", true);
+				}
+			}
+		}
+		
+		
+    /**
+     *
+     *	List of rounds for editing.
+     *	C tag.
+     *	
+     *	@param		pageId					next page id
+     *	@param		useFrames				use frames in output
+     *	@param		showMsg					show messages in output
+     *
+     */		 		 		 		     
+    public function showEditRounds($pageId = false, $useFrames = false, $showMsg = false) {
+    	global $dbObject;
+    	global $webObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$retrun = '';
+			
+			$projectId = self::getProjectId();
+			$seasonId = self::getSeasonId();
+			
+			if($_POST['round-delete'] == $rb->get('rounds.delete')) {
+				$roundId = $_POST['round-id'];
+				
+				parent::db()->execute(parent::query()->get('roundDeleteById', array('id' => $roundId), 'sport'));
+				$return .= parent::getSuccess($rb->get('rounds.deleted'));
+			}
+			
+			if($projectId != '-1' && $seasonId != '-1') {
+				$data = parent::db()->fetchAll(parent::query()->get('roundsByProjectIdSeasonId', array('projectId' => $projectId, 'seasonId' => $seasonId), 'sport'));
+				if(count($data) > 0) {
+					foreach($data as $key=>$d) {
+						$form = ''
+						.'<form name="rounds-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'"> '
+							.'<input type="hidden" name="round-id" value="'.$d['id'].'" /> '
+							.'<input type="image" src="~/images/page_edi.png" name="round-edit" value="'.$rb->get('rounds.edit').'" title="'.$rb->get('rounds.editcap').', id='.$d['id'].'" />'
+						.'</form> '
+						.'<form name="rounds-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'"> '
+							.'<input type="hidden" name="round-id" value="'.$d['id'].'" /> '
+							.'<input class="confirm" type="image" src="~/images/page_del.png" name="round-delete" value="'.$rb->get('rounds.delete').'" title="'.$rb->get('rounds.deletecap').', id='.$d['id'].'" /> '
+						.'</form>';
+						$data[$key]['form'] = $form;
+					}
+					
+					$grid = new BaseGrid();
+					$grid->setHeader(array('id' => $rb->get('rounds.id'), 'number' => $rb->get('rounds.number'), 'name' => $rb->get('rounds.name'), 'form' => ''));
+					$grid->addRows($data);
+					$return .= $grid->render();
+				} else {
+					$return .= parent::getWarning($rb->get('rounds.nodata'));
+				}
+				
+				$return .= ''
+				.'<hr />'
+				.'<form name="match-new" method="post" action="'.$SERVER['REDIRECT_URL'].'">'
+					.'<input type="submit" name="round-new" value="'.$rb->get('rounds.new').'" title="'.$rb->get('rounds.newcap').'" />'
+				.'</form>';
+				//$newForm = new BaseForm();
+				//$newForm->setFormAttrs('round-new', 'post', $_SERVER['REDIRECT_URL'])
+				//$newForm->addSubmit('rounds-new');
+			} else {
+				$return .= parent::getError($rb->get('rounds.seasonprojectnotset'));
+			}
+			
+			if($useFrames == "false") {
+				return $return;
+			} else {
+				return parent::getFrame($rb->get('rounds.title'), $return, "", true);
+			}
+		}
+		
+		/**
+		 *
+		 *	Edit round.
+		 *	C tag.
+		 *	
+     *	@param		useFrames				use frames in output
+     *	@param		showMsg					show messages in output
+		 *
+		 */		 		 		 		 		
+		public function showEditRoundForm($useFrames = false, $showMsg = false) {
+			global $dbObject;
+			global $webObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$round = array();
+			$return = '';
+			$ok = true;
+			
+			$form = new BaseForm();
+			$form->setFormAttrs('edit-round', 'post', $_SERVER['REDIRECT_URL']);
+			$form->addSubmit('round-save', $rb->get('round.save'));
+			
+			if($form->isSubmited()) {
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+					$round['id'] = $form->getValue('round-id');
+					$round['number'] = trim($form->getValue('number'));
+					$round['name'] = trim($form->getValue('name'));
+					$round['season_id'] = self::getSeasonId();
+					$round['project_id'] = self::getProjectId();
+					
+					//parent::db()->setMockMode(true);
+					$roothnum = parent::db()->fetchAll(parent::query()->get('roundsIdByNumberNotId', array('number' => $round['number'], 'id' => $round['id']), 'sport'));
+					if(count($roothnum) > 0) {
+						$return .= parent::getError($rb->get('rounds.numberunique'));
+						$ok = false;
+					}
+					if($round['name'] == '') {
+						$return .= parent::getError($rb->get('rounds.namenotempty'));
+						$ok = false;
+					}
+					
+					if($ok) {
+						$rr = parent::db()->fetchAll(parent::query()->get('roundById', array('id' => $round['id']), 'sport'));
+						if(count($rr) == 1) {
+							parent::db()->execute(parent::query()->get('updateRound', $round, 'sport'));
+						} else {
+							parent::db()->execute(parent::query()->get('insertRound', $round, 'sport'));
+						}
+					}
+					//parent::db()->setMockMode(false);
+				} else {
+					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+				}
+			}
+			
+			if($_POST['round-edit'] == $rb->get('rounds.edit') || $_POST['round-new'] == $rb->get('rounds.new') || $ok == false) {
+				if($_POST['round-edit'] == $rb->get('rounds.edit')) {
+					$roundId = $_POST['round-id'];
+					$round = parent::db()->fetchSingle(parent::query()->get('roundById', array('id' => $roundId), 'sport'));
+				}
+				
+				$form->addField('text', 'number', $rb->get('rounds.number'), $round['number'], 'w160', 'w80');
+				$form->addField('text', 'name', $rb->get('rounds.name'), $round['name'], 'w160', 'w200');
+				$form->addField('hidden', 'round-id', '', $round['id']);
+				
+				$return .= $form->render();
+				
+				if($useFrames == "false") {
+					return $return;
+				} else {
+					return parent::getFrame($rb->get('round.title'), $return, "", true);
 				}
 			}
 		}
@@ -1496,7 +2357,7 @@
 		 *	@param		sorting					ASC or DESC
 		 *
 		 */		 		 		 		 		
-		public function showSeasons($templateId, $sorting) {
+		public function showSeasons($templateId, $sorting, $noDataMessage) {
 			global $dbObject;
 			global $loginObject;
 			$rb = new ResourceBundle();
@@ -1509,34 +2370,28 @@
 				$sorting = 'DESC';
 			}
 			
-			$seasons = $dbObject->fetchAll('SELECT `id` FROM `w_sport_season` ORDER BY `start_year` '.$sorting.';');
+			if(!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
+				return parent::getWarning($noDataMessage);
+			}
+			$seasons = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` where `project_id` = '.self::getProjectId().' ORDER BY `start_year` '.$sorting.';');
 			if(count($seasons) > 0) {
-				$rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
-				if(count($rights) > 0 && $templateId > 0) {
-					$template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = '.$templateId.';');
-					$templateContent = $template[0]['content'];
-				} else {
-					$message = "Permission Denied when reading template[templateId = ".$templateId."]!";
-    			trigger_error($message, E_USER_WARNING);
-    		 	return;
-				}
-						
-				$i = 1;
-				$_SESSION['sport']['table']['season-id'] = $_SESSION['sport']['season-id'];
-				$_SESSION['sport']['table']['i'] = $_SESSION['sport']['i'];
+				$content = parent::getTemplateContent($templateId);
+				$parser = new CustomTagParser();
+				$i = 0;
+				$prevId = self::getSeasonId();
 				foreach($seasons as $season) {
-					$_SESSION['sport']['season-id'] = $season['id'];
-					$_SESSION['sport']['i'] = $i;
-					$Parser = new CustomTagParser();
-				  $Parser->setContent($templateContent);
-				  $Parser->startParsing();
-  				$return .= $Parser->getResult();
+					parent::request()->set('season', $season, 'sport-data');
+					parent::request()->set('i', $i, 'sport-data');
+					self::setSeasonId($season['id']);
+
+				  $parser->setContent($content);
+				  $parser->startParsing();
+  				$return .= $parser->getResult();
 					$i ++;
- 				}
-				$_SESSION['sport']['season-id'] = $_SESSION['sport']['table']['season-id'];
-				$_SESSION['sport']['i'] = $_SESSION['sport']['table']['i'];
+				}
+				self::setSeasonId($prevId);
 			} else {
-				$return .= '<h4 class="warning>'.$rb->get('seasons.warning.nodata').'</h4>';
+				$return .= parent::getWarning($noDataMessage);
 			}
 			
 			return $return;	
@@ -1557,41 +2412,37 @@
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
+			$data = array();
 			
-			if($seasonId == false) {
-				$seasonId = $_SESSION['sport']['season-id'];
+			if(!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
+				return parent::getWarning($noDataMessage);
 			}
 			
-			if($seasonId != '') {
-				if($_SESSION['sport']['season'][0]['id'] != $seasonId) {
-					$season = $dbObject->fetchAll('SELECT `start_year`, `end_year` FROM `w_sport_season` WHERE `id` = '.$seasonId.';');
-					$_SESSION['sport']['season'] = $season;
+			if($seasonId == '') {
+				$seasonId = self::getSeasonId();
+			}
+			
+			if($seasonId != '-1') {
+				$data = parent::db()->fetchSingle('select `start_year`, `end_year` from `w_sport_season` where `id` = '.$seasonId.';');
+			} else {
+				if(parent::request()->exists('season', 'sport-data')) {
+					$data = parent::request()->get('season', 'sport-data');
 				} else {
-					$season = $_SESSION['sport']['season'];
+					$return .= parent::getError($rb->get('season.error.seasonnotset'));
 				}
-				if(count($season) > 0) {
-					$season = $season[0];
-					switch(strtolower($field)) {
-						case 'row': $return .= ((($_SESSION['sport']['i'] % 2) == 1) ? 'idle' : 'even'); break;
-						case 'i': $return .= $_SESSION['sport']['i']; break;
-						case 'id': $return .= $season['id']; break;
-						case 'start_year': $return .= $season['start_year']; break;
-						case 'end_year': $return .= $season['end_year']; break;
-						default: $return .= '<h4 class="error">'.$rb->get('season.error.incorrectfield').'</h4>';;
-					}
-				} else {
-					if($errMsg != false) {
-						$return .=  $errMsg;
-					} else {
-						$return .= '<h4 class="error">'.$rb->get('season.error.seasondoesntexist').'</h4>';
-					}
+			}
+			
+			if($data != array()) {
+				switch(strtolower($field)) {
+					case 'row': $return .= (((self::request()->get('i', 'sport-data') % 2) == 1) ? 'idle' : 'even'); break;
+					case 'i': $return .= self::request()->get('i', 'sport-data'); break;
+					case 'id': $return .= $data['id']; break;
+					case 'start_year': $return .= $data['start_year']; break;
+					case 'end_year': $return .= $data['end_year']; break;
+					default: $return .= parent::getError($rb->get('season.error.incorrectfield'));
 				}
 			} else {
-				if($errMsg != false) {
-					$return .=  $errMsg;
-				} else {
-					$return .= '<h4 class="error">'.$rb->get('season.error.seasonnotset').'</h4>';
-				}
+				$return .= parent::getError($rb->get('season.error.seasondoesntexist'));
 			}
 			
 			return $return;
@@ -1602,98 +2453,70 @@
 		 *	Shows table for selected season.
 		 *	C tag.
 		 *	
-		 *	@param		templateId			template id
 		 *	@param		seasonId				season to show		 
 		 *	@param		useFrames				use frames in output
      *	@param		showMsg					show messages in output
 		 *
 		 */		 		 		 		 		 		
-		public function showTable($templateId = false, $seasonId = false, $tableId, $useFrames = false, $showMsg = false) {
+		public function showTable($seasonId = false, $tableId = false, $useFrames = false, $showMsg = false) {
 			global $dbObject;
 			global $loginObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
-			if(($seasonId != '' || $_SESSION['sport']['season-id'] != '') && ($tableId != '' || $_SESSION['sport']['table-id'] != '')) {
+			if(!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
+				return parent::getWarning($noDataMessage);
+			}
+			
+			if(($seasonId != '' || self::getSeasonId() != '-1') && ($tableId != '' || self::getTableId() != '-1')) {
 				if($seasonId == '') {
-					$seasonId = $_SESSION['sport']['season-id'];
+					$seasonId = self::getSeasonId();
 				}
 				if($tableId == '') {
-					$tableId = $_SESSION['sport']['table-id'];
+					$tableId = self::getTableId();
 				}
 				
-				$table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = '.$seasonId.' AND `w_sport_team`.`season` = '.$seasonId.' AND `w_sport_table`.`table_id` = '.$tableId.' ORDER BY `points` DESC, (`w_sport_table`.`s_score` - `w_sport_table`.`r_score`) DESC, `w_sport_table`.`s_score` DESC, `w_sport_table`.`wins` DESC;');
-				
+				$table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = '.$seasonId.' AND `w_sport_team`.`season` = '.$seasonId.' AND `w_sport_table`.`table_id` = '.$tableId.' and `w_sport_table`.`project_id` = '.self::getProjectId().' ORDER BY `points` DESC, (`w_sport_table`.`s_score` - `w_sport_table`.`r_score`) DESC, `w_sport_table`.`s_score` DESC, `w_sport_table`.`wins` DESC;');
 				if(count($table) > 0) {
-					if($templateId == false) {
-						$return .= ''
-						.'<table class="table">'
-							.'<tr class="table-head">'
-								.'<th class="table-position">'.$rb->get('table.position').'</th>'
-								.'<th class="table-name">'.$rb->get('table.name').'</th>'
-								.'<th class="table-matches">'.$rb->get('table.matches').'</th>'
-								.'<th class="table-wins">'.$rb->get('table.wins').'</th>'
-								.'<th class="table-draws">'.$rb->get('table.draws').'</th>'
-								.'<th class="table-loses">'.$rb->get('table.loses').'</th>'
-								.'<th class="table-s_score">'.$rb->get('table.s_score').'</th>'
-								.'<th class="table-r_score">'.$rb->get('table.r_score').'</th>'
-								.'<th class="table-points">'.$rb->get('table.points').'</th>'
-							.'</tr>';
+					$return .= ''
+					.'<table class="table">'
+						.'<tr class="table-head">'
+							.'<th class="table-position">'.$rb->get('table.position').'</th>'
+							.'<th class="table-name">'.$rb->get('table.name').'</th>'
+							.'<th class="table-matches">'.$rb->get('table.matches').'</th>'
+							.'<th class="table-wins">'.$rb->get('table.wins').'</th>'
+							.'<th class="table-draws">'.$rb->get('table.draws').'</th>'
+							.'<th class="table-loses">'.$rb->get('table.loses').'</th>'
+							.'<th class="table-s_score">'.$rb->get('table.s_score').'</th>'
+							.'<th class="table-r_score">'.$rb->get('table.r_score').'</th>'
+							.'<th class="table-points">'.$rb->get('table.points').'</th>'
+						.'</tr>';
 					
-						$i = 1;
-						foreach($table as $team) {
-							$return .= ''
-							.'<tr class="'.((($i % 2) == 1) ? 'idle' : 'even').'">'
-								.'<td class="table-position">'.$i.'</td>'
-								.'<td class="table-name">'.$team['name'].'</td>'
-								.'<td class="table-matches">'.$team['matches'].'</td>'
-								.'<td class="table-wins">'.$team['wins'].'</td>'
-								.'<td class="table-draws">'.$team['draws'].'</td>'
-								.'<td class="table-loses">'.$team['loses'].'</td>'
-								.'<td class="table-s_score">'.$team['s_score'].'</td>'
-								.'<td class="table-r_score">'.$team['r_score'].'</td>'
-								.'<td class="table-points">'.$team['points'].'</td>'
-							.'</tr>';
-							$i ++;
-						}
-						
+					$i = 1;
+					foreach($table as $team) {
 						$return .= ''
-						.'</table>';
-					} else {
-						$rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
-						if(count($rights) > 0 && $templateId > 0) {
-							$template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = '.$templateId.';');
-							$templateContent = $template[0]['content'];
-						} else {
-							$message = "Permission Denied when reading template[templateId = ".$templateId."]!";
-    	  			trigger_error($message, E_USER_WARNING);
-    			  	return;
-						}
-						
-						$i = 1;
-						$_SESSION['sport']['table']['season-id'] = $_SESSION['sport']['season-id'];
-						$_SESSION['sport']['table']['team-id'] = $_SESSION['sport']['team-id'];
-						$_SESSION['sport']['table']['i'] = $_SESSION['sport']['i'];
-						foreach($table as $team) {
-							$_SESSION['sport']['season-id'] = $seasonId;
-							$_SESSION['sport']['team-id'] = $team['id'];
-							$_SESSION['sport']['i'] = $i;
-							$Parser = new CustomTagParser();
-						  $Parser->setContent($templateContent);
-						  $Parser->startParsing();
-		  				$return .= $Parser->getResult();
-							$i ++;
-	  				}
-						$_SESSION['sport']['season-id'] = $_SESSION['sport']['table']['season-id'];
-						$_SESSION['sport']['team-id'] = $_SESSION['sport']['table']['team-id'];
-						$_SESSION['sport']['i'] = $_SESSION['sport']['table']['i'];
+						.'<tr class="'.((($i % 2) == 1) ? 'idle' : 'even').'">'
+							.'<td class="table-position">'.$i.'</td>'
+							.'<td class="table-name">'.$team['name'].'</td>'
+							.'<td class="table-matches">'.$team['matches'].'</td>'
+							.'<td class="table-wins">'.$team['wins'].'</td>'
+							.'<td class="table-draws">'.$team['draws'].'</td>'
+							.'<td class="table-loses">'.$team['loses'].'</td>'
+							.'<td class="table-s_score">'.$team['s_score'].'</td>'
+							.'<td class="table-r_score">'.$team['r_score'].'</td>'
+							.'<td class="table-points">'.$team['points'].'</td>'
+						.'</tr>';
+						$i ++;
 					}
+						
+					$return .= ''
+					.'</table>';
 				} else {
-					$return .= '<h4 class="warning">'.$rb->get('table.nodata').'</h4>';
+					$return .= parent::getWarning($rb->get('table.nodata'));
 				}
 			} else {
-				$return .= '<h4 class="error">'.$rb->get('season.error.notset').'</h4>';
+				$return .= parent::getError($rb->get('table.error.notset'));
 			}
 		
 			if($useFrames == "false") {
@@ -1705,73 +2528,102 @@
 		
 		/**
 		 *
+		 *	Shows list of teams.
+		 *	C tag.
+		 *	
+		 *	@param		templateId			template id
+		 *	@param		sortBy					field name to sort list by
+		 *	@param		sorting					asc|desc
+		 *	@param		noDataMessage		...		 		 		 		 		 		 
+		 *
+		 */		 		 		 		
+		public function showTeams($templateId, $seasonId, $noDataMessage, $teamId = false, $sortBy = false, $sorting = false) {
+			global $dbObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			
+			if(!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
+				return parent::getWarning($noDataMessage);
+			}
+			
+			if(!$sorting == 'desc') {
+				$sorting = 'asc';
+			}
+			if($sortBy == '') {
+				$sortBy = 'id';
+			}
+			
+			$teams = parent::db()->fetchAll('select distinct `id`, `name`, `url`, `logo` from `w_sport_team` where `project_id` = '.self::getProjectId().' and `season` = '.$seasonId.($teamId != '' ? ' and `id` = '.$teamId : '').' order by `'.$sortBy.'` '.$sorting.';');
+			if(count($teams) > 0) {
+				$i = 0;
+				$content = parent::getTemplateContent($templateId);
+				$seasonId = self::getSeasonId();
+				$teamId = self::getTeamId();
+				foreach($teams as $team) {
+					parent::request()->set('team', $team, 'sport-data');
+					parent::request()->set('i', $i, 'sport-data');
+					self::setSeasonId($seasonId);
+					self::setTeamId($team['id']);
+
+					$parser = new CustomTagParser();
+				  $parser->setContent($content);
+				  $parser->startParsing();
+  				$return .= $parser->getResult();
+					$i ++;
+				}
+				self::setSeasonId($seasonId);
+				self::setTeamId($teamId);
+			} else {
+				$return .= parent::getWarning($noDataMessage);
+			}
+			
+			return $return;
+		}
+		
+		/**
+		 *
 		 *	Shows team.
 		 *	C tag.
 		 *	
 		 *	@param		field						field name to show
 		 *	@param		teamId					team id
 		 *	@param		seasonId				season id
-		 *	@param		match						for displaying in match, indicates "home" or "away"		 
-		 *	@param		errMsg					error message
 		 *
 		 */		 		 		 		 		
-		public function showTeam($field, $teamId = false, $seasonId = false, $match = false, $errMsg = false) {
+		public function showTeam($field, $teamId = false, $seasonId = false) {
 			global $dbObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
+			$data = array();
 			
-			if($teamId == false) {
-				if(strtolower($match) == 'home') {
-					$teamId = $_SESSION['sport']['team-id-home'];
-				} elseif(strtolower($match) == 'away') {
-					$teamId = $_SESSION['sport']['team-id-away'];
-				} else {
-					$teamId = $_SESSION['sport']['team-id'];
-				}
-			}
-			if($seasonId == false) {
-				$seasonId = $_SESSION['sport']['season-id'];
+			if($seasonId == '') {
+				$seasonId = self::getSeasonId();
 			}
 			
-			if($teamId != '' && $seasonId != '') {
-				if($_SESSION['sport']['team'][0]['id'] != $teamId) {
-					$team = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_team`.`logo`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = '.$seasonId.' AND `w_sport_team`.`season` = '.$seasonId.' AND `w_sport_team`.`id` = '.$teamId.';');
-					$_SESSION['sport']['team'] = $team;
+			if($teamId != '') {
+				$data = parent::db()->fetchSingle('select `id`, `name`, `url`, `logo` from `w_sport_team` where `project_id` = '.self::getProjectId().' and `id` = '.$teamId.($seasonId != '-1' ? ' and `season` = '.$seasonId : '').';');
+			} else {
+				if(parent::request()->exists('team', 'sport-data')) {
+					$data = parent::request()->get('team', 'sport-data');
 				} else {
-					$team = $_SESSION['sport']['team'];
+					$return .= parent::getError($rb->get('table.error.seasonorteamnotset'));
 				}
-				if(count($team) > 0) {
-					$team = $team[0];
-					switch(strtolower($field)) {
-						case 'row': $return .= ((($_SESSION['sport']['i'] % 2) == 1) ? 'idle' : 'even'); break;
-						case 'i': $return .= $_SESSION['sport']['i']; break;
-						case 'id': $return .= $team['id']; break;
-						case 'name': $return .= $team['name']; break;
-						case 'logo': $return .= $team['logo']; break;
-						case 'matches': $return .= $team['matches']; break;
-						case 'wins': $return .= $team['wins']; break;
-						case 'draws': $return .= $team['draws']; break;
-						case 'loses': $return .= $team['loses']; break;
-						case 's_score': $return .= $team['s_score']; break;
-						case 'r_score': $return .= $team['r_score']; break;
-						case 'd_score': $return .= ($team['s_score'] - $team['r_score']); break;
-						case 'points': $return .= $team['points']; break;
-						default: $return .= '<h4 class="error">'.$rb->get('table.error.incorrectfield').'</h4>';;
-					}
-				} else {
-					if($errMsg != false) {
-						$return .=  $errMsg;
-					} else {
-						$return .= '<h4 class="error">'.$rb->get('table.error.teamdoesntexist').'</h4>';
-					}
+			}
+			
+			if($data != array()) {
+				switch(strtolower($field)) {
+					case 'row': $return .= (((parent::request()->get('i', 'sport-data') % 2) == 1) ? 'idle' : 'even'); break;
+					case 'i': $return .= parent::request()->get('i', 'sport-data'); break;
+					case 'id': $return .= $data['id']; break;
+					case 'name': $return .= $data['name']; break;
+					case 'logo': $return .= $data['logo']; break;
+					case 'url': $return .= $data['url']; break;
+					default: $return .= parent::getError($rb->get('table.error.incorrectfield'));
 				}
 			} else {
-				if($errMsg != false) {
-					$return .=  $errMsg;
-				} else {
-					$return .= '<h4 class="error">'.$rb->get('table.error.seasonorteamnotset').'</h4>';
-				}
+				$return .= parent::getError($rb->get('table.error.teamdoesntexist'));
 			}
 			
 			return $return;
@@ -1789,83 +2641,92 @@
 		 *	@param		seasonId				season id
 		 *
 		 */		 		 		 		 		
-		public function showMatches($templateId, $sorting, $round = false, $teamId = false, $seasonId = false) {
+		public function showMatches($templateId, $noDataMessage, $sorting = false, $matchId = false, $round = false, $teamId = false, $seasonId = false, $onlyPlayed = true) {
 			global $dbObject;
 			global $loginObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
-			if($round == false) {
-				$round = $_SESSION['sport']['round'];
+			if(!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
+				return parent::getWarning($noDataMessage);
 			}
-			if($teamId == false) {
-				$teamId = $_SESSION['sport']['team-id'];
-			}
-			if($seasonId == false) {
-				$seasonId = $_SESSION['sport']['season-id'];
-			}
-			if(strtolower($sorting) == 'asc') {
-				$sorting = 'ASC';
+			
+			if($onlyPlayed == 'false') {
+				$onlyPlayed = false;
 			} else {
+				$onlyPlayed = true;
+			}
+			
+			/*if($round == '') {
+				$round = self::getRoundId();
+			}
+			if($teamId == '') {
+				$teamId = self::getTeamId();
+			}
+			if($seasonId == '') {
+				$seasonId = self::getSeasonId();
+			}*/
+			if(strtolower($sorting) == 'desc') {
 				$sorting = 'DESC';
+			} else {
+				$sorting = 'ASC';
 			}
 			
 			$data = array();
-			if($teamId != '' && $seasonId != '' && $round != '') {
-				$data = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `season` FROM `w_sport_match` WHERE (`h_team` = '.$teamId.' OR `a_team` = '.$teamId.') AND `season` = '.$seasonId.' AND `round` = '.$round.' ORDER BY `round` '.$sorting.', `id` '.$sorting.';');
-			} elseif($teamId != '' && $seasonId != '' && $round == '') {
-				$data = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `season` FROM `w_sport_match` WHERE (`h_team` = '.$teamId.' OR `a_team` = '.$teamId.') AND `season` = '.$seasonId.' ORDER BY `round` '.$sorting.', `id` '.$sorting.';');
-			} elseif($teamId != '' && $seasonId == '' && $round != '') {
-				$data = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `season` FROM `w_sport_match` WHERE (`h_team` = '.$teamId.' OR `a_team` = '.$teamId.') AND `round` = '.$round.' ORDER BY `round` '.$sorting.', `id` '.$sorting.';');
-			} elseif($teamId != '' && $seasonId == '' && $round == '') {
-				$data = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `season` FROM `w_sport_match` WHERE (`h_team` = '.$teamId.' OR `a_team` = '.$teamId.') ORDER BY `round` '.$sorting.', `id` '.$sorting.';');
-			} elseif($teamId == '' && $seasonId != '' && $round != '') {
-				$data = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `season` FROM `w_sport_match` WHERE `season` = '.$seasonId.' AND `round` = '.$round.' ORDER BY `round` '.$sorting.', `id` '.$sorting.';');
-			} elseif($teamId == '' && $seasonId != '' && $round == '') {
-				$data = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `season` FROM `w_sport_match` WHERE `season` = '.$seasonId.' ORDER BY `round` '.$sorting.', `id` '.$sorting.';');
-			} elseif($teamId == '' && $seasonId == '' && $round != '') {
-				$data = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `season` FROM `w_sport_match` WHERE `round` = '.$round.' ORDER BY `round` '.$sorting.', `id` '.$sorting.';');
-			} elseif($teamId == '' && $seasonId == '' && $round == '') {
-				$data = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `season` FROM `w_sport_match` ORDER BY `round` '.$sorting.', `id` '.$sorting.';');
+			$where = '';
+			
+			$where .= ' `project_id` = '.self::getProjectId();
+			
+			if($teamId != '') {
+				$where .= ' and (`h_team` = '.$teamId.' OR `a_team` = '.$teamId.')';
+			}
+			if($round != '') {
+				$where .= ' and `round` = '.$round;
+			}
+			if($seasonId != '') {
+				$where .= ' and `season` = '.$seasonId;
+			}
+			if($matchId != '') {
+				$where .= ' and `id` = '.$matchId;
+			}
+			if($onlyPlayed == true) {
+				$where .= ' and `notplayed` = 0';
 			}
 			
-			if(count($data) > 0) {
-				$rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
-				if(count($rights) > 0 && $templateId > 0) {
-					$template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = '.$templateId.';');
-					$templateContent = $template[0]['content'];
-				} else {
-					$message = "Permission Denied when reading template[templateId = ".$templateId."]!";
- 	  			trigger_error($message, E_USER_WARNING);
- 			  	return;
-				}
-				
-				$i = 1;
-				$_SESSION['sport']['matches']['match-id'] = $_SESSION['sport']['match-id'];
-				$_SESSION['sport']['matches']['team-id-home'] = $_SESSION['sport']['team-id-home'];
-				$_SESSION['sport']['matches']['team-id-away'] = $_SESSION['sport']['team-id-away'];
-				$_SESSION['sport']['matches']['season-id'] = $_SESSION['sport']['season-id'];
-				$_SESSION['sport']['matches']['i'] = $_SESSION['sport']['i'];
-				foreach($data as $match) {
-					$_SESSION['sport']['match-id'] = $match['id'];
-					$_SESSION['sport']['team-id-home'] = $match['h_team'];
-					$_SESSION['sport']['team-id-away'] = $match['a_team'];
-					$_SESSION['sport']['season-id'] = $match['season'];
-					$_SESSION['sport']['i'] = $i;
-					$Parser = new CustomTagParser();
-				  $Parser->setContent($templateContent);
-				  $Parser->startParsing();
-  				$return .= $Parser->getResult();
+			$sql = 'select `id`, `h_team`, `a_team`, `season`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `place`, `refs`, `datetime` from `w_sport_match`'.($where != '' ? ' where '.$where : '').' order by `round` '.$sorting.', `id` '.$sorting.';';
+			$matches = parent::db()->fetchAll($sql);
+			
+			if(count($matches) > 0) {
+				$content = parent::getTemplateContent($templateId);
+				$round = self::getRoundId();
+				$season = self::getSeasonId();
+				$table = self::getTableId();
+				$matchId = self::getMatchId();
+				foreach($matches as $match) {
+					parent::request()->set('match', $match, 'sport-data');
+					parent::request()->set('i', $i, 'sport-data');
+					self::setSeasonId($match['season']);
+					self::setRoundId($match['round']);
+					self::setMatchId($match['id']);
+					if($match['in_table'] != 0) {
+						self::setTableId($match['in_table']);
+					}
+					self::setHomeTeamId($match['h_team']);
+					self::setAwayTeamId($match['a_team']);
+
+					$parser = new CustomTagParser();
+				  $parser->setContent($content);
+				  $parser->startParsing();
+  				$return .= $parser->getResult();
 					$i ++;
- 				}
-				$_SESSION['sport']['match-id'] = $_SESSION['sport']['matches']['match-id'];
-				$_SESSION['sport']['team-id-home'] = $_SESSION['sport']['matches']['team-id-home'];
-				$_SESSION['sport']['team-id-away'] = $_SESSION['sport']['matches']['team-id-away'];
-				$_SESSION['sport']['season-id'] = $_SESSION['sport']['matches']['season-id'];
-				$_SESSION['sport']['i'] = $_SESSION['sport']['matches']['i'];
+				}
+				self::setRoundId($round);
+				self::setSeasonId($season);
+				self::setTableId($table);
+				self::setMatchId($matchId);
 			} else {
-				$return .= '<h4 class="warning">'.$rb->get('matches.warning.nodata').'</h4>';
+				$return .= parent::getWarning($noDataMessage);
 			}
 			
 			return $return;	
@@ -1878,62 +2739,52 @@
 		 *	
 		 *	@param		field						field name to show
 		 *	@param		matchId					match id
-		 *	@param		scope					possible value "session" for field "round"
-		 *	@param		errMsg					error message
 		 *
 		 */		 		 		 		 		
-		public function showMatch($field, $matchId = false, $scope = false, $errMsg = false) {
+		public function showMatch($field, $matchId = false) {
 			global $dbObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
+			$data = array();
 			
-			if($matchId == false) {
-				$matchId = $_SESSION['sport']['match-id'];
-			}
+			/*if($matchId == '') {
+				$matchId = self::getMatchId();
+			}*/
 			
 			if($matchId != '') {
-				if($_SESSION['sport']['match'][0]['id'] != $matchId) {
-					$match = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table` FROM `w_sport_match` WHERE `id` = '.$matchId.';');
-					$_SESSION['sport']['match'] = $match;
-				} else {
-					$match = $_SESSION['sport']['match'];
-				}
-				if(count($match) > 0) {
-					$match = $match[0];
-					switch(strtolower($field)) {
-						case 'row': $return .= ((($_SESSION['sport']['i'] % 2) == 1) ? 'idle' : 'even'); break;
-						case 'i': $return .= $_SESSION['sport']['i']; break;
-						case 'id': $return .= $match['id']; break;
-						case 'h_score': $return .= $match['h_score']; break;
-						case 'a_score': $return .= $match['a_score']; break;
-						case 'h_shoots': $return .= $match['h_shoots']; break;
-						case 'a_shoots': $return .= $match['a_shoots']; break;
-						case 'h_penalty': $return .= $match['h_penalty']; break;
-						case 'a_penalty': $return .= $match['a_penalty']; break;
-						case 'h_extratime': $return .= $match['h_extratime']; break;
-						case 'a_extratime': $return .= $match['a_extratime']; break;
-						case 'h_extratime_text': $return .= (($match['h_extratime'] == 1) ? $rb->get('matches.form.homeexwin') : ''); break;
-						case 'a_extratime_text': $return .= (($match['a_extratime']) ? $rb->get('matches.form.awayexwin') : ''); break;
-						case 'comment': $return .= $match['comment']; break;
-						case 'round': $return .= $match['round']; break;
-						default: $return .= '<h4 class="error">'.$rb->get('match.error.incorrectfield').'</h4>';;
-					}
-				} else {
-					if($errMsg != false) {
-						$return .=  $errMsg;
-					} else {
-						$return .= '<h4 class="error">'.$rb->get('match.error.matchdoesntexist').'</h4>';
-					}
-				}
-			} elseif(strtolower($scope) == 'session' && strtolower($field) == 'round') {
-				$return .= $_SESSION['sport']['round'];
+				$data = parent::db()->fetchSingle('select `id`, `h_team`, `a_team`, `season`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `place`, `refs`, `datetime` from `w_sport_match` where `id` = '.$matchId.' order by `round` '.$sorting.', `id` '.$sorting.';');
 			} else {
-				if($errMsg != false) {
-					$return .=  $errMsg;
+				if(parent::request()->exists('match', 'sport-data')) {
+					$data = parent::request()->get('match', 'sport-data');
 				} else {
-					$return .= '<h4 class="error">'.$rb->get('match.error.matchidnotset').'</h4>';
+					$return .= parent::getError($rb->get('match.error.matchdoesntexist'));
 				}
+			}
+			
+			if($data != array()) {
+				switch(strtolower($field)) {
+						case 'row': $return .= (((parent::session()->get('i', 'sport-data') % 2) == 1) ? 'idle' : 'even'); break;
+						case 'i': $return .= parent::session()->get('i', 'sport-data'); break;
+						case 'id': $return .= $data['id']; break;
+						case 'h_score': $return .= $data['h_score']; break;
+						case 'a_score': $return .= $data['a_score']; break;
+						case 'h_shoots': $return .= $data['h_shoots']; break;
+						case 'a_shoots': $return .= $data['a_shoots']; break;
+						case 'h_penalty': $return .= $data['h_penalty']; break;
+						case 'a_penalty': $return .= $data['a_penalty']; break;
+						case 'h_extratime': $return .= $data['h_extratime']; break;
+						case 'a_extratime': $return .= $data['a_extratime']; break;
+						case 'h_extratime_text': $return .= (($data['h_extratime'] == 1) ? $rb->get('matches.form.homeexwin') : ''); break;
+						case 'a_extratime_text': $return .= (($data['a_extratime']) ? $rb->get('matches.form.awayexwin') : ''); break;
+						case 'comment': $return .= $data['comment']; break;
+						case 'place': $return .= $data['place']; break;
+						case 'refs': $return .= $data['refs']; break;
+						case 'datetime': $return .= $data['datetime']; break;
+						default: $return .= parent::getError($rb->get('match.error.incorrectfield'));
+					}
+			} else {
+				$return .= parent::getError($rb->get('match.error.matchidnotset'));
 			}
 			
 			return $return;
@@ -1949,56 +2800,101 @@
 		 *	@param		seasonId				season id
 		 *
 		 */		 		 		 		 		
-		public function showRounds($templateId, $sorting, $seasonId = false) {
+		public function showRounds($templateId, $sorting, $noDataMessage, $seasonId = false, $onlyPlayed = true) {
 			global $dbObject;
 			global $loginObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
-			if($seasonId == false) {
-				$seasonId = $_SESSION['sport']['season-id'];
+			if($seasonId == '') {
+				$seasonId = self::getSeasonId();
 			}
+			if($onlyPlayed == 'false') {
+				$onlyPlayed = false;
+			} else {
+				$onlyPlayed = true;
+			}
+			
 			if(strtolower($sorting) == 'asc') {
 				$sorting = 'ASC';
 			} else {
 				$sorting = 'DESC';
 			}
-			if($seasonId != '') {
-				$rounds = $dbObject->fetchAll('SELECT DISTINCT `round` FROM `w_sport_match` WHERE `season` = '.$seasonId.' ORDER BY `round` '.$sorting.';');
+			if($seasonId != '-1') {
+				if($onlyPlayed) {
+					// join pres zapasy pro zobrazeni jen kol s odehranymi zapasy ...
+					$rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `w_sport_round`.`name`, `w_sport_round`.`number` from `w_sport_match` left join `w_sport_round` on `w_sport_match`.`round` = `w_sport_round`.`id` where `w_sport_round`.`project_id` = '.self::getProjectId().' and `w_sport_round`.`season_id` = '.$seasonId.' and `w_sport_match`.`notplayed` = 0 order by `w_sport_round`.`name` '.$sorting.';');
+				} else {
+					$rounds = parent::db()->fetchAll(parent::query()->get('roundsByProjectIdSeasonIdSorting', array('projectId' => self::getProjectId(), 'seasonId' => $seasonId, 'sorting' => $sorting), 'sport'));
+				}
 				if(count($rounds) > 0) {
-					$rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
-					if(count($rights) > 0 && $templateId > 0) {
-						$template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = '.$templateId.';');
-						$templateContent = $template[0]['content'];
-					} else {
-						$message = "Permission Denied when reading template[templateId = ".$templateId."]!";
- 	  				trigger_error($message, E_USER_WARNING);
- 				  	return;
-					}
-				
+					$templateContent = parent::getTemplateContent($templateId);
 					$i = 1;
-					$_SESSION['sport']['rounds']['round'] = $_SESSION['sport']['round'];
-					$_SESSION['sport']['rounds']['i'] = $_SESSION['sport']['i'];
+					$lastround = self::getRoundId();
+					$lastseason = self::getSeasonId();
 					foreach($rounds as $round) {
-						$_SESSION['sport']['round'] = $round['round'];
-						$_SESSION['sport']['i'] = $i;
+						parent::request()->set('round', $round, 'sport-data');
+						parent::request()->set('i', $i, 'sport-data');
+						self::setRoundId($round['id']);
+						self::setSeasonId($seasonId);
 						$Parser = new CustomTagParser();
 				  	$Parser->setContent($templateContent);
 					  $Parser->startParsing();
   					$return .= $Parser->getResult();
 						$i ++;
  					}
-					$_SESSION['sport']['round'] = $_SESSION['sport']['rounds']['round'];
-					$_SESSION['sport']['i'] = $_SESSION['sport']['rounds']['i'];
+					self::setRoundId($lastround);
+					self::setSeasonId($lastseason);
 				} else {
-					$return .= '<h4 class="warning">'.$rb->get('rounds.warning.nodata').'</h4>';
+					$return .= parent::getWarning($noDataMessage);
 				}
 			} else {
-				$return .= '<h4 class="warning">'.$rb->get('rounds.error.seasonidnotset').'</h4>';
+				$return .= parent::getWarning($noDataMessage);
 			}
 		
 			return $return;	
+		}
+		
+		/**
+		 *
+		 *	Shows match.
+		 *	C tag.
+		 *	
+		 *	@param		field						field name to show
+		 *	@param		matchId					match id
+		 *
+		 */		 		 		 		 		
+		public function showRound($field, $roundId = false) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			$data = array();
+			
+			if($roundId != '') {
+				$data = parent::db()->fetchSingle(parent::query()->get('roundById', array('id' => $roundId), 'sport'));
+			} else {
+				if(parent::request()->exists('round', 'sport-data')) {
+					$data = parent::request()->get('round', 'sport-data');
+				} else {
+					$return .= parent::getError($rb->get('round.error.rounddoesntexist'));
+				}
+			}
+			
+			if($data != array()) {
+				switch(strtolower($field)) {
+						case 'row': $return .= (((parent::session()->get('i', 'sport-data') % 2) == 1) ? 'idle' : 'even'); break;
+						case 'i': $return .= parent::session()->get('i', 'sport-data'); break;
+						case 'id': $return .= $data['id']; break;
+						case 'name': $return .= $data['name']; break;
+						case 'number': $return .= $data['number']; break;
+						default: $return .= parent::getError($rb->get('round.error.incorrectfield'));
+					}
+			} else {
+				$return .= parent::getError($rb->get('round.error.roundidnotset'));
+			}
+			
+			return $return;
 		}
 		
 		/**
@@ -2015,54 +2911,67 @@
 		 *	@param		only
 		 *	@param		scope
 		 *	@param		showGolmans
-		 *	@param		limit		 
+		 *	@param		limit
 		 *
 		 */		 		 		 		 		
-		public function showPlayers($templateId, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false) {
+		public function showPlayers($templateId, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $noDataMessage = false) {
 			global $dbObject;
 			global $loginObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
-			$players = self::getPlayersFrom('id', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, $limit, $playerId);
+			$templateContent = parent::getTemplateContent($templateId);
+			
+			$oldFields = $this->UsedFields;
+			$oldPhase = $this->ViewPhase;
+			$this->UsedFields = array();
+			$this->ViewPhase = 1;
+			
+			$parser = new CustomTagParser();
+			$parser->setContent($templateContent);
+			$parser->startParsing();
+			
+			//print_r($this->UsedFields);
+			
+			//parent::db()->setMockMode(true);
+			$players = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, $limit, $playerId);
 			//echo $_SESSION['sport']['match-id'];
 			//unset($_SESSION['sport']['match-id']);
+			$this->UsedFields = $oldFields;
 				
 			if(count($players) > 0) {
-				$rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
-				if(count($rights) > 0 && $templateId > 0) {
-					$template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = '.$templateId.';');
-					$templateContent = $template[0]['content'];
-				} else {
-					$message = "Permission Denied when reading template[templateId = ".$templateId."]!";
-	 				trigger_error($message, E_USER_WARNING);
-			  	return;
-				}
-			
 				$i = 1;
+				$this->ViewPhase = 2;
 				$_SESSION['sport']['players']['round'] = $_SESSION['sport']['round'];
 				$_SESSION['sport']['players']['team-id'] = $_SESSION['sport']['team-id'];
 				$_SESSION['sport']['players']['season-id'] = $_SESSION['sport']['season-id'];
 				$_SESSION['sport']['players']['i'] = $_SESSION['sport']['i'];
+				$oldteam = self::getTeamId();
 				foreach($players as $player) {
+					parent::request()->set('player', $player, 'sport-data');
 					$_SESSION['sport']['player-id'] = $player['id'];
 					$_SESSION['sport']['team-id'] = $player['team-id'];
 					$_SESSION['sport']['season-id'] = $seasonId;
+					self::setTeamId($player['team-id']);
 					$_SESSION['sport']['i'] = $i;
-					$Parser = new CustomTagParser();
-			  	$Parser->setContent($templateContent);
-				  $Parser->startParsing();
- 					$return .= $Parser->getResult();
+					$parser = new CustomTagParser();
+			  	$parser->setContent($templateContent);
+				  $parser->startParsing();
+ 					$return .= $parser->getResult();
 					$i ++;
 				}
+				self::setTeamId($oldteam);
 				$_SESSION['sport']['round'] = $_SESSION['sport']['players']['round'];
 				$_SESSION['sport']['team-id'] = $_SESSION['sport']['players']['team-id'];
 				$_SESSION['sport']['season-id'] = $_SESSION['sport']['players']['season-id'];
 				$_SESSION['sport']['i'] = $_SESSION['sport']['players']['i'];
 			} else {
-				$return .= '<h4 class="warning">'.$rb->get('players.warning.nodata').'</h4>';
+				$return .= parent::getWarning($noDataMessage);
 			}
+			//parent::db()->setMockMode(false);
+			
+			$this->ViewPhase = $oldPhase;
 			
 			return $return;	
 		}
@@ -2085,6 +2994,11 @@
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
+			if($this->ViewPhase == 1) {
+				$this->UsedFields[] = $field;
+				return;
+			}
+			
 			if($playerId == false) {
 				$playerId = $_SESSION['sport']['player-id'];
 			}
@@ -2096,10 +3010,13 @@
 			}
 			
 			$player = array();
-			$player = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, 1, $playerId);
+			if(parent::request()->exists('player', 'sport-data')) {
+				$player = parent::request()->get('player', 'sport-data');
+			} else {
+				$player = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, 1, $playerId);
+			}
 			
-			if(count($player) > 0) {
-				$player = $player[0];
+			if($player != array()) {
 				switch(strtolower($field)) {
 					case 'row': $return .= ((($_SESSION['sport']['i'] % 2) == 1) ? 'idle' : 'even'); break;
 					case 'i': $return .= $_SESSION['sport']['i']; break;
@@ -2147,13 +3064,252 @@
 			return $return;
 		}
 		
+		public function showPlayersNG($templateId, $noDataMessage, $seasonId = false, $tableId = false, $matchId = false, $playerId = false, $teamId = false, $positions = false, $sortBy = false, $sorting = false) {
+			global $dbObject;
+			global $loginObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			
+			$where = ' `project_id` = '.self::getProjectId().' and `season` = '.$seasonId;
+			
+			if($playerId != '') {
+				$where .= ' and `id` = '.$playerId;
+			}
+			if($teamId != '') {
+				$where .= ' and `team` = '.$teamId;
+			}
+			if($positions != '') {
+				$where .= ' and `position` in ('.$positions.')';
+			}
+			if($sortBy == '') {
+				$sortBy = 'id';
+			}
+			if($sorting != 'desc') {
+				$sorting = 'asc';
+			}
+			
+			$sql = 'select `id`, `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team` from `w_sport_player` where'.$where.' order by `'.$sortBy.'` '.$sorting.';';
+			$players = parent::db()->fetchAll($sql);
+			if(count($players) > 0) {
+				$templateContent = parent::getTemplateContent($templateId);
+				$i = 1;
+				$lastseasonId = self::getSeasonId();
+				$lastplayerId = self::getPlayerId();
+				$lastteamId = self::getTeamId();
+				foreach($players as $player) {
+					parent::request()->set('player', $player, 'sport-data');
+					parent::request()->set('i', $i, 'sport-data');
+					
+					self::setSeasonId($player['season']);
+					self::setTeamId($player['team']);
+					self::setPlayerId($player['id']);
+					
+					$parser = new CustomTagParser();
+			  	$parser->setContent($templateContent);
+				  $parser->startParsing();
+  				$return .= $parser->getResult();
+					$i ++;
+ 				}
+				self::setSeasonId($lastseasonId);
+				self::setPlayerId($lastplayerId);
+				self::setTeamId($lastteamId);
+			} else {
+				$return .= parent::getWarning($noDataMessage);
+			}
+			
+			return $return;	
+		}
+		
+		public function showPlayerNG($field, $playerId = false) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			$data = array();
+			
+			if($playerId != '') {
+				$sql = 'select `id`, `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team` from `w_sport_player` where `id` = '.$playerId.';';
+				$data = parent::db()->fetchSingle($sql);
+			} else {
+				if(parent::request()->exists('player', 'sport-data')) {
+					$data = parent::request()->get('player', 'sport-data');
+				} else {
+					//$return .= parent::getWarning($noDataMessage);
+				}
+			}
+			
+			$positions = array('', $rb->get('player.position-goa'), $rb->get('player.position-def'), $rb->get('player.position-att'));
+			if($data != array()) {
+				switch(strtolower($field)) {
+						case 'row': $return .= (((parent::session()->get('i', 'sport-data') % 2) == 1) ? 'idle' : 'even'); break;
+						case 'i': $return .= parent::session()->get('i', 'sport-data'); break;
+						case 'id': $return .= $data['id']; break;
+						case 'name': $return .= $data['name']; break;
+						case 'surname': $return .= $data['surname']; break;
+						case 'number': $return .= $data['number']; break;
+						case 'url': $return .= $data['url']; break;
+						case 'birthyear': $return .= $data['birthyear']; break;
+						case 'position': $return .= $positions[$data['position']]; break;
+						case 'photo': $return .= $data['photo']; break;
+						default: $return .= parent::getError($rb->get('player.error.incorrectfield'));
+					}
+			} else {
+				//$return .= parent::getWarning($noDataMessage);
+			}
+			
+			return $return;
+		}
+		
+		public function showPlayersStatsNG($templateId, $type, $noDataMessage, $seasonId = false, $tableId = false, $playerId = false, $matchId = false, $sortBy = false, $sorting = false, $positions = false, $partWhere = false) {
+			global $dbObject;
+			global $loginObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			$ok = true;
+			$sqlpart = '';
+			
+			$where = ' `w_sport_stats`.`project_id` = '.self::getProjectId();
+			
+			if($seasonId != '') {
+				$where .= ' and `w_sport_stats`.`season` = '.$seasonId;
+			}
+			if($tableId != '') {
+				$where .= ' and `w_sport_stats`.`table_id` = '.$tableId;
+			}
+			if($playerId != '') {
+				$where .= ' and `w_sport_stats`.`pid` = '.$playerId;
+			}
+			if($matchId != '') {
+				$where .= ' and `w_sport_stats`.`mid` = '.$matchId;
+			}
+			if($positions != '') {
+				$where .= ' and `w_sport_player`.`position` in ('.$positions.')';
+			}
+			if($partWhere != '') {
+				$where .= ' and ('.$partWhere.')';
+			}
+			if($sorting != 'desc') {
+				$sorting = 'asc';
+			}
+			if($sortBy == '') {
+				$sortBy = 'pid';
+			}
+			
+			switch($type) {
+				case 'match':
+					if($matchId == '') {
+						$ok = false;
+					} else {
+						$sqlpart = 'select distinct `pid`, `mid`, `goals`, `assists`, `penalty`, `shoots`, `w_sport_stats`.`season`, `table_id` from `w_sport_stats`';
+					}
+				break;
+				case 'season':
+					if($seasonId == '' || ($playerId == '' && $tableId == '')) {
+						$ok = false;
+					} else {
+						// dotaz na pohledem bud pro jednotliveho hrace nebo pro tabulku
+					}
+				break;
+				case 'total':
+					if($playerId == '' && $tableId == '') {
+						$ok = false;
+					} else {
+						// dotaz na pohledem bud pro jednotliveho hrace nebo pro tabulku
+					}
+				break;
+			}
+			
+			if($ok) {
+				if($positions != '') {
+					$sqlpart .= ' left join `w_sport_player` on `w_sport_stats`.`pid` = `w_sport_player`.`id`';
+				}
+				$sql = $sqlpart.' where'.$where.' order by `'.$sortBy.'` '.$sorting.';';
+				$stats = parent::db()->fetchAll($sql);
+				if(count($stats) > 0) {
+					$templateContent = parent::getTemplateContent($templateId);
+					$i = 1;
+					$lastseasonId = self::getSeasonId();
+					$lastplayerId = self::getPlayerId();
+					$lastmatchId = self::getMatchId();
+					$lasttableId = self::getTableId();
+					foreach($stats as $stat) {
+						parent::request()->set('stat', $stat, 'sport-data');
+						parent::request()->set('i', $i, 'sport-data');
+					
+						self::setSeasonId($stat['season']);
+						self::setMatchId($stat['mid']);
+						self::setPlayerId($stat['pid']);
+						self::setTableId($stat['table_id']);
+					
+						$parser = new CustomTagParser();
+			  		$parser->setContent($templateContent);
+					  $parser->startParsing();
+  					$return .= $parser->getResult();
+						$i ++;
+ 					}
+					self::setMatchId($lastmatchId);
+					self::setTableId($lasttableId);
+					self::setSeasonId($lastseasonId);
+					self::setPlayerId($lastplayerId);
+				} else {
+					$return .= parent::getWarning($noDataMessage);
+				}
+			} else {
+				$return .= parent::getWarning($noDataMessage);
+			}
+			
+			return $return;
+		}
+		
+		public function showPlayerStatsNG($field) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			$data = array();
+			
+			if(parent::request()->exists('stat', 'sport-data')) {
+				$data = parent::request()->get('stat', 'sport-data');
+			} else {
+				//$return .= parent::getWarning($noDataMessage);
+			}
+			
+			if($data != array()) {
+				switch(strtolower($field)) {
+						case 'row': $return .= (((parent::session()->get('i', 'sport-data') % 2) == 1) ? 'idle' : 'even'); break;
+						case 'i': $return .= parent::session()->get('i', 'sport-data'); break;
+						case 'goals': $return .= $data['goals']; break;
+						case 'assists': $return .= $data['assists']; break;
+						case 'shoots': $return .= $data['shoots']; break;
+						case 'penalty': $return .= $data['penalty']; break;
+						case 'season_goals': $return .= $data['season_goals']; break;
+						case 'season_assits': $return .= $data['season_assists']; break;
+						case 'season_shoots': $return .= $data['season_shoots']; break;
+						case 'season_penalty': $return .= $data['season_penalty']; break;
+						case 'total_goals': $return .= $data['total_goals']; break;
+						case 'total_assits': $return .= $data['total_assists']; break;
+						case 'total_shoots': $return .= $data['total_shoots']; break;
+						case 'total_penalty': $return .= $data['total_penalty']; break;
+						default: $return .= parent::getError($rb->get('player.error.incorrectfield'));
+					}
+			} else {
+				//$return .= parent::getWarning($noDataMessage);
+			}
+			
+			return $return;
+		}
+		
 		// ------------------------------------------------------------------------------------------------------------------- \\
 		
 		public function getSeasonsOptions($teamId, $seasonId, $seaselId) {
 			global $dbObject;
 			$return = '';
 			
-			$seasql = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` ORDER BY `start_year` DESC;');
+			if(!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
+				return '';
+			}
+			
+			$seasql = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` WHERE `project_id` = '.self::getProjectId().' ORDER BY `start_year` DESC;');
 			foreach($seasql as $sea) {
 				$tea = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE `id` = '.$teamId.' AND `season` = '.$sea['id'].';');
 				if(count($tea) == 0 || $sea['id'] == $seasonId) {
@@ -2168,9 +3324,29 @@
 			global $dbObject;
 			$return = '';
 			
-			$tabsql = $dbObject->fetchAll('SELECT `id`, `name` FROM `w_sport_tables` ORDER BY `name` DESC;');
+			if(!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
+				return '';
+			}
+			
+			$tabsql = $dbObject->fetchAll('select `id`, `name` from `w_sport_tables` where `project_id` = '.self::getProjectId().' ORDER BY `name`;');
 			foreach($tabsql as $tab) {
-				$return .= '<option value="'.$tab['id'].'"'.(($tab['id'] == $tabselId) ? 'selected="selectd"' : '').'>'.$tab['name'].'</option>';
+				$return .= '<option value="'.$tab['id'].'"'.(($tab['id'] == $tabselId) ? ' selected="selectd"' : '').'>'.$tab['name'].'</option>';
+			}
+			
+			return $return;
+		}
+		
+		public function getRoundsOptions($tabselId) {
+			global $dbObject;
+			$return = '';
+			
+			if(!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
+				return '';
+			}
+			
+			$tabsql = $dbObject->fetchAll('select `id`, `name` from `w_sport_round` where `project_id` = '.self::getProjectId().' ORDER BY `number`;');
+			foreach($tabsql as $tab) {
+				$return .= '<option value="'.$tab['id'].'"'.(($tab['id'] == $tabselId) ? ' selected="selectd"' : '').'>'.$tab['name'].'</option>';
 			}
 			
 			return $return;
@@ -2180,18 +3356,45 @@
 			global $dbObject;
 			$return = '';
 			
-			$teams = $dbObject->fetchAll('SELECT DISTINCT `id`, `name` FROM `w_sport_team` ORDER BY `name`;');
+			if(!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
+				return '';
+			}
+			
+			$teams = $dbObject->fetchAll('select distinct `id`, `name` from `w_sport_team` where `project_id` = '.self::getProjectId().' order by `name`;');
 			foreach($teams as $team) {
-				$return .= '<option value="'.$team['id'].'"'.(($team['id'] == $teaselId) ? 'selected="selectd"' : '').'>'.$team['name'].'</option>';
+				$return .= '<option value="'.$team['id'].'"'.(($team['id'] == $teaselId) ? ' selected="selectd"' : '').'>'.$team['name'].'</option>';
 			}
 			
 			return $return;
+		}
+		
+		public function getProjectsOptions($prselId, $permType) {
+			$return = '';
+			
+			$projects = parent::db()->fetchAll('select `id`, `name` from `w_sport_project` order by `name`;');
+			foreach($projects as $project) {
+				if(UniversalPermission::checkUserPermissions($this->UPDisc, $project['id'], $permType)) {
+					$return .= '<option value="'.$project['id'].'"'.(($project['id'] == $prselId) ? ' selected="selected"' : '').'>'.$project['name'].'</option>';
+				}
+			}
+			return $return;
+		}
+		
+		public function isSetProjectId() {
+			if(self::getProjectId() == '-1') {
+				return false;
+			} else {
+				return true;
+			}
 		}
 		
 		// ------------------------------------------------------------------------------------------------------------------- \\
 		
 		public function getPlayersFrom($type, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $playerId = false) {
 			global $dbObject;
+			
+			//return parent::db()->fetchAll('select * from `w_sport_stats_list`');
+			//return parent::db()->fetchAll('SELECT DISTINCT `player`.`id`, `player`.`name`, `player`.`surname`, `player`.`birthyear`, `player`.`number`, `player`.`position`, `player`.`photo`, (SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `total_matches`, (SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `total_goals`, (SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `total_assists`, (SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `total_penalty`, (SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `total_shoots`, (SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `total_percentage`,(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `total_average`, (SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `total_points`, (SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = 4 AND `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `season_matches`, (SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = 4 AND `pid` = `player`.`id`) AS `season_goals`, (SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = 4 AND `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `season_assists`, (SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = 4 AND `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `season_penalty`, (SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = 4 AND `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `season_shoots`, (SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = 4 AND `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `season_percentage`,(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = 4 AND `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `season_average`, (SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = 4 AND `pid` = `player`.`id` and `w_sport_stats`.`table_id` = 7) AS `season_points` FROM `w_sport_player` AS `player` LEFT JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id` WHERE `player`.`season` = 4 AND (`player`.`position` = 2 OR `player`.`position` = 3) ORDER BY `season_points` DESC LIMIT 20;');
 			
 			$cols = '';
 			$matchsql = '';
@@ -2242,6 +3445,8 @@
 				$sortBy = 'total_shoots';
 			} elseif(strtolower($sortBy) == 'total_penalty') {
 				$sortBy = 'total_penalty';
+			} elseif(strtolower($sortBy) == 'total_points') {
+				$sortBy = 'total_points';
 			} elseif(strtolower($sortBy) == 'total_percentage') {
 				$sortBy = 'total_percentage';
 			} elseif(strtolower($sortBy) == 'total_average') {
@@ -2256,6 +3461,8 @@
 				$sortBy = 'season_shoots';
 			} elseif(strtolower($sortBy) == 'season_penalty') {
 				$sortBy = 'season_penalty';
+			} elseif(strtolower($sortBy) == 'season_points') {
+				$sortBy = 'season_points';
 			} elseif(strtolower($sortBy) == 'season_percentage') {
 				$sortBy = 'season_percentage';
 			} elseif(strtolower($sortBy) == 'season_average') {
@@ -2270,6 +3477,8 @@
 				$sortBy = 'match_shoots';
 			} elseif(strtolower($sortBy) == 'match_penalty') {
 				$sortBy = 'match_penalty';
+			} elseif(strtolower($sortBy) == 'match_points') {
+				$sortBy = 'match_points';
 			} elseif(strtolower($sortBy) == 'match_percentage') {
 				$sortBy = 'match_percentage';
 			} elseif(strtolower($sortBy) == 'match_average') {
@@ -2278,24 +3487,9 @@
 				$sortBy = 'surname';
 			}
 			
-			//unset($_SESSION['sport']['players']['from']);
-			/*echo $_SESSION['sport']['players']['from']['type'].' == '.$type.'<br />'.
-			$_SESSION['sport']['players']['from']['sorting'].' == '.$sorting.'<br />'.
-			$_SESSION['sport']['players']['from']['sortBy'].' == '.$sortBy.'<br />'.
-			$_SESSION['sport']['players']['from']['teamId'].' == '.$teamId.'<br />'.
-			$_SESSION['sport']['players']['from']['seasonId'].' == '.$seasonId.'<br />'.
-			$_SESSION['sport']['players']['from']['fromMatchId'].' == '.$fromMatchId.'<br />'.
-			$_SESSION['sport']['players']['from']['only'].' == '.$only.'<br />'.
-			$_SESSION['sport']['players']['from']['scope'].' == '.$scope.'<br />'.
-			$_SESSION['sport']['players']['from']['showGolmans'].' == '.$showGolmans.'<br />'.
-			$_SESSION['sport']['players']['from']['playerId'].' == '.$playerId.'<br />'.
-			$_SESSION['sport']['players']['from']['players'].'<br />';*/
+			if(true) {
 			
-			if($type == $_SESSION['sport']['players']['from']['type'] && $sorting == $_SESSION['sport']['players']['from']['sorting'] && $sortBy == $_SESSION['sport']['players']['from']['sortBy'] && $teamId == $_SESSION['sport']['players']['from']['teamId'] && $seasonId == $_SESSION['sport']['players']['from']['seasonId'] && $fromMatchId == $_SESSION['sport']['players']['from']['fromMatchId'] && $only == $_SESSION['sport']['players']['from']['only'] && $scope == $_SESSION['sport']['players']['from']['scope'] && $showGolmans == $_SESSION['sport']['players']['from']['showGolmans'] && $limit == $_SESSION['sport']['players']['from']['limit'] && $playerId == $_SESSION['sport']['players']['from']['playerId']) {
-				$players = $_SESSION['sport']['players']['from']['players'];
-			} else {
-			
-				if($fromMatchId != false) {
+				if($fromMatchId != '') {
 					$matchsql = '`w_sport_stats`.`mid` = '.$fromMatchId.'';
 					$joinstatssql = 'LEFT JOIN `w_sport_stats` ON `player`.`id` = `w_sport_stats`.`pid`';
 				}
@@ -2346,7 +3540,16 @@
 					$positionsql = '(`player`.`position` = 2 OR `player`.`position` = 3)';
 				}
 				
-				$subqueriessql .= '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`) AS `total_matches`, (SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`) AS `total_goals`, (SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`) AS `total_assists`, (SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`) AS `total_penalty`, (SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`) AS `total_shoots`, (SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`) AS `total_percentage`,(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`) AS `total_average`, (SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`) AS `total_points`';
+				$subqueriessql .= ''
+				.(in_array('total_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_matches`, ' : '')
+				.(in_array('total_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_goals`, ' : '')
+				.(in_array('total_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_assists`, ' : '')
+				.(in_array('total_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_penalty`, ' : '')
+				.(in_array('total_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_shoots`, ' : '')
+				.(in_array('total_percentage', $this->UsedFields) ? '(SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_percentage`, ' : '')
+				.(in_array('total_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_average`, ' : '')
+				.(in_array('total_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_points`, ' : '');
+				
 				if($teamId != '') {
 					if(strlen($conditionssql) != 0) {
 						$conditionssql .= ' AND `player`.`team` = '.$teamId;
@@ -2360,14 +3563,15 @@
 					} else {
 						$conditionssql .= ' `player`.`season` = '.$seasonId;
 					}
-					$subqueriessql .= ', (SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_matches`, (SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_goals`, (SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_assists`, (SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_penalty`, (SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_shoots`, (SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_percentage`,(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_average`, (SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`) AS `season_points`';
-				}
-				if($tableId != '') {
-					if(strlen($conditionssql) != 0) {
-						$conditionssql .= ' AND `w_sport_stats`.`table_id` = '.$tableId;
-					} else {
-						$conditionssql .= ' `w_sport_stats`.`table_id` = '.$tableId;
-					}
+					$subqueriessql .= /*(strlen($subqueriessql) != 0 ? ', ' : '')*/''
+					.(in_array('season_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_matches`, ' : '')
+					.(in_array('season_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_goals`, ' : '')
+					.(in_array('season_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_assists`, ' : '')
+					.(in_array('season_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_penalty`, ' : '')
+					.(in_array('season_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_shoots`, ' : '')
+					.(in_array('season_percentage', $this->UsedFields) ? '(SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_percentage`, ' : '')
+					.(in_array('season_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_average`, ' : '')
+					.(in_array('season_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_points`,' : '');
 				}
 				if(strlen($matchsql) != 0) {
 					if(strlen($conditionssql) != 0) {
@@ -2375,7 +3579,14 @@
 					} else {
 						$conditionssql .= ' '.$matchsql;
 					}
-					$subqueriessql .= ', (SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`) AS `match_matches`, (SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`) AS `match_goals`, (SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`) AS `match_assists`, (SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`) AS `match_penalty`, (SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`) AS `match_shoots`, (SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`) AS `match_percentage`,(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`) AS `match_average`, (SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`) AS `match_points`';
+					$subqueriessql .= ', '
+					.(in_array('match_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_goals`, ' : '')
+					.(in_array('match_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_assists`, ' : '')
+					.(in_array('match_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_penalty`, ' : '')
+					.(in_array('match_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_shoots`, ' : '')
+					.(in_array('match_percentage', $this->UsedFields) ? '(SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_percentage`, ' : '')
+					.(in_array('match_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_average`, ' : '')
+					.(in_array('match_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_points`, ' : '');
 				}
 				if(strlen($onlysql) != 0) {
 					if(strlen($conditionssql) != 0) {
@@ -2403,28 +3614,232 @@
 				}
 				
 				if($type == 'most') {
-					$cols = '`player`.`id`, `player`.`name`, `player`.`surname`, `player`.`birthyear`, `player`.`number`, `player`.`position`, `player`.`photo`';
+					$cols = '`player`.`id`, `player`.`name`, `player`.`surname`, `player`.`birthyear`, `player`.`number`, `player`.`position`, `player`.`photo`, `player`.`team` as `team-id`';
 				} else {
 					$cols = '`player`.`id`, `w_sport_team`.`id` AS `team-id`';
 				}
+				
+				if($subqueriessql[strlen($subqueriessql) - 1] == ',') {
+					$subqueriessql = substr($subqueriessql, 0, strlen($subqueriessql) - 1);
+				}
+				
+				if($tableId != '') {
+					if(strlen($joinstatssql) != 0) {
+						$joinstatssql .= ', ';
+					}
+					$joinstatssql .= 'join `w_sport_table` on `player`.`team` = `w_sport_table`.`team`';
+					if(strlen($conditionssql) != 0) {
+						$conditionssql .= ' and';
+					}
+					$conditionssql .= ' `w_sport_table`.`table_id` = '.$tableId;
+				}
 			
-				$players = $dbObject->fetchAll('SELECT DISTINCT '.$cols.', '.$subqueriessql.' FROM `w_sport_player` AS `player` LEFT JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`'.((strlen($joinstatssql) != 0) ? ' '.$joinstatssql : '').''.((strlen($conditionssql) != 0) ? ' WHERE '.$conditionssql : '').' ORDER BY `'.$sortBy.'` '.$sorting.((strlen($limitsql) != 0) ? ' '.$limitsql : '').';', true, true);
-				$_SESSION['sport']['players']['from']['type'] = $type;
-				$_SESSION['sport']['players']['from']['sorting'] = $sorting;
-				$_SESSION['sport']['players']['from']['sortBy'] = $sortBy;
-				$_SESSION['sport']['players']['from']['teamId'] = $teamId;
-				$_SESSION['sport']['players']['from']['seasonId'] = $seasonId;
-				$_SESSION['sport']['players']['from']['fromMatchId'] = $fromMatchId;
-				$_SESSION['sport']['players']['from']['only'] = $only;
-				$_SESSION['sport']['players']['from']['scope'] = $scope;
-				$_SESSION['sport']['players']['from']['showGolmans'] = $showGolmans;
-				$_SESSION['sport']['players']['from']['limit'] = $limit;
-				$_SESSION['sport']['players']['from']['playerId'] = $playerId;
-				$_SESSION['sport']['players']['from']['players'] = $players;
+				$players = $dbObject->fetchAll('SELECT DISTINCT '.$cols.', '.$subqueriessql.' FROM `w_sport_player` AS `player` JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`'.((strlen($joinstatssql) != 0) ? ' '.$joinstatssql : '').''.((strlen($conditionssql) != 0) ? ' WHERE '.$conditionssql : '').' ORDER BY `'.$sortBy.'` '.$sorting.((strlen($limitsql) != 0) ? ' '.$limitsql : '').';');
 			}
 			
 			return $players;
 		}
+		
+		
+		/* ======================== PROPERTIES ================================= */
+		
+		public function setProjectId($projectId) {
+			parent::session()->set('project-id', $projectId, 'sport');
+			return $projectId;
+		}
+		
+		public function getProjectId() {
+			if(parent::session()->exists('project-id', 'sport')) {
+				return parent::session()->get('project-id', 'sport');
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setSeasonId($seasonId) {
+			parent::session()->set('season-id', $seasonId, 'sport');
+			return $seasonId;
+		}
+		
+		public function getSeasonId() {
+			if(parent::session()->exists('season-id', 'sport')) {
+				return parent::session()->get('season-id', 'sport');
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setTableId($tableId) {
+			parent::session()->set('table-id', $tableId, 'sport');
+			return $seasonId;
+		}
+		
+		public function getTableId() {
+			if(parent::session()->exists('table-id', 'sport')) {
+				return parent::session()->get('table-id', 'sport');
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setTeamId($teamId) {
+			parent::session()->set('team-id', $teamId, 'sport');
+			return $teamId;
+		}
+		
+		public function getTeamId() {
+			if(parent::session()->exists('team-id', 'sport')) {
+				return parent::session()->get('team-id', 'sport');
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setHomeTeamId($teamId) {
+			parent::session()->set('home-team-id', $teamId, 'sport');
+			return $teamId;
+		}
+		
+		public function getHomeTeamId() {
+			if(parent::session()->exists('home-team-id', 'sport')) {
+				return parent::session()->get('home-team-id', 'sport');
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setAwayTeamId($teamId) {
+			parent::session()->set('away-team-id', $teamId, 'sport');
+			return $teamId;
+		}
+		
+		public function getAwayTeamId() {
+			if(parent::session()->exists('away-team-id', 'sport')) {
+				return parent::session()->get('away-team-id', 'sport');
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setPlayerId($playerId) {
+			parent::session()->set('player-id', $playerId, 'sport');
+			return $playerId;
+		}
+		
+		public function getPlayerId() {
+			if(parent::session()->exists('player-id', 'sport')) {
+				return parent::session()->get('player-id', 'sport');
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setMatchId($matchId) {
+			parent::session()->set('match-id', $matchId, 'sport');
+			return $matchId;
+		}
+		
+		public function getMatchId() {
+			if(parent::session()->exists('match-id', 'sport')) {
+				return parent::session()->get('match-id', 'sport');
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setRoundId($roundId) {
+			parent::session()->set('round-id', $roundId, 'sport');
+			return $roundId;
+		}
+		
+		public function getRoundId() {
+			if(parent::session()->exists('round-id', 'sport')) {
+				return parent::session()->get('round-id', 'sport');
+			} else {
+				return '-1';
+			}
+		}
+		
+		// Urls
+		
+		public function setProjectUrl($url) {
+			$row = parent::db()->fetchAll('select `id` from `w_sport_project` where `url` = "'.$url.'";');
+			if(count($row) == 1) {
+				self::setProjectId($row[0]['id']);
+				return $url;
+			} else {
+				return '??';
+			}
+		}
+		
+		public function getProjectUrl() {
+			if(self::getProjectId() != '-1') {
+				$url = parent::db()->fetchSingle('select `url` from `w_sport_project` where `id` = '.self::getProjectId().';');
+				return $url['url'];
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setSeasonUrl($url) {
+			$url1 = split('-', $url);
+			$row = parent::db()->fetchAll('select `id` from `w_sport_season` where `start_year` = '.$url1[0].' and `end_year` = '.$url1[1].(self::getProjectId() != '-1' ? ' and `project_id` = '.self::getProjectId() : '').';');
+			if(count($row) == 1) {
+				self::setSeasonId($row[0]['id']);
+				return $url;
+			} else {
+				return '??';
+			}
+		}
+		
+		public function getSeasonUrl() {
+			if(self::getSeasonId() != '-1') {
+				$url = parent::db()->fetchSingle('select `start_year`, `end_year` from `w_sport_season` where `id` = '.self::getSeasonId().';');
+				return $url['start_year'].'-'.$url['end_year'];
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setTeamUrl($url) {
+			$row = parent::db()->fetchAll('select `id` from `w_sport_team` where `url` = "'.$url.'"'.(self::getProjectId() != '-1' ? ' and `project_id` = '.self::getProjectId() : '').';');
+			if(count($row) == 1) {
+				self::setTeamId($row[0]['id']);
+				return $url;
+			} else {
+				return '??';
+			}
+		}
+		
+		public function getTeamUrl() {
+			if(self::getTeamId() != '-1') {
+				$url = parent::db()->fetchSingle('select `url` from `w_sport_team` where `id` = '.self::getTeamId().';');
+				return $url['url'];
+			} else {
+				return '-1';
+			}
+		}
+		
+		public function setPlayerUrl($url) {
+			$row = parent::db()->fetchAll('select `id` from `w_sport_player` where `url` = "'.$url.'"'.(self::getProjectId() != '-1' ? ' and `project_id` = '.self::getProjectId() : '').';');
+			if(count($row) == 1) {
+				self::setPlayerId($row[0]['id']);
+				return $url;
+			} else {
+				return '??';
+			}
+		}
+		
+		public function getPlayerUrl() {
+			if(self::getPlayerId() != '-1') {
+				$url = parent::db()->fetchSingle('select `url` from `w_sport_player` where `id` = '.self::getPlayerId().';');
+				return $url['url'];
+			} else {
+				return '-1';
+			}
+		}
+		
+		
   }
 
 ?>

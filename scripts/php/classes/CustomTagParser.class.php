@@ -7,41 +7,41 @@
 		 *	String for parsing.
 		 *
 		 */		 		 		 		
-		private $Content = '';
+		protected $Content = '';
 		
 		/**
 		 *
 		 *	String after parsing.
 		 *
 		 */		 		 		 		
-		private $Result = '';
+		protected $Result = '';
 	
 		/**
 		 *
 		 *	Custom tag attributes.
 		 *
 		 */		 		 		 		
-		private $Attributes = array();
+		protected $Attributes = array();
 		
 		/**
      *
      *  Regular expression for parsing custom tag.     
      *
      */              
-    private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.,\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*" )*)\/>)';
+    protected $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="[^"]*" )*)\/>)';
     
     /**
      *
      *  Regular expression for parsing attribute.
      *
      */                   
-    private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.,\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*")';
+    protected $ATT_RE =  '(([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="([^"]*)")';
     
-    private $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
+    protected $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
     
-    private $PropertyAttr = '';
+    protected $PropertyAttr = '';
     
-		private $PropertyUse = '';
+		protected $PropertyUse = '';
     
     /**
      *
@@ -51,7 +51,7 @@
      *  @return array of attributes
      *
      */                   
-    private function parseatt($att) {
+    protected function parseatt($att) {
       $this->Attributes[] = $att[0];
     }
     
@@ -63,7 +63,7 @@
      *  @return return of custom tag function     
      *
      */
-    private function parsectag($ctag) {
+    protected function parsectag($ctag) {//print_r($ctag);
       $object = explode(":", $ctag[1]);
       $attributes = array();
       $this->Attributes = array();
@@ -78,6 +78,22 @@
         	$att[1] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $att[1]);
           $attributes[$att[0]] = str_replace("\"", "", $att[1]);
         }
+      }
+      
+      foreach($attributes as $key=>$att) {
+      	if($key == 'security:requireGroup') {
+      		global $loginObject;
+	    	  $ok = false;
+  		    foreach($loginObject->getGroups() as $group) {
+  		    	if($group['name'] == $att) {
+  		    		$ok = true;
+  		    		break;
+  		  		}
+  		  	}
+  		  	if(!$ok) {
+  		  		return '';
+  		  	}
+	  	  }
       }
       
       global $phpObject;
@@ -96,6 +112,7 @@
             }
             $i ++;
           }
+          //echo '$return =  $'.$object[0].'Object->'.$func.'('.$attstring.');';
           eval('$return =  ${$object[0]."Object"}->{$func}('.$attstring.');');
           return $return;
         }  
@@ -113,7 +130,7 @@
      *  @return return of custom property function     
      *
      */
-    private function parsecproperty($cprop) {
+    protected function parsecproperty($cprop) {
       $object = explode(":", $cprop[1]);
       $attributes = array();
       $this->Attributes = array();
@@ -125,8 +142,8 @@
         eval('$return =  ${$object[0]."Object"}->{$func}("'.$this->PropertyAttr.'");');
         return $return;
       } else {
-        echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
-        return "";
+        //echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
+        return $cprop[0];
       }
     }
 		

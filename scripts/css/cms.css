@@ -11,17 +11,21 @@ form {
   display: inline;
 }
 
-input, select {
+input, select, textarea {
 	border: 2px solid #cccccc;
 	background: white;
 }
 
-input.input-focused, select.input-focused {
+input.input-focused, select.input-focused, textarea.input-focused {
 	border: 2px solid #04601C;
 }
 
 input[type=image] {
 	border: none !important;
+}
+
+input[disabled] {
+	background: #eeeeee;
 }
 
 input.confirm {
@@ -102,8 +106,13 @@ table.pages-table {
   display: inline;
 }
 
-.page-list li {
-  padding: 4px 0 0 0;
+.page-list span.page {
+	display: block;
+	padding: 2px 0 4px 0;
+}
+
+.page-list li span:hover {
+	background: #eeeeee;
 }
 
 .page-id-col {
@@ -122,7 +131,9 @@ table.pages-table {
 
 .show-lines table, .group-list table, .user-log-list table, .hp-projection-edit table, 
 table.seasons-list, table.teams-list, table.players-list, table.table, table.match-edit-table, table.matches-table, table.match-stats-table,
-.db-connection table, table.guestbook-list {
+.db-connection table, table.guestbook-list,
+table.standart {
+	margin: 2px;
   border-top: 1px solid #cccccc;
   border-collapse: collapse;
 }
@@ -138,7 +149,8 @@ table.seasons-list, table.teams-list, table.players-list, table.table, table.mat
 .show-lines table td, .group-list table td, .user-log-list td, .languages-edit td, .show-projects td, 
 .user-list-table td, .dir-list td, .hp-projection-edit td, .references-edit td, .url-cache-table td, 
 table.seasons-list td, table.teams-list td, table.players-list td, table.table td, table.matches-table td, table.match-stats-table td,
-.system-properties table td, .system-notes table td, .db-connection table td, table.guestbook-list td {
+.system-properties table td, .system-notes table td, .db-connection table td, table.guestbook-list td,
+table.standart td {
 	padding: 2px 10px;
   border-bottom: 1px solid #cccccc;
 }
@@ -146,7 +158,8 @@ table.seasons-list td, table.teams-list td, table.players-list td, table.table t
 .group-list table th, .show-lines table th, .user-log-list th, .user-list-table th, .dir-list th, 
 .hp-projection-edit th, .references-edit th, table.seasons-list th, table.teams-list th, table.players-list th, table.table th,
 table.match-edit-table th, table.matches-table th, table.match-stats-table th, .system-properties th, .system-notes th,
-.db-connection table th {
+.db-connection table th,
+table.standart th {
 	padding: 0 10px;
 	text-align: left;
 }
@@ -154,7 +167,8 @@ table.match-edit-table th, table.matches-table th, table.match-stats-table th, .
 .file-tr th, .dir-list th, .show-lines th, .template-list th, .group-list th, .user-log-list th, .hp-projection-edit th, 
 .references-edit th, table.seasons-list th, table.teams-list th, table.players-list th, table.table th,
 table.match-edit-table th, table.matches-table th, table.match-stats-table th, .system-properties th, .system-notes th,
-.db-connection table th, table.guestbook-list th {
+.db-connection table th, table.guestbook-list th,
+table.standart th {
   text-align: left;
   background-color: #cccccc;
   border-bottom: 1px solid black;
@@ -197,8 +211,20 @@ td.template-id, td.matches-table-round {
 	font-weight: bold;
 } 
 
+table .template-id {
+	width: 20px;
+}
+
+.template-name {
+	white-space: nowrap;
+}
+
 .file-content, td.template-content {
   color: #777777;
+}
+
+.template-name {
+	width: 200px;
 }
 
 .file-content-in {
@@ -379,12 +405,23 @@ th.file-head-th {
   float: left;
 }
 
-.edit-rights div, .text-file-name, .text-file-type, .edit-keywords {
+.edit-rights div, .text-file-name, .text-file-type, .edit-keywords, .gray-box-float {
   float: left;
   padding: 6px 8px;
   margin: 2px;
   background-color: #eeeeee;
 }
+
+.gray-box {
+  padding: 6px 8px;
+  margin: 2px;
+  background-color: #eeeeee;
+}
+
+.player-search-submit {
+	padding-left: 105px;
+}
+
 
 .edit-prop .edit-in-title input, .edit-prop .edit-menu input, .edit-prop .edit-visible input, .edit-prop .edit-clear-cache input, .edit-prop .edit-language select, .project-edit-http, .project-edit-https, .edit-cache-time select {
 	display: block;
@@ -466,31 +503,33 @@ th.file-head-th {
   display: block;
 }
 
-.error {
+.note, .warning, .error, .fatal, .success {
 	font-family: Times;
 	font-size: 15px;
-	margin: 2px 0;
+	margin: 2px;
 	padding: 0 0 1px 18px;
 	color: white;
-	background: url('/images/error.png') #bd2828 no-repeat 1px 3px;
 }
 
-.success {
-	font-family: Times;
-	font-size: 15px;
-	margin: 2px 0;
-	padding: 0 0 1px 18px;
-	color: white;
-	background: url('/images/success.png') #38cb35 no-repeat 1px 3px;
+.note {
+	color: black;
+	background: url('/images/note.png') no-repeat 1px 2px;
 }
 
 .warning {
-	font-family: Times;
-	font-size: 15px;
-	margin: 2px 0;
-	padding: 0 0 1px 18px;
-	color: black;
 	background: url('/images/warning.png') #ff8c2f no-repeat 1px 3px;
+}
+
+.error {
+	background: url('/images/error.png') #bd2828 no-repeat 1px 3px;
+}
+
+.fatal {
+	background: url('/images/error.png')  #660000 no-repeat 1px 3px;
+}
+
+.success {
+	background: url('/images/success.png') #38cb35 no-repeat 1px 3px;
 }
 
 body {
@@ -635,7 +674,7 @@ body {
 }
 
 .cms .body {
-	position: relative;
+	/*position: relative;*/
 	margin: 47px 5px 30px 5px;
 	/*margin: 60px 60px 40px 60px;*/
 }
@@ -757,6 +796,10 @@ body {
 	width: 20px;
 }
 
+.article-mgm-td.article-mgm-name {
+	width: 100px;
+}
+
 .article-mgm-td.article-mgm-lang {
 	width: 30px;
 }
@@ -870,6 +913,10 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   background-color: #eeeeee;
 }
 
+.idle {
+	background-color: white;
+}
+
 .user-list-table {
   border-collapse: collapse;
 }
@@ -907,11 +954,11 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
   text-align: right;
 }
 
-.team-edit-form div, .player-edit-form div {
+.player-edit-form div {
 	text-align: right;
 }
 
-.team-edit-form div label, .player-edit-form div label {
+.player-edit-form div label {
 	float: left;
 	margin-right: 10px;
 }
@@ -968,7 +1015,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .update-keywords, .add-new-language, .user-log-truncate, .hp-projection-form div, .hp-reference-form div, .project-edit-error-all, 
 .clear-url-cache .part-of-url, .clear-url-cache .page-id, .clear-url-cache .project-id, .clear-url-cache .submit, .clear-url-cache .results, 
 .project-edit-error-404, .project-edit-error-403,
-.season-edit-id, .season-edit-start, .season-edit-end, .season-edit-submit, .team-edit-form div, .player-edit-form div, .match-edit-form div,
+.season-edit-id, .season-edit-start, .season-edit-end, .season-edit-submit, .player-edit-form div, .match-edit-form div,
 .select-class-path {
   padding: 6px 8px;
   margin: 2px;
@@ -1034,6 +1081,10 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 	width: 200px;
 }
 
+.select-season, .select-team, .select-table {
+	float: left;
+}
+
 .edit-submit, .text-file-submit {
   padding: 6px 8px;
   margin: 2px;
@@ -1066,6 +1117,86 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .select-webproject .webproject {
 	background-color: #cccccc;
+}
+
+.red {
+	color: red;
+}
+
+.font-right {
+	text-align: right;
+}
+
+.gray-box .small-font, .gray-box-float .small-font {
+	font-size: 11px;
+}
+
+.gray-box label.padded, .gray-box-float label.padded {
+	padding: 0 10px 0 0;
+}
+
+.gray-box .block, .gray-box-float .block {
+	display: block;
+}
+
+.gray-box .w80, .gray-box-float .w80 {
+	width: 80px;
+	display: inline-block;
+}
+
+.gray-box .w60, .gray-box-float .w60 {
+	width: 60px;
+	display: inline-block;
+}
+
+.gray-box .w100, .gray-box-float .w100 {
+	width: 100px;
+	display: inline-block;
+}
+
+.gray-box .w160, .gray-box-float .w160 {
+	width: 160px;
+	display: inline-block;
+}
+
+.gray-box .w200, .gray-box-float .w200 {
+	width: 200px;
+	display: inline-block;
+}
+
+.gray-box .w300, .gray-box-float .w300 {
+	width: 300px;
+	display: inline-block;
+}
+
+.gray-box .w400, .gray-box-float .w400 {
+	width: 400px;
+	display: inline-block;
+}
+
+.gray-box .w500, .gray-box-float .w500 {
+	width: 500px;
+}
+
+.gray-box .wmax, .gray-box-float .wmax {
+	width: 100%;
+	display: block;
+}
+
+.gray-box .ml160, .gray-box-float .ml160 {
+	margin-left: 160px;
+}
+
+.gray-box .ml100, .gray-box-float .ml100 {
+	margin-left: 100px;
+}
+
+.gray-box .floatedl, .gray-box-float .floatedl {
+	float: left;
+}
+
+.long-input {
+	width: 500px;
 }
 
 /* ----------------- Hint ----------------------- */
@@ -1123,10 +1254,6 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .hint-lib table th {
   text-align: left;
   border-bottom: 1px solid black;
-}
-
-.system-properties, .system-notes {
-	margin: 0 10px;
 }
 
 .system-properties table, .system-notes table {
@@ -1288,34 +1415,28 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 /* ---------------------- CMS MENU ------------------------------------------- */
 
-
 .cms .head .cms-menu {
 	position: absolute;
-	margin: 10px 0pt 0pt 15px;
+	margin: 10px 0pt 0pt 45px;
 }
 
 .cms .head .cms-menu.cms-menu-2 {
 	position: absolute;
-	margin: 10px 0pt 0pt 100px;
+	margin: 10px 0pt 0pt 110px;
 }
 
 .cms .head .cms-menu.cms-menu-3 {
 	position: absolute;
-	margin: 10px 0pt 0pt 210px;
+	margin: 10px 0pt 0pt 10px;
 }
 
 .cms .head .cms-menu.cms-menu-4 {
 	position: absolute;
-	margin: 10px 0pt 0pt 290px;
+	margin: 10px 0pt 0pt 200px;
 }
 
-.cms .head .cms-menu.cms-menu-5 {
-	position: absolute;
-	margin: 10px 0pt 0pt 430px;
-}
-
-.cms .head .cms-menu-4 .menu-root, .cms .head .cms-menu-5 .menu-root {
-	width: 120px;
+.cms .head .cms-menu-4 .menu-root {
+	width: 160px;
 }
 
 .cms .head .cms-menu .menu-root a {
@@ -1383,7 +1504,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu li.menu-item.li-2 a {
-	background: url('/images/icons/page_attachment.gif') no-repeat 4px center;
+	background: url('/images/icons/page_script.gif') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-3 a {
@@ -1391,19 +1512,19 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu li.menu-item.li-4 a {
-	background: url('/images/icons/drive.png') no-repeat 4px center;
+	background: url('/images/icons/page_attachment.gif') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-5 a {
-	background: url('/images/icons/book_open.png') no-repeat 4px center;
+	background: url('/images/icons/drive.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-6 a {
-	background: url('/images/icons/comment.png') no-repeat 4px center;
+	background: url('/images/icons/book_open.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-7 a {
-	background: url('/images/icons/user.png') no-repeat 4px center;
+	background: url('/images/icons/comment.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-8 a {
@@ -1413,37 +1534,73 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 
 .cms-menu-2 li.menu-item.li-1 a {
-	background: url('/images/icons/floorball/seasons.png') no-repeat 4px center;
+	background: url('/images/icons/floorball/projects.gif') no-repeat 4px center;
 }
 
 .cms-menu-2 li.menu-item.li-2 a {
-	background: url('/images/icons/floorball/teams.png') no-repeat 4px center;
+	background: url('/images/icons/floorball/seasons.png') no-repeat 4px center;
 }
 
 .cms-menu-2 li.menu-item.li-3 a {
-	background: url('/images/icons/floorball/players.png') no-repeat 4px center;
+	background: url('/images/icons/floorball/table.png') no-repeat 4px center;
 }
 
 .cms-menu-2 li.menu-item.li-4 a {
-	background: url('/images/icons/floorball/matches.png') no-repeat 4px center;
+	background: url('/images/icons/floorball/rounds.gif') no-repeat 4px center;
 }
 
 .cms-menu-2 li.menu-item.li-5 a {
-	background: url('/images/icons/floorball/table.png') no-repeat 4px center;
+	background: url('/images/icons/floorball/teams.png') no-repeat 4px center;
+}
+
+.cms-menu-2 li.menu-item.li-6 a {
+	background: url('/images/icons/floorball/players.png') no-repeat 4px center;
+}
+
+.cms-menu-2 li.menu-item.li-7 a {
+	background: url('/images/icons/floorball/matches.png') no-repeat 4px center;
 }
 
 
 
 .cms-menu-4 li.menu-item.li-1 a {
-	background: url('/images/icons/properties.png') no-repeat 4px center;
+	background: url('/images/icons/cog.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-2 a {
+	background: url('/images/lang_add.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-3 a {
+	background: url('/images/icons/book_open.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-4 a {
+	background: url('/images/icons/user.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-5 a {
+	background: url('/images/icons/userlog.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-6 a {
+	background: url('/images/icons/log.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-7 a {
+	background: url('/images/icons/page_code.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-8 a {
+	background: url('/images/icons/properties.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-9 a {
 	background: url('/images/page_edi.png') no-repeat 4px center;
 }
 
 
 
 .cms-menu-5 li.menu-item a {
-	background-image: url('/images/icons/cog.png') !important;
+	background-image: url('') !important;
 }

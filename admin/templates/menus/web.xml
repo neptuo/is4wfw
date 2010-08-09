@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu>
+	<item name="Pages" url="~/in/pages.view" />
+	<item name="Text files (css/js)" url="~/in/text-files.view" />
+	<item name="Templates" url="~/in/templates.view" />
+	<item name="Custom forms" url="~/in/custom-forms.view" />
+	<item name="File manager" url="~/in/files.view" />
+	<item name="Articles" url="~/in/articles.view" />
+	<item name="Guestbooks" url="~/in/guestbooks.view" />
+	<item name="Web projects" url="~/in/web-projects.view" security:requireGroup="admins" />
+</menu>

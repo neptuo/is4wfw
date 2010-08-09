@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>View Lib</name>
+  <classname>View</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    "View"
+  </comment>
+  <tag>
+    <tagname>process</tagname>
+    <function>processView</function>
+    <attribute>
+      <attname>path</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zpracuje pohled.
+    </comment>
+  </tag>
+  <fulltag>
+    <tagname>template</tagname>
+    <function>useTemplate</function>
+    <attribute>
+      <attname>src</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Šablona.
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>content</tagname>
+    <function>getContent</function>
+    <comment>
+      Placeholder pro obsah
+    </comment>
+  </tag>
+  <tag>
+    <tagname>header</tagname>
+    <function>addHeader</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Přidá hlavičku.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>resource</tagname>
+    <function>addResource</function>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>src</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Přidá hlavičku.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>title</tagname>
+    <function>setTitle</function>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Nastaví titulek.
+    </comment>
+  </tag>
+  <fulltag>
+    <tagname>panel</tagname>
+    <function>showPanel</function>
+    <attribute>
+      <attname>id</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>class</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Panel
+    </comment>
+  </fulltag>
+</taglib>
+

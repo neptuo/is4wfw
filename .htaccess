@@ -1,5 +1,6 @@
 RewriteEngine on
 RewriteRule ^([a-zA-Z0-9/_-]*)$ index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
+RewriteRule ^(.*).view$ view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
 RewriteRule ^js/([a-zA-Z0-9/_-]*).js scripts/js/$1.js
 RewriteRule ^css/([a-zA-Z0-9/_-]*).css scripts/css/$1.css
 RewriteRule ^file/([a-zA-Z0-9/_-]*).([a-z0-9]*) scripts/files/$1.$2

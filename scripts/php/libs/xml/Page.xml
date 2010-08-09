@@ -4,7 +4,7 @@
   <name>Page Lib</name>
   <classname>Page</classname>
   <classpath>php.libs</classpath>
-  <version>1.39</version>
+  <version>1.43</version>
   <count>*</count>
   <comment>
     Třída pro správu obsahu jednotlivých stránek.
@@ -63,7 +63,14 @@
     <tagname>updateKeywords</tagname>
     <function>updateKeywords</function>
     <comment>
-      Spravuje keywords pro vrlé webové aplikace.
+      Spravuje keywords pro celé webové aplikace.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>updateRobots</tagname>
+    <function>updateRobots</function>
+    <comment>
+      Spravuje robots.txt
     </comment>
   </tag>
   <tag>

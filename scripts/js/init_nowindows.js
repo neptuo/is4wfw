@@ -148,6 +148,8 @@ function initEditAreas(event) {
 	var firstId = 0;
 	var last = null;
 	
+	addEvent(window, 'unload', editorUnloadPage, false);
+	
 	for(var i = 0; i < tas.length; i ++) {
 		if(tas[i].className.indexOf('edit-area') != -1) {
 			var tabs = document.getElementById('editors-tab');
@@ -180,11 +182,25 @@ function initEditAreas(event) {
 	initEditAreasDone = true;
 }
 
-function editorsTabClick(event) {
+function editorUnloadPage(event) {
+	var c = new Cookies();
+	for(var i = 0; i < EditAreaElements.length; i ++) {
+		var sel = editAreaLoader.getSelectionRange(EditAreaElements[i].id);
+		//alert("start: "+sel["start"]+"\nend: "+sel["end"]);
+		// save position to cookies
+		c.create(EditAreaElements[i].id + '-start', sel["start"]);
+		c.create(EditAreaElements[i].id + '-end', sel["end"]);
+		c.create(EditAreaElements[i].id + '-height', EditAreaElements[i].style.height);
+	}
+	//alert(document.cookie);
+}
+
+function editorsTabClick(event) {		
 	var el = (event.srcElement) ? event.srcElement : event.target;
 	var tas = document.getElementById('editors').getElementsByTagName('textarea');
+	var c = new Cookies();
 	
-	log("EA I: In tab click with, tas.length" + tas.length);
+	//log("EA I: In tab click with, tas.length" + tas.length);
 	for(var i = 0; i < tas.length; i ++) {
 		var show = -1;
 		//var height = 200;
@@ -203,13 +219,17 @@ function editorsTabClick(event) {
 			if(tas[i].rows > 0) {
 				height = tas[i].rows * 10;
 			}
+			var th = c.read(tas[i].id + '-height');
+			if(th != null) {
+				tas[i].style.height = th;
+			}
 			tas[i].parentNode.style.display = '';
 			if(tas[i].getAttribute('edit-area-init') != "true") {
 				var type = 'html';
 				if(tas[i].className.indexOf('css') != -1) {
 					type = 'css';
 				}
-				log("EA I: Before init ea ...");
+				//log("EA I: Before init ea ...");
 				editAreaLoader.init({
 					id: tas[i].id
 					,start_highlight: false
@@ -225,10 +245,23 @@ function editorsTabClick(event) {
 					,min_height: height
 				});
 				tas[i].setAttribute('edit-area-init', "true");
+				
+				var selStart = c.read(tas[i].id + '-start');
+				var selEnd = c.read(tas[i].id + '-end');
+				//alert("selStart: " + selStart + ", selEnd: " + selEnd);
+				if(selStart != null && selEnd != null) {
+					window.setTimeout('editAreaSetSelection("' + tas[i].id + '", ' + selStart + ', ' + selEnd + ');', 1000);
+					//window.setTimeout('editAreaSetSelection(' + tas[i].id + ', ' + selStart + ', ' + selEnd + ');', 1000);
+				}
 				EditAreaElements[EditAreaElements.length] = tas[i];
 			}
 		}
 	}
+}
+
+function editAreaSetSelection(id, selStart, selEnd) {
+	//alert('id: ' + id + ', selStart: ' + selStart + ', selEnd: ' + selEnd);
+	editAreaLoader.setSelectionRange(id, selStart, selEnd);
 }
 
 //addEvent(window, "load", initClosers, false);
