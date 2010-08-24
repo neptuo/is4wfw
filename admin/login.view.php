@@ -1,4 +1,3 @@
-<v:title value="Login - cms" />
 <v:template src="~/templates/template.view">
 		<div class="login-icons">
   			<img src="~/images/icons/service/rssmm_wfw.png" width="80" height="15" />

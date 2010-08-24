@@ -350,7 +350,7 @@
   </tag>
   <fulltag>
     <tagname>frame</tagname>
-    <function>getFrame</function>
+    <function>getWebFrame</function>
     <attribute>
       <attname>title</attname>
       <attreq>required</attreq>

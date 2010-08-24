@@ -34,7 +34,7 @@
      */              
     public function __construct() {
       parent::setTagLibXml("xml/Error.xml");
-      error_reporting(0);
+      //error_reporting(0);
     }
     
     /**

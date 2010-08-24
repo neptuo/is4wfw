@@ -106,7 +106,7 @@
             echo "<h4 class=\"error\">".$str."</h4>";
           }
         } else {
-          $str = "This class doesn't exist! [".$classJPath."]";
+          $str = "This class doesn't existecho '-'.$return.'-';! [".$classJPath."]";
           trigger_error($str , E_USER_WARNING);
           echo "<h4 class=\"error\">".$str."</h4>";
         }
@@ -115,7 +115,6 @@
         trigger_error($str , E_USER_WARNING);
         echo "<h4 class=\"error\">".$str."</h4>";
       }
-      
       return "";
     }
   
@@ -667,7 +666,7 @@
     
     /**
      *
-     *  Set caching in webObject 
+     *  Set caching in webObject :D
      *
      *  @param  cache bool value for caching     
      *     
@@ -680,7 +679,7 @@
     public function usingObject($content, $prefix, $class) {
     	$return = '';
     	self::register($prefix, $class);
-    	
+
     	$parser = new FullTagParser();
     	$parser->setContent($content);
     	$parser->startParsing();

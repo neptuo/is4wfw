@@ -1,5 +1,6 @@
 <v:template src="~/templates/in-template.view">
-	<web:frame title="Application log">
-		<h4 class="warning">Coming soon ...</h4>
-	</web:frame>
+	<php:using prefix="applog" class="php.libs.ApplicationLog">
+		<applog:log />
+		<applog:list />
+	</php:using>
 </v:template>

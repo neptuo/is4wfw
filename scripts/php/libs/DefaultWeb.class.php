@@ -1853,12 +1853,12 @@
 		 *	C fulltag.
 		 *
 		 */		 		 		 		
-		public function getFrame($content, $title, $open = false) {
+		public function getWebFrame($content, $title, $open = false) {
 			$parser = new FullTagParser();
-    	$parser->setContent($content);
-    	$parser->startParsing();
-    	$return = $parser->getResult();
-    	$return = parent::getFrame($title, $content, '', $open == 'true' ? true : false);
+    		$parser->setContent($content);
+    		$parser->startParsing();
+    		$return = $parser->getResult();
+    		$return = parent::getFrame($title, $content, '', $open == 'true' ? true : false);
 			
 			return $return;
 		}
