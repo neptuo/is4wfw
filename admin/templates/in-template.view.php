@@ -29,7 +29,7 @@
 	        <web:version />
 	      </div>
 	    </div>
-	    <div id="loading" class="web-version loading">
+	    <div id="loading" class="web-version lorequireGroupading">
 	      Loading ...
 	    </div>
 	    <div id="cms-menus">
@@ -40,14 +40,14 @@
 	        <span class="menu-root"><a href="~/in/index.view">Web</a></span>
 	        <m:xmlMenu file="~/templates/menus/web.xml" />
 	      </div>
-	      <div class="cms-menu cms-menu-2">
+	      <v:panel class="cms-menu cms-menu-2" security:requireGroup="floorball-access">
 	        <span class="menu-root"><a href="~/in/floorball/projects.view">Floorball</a></span>
 	      	<m:xmlMenu file="~/templates/menus/floorball.xml" />
-	      </div>
-	      <div class="cms-menu cms-menu-4">
+	      </v:panel>
+	      <v:panel class="cms-menu cms-menu-4">
 	        <span class="menu-root"><a href="~/in/personal-notes.view">Application settings</a></span>
 	        <m:xmlMenu file="~/templates/menus/settings.xml" />
-	      </div>
+	      </v:panel>
 	    </div>
 	  </div>
 	  <div class="dock-bar">

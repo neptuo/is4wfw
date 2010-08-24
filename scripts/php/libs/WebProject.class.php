@@ -11,10 +11,10 @@
   /**
    * 
    *  Class WebProject.
-   * 	management of web projects	     
+   *  management of web projects
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-08-08
+   *  @timestamp  2010-08-16
    * 
    */  
   class WebProject extends BaseTagLib {
@@ -26,96 +26,98 @@
     public function __construct() {
     	global $webObject;
     	
-      parent::setTagLibXml("xml/WebProject.xml");
+      	parent::setTagLibXml("xml/WebProject.xml");
       
-      if($webObject->LanguageName != '') {
-				$rb = new ResourceBundle();
-				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-					$this->BundleLang = $webObject->LanguageName;
-				}
-			}
-      
-      require_once("scripts/php/classes/ResourceBundle.class.php");
-    }
-		
-		/**
-		 *
-		 *	Select web project id and save it to session var.
-		 *	C tag.
-		 *
-		 */		 		 		 		 		
-		public function selectProject($useFrames = false, $showMsg = false) {
-			global $dbObject;
-			global $loginObject;
+      	if($webObject->LanguageName != '') {
 			$rb = new ResourceBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
-			$return = '';
-			
-			if($_POST['select-project'] == $rb->get('selectproject.submit')) {
-				$projectId = $_POST['project-id'];
-				$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = '.$projectId.' AND `type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
-				if(count($permission) > 0) {
-					$_SESSION['selected-project'] = $projectId;
-					if($showMsg != 'false') {
-						$return .= '<h4 class="success">'.$rb->get('selectproject.success').'</h4>';
-					}
-				} else {
-					if($showMsg != 'false') {
-						$return .= '<h4 class="error">'.$rb->get('selectproject.failed').'</h4>';
-					}
-				}
-			} else {
-				$projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
-				$ok = false;
-				foreach($projects as $project) {
-					if($_SESSION['selected-project'] == $project['id']) {
-						$ok = true;
-					}
-				}
-				if(!$ok) {
-					$sys = new System();
-					$val = $sys->getPropertyValue('WebProject.defaultProjectId');
-					$proj = parent::db()->fetchSingle('select `id` from `web_project` where `id` = '.$val.';');
-					if($val > 0 && $proj != array()) {
-							$_SESSION['selected-project'] = $val;
-					} elseif(count($projects) > 0) {
-						$_SESSION['selected-project'] = $projects[0]['id'];
-					} else {
-						$_SESSION['selected-project'] = '';
-					}
-				}
-			}
-			
-			$projectId = $_SESSION['selected-project'];
-			
-			if(count($projects) > 0) {
-				$return .= ''
-				.'<div class="select-project">'
-					.'<form name="select-project" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-						.'<label for="select-project">'.$rb->get('selectproject.label').'</label> '
-						.'<select id="select-project" name="project-id">';
-				$projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `web_project`.`name`;');
-				foreach($projects as $project) {
-					$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = '.$project['id'].' AND `type` = '.WEB_R_WRITE.' ORDER BY `value` DESC;');
-					if(count($permission)) {
-						$return .= '<option value="'.$project['id'].'"'.(($projectId == $project['id']) ? ' selected="selected"' : '').'>'.$project['name'].'</option>';
-					}
-				}
-				$return .= ''
-						.'</select> '
-						.'<input type="submit" name="select-project" value="'.$rb->get('selectproject.submit').'" />'
-					.'</form>'
-				.'</div>';
-			} else {
-				$return .= '<div class="select-project">'.parent::getWarning('No projects').'</div>';
-			}
-			
-			if($useFrames == "false") {
-				return $return;
-			} else {
-				return parent::getFrame($rb->get('selectproject.label'), $return, "", true);
+			if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
+				$this->BundleLang = $webObject->LanguageName;
 			}
 		}
+      
+      	require_once("scripts/php/classes/ResourceBundle.class.php");
+    }
+		
+	/**
+	 *
+	 *	Select web project id and save it to session var.
+	 *	C tag.
+	 *
+	 */		 		 		 		 		
+	public function selectProject($useFrames = false, $showMsg = false) {
+		global $dbObject;
+		global $loginObject;
+		$rb = new ResourceBundle();
+		$rb->loadBundle($this->BundleName, $this->BundleLang);
+		$return = '';
+		$projects = array();
+		
+		if($_POST['select-project'] == $rb->get('selectproject.submit')) {
+			$projectId = $_POST['project-id'];
+			$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = '.$projectId.' AND `type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+			if(count($permission) > 0) {
+				$_SESSION['selected-project'] = $projectId;
+				if($showMsg != 'false') {
+					$return .= '<h4 class="success">'.$rb->get('selectproject.success').'</h4>';
+				}
+			} else {
+				if($showMsg != 'false') {
+					$return .= '<h4 class="error">'.$rb->get('selectproject.failed').'</h4>';
+				}
+			}
+			$projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
+		} else {
+			$projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
+			$ok = false;
+			foreach($projects as $project) {
+				if($_SESSION['selected-project'] == $project['id']) {
+					$ok = true;
+				}
+			}
+			if(!$ok) {
+				$sys = new System();
+				$val = $sys->getPropertyValue('WebProject.defaultProjectId');
+				$proj = parent::db()->fetchSingle('select `id` from `web_project` where `id` = '.$val.';');
+				if($val > 0 && $proj != array()) {
+					$_SESSION['selected-project'] = $val;
+				} elseif(count($projects) > 0) {
+					$_SESSION['selected-project'] = $projects[0]['id'];
+				} else {
+					$_SESSION['selected-project'] = '';
+				}
+			}
+		}
+		
+		$projectId = $_SESSION['selected-project'];
+		
+		if(count($projects) > 0) {
+			$return .= ''
+			.'<div class="select-project">'
+				.'<form name="select-project" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<label for="select-project">'.$rb->get('selectproject.label').'</label> '
+					.'<select id="select-project" name="project-id">';
+			$projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `web_project`.`name`;');
+			foreach($projects as $project) {
+				$permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = '.$project['id'].' AND `type` = '.WEB_R_WRITE.' ORDER BY `value` DESC;');
+				if(count($permission)) {
+					$return .= '<option value="'.$project['id'].'"'.(($projectId == $project['id']) ? ' selected="selected"' : '').'>'.$project['name'].'</option>';
+				}
+			}
+			$return .= ''
+					.'</select> '
+					.'<input type="submit" name="select-project" value="'.$rb->get('selectproject.submit').'" />'
+				.'</form>'
+			.'</div>';
+		} else {
+			$return .= '<div class="select-project">'.parent::getWarning('No projects').'</div>';
+		}
+			
+		if($useFrames == "false") {
+			return $return;
+		} else {
+			return parent::getFrame($rb->get('selectproject.label'), $return, "", true);
+		}
+	}
 		
 		/**
 		 *

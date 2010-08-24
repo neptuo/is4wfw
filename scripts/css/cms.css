@@ -2,13 +2,13 @@
 
 body {
 	min-width: 1200px;
-  margin: 0 auto;
-  overflow: hidden;
+  	margin: 0 auto;
+  	overflow: hidden;
 }
 
 form {
-  margin: 0;
-  display: inline;
+  	margin: 0;
+  	display: inline;
 }
 
 input, select, textarea {
@@ -34,6 +34,7 @@ input.confirm {
 
 textarea {
   width: 100%;
+  white-space: nowrap;
 }
 
 input[type=image] {

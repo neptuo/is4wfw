@@ -6,8 +6,8 @@
    *
    */
   require_once("BaseTagLib.class.php");
-  require_once("/scripts/php/classes/ui/BaseGrid.class.php");
-  require_once("/scripts/php/classes/ui/BaseForm.class.php");
+  require_once("scripts/php/classes/ui/BaseGrid.class.php");
+  require_once("scripts/php/classes/ui/BaseForm.class.php");
   require_once("scripts/php/classes/CustomTagParser.class.php");
   require_once("scripts/php/classes/ResourceBundle.class.php");
   
@@ -236,16 +236,24 @@
 				}
 			}
 			
-			$return .= ''
-			.'<div class="gray-box-float">'
-				.'<form name="select-project" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-					.'<label for="select-project">'.$rb->get('project.selectlab').':</label> '
-					.'<select name="select-project" id="select-project" class="w160">'
-						.self::getProjectsOptions(self::getProjectId(), WEB_R_READ)
-					.'</select> '
-					.'<input type="submit" name="select-project-submit" value="'.$rb->get('project.select').'" />'
-				.'</form>'
-			.'</div>';
+			$projectsOptions = self::getProjectsOptions(self::getProjectId(), WEB_R_READ);
+			
+			if($projectsOptions != '') {
+				$return .= ''
+				.'<div class="gray-box-float">'
+					.'<form name="select-project" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<label for="select-project">'.$rb->get('project.selectlab').':</label> '
+						.'<select name="select-project" id="select-project" class="w160">'
+							.self::getProjectsOptions(self::getProjectId(), WEB_R_READ)
+						.'</select> '
+						.'<input type="submit" name="select-project-submit" value="'.$rb->get('project.select').'" />'
+					.'</form>'
+				.'</div>';
+			} else {
+				if($showMsg != 'false') {
+					$return .= parent::getWarning($rb->get('projects.nodata'));
+				} 
+			}
 			
 			if($useFrames == "false") {
 				return $return;
