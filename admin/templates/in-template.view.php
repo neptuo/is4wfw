@@ -36,12 +36,12 @@
 	      <div class="cms-menu cms-menu-3">
 	        <span class="menu-root"><a href="~/in/hint.view"></a></span>
 	      </div>
-	      <div class="cms-menu">
+	      <v:panel class="cms-menu" security:requireGroup="cms-access">
 	        <span class="menu-root"><a href="~/in/index.view">Web</a></span>
 	        <m:xmlMenu file="~/templates/menus/web.xml" />
-	      </div>
+	      </v:panel>
 	      <v:panel class="cms-menu cms-menu-2" security:requireGroup="floorball-access">
-	        <span class="menu-root"><a href="~/in/floorball/projects.view">Floorball</a></span>
+	        <span class="menu-root"><web:a pageId="~/in/floorball/seasons.view" text="Floorball" /></span>
 	      	<m:xmlMenu file="~/templates/menus/floorball.xml" />
 	      </v:panel>
 	      <v:panel class="cms-menu cms-menu-4">

@@ -15,9 +15,9 @@
 		  	<img src="~/images/icons/service/16001200.gif" width="80" height="15" />
 		</div>
 		<div class="login">
-				<div class="login-head"></div>
-				<div class="login-in">
-						<login:form group="web-admins" pageId="~/in/index.view" autoLoginUserName="admin" autoLoginPassword="111111" />
-				</div>
+			<div class="login-head"></div>
+			<div class="login-in">
+				<login:form group="web-admins" pageId="~/in/index.view" autoLoginUserName="admin" autoLoginPassword="111111" />
+			</div>
 		</div>
 </v:template>
