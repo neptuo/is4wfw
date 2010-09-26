@@ -17,7 +17,7 @@
    * 	all about sport	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-08-08
+   *  @timestamp  2010-09-26
    * 
    */  
   class Sport extends BaseTagLib {
@@ -1974,7 +1974,7 @@
 					$shoots2 = $_POST['match-stats-shoots2'];
 					$penalty2 = $_POST['match-stats-penalty2'];
 				
-					$match = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `season` FROM `w_sport_match` WHERE `id` = '.$matchId.';');
+					$match = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `season`, `in_table` FROM `w_sport_match` WHERE `id` = '.$matchId.';');
 					if(count($match) > 0) {
 						$match = $match[0];
 						// Kontrola integrity dat: ---
@@ -2023,7 +2023,7 @@
 									
 									$stats = $dbObject->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `pid` = '.$pl.' AND `mid` = '.$match['id'].' AND `season` = '.self::getSeasonId().';');
 									if(count($stats) == 0) {
-										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`, `project_id`) VALUES ('.$pl.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.', '.self::getProjectId().');');
+										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`, `table_id`, `project_id`) VALUES ('.$pl.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.', '.$match['in_table'].', '.self::getProjectId().');');
 										$return .= '<h4 class="success">Saved!</h4>';
 									} else {
 									
@@ -2039,7 +2039,7 @@
 									
 									$stats = $dbObject->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `pid` = '.$pl.' AND `mid` = '.$match['id'].' AND `season` = '.self::getSeasonId().';');
 									if(count($stats) == 0) {
-										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`) VALUES ('.$pl.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.');');
+										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`, `table_id`, `project_id`) VALUES ('.$pl.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.', '.$match['in_table'].', '.self::getProjectId().');');
 										$return .= '<h4 class="success">Saved!</h4>';
 									} else {
 									
