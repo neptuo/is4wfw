@@ -137,11 +137,12 @@ function initEditAreas(event) {
 	if(AjaxInitTopElement != null) {
 		var doc = AjaxInitTopElement;
 	} else {
-	  var doc = document;
-  }
-  //alert(doc);
+		var doc = document;
+	}
+	//alert(doc);
 	//var cover = doc.getElementById('editors');
 	var cover = $(doc).find(".editors").get(0);
+	
 	if(cover == null) return;
 	var tas = cover.getElementsByTagName('textarea');
 	var addTab = false;

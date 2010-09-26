@@ -134,33 +134,35 @@
     	global $logObject;
     	global $webObject;
     	$this->queriesPerRequest ++;
-			if($this->IsOpen) {
-			  if($showQuery || $this->mockMode) {
-          if($forceImmediateOutput || $this->mockMode) {
-				  	echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
-			  	} else {
-	          $webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
-          }
-			  }
+			
+		if($this->IsOpen) {
+			if($showQuery || $this->mockMode) {
+				$pquery = str_replace('<', '&lt;', str_replace('>', '&gt;', $query));
+				if($forceImmediateOutput || $this->mockMode) {
+					echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$pquery."</code></div>";
+				} else {
+					$webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$pquery."</code></div>";
+				}
+			}
 			  
-			  if(!$notExecuteQuery && !$this->mockMode) {
-  				$result = mysql_query($query);
-  				
-  				$errno = mysql_errno();
-  				if($errno != 0) {
-						if(is_object($logObject)) {
-							$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
-						} else {
-							echo 'Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'';
-						}
+			if(!$notExecuteQuery && !$this->mockMode) {
+				$result = mysql_query($query);
+  			
+				$errno = mysql_errno();
+				if($errno != 0) {
+					if(is_object($logObject)) {
+						$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
+					} else {
+						echo 'Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'';
 					}
 				}
-				
-				return ;
-			} else {
-        trigger_error("Connection is closed, cannot fetch data!", E_USER_WARNING);
-      }
+			}
+			
+			return ;
+		} else {
+			trigger_error("Connection is closed, cannot fetch data!", E_USER_WARNING);
 		}
+	}
     
     /**
      *

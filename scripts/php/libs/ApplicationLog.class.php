@@ -95,7 +95,7 @@ class ApplicationLog extends BaseTagLib {
 			if(file_exists('logs/'.$fileName)) {
 				$content = file_get_contents('logs/'.$fileName);
 				$return .= ''
-				.'<div id="editors" class="gray-box editors">'
+				.'<div id="editors" class="gray-box">'
 					.'<textarea id="robots" name="robots" rows="20">'.$content.'</textarea>'
 					//class="edit-area html" 
 				.'</div>';
