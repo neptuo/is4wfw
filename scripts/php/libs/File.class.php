@@ -6,6 +6,7 @@
    *
    */
   require_once("BaseTagLib.class.php");
+  require_once("scripts/php/classes/ResourceBundle.class.php");
   
   /**
    * 
@@ -29,12 +30,18 @@
      *  Holds file id when dynamic rewrite.
      *
      */                        
-    private $CurrentId = 0;                        
+    private $CurrentId = 0;     
+
+	private $BundleName = 'file';
+  	
+  	private $BundleLang = 'cs';	
   
     public function __construct() {
-      parent::setTagLibXml("xml/File.xml");
+		global $webObject;
+		
+		parent::setTagLibXml("xml/File.xml");
       
-      $this->FileEx = array(WEB_TYPE_CSS => "css", WEB_TYPE_JS => "js", WEB_TYPE_JPG => "jpg", WEB_TYPE_GIF => "gif", 
+		$this->FileEx = array(WEB_TYPE_CSS => "css", WEB_TYPE_JS => "js", WEB_TYPE_JPG => "jpg", WEB_TYPE_GIF => "gif", 
                             WEB_TYPE_PNG => "png", WEB_TYPE_PDF => "pdf", WEB_TYPE_RAR => "rar", WEB_TYPE_ZIP => "zip", 
                             WEB_TYPE_TXT => "txt", WEB_TYPE_XML => "xml", WEB_TYPE_XSL => "xsl", WEB_TYPE_DTD => "dtd",
                             WEB_TYPE_HTML => "html", WEB_TYPE_PHP => "php", WEB_TYPE_SQL => "sql", WEB_TYPE_C => "c",
@@ -43,15 +50,22 @@
 														WEB_TYPE_XLS => "xls", WEB_TYPE_MPEG => "mpeg", WEB_TYPE_MOV => "mov",
 														WEB_TYPE_BMP => "bmp", WEB_TYPE_AVI => "avi", WEB_TYPE_ICO => "ico");
       
-      $this->FileMimeType = array(WEB_TYPE_CSS => "text/css", WEB_TYPE_JS => "application/x-javascript", WEB_TYPE_JPG => "image/jpeg", WEB_TYPE_GIF => "image/gif", 
-                            			WEB_TYPE_PNG => "image/png", WEB_TYPE_PDF => "application/pdf", WEB_TYPE_RAR => "application/octet-stream", WEB_TYPE_ZIP => "application/zip", 
-                            			WEB_TYPE_TXT => "text/plain", WEB_TYPE_XML => "text/xml", WEB_TYPE_XSL => "text/plain", WEB_TYPE_DTD => "text/plain",
-                            			WEB_TYPE_HTML => "text/html", WEB_TYPE_PHP => "application/octet-stream", WEB_TYPE_SQL => "text/plain", WEB_TYPE_C => "text/plain",
-                            			WEB_TYPE_CPP => "text/plain", WEB_TYPE_H => "text/plain", WEB_TYPE_JAVA => "text/plain", WEB_TYPE_SWF => "application/x-shockwave-flash",
-																	WEB_TYPE_MP3 => "audio/mpeg", WEB_TYPE_PSD => "application/octet-stream", WEB_TYPE_DOC => "application/msword", WEB_TYPE_PPT => "application/vnd.ms-powerpoint",
-																	WEB_TYPE_XLS => "application/vnd.ms-excel", WEB_TYPE_MPEG => "video/mpeg", WEB_TYPE_MOV => "video/quicktime",
-																	WEB_TYPE_BMP => "image/bmp", WEB_TYPE_AVI => "video/x-msvideo", WEB_TYPE_ICO => "image/x-icon");
+		$this->FileMimeType = array(WEB_TYPE_CSS => "text/css", WEB_TYPE_JS => "application/x-javascript", WEB_TYPE_JPG => "image/jpeg", WEB_TYPE_GIF => "image/gif", 
+                            		WEB_TYPE_PNG => "image/png", WEB_TYPE_PDF => "application/pdf", WEB_TYPE_RAR => "application/octet-stream", WEB_TYPE_ZIP => "application/zip", 
+                            		WEB_TYPE_TXT => "text/plain", WEB_TYPE_XML => "text/xml", WEB_TYPE_XSL => "text/plain", WEB_TYPE_DTD => "text/plain",
+                            		WEB_TYPE_HTML => "text/html", WEB_TYPE_PHP => "application/octet-stream", WEB_TYPE_SQL => "text/plain", WEB_TYPE_C => "text/plain",
+                            		WEB_TYPE_CPP => "text/plain", WEB_TYPE_H => "text/plain", WEB_TYPE_JAVA => "text/plain", WEB_TYPE_SWF => "application/x-shockwave-flash",
+									WEB_TYPE_MP3 => "audio/mpeg", WEB_TYPE_PSD => "application/octet-stream", WEB_TYPE_DOC => "application/msword", WEB_TYPE_PPT => "application/vnd.ms-powerpoint",
+									WEB_TYPE_XLS => "application/vnd.ms-excel", WEB_TYPE_MPEG => "video/mpeg", WEB_TYPE_MOV => "video/quicktime",
+									WEB_TYPE_BMP => "image/bmp", WEB_TYPE_AVI => "video/x-msvideo", WEB_TYPE_ICO => "image/x-icon");
       //$_SESSION['dir-id'] = 0;
+	  
+      	if($webObject->LanguageName != '') {
+			$rb = new ResourceBundle();
+			if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
+				$this->BundleLang = $webObject->LanguageName;
+			}
+		}
     }
     
     function __destruct() {
@@ -68,7 +82,7 @@
      *  @return   list of directories and files from FS.
      *
      */                   
-    public function showDirectory($dirId = false, $editable = false, $useFrames = false) {
+    public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false) {
       global $dbObject;
       global $loginObject;
       $return = "";
@@ -117,7 +131,7 @@
       }
       
       if($useFrames != 'false') {
-      	return parent::getFrame("File list :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable), "", true);
+      	return parent::getFrame("File list :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable, $showParent == "false" ? false : true, $showTitleInsteadOfName == "true" ? true : false), "", true);
       } else {
 				return $return.self::getList($dirId, true);
 			}
@@ -132,10 +146,12 @@
      *  @return   list of files     
      *
      */                        
-    private function getList($dirId, $editable) {
-      global $dbObject;
-      global $loginObject;
-      $return = "";
+    private function getList($dirId, $editable, $showParent, $showTitleInsteadOfName) {
+		global $dbObject;
+		global $loginObject;
+		$rb = new ResourceBundle();
+		$rb->loadBundle($this->BundleName, $this->BundleLang);
+		$return = "";
         
       $dirs = $dbObject->fetchAll('SELECT `directory`.`id`, `directory`.`name`, .`directory`.`timestamp` FROM `directory` LEFT JOIN `directory_right` ON `directory`.`id` = `directory_right`.`did` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `parent_id` = '.$dirId.' AND `directory_right`.`type` = '.WEB_R_READ.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `name`;');
       $dir = $dbObject->fetchAll("SELECT `parent_id` FROM `directory` WHERE `id` = ".$dirId.";");
@@ -144,13 +160,14 @@
       .'<table class="dir-list">'
         .'<tr>'
           .'<th class="th-icon"></th>'
-          .'<th class="th-id"><span>ID</span></th>'
-          .'<th class="th-name">Name</th>'
-          .'<th class="th-dir-physical-path">Direct link:</th>'
-          .'<th class="th-timestamp">Timestamp</th>'
-          .'<th class="th-type">Type</th>'
-          .(($editable != "false") ? '<th class="th-edit">Action</th>' : '' )
+          .'<th class="th-id"><span>'.$rb->get('file.id').':</span></th>'
+          .'<th class="th-name">'.$rb->get('file.name').':</th>'
+          .'<th class="th-dir-physical-path">'.$rb->get('file.directlink').':</th>'
+          .'<th class="th-timestamp">'.$rb->get('file.timestamp').'</th>'
+          .'<th class="th-type">'.$rb->get('file.type').'</th>'
+          .(($editable != "false") ? '<th class="th-edit">'.$rb->get('file.action').'</th>' : '' )
         .'</tr>'
+		.($showParent ? ''
         .'<tr>'
           .'<td class="dir-icon"></td>'
           .'<td class="dir-id"></td>'
@@ -164,7 +181,8 @@
           .'<td class="dir-timestamp"></td>'
           .'<td class="dir-type"></td>'
           .(($editable != "false") ? '<td class="dir-edit"></td>' : '' )
-        .'</tr>';
+        .'</tr>'
+		: '');
         
       $n = 0;
       // sudy   even
@@ -210,7 +228,13 @@
           .'<td class="file-icon '.$this->FileEx[$file['type']].'"></td>'
           .'<td class="file-id"><span>'.$file['id'].'</span></td>'
           .'<td class="file-name">'
-            .'<a target="_blank" title="'.$file['title'].'" href="~/file.php?rid='.$file['id'].'">'.$file['name'].'</a>'
+            .'<a target="_blank" title="'.$file['title'].'" href="~/file.php?rid='.$file['id'].'">'
+				.($showTitleInsteadOfName && strlen($file['title']) != 0 ? ''
+				.$file['title']
+				: ''
+				.$file['name']
+				)
+			.'</a>'
           .'</td>'
           .'<td class="dir-physical-path">'
 						.'<a href="'.self::getPhysicalPathTo($dirId, false).$file['name'].".".$this->FileEx[$file['type']].'" target="_blank">open</a>'
