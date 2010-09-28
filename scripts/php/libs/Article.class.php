@@ -917,7 +917,7 @@
 				}
 				$articleContent['url'] = parent::convertToUrlValid($articleContent['url']);
 				$urls = parent::db()->fetchAll('select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "'.$articleContent['url'].'" and `line_id` = '.$article['line_id'].';');
-				if(count($urls) == 0) {
+				if(count($urls) == 0 || (count($urls) == 1 && $urls[0]['article_id'] == $article['id'])) {
 					$permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = '.$article['line_id'].' AND `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
 					if(count($permission) > 0) {
 						$permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = '.$articleContent['line_old_id'].' AND `article_line_right`.`type` = '.WEB_R_WRITE.' ORDER BY `value` DESC;');
@@ -955,7 +955,7 @@
 					} else {
 						$return .= '<h4 class="error">Permission Denied!</h4>';
 					}
-	      } else {
+				} else {
 					$return .= parent::getError('This url already exists!');
 				}
 			}
