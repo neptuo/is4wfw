@@ -2946,7 +2946,6 @@
 			$players = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, $limit, $playerId);
 			//echo $_SESSION['sport']['match-id'];
 			//unset($_SESSION['sport']['match-id']);
-			$this->UsedFields = $oldFields;
 				
 			if(count($players) > 0) {
 				$i = 1;
@@ -2964,8 +2963,8 @@
 					self::setTeamId($player['team-id']);
 					$_SESSION['sport']['i'] = $i;
 					$parser = new CustomTagParser();
-			  	$parser->setContent($templateContent);
-				  $parser->startParsing();
+					$parser->setContent($templateContent);
+					$parser->startParsing();
  					$return .= $parser->getResult();
 					$i ++;
 				}
@@ -2980,6 +2979,7 @@
 			//parent::db()->setMockMode(false);
 			
 			$this->ViewPhase = $oldPhase;
+			$this->UsedFields = $oldFields;
 			
 			return $return;	
 		}
@@ -3041,24 +3041,24 @@
 					case 'total_assists': $return .= $player['total_assists']; break;
 					case 'total_shoots': $return .= $player['total_shoots']; break;
 					case 'total_penalty': $return .= $player['total_penalty']; break;
-					case 'total_percentage': $return .= $player['total_percentage']; break;
-					case 'total_average': $return .= $player['total_average']; break;
+					case 'total_percentage': $return .= sprintf("%05s", number_format($player['total_percentage'], 2)); break;
+					case 'total_average': $return .= sprintf("%05s", round($player['total_average'], 2)); break;
 					case 'season_matches': $return .= $player['season_matches']; break;
 					case 'season_points': $return .= $player['season_points']; break;
 					case 'season_goals': $return .= $player['season_goals']; break;
 					case 'season_assists': $return .= $player['season_assists']; break;
 					case 'season_shoots': $return .= $player['season_shoots']; break;
 					case 'season_penalty': $return .= $player['season_penalty']; break;
-					case 'season_percentage': $return .= $player['season_percentage']; break;
-					case 'season_average': $return .= $player['season_average']; break;
+					case 'season_percentage': $return .= sprintf("%05s", number_format($player['season_percentage'], 2)); break;
+					case 'season_average': $return .= sprintf("%05s", number_format($player['season_average'], 2)); break;
 					case 'match_matches': $return .= $player['match_matches']; break;
 					case 'match_points': $return .= $player['match_points']; break;
 					case 'match_goals': $return .= $player['match_goals']; break;
 					case 'match_assists': $return .= $player['match_assists']; break;
 					case 'match_shoots': $return .= $player['match_shoots']; break;
 					case 'match_penalty': $return .= $player['match_penalty']; break;
-					case 'match_percentage': $return .= $player['match_percentage']; break;
-					case 'match_average': $return .= $player['match_average']; break;
+					case 'match_percentage': $return .= sprintf("%05s", number_format($player['match_percentage'], 2)); break;
+					case 'match_average': $return .= sprintf("%05s", number_format($player['match_average'], 2)); break;
 					default: $return .= '<h4 class="error">'.$rb->get('player.error.incorrectfield').'</h4>';
 				}
 			} else {
@@ -3414,7 +3414,7 @@
 			$conditionssql = '';
 			
 			//echo $_SESSION['sport']['match-id'];
-			//unset($_SESSION['sport']['match-id']);
+			//unset($_SESSION['sport']['team-id']);
 			if($seasonId == false) {
 				$seasonId = $_SESSION['sport']['season-id'];
 			}
@@ -3549,14 +3549,14 @@
 				}
 				
 				$subqueriessql .= ''
-				.(in_array('total_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_matches`, ' : '')
-				.(in_array('total_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_goals`, ' : '')
-				.(in_array('total_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_assists`, ' : '')
-				.(in_array('total_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_penalty`, ' : '')
-				.(in_array('total_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_shoots`, ' : '')
-				.(in_array('total_percentage', $this->UsedFields) ? '(SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_percentage`, ' : '')
-				.(in_array('total_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_average`, ' : '')
-				.(in_array('total_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_points`, ' : '');
+				.(in_array('total_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_matches`,' : '')
+				.(in_array('total_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_goals`,' : '')
+				.(in_array('total_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_assists`,' : '')
+				.(in_array('total_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_penalty`,' : '')
+				.(in_array('total_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_shoots`,' : '')
+				.(in_array('total_percentage', $this->UsedFields) ? '(SELECT (100 / (SUM(`shoots`)) * (SUM(`shoots`) - SUM(`goals`))) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_percentage`,' : '')
+				.(in_array('total_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_average`,' : '')
+				.(in_array('total_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `total_points`,' : '');
 				
 				if($teamId != '') {
 					if(strlen($conditionssql) != 0) {
@@ -3571,14 +3571,15 @@
 					} else {
 						$conditionssql .= ' `player`.`season` = '.$seasonId;
 					}
+					
 					$subqueriessql .= /*(strlen($subqueriessql) != 0 ? ', ' : '')*/''
-					.(in_array('season_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_matches`, ' : '')
-					.(in_array('season_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_goals`, ' : '')
-					.(in_array('season_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_assists`, ' : '')
-					.(in_array('season_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_penalty`, ' : '')
-					.(in_array('season_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_shoots`, ' : '')
-					.(in_array('season_percentage', $this->UsedFields) ? '(SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_percentage`, ' : '')
-					.(in_array('season_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_average`, ' : '')
+					.(in_array('season_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_matches`,' : '')
+					.(in_array('season_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_goals`,' : '')
+					.(in_array('season_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_assists`,' : '')
+					.(in_array('season_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_penalty`,' : '')
+					.(in_array('season_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_shoots`,' : '')
+					.(in_array('season_percentage', $this->UsedFields) ? '(SELECT (100 / (SUM(`shoots`)) * (SUM(`shoots`) - SUM(`goals`))) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_percentage`,' : '')
+					.(in_array('season_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_average`,' : '')
 					.(in_array('season_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `season_points`,' : '');
 				}
 				if(strlen($matchsql) != 0) {
@@ -3588,13 +3589,13 @@
 						$conditionssql .= ' '.$matchsql;
 					}
 					$subqueriessql .= ', '
-					.(in_array('match_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_goals`, ' : '')
-					.(in_array('match_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_assists`, ' : '')
-					.(in_array('match_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_penalty`, ' : '')
-					.(in_array('match_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_shoots`, ' : '')
-					.(in_array('match_percentage', $this->UsedFields) ? '(SELECT (SUM(`shoots`) / (SUM(`shoots`) + SUM(`goals`)) * 100) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_percentage`, ' : '')
-					.(in_array('match_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_average`, ' : '')
-					.(in_array('match_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_points`, ' : '');
+					.(in_array('match_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_goals`,' : '')
+					.(in_array('match_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_assists`,' : '')
+					.(in_array('match_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_penalty`,' : '')
+					.(in_array('match_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_shoots`,' : '')
+					.(in_array('match_percentage', $this->UsedFields) ? '(SELECT (100 / (SUM(`shoots`)) * (SUM(`shoots`) - SUM(`goals`))) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_percentage`,' : '')
+					.(in_array('match_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_average`,' : '')
+					.(in_array('match_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = '.$fromMatchId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` = '.$tableId : '').') AS `match_points`,' : '');
 				}
 				if(strlen($onlysql) != 0) {
 					if(strlen($conditionssql) != 0) {
