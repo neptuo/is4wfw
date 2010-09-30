@@ -577,8 +577,9 @@
       global $loginObject;
       
       $path = $phpObject->str_tr($path, '/', 1);
-      $return = $dbObject->fetchAll("SELECT `info`.`page_id`, `info`.`href` , `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `content` ON `info`.`page_id` = `content`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `page`.`parent_id` = ".$parentId." AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`wp` = ".$this->ProjectId." ORDER BY `info`.`href` DESC;");
-      
+      $return = $dbObject->fetchAll("SELECT `info`.`page_id`, `info`.`href` , `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `content` ON `info`.`page_id` = `content`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `page`.`parent_id` = ".$parentId." AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`wp` = ".$this->ProjectId." ORDER BY `info`.`href` DESC;", true, true, true);
+      //echo $path[0];
+	  
       $this->CurrentDynamicPath = $path[0];
       $this->ParsingPages = true;
       if(count($return) == 0 && ($path[0] != "" || $path[1] != "")) {
@@ -597,11 +598,13 @@
         	return;
         }
       } else {
+		$pathCache = $path;
       	for($i = 0; $i < count($return); $i ++) {
       		$ok = true;
       		//$temp_path_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['href']);
       		$temp_path = $phpObject->str_tr($return[$i]['href'], '/');
       		for($j = 0; $j < count($temp_path); $j ++) {
+				//echo '<br />['.$i.']['.$j.']'.$temp_path[$j].' === '.$path[0];
       			//$temp_path_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $temp_path[$j]);
       			$this->PropertyAttr = $path[0];
 						$this->PropertyUse = 'set';
@@ -614,8 +617,10 @@
 									$this->UrlDef .= '/'.$temp_path[$j];
 								}
 							}
+							echo ' ( '.$path[1].' ) ';
 							$path = $phpObject->str_tr($path[1], '/', 1);
 						} else {
+							$path = $pathCache;
 							$ok = false;
 							break;
 						}
