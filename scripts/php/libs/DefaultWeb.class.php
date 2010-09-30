@@ -617,7 +617,7 @@
 									$this->UrlDef .= '/'.$temp_path[$j];
 								}
 							}
-							echo ' ( '.$path[1].' ) ';
+							//echo ' ( '.$path[1].' ) ';
 							$path = $phpObject->str_tr($path[1], '/', 1);
 						} else {
 							$path = $pathCache;
