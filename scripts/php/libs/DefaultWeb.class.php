@@ -577,7 +577,7 @@
       global $loginObject;
       
       $path = $phpObject->str_tr($path, '/', 1);
-      $return = $dbObject->fetchAll("SELECT `info`.`page_id`, `info`.`href` , `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `content` ON `info`.`page_id` = `content`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `page`.`parent_id` = ".$parentId." AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`wp` = ".$this->ProjectId." ORDER BY `info`.`href` DESC;", true, true, true);
+      $return = $dbObject->fetchAll("SELECT `info`.`page_id`, `info`.`href` , `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `content` ON `info`.`page_id` = `content`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `page`.`parent_id` = ".$parentId." AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`wp` = ".$this->ProjectId." ORDER BY `info`.`href` DESC;");
       //echo $path[0];
 	  
       $this->CurrentDynamicPath = $path[0];
