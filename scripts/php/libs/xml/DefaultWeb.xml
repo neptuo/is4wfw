@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.67</version>
+  <version>1.69</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -376,6 +376,21 @@
     </attribute>
     <comment>
       Nastaví session hodnotu na náhodné číslo [mezi min a max pokud jsou zadané].
+    </comment>
+  </tag>
+  <tag>
+    <tagname>static</tagname>
+    <function>showStaticText</function>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>lang</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zobrazí text (value) pokud se jedná o danou jazykovou verzi (this->LanguageName == lang)
     </comment>
   </tag>
   <tag>

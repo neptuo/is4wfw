@@ -13,7 +13,7 @@
    *  Article class
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-08-08
+   *  @timestamp  2010-10-02
    * 
    */  
   class Article extends BaseTagLib {
@@ -616,7 +616,7 @@
       include_once('System.class.php');
     
 			$name = 'Article.editors';
-    	$system = new System();
+		$system = new System();
 		  $propertyEditors = $system->getPropertyValue($name);
 		  $editAreaContentRows = $system->getPropertyValue('Article.editAreaContentRows');
 		  $editAreaHeadRows = $system->getPropertyValue('Article.editAreaHeadRows');
@@ -660,6 +660,19 @@
 							.'<textarea id="article-content" class="edit-area html" name="article-content" rows="'.($editAreaContentRows > 0 ? $editAreaContentRows : 20).'">'.str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $articleContent['content']))).'</textarea>'
 						.'</div>'
 					.'</div>';
+			} else if($propertyEditors == 'tiny') {
+				$return .= ''
+						.'<div id="cover-article-head">'
+							.'<label for="article-head">Article Head</label>'
+							.'<textarea id="article-head" name="article-head" rows="'.($editAreaHeadRows > 0 ? $editAreaHeadRows : 10).'">'.str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $articleContent['head']))).'</textarea>'
+						.'</div>'
+						.'<div id="cover-article-content">'
+							.'<label for="article-content">Article Content</label>'
+							.'<textarea id="article-content" name="article-content" rows="'.($editAreaContentRows > 0 ? $editAreaContentRows : 20).'">'.str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $articleContent['content']))).'</textarea>'
+						.'</div>'
+						.'<script type="text/javascript">'
+							.'initTiny("article-head"); initTiny("article-content");'
+						.'</script>';
 			} else {  
       	$return .= ''
           .'<div class="article-head">'
@@ -905,6 +918,7 @@
 			$actionUrl = $_SERVER['REDIRECT_URL'];
 			$article = array();
 			$articleContent = array();
+			$usedLangs = array();
 			
 			// Save article .... ;)
 			if($_POST['article-save'] == "Save") {
@@ -960,11 +974,11 @@
 				}
 			}
 			
-			if(array_key_exists('article-id', $_POST) && $_POST['article-id'] != '' && array_key_exists('language-id', $_POST)) {
+			if(array_key_exists('article-id', $_POST) && $_POST['article-id'] != '') {
 				$articleId = $_POST['article-id'];
 				$languageId = $_POST['language-id'];
 				
-				if($_POST['article-id'] != '') {
+				if($_POST['article-id'] != '' && array_key_exists('language-id', $_POST)) {
 					// test na prava pro cteni z prislusne rady!
 					$article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article`.`line_id` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) AND `article_content`.`article_id` = '.$articleId.' AND `article_content`.`language_id` = '.$languageId.' ORDER BY `id`;');
 					if(count($article) != 0) {
@@ -1079,7 +1093,33 @@
 							.'<textarea id="article-content" class="edit-area html" name="article-content" rows="'.($editAreaContentRows > 0 ? $editAreaContentRows : 20).'">'.str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $article['content']))).'</textarea>'
 						.'</div>'
 					.'</div>';
-			} else {  
+			} elseif(($propertyEditors == 'tiny')) {  
+      	$return .= ''
+          .'<div class="article-head">'
+            .'<label for="article-head">Head:</label> '
+            .'<div class="editor-cover">'
+	            .'<div class="tiny-cover">'
+	            	.'<textarea id="article-head" name="article-head" class="" rows="'.($editAreaHeadRows > 0 ? $editAreaHeadRows : 20).'">'.str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $article['head']))).'</textarea>'
+	            .'</div>'
+            	.'<div class="clear"></div>'
+            .'</div>'
+          .'</div>'
+          .'<div class="article-content">'
+            .'<label for="article-content">Content:</label> '
+            .'<div class="editor-cover">'
+	            .'<div class="tiny-cover">'
+  	          	.'<textarea id="article-content" name="article-content" class="" rows="'.($editAreaHeadRows > 0 ? $editAreaHeadRows : 20).'">'.str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $article['content']))).'</textarea>'
+    	        .'</div>'
+              .'<div class="clear"></div>'
+            .'</div>'
+          .'</div>'
+		  .'<script type="text/javascript">'
+			.'initTiny("article-head");'
+			.'initTiny("article-content");'
+			.'tinyMCE.execCommand("mceAddControl", true, "article-content");'
+			.'tinyMCE.execCommand("mceAddControl", true, "article-head"); '
+		  .'</script>';
+      } else {  
       	$return .= ''
           .'<div class="article-head">'
             .'<label for="article-head">Head:</label> '

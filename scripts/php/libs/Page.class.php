@@ -16,7 +16,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-09-25
+   *  @timestamp  2010-10-02
    * 
    */  
   class Page extends BaseTagLib {
@@ -499,7 +499,7 @@
 		  	  	$editAreaContentRows = $system->getPropertyValue('Page.editAreaContentRows');
 		  	  	$editAreaHeadRows = $system->getPropertyValue('Page.editAreaHeadRows');
 		  	  	$editAreaTLStartRows = $system->getPropertyValue('Page.editAreaTLStartRows');
-		  	  	$editAreaTLendRows = $system->getPropertyValue('Page.editAreaTLEndRows');
+		  	  	$editAreaTLEndRows = $system->getPropertyValue('Page.editAreaTLEndRows');
 		  	  	
 				$returnTmp .= ''
 					.'</div>'
@@ -554,6 +554,52 @@
 								.'<textarea id="page-edit-content" class="edit-area html" name="edit-content" rows="'.($editAreaContentRows > 0 ? $editAreaContentRows : 20).'">'.str_replace('~', '&#126', $sql_return[0]['content']).'</textarea>'
 							.'</div>'
 						.'</div>';
+				} elseif($propertyEditors == 'tiny') {  
+					$returnTmp .= ''
+					.'<div class="edit edit-tag-lib">'
+						.'<div class="edit edit-tl-start">'
+							.'<label for="edit-tl-start">'.$rb->get('page.field.tlstartlabel').':</label>'
+							.'<div class="editor-cover">'
+								.'<div class="textarea-cover">'
+									.'<textarea name="edit-tl-start" class="editor-textarea editor-closed" wrap="off" rows="'.($editAreaTLStartRows > 0 ? $editAreaTLStartRows : 20).'">'.str_replace('~', '&#126', $sql_return[0]['tag_lib_start']).'</textarea>'
+								.'</div>'
+								.'<div class="clear"></div>'
+							.'</div>'
+						.'</div>'
+						.'<div class="edit edit-tl-end">'
+							.'<label for="edit-tl-end">'.$rb->get('page.field.tlendlabel').':</label>'
+							.'<div class="editor-cover">'
+								.'<div class="textarea-cover">'
+									.'<textarea name="edit-tl-end" class="editor-textarea editor-closed" wrap="off" rows="'.($editAreaTLEndRows > 0 ? $editAreaTLEndRows : 20).'">'.str_replace('~', '&#126', $sql_return[0]['tag_lib_end']).'</textarea>'
+								.'</div>'
+								.'<div class="clear"></div>'
+							.'</div>'
+						.'</div>'
+					.'</div>'
+					.'<div class="edit edit-content">'
+						.'<div class="edit edit-head">'
+							.'<label for="edit-head">'.$rb->get('page.field.headlabel').':</label>'
+							.'<div class="editor-cover">'
+								.'<div class="textarea-cover">'
+									.'<textarea name="edit-head" class="editor-textarea editor-closed" wrap="off" rows="'.($editAreaHeadRows > 0 ? $editAreaHeadRows : 20).'">'.str_replace('~', '&#126', $sql_return[0]['head']).'</textarea>'
+								.'</div>'
+								.'<div class="clear"></div>'
+							.'</div>'
+						.'</div>'
+						.'<div class="edit edit-content">'
+							.'<label for="page-content">'.$rb->get('page.field.contentlabel').':</label>'
+							.'<div class="editor-cover">'
+								.'<div class="tiny-cover">'
+									.'<textarea name="edit-content" class="" id="page-content" wrap="off" rows="'.($editAreaContentRows > 0 ? $editAreaContentRows : 20).'">'.str_replace('~', '&#126', $sql_return[0]['content']).'</textarea>'
+								.'</div>'
+								.'<div class="clear"></div>'
+							.'</div>'
+						.'</div>'
+					.'</div>'
+					.'<script type="text/javascript">'
+						.'initTiny("page-content");'
+						.'tinyMCE.execCommand("mceAddControl", true, "page-content");'
+					.'</script>';
 				} else {  
 					$returnTmp .= ''
 					.'<div class="edit edit-tag-lib">'
