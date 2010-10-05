@@ -28,3 +28,7 @@ body {
 .cms .data-table th {
 	background: #cccccc;
 }
+
+tr:hover td {
+	background: yellow !important;
+}

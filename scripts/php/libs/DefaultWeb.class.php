@@ -22,7 +22,7 @@
    *  @objectname webObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2010-08-08
+   *  @timestamp  2010-10-02
    *
    */           
   class DefaultWeb extends BaseTagLib {
@@ -1866,6 +1866,19 @@
     		$return = parent::getFrame($title, $content, '', $open == 'true' ? true : false);
 			
 			return $return;
+		}
+		
+		/**
+		 *
+		 *	C tag.
+		 *  Show value if this->LanguageName == lang
+		 *
+		 */
+		public function showStaticText($value, $lang) {
+			if($this->LanguageName == $lang) {
+				return $value;
+			}
+			return "";
 		}
 		
 		/**
