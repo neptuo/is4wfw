@@ -4,7 +4,7 @@
   <name>Sport Lib</name>
   <classname>Sport</classname>
   <classpath>php.libs</classpath>
-  <version>2.07</version>
+  <version>2.09</version>
   <count>*</count>
   <comment>
     Třída pro "sport".
@@ -518,6 +518,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>teamId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>onlyPlayed</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -585,6 +589,10 @@
     </attribute>
     <attribute>
       <attname>limit</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>offset</attname>
       <attreq>implied</attreq>
     </attribute>
     <attribute>

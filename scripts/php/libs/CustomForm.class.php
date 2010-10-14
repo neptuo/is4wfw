@@ -97,14 +97,17 @@
     		$data = parent::db()->fetchAll($sql);
     		if(count($data) > 0) {
     			$this->ViewPhase = 2;
+				$i = 1;
     			foreach($data as $row) {
+					parent::request()->set('i', $i, 'custom-form');
     				$this->ViewDataRow = $row;
     				self::setRowId($row['id']);
     				
     				$Parser = new CustomTagParser();
-						$Parser->setContent($templateContent);
-						$Parser->startParsing();
-						$return .= $Parser->getResult();
+					$Parser->setContent($templateContent);
+					$Parser->startParsing();
+					$return .= $Parser->getResult();
+					$i ++;
     			}
     		} else {
     			$return .= $noDataMessage;
@@ -637,7 +640,7 @@
     	$this->ResourcesToAdd[] = array($type, $name);
     }
 		
-		/* ===================== BUTTON ========================================= */
+	/* ===================== BUTTON ========================================= */
     
     public function button($type = false, $value = false, $elementId = false) {
     	$return = "";
@@ -672,6 +675,16 @@
     	return $return;
     }
     
+	/* ===================== SPECIAL FIELD ================================== */
+	
+	public function specialfield($type) {
+		if($this->ViewPhase == 2) {
+			switch($type) {
+				case 'idleeven': return ((parent::request()->get('i', 'custom-form') % 2) == 0 ? 'even' : 'idle');
+			}
+		}
+	}
+	
     /* ===================== HELPERS ======================================== */
     
     private function isFormIdFree($name) {

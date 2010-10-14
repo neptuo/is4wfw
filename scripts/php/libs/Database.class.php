@@ -44,6 +44,8 @@
      *
      */		 		     
     private $queriesPerRequest = 0;
+	
+	private $cacheResults = 'REQUEST';
     
     /**
      *
@@ -54,16 +56,20 @@
      *
      */                   
     public function __construct($defaultLogin = true) {
-      self::setTagLibXml("xml/Database.xml");
+		self::setTagLibXml("xml/Database.xml");
     
-      if($defaultLogin) {
-        $this->conn = mysql_connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD);
-			  mysql_query("use ".WEB_DB_DATABASE);
-			  $this->IsOpen = true;
-			  mysql_query("SET CHARACTER utf-8;");
-      }
+		if($defaultLogin) {
+			$this->conn = mysql_connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD);
+			mysql_query("use ".WEB_DB_DATABASE);
+			$this->IsOpen = true;
+			mysql_query("SET CHARACTER utf-8;");
+		}
     }
     
+	public function setCacheResults($val) {
+		$this->cacheResults = $val;
+	}
+	
     /**
      *
      *  Connects to database.
@@ -76,8 +82,8 @@
      *
      */
     public function connect($hostname, $user, $password, $dbname) {
-      $this->conn = mysql_connect($hostname, $user, $password);
-      mysql_query("use ".$dbname);
+		$this->conn = mysql_connect($hostname, $user, $password);
+		mysql_query("use ".$dbname);
     }
     
     /**
@@ -88,11 +94,11 @@
      *
      */                   
     public function close() {
-      if($this->IsOpen) {
-        mysql_close($this->conn);
-      } else {
-        trigger_error("Connection already closed!", E_USER_WARNING);
-      }
+		if($this->IsOpen) {
+			mysql_close($this->conn);
+		} else {
+			trigger_error("Connection already closed!", E_USER_WARNING);
+		}
     }
     
     /**
@@ -105,20 +111,20 @@
      *
      */		 		 		     
     public function useConnection($name) {
-			if($name == 'default') {
+		if($name == 'default') {
+			self::close();
+			self::connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE);
+		} elseif(strlen($name) != 0) {
+			$conn = self::fetchAll('select `hostname`, `user`, `password`, `database`, `fs_root` from `db_connection` where `name` = "'.$name.'"');
+			if(count($conn) > 0) {
+				$conn = $conn[0];
 				self::close();
-				self::connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE);
-			} elseif(strlen($name) != 0) {
-				$conn = self::fetchAll('select `hostname`, `user`, `password`, `database`, `fs_root` from `db_connection` where `name` = "'.$name.'"');
-				if(count($conn) > 0) {
-					$conn = $conn[0];
-					self::close();
-					self::connect($conn['hostname'], $conn['user'], $conn['password'], $conn['database']);
-				} else {
-					// bad conn name!
-				}
+				self::connect($conn['hostname'], $conn['user'], $conn['password'], $conn['database']);
+			} else {
+				// bad conn name!
 			}
 		}
+	}
     
     /**
      *
@@ -179,55 +185,66 @@
     public function fetchAll($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
     	global $logObject;
     	global $webObject;
-    	$this->queriesPerRequest ++;
-			if($this->IsOpen) {
-			  if($showQuery || $this->mockMode) {
-			  	if($forceImmediateOutput || $this->mockMode) {
-				  	echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
+		if($this->IsOpen) {
+			if($showQuery || $this->mockMode) {
+				if($forceImmediateOutput || $this->mockMode) {
+					echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
 			  	} else {
-	          $webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
-          }
-			  }
+					$webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
+				}
+			}
 			  
-			  if(!$notExecuteQuery) {
-  				$result = mysql_query($query);
-  				$return = array();
+			$hashQuery = '';
+			if(!$notExecuteQuery) {
+				$return = array();
+				$result = array();
+				$hashQuery = sha1($query);
+				if($this->cacheResults == 'REQUEST' && parent::request()->exists($hashQuery, 'database-cache')) {
+					$return = parent::request()->get($hashQuery, 'database-cache');
+					return $return;
+				} else {
+					$this->queriesPerRequest ++;
+					$result = mysql_query($query);
+				}
   				
   				$errno = mysql_errno();
   				if($errno != 0) {
   					if(is_object($logObject)) {
-							$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
-						} else {
-							echo 'Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'';
-						}
+						$logObject->write('Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'');
+					} else {
+						echo 'Mysql query error! ERRNO = '.$errno.', ERRORMSG = '.mysql_error().', QUERY = '.$query.'';
 					}
+				}
   				
   				while($row = mysql_fetch_assoc($result)) {
   					$return[] = $row;
   				}
+			}
+				
+			if($printOutput || $this->mockMode) {
+				if($forceImmediateOutput || $this->mockMode) {
+					echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px; overflow: auto;\"><strong style=\"color: red;\">SQL output:</strong><pre>";
+					$str = print_r($return, true);
+					echo htmlentities($str);
+					echo "</pre></div>";
+				} else {
+					$webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px; overflow: auto;\"><strong style=\"color: red;\">SQL output:</strong><pre>";
+					$str = print_r($return, true);
+					$webObject->PageLog .= htmlentities($str);
+					$webObject->PageLog .= "</pre></div>";
 				}
-				
-				if($printOutput || $this->mockMode) {
-					if($forceImmediateOutput || $this->mockMode) {
-						echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px; overflow: auto;\"><strong style=\"color: red;\">SQL output:</strong><pre>";
-    	      $str = print_r($return, true);
-  	        echo htmlentities($str);
-	          echo "</pre></div>";
-					} else {
-      	    $webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px; overflow: auto;\"><strong style=\"color: red;\">SQL output:</strong><pre>";
-    	      $str = print_r($return, true);
-  	        $webObject->PageLog .= htmlentities($str);
-	          $webObject->PageLog .= "</pre></div>";
-          }
-        }
-				
-				return $return;
-			} else {
-        trigger_error("Connection is closed, cannot fetch data!", E_USER_WARNING);
-      }
+			}
+			
+			if($this->cacheResults == 'REQUEST') {
+				parent::request()->set($hashQuery, $return, 'database-cache');
+			}
+			return $return;
+		} else {
+			trigger_error("Connection is closed, cannot fetch data!", E_USER_WARNING);
 		}
+	}
 		
-		/**
+	/**
      *
      *  Returns single row fetched by database.
      *  

@@ -29,6 +29,6 @@ body {
 	background: #cccccc;
 }
 
-tr:hover td {
+.standart tr.idle:hover td, .standart tr.even:hover td {
 	background: yellow !important;
 }

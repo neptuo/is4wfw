@@ -12,6 +12,7 @@
    define("FS_ROOT", WEB_ROOT."files/");
 
    define("FILE_PAGE_PATH", "/file/");
+   define("TEMPLATES_CACHE_DIR", "cache/templates/");
 
    define("WEB_R_READ", 101);
    define("WEB_R_WRITE", 102);

@@ -35,7 +35,7 @@ class View extends BaseTagLib {
 	private $CurrentTemplatePointer;
 
 	public function __construct() {
-
+		global $webObject;
 		parent :: setTagLibXml("xml/View.xml");
 
 		if ($webObject->LanguageName != '') {

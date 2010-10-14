@@ -1,6 +1,6 @@
 <v:template src="~/templates/in-template.view">
-	<php:register tagPrefix="pg" classPath="php.libs.Page" />
+	<php:using prefix="pg" class="php.libs.Page">
 		<pg:editTemplate />
 		<pg:showTemplates />
-	<php:unregister tagPrefix="pg" />
+	</php:using>
 </v:template>

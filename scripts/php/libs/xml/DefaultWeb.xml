@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.69</version>
+  <version>1.70</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.

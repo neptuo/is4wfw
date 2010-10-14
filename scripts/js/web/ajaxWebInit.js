@@ -57,7 +57,7 @@ function initLocation(event) {
           document.body.appendChild(ajaxLoading);
         }
       }
-      ajaxLoading.innerHTML = "Loading ...";
+      ajaxLoading.innerHTML = "{ajax-message}";
       ajaxLoading.style.display = '';
       ajaxIsLoadingNow = true;
       var xmlhttp = new Rxmlhttp();
@@ -117,7 +117,7 @@ function menuLinkClick(event) {
       }
       var href = anchor.href.substring(anchor.href.indexOf('/', 7), anchor.href.length);
       window.location.href = window.location.href.substring(0, window.location.href.indexOf('#')) + "#" + href;
-      ajaxLoading.innerHTML = "Loading ...";
+      ajaxLoading.innerHTML = "{ajax-message}";
       ajaxLoading.style.display = '';
       ajaxIsLoadingNow = true;
       var xmlhttp = new Rxmlhttp();

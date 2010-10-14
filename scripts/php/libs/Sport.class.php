@@ -17,7 +17,7 @@
    * 	all about sport	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-10-04
+   *  @timestamp  2010-10-09
    * 
    */  
   class Sport extends BaseTagLib {
@@ -299,7 +299,7 @@
 						.'<th>'.$rb->get('projects.id').':</th>'
 						.'<th>'.$rb->get('projects.name').':</th>'
 						.'<th>'.$rb->get('projects.url').':</th>'
-						.'<th>'.$rb->get('projects.actions').':</th>'
+						.'<th></th>'
 					.'</tr>';
 				for($i = 0; $i < count($projects); $i ++) {
 					$can = UniversalPermission::checkUserPermissions($this->UPDisc, $projects[$i]['id'], WEB_R_DELETE);
@@ -470,7 +470,7 @@
 				$seasons = $dbObject->fetchAll(parent::query()->get('selectSeasonsByProjectId', array('projectId' => self::getProjectId()), 'sport'));
 				if(count($seasons) > 0) {
 					$return .= ''
-					.'<table class="seasons-list">'
+					.'<table class="seasons-list standart">'
 						.'<tr>'
 							.'<th class="seasons-list-id">'.$rb->get('seasons.id').':</th>'
 							.'<th class="seasons-list-start">'.$rb->get('seasons.startyear').':</th>'
@@ -680,7 +680,7 @@
 				if(count($teams) > 0) {
 					$return .= ''
 					//.parent::getWarning('Do formuláře pro editaci týmu přidat checkboxy pro výběr v jakých tabulkách bude zařazen!')
-					.'<table class="teams-list">'
+					.'<table class="teams-list standart">'
 						.'<tr>'
 							.'<th class="teams-list-id">'.$rb->get('teams.id').':</th>'
 							.'<th class="teams-list-name">'.$rb->get('teams.name').':</th>'
@@ -974,7 +974,7 @@
 			}
 			if(count($players) > 0) {
 				$return .= ''
-				.'<table class="players-list">'
+				.'<table class="players-list standart">'
 					.'<tr>'
 						.'<th class="players-list-id">'.$rb->get('players.id').'</th>'
 						.'<th class="players-list-name">'.$rb->get('players.name').'</th>'
@@ -1271,7 +1271,7 @@
 					.'</select>'
 				.'</div>'
 				.'<div class="player-search-submit gray-box">'
-					.'<input type="submit" name="player-search-submit" id="player-search-submit" value="'.$rb->get('player.search.submit').'" />'
+					.'<input type="submit" name="player-search-submit" id="player-search-submit" value="'.$rb->get('player.search.submit').'" /> '
 					.'<input type="submit" name="player-search-clear" id="player-search-clear" value="'.$rb->get('player.search.clear').'" />'
 				.'</div>'
 			.'</form>';
@@ -1518,7 +1518,7 @@
 				
 				if(count($matches) > 0) {
 					$return .= ''
-					.'<table class="matches-table">'
+					.'<table class="matches-table standart">'
 						.'<tr>'
 							.'<th class="matches-table-id">'.$rb->get('matches.id').':</th>'
 							.'<th class="matches-table-round">'.$rb->get('matches.round').':</th>'
@@ -2276,10 +2276,11 @@
 							.'<input class="confirm" type="image" src="~/images/page_del.png" name="round-delete" value="'.$rb->get('rounds.delete').'" title="'.$rb->get('rounds.deletecap').', id='.$d['id'].'" /> '
 						.'</form>';
 						$data[$key]['form'] = $form;
+						$data[$key]['visible'] = ($data[$key]['visible'] == 1 ? $rb->get('rounds.yes') : $rb->get('rounds.no'));
 					}
 					
 					$grid = new BaseGrid();
-					$grid->setHeader(array('id' => $rb->get('rounds.id'), 'number' => $rb->get('rounds.number'), 'name' => $rb->get('rounds.name'), 'form' => ''));
+					$grid->setHeader(array('id' => $rb->get('rounds.id'), 'number' => $rb->get('rounds.number'), 'name' => $rb->get('rounds.name'), 'visible' => $rb->get('rounds.visible'), 'form' => ''));
 					$grid->addRows($data);
 					$return .= $grid->render();
 				} else {
@@ -2310,8 +2311,8 @@
 		 *	Edit round.
 		 *	C tag.
 		 *	
-     *	@param		useFrames				use frames in output
-     *	@param		showMsg					show messages in output
+		 *	@param		useFrames				use frames in output
+		 *	@param		showMsg					show messages in output
 		 *
 		 */		 		 		 		 		
 		public function showEditRoundForm($useFrames = false, $showMsg = false) {
@@ -2332,6 +2333,7 @@
 					$round['id'] = $form->getValue('round-id');
 					$round['number'] = trim($form->getValue('number'));
 					$round['name'] = trim($form->getValue('name'));
+					$round['visible'] = (trim($form->getValue('visible')) == 'on' ? 1 : 0);
 					$round['season_id'] = self::getSeasonId();
 					$round['project_id'] = self::getProjectId();
 					
@@ -2361,13 +2363,17 @@
 			}
 			
 			if($_POST['round-edit'] == $rb->get('rounds.edit') || $_POST['round-new'] == $rb->get('rounds.new') || $ok == false) {
+				$round == array();
 				if($_POST['round-edit'] == $rb->get('rounds.edit')) {
 					$roundId = $_POST['round-id'];
 					$round = parent::db()->fetchSingle(parent::query()->get('roundById', array('id' => $roundId), 'sport'));
+				} else {
+					$round['visible'] = true;
 				}
 				
 				$form->addField('text', 'number', $rb->get('rounds.number'), $round['number'], 'w160', 'w80');
 				$form->addField('text', 'name', $rb->get('rounds.name'), $round['name'], 'w160', 'w200');
+				$form->addField('singlecheckbox', 'visible', $rb->get('rounds.visible'), ($round['visible'] == 1 ? true : false), 'w160');
 				$form->addField('hidden', 'round-id', '', $round['id']);
 				
 				$return .= $form->render();
@@ -2487,7 +2493,7 @@
 		 *	
 		 *	@param		seasonId				season to show		 
 		 *	@param		useFrames				use frames in output
-     *	@param		showMsg					show messages in output
+		 *	@param		showMsg					show messages in output
 		 *
 		 */		 		 		 		 		 		
 		public function showTable($seasonId = false, $tableId = false, $useFrames = false, $showMsg = false) {
@@ -2599,9 +2605,9 @@
 					self::setTeamId($team['id']);
 
 					$parser = new CustomTagParser();
-				  $parser->setContent($content);
-				  $parser->startParsing();
-  				$return .= $parser->getResult();
+					$parser->setContent($content);
+					$parser->startParsing();
+					$return .= $parser->getResult();
 					$i ++;
 				}
 				self::setSeasonId($seasonId);
@@ -2769,7 +2775,7 @@
 		 *	Shows match.
 		 *	C tag.
 		 *	
-		 *	@param		field						field name to show
+		 *	@param		field					field name to show
 		 *	@param		matchId					match id
 		 *
 		 */		 		 		 		 		
@@ -2837,12 +2843,14 @@
 		 *	@param		seasonId				season id
 		 *
 		 */		 		 		 		 		
-		public function showRounds($templateId, $sorting, $noDataMessage, $seasonId = false, $onlyPlayed = true) {
+		public function showRounds($templateId, $sorting, $noDataMessage, $seasonId = false, $teamId = false, $onlyPlayed = true) {
 			global $dbObject;
 			global $loginObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
+			$teamSql = '';
+			$joinSql = '';
 			
 			if($seasonId == '') {
 				$seasonId = self::getSeasonId();
@@ -2851,6 +2859,10 @@
 				$onlyPlayed = false;
 			} else {
 				$onlyPlayed = true;
+			}
+			if($teamId != '') {
+				$teamSql = ' and (`w_sport_match`.`h_team` = '.$teamId.' or `w_sport_match`.`a_team` = '.$teamId.')';
+				$joinSql = ' left join `w_sport_match` on `w_sport_match`.`round` = `w_sport_round`.`id`';
 			}
 			
 			if(strtolower($sorting) == 'asc') {
@@ -2862,9 +2874,9 @@
 			if($seasonId != '-1') {
 				if($onlyPlayed) {
 					// join pres zapasy pro zobrazeni jen kol s odehranymi zapasy ...
-					$rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `w_sport_round`.`name`, `w_sport_round`.`number` from `w_sport_match` left join `w_sport_round` on `w_sport_match`.`round` = `w_sport_round`.`id` where `w_sport_round`.`project_id` = '.self::getProjectId().' and `w_sport_round`.`season_id` = '.$seasonId.' and `w_sport_match`.`notplayed` = 0 order by `w_sport_round`.`number` '.$sorting.';');
+					$rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `w_sport_round`.`name`, `w_sport_round`.`number` from `w_sport_match` left join `w_sport_round` on `w_sport_match`.`round` = `w_sport_round`.`id` where `w_sport_round`.`project_id` = '.self::getProjectId().' and `w_sport_round`.`season_id` = '.$seasonId.$teamSql.' and `w_sport_match`.`notplayed` = 0 and `w_sport_round`.`visible` = 1 order by `w_sport_round`.`number` '.$sorting.';');
 				} else {
-					$rounds = parent::db()->fetchAll(parent::query()->get('roundsByProjectIdSeasonIdSorting', array('projectId' => self::getProjectId(), 'seasonId' => $seasonId, 'sorting' => $sorting), 'sport'));
+					$rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `name`, `number` from `w_sport_round`'.$joinSql.' where `w_sport_round`.`project_id` = '.self::getProjectId().' and `season_id` = '.$seasonId.$teamSql.' and `visible` = 1 order by `number` '.$sorting.';');
 				}
 				if(count($rounds) > 0) {
 					$templateContent = parent::getTemplateContent($templateId);
@@ -2952,12 +2964,16 @@
 		 *	@param		limit
 		 *
 		 */		 		 		 		 		
-		public function showPlayers($templateId, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $noDataMessage = false) {
+		public function showPlayers($templateId, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $offset = false, $noDataMessage = false) {
 			global $dbObject;
 			global $loginObject;
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
+			
+			if($offset == '') {
+				$offset = 0;
+			}
 			
 			$templateContent = parent::getTemplateContent($templateId);
 			
@@ -2973,12 +2989,12 @@
 			//print_r($this->UsedFields);
 			
 			//parent::db()->setMockMode(true);
-			$players = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, $limit, $playerId);
+			$players = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, $limit, $playerId, $offset);
 			//echo $_SESSION['sport']['match-id'];
 			//unset($_SESSION['sport']['match-id']);
 				
 			if(count($players) > 0) {
-				$i = 1;
+				$i = $offset + 1;
 				$this->ViewPhase = 2;
 				$_SESSION['sport']['players']['round'] = $_SESSION['sport']['round'];
 				$_SESSION['sport']['players']['team-id'] = $_SESSION['sport']['team-id'];
@@ -3052,6 +3068,12 @@
 				$player = parent::request()->get('player', 'sport-data');
 			} else {
 				$player = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, 1, $playerId);
+			}
+			
+			foreach($player as $key => $val) {
+				if($val == '') {
+					$player[$key] = $errMsg;
+				}
 			}
 			
 			if($player != array()) {
@@ -3428,7 +3450,7 @@
 		
 		// ------------------------------------------------------------------------------------------------------------------- \\
 		
-		public function getPlayersFrom($type, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $playerId = false) {
+		public function getPlayersFrom($type, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $playerId = false, $offset = false) {
 			global $dbObject;
 			
 			//return parent::db()->fetchAll('select * from `w_sport_stats_list`');
@@ -3648,7 +3670,11 @@
 					}
 				}
 				if($limit != false) {
-					$limitsql = 'LIMIT '.$limit;
+					$limitsql = 'LIMIT ';
+					if($offset != false) {
+						$limitsql .= $offset.', ';
+					}
+					$limitsql .= $limit;
 				}
 				
 				if($type == 'most') {

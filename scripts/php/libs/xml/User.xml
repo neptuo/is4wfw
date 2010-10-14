@@ -4,7 +4,7 @@
   <name>User management lib</name>
   <classname>User</classname>
   <classpath>php.libs</classpath>
-  <version>1.03</version>
+  <version>1.05</version>
   <count>*</count>
   <comment>
     Třída pro správu uživatelských účtů.
@@ -62,6 +62,25 @@
     </attribute>
     <comment>
       Smaže log uživatelů.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>register</tagname>
+    <function>registerUser</function>
+    <attribute>
+      <attname>groups</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>disableUser</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      "Registrační formulář", groups je čárkou oddělený seznam rolí.
     </comment>
   </tag>
   <property>

@@ -24,128 +24,169 @@
 		protected $Attributes = array();
 		
 		/**
-     *
-     *  Regular expression for parsing custom tag.     
-     *
-     */              
-    protected $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="[^"]*" )*)\/>)';
+		 *
+		 *  Regular expression for parsing custom tag.     
+		 *
+		 */              
+		protected $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)( )+((([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="[^"]*"( )*)*)\/>)';
     
-    /**
-     *
-     *  Regular expression for parsing attribute.
-     *
-     */                   
-    protected $ATT_RE =  '(([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="([^"]*)")';
+		/**
+		 *
+		 *  Regular expression for parsing attribute.
+		 *
+		 */                   
+		protected $ATT_RE =  '(([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="([^"]*)")';
     
-    protected $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
+		protected $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
     
-    protected $PropertyAttr = '';
+		protected $PropertyAttr = '';
     
 		protected $PropertyUse = '';
+		
+		/**
+		 *
+		 *	Array of object names that must be set as global
+		 *
+		 */
+		protected $GlobalObjects = array();
+		
+		protected $UseCaching = true;
     
-    /**
-     *
-     *  Parse all attributes to array.
-     *  
-     *  @param  att string with attributes
-     *  @return array of attributes
-     *
-     */                   
-    protected function parseatt($att) {
-      $this->Attributes[] = $att[0];
-    }
+		/**
+		 *
+		 *  Parse all attributes to array.
+		 *  
+		 *  @param  att string with attributes
+		 *  @return array of attributes
+		 *
+		 */                   
+		protected function parseatt($att) {
+			$this->Attributes[] = $att[0];
+		}
+		
+		/**
+		 *
+		 *	Use caching
+		 *
+		 */
+		protected function setUseCaching($val) {
+			if($val == false) {
+				$this->UseCaching = false;
+			} else {
+				$this->UseCaching = true;
+			}
+		}
+		
+		protected function addSingletonGlobalObject($obj) {
+			if(!in_array($obj, $this->GlobalObjects)) {
+				$this->GlobalObjects[] = $obj;
+			}
+		}
     
-    /**
-     *
-     *  Function parses custom tag, call right function & return content.
-     *  
-     *  @param  ctag  custom tag as string
-     *  @return return of custom tag function     
-     *
-     */
-    protected function parsectag($ctag) {//print_r($ctag);
-      $object = explode(":", $ctag[1]);
-      $attributes = array();
-      $this->Attributes = array();
+		/**
+		 *
+		 *  Function parses custom tag, call right function & return content.
+		 *  
+		 *  @param  ctag  custom tag as string
+		 *  @return return of custom tag function     
+		 *
+		 */
+		protected function parsectag($ctag) {
+			$object = explode(":", $ctag[1]);
+			$attributes = array();
+			$this->Attributes = array();
       
-      preg_replace_callback($this->ATT_RE, array( &$this,'parseatt'), $ctag[2]);
-      
-      foreach($this->Attributes as $tmp) {
-        $att = explode("=", $tmp);
-        if(strlen($att[0]) > 0) {
+			preg_replace_callback($this->ATT_RE, array( &$this,'parseatt'), $ctag[3]);
+		
+			foreach($this->Attributes as $tmp) {
+				$att = explode("=", $tmp);
+				if(strlen($att[0]) > 0) {
 					$this->PropertyAttr = '';
 					$this->PropertyUse = 'get';
-        	$att[1] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $att[1]);
-          $attributes[$att[0]] = str_replace("\"", "", $att[1]);
-        }
-      }
+					$att[1] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $att[1]);
+					$attributes[$att[0]] = str_replace("\"", "", $att[1]);
+				}
+			}
       
-      foreach($attributes as $key=>$att) {
-      	if($key == 'security:requireGroup') {
-      		global $loginObject;
-	    	  $ok = false;
-  		    foreach($loginObject->getGroups() as $group) {
-  		    	if($group['name'] == $att) {
-  		    		$ok = true;
-  		    		break;
-  		  		}
-  		  	}
-  		  	if(!$ok) {
-  		  		return '';
-  		  	}
-	  	  }
-      }
+			foreach($attributes as $key=>$att) {
+				if($key == 'security:requireGroup') {
+					global $loginObject;
+					$ok = false;
+					foreach($loginObject->getGroups() as $group) {
+						if($group['name'] == $att) {
+							$ok = true;
+							break;
+						}
+					}
+					if(!$ok) {
+						return '';
+					}
+				}
+			}
       
-      global $phpObject;
-      if($phpObject->isRegistered($object[0]) && $phpObject->isTag($object[0], $object[1], $attributes)) {
-        $attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
+			global $phpObject;
+			if($phpObject->isRegistered($object[0]) && $phpObject->isTag($object[0], $object[1], $attributes)) {
+				$attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
         
-        global ${$object[0]."Object"};
-        $func = $phpObject->getFuncToTag($object[0], $object[1]);
-        if($func && ($attributes !== false)) {
-          $attstring = "";
-          $i = 0;
-          foreach($attributes as $att) {
-            $attstring .= "'" . $att . "'";
-            if($i < (count($attributes) - 1)) {
-              $attstring .= ", ";
-            }
-            $i ++;
-          }
-          //echo '$return =  $'.$object[0].'Object->'.$func.'('.$attstring.');';
-          eval('$return =  ${$object[0]."Object"}->{$func}('.$attstring.');');
-          return $return;
-        }  
-      } else {
-        echo '<h4 class="error">This tag isn\'t registered! ['.$object[0].']</h4>';
-        return "";
-      }
-    }
+				global ${$object[0]."Object"};
+				$func = $phpObject->getFuncToTag($object[0], $object[1]);
+				if($func && ($attributes !== false)) {
+					$attstring = "";
+					$i = 0;
+					foreach($attributes as $att) {
+						$attstring .= "'" . $att . "'";
+						if($i < (count($attributes) - 1)) {
+							$attstring .= ", ";
+						}
+						$i ++;
+					}
+					//echo '$return =  $'.$object[0].'Object->'.$func.'('.$attstring.');';
+					if($this->UseCaching) {
+						self::addSingletonGlobalObject('$'.$object[0].'Object');
+						//$return = '\'.$'.$object[0].'Object->'.$func.'('.$attstring.').\'';
+						$return = '<?php echo $'.$object[0].'Object->'.$func.'('.$attstring.') ?>';
+					} else {
+						eval('$return =  ${$object[0]."Object"}->{$func}('.$attstring.');');
+					}
+					return $return;
+				}  
+			} else {
+				echo '<h4 class="error">This tag isn\'t registered! ['.$object[0].']</h4>';
+				return "";
+			}
+		}
     
-    /**
-     *
-     *  Function parses custom property, call right function & return content.
-     *  
-     *  @param  cprop  custom property as string
-     *  @return return of custom property function     
-     *
-     */
-    protected function parsecproperty($cprop) {
-      $object = explode(":", $cprop[1]);
-      $attributes = array();
-      $this->Attributes = array();
+		/**
+		 *
+		 *  Function parses custom property, call right function & return content.
+		 *  
+		 *  @param  cprop  custom property as string
+		 *  @return return of custom property function     
+		 *
+		 */
+		protected function parsecproperty($cprop) {
+			$object = explode(":", $cprop[1]);
+			$attributes = array();
+			$this->Attributes = array();
       
-      global $phpObject;
-      if($phpObject->isRegistered($object[0]) && $phpObject->isProperty($object[0], $object[1])) {
-        global ${$object[0]."Object"};
-        $func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
-        eval('$return =  ${$object[0]."Object"}->{$func}("'.$this->PropertyAttr.'");');
-        return $return;
-      } else {
-        //echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
-        return $cprop[0];
-      }
-    }
+			global $phpObject;
+			if($phpObject->isRegistered($object[0]) && $phpObject->isProperty($object[0], $object[1])) {
+				global ${$object[0]."Object"};
+				$func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
+				//eval('$return =  ${$object[0]."Object"}->{$func}("'.$this->PropertyAttr.'");');
+		
+				if($this->UseCaching) {
+					self::addSingletonGlobalObject('$'.$object[0].'Object');
+					$return = '\'.$'.$object[0].'Object->'.$func.'("'.$this->PropertyAttr.'").\'';
+				} else {
+					eval('$return =  ${$object[0]."Object"}->{$func}("'.$this->PropertyAttr.'");');
+				}
+				return $return;
+			} else {
+				//echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
+				return $cprop[0];
+			}
+		}
 		
 		/**
 		 *
@@ -164,7 +205,31 @@
 		 *
 		 */		 		 		 		
 		public function startParsing() {
-			$this->Result = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $this->Content);
+			$return = '';
+			if($this->UseCaching) {
+				$hashName = sha1($this->Content);
+				$fileName = TEMPLATES_CACHE_DIR.$hashName.'.cache.php';
+				if(!file_exists($fileName)) {
+					$this->Result = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $this->Content);
+					$objcts = '';
+					foreach($this->GlobalObjects as $obj) {
+						$objcts .= 'global '.$obj.'; ';
+					}
+					file_put_contents($fileName, '<?php '.$objcts.' ?>'.$this->Result);
+					$this->Result = '';
+				}
+				
+				ob_start(array( &$this,'OnOutput'));
+				include $fileName;
+				ob_end_clean();
+				
+			} else {
+				$this->Result = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $this->Content);
+			}
+		}
+		
+		public function OnOutput($data) {
+			$this->Result .= $data;
 		}
 		
 		/**

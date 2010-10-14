@@ -62,6 +62,8 @@ function init(event) {
 	//initUserLogin(event);
 	//initKeystrokes(event);
 	
+	initClickableGrid();
+	
 	var inputs = document.getElementById('cms-head').getElementsByTagName('input');
 	for(var i = 0; i < inputs.length; i ++) {
 		if(inputs[i].name == 'logout') {
@@ -79,11 +81,7 @@ function init(event) {
 var Editors = new Array();
 
 function initEditors(event) {
-	//if(AjaxInitTopElement != null) {
-	//	var doc = AjaxInitTopElement;
-	//} else {
   	var doc = document;
-  //}
   var tas = doc.getElementsByTagName('textarea');
 
   var string = '';
@@ -157,7 +155,8 @@ function initEditAreas(event) {
 			var button = document.createElement('input');
 			button.type = 'button';
 			button.name = tas[i].id;
-			button.value = tas[i].id.replace(/-/g, ' ');
+			button.value = $(cover).find('label[for='+tas[i].id+']').get(0).innerHTML.trim().replace(':', '');
+			//button.value = tas[i].id.replace(/-/g, ' ');
 			addEvent(button, 'click', editorsTabClick, false);
 			if(tabs != null) {
 				tabs.appendChild(button);
@@ -610,8 +609,8 @@ function initClearCache(event) {
 	if(AjaxInitTopElement != null) {
 		var doc = AjaxInitTopElement;
 	} else {
-	  var doc = document;
-  }
+		var doc = document;
+	}
 	var cover = $(doc).find("#clear-url-cache").get(0);
 	if(cover != null) {
 		var submit = document.getElementById('clear-url-cache-submit');
@@ -963,6 +962,17 @@ function initDataTables() {
 			});
 		}
 		//alert(i + ", " + tables[i]);
+	}
+}
+
+function initClickableGrid() {
+	var rows = $('.clickable').find('tr');
+	for(var i = 0, s = rows.size(); i < s; i++) {
+		$(rows[i]).click(function(e) {
+			var el = e.target ? e.target : e.srcElement;
+			$(el).parent('tr').find('input[type=image]')[0].click();
+			//$(this).find('input').click();
+		});
 	}
 }
 

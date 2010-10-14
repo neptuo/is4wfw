@@ -1,0 +1,1 @@
+ALTER TABLE  `article_line` ADD  `url` TINYTEXT NOT NULL;

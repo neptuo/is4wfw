@@ -1,0 +1,1 @@
+ALTER TABLE  `w_sport_round` ADD  `visible` INT NOT NULL DEFAULT  '1';
