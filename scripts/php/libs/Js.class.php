@@ -92,8 +92,12 @@
     	return $return;
     }
     
-    public function getAjaxWeb($webContentRootElId, $rootPageId) {
+    public function getAjaxWeb($webContentRootElId, $rootPageId, $ajaxMessage = false) {
     	$return = '';
+		
+		if(trim($ajaxMessage) == '') {
+			$ajaxMessage = 'Loading ...';
+		}
     	
     	$return .= '<script type="text/javascript" src="~/js/domready.js"></script>';
     	$return .= '<script type="text/javascript" src="~/js/rxmlhttp.js"></script>';
@@ -102,6 +106,7 @@
     	$content = file_get_contents("scripts/js/web/ajaxWebInit.js");
     	$content = str_replace("{web-content}", $webContentRootElId, $content);
     	$content = str_replace("{root-page}", $rootPageId, $content); 
+    	$content = str_replace("{ajax-message}", $ajaxMessage, $content); 
     	
     	$return .= '<script type="text/javascript">'.$content.'</script>';
     	

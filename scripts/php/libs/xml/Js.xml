@@ -52,6 +52,10 @@
       <attname>rootPageId</attname>
       <attreq>required</attreq>
     </attribute>
+    <attribute>
+      <attname>message</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vloří do stránky potřebný skripty pro ajax fukčnost, "webContentRootElId" je id hmtl element pro vkladání obsahu, 
 			vše mimo něj zůstane neměnné. "rootPageId" je id stránky od které se bude na serveru stránka vykreslovat.

@@ -16,7 +16,7 @@
    *  Class updating web pages.     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-10-02
+   *  @timestamp  2010-10-13
    * 
    */  
   class Page extends BaseTagLib {
@@ -28,6 +28,7 @@
 	private $MessageFromEdit = '';
   
     public function __construct() {
+		global $webObject;
 		parent::setTagLibXml("xml/Page.xml");
       
 		if($webObject->LanguageName != '') {
@@ -424,31 +425,35 @@
 					.'<form name="page-edit-detail" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 						.'<div class="edit edit-page-info">'
 							.'<div class="edit edit-prop">'
-								.'<div class="edit edit-name">'
-									.'<label for="edit-name">'.$rb->get('page.field.namelabel').':</label> '
-									.'<input type="text" name="edit-name" id="edit-name" value="'.$sql_return[0]['name'].'" />'
+								.'<div class="gray-box">'
+									.'<label for="edit-name" class="w90">'.$rb->get('page.field.namelabel').':</label> '
+									.'<input type="text" name="edit-name" id="edit-name" value="'.$sql_return[0]['name'].'" class="w450" />'
 								.'</div>'
-								.'<div class="edit edit-href">'
-									.'<label for="edit-href">'.$rb->get('page.field.urllabel').':</label> '
-									.'<input type="text" name="edit-href" id="edit-href" value="'.$sql_return[0]['href'].'" />'
+								.'<div class="gray-box">'
+									.'<label for="edit-href" class="w90">'.$rb->get('page.field.urllabel').':</label> '
+									.'<input type="text" name="edit-href" id="edit-href" value="'.$sql_return[0]['href'].'" class="w450" />'
 								.'</div>'
-								.'<div class="edit edit-in-title">'
+								.'<div class="gray-box">'
+									.'<label for="edit-keywords" class="w90">'.$rb->get('page.field.keywordslabel').':</label> '
+									.'<input id="edit-keywords" type="text" name="edit-keywords" value="'.$sql_return[0]['keywords'].'" class="w450" />'
+								.'</div>'
+								.'<div class="edit edit-in-title h50">'
 									.'<label for="edit-in-title">'.$rb->get('page.field.intitlelabel').':</label> '
 									.'<input type="checkbox" name="edit-in-title" id="edit-in-title"'.(($sql_return[0]['in_title'] == 1) ? 'checked="checked"' : '').' />'
 								.'</div>'
-								.'<div class="edit edit-menu">'
+								.'<div class="edit edit-menu h50">'
 									.'<label for="edit-menu">'.$rb->get('page.field.inmenulabel').':</label> '
 									.'<input type="checkbox" name="edit-menu" id="edit-menu"'.(($sql_return[0]['in_menu'] == 1) ? 'checked="checked"' : '').' />'
 								.'</div>'
-								.'<div class="edit edit-visible">'
+								.'<div class="edit edit-visible h50">'
 									.'<label for="edit-visible">'.$rb->get('page.field.isvisiblelabel').':</label> '
 									.'<input type="checkbox" name="edit-visible" id="edit-visible"'.(($sql_return[0]['is_visible'] == 1) ? 'checked="checked"' : '').' />'
 								.'</div>'
-								.'<div class="edit edit-clear-cache">'
+								.'<div class="edit edit-clear-cache h50">'
 									.'<label for="edit-clearurlcache">'.$rb->get('page.field.clearcachelabel').':</label> '
 									.'<input type="checkbox" name="edit-clearurlcache" id="edit-clearurlcache" />'
 								.'</div>'
-								.'<div class="edit edit-cache-time">'
+								.'<div class="edit edit-cache-time h50">'
 									.'<label for="edit-cachetime">'.$rb->get('page.field.cachetimelabel').':</label>'
 									.'<select id="edit-cachetime" name="edit-cachetime">'
 										.'<option value="-1"'.(($sql_return[0]['cachetime'] == -1) ? 'selected="selected"' : '').'>Don\'t use</option>'
@@ -523,11 +528,6 @@
 							.'</div>'
 							: '')
 							.'<div class="clear"></div>'
-                        .'</div>'
-                        .'<div class="clear"></div>'
-                        .'<div class="edit edit-keywords">'
-							.'<label for="edit-keywords">'.$rb->get('page.field.keywordslabel').':</label> '
-							.'<input id="edit-keywords" type="text" name="edit-keywords" value="'.$sql_return[0]['keywords'].'" />'
                         .'</div>'
                         .'<div class="clear"></div>'
                     .'</div>'
@@ -1597,7 +1597,7 @@
       $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` WHERE `wp` = ".$projectId." ORDER BY `id`;");
       if(count($files) != 0) {
 	      $returnTmp .= ''
-  	    .'<table class="page-file-list data-table">'
+  	    .'<table class="page-file-list data-table clickable standart">'
   	    	.'<thead>'
     	  	.'<tr class="file-tr">'
       			.'<th class="">Id</th>'
@@ -1814,7 +1814,7 @@
 				
 				if(count($urlCache) > 0) {
 					$urlCacheReturn .= ''
-					.'<table class="url-cache-table data-table">'
+					.'<table class="url-cache-table data-table standart">'
 						.'<thead>'
 						.'<tr>'
 							.'<th class="url-cache-id">Id:</th>'
@@ -2139,7 +2139,7 @@
 			
 			if(count($templates) > 0) {
 				$return .= ''
-				.'<table class="template-list data-table standart">'
+				.'<table class="template-list data-table standart clickable">'
 					.'<thead>'
 					.'<tr>'
 						.'<th class="template-id">Id:</th>'
@@ -2390,9 +2390,9 @@
 		  	if($propertyEditors == "edit_area") {
 		  		$return .= ''
 					.'<div id="editors" class="editors edit-area-editors">'
-						.'<div id="template-edit-detail-content">'
+						.'<div id="template-edit-detail-content-cover">'
 							.'<label for="template-edit-detail-content">Template content:</label>'
-							.'<textarea id="template-content" class="edit-area html" name="template-content" rows="'.($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30).'" wrap="off">'.str_replace('~', '&#126', $template['content']).'</textarea>'
+							.'<textarea id="template-edit-detail-content" class="edit-area html" name="template-content" rows="'.($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30).'" wrap="off">'.str_replace('~', '&#126', $template['content']).'</textarea>'
 						.'</div>'
 					.'</div>';
 				} else {
@@ -2419,7 +2419,7 @@
 			}
 		
 			if($useFrames != "false") {
-				return parent::getFrame('Temlate edit', $return, '');
+				return parent::getFrame('Temlate edit :: ('.($templateId == '' ? 'New' : $templateId).') '.$template['name'], $return, '');
 			} else {
 				return $return;
 			}

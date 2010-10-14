@@ -162,7 +162,7 @@
 				$return .= '<h4 class="error">No projects to show!</h4>';
 			} else {
 				$return .= ''
-				.'<table class="show-projects data-table">'
+				.'<table class="show-projects data-table standart clickable">'
 					.'<thead>'
 						.'<tr>'
 							.'<th class="th-id">Id:</th>'

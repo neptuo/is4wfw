@@ -244,7 +244,7 @@
 			$conns = $dbObject->fetchAll('SELECT `id`, `name`, `hostname`, `user`, `password`, `database` FROM `db_connection` ORDER BY `id`;');
 			if(count($conns)) {
 				$return .= ''
-				.'<div class="db-connection">'
+				.'<div class="db-connection standart clickable">'
 					.'<table>'
 						.'<tr>'
 							.'<th class="db-connection-id">Id:</th>'

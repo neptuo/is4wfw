@@ -89,7 +89,7 @@
 					$return .= '<div class="gray-box">';
 				}
 				if($field['label'] != '') {
-					$return .= '<label for="" class="'.$field['labelClassName'].'">'.$field['label'].'</label>'; 
+					$return .= '<label for="'.$field['id'].'" class="'.$field['labelClassName'].'">'.$field['label'].'</label>'; 
 				}
 				$return .= self::renderField($field);
 				if($field['type'] != 'hidden') {
@@ -168,6 +168,9 @@
 				case 'textarea' :
 					$return .= '<textarea name="'.$this->formAttrs['name'].'-'.$field['name'].'" id="'.$field['id'].'" class="'.$fiel['fieldClassName'].'">'.$field['value'].'</textarea>';
 				break; 
+				case 'singlecheckbox':
+					$return .= '<input type="checkbox" name="'.$this->formAttrs['name'].'-'.$field['name'].'"'.($field['value'] == true ? ' checked="checked"' : '').' id="'.$field['id'].'" class="'.$field['fieldClassName'].'" />';
+				break;
 				case 'dropdown' :
 					$return .= '<select name="'.$this->formAttrs['name'].'-'.$field['name'].'" id="'.$field['id'].'" class="'.$fiel['fieldClassName'].'">';
 					foreach($field['items'] as $item) {

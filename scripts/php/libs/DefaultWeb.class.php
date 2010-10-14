@@ -22,7 +22,7 @@
    *  @objectname webObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2010-10-02
+   *  @timestamp  2010-10-14
    *
    */           
   class DefaultWeb extends BaseTagLib {
@@ -162,8 +162,9 @@
      *  Regular expression for parsing c tag.     
      *
      */              
-		//private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.,\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*" )*)\/>)';
-    private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="[^"]*" )*)\/>)';
+	//private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.,\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*" )*)\/>)';
+    //private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="[^"]*" )*)\/>)';  ///2010-10-11
+	protected $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)( )+((([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="[^"]*"( )*)*)\/>)';
     
     private $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
     
@@ -190,6 +191,8 @@
     private $ChildPageId = 0;
     
     public $Diagnostics;
+	
+	private $ZipOutput = true;
     
     /**
      *
@@ -223,6 +226,18 @@
       //UniversalPermission::setPermissions('pes', 1, array(array('group' => 'admins', 'type' => WEB_R_READ), array('group' => 'web-admins', 'type' => WEB_R_WRITE)));
       //echo UniversalPermission::showPermissionsFormPart('pes', 1, array('admins'), WEB_R_READ);
     }
+	
+	public function isZipOutput() {
+		return $this->ZipOutput;
+	}
+	
+	public function setZipOutput($val) {
+		if($val == false) {
+			$this->ZipOutput = false;
+		} else {
+			$this->ZipOutput = true;
+		}
+	}
     
     /**
      *
@@ -843,32 +858,32 @@
 		
 		private function tryToComprimeContent($content) {
 			$acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
-    	if(headers_sent()) {
-        $encoding = false;
-    	} elseif(strpos($acceptEnc, 'x-gzip') !== false) {
-        $encoding = 'x-gzip';
-  	  } elseif(strpos($acceptEnc,'gzip') !== false) {
-        $encoding = 'gzip';
-	    } else {
-        $encoding = false;
-    	}
+			if(headers_sent()) {
+				$encoding = false;
+			} elseif(strpos($acceptEnc, 'x-gzip') !== false) {
+				$encoding = 'x-gzip';
+			} elseif(strpos($acceptEnc,'gzip') !== false) {
+				$encoding = 'gzip';
+			} else {
+				$encoding = false;
+			}
     	
-    	//file_put_contents('databasequeries.txt', parent::db()->getQueriesPerRequest());
+			//file_put_contents('databasequeries.txt', parent::db()->getQueriesPerRequest());
     	
-    	$return = $content;
+			$return = $content;
 
-  	  if($encoding) {
-        header('Content-Encoding: '.$encoding);
-        print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
-        $size = strlen($return);
-        $return = gzcompress($return, 9);
-        $return = substr($return, 0, $size);
-        print($return);
-        exit();
-	    } else {
-	    	echo $return;
-  	    exit();
-	    }
+			if($this->ZipOutput && $encoding) {
+				header('Content-Encoding: '.$encoding);
+				print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
+				$size = strlen($return);
+				$return = gzcompress($return, 9);
+				$return = substr($return, 0, $size);
+				print($return);
+				exit();
+			} else {
+				echo $return;
+				exit();
+			}
 		}
     
     /**
@@ -927,44 +942,44 @@
         			return $url;
         		} else {
         			$tmpPath = self::addSpecialParams($tmpPath);
-							return $tmpPath;
-						}
+					return $tmpPath;
+				}
         	} else {
-						if($this->Protocol == 'http' && $project[0]['http'] == 1) {
+				if($this->Protocol == 'http' && $project[0]['http'] == 1) {
   			    	$this->PropertyAttr = $project[0]['url'];
-							$this->PropertyUse = 'get';
+					$this->PropertyUse = 'get';
 	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
 	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
 	  		    	$url = 'http://'.$project[0]['url'].$tmpPath;
         			$url = self::addSpecialParams($url);
-							return $url;
-						} elseif($this->Protocol == 'https' && $project[0]['https'] == 1) {
+					return $url;
+				} elseif($this->Protocol == 'https' && $project[0]['https'] == 1) {
   			    	$this->PropertyAttr = $project[0]['url'];
-							$this->PropertyUse = 'get';
+					$this->PropertyUse = 'get';
 	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
 	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
-							$url = 'https://'.$project[0]['url'].$tmpPath;
+					$url = 'https://'.$project[0]['url'].$tmpPath;
         			$url = self::addSpecialParams($url);
-							return $url;
-						} elseif($project[0]['http'] == 1) {
+					return $url;
+				} elseif($project[0]['http'] == 1) {
   			    	$this->PropertyAttr = $project[0]['url'];
-							$this->PropertyUse = 'get';
+					$this->PropertyUse = 'get';
 	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
 	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
-							$url = 'http://'.$project[0]['url'].$tmpPath;
+					$url = 'http://'.$project[0]['url'].$tmpPath;
         			$url = self::addSpecialParams($url);
-							return $url;
-						} elseif($project[0]['https'] == 1) {
+					return $url;
+				} elseif($project[0]['https'] == 1) {
   			    	$this->PropertyAttr = $project[0]['url'];
-							$this->PropertyUse = 'get';
+					$this->PropertyUse = 'get';
 	  		    	$project[0]['url'] = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $project[0]['url']);
 	  		    	//$tmpPath = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $tmpPath);
-							$url = 'https://'.$project[0]['url'].$tmpPath;
+					$url = 'https://'.$project[0]['url'].$tmpPath;
         			$url = self::addSpecialParams($url);
-							return $url;
-						}
-					}
+					return $url;
 				}
+			}
+		}
         
       }
     }
@@ -1022,7 +1037,7 @@
       $attributes = array();
       $this->Attributes = array();
       
-      preg_replace_callback($this->ATT_RE, array( &$this,'parseatt'), $ctag[2]);
+      preg_replace_callback($this->ATT_RE, array( &$this,'parseatt'), $ctag[3]);
       
       foreach($this->Attributes as $tmp) {
         $att = explode("=", $tmp);
@@ -1508,7 +1523,7 @@
 			}
 			
 			$i = 0;
-			if(count($_GET) > 1) {
+			if(count($_GET) > 1 && strpos($key, $href) == -1) {
 				foreach($_GET as $key => $param) {
 					if($key != 'WEB_PAGE_PATH') {
 						if($i == 0) {

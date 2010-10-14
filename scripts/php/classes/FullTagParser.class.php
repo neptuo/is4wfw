@@ -86,6 +86,7 @@
 	 *
 	 */		 		 		 		
 	public function startParsing() {
+		parent::setUseCaching(false);
 		$this->Result = preg_replace_callback($this->FULL_TAG_RE, array( &$this,'parsefulltag'), $this->Content);
 		$this->Result = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $this->Result);
 	}

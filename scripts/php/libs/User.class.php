@@ -7,24 +7,32 @@
    */
   require_once("BaseTagLib.class.php");
   
-  /**
-   *
-   *  user management class.
-   *      
-   *  @author     Marek SMM
-   *  @timestamp  2009-11-29
-   *
-   */              
-  class User extends BaseTagLib {
+	/**
+	 *
+	 *  user management class.
+	 *      
+	 *  @author     Marek SMM
+	 *  @timestamp  2010-10-09
+	 *
+	 */              
+	class User extends BaseTagLib {
     
-    /**
-     *
-     *  Initialize object.
-     *
-     */                   
-    public function __construct() {
-      self::setTagLibXml("xml/User.xml");
-    }
+  
+		private $BundleName = 'user';
+  	
+		private $BundleLang = 'cs';
+		
+		public function __construct() {
+			global $webObject;
+			self::setTagLibXml("xml/User.xml");
+			
+			if($webObject->LanguageName != '') {
+				$rb = new ResourceBundle();
+				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
+					$this->BundleLang = $webObject->LanguageName;
+				}
+			}
+		}
     
     public function showUserManagement($attUserId = false) {
       global $dbObject;
@@ -137,7 +145,7 @@
 	      $n = 1;
   	    $returnTmp = ''
     	  .'<div class="user-management">'
-      	  .'<table class="user-list-table">'
+      	  .'<table class="user-list-table standart clickable">'
         	  .'<tr>'
           	  .'<th class="user-list-th user-list-id">Uid</th>'
             	.'<th class="user-list-th user-list-login">Login</th>'
@@ -443,7 +451,7 @@
 			
 					$return .= ''
 					.'<div class="group-list">'
-							.'<table>'
+							.'<table class="standart">'
 								.'<tr>'
 									.'<th>Gid:</th>'
 									.'<th>Name:</th>'
@@ -510,7 +518,7 @@
 				
 				$return .= ''
 				.'<div class="user-log-list">'
-					.'<table class="data-table">'
+					.'<table class="data-table standart">'
 						.'<thead>'
 						.'<tr>'
 							.'<th class="user-log-id">Id:</th>'
@@ -582,6 +590,101 @@
 			} else {
 					return parent::getFrame('Truncate user log', $return, "", true);
 			}
+		}
+		
+		public function registerUser($groups, $disableUser = false, $pageId = false) {
+			global $webObject;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$user = array();
+			$ok = true;
+			$messages = array();;
+			$msgHtml = '';
+			
+			if($_POST['user-register-submit'] == $rb->get('reg.submit')) {
+				$user['name'] = $_POST['user-register-name'];
+				$user['surname'] = $_POST['user-register-surname'];
+				$user['username'] = $_POST['user-register-username'];
+				$user['password1'] = $_POST['user-register-password1'];
+				$user['password2'] = $_POST['user-register-password2'];
+				
+				if(strlen($user['password1']) < 6) {
+					$ok = false;
+					$messages[] = parent::getError($rb->get('reg.error.passwordshort'));
+				}
+				if($user['password1'] != $user['password2']) {
+					$ok = false;
+					$messages[] = parent::getError($rb->get('reg.error.passwordnotmatch'));
+				}
+				if(strlen($user['username']) < 4) {
+					$ok = false;
+					$messages[] = parent::getError($rb->get('reg.error.usernameshort'));
+				}
+				$userNames = parent::db()->fetchAll('select `uid` from `user` where `login` = "'.$user['username'].'";');
+				if(count($userNames) > 0) {
+					$ok = false;
+					$messages[] = parent::getError($rb->get('reg.error.usernamenotunique'));
+				}
+				if($ok) {
+					if($disableUser == 'true') {
+						$user['enable'] = 0;
+					} else {
+						$user['enable'] = 1;
+					}
+					$user['password'] = sha1($user['username'].$user['password1']);
+					
+					//parent::db()->setMockMode(true);
+					parent::db()->execute(parent::query()->get('register', $user, 'user'));
+					$uid = parent::db()->fetchSingle(parent::query()->get('userByUsername', $user, 'user'));
+					$uid = $uid['uid'];
+					$groupNames = split(',', $groups);
+					foreach($groupNames as $gpName) {
+						$gid = parent::db()->fetchSingle(parent::query()->get('groupByName', array('name' => trim($gpName)), 'user'));
+						$gid = $gid['gid'];
+						parent::db()->execute(parent::query()->get('addUserInGroup', array('uid' => $uid, 'gid' => $gid), 'user'));
+					}
+					$messages[] = parent::getSuccess($rb->get('reg.saved'));
+					$user = array();
+					if($pageId != '') {
+						$webObject->redirectTo($pageId);
+					}
+					//parent::db()->setMockMode(false);
+				}
+				
+				foreach($messages as $msg) {
+					$msgHtml .= $msg;
+				}
+			}
+			
+			$return .= ''
+			.'<form name="user-register" action="'.$_SERVER['REDIRECT_URL'].'" method="post">'
+				.$msgHtml
+				.'<div class="gray-box">'
+					.'<label for="user-register-name">'.$rb->get('reg.name').'</label>'
+					.'<input type="text" name="user-register-name" id="user-register-name" value="'.$user['name'].'" />'
+				.'</div>'
+				.'<div class="gray-box">'
+					.'<label for="user-register-surname">'.$rb->get('reg.surname').'</label>'
+					.'<input type="text" name="user-register-surname" id="user-register-surname" value="'.$user['surname'].'" />'
+				.'</div>'
+				.'<div class="gray-box">'
+					.'<label for="user-register-username">'.$rb->get('reg.username').'</label>'
+					.'<input type="text" name="user-register-username" id="user-register-username" value="'.$user['username'].'" />'
+				.'</div>'
+				.'<div class="gray-box">'
+					.'<label for="user-register-password1">'.$rb->get('reg.password1').'</label>'
+					.'<input type="password" name="user-register-password1" id="user-register-password1" value="'.$user['password1'].'" />'
+				.'</div>'
+				.'<div class="gray-box">'
+					.'<label for="user-register-password2">'.$rb->get('reg.password2').'</label>'
+					.'<input type="password" name="user-register-password2" id="user-register-password2" value="'.$user['password2'].'" />'
+				.'</div>'
+				.'<div class="gray-box">'
+					.'<input type="submit" name="user-register-submit" value="'.$rb->get('reg.submit').'" />'
+				.'</div>'
+			.'</form>';
+			
+			return $return;
 		}
 		
 		public function getUserId() {

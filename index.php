@@ -85,6 +85,8 @@
   $phpObject = new DefaultPhp();
   $webObject = new DefaultWeb();
   
+  require_once("scripts/php/includes/postinit.inc.php");
+  
   $webObject->processRequest();
 
 ?>

@@ -4,7 +4,7 @@
   <name>Article Lib</name>
   <classname>Article</classname>
   <classpath>php.libs</classpath>
-  <version>1.27</version>
+  <version>1.31</version>
   <count>*</count>
   <comment>
     Třída pro články.
@@ -42,6 +42,10 @@
     </attribute>
     <attribute>
       <attname>sort</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>noDataMessage</attname>
       <attreq>implied</attreq>
     </attribute>
     <comment>
@@ -321,6 +325,14 @@
   	<getfunction>getUrl</getfunction>
     <comment>
       Vrací / Nastavuje url článku
+    </comment>
+  </property>
+  <property>
+  	<propname>lineUrl</propname>
+  	<setfunction>setLineUrl</setfunction>
+  	<getfunction>getLineUrl</getfunction>
+    <comment>
+      Vrací / Nastavuje url řady článků
     </comment>
   </property>
 </taglib>

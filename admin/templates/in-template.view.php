@@ -1,4 +1,3 @@
-<v:title value="is4wfw" />
 <v:template src="~/templates/template.view">
 	<php:register tagPrefix="js" classPath="php.libs.Js" />
 	<php:register tagPrefix="sys" classPath="php.libs.System" />

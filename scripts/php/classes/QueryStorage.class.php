@@ -22,14 +22,20 @@
 				'insertMatch' => 'insert into `w_sport_match`(`h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season`, `project_id`, `date`, `time`, `refs`, `refs2`, `place`, `main_stuff`, `stuff`, `stuff2`, `notplayed`) VALUES ({hTeamId}, {aTeamId}, {hScore}, {aScore}, {hShoots}, {aShoots}, {hPenalty}, {aPenalty}, {hExtratime}, {aExtratime}, "{comment}", {round}, {tableId}, {seasonId}, {projectId}, "{date}", "{time}", "{refs1}", "{refs2}", "{place}", "{mainStuff}", "{stuff1}", "{stuff2}", {notplayed});',
 				'updateTableIdInStatsByMid' => 'update `w_sport_stats` set `table_id` = {tableId} WHERE `mid` = {mid};',
 				'selectMatchByIdProjectId' => 'select `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season`, `date`, `time`, `refs`, `refs2`, `place`, `main_stuff`, `stuff`, `stuff2`, `notplayed` FROM `w_sport_match` WHERE `id` = {id} and `project_id` = {projectId};',
-				'roundsByProjectIdSeasonId' => 'select `id`, `number`, `name`, `season_id` from `w_sport_round` where `project_id` = {projectId} and `season_id` = {seasonId} order by `number`',
-				'roundById' => 'select `id`, `number`, `name` from `w_sport_round` where `id` = {id};',
+				'roundsByProjectIdSeasonId' => 'select `id`, `number`, `name`, `visible`, `season_id` from `w_sport_round` where `project_id` = {projectId} and `season_id` = {seasonId} order by `number`',
+				'roundById' => 'select `id`, `number`, `visible`, `name` from `w_sport_round` where `id` = {id};',
 				'roundsIdByNumberNotId' => 'select `id` from `w_sport_round` where `number` = {number} and `id` != {id};',
-				'updateRound' => 'update `w_sport_round` set `name` = "{name}", `number` = {number} where `id` = {id};',
-				'insertRound' => 'insert into `w_sport_round`(`name`, `number`, `season_id`, `project_id`) values ("{name}", {number}, {season_id}, {project_id});',
-				'roundDeleteById' => 'delete from `w_sport_round` where `id` = {id};',
-				'roundById' => 'select `id`, `name`, `number` from `w_sport_round` where `id` = {id};',
-				'roundsByProjectIdSeasonIdSorting' => 'select `id`, `name`, `number` from `w_sport_round` where `project_id` = {projectId} and `season_id` = {seasonId} order by `number` {sorting};'
+				'updateRound' => 'update `w_sport_round` set `name` = "{name}", `number` = {number}, `visible` = {visible} where `id` = {id};',
+				'insertRound' => 'insert into `w_sport_round`(`name`, `number`, `visible`, `season_id`, `project_id`) values ("{name}", {number}, {visible}, {season_id}, {project_id});',
+				'roundDeleteById' => 'delete from `w_sport_round` where `id` = {id};'
+			),
+			'user' =>
+			array(
+				'register' => 'insert into `user`(`name`, `surname`, `login`, `password`, `enable`) values ("{name}", "{surname}", "{username}", "{password}", {enable});',
+				'addToGroup' => 'insert into `user_in_group`(`uid`, `gid`) values ({uid}, {gid});',
+				'groupByName' => 'select `gid`, `name` from `group` where `name` = "{name}";',
+				'userByUsername' => 'select `uid`, `name`, `surname`, `login`, `password` from `user` where `login` = "{username}";',
+				'addUserInGroup' => 'insert into `user_in_group`(`uid`, `gid`) values ({uid}, {gid});'
 			)
 		);
 		

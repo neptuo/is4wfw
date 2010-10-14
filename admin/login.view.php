@@ -20,4 +20,7 @@
 				<login:form group="web-admins" pageId="~/in/index.view" autoLoginUserName="admin" autoLoginPassword="111111" />
 			</div>
 		</div>
+		<script type="text/javascript" src="~/js/domready.js"></script>
+		<script type="text/javascript" src="~/js/formFieldEffect.js"></script>
+		<script type="text/javascript" src="~/js/initLogin.js"></script>
 </v:template>

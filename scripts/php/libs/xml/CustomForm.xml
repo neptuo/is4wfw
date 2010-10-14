@@ -185,6 +185,17 @@
     </comment>
   </tag>
   <tag>
+    <tagname>specialfield</tagname>
+    <function>specialfield</function>
+    <attribute>
+      <attname>type</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Speciální fíld, type: (idleeven)
+    </comment>
+  </tag>
+  <tag>
     <tagname>formList</tagname>
     <function>formList</function>
     <attribute>

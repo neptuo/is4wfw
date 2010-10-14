@@ -1,5 +1,7 @@
 <?php
 
+	include_once('System.class.php');
+
   /**
    *
    *  Base class for all tag libs.
@@ -23,6 +25,14 @@
      *
      */                   
     private $FirstFrame = true;
+	
+	/**
+	 *
+	 *	Use caching for template content
+	 *	REQUEST ...... for caching for single request
+	 *
+	 */
+	private $CacheTemplatesContent = 'REQUEST';
     
     /**
      *
@@ -45,6 +55,16 @@
     protected function setTagLibXml($xml) {
       $this->TagLIbXml = $xml;
     }
+	
+	/**
+	 *
+	 *	Setup template content caching.
+	 *	For possible values, see field definition
+	 *
+	 */
+	protected function setCacheTemplatesContent($val) {
+		$this->CacheTemplatesContent = $val;
+	}
     
     /**
      *
@@ -54,16 +74,17 @@
      *
      */                   
     public function getFileEx() {
-      return array(WEB_TYPE_CSS => "css", WEB_TYPE_JS => "js", WEB_TYPE_JPG => "jpg", WEB_TYPE_GIF => "gif", 
-                            WEB_TYPE_PNG => "png", WEB_TYPE_PDF => "pdf", WEB_TYPE_RAR => "rar", WEB_TYPE_ZIP => "zip", 
-                            WEB_TYPE_TXT => "txt", WEB_TYPE_XML => "xml", WEB_TYPE_XSL => "xsl", WEB_TYPE_DTD => "dtd",
-                            WEB_TYPE_HTML => "html", WEB_TYPE_PHP => "php", WEB_TYPE_SQL => "sql", WEB_TYPE_C => "c",
-                            WEB_TYPE_CPP => "cpp", WEB_TYPE_H => "h", WEB_TYPE_JAVA => "java", WEB_TYPE_SWF => "swf",
-														WEB_TYPE_MP3 => "mp3", WEB_TYPE_PSD => "psd", WEB_TYPE_DOC => "doc", WEB_TYPE_PPT => "ppt",
-														WEB_TYPE_XLS => "xls", WEB_TYPE_MPEG => "mpeg", WEB_TYPE_MOV => "mov",
-														WEB_TYPE_BMP => "bmp", WEB_TYPE_AVI => "avi", WEB_TYPE_ICO => "ico");
-      
-    }
+		return array(
+					WEB_TYPE_CSS => "css", WEB_TYPE_JS => "js", WEB_TYPE_JPG => "jpg", WEB_TYPE_GIF => "gif", 
+                    WEB_TYPE_PNG => "png", WEB_TYPE_PDF => "pdf", WEB_TYPE_RAR => "rar", WEB_TYPE_ZIP => "zip", 
+                    WEB_TYPE_TXT => "txt", WEB_TYPE_XML => "xml", WEB_TYPE_XSL => "xsl", WEB_TYPE_DTD => "dtd",
+                    WEB_TYPE_HTML => "html", WEB_TYPE_PHP => "php", WEB_TYPE_SQL => "sql", WEB_TYPE_C => "c",
+                    WEB_TYPE_CPP => "cpp", WEB_TYPE_H => "h", WEB_TYPE_JAVA => "java", WEB_TYPE_SWF => "swf",
+					WEB_TYPE_MP3 => "mp3", WEB_TYPE_PSD => "psd", WEB_TYPE_DOC => "doc", WEB_TYPE_PPT => "ppt",
+					WEB_TYPE_XLS => "xls", WEB_TYPE_MPEG => "mpeg", WEB_TYPE_MOV => "mov",
+					WEB_TYPE_BMP => "bmp", WEB_TYPE_AVI => "avi", WEB_TYPE_ICO => "ico"
+					);
+	}
     
     /**
      *
@@ -83,8 +104,6 @@
     	if(strlen($content) == 0) {
     		return '';
     	}
-    	
-    	include_once('System.class.php');
     
 	    //$escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n");
     	$name = 'Frame.'.strtolower(str_replace(' ', '', $label));
@@ -143,21 +162,29 @@
     
     public function getTemplateContent($templateId) {
     	global $webObject;
-      global $dbObject;
-      global $loginObject;
-      $templateContent = "";
+		global $dbObject;
+		global $loginObject;
+		$templateContent = "";
+		
+		if($this->CacheTemplatesContent == 'REQUEST' && self::request()->exists($templateId, 'templates')) {
+			return self::request()->get($templateId, 'templates');
+		}
       
     	$rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
-			if(count($rights) > 0 && $templateId > 0) {
-				$template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = '.$templateId.';');
-				$templateContent = $template[0]['content'];
-			} else {
-				$message = "Permission denied when reading template[templateId = ".$templateId."]!";
-    	  trigger_error($message, E_USER_WARNING);
-    	  return;
-			}
-			
-			return $templateContent;
+		if(count($rights) > 0 && $templateId > 0) {
+			$template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = '.$templateId.';');
+			$templateContent = $template[0]['content'];
+		} else {
+			$message = "Permission denied when reading template[templateId = ".$templateId."]!";
+			trigger_error($message, E_USER_WARNING);
+			return;
+		}
+		
+		if($this->CacheTemplatesContent == 'REQUEST') {
+			self::request()->set($templateId, $templateContent, 'templates');
+		}
+		
+		return $templateContent;
     }
     
     protected function db() {
@@ -186,9 +213,11 @@
     }
     
     protected function convertToUrlValid($value) {
+		$value = str_replace(' - ', '-', $value);
+	
     	$escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n", "Ě" => "E", "É" => "E", "Ř" => "R", "Ť" => "T", "Ý" => "Y", "Ú" => "U", "Ů" => "U", "Í" => "I", "Ó" => "O", "Á" => "A", "Š" => "S", "Ď" => "D", "Ž" => "Z", "Č" => "C", "Ň" => "N", "." => "-", " " => '-');
-      $value = strtr($value, $escapeChars);
-      return $value;
+		$value = strtr($value, $escapeChars);
+		return $value;
     }
     
     protected function convertToValidUrl($value) {
