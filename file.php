@@ -86,6 +86,7 @@
 		require_once("scripts/php/libs/Database.class.php");
 		require_once("scripts/php/libs/File.class.php");
 		$dbObject = new Database();
+		$dbObject->setCacheResults('NONE');
 		$flObject = new File();
 		$file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = ".$fileId.";");
       
