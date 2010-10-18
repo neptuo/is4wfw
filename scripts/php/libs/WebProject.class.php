@@ -75,8 +75,7 @@
 				}
 			}
 			if(!$ok) {
-				$sys = new System();
-				$val = $sys->getPropertyValue('WebProject.defaultProjectId');
+				$val = parent::system()->getPropertyValue('WebProject.defaultProjectId');
 				$proj = parent::db()->fetchSingle('select `id` from `web_project` where `id` = '.$val.';');
 				if($val > 0 && $proj != array()) {
 					$_SESSION['selected-project'] = $val;

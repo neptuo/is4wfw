@@ -1809,8 +1809,7 @@
 		 */		 		 		 		
 		public function getSystemPropertyValue($name) {
 			require_once('System.class.php');
-			$system = new System();
-			return $system->getPropertyValue($name);
+			return parent::system()->getPropertyValue($name);
 		}
 		
 		/**

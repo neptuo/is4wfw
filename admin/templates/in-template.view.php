@@ -1,9 +1,7 @@
 <v:template src="~/templates/template.view">
 	<php:register tagPrefix="js" classPath="php.libs.Js" />
-	<php:register tagPrefix="sys" classPath="php.libs.System" />
 	<php:register tagPrefix="wp" classPath="php.libs.WebProject" />
 	<js:cmsResources useWindows="sys:cmsWindowsStyle" />
-	<php:unregister tagPrefix="sys" />
 	<php:unregister tagPrefix="js" />
 	<div class="cms">
 		<div id="cms-head" class="head">

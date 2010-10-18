@@ -26,7 +26,7 @@
      *  List of default registered tag libs.
      *
      */                   
-    private $_DEFAULT = array("php" => "php.libs", "web" => "php.libs", "error" => "php.libs", "log" => "php.libs", "db" => "php.libs", "login" => "php.libs");
+    private $_DEFAULT = array("php" => "php.libs", "web" => "php.libs", "error" => "php.libs", "log" => "php.libs", "db" => "php.libs", "login" => "php.libs", "sys" => "php.libs");
   
     /**
      *
@@ -42,7 +42,7 @@
      */                   
     private $_CLASSES = array("php.libs.DefaultPhp" => 1, "php.libs.DefaultWeb" => 1, 
                               "php.libs.Error" => 1, "php.libs.Log" => 1, "php.libs.Database" => 1,
-                              "php.libs.Login" => 1);
+                              "php.libs.Login" => 1, "php.libs.System" => 1);
     
     /**
      *
@@ -61,6 +61,8 @@
       $GLOBALS['dbObject'] = new Database();
       require_once(PHP_SCRIPTS."libs/Login.class.php");
       $GLOBALS['loginObject'] = new Login();
+      require_once(PHP_SCRIPTS."libs/System.class.php");
+      $GLOBALS['sysObject'] = new System();
       
       set_error_handler("Error::errorHandler");
     }

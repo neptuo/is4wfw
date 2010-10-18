@@ -17,7 +17,7 @@
    * 	all about sport	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-10-09
+   *  @timestamp  2010-10-16
    * 
    */  
   class Sport extends BaseTagLib {
@@ -985,9 +985,9 @@
 				$i = 1;
 				foreach($players as $pl) {
 					if(self::getSeasonId() != '-1') {
-						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' AND `w_sport_player`.`season` = '.self::getSeasonId().' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
+						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' AND `w_sport_player`.`season` = '.self::getSeasonId().' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
 					} else {
-						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
+						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
 					}
 					
 					$teaseastr = '';
@@ -995,7 +995,7 @@
 						if(strlen($teaseastr) != 0) {
 							$teaseastr .= ', ';
 						}
-						$teaseastr .= '('.$sea['start_year'].' - '.$sea['end_year'].' / '.$sea['name'].' - '
+						$teaseastr .= '('.$sea['start_year'].' - '.$sea['end_year'].' / '.$sea['name'].($sea['on_loan'] == 1 ? ' <span class="red">['.$rb->get('players.onloanletter').']</span>' : '').' - '
 						.'<form name="player-edit" method="post" action="'.$actionUrl.'">'
 							.'<input type="hidden" name="player-id" value="'.$pl['id'].'" />'
 							.'<input type="hidden" name="season-id" value="'.$sea['sid'].'" />'
@@ -1084,6 +1084,7 @@
 					$player['photo'] = $_POST['player-edit-photo'];
 					$player['season'] = $_POST['player-edit-season'];
 					$player['team'] = $_POST['player-edit-team'];
+					$player['on_loan'] = $_POST['player-edit-onloan'] == 'on' ? 1 : 0;
 					
 					if($player['url'] == '') {
 						$player['url'] = strtolower(parent::convertToValidUrl($player['name'].'-'.$player['surname']));
@@ -1115,12 +1116,12 @@
 					if($ok) {
 						$pl = $dbObject->fetchAll('SELECT `id` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.';');
 						if(count($pl) == 1) {
-							$dbObject->execute('UPDATE `w_sport_player` SET `name` = "'.$player['name'].'", `surname` = "'.$player['surname'].'", `url` = "'.$player['url'].'", `birthyear` = '.$player['birthyear'].', `number` = '.$player['number'].', `photo` = "'.$player['photo'].'", `position` = '.$player['position'].', `season` = '.$player['season'].', `team` = '.$player['team'].' WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.';');
+							$dbObject->execute('UPDATE `w_sport_player` SET `name` = "'.$player['name'].'", `surname` = "'.$player['surname'].'", `url` = "'.$player['url'].'", `birthyear` = '.$player['birthyear'].', `number` = '.$player['number'].', `photo` = "'.$player['photo'].'", `position` = '.$player['position'].', `season` = '.$player['season'].', `team` = '.$player['team'].', `on_loan` = '.$player['on_loan'].' WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.';');
 						} else {
 							if($playerId == '') {
-								$dbObject->execute('INSERT INTO `w_sport_player`(`name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team`, `project_id`) VALUES ("'.$player['name'].'", "'.$player['surname'].'", "'.$player['url'].'", '.$player['birthyear'].', '.$player['number'].', '.$player['position'].', "'.$player['photo'].'", '.$player['season'].', '.$player['team'].', '.self::getProjectId().');');
+								$dbObject->execute('INSERT INTO `w_sport_player`(`name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team`, `on_loan`, `project_id`) VALUES ("'.$player['name'].'", "'.$player['surname'].'", "'.$player['url'].'", '.$player['birthyear'].', '.$player['number'].', '.$player['position'].', "'.$player['photo'].'", '.$player['season'].', '.$player['team'].', '.$player['on_loan'].', '.self::getProjectId().');');
 							} else {
-								$dbObject->execute('INSERT INTO `w_sport_player`(`id`, `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team`, `project_id`) VALUES ('.$playerId.', "'.$player['name'].'", "'.$player['surname'].'", "'.$player['url'].'", '.$player['birthyear'].', '.$player['number'].', '.$player['position'].', "'.$player['photo'].'", '.$player['season'].', '.$player['team'].', '.self::getProjectId().');');
+								$dbObject->execute('INSERT INTO `w_sport_player`(`id`, `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team`, `on_loan`, `project_id`) VALUES ('.$playerId.', "'.$player['name'].'", "'.$player['surname'].'", "'.$player['url'].'", '.$player['birthyear'].', '.$player['number'].', '.$player['position'].', "'.$player['photo'].'", '.$player['season'].', '.$player['team'].', '.$player['on_loan'].', '.self::getProjectId().');');
 							}
 						}
 					}
@@ -1137,12 +1138,12 @@
 					$seasonId = $_POST['season-id'];
 					$playerId = $_POST['player-id'];
 					$teamId = $_POST['team-id'];
-					$player = $dbObject->fetchAll('SELECT `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `team` = '.$teamId.' AND `season` = '.$seasonId.';');
+					$player = $dbObject->fetchAll('SELECT `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team`, `on_loan` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `team` = '.$teamId.' AND `season` = '.$seasonId.';');
 					$player = $player[0];
 					$player['photo'] = str_replace('~', '&#126', $player['photo']);
 				} elseif ($_POST['player-add'] ==  $rb->get('players.add')) {
 					$playerId = $_POST['player-id'];
-					$player = $dbObject->fetchSingle('SELECT `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `team` FROM `w_sport_player` WHERE `id` = '.$playerId.' ORDER BY `season` DESC;');
+					$player = $dbObject->fetchSingle('SELECT `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `team`, `on_loan` FROM `w_sport_player` WHERE `id` = '.$playerId.' ORDER BY `season` DESC;');
 					$teamId = $player['team'];
 				}
 				
@@ -1192,6 +1193,10 @@
 							.'<select name="player-edit-team" id="player-edit-team">'
 								.self::getTeamsOptions($teamId)
 							.'</select>'
+						.'</div>'
+						.'<div class="gray-box">'
+							.'<label for="player-edit-onloan">'.$rb->get('players.form.onloan').'</label>'
+							.'<input type="checkbox" name="player-edit-onloan" id="player-edit-onloan" '.($player['on_loan'] == 1 ? ' checked="checked"' : '').'/>'
 						.'</div>'
 						.'<div class="player-edt-submit">'
 							.'<input type="hidden" name="player-id" value="'.$playerId.'" />'
@@ -3131,7 +3136,7 @@
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
-			$where = ' `project_id` = '.self::getProjectId().' and `season` = '.$seasonId;
+			$where = ' `project_id` = '.self::getProjectId().' and `season` = '.$seasonId.' and `on_loan` = 0';
 			
 			if($playerId != '') {
 				$where .= ' and `id` = '.$playerId;
@@ -3420,7 +3425,14 @@
 				return '';
 			}
 			
-			$teams = $dbObject->fetchAll('select distinct `id`, `name` from `w_sport_team` where `project_id` = '.self::getProjectId().' order by `name`;');
+			$tablesql = '';
+			$tablewhere = '';
+			if(self::getTableId() != '-1') {
+				$tablesql = ' join `w_sport_table` on `w_sport_team`.`id` = `w_sport_table`.`team`';
+				$tablewhere = ' and `w_sport_table`.`table_id` = '.self::getTableId();
+			}
+			
+			$teams = $dbObject->fetchAll('select distinct `id`, `name` from `w_sport_team`'.$tablesql.' where `w_sport_team`.`project_id` = '.self::getProjectId().$tablewhere.' order by `name`;');
 			foreach($teams as $team) {
 				$return .= '<option value="'.$team['id'].'"'.(($team['id'] == $teaselId) ? ' selected="selectd"' : '').'>'.$team['name'].'</option>';
 			}
@@ -3678,9 +3690,9 @@
 				}
 				
 				if($type == 'most') {
-					$cols = '`player`.`id`, `player`.`name`, `player`.`surname`, `player`.`birthyear`, `player`.`number`, `player`.`position`, `player`.`photo`, `player`.`team` as `team-id`';
+					$cols = 'distinct `player`.`id`, `player`.`name`, `player`.`surname`, `player`.`birthyear`, `player`.`number`, `player`.`position`, `player`.`photo`, `player`.`team` as `team-id`';
 				} else {
-					$cols = '`player`.`id`, `w_sport_team`.`id` AS `team-id`';
+					$cols = 'distinct `player`.`id`, `w_sport_team`.`id` AS `team-id`';
 				}
 				
 				if($subqueriessql[strlen($subqueriessql) - 1] == ',') {
@@ -3698,7 +3710,7 @@
 					$conditionssql .= ' `w_sport_table`.`table_id` '.self::resolveTableIdPartSql($tableId);
 				}
 			
-				$players = $dbObject->fetchAll('SELECT DISTINCT '.$cols.', '.$subqueriessql.' FROM `w_sport_player` AS `player` JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`'.((strlen($joinstatssql) != 0) ? ' '.$joinstatssql : '').''.((strlen($conditionssql) != 0) ? ' WHERE '.$conditionssql : '').' ORDER BY `'.$sortBy.'` '.$sorting.((strlen($limitsql) != 0) ? ' '.$limitsql : '').';');
+				$players = $dbObject->fetchAll('SELECT '.$cols.', '.$subqueriessql.' FROM `w_sport_player` AS `player` JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`'.((strlen($joinstatssql) != 0) ? ' '.$joinstatssql : '').''.((strlen($conditionssql) != 0) ? ' WHERE '.$conditionssql : '').' GROUP BY `player`.`id`'.' ORDER BY `'.$sortBy.'` '.$sorting.((strlen($limitsql) != 0) ? ' '.$limitsql : '').';');
 			}
 			
 			return $players;

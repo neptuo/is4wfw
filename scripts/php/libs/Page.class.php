@@ -499,12 +499,11 @@
 				}
          
 			    $name = 'Page.editors';
-    			$system = new System();
-		  	  	$propertyEditors = $system->getPropertyValue($name);
-		  	  	$editAreaContentRows = $system->getPropertyValue('Page.editAreaContentRows');
-		  	  	$editAreaHeadRows = $system->getPropertyValue('Page.editAreaHeadRows');
-		  	  	$editAreaTLStartRows = $system->getPropertyValue('Page.editAreaTLStartRows');
-		  	  	$editAreaTLEndRows = $system->getPropertyValue('Page.editAreaTLEndRows');
+		  	  	$propertyEditors = parent::system()->getPropertyValue($name);
+		  	  	$editAreaContentRows = parent::system()->getPropertyValue('Page.editAreaContentRows');
+		  	  	$editAreaHeadRows = parent::system()->getPropertyValue('Page.editAreaHeadRows');
+		  	  	$editAreaTLStartRows = parent::system()->getPropertyValue('Page.editAreaTLStartRows');
+		  	  	$editAreaTLEndRows = parent::system()->getPropertyValue('Page.editAreaTLEndRows');
 		  	  	
 				$returnTmp .= ''
 					.'</div>'
@@ -1452,101 +1451,104 @@
 			}
 		}
 		
-		public function showEditPageFile() {
-      global $dbObject;
-      global $loginObject;
-      $return = "";
-      $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
+	public function showEditPageFile() {
+		global $dbObject;
+		global $loginObject;
+		$rb = new ResourceBundle();
+		$rb->loadBundle($this->BundleName, $this->BundleLang);
+		$return = "";
+		$filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
       
-      $projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
-      if(count($projects) != 0) {
-      	if(array_key_exists('selected-project', $_SESSION)) {
-					$projectId = $_SESSION['selected-project'];
-				} else {
-					$projectId = $projects[0]['id'];
-				}
+		$projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
+		if(count($projects) != 0) {
+			if(array_key_exists('selected-project', $_SESSION)) {
+				$projectId = $_SESSION['selected-project'];
 			} else {
-				if(array_key_exists('selected-project', $_SESSION)) {
-					$projectId = $_SESSION['selected-project'];
-				} else {
-					// dont care.
+				$projectId = $projects[0]['id'];
+			}
+		} else {
+			if(array_key_exists('selected-project', $_SESSION)) {
+				$projectId = $_SESSION['selected-project'];
+			} else {
+				// dont care.
+			}
+		}
+      
+		if($_POST['add-file'] == $rb->get('tf.new')) {
+			$fileTypesOpt = "";
+			foreach($filesEx as $key => $ext) {
+				$fileTypesOpt .= '<option value="'.$key.'">'.$ext.'</option>';
+			}  
+        
+			$browsers['All'] = 1;
+			$browsers['IE6'] = 0;
+			$browsers['IE7'] = 0;
+			$browsers['IE8'] = 0;
+			$browsers['Firefox'] = 0;
+			$browsers['Opera'] = 0;
+			$browsers['Safari'] = 0;
+          
+			$return .= self::getFileUpdateForm(-1, '', '', $browsers, $fileTypesOpt);
+		}
+      
+		if($_POST['save'] == $rb->get('tf.save') || $_POST['save'] == $rb->get('tf.saveandclose')) {
+			if(array_key_exists("file-id", $_POST)) {
+				$fileId = $_POST['file-id'];
+			}
+			$fileName = $_POST['file-name'];
+			$fileContent = str_replace('&#126', '~', $_POST['file-content']);
+			$fileType = $_POST['file-type'];
+			$browser['all'] = (($_POST['browser-all'] == "on") ? 1 : 0);
+			$browser['msie6'] = (($_POST['browser-ie6'] == "on") ? 1 : 0);
+			$browser['msie7'] = (($_POST['browser-ie7'] == "on") ? 1 : 0);
+			$browser['msie8'] = (($_POST['browser-ie8'] == "on") ? 1 : 0);
+			$browser['firefox'] = (($_POST['browser-firefox'] == "on") ? 1 : 0);
+			$browser['safari'] = (($_POST['browser-safari'] == "on") ? 1 : 0);
+			$browser['opera'] = (($_POST['browser-opera'] == "on") ? 1 : 0);
+        
+			$newFile = false;
+        
+			if(isset($fileId)) {
+				$dbObject->execute("UPDATE `page_file` SET `name` = \"".$fileName."\", `content` = \"".$fileContent."\", `for_all` = ".$browser['all'].", `for_msie6` = ".$browser['msie6'].", `for_msie7` = ".$browser['msie7'].", `for_msie8` = ".$browser['msie8'].", `for_firefox` = ".$browser['firefox'].", `for_opera` = ".$browser['opera'].", `for_safari` = ".$browser['safari'].", `type` = \"".$fileType."\" WHERE `id` = ".$fileId.";");
+			} else {
+				$dbObject->execute("INSERT INTO `page_file`(`name`, `content`, `for_all`, `for_msie6`, `for_msie7`, `for_msie8`, `for_firefox`, `for_opera`, `for_safari`, `type`, `wp`) VALUES (\"".$fileName."\", \"".$fileContent."\", ".$browser['all'].", ".$browser['msie6'].", ".$browser['msie7'].", ".$browser['msie8'].", ".$browser['firefox'].", ".$browser['opera'].", ".$browser['safari'].", ".$fileType.", ".$projectId.");");
+				$newFile = true;
+			}
+        
+			if($_POST['save'] == $rb->get('tf.save')) {
+				$_POST['edit-file'] = $rb->get('tf.edit');
+				if($newFile) {
+					$fid = $dbObject->fetchAll("SELECT MAX(`id`) AS `id` FROM `page_file`;");
+					$_POST['file-id'] = $fid[0]['id'];
 				}
 			}
-      
-			if($_POST['add-file'] == "New file") {
-        $fileTypesOpt = "";
-        foreach($filesEx as $key => $ext) {
-          $fileTypesOpt .= '<option value="'.$key.'">'.$ext.'</option>';
-        }  
-        
-        $browsers['All'] = 1;
-        $browsers['IE6'] = 0;
-        $browsers['IE7'] = 0;
-        $browsers['IE8'] = 0;
-        $browsers['Firefox'] = 0;
-        $browsers['Opera'] = 0;
-        $browsers['Safari'] = 0;
-          
-        $return .= self::getFileUpdateForm(-1, '', '', $browsers, $fileTypesOpt);
-      }
-      
-      if($_POST['save'] == "Save" || $_POST['save'] == "Save and Close") {
-        if(array_key_exists("file-id", $_POST)) {
-          $fileId = $_POST['file-id'];
-        }
-        $fileName = $_POST['file-name'];
-        $fileContent = str_replace('&#126', '~', $_POST['file-content']);
-        $fileType = $_POST['file-type'];
-        $browser['all'] = (($_POST['browser-all'] == "on") ? 1 : 0);
-        $browser['msie6'] = (($_POST['browser-ie6'] == "on") ? 1 : 0);
-        $browser['msie7'] = (($_POST['browser-ie7'] == "on") ? 1 : 0);
-        $browser['msie8'] = (($_POST['browser-ie8'] == "on") ? 1 : 0);
-        $browser['firefox'] = (($_POST['browser-firefox'] == "on") ? 1 : 0);
-        $browser['safari'] = (($_POST['browser-safari'] == "on") ? 1 : 0);
-        $browser['opera'] = (($_POST['browser-opera'] == "on") ? 1 : 0);
-        
-        $newFile = false;
-        
-        if(isset($fileId)) {
-          $dbObject->execute("UPDATE `page_file` SET `name` = \"".$fileName."\", `content` = \"".$fileContent."\", `for_all` = ".$browser['all'].", `for_msie6` = ".$browser['msie6'].", `for_msie7` = ".$browser['msie7'].", `for_msie8` = ".$browser['msie8'].", `for_firefox` = ".$browser['firefox'].", `for_opera` = ".$browser['opera'].", `for_safari` = ".$browser['safari'].", `type` = \"".$fileType."\" WHERE `id` = ".$fileId.";");
-        } else {
-          $dbObject->execute("INSERT INTO `page_file`(`name`, `content`, `for_all`, `for_msie6`, `for_msie7`, `for_msie8`, `for_firefox`, `for_opera`, `for_safari`, `type`, `wp`) VALUES (\"".$fileName."\", \"".$fileContent."\", ".$browser['all'].", ".$browser['msie6'].", ".$browser['msie7'].", ".$browser['msie8'].", ".$browser['firefox'].", ".$browser['opera'].", ".$browser['safari'].", ".$fileType.", ".$projectId.");");
-          $newFile = true;
-        }
-        if($_POST['save'] == "Save") {
-          $_POST['edit-file'] = "Edit";
-          if($newFile) {
-	          $fid = $dbObject->fetchAll("SELECT MAX(`id`) AS `id` FROM `page_file`;");
-	          $_POST['file-id'] = $fid[0]['id'];
-	        }
-        }
-      }
-       
-      if($_POST['edit-file'] == "Edit") {
-        $fileId = $_POST['file-id'];
-        
-        $file = $dbObject->fetchAll("SELECT `name`, `content`, `for_all`, `for_msie6`, `for_msie7`, `for_msie8`, `for_firefox`, `for_opera`, `for_safari`, `type` FROM `page_file` WHERE `id` = ".$fileId.";");
-        if(count($file) == 1) {      
-          $fileTypesOpt = "";
-          foreach($filesEx as $key => $ext) {
-            $fileTypesOpt .= '<option '.(($key == $file[0]['type']) ? 'selected="selected"' : '').'value="'.$key.'">'.$ext.'</option>';
-          }
-          $browsers['All'] = $file[0]['for_all'];
-          $browsers['IE6'] = $file[0]['for_msie6'];
-          $browsers['IE7'] = $file[0]['for_msie7'];
-          $browsers['IE8'] = $file[0]['for_msie8'];
-          $browsers['Firefox'] = $file[0]['for_firefox'];
-          $browsers['Opera'] = $file[0]['for_opera'];
-          $browsers['Safari'] = $file[0]['for_safari'];
-          
-          $return .= self::getFileUpdateForm($fileId, $file[0]['name'], $file[0]['content'], $browsers, $fileTypesOpt);
-        } else {
-          $return .= parent::getFrame('Error message', '<h4 class="error">No file selected!</h4>', '', true);
-        }
-      }
-      
-      return $return;
 		}
+       
+		if($_POST['edit-file'] == $rb->get('tf.edit')) {
+			$fileId = $_POST['file-id'];
+        
+			$file = $dbObject->fetchAll("SELECT `name`, `content`, `for_all`, `for_msie6`, `for_msie7`, `for_msie8`, `for_firefox`, `for_opera`, `for_safari`, `type` FROM `page_file` WHERE `id` = ".$fileId.";");
+			if(count($file) == 1) {      
+				$fileTypesOpt = "";
+				foreach($filesEx as $key => $ext) {
+					$fileTypesOpt .= '<option '.(($key == $file[0]['type']) ? 'selected="selected"' : '').'value="'.$key.'">'.$ext.'</option>';
+				}
+				$browsers['All'] = $file[0]['for_all'];
+				$browsers['IE6'] = $file[0]['for_msie6'];
+				$browsers['IE7'] = $file[0]['for_msie7'];
+				$browsers['IE8'] = $file[0]['for_msie8'];
+				$browsers['Firefox'] = $file[0]['for_firefox'];
+				$browsers['Opera'] = $file[0]['for_opera'];
+				$browsers['Safari'] = $file[0]['for_safari'];
+          
+				$return .= self::getFileUpdateForm($fileId, $file[0]['name'], $file[0]['content'], $browsers, $fileTypesOpt);
+			} else {
+				$return .= parent::getFrame($rb->get('tf.title'), parent::getError($rb->get('tf.notselected')), '', true);
+			}
+		}
+      
+		return $return;
+	}
     
     /**
      *
@@ -1558,177 +1560,247 @@
      *
      */                        
     public function showPageFiles($editable = false) {
-      global $dbObject;
-      global $loginObject;
-      $editable = (strtolower($editable) == "true") ? true : false;
-      $return = "";
-      $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
+		global $dbObject;
+		global $loginObject;
+		$rb = new ResourceBundle();
+		$rb->loadBundle($this->BundleName, $this->BundleLang);
+		$return = "";
+		$editable = (strtolower($editable) == "true") ? true : false;
+		$filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
       
-      $projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
-      if(count($projects) != 0) {
-      	if(array_key_exists('selected-project', $_SESSION)) {
+		$projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'));');
+		if(count($projects) != 0) {
+			if(array_key_exists('selected-project', $_SESSION)) {
+				$projectId = $_SESSION['selected-project'];
+				/*$test = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project`.`id` = '.$projectId.' AND `web_project_right`.`type` = '.WEB_R_WRITE.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
+				if(count($test) == 0) {
 					$projectId = $_SESSION['selected-project'];
-					/*$test = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project`.`id` = '.$projectId.' AND `web_project_right`.`type` = '.WEB_R_WRITE.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
-					if(count($test) == 0) {
-						$projectId = $_SESSION['selected-project'];
-					} else {
-						$projectId = $projects[0]['id'];
-					}*/
 				} else {
 					$projectId = $projects[0]['id'];
-				}
+				}*/
 			} else {
-				if(array_key_exists('selected-project', $_SESSION)) {
-					$projectId = $_SESSION['selected-project'];
-				} else {
-					return parent::getFrame("Text file list", '<h4 class="error">No files to edit!</h4>', "", true);
-				}
+				$projectId = $projects[0]['id'];
 			}
+		} else {
+			if(array_key_exists('selected-project', $_SESSION)) {
+				$projectId = $_SESSION['selected-project'];
+			} else {
+				return parent::getFrame($rb->get('tf.title'), parent::getWarning($rb->get('tf.emptylist')), "", true);
+			}
+		}
       
-      // text file form block ---------------------
+		// text file form block ---------------------
       
-      if($_POST['delete-file'] == "Delete") {
-        $fileId = $_POST['file-id'];
-        $dbObject->execute("DELETE FROM `page_file_inc` WHERE `file_id` = ".$fileId.";");
-        $dbObject->execute("DELETE FROM `wp_wysiwyg_file` WHERE `tf_id` = ".$fileId.";");
-        $dbObject->execute("DELETE FROM `page_file` WHERE `id` = ".$fileId.";");
-      }
-      $n = 1;
-      $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` WHERE `wp` = ".$projectId." ORDER BY `id`;");
-      if(count($files) != 0) {
-	      $returnTmp .= ''
-  	    .'<table class="page-file-list data-table clickable standart">'
-  	    	.'<thead>'
-    	  	.'<tr class="file-tr">'
-      			.'<th class="">Id</th>'
-      			.'<th class="">Name</th>'
-      			.'<th class="">Content</th>'
-	      		.'<th class="">Type</th>'
-  	    		.'<th class="">Edit</th>'
+		if($_POST['delete-file'] == $rb->get('tf.delete')) {
+			$fileId = $_POST['file-id'];
+			$dbObject->execute("DELETE FROM `page_file_inc` WHERE `file_id` = ".$fileId.";");
+			$dbObject->execute("DELETE FROM `wp_wysiwyg_file` WHERE `tf_id` = ".$fileId.";");
+			$dbObject->execute("DELETE FROM `page_file` WHERE `id` = ".$fileId.";");
+		}
+		
+		if(parent::getPropertyValue('TextFiles.showFilter', 'true') == 'true') {
+			$searchForm = self::getTextFileSearchForm().'<hr />';
+		}
+		
+		$n = 1;
+		$files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` WHERE `wp` = ".$projectId." ".self::getTextFileSearchPartSql()." ORDER BY `id`;");
+		if(count($files) != 0) {
+			$returnTmp .= ''
+			.$searchForm
+			.'<table class="page-file-list data-table clickable standart">'
+				.'<thead>'
+					.'<tr class="file-tr">'
+						.'<th class="tf-id">'.$rb->get('tf.id').':</th>'
+						.'<th class="tf-name">'.$rb->get('tf.name').':</th>'
+						.'<th class="tf-content">'.$rb->get('tf.content').':</th>'
+						.'<th class="tf-type">'.$rb->get('tf.type').':</th>'
+						.'<th class="tf-action"></th>'
 					.'</tr>'
-					.'</thead>'
-					.'<tbody>';     
-      	foreach($files as $file) {
-        	$returnTmp .= '' 
-					.'<tr class="file-tr '.(($n % 2) ? 'idle' : 'even').'">'
-        		.'<td class="file-id">'
-							.$file['id']
-        		.'</td>'
-            .'<td class="file-name">'
-            	.$file['name']
-            .'</td>'
-            .'<td class="file-content">'
-            	.'<div class="file-content-in"><div class="foo">'.substr($file['content'], 0, 130).'</div></div>'
-            .'</td>'
-            .'<td class="file-type">'
-            	.$filesEx[$file['type']]
-            .'</td>'
-            .'<td>'
-            	.(($editable) ? ''
-              .'<form name="process-file1" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-              	.'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
-                .'<input type="hidden" name="edit-file" value="Edit" />'
-                .'<input type="image" src="'.WEB_ROOT.'images/page_edi.png" name="edit-file" value="Edit" title="Edit file" /> '
-              .'</form>'
-              .'<form name="process-file2" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-              	.'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
-                .'<input type="hidden" name="delete-file" value="Delete" />'
-                .'<input class="confirm" type="image" src="'.WEB_ROOT.'images/page_del.png" name="delete-file" value="Delete" title="Delete file, id('.$file['id'].')" />'
-              .'</form>'
-              : '')
-            .'</td>'
-          .'</tr>';
-        	$n ++;
-      	}
-      	$returnTmp .= '</tbody></table>';
-      	//$return .= parent::getFrame('Text files', $returnTmp, '');
-      } else {
-				//$return .= parent::getFrame('Text files', '<h4 class="error">No files to edit!</h4>', '');
-				$returnTmp .= parent::getWarning('No files to edit!');
+				.'</thead>'
+				.'<tbody>';     
+			foreach($files as $file) {
+				$returnTmp .= '' 
+				.'<tr class="file-tr '.(($n % 2) ? 'idle' : 'even').'">'
+					.'<td class="file-id">'
+						.$file['id']
+					.'</td>'
+					.'<td class="file-name">'
+						.$file['name']
+					.'</td>'
+					.'<td class="file-content">'
+						.'<div class="file-content-in"><div class="foo">'.substr($file['content'], 0, 130).'</div></div>'
+					.'</td>'
+					.'<td class="file-type">'
+						.$filesEx[$file['type']]
+					.'</td>'
+					.'<td>'
+						.(($editable) ? ''
+						.'<form name="process-file1" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+							.'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
+							.'<input type="hidden" name="edit-file" value="'.$rb->get('tf.edit').'" />'
+							.'<input type="image" src="~/images/page_edi.png" name="edit-file" value="'.$rb->get('tf.edit').'" title="'.$rb->get('tf.edittitle').', id='.$file['id'].'" /> '
+						.'</form>'
+						.'<form name="process-file2" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+							.'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
+							.'<input type="hidden" name="delete-file" value="'.$rb->get('tf.delete').'" />'
+							.'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="'.$rb->get('tf.delete').'" title="'.$rb->get('tf.deletetitle').', id('.$file['id'].')" />'
+						.'</form>'
+						: '')
+					.'</td>'
+				.'</tr>';
+				$n ++;
 			}
+			$returnTmp .= '</tbody></table>';
+			//$return .= parent::getFrame('Text files', $returnTmp, '');
+		} else {
+			//$return .= parent::getFrame('Text files', '<h4 class="error">No files to edit!</h4>', '');
+			$returnTmp .= parent::getWarning($rb->get('tf.emptylist'));
+		}
       
-      if($_SESSION['selected-project'] != '') {
-	      $returnTmp .= ''
-      	.'<hr />'
-    	  .'<form name="add-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-  	    	.'<input type="submit" name="add-file" value="New file" title="Create new file" />'
-	      .'</form>';
-      }
-      $return .= parent::getFrame('Text Files', $returnTmp, '');
-      return $return;
+		if($_SESSION['selected-project'] != '') {
+			$returnTmp .= ''
+			.'<hr />'
+			.'<div class="gray-box">'
+				.'<form name="add-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<input type="submit" name="add-file" value="'.$rb->get('tf.new').'" title="'.$rb->get('tf.newtitle').'" />'
+				.'</form>'
+			.'</div>';
+		}
+		$return .= parent::getFrame($rb->get('tf.title'), $returnTmp, '');
+		return $return;
     }
     
+	/**
+	 *
+	 *	Generates search form for text files
+	 *
+	 */
+	private function getTextFileSearchForm() {
+		$rb = new ResourceBundle();
+		$rb->loadBundle($this->BundleName, $this->BundleLang);
+		
+		if($_POST['text-file-search-submit'] == $rb->get('tf.search')) {
+			parent::session()->set('name', $_POST['text-file-search-name'], 'tf-search');
+			parent::session()->set('content', $_POST['text-file-search-content'], 'tf-search');
+		} elseif($_POST['text-file-search-clear'] == $rb->get('tf.clear')) {
+			parent::session()->clear('tf-search');
+		}
+		
+		$return = ''
+		.'<form name="text-file-search" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+			.'<div class="gray-box">'
+				.'<label class="w80" for="text-file-search-name">'.$rb->get('tf.name').':</label>'
+				.'<input class="w300" nametype="text" name="text-file-search-name" id="text-file-search-name" value="'.parent::session()->get('name', 'tf-search').'" />'
+			.'</div>'
+			.'<div class="gray-box">'
+				.'<label class="w80" for="text-file-search-content">'.$rb->get('tf.content').':</label>'
+				.'<input class="w500" type="text" name="text-file-search-content" id="text-file-search-content" value="'.parent::session()->get('content', 'tf-search').'" />'
+			.'</div>'
+			.'<div class="gray-box">'
+				.'<input type="submit" name="text-file-search-submit" value="'.$rb->get('tf.search').'" /> '
+				.'<input type="submit" name="text-file-search-clear" value="'.$rb->get('tf.clear').'" /> '
+			.'</div>'
+		.'</form>';
+		
+		return $return;
+	}
+	
+	/**
+	 *
+	 *	Generates part sql for text file search form
+	 *
+	 */
+	private function getTextFileSearchPartSql() {
+		$return = '';
+		$name = parent::session()->get('name', 'tf-search');
+		$content = parent::session()->get('content', 'tf-search');
+		if(strlen($name) != 0) {
+			if($return == '') {
+				$return .= 'and ';
+			}
+			$return .= '`name` like "%'.$name.'%"';
+		}
+		if(strlen($content) != 0) {
+			if($return == '') {
+				$return .= 'and ';
+			}
+			$return .= '`content` like "%'.$content.'%"';
+		}
+		return $return;
+	}
+	
     /**
      *
      *  Generates form for updating text files.
      *
      */                        
     private function getFileUpdateForm($fileId, $fileName, $fileContent, $browsers, $fileTypes) {
-    	include_once('System.class.php');
+		$rb = new ResourceBundle();
+		$rb->loadBundle($this->BundleName, $this->BundleLang);
     	$htmlBrowsers = '';
     	foreach($browsers as $browser => $value) {
-				$htmlBrowsers .= ''
-				.'<div class="text-file-browser">'
-					.'<label for="browser-'.strtolower($browser).'">'.$browser.'</label> '
-					.'<input type="checkbox" name="browser-'.strtolower($browser).'"'.(($value == 1) ? ' checked="checked"' : '').' />'
-				.'</div>';
-			}
+			$htmlBrowsers .= ''
+			.'<div class="text-file-browser">'
+				.'<label for="browser-'.strtolower($browser).'">'.$browser.'</label> '
+				.'<input type="checkbox" name="browser-'.strtolower($browser).'" id="browser-'.strtolower($browser).'"'.(($value == 1) ? ' checked="checked"' : '').' />'
+			.'</div>';
+		}
     
-      $returnTmp = ''
-                .'<form name="edit-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-                  .'<div class="edit-file-name">'
-                    .'<div class="text-file-prop">'
-                      .'<div class="text-file-name gray-box">'
-                        .'<label for="file-name">Name:</label> '
+		$returnTmp = ''
+        .'<form name="edit-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+			.'<div class="edit-file-name">'
+				.'<div class="text-file-prop">'
+					.'<div class="text-file-name gray-box">'
+						.'<label for="file-name">'.$rb->get('tf.name').':</label> '
                         .'<input type="text" name="file-name" value="'.$fileName.'" class="w300" /> '
-                      .'</div>'
-                      .'<div class="text-file-type">'
-                        .'<label for="file-type">Type:</label> '
+                    .'</div>'
+                    .'<div class="text-file-type">'
+						.'<label for="file-type">'.$rb->get('tf.type').':</label> '
                         .'<select name="file-type"> '
-                          .$fileTypes
+							.$fileTypes
                         .'</select> '
-                      .'</div>'
-                      .'<div class="text-file-browsers">'
+                    .'</div>'
+                    .'<div class="text-file-browsers">'
                       	.$htmlBrowsers
-                      .'</div>'
-                      .'<div class="clear"></div>'
                     .'</div>'
-                    .'<div class="text-file-content">';
+                    .'<div class="clear"></div>'
+                .'</div>'
+                .'<div class="text-file-content">';
 			
-      $name = 'Page.editors';
-    	$system = new System();
-			$propertyEditors = $system->getPropertyValue($name);
-		  $editAreaTextFileRows = $system->getPropertyValue('Page.editAreaTextFileRows');
+		$name = 'Page.editors';
+		$propertyEditors = parent::system()->getPropertyValue($name);
+		$editAreaTextFileRows = parent::system()->getPropertyValue('Page.editAreaTextFileRows');
 		  
-		  if($propertyEditors == "edit_area") {
+		if($propertyEditors == "edit_area") {
 		  	$returnTmp .= ''
-					.'<div id="editors" class="editors edit-area-editors">'
-						.'<div id="cover-page-file-content">'
-							.'<label for="file-content">File content:</label>'
-							.'<textarea id="file-content" class="edit-area html" name="file-content" rows="'.($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30).'" wrap="off">'.str_replace('~', '&#126', $fileContent).'</textarea>'
-						.'</div>'
-					.'</div>';
-			} else {
-      	$returnTmp .= ''
-                      .'<label for="file-content">Content:</label> '
-                      .'<div class="editor-cover">'
-                      	.'<div class="textarea-cover">'
-                      		.'<textarea name="file-content" class="editor-textarea" rows="15" wrap="off">'.str_replace('~', '&#126', $fileContent).'</textarea> '
-                      	.'</div>'
-                      	.'<div class="clear"></div>'
-                      .'</div>';
-      } 
-      $returnTmp .= ''
-                    .'</div>'
-                    .'<div class="text-file-submit">'
-                      .(($fileId != -1) ? '<input type="hidden" name="file-id" value="'.$fileId.'" />' : '')
-                      .'<input type="submit" name="save" value="Save" title="Save changes" /> '
-                      .'<input type="submit" name="save" value="Save and Close" title="Save changes and Close file" /> '
-                      .'<input type="submit" name="close" value="Close" title="Close file" /> '
-                    .'</div>'
-                  .'</div>'
-                .'</form>';
-      return parent::getFrame('Edit file'.((strlen($fileName) != 0) ? ' :: '.$fileName.' ( '.$fileId.' )' : ''), $returnTmp, '');
+			.'<div id="editors" class="editors edit-area-editors">'
+				.'<div id="cover-page-file-content">'
+					.'<label for="file-content">'.$rb->get('tf.name').':</label>'
+					.'<textarea id="file-content" class="edit-area html" name="file-content" rows="'.($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30).'" wrap="off">'.str_replace('~', '&#126', $fileContent).'</textarea>'
+				.'</div>'
+			.'</div>';
+		} else {
+			$returnTmp .= ''
+            .'<label for="file-content">'.$rb->get('tf.name').':</label> '
+			.'<div class="editor-cover">'
+				.'<div class="textarea-cover">'
+					.'<textarea name="file-content" class="editor-textarea" rows="15" wrap="off">'.str_replace('~', '&#126', $fileContent).'</textarea> '
+                .'</div>'
+                .'<div class="clear"></div>'
+            .'</div>';
+		} 
+		$returnTmp .= ''
+				.'</div>'
+                .'<div class="text-file-submit">'
+                    .(($fileId != -1) ? '<input type="hidden" name="file-id" value="'.$fileId.'" />' : '')
+                    .'<input type="submit" name="save" value="'.$rb->get('tf.save').'" title="'.$rb->get('tf.savetitle').'" /> '
+                    .'<input type="submit" name="save" value="'.$rb->get('tf.saveandclose').'" title="'.$rb->get('tf.saveandclosetitle').'" /> '
+					.'<input type="submit" name="close" value="'.$rb->get('tf.close').'" title="'.$rb->get('tf.closetitle').'" /> '
+				.'</div>'
+			.'</div>'
+        .'</form>';
+		
+		return parent::getFrame($rb->get('tf.editframetitle').' :: '.((strlen($fileName) != 0) ? $fileName.' ( '.$fileId.' )' : $rb->get('tf.new')), $returnTmp, '');
     }
     
     /**
@@ -1814,7 +1886,8 @@
 				
 				if(count($urlCache) > 0) {
 					$urlCacheReturn .= ''
-					.'<table class="url-cache-table data-table standart">'
+					.'<hr />'
+					.'<table class="standart data-table standart clickable">'
 						.'<thead>'
 						.'<tr>'
 							.'<th class="url-cache-id">Id:</th>'
@@ -1907,9 +1980,7 @@
 						.'<input type="submit" name="cancel-url-cache" value="Cancel" />'
 						: '')
 					.'</div>'
-					.'<div class="results">'
-						.$urlCacheReturn
-					.'</div>'
+					.$urlCacheReturn
 				.'</form>'
 			.'</div>';
 			
@@ -2111,21 +2182,24 @@
 				parent::session()->delete('content', 'template-search');
 			}
 			
-			$return .= ''
-			.'<form name="template-search" method="post" action"'.$_SERVER['REDIRECT_URL'].'">'
-				.'<div class="gray-box">'
-					.'<label form="template-search-name" class="w100">Name:</label>'
-					.'<input class="w300" type="text" name="template-search-name" id="template-search-name" value="'.parent::session()->get('name', 'template-search').'" />'
-				.'</div>'
-				.'<div class="gray-box">'
-					.'<label form="template-search-content" class="w100">Content:</label>'
-					.'<input class="w300" type="text" name="template-search-content" id="template-search-content" value="'.parent::session()->get('content', 'template-search').'" />'
-				.'</div>'
-				.'<div class="gray-box">'
-					.'<input type="submit" name="template-search-submit" value="Search" /> '
-					.'<input type="submit" name="template-search-clear" value="Clear" />'
-				.'</div>'
-			.'</form>';
+			if(parent::getPropertyValue('Templates.showFilter', 'true') == 'true') {
+				$return .= ''
+				.'<form name="template-search" method="post" action"'.$_SERVER['REDIRECT_URL'].'">'
+					.'<div class="gray-box">'
+						.'<label for="template-search-name" class="w100">Name:</label>'
+						.'<input class="w300" type="text" name="template-search-name" id="template-search-name" value="'.parent::session()->get('name', 'template-search').'" />'
+					.'</div>'
+					.'<div class="gray-box">'
+						.'<label for="template-search-content" class="w100">Content:</label>'
+						.'<input class="w500" type="text" name="template-search-content" id="template-search-content" value="'.parent::session()->get('content', 'template-search').'" />'
+					.'</div>'
+					.'<div class="gray-box">'
+						.'<input type="submit" name="template-search-submit" value="Search" /> '
+						.'<input type="submit" name="template-search-clear" value="Clear" />'
+					.'</div>'
+				.'</form>'
+				.'<hr />';
+			}
 			
 			// Vyber templatu do kterych smim zapisovat
 			$searchPara = '';
@@ -2191,9 +2265,11 @@
 			if(count($newTemplate) > 0) {
 				$return .= ''
 				.'<hr />'
-				.'<form name="template-new" method="post" action="'.$actionUrl.'">'
-					.'<input type="submit" name="template-new" value="New Template" />'
-				.'</form>';
+				.'<div class="gray-box">'
+					.'<form name="template-new" method="post" action="'.$actionUrl.'">'
+						.'<input type="submit" name="template-new" value="New Template" />'
+					.'</form>'
+				.'</div>';
 			}
 			
 			if($useFrames != "false") {
@@ -2354,10 +2430,11 @@
     	  $template['content'] = str_replace("<", "&lt;", $template['content']);
 				$return .= ''
 				.'<form name="template-edit-detail" method="post" action="'.$actionUrl.'">'
-					.'<div class="gray-box">'
+					.'<div class="gray-box-float">'
 						.'<label for="template-name" class="padded">Name:</label>'
-						.'<input class="w300" type="text" name="template-name" id="template-name" value="'.$template['name'].'" />'
+						.'<input class="w435" type="text" name="template-name" id="template-name" value="'.$template['name'].'" />'
 					.'</div>'
+					.'<div class="clear"></div>'
 					.'<div class="template-rights">'
 						.(($show['read']) ? ''
 						.'<div class="template-right-r">'
@@ -2381,11 +2458,9 @@
 					.'</div>'
 					.'<div class="clear"></div>';
 				
-				require_once('System.class.php');	
 				$name = 'Page.editors';
-    		$system = new System();
-				$propertyEditors = $system->getPropertyValue($name);
-		  	$editAreaTextFileRows = $system->getPropertyValue('Page.editAreaTextFileRows');
+				$propertyEditors = parent::system()->getPropertyValue($name);
+		  	$editAreaTextFileRows = parent::system()->getPropertyValue('Page.editAreaTextFileRows');
 		  
 		  	if($propertyEditors == "edit_area") {
 		  		$return .= ''
