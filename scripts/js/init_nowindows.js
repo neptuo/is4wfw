@@ -270,13 +270,13 @@ function initClosers(event) {
 	if(AjaxInitTopElement != null) {
 		var divs = AjaxInitTopElement.getElementsByTagName('div');
 	} else {
-  	var divs = document.getElementsByTagName('div');
-  }
-  for(var i = 0; i < divs.length; i ++) {
-    if(divs[i].className.indexOf('frame frame-cover') != -1) {
-      new Closer(divs[i]);
-    }
-  }
+		var divs = document.getElementsByTagName('div');
+	}
+	for(var i = 0; i < divs.length; i ++) {
+		if(divs[i].className.indexOf('frame frame-cover') != -1) {
+			new Closer(divs[i]);
+		}
+	}
 }
 
 function initClock(event) {
@@ -644,7 +644,7 @@ function initClearCache(event) {
 		}
 		
 		var pids = $(cover).find(".url-cache-page label").get();
-		if(pids && pids.length > 0) {
+		if(false && pids && pids.length > 0) {
 			for(var i = 0; i < pids.length; i ++) {
 				var pages = pids[i].innerHTML.split('-');
 				for(var j = 0; j < pages.length; j ++) {

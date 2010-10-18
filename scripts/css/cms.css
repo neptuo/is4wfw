@@ -1209,6 +1209,11 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 	display: inline-block;
 }
 
+.gray-box .w435, .gray-box-float .w435 {
+	width: 435px;
+	display: inline-block;
+}
+
 .gray-box .w500, .gray-box-float .w500 {
 	width: 500px;
 }

@@ -611,10 +611,9 @@
 			$lineSelect .= '</select>';
       
 			$name = 'Article.editors';
-			$system = new System();
-			$propertyEditors = $system->getPropertyValue($name);
-			$editAreaContentRows = $system->getPropertyValue('Article.editAreaContentRows');
-			$editAreaHeadRows = $system->getPropertyValue('Article.editAreaHeadRows');
+			$propertyEditors = parent::system()->getPropertyValue($name);
+			$editAreaContentRows = parent::system()->getPropertyValue('Article.editAreaContentRows');
+			$editAreaHeadRows = parent::system()->getPropertyValue('Article.editAreaHeadRows');
       
 			$return .= ''
 			.'<div class="article-mgm-edit">'
@@ -1058,10 +1057,9 @@
 			}
     
 			$name = 'Article.editors';
-			$system = new System();
-			$propertyEditors = $system->getPropertyValue($name);
-			$editAreaContentRows = $system->getPropertyValue('Article.editAreaContentRows');
-			$editAreaHeadRows = $system->getPropertyValue('Article.editAreaHeadRows');
+			$propertyEditors = parent::system()->getPropertyValue($name);
+			$editAreaContentRows = parent::system()->getPropertyValue('Article.editAreaContentRows');
+			$editAreaHeadRows = parent::system()->getPropertyValue('Article.editAreaHeadRows');
       
 			$return .= ''
 			.'<div class="article-mgm-edit">'

@@ -112,8 +112,7 @@
     	//$name = strtr($name, $escapeChars); 
     	$name = self::convertToUrlValid($name);
     	
-    	$system = new System();
-    	$value = $system->getPropertyValue($name);
+    	$value = self::system()->getPropertyValue($name);
     	$closed = false;
     	if($value == 'true') {
 				$closed = true;
@@ -197,6 +196,11 @@
     	return $loginObject;
     }
     
+    protected function system() {
+    	global $sysObject;
+    	return $sysObject;
+    }
+    
     protected function request() {
     	global $requestStorage;
     	return $requestStorage;
@@ -223,6 +227,15 @@
     protected function convertToValidUrl($value) {
     	return self::convertToUrlValid($value);
     }
+	
+	protected function getPropertyValue($name, $default = -1) {
+		$value = self::system()->getPropertyValue($name);
+		if($value == -1) {
+			return $default;
+		} else {
+			return $value;
+		}
+	}
   }
 
 ?>

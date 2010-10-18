@@ -255,8 +255,7 @@
       if(self::isLogged()) {
       	require_once('System.class.php');	
 				$name = 'Login.session';
-    		$system = new System();
-				$sessionTime = $system->getPropertyValue($name);
+				$sessionTime = parent::system()->getPropertyValue($name);
 				
 				if($sessionTime < 0) {
 					$sessionTime = 15;
