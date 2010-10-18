@@ -100,7 +100,7 @@
 					$return .= parent::getFrame($rb->get('management.error.title'), $errorList, "", true);
           
 					$user = array('uid' => "", 'login' => $login, 'name' => $name, 'surname' => $surname);
-					$return .= parent::getFrame('Edit User', self::editForm($user, $groups), '');
+					$return .= parent::getFrame($rb->get('management.edit'), self::editForm($user, $groups), '');
 				}
 			}
       
