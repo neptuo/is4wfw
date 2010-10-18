@@ -115,7 +115,7 @@
 				if(count($permission) > 0) {
 					$user = $dbObject->fetchAll("SELECT `uid`, `login`, `name`,`surname`, `enable` FROM `user` WHERE `uid` = ".$uid." ORDER BY `uid`;");
 					$groups = $dbObject->fetchAll("SELECT `group`.`gid` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `user_in_group`.`uid` = ".$user[0]['uid'].";");
-					$return .= parent::getFrame('Edit User', self::editForm($user[0], $groups), '');
+					$return .= parent::getFrame($rb->get('management.edittitle'), self::editForm($user[0], $groups), '');
 				} else {
 					$return .= parent::getFrame($rb->get('management.edittitle'), parent::getError($rb->get('management.permdenied')), '');
 				}
