@@ -179,7 +179,7 @@
 							.'<form name="user-list-edit1" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 								.'<input type="hidden" name="user-list-uid" value="'.$user['this_uid'].'" />'
 								.'<input type="hidden" name="user-list-edit" value="'.$rb->get('management.edit').'" />'
-								.'<input type="image" src="~/images/page_edi.png" name="user-list-edit" value="'.$rb->get('management.edit').'" title="'.$rb->get('management.edit').', id='.$uset['this_uid'].'" /> '
+								.'<input type="image" src="~/images/page_edi.png" name="user-list-edit" value="'.$rb->get('management.edit').'" title="'.$rb->get('management.edit').', id('.$user['this_uid'].')" /> '
 							.'</form>'
 							.'<form name="user-list-edit2" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 								.'<input type="hidden" name="user-list-uid" value="'.$user['this_uid'].'" />'

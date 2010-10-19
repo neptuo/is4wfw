@@ -23,7 +23,7 @@
   
   	private $BundleName = 'page';
   	
-  	private $BundleLang = 'en';
+  	private $BundleLang = 'cs';
 	
 	private $MessageFromEdit = '';
   
