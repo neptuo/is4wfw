@@ -402,7 +402,7 @@
           
 			$return .= '';
 			if($this->MessageFromEdit != '') {
-				$return .= $this->MessageFromEdit;
+				$returnTmp .= $this->MessageFromEdit;
 				$this->MessageFromEdit = '';
 			}
 			
@@ -1258,10 +1258,16 @@
 				.$returnTmp;
 	      //$return .= parent::getFrame($rb->get('pagelist.newtitle'), $returnTmp, 'page-newlist');
       }
-      $return .= parent::getFrame($rb->get('pagelist.title'), $returnTmp, 'page-pagelist');
+	  
+		if($this->MessageFromEdit != '') {
+			$returnTmp = $this->MessageFromEdit.$returnTmp;
+			$this->MessageFromEdit = '';
+		}
+	  
+		$return .= parent::getFrame($rb->get('pagelist.title'), $returnTmp, 'page-pagelist');
       
-      return $return;
-    }
+		return $return;
+	}
     
     /**
      *

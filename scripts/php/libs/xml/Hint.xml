@@ -4,7 +4,7 @@
   <name>Hint Lib</name>
   <classname>Hint</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
+  <version>1.01</version>
   <count>*</count>
   <comment>
     Třída nápovědy pro custom tagy.
@@ -41,6 +41,17 @@
     </attribute>
     <comment>
       Zobrazí formulář pro výběr knihovny.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>propertyList</tagname>
+    <function>getPropertyList</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí seznam vlastnotí uživatelského rozhraní
     </comment>
   </tag>
   <property>

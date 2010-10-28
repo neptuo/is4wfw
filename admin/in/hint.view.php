@@ -1,4 +1,5 @@
 <v:template src="~/templates/in-template.view">
+	<web:a pageId="~/in/hint-properties.view" text="User interface properties &raquo;" />
 	<php:using prefix="hint" class="php.libs.Hint">
 		<hint:selectLib />
 		<hint:lib classPath="hint:classPath" />

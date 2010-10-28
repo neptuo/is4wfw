@@ -28,7 +28,7 @@ input[disabled] {
 	background: #eeeeee;
 }
 
-input[type=button], input[type=submit] {
+input[type=button], input[type=submit], button, .editor-panel input[type=button] {
 	cursor: pointer;
 	font-size: small;
 	margin: 0;
@@ -62,6 +62,10 @@ select[multiple=multiple] {
 
 .clickable tr {
 	cursor: Pointer;
+}
+
+.hspace {
+	padding: 3px;
 }
 
 .add-rem-text-files-submit {
@@ -818,7 +822,13 @@ body {
 }
 
 .article-mgm-td.article-mgm-id {
-	width: 20px;
+	width: 40px;
+	font-weight: bold;
+}
+
+.article-mgm-td.article-mgm-id span {
+	display: block;
+	background: yellow;
 }
 
 .article-mgm-td.article-mgm-name {
@@ -1184,6 +1194,11 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 	display: inline-block;
 }
 
+.gray-box .w120, .gray-box-float .w120 {
+	width: 120px;
+	display: inline-block;
+}
+
 .gray-box .w160, .gray-box-float .w160 {
 	width: 160px;
 	display: inline-block;
@@ -1229,6 +1244,19 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .gray-box .ml100, .gray-box-float .ml100 {
 	margin-left: 100px;
+}
+
+.gray-box .small-note {
+	color: #777777;
+	font-size: 90%;
+}
+
+.gray-box .padded {
+	padding: 0 10px;
+}
+
+.fright {
+  float: right;
 }
 
 .h30 {
