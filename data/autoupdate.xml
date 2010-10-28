@@ -1,0 +1,9 @@
+<autoupdate>
+	<script build="245">ALTER TABLE  `article` ADD  `order` INT NOT NULL;</script>
+	<script build="245">ALTER TABLE  `article` ADD  `visible` INT NOT NULL DEFAULT  '2';</script>
+	<script build="245">update `article` set `order` = `id`;</script>
+	<script build="249">CREATE TABLE  `article_label` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , `name` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+	<script build="249">CREATE TABLE  `tmp_wfw_wp_lfp_20101009`.`article_line_label` (`line_id` INT NOT NULL , `label_id` INT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+	<script build="249">ALTER TABLE  `article_label` ADD  `url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL;</script>
+	<script build="249">CREATE TABLE  `article_attached_label` (`article_id` INT NOT NULL , `label_id` INT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+</autoupdate>

@@ -6,6 +6,8 @@
 		
 		private $rows = array();
 		
+		private $classes = array();
+		
 		public function __contruct() {
 			
 		}
@@ -43,13 +45,23 @@
 			}
 		}
 		
+		public function addClass($className) {
+			if(!in_array($className, $this->classes)) {
+				$this->classes[] = $className;
+			}
+		}
+		
 		/**
 		 *
 		 *	Returns html table
 		 *
 		 */		 		 		 		
 		public function render() {
-			$return = '<table class="standart">'
+			$classNames = '';
+			foreach($this->classes as $class) {
+				$classNames .= ' '.$class;
+			}
+			$return = '<table class="standart'.$classNames.'">'
 			.'<tr>';
 			foreach($this->header as $th) {
 				$return .= '<th>'.$th.'</th>';

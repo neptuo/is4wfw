@@ -74,6 +74,10 @@ function init(event) {
 	AjaxCountDown.onReachZero = ajaxAutoRedirect;
 	
 	hideLoading();
+	
+	// roztazeni text-obsahu v gridech
+	var foo = $('.foo');
+	$('.foo').parent().width($(foo).parent().parent().width());
 }
 
 //addEvent(window, "load", initEditors, false);

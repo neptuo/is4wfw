@@ -10,17 +10,17 @@
   /**
    * 
    *  Class Hint.
-   * 	Manual for custom tags	     
+   *  Manual for custom tags	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-07-25
+   *  @timestamp  2010-10-21
    * 
    */  
   class Hint extends BaseTagLib {
   
   	private $BundleName = 'hint';
   	
-  	private $BundleLang = 'en';
+  	private $BundleLang = 'cs';
   
     public function __construct() {
     	global $webObject;
@@ -140,12 +140,11 @@
 		
 		/**
 		 *
-		 *
-		 *
+		 *	Generates form for select taglib
 		 *
 		 */		 		 		 		 		
 		public function selectClassPath($useFrames = false, $showMsg = false) {
-    	$rb = new ResourceBundle();
+			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
@@ -192,7 +191,7 @@
 			.'</div>'
 			.'<div class="gray-box">'
 				.'<strong>There are some special GET parameters in the system, here is list of them: </strong>'
-				.'<ul'
+				.'<ul>'
 					.'<li>auto-login-ignore - ignore auto-login parameteres for login:login</li>'
 					.'<li>duration-stats - time required to generate response</li>'
 					.'<li>mem-stats - wfw memory cosumption stats</li>'
@@ -206,6 +205,43 @@
 				return parent::getFrame($rb->get('lib.title2').': '.$classPath, $return, "", true);
 			}
 		}
+		
+		
+	public function getPropertyList($useFrames = false) {
+		$rb = new ResourceBundle();
+		$rb->loadBundle($this->BundleName, $this->BundleLang);
+		
+		$return = ''
+		.'<div class="gray-box">'
+			.$rb->get('properties.headline').':'
+		.'</div>'
+		.'<div class="gray-box">'
+			.'<ul>'
+				.'<li>Article.author</li>'
+				.'<li>Article.editAreaHeadRows</li>'
+				.'<li>Article.editors</li>'
+				.'<li>Article.languageId</li>'
+				.'<li>Login.session</li>'
+				.'<li>Page.editAreaContentRows</li>'
+				.'<li>Page.editAreaHeadRows</li>'
+				.'<li>Page.editAreaTLEndRows</li>'
+				.'<li>Page.editAreaTLStartRows</li>'
+				.'<li>Page.editAreaTextFileRows</li>'
+				.'<li>Page.editors</li>'
+				.'<li>System.cms.windowsstyle</li>'
+				.'<li>TextFiles.showFilter</li>'
+				.'<li>Templates.showFilter</li>'
+				.'<li>WebProject.defaultProjectId</li>'
+			.'</ul>'
+		.'</div>';
+		
+		
+		if($useFrames == "false") {
+			return $return;
+		} else {
+			return parent::getFrame($rb->get('properties.title').': '.$classPath, $return, "", true);
+		}
+	}
 		
 		public function setPropClassPath($classPath) {
 			$_SESSION['select-class-path'] = $classPath;

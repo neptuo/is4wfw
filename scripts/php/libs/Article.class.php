@@ -7,14 +7,14 @@
 	 */
 	require_once("BaseTagLib.class.php");
 	require_once("scripts/php/classes/CustomTagParser.class.php");
-	require_once('System.class.php');
+	require_once("scripts/php/classes/ui/BaseGrid.class.php");
   
 	/**
 	 * 
 	 *  Article class
 	 *      
 	 *  @author     Marek SMM
-	 *  @timestamp  2010-10-14
+	 *  @timestamp  2010-10-24
 	 * 
 	 */  
 	class Article extends BaseTagLib {
@@ -55,11 +55,14 @@
 		 *  @param		pageLangId		language id     
 		 *  @param		articleLangId	language id     
 		 *  @param    	method    		method for passing detail id
+		 *  @param		sortBy
 		 *  @param		sort			asc (default) / desc
+		 *  @param		noDateMessage
+		 *  @param		limit
 		 *  @return   	list of articles
 		 *
 		 */                   
-		public function showLine($lineId = false, $template = fales, $templateId = false, $pageId = false, $pageLangId = false, $articleLangId = false, $method = false, $sort = false, $noDataMessage = false) {
+		public function showLine($lineId = false, $template = fales, $templateId = false, $pageId = false, $pageLangId = false, $articleLangId = false, $method = false, $sortBy = false, $sort = false, $noDataMessage = false, $limit = false, $visible = false, $labelIds = false) {
 			global $webObject;
 			global $dbObject;
 			global $loginObject;
@@ -111,13 +114,55 @@
 				trigger_error($message, E_USER_WARNING);
 				return;
 			}
+			
+			if($sortBy == 'order') {
+				$sortBy = '`article`.`order`';
+			} elseif($sortBy == 'name') {
+				$sortBy = '`article_content`.`name`';
+			} elseif($sortBy == 'url') {
+				$sortBy = '`article_content`.`url`';
+			} elseif($sortBy == 'head') {
+				$sortBy = '`article_content`.`head`';
+			} elseif($sortBy == 'content') {
+				$sortBy = '`article_content`.`content`';
+			} else {
+				$sortBy = '`article_content`.`timestamp`';
+			}
+			
+			if($limit != '') {
+				$limit = ' limit '.$limit;
+			}
+			
+			if($visible != '') {
+				$visipart = 'and `article`.`visible` = ';
+				switch($visible) {
+					case '0':
+					case '1':
+					case '2': $visible = $visipart.$visible; break;
+					case 'invisible': $visible = $visipart.'0'; break;
+					case 'archive': $visible = $visipart.'1'; break;
+					case 'visible': $visible = $visipart.'2'; break;
+					case 'all': $visible = ''; break;
+				}
+			} else {
+				$visible = 'and `article`.`visible` = 2';
+			}
+			
+			$labelsWhere = '';
+			$labelsJoin = '';
+			if($labelIds != '') {
+				$labelsJoin = ' join `article_attached_label` on `article`.`id` = `article_attached_label`.`article_id`';
+				$labelsWhere = ' and `label_id` in ('.$labelIds.')';
+			}
         
 			$sort = (strtolower($sort) == 'desc' ? 'DESC' : 'ASC'); 
-			$articles = $dbObject->fetchAll("SELECT `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article`.`line_id` = ".$lineId." AND `article_content`.`language_id` = ".$articleLangId." AND `article_line_right`.`type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString().")) ORDER BY `article_content`.`timestamp` " . $sort . ";");
+			$articles = $dbObject->fetchAll("SELECT distinct `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid`".$labelsJoin." WHERE `article`.`line_id` = ".$lineId." AND `article_content`.`language_id` = ".$articleLangId." AND `article_line_right`.`type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString().")) ".$visible.$labelsWhere." ORDER BY ".$sortBy." " .$sort.$limit.";");
 			if(count($articles) > 0) {
 				$flink = '';
 				parent::request()->set('line-url', $lineInfo['url']);
+				$articleOldId = self::getArticleId();
 				foreach($articles as $article) {
+					self::setArticleId($article['id']);
 					parent::request()->set('id', $article['id'], 'current-article');
 					parent::request()->set('date', $article['timestamp'], 'current-article');
 					parent::request()->set('time', $article['timestamp'], 'current-article');
@@ -125,6 +170,7 @@
 					parent::request()->set('author', $article['author'], 'current-article');
 					parent::request()->set('head', $article['head'], 'current-article');
 					parent::request()->set('content', $article['content'], 'current-article');
+					parent::request()->set('visible', $rb->get('articles.visible.'.$article['visible']), 'current-article');
           
 					self::setUrl($article['url']);
 					if($detail) {
@@ -141,7 +187,7 @@
 					$Parser->startParsing();
 					$return .= $Parser->getResult();
 				}
-        
+				self::setArticleId($articleOldId);
 				unset($_SESSION['article-id']);
 				unset($_SESSION['current-article']);
 			} else {
@@ -335,10 +381,96 @@
     
 		/**
 		 *
+		 *	Display labels (all|for line|for article)
+		 *	C tag.
+		 *
+		 */
+		public function showLabels($templateId, $articleId = false, $lineId = false, $sortBy = false, $sort = false, $limit = false, $noDataMessage = false) {
+			$return = '';
+			$whereSql = '';
+			$joinSql = '';
+			
+			if($articleId != '') {
+				if($whereSql == '') {
+					$whereSql .= ' where';
+				} else {
+					$whereSql .= ' and';
+				}
+				$whereSql .= ' `article_attached_label`.`article_id` = '.$articleId;
+				$joinSql .= ' join `article_attached_label` on `article_label`.`id` = `article_attached_label`.`label_id`';
+			}
+			if($lineId != '') {
+				if($whereSql == '') {
+					$whereSql .= ' where';
+				} else {
+					$whereSql .= ' and';
+				}
+				$whereSql .= ' `article_line_label`.`line_id` = '.$lineId;
+				$joinSql .= ' join `article_line_label` on `article_label`.`id` = `article_line_label`.`label_id`';
+			}
+			if($sort != 'desc') {
+				$sort = 'asc';
+			}
+			if($sortBy != 'id' && $sortBy != 'name' && $sortBy != 'url') {
+				$sortBy = 'id';
+			}
+			if($limit != '') {
+				$limit = 'limit '.$limit;
+			}
+			$labels = parent::db()->fetchAll('select `id`, `name`, `url` from `article_label`'.$joinSql.$whereSql.' order by '.$sortBy.' '.$sort.' '.$limit.';');
+			if(count($labels) > 0) {
+				$templateContent = parent::getTemplateContent($templateId);
+				$i = 1;
+				$labelOldId = self::getLabelId();
+				foreach($labels as $label) {
+					parent::request()->set('i', $i, 'current-label');
+					parent::request()->set('label', $label, 'current-label');
+					self::setLabelId($label['id']);
+					$parser = new CustomTagParser();
+					$parser->setContent($templateContent);
+					$parser->startParsing();
+					$return .= $parser->getResult();
+					$i ++;
+				}
+				self::setLabelId($labelOldId);
+			} else {
+				if($noDataMessage != '') {
+					$return .= parent::getWarning($noDataMessage);
+				}
+			}
+			return $return;
+		}
+		
+		/**
+		 *
+		 *	Shows field from ArticleLabel.
+		 *
+		 */
+		public function showLabel($type, $labelId = false) {
+			$return = '';
+			$label = array();
+			if($labelId == '') {
+				$label = parent::request()->get('label', 'current-label');
+			} else {
+				$label = parent::db()->fetchSingle('select `id`, `name`, `url` from `article_label` where `id` = '.$labelId);
+			}
+			switch($type) {
+				case 'i': $return .= parent::request()->get('i', 'current-label'); break;
+				case 'id': $return .= $label['id']; break;
+				case 'name': $return .= $label['name']; break;
+				case 'url': $return .= $label['url']; break;
+			}
+			return $return;
+		}
+		
+		/**
+		 *
 		 *  Dynamicly rewrite address.
 		 *  C tag.
 		 *  
-		 *  return    if article exists, it returns CurrentDynamicPath     
+		 *  return    if article exists, it returns CurrentDynamicPath
+		 *
+		 *  DECPRECATED!!
 		 *
 		 */                        
 		public function composeUrl() {
@@ -353,6 +485,7 @@
 			if(count($file) == 1 && $cdp == $id[0]) {
 				$this->CurrentId = $id[0];
 				$_SESSION['article']['current_id'] = $id[0];
+				self::setArticleId($id[0]);
 				return $cdp;
 			} else {
 				return 'false.false';
@@ -365,13 +498,13 @@
 		 *  C tag.
 		 *  
 		 *  @param    lineId    			line id
-		 *  @param		detailPafeId    page id for next articles.selectline
-		 *  @param		method					method of passing arguments
-		 *  @param		useFrames				use frames in output		      
+		 *  @param	  detailPageId    page id for next articles.selectline
+		 *  @param	  method					method of passing arguments
+		 *  @param	  useFrames				use frames in output		      
 		 *  @return   complete article management                    
 		 *
 		 */                   
-		public function showManagement($lineId = false, $detailPageId = false, $method = false, $useFrames = false) {
+		public function showManagement($lineId = false, $detailPageId = false, $method = false, $useFrames = false, $newArticleButton = false) {
 			global $dbObject;
 			global $loginObject;
 			global $webObject;
@@ -407,6 +540,54 @@
 				}
 			}
 			
+			if($_POST['article-move-up'] == $rb->get('articles.moveup')) {
+				$artcId = $_POST['article-id'];
+				$lineId = $_POST['line-id'];
+				
+				// Vyber clanek pred a prohod ordery
+				//parent::db()->setMockMode(true);
+				$article = parent::db()->fetchSingle('select `id`, `order` from `article` where `id` = '.$artcId.';');
+				$articlesInLine = parent::db()->fetchAll('select `id`, `order` from `article` where `line_id` = '.$lineId.' order by `order` desc;');
+				for($i = 0; $i < count($articlesInLine); $i ++) {
+					if($articlesInLine[$i]['id'] == $article['id']) {
+						if($i != 0) {
+							$order = $article['order'];
+							parent::db()->execute('update `article` set `order` = '.$articlesInLine[$i - 1]['order'].' where `id` = '.$article['id'].';');
+							parent::db()->execute('update `article` set `order` = '.$order.' where `id` = '.$articlesInLine[$i - 1]['id'].';');
+							$returnTmp .= parent::getSuccess($rb->get('articles.moved'));
+							break;
+						} else {
+							$returnTmp .= parent::getError($rb->get('articles.cantmove'));
+							break;
+						}
+					}
+				}
+				//parent::db()->setMockMode(false);
+			} elseif($_POST['article-move-down'] == $rb->get('articles.movedown')) {
+				$artcId = $_POST['article-id'];
+				$lineId = $_POST['line-id'];
+				
+				// Vyber clanek za a prohod ordery
+				//parent::db()->setMockMode(true);
+				$article = parent::db()->fetchSingle('select `id`, `order` from `article` where `id` = '.$artcId.';');
+				$articlesInLine = parent::db()->fetchAll('select `id`, `order` from `article` where `line_id` = '.$lineId.' order by `order` desc;');
+				for($i = 0; $i < count($articlesInLine); $i ++) {
+					if($articlesInLine[$i]['id'] == $article['id']) {
+						if($i != count($articlesInLine) - 1) {
+							$order = $article['order'];
+							parent::db()->execute('update `article` set `order` = '.$articlesInLine[$i + 1]['order'].' where `id` = '.$article['id'].';');
+							parent::db()->execute('update `article` set `order` = '.$order.' where `id` = '.$articlesInLine[$i + 1]['id'].';');
+							$returnTmp .= parent::getSuccess($rb->get('articles.moved'));
+							break;
+						} else {
+							$returnTmp .= parent::getError($rb->get('articles.cantmove'));
+							break;
+						}
+					}
+				}
+				//parent::db()->setMockMode(false);
+			}
+			
 			if($_POST['article-delete'] == $rb->get('articles.delete')) {
 				$artcId = $_POST['article-id'];
         
@@ -423,7 +604,7 @@
 				}
 			}
       
-			$articles = $dbObject->fetchAll("SELECT `id` FROM `article` WHERE `line_id` = ".$lineId.";");
+			$articles = $dbObject->fetchAll("SELECT `id` FROM `article` WHERE `line_id` = ".$lineId." order by `order` desc;");
 			if(count($articles) > 0) {
 				$returnTmp .= ''
 				.'<div class="article-mgm-show">'
@@ -447,17 +628,31 @@
 						.(($first) ? ''
 							.'<td rowspan="'.$lnVersions.'" class="article-mgm-td article-mgm-id">'
 								.'<span>'.$article['id'].'</span>'
+								.'<div class="clear"></div>'
 								.'<form name="article-add-lang1" method="post" action="'.$actionUrl.'">'
 									.'<input type="hidden" name="article-id" value="'.$article['id'].'" />'
 									.'<input type="hidden" name="line-id" value="'.$lineId.'" />'
 									.'<input type="hidden" name="article-add-lang" value="'.$rb->get('articles.addlang').'" />'
 									.'<input type="image" src="~/images/lang_add.png" name="article-add-lang" value="'.$rb->get('articles.addlang').'" title="'.$rb->get('articles.addlangcap').'" />'
 								.'</form>'
+								.'<form name="article-move-up" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+									.'<input type="hidden" name="article-id" value="'.$article['id'].'" />'
+									.'<input type="hidden" name="line-id" value="'.$lineId.'" />'
+									.'<input type="hidden" name="article-move-up" value="'.$rb->get('articles.moveup').'" />'
+									.'<input type="image" src="~/images/arro_up.png" name="article-move-up" value="'.$rb->get('articles.moveup').'" title="'.$rb->get('articles.moveupcap').'" /> '
+								.'</form>'
+								.'<div class="clear"></div>'
 								.'<form name="article-add-lang2" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 									.'<input type="hidden" name="article-id" value="'.$article['id'].'" />'
 									.'<input type="hidden" name="line-id" value="'.$lineId.'" />'
 									.'<input type="hidden" name="article-delete" value="'.$rb->get('articles.delete').'" />'
 									.'<input type="image" src="~/images/page_del.png" class="confirm" name="article-delete" value="'.$rb->get('articles.delete').'" title="'.$rb->get('articles.deletecap').', id('.$article['id'].')" >'
+								.'</form>'
+								.'<form name="article-move-down" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+									.'<input type="hidden" name="article-id" value="'.$article['id'].'" />'
+									.'<input type="hidden" name="line-id" value="'.$lineId.'" />'
+									.'<input type="hidden" name="article-move-down" value="'.$rb->get('articles.movedown').'" />'
+									.'<input type="image" src="~/images/arro_do.png" name="article-move-down" value="'.$rb->get('articles.movedown').'" title="'.$rb->get('articles.movedowncap').'" /> '
 								.'</form>'
 							.'</td>'
 						: '')
@@ -498,7 +693,11 @@
 			} else {
 				$returnTmp .= '<div class="no-articles"><h4 class="error">'.$rb->get('articled.noinline').'</h4></div>';
 			}
-		
+
+			if($newArticleButton == 'true') {
+				$returnTmp .= '<div class="hspace"></div>'.self::createArticle($lineId, $detailPageId, $method, "false", false);
+			}
+			
 			if($useFrames != "false") {
 				return parent::getFrame($rb->get('articles.inlinetitle'), $returnTmp, '');
 			} else {
@@ -583,6 +782,8 @@
 			$return = '';
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			
+			return parent::getError('DEPRECATED C-TAG');
       
 			$usedLangs = $dbObject->fetchAll("SELECT `language_id` FROM `article_content` WHERE `article_id` = ".$article['id'].";");
 			$langs = $dbObject->fetchAll("SELECT `id`, `language` FROM `language` ORDER BY `language`;");
@@ -716,7 +917,7 @@
 		 *  @return   Article lines                    
 		 *
 		 */
-		public function showLines($editable = false, $detailPageId = false, $useFrames = false) {
+		public function showLines($editable = false, $detailPageId = false, $useFrames = false, $newLineButton = false) {
 			global $dbObject;
 			global $webObject;
 			global $loginObject;
@@ -801,6 +1002,12 @@
 				.'</div>';
 			} else {
 				$return .= '<h4 class="error">'.$rb->get('lines.nolines').'</h4>';
+			}
+			
+			if($newLineButton == 'true') {
+				$return .= ''
+				.'<hr />'
+				.self::createLine($detailPageId, "false");
 			}
       
 			if($useFrames != "false") {
@@ -933,15 +1140,24 @@
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			
 			if($_POST['article-save'] == $rb->get('articles.save')) {
-				$article = array('id' => $_POST['article-id'], 'line_id' => $_POST['line-id']);
+				$article = array('id' => $_POST['article-id'], 'line_id' => $_POST['line-id'], 'visible' => $_POST['article-visible'], 'order' => $_POST['article-id'], 'labels' => $_POST['article-labels']);
 				$articleContent = array('article_id' => $_POST['article-id'], 'name' => $_POST['article-name'], 'head' => $_POST['article-head'], 'content' => $_POST['article-content'], 'author' => $_POST['article-author'], 'timestamp' => time(), 'language_id' => $_POST['language-id'], 'language_old_id' => $_POST['article-old-lang-id'], 'line_old_id' => $_POST['line-old-id'], 'url' => $_POST['article-url']);
 				
 				if($articleContent['url'] == '') {
 					$articleContent['url'] = $articleContent['name'];
 				}
 				
+				//parent::db()->setMockMode(true);
 				$articleContent['url'] = strtolower(parent::convertToUrlValid($articleContent['url']));
-				$urls = parent::db()->fetchAll('select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "'.$articleContent['url'].'" and `line_id` = '.$article['line_id'].';');
+				$idSql = '';
+				if($article['id'] != '') {
+					$idSql = ' and `article_id` = '.$article['id'];
+				}
+				$langSql = '';
+				if($articleContent['language_id'] != '') {
+					$langSql = ' and `language_id` = '.$articleContent['language_id'];
+				}
+				$urls = parent::db()->fetchAll('select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "'.$articleContent['url'].'" and `line_id` = '.$article['line_id'].$idSql.$langId.';');
 				if(count($urls) == 0 || (count($urls) == 1 && $urls[0]['article_id'] == $article['id'])) {
 					$permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = '.$article['line_id'].' AND `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
 					if(count($permission) > 0) {
@@ -955,7 +1171,8 @@
 									$maxId = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `article`;');
 									$article['id'] = $ac['article_id'] = $maxId[0]['id'] + 1;
 									// Ulozeni - NOVY clanek
-									$dbObject->execute("INSERT INTO `article`(`id`, `line_id`) VALUES (".$article['id'].", ".$article['line_id'].");");
+									$maxOrder = parent::db()->fetchSingle('select `order` from `article` order by `order` desc limit 1');
+									$dbObject->execute("INSERT INTO `article`(`id`, `line_id`, `order`, `visible`) VALUES (".$article['id'].", ".$article['line_id'].", ".$maxOrder['order'].", ".$article['visible'].");");
 									$dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `head`, `content`, `author`, `timestamp`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['url']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", ".$ac['language_id'].");");
 									$return .= '<h4 class="success">'.$rb->get('articles.newcreated').'</h4>';
 									$_POST['article-id'] = $article['id'];
@@ -970,11 +1187,16 @@
 								}
 							} else {
 								$ac = $articleContent;
-								$dbObject->execute("UPDATE `article` SET `line_id` = ".$article['line_id']." WHERE `id` = ".$article['id'].";");
+								$dbObject->execute("UPDATE `article` SET `line_id` = ".$article['line_id'].", `order` = ".$article['order'].", `visible`= ".$article['visible']." WHERE `id` = ".$article['id'].";");
 								$dbObject->execute("UPDATE `article_content` SET `name` = \"".$ac['name']."\", `url` = \"".$ac['url']."\", `head` = \"".$ac['head']."\", `content` = \"".$ac['content']."\", `author` = \"".$ac['author']."\", `timestamp` = ".$ac['timestamp'].", `language_id` = ".$ac['language_id']." WHERE `article_id` = ".$ac['article_id']." AND `language_id` = ".$ac['language_old_id'].";");
 								$_POST['article-id'] = $article['id'];
 								$_POST['language-id'] = $ac['language_id'];
 								$return .= '<h4 class="success">'.$rb->get('articles.updated').'</h4>';
+							}
+							
+							parent::db()->execute('delete from `article_attached_label` where `article_id` = '.$article['id'].';');
+							foreach($article['labels'] as $label) {
+								parent::db()->execute('insert into `article_attached_label`(`article_id`, `label_id`) values ('.$article['id'].', '.$label.');');
 							}
 						}
 					} else {
@@ -983,6 +1205,7 @@
 				} else {
 					$return .= parent::getError($rb->get('articles.notuniqueurl'));
 				}
+				//parent::db()->setMockMode(false);
 			}
 			
 			if(array_key_exists('article-id', $_POST) && $_POST['article-id'] != '') {
@@ -991,7 +1214,7 @@
 				
 				if($_POST['article-id'] != '' && array_key_exists('language-id', $_POST)) {
 					// test na prava pro cteni z prislusne rady!
-					$article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article`.`line_id` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) AND `article_content`.`article_id` = '.$articleId.' AND `article_content`.`language_id` = '.$languageId.' ORDER BY `id`;');
+					$article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article`.`line_id`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) AND `article_content`.`article_id` = '.$articleId.' AND `article_content`.`language_id` = '.$languageId.' ORDER BY `id`;');
 					if(count($article) != 0) {
 						$article = $article[0];
 					} else {
@@ -1015,6 +1238,9 @@
 				$new = true;
 				$userLangs = array();
 				$article = $articleContent;
+				$article['visible'] = 2;
+				$article['author'] = parent::getPropertyValue('Article.author', '');
+				$article['language_id'] = parent::getPropertyValue('Article.languageId', '1');
 			}
 			
 			$langs = $dbObject->fetchAll("SELECT `id`, `language` FROM `language` ORDER BY `language`;");
@@ -1055,6 +1281,22 @@
 			if($submitPageId != false) {
 				$actionUrl = $webObject->composeUrl($submitPageId);
 			}
+			
+			$labelList = '';
+			$labels = parent::db()->fetchAll('select `id`, `name` from `article_label` join `article_line_label` on `article_label`.`id` = `article_line_label`.`label_id` where `line_id` = '.$article['line_id'].' order by `name`');
+			$usedLabels = parent::db()->fetchAll('select `label_id` from `article_attached_label` where `article_id` = '.$articleId.';');
+			foreach($labels as $label) {
+				$used = false;
+				foreach($usedLabels as $ul) {
+					if($label['id'] == $ul['label_id']) {
+						$used = true;
+						break;
+					}
+				}
+				$labelList .= ''
+				.'<input type="checkbox" name="article-labels[]" id="article-labels-'.$label['id'].'" '.($used ? ' checked="checked"' : '').' value="'.$label['id'].'" />'
+				.'<label for="article-labels-'.$label['id'].'">'.$label['name'].'</label> ';
+			}
     
 			$name = 'Article.editors';
 			$propertyEditors = parent::system()->getPropertyValue($name);
@@ -1083,10 +1325,25 @@
 						.'</div>'
 						.'<div class="clear"></div>'
 					.'</div>'
-					.'<div class="gray-box">'
+					.'<div class="gray-box-float">'
 						.'<label for="article-url" class="w60">'.$rb->get('articles.url').':</label> '
 						.'<input type="text" class="long-input" name="article-url" id="article-url" value="'.$article['url'].'" />'
-					.'</div>';
+					.'</div>'
+					.'<div class="gray-box-float">'
+						.'<label for="article-visible" class="w60">'.$rb->get('articles.visible').':</label> '
+						.'<select name="article-visible" id="article-visible">'
+							.'<option'.($article['visible'] == 0 ? ' selected="selected"' : '').' value="0">'.$rb->get('articles.visible.0').'</option>'
+							.'<option'.($article['visible'] == 1 ? ' selected="selected"' : '').' value="1">'.$rb->get('articles.visible.1').'</option>'
+							.'<option'.($article['visible'] == 2 ? ' selected="selected"' : '').' value="2">'.$rb->get('articles.visible.2').'</option>'
+						.'</select>'
+					.'</div>'
+					.'<div class="clear"></div>'
+					.'<div class="gray-box">'
+						.'<label class="w60">'.$rb->get('label.edittitle').':</label>'
+						.$labelList
+						.'<span class="padded small-note">'.$rb->get('lines.labelnote').'</span>'
+					.'</div>'
+					.'<div class="clear"></div>';
 				if($propertyEditors == 'edit_area') {
 					$return .= ''
 					.'<div id="editors" class="editors edit-area-editors">'
@@ -1188,6 +1445,7 @@
 			global $webObject;
 			global $loginObject;
 			$return = '';
+			$ok = true;
 			$actionUrl = $_SERVER['REDIRECT_URL'];
 			$rb = new ResourceBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -1205,7 +1463,10 @@
 					return $return;
 				}
 			}
-			$ok = true;
+			
+			if($_POST['article-line-edit-submit'] != $rb->get('lines.save') && $_POST['article-line-edit'] != $rb->get('lines.edit') && $_POST['article-line-create-submit'] != $rb->get('lines.new')) {
+				$ok = false;
+			}
 			
 			if($ok) {
 				if($_POST['article-line-edit-submit'] == $rb->get('lines.save')) {
@@ -1215,6 +1476,7 @@
 					$read = $_POST['article-right-edit-groups-r'];
 					$write = $_POST['article-right-edit-groups-w'];
 					$delete = $_POST['article-right-edit-groups-d'];
+					$labels = $_POST['article-line-labels'];
 					
 					$ok = true;
 					$urlOk = true;
@@ -1236,6 +1498,12 @@
 							$dbObject->execute('UPDATE `article_line` SET `name` = "'.$name.'", `url` = "'.$url.'" WHERE `id` = '.$lineId.';');
 							$return .= '<h4 class="success">'.$rb->get('lines.updated').'</h4>';
 						}
+						
+						parent::db()->execute('delete from `article_line_label` where `line_id` = '.$lineId.';');
+						foreach($labels as $label) {
+							parent::db()->execute('insert into `article_line_label`(`line_id`, `label_id`) values ('.$lineId.', '.$label.');');
+						}
+						
 						
 						if(count($read) != 0) {
 							$dbR = $dbObject->fetchAll("SELECT `gid` FROM `article_line_right` WHERE `article_line_right`.`line_id` = ".$lineId." AND `type` = ".WEB_R_READ.";");
@@ -1332,6 +1600,22 @@
 				$groupSelectR .= '</select>';
 				$groupSelectW .= '</select>';
 				$groupSelectD .= '</select>';
+				
+				$labelList = '';
+				$labels = parent::db()->fetchAll('select `id`, `name` from `article_label` order by `name`');
+				$usedLabels = parent::db()->fetchAll('select `label_id` from `article_line_label` where `line_id` = '.$lineId.';');
+				foreach($labels as $label) {
+					$used = false;
+					foreach($usedLabels as $ul) {
+						if($label['id'] == $ul['label_id']) {
+							$used = true;
+							break;
+						}
+					}
+					$labelList .= ''
+					.'<input type="checkbox" name="article-line-labels[]" id="article-line-labels-'.$label['id'].'" '.($used ? ' checked="checked"' : '').' value="'.$label['id'].'" />'
+					.'<label for="article-line-labels-'.$label['id'].'">'.$label['name'].'</label> ';
+				}
 			
 				$line = $dbObject->fetchAll('SELECT `name`, `url` FROM `article_line` WHERE `id` = '.$lineId.';');
 				if(count($line) != 0 || $lineId == 0) {
@@ -1369,6 +1653,12 @@
 								: '')
 							.'</div>'
 							.'<div class="clear"></div>'
+							.'<div class="gray-box">'
+								.'<span class="w120">'.$rb->get('lines.availablelabels').':</span>'
+								.'<div>'
+									.$labelList
+								.'</div>'
+							.'</div>'
 							.'<div class="article-line-edit-submit">'
 								.'<input type="hidden" name="article-line-edit-id" value="'.$lineId.'" />'
 								.'<input type="submit" name="article-line-edit-submit" value="'.$rb->get('lines.save').'" />'
@@ -1378,14 +1668,144 @@
 				} else {
 					$return .= '<h4 class="error">'.$rb->get('lines.notoedit').'</h4>';
 				}
-			} else {
-				$return .= '<h4 class="error">'.$rb->get('articles.noperm').'</h4>';
 			}
 			
 			if($useFrames != "false") {
 				return parent::getFrame($rb->get('lines.edittitle3'), $return, '');
 			} else {
 				return $return;
+			}
+		}
+		
+		/**
+		 *
+		 *	Generates editable label list
+		 *
+		 */
+		public function showEditLabels($useFrames = false) {
+			$return = '';
+			$actionUrl = $_SERVER['REDIRECT_URL'];
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			
+			if($_POST['label-delete'] == $rb->get('label.delete')) {
+				$labelId = $_POST['label-id'];
+				parent::db()->execute('delete from `article_label` where `id` = '.$labelId.';');
+				parent::db()->execute('delete from `article_line_label` where `label_id` = '.$labelId.';');
+				parent::db()->execute('delete from `article_attached_label` where `label_id` = '.$labelId.';');
+				$return .= parent::getSuccess($rb->get('label.deleted'));
+			}
+			
+			$labels = parent::db()->fetchAll('select `id`, `name`, `url` from `article_label` order by `id`;');
+			if(count($labels) > 0) {
+				foreach($labels as $key=>$label) {
+					$labels[$key]['form'] = ''
+					.'<form name="label-edit" method="post" action="'.$actionUrl.'">'
+						.'<input type="hidden" name="label-id" value="'.$label['id'].'" />'
+						.'<input type="hidden" name="label-edit" value="'.$rb->get('label.edit').'" />'
+						.'<input type="image" src="~/images/page_edi.png" name="label-edit" value="'.$rb->get('label.edit').'" title="'.$rb->get('label.edittitle2').', id='.$label['id'].'" />'
+					.'</form> '
+					.'<form name="label-delete" method="post" action="'.$actionUrl.'">'
+						.'<input type="hidden" name="label-id" value="'.$label['id'].'" />'
+						.'<input type="hidden" name="label-delete" value="'.$rb->get('label.delete').'" />'
+						.'<input class="confirm" type="image" src="~/images/page_del.png" name="label-delete" value="'.$rb->get('label.delete').'" title="'.$rb->get('label.deletetitle').', id='.$label['id'].'" />'
+					.'</form>';
+				}
+				$grid = new BaseGrid();
+				$grid->setHeader(array('id' => $rb->get('label.id'), 'name' => $rb->get('label.name'), 'url' => $rb->get('label.url'), 'form' => ''));
+				$grid->addRows($labels);
+				$grid->addClass('clickable');
+				
+				$return .= $grid->render();
+			} else {
+				$return .= parent::getWarning($rb->get('label.nolabels'));
+			}
+			
+			$return .= ''
+			.'<hr />'
+			.'<div class="gray-box">'
+				.'<form name="label-new" method="post" action="'.$artionUrl.'">'
+					.'<input type="submit" name="label-new" value="'.$rb->get('label.new').'" title="'.$rb->get('label.newtitle').'" />'
+				.'</form>'
+			.'</div>';
+			
+			if($useFrames != "false") {
+				return parent::getFrame($rb->get('label.edittitle'), $return, '');
+			} else {
+				return $return;
+			}
+		}
+		
+		/**
+		 *
+		 *	Generates edit form label
+		 *
+		 */
+		public function showEditLabelForm($useFrames = false) {
+			$return = '';
+			$actionUrl = $_SERVER['REDIRECT_URL'];
+			$label = array();
+			$ok = true;
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			
+			if($_POST['label-edit-save'] == $rb->get('label.save')) {
+				$label['id'] = $_POST['label-edit-id'];
+				$label['name'] = $_POST['label-edit-name'];
+				$label['url'] = strtolower(parent::convertToValidUrl(strlen($_POST['label-edit-url']) != 0 ? $_POST['label-edit-url'] : $label['name']));
+				
+				if(strlen($label['name']) < 2) {
+					$ok = false;
+					$return .= parent::getError($rb->get('label.namelength'));
+				}
+				$idSql = '';
+				if($label['id'] != '') {
+					$idSql = ' and `id` != '.$label['id'];
+				}
+				$labels = parent::db()->fetchAll('select `id` from `article_label` where `url` = "'.$label['url'].'"'.$idSql.';');
+				if(strlen($label['url']) < 2 || count($labels) != 0) {
+					$ok = false;
+					$return .= parent::getError($rb->get('label.uniqueurlandlength'));
+				}
+				
+				if($ok) {
+					if($label['id'] != '') {
+						parent::db()->execute('update `article_label` set `name` = "'.$label['name'].'", `url` = "'.$label['url'].'" where `id` = '.$label['id'].';');
+						$return .= parent::getSuccess($rb->get('label.saved'));
+					} else {
+						parent::db()->execute('insert into `article_label`(`name`, `url`) values("'.$label['name'].'", "'.$label['url'].'");');
+						$return .= parent::getSuccess($rb->get('label.updated'));
+					}
+				}
+			}
+			
+			if($_POST['label-edit'] == $rb->get('label.edit') || $_POST['label-new'] == $rb->get('label.new') || $ok == false) {
+				if($_POST['label-id'] != '') {
+					$labelId = $_POST['label-id'];
+					$label = parent::db()->fetchSingle('select `id`, `name`, `url` from `article_label` where `id` = '.$labelId.';');
+				}
+				
+				$return .= ''
+				.'<form name="label-edit-form" method="post" action="'.$artionUrl.'">'
+					.'<div class="gray-box">'
+						.'<label for="label-edit-name" class="w60">'.$rb->get('label.name').'</label>'
+						.'<input type="text" class="w200" name="label-edit-name" id="label-edit-name" value="'.$label['name'].'" />'
+					.'</div>'
+					.'<div class="gray-box">'
+						.'<label for="label-edit-url" class="w60">'.$rb->get('label.url').'</label>'
+						.'<input type="text" class="w200" name="label-edit-url" id="label-edit-url" value="'.$label['url'].'" />'
+					.'</div>'
+					.'<div class="gray-box">'
+						.'<input type="hidden" name="label-edit-id" value="'.$label['id'].'" />'
+						.'<input type="submit" name="label-edit-save" value="'.$rb->get('label.save').'" title="'.$rb->get('label.savetitle').'" />'
+					.'</div>'
+				.'</form>';
+				
+				if($useFrames != "false") {
+					return parent::getFrame($rb->get('label.edittitle3'), $return, '');
+				} else {
+					return $return;
+				}
 			}
 		}
 		
@@ -1429,11 +1849,30 @@
 			return parent::request()->get('link', 'current-article');
 		}
 		
+		public function showVisible() {
+			return parent::request()->get('visible', 'current-article');
+		}
+		
 		// =============== PROPERTIES ======================================
 		
+		public function setArticleId($id) {
+			parent::request()->set('article-id', $id);
+			return $id;
+		}
+		
+		public function getArticleId() {
+			return parent::request()->get('article-id');
+		}
+		
 		public function setUrl($url) {
-			parent::request()->set('article-url', $url);
-			return $url;
+			$article = parent::db()->fetchSingle('select `article_id` from `article_content` where `url` = "'.$url.'";');
+			if($article != array()) {
+				self::setArticleId($article['article_id']);
+				parent::request()->set('article-url', $url);
+				return $url;
+			} else {
+				return 'false.false';
+			}
 		}
 		
 		public function getUrl() {
@@ -1447,6 +1886,30 @@
 		
 		public function getLineUrl() {
 			return parent::request()->get('line-url');
+		}
+		
+		public function setLabelId($labelId) {
+			parent::request()->set('label-id', $labelId);
+			return $labelId;
+		}
+		
+		public function getLabelId() {
+			return parent::request()->get('label-id');
+		}
+		
+		public function setLabelUrl($url) {
+			$label = parent::db()->fetchSingle('select `id` from `article_label` where `url` = "'.$url.'";');
+			if($label != array()) {
+				self::setLabelId($label['id']);
+				return $url;
+			} else {
+				return 'false.false';
+			}
+		}
+		
+		public function getLabelUrl() {
+			$label = parent::db()->fetchSingle('select `url` from `article_label` where `id` = "'.self::getLabelId().'";');
+			return $label['url'];
 		}
     
 	}

@@ -86,6 +86,7 @@
   $webObject = new DefaultWeb();
   
   require_once("scripts/php/includes/postinit.inc.php");
+  require_once("scripts/php/includes/autoupdate.inc.php");
   
   $webObject->processRequest();
 

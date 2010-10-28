@@ -4,7 +4,7 @@
   <name>Article Lib</name>
   <classname>Article</classname>
   <classpath>php.libs</classpath>
-  <version>1.31</version>
+  <version>1.42</version>
   <count>*</count>
   <comment>
     Třída pro články.
@@ -41,6 +41,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>sortBy</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>sort</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -48,11 +52,24 @@
       <attname>noDataMessage</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>limit</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>visible</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>labelIds</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vypíše všechny všechny články z řady. Pokud je zadáno pageId, je to stránka,
       na kterou povede odkaz na detail článku, method (static | dynamic) pak udává jesi
       má být použit dynamický překlad adres nebo předání parametrem.
-      Musí být zadán buď template(deprecated) nebo templateId. Sort = asc ( default ) / desc
+      Musí být zadán buď template(deprecated) nebo templateId. Sort = asc ( default ) / desc.
+	  LabelIds je čárkou oddělený seznam id štíků
     </comment>
   </tag>
   <tag>
@@ -119,6 +136,56 @@
     </comment>
   </tag>
   <tag>
+    <tagname>labels</tagname>
+    <function>showLabels</function>
+    <attribute>
+      <attname>templateId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>articleId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>lineId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>sortBy</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>sort</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>limit</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>noDataMessage</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí seznam štítků, pokud je vyplněno lineId nebo articleId, pak jen štítky vstahující se ke článku nebo řadě.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>label</tagname>
+    <function>showLabel</function>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>labelId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí fíld štítku. Nutno použít uvnitř a:labels!
+    </comment>
+  </tag>
+  <tag>
     <tagname>compose</tagname>
     <function>composeUrl</function>
     <comment>
@@ -138,6 +205,14 @@
     </attribute>
     <attribute>
       <attname>method</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>newArticleButton</attname>
       <attreq>implied</attreq>
     </attribute>
     <comment>
@@ -206,8 +281,34 @@
       <attname>useFrames</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>newLineButton</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vypíše všechny řady článků. Pokud je 'editable' "true", pak se zobrazí editační formuláře. 
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showLabels</tagname>
+    <function>showEditLabels</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí seznam štítků
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showLabelEdit</tagname>
+    <function>showEditLabelForm</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro editaci štítku
     </comment>
   </tag>
   <tag>
@@ -319,6 +420,13 @@
       Zobrazí odkaz.
     </comment>
   </tag>
+  <tag>
+    <tagname>visible</tagname>
+    <function>showVisible</function>
+    <comment>
+      Zobrazí "zobrazitelnost" článku.
+    </comment>
+  </tag>
   <property>
   	<propname>url</propname>
   	<setfunction>setUrl</setfunction>
@@ -328,11 +436,35 @@
     </comment>
   </property>
   <property>
+  	<propname>id</propname>
+  	<setfunction>setArticleId</setfunction>
+  	<getfunction>getArticleId</getfunction>
+    <comment>
+      Vrací / Nastavuje id článku
+    </comment>
+  </property>
+  <property>
   	<propname>lineUrl</propname>
   	<setfunction>setLineUrl</setfunction>
   	<getfunction>getLineUrl</getfunction>
     <comment>
       Vrací / Nastavuje url řady článků
+    </comment>
+  </property>
+  <property>
+  	<propname>labelId</propname>
+  	<setfunction>setLabelId</setfunction>
+  	<getfunction>getLabelId</getfunction>
+    <comment>
+      Vrací / Nastavuje id štítku
+    </comment>
+  </property>
+  <property>
+  	<propname>labelUrl</propname>
+  	<setfunction>setLabelUrl</setfunction>
+  	<getfunction>getLabelUrl</getfunction>
+    <comment>
+      Vrací / Nastavuje url štítku
     </comment>
   </property>
 </taglib>

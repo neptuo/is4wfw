@@ -115,36 +115,42 @@
     	$value = self::system()->getPropertyValue($name);
     	$closed = false;
     	if($value == 'true') {
-				$closed = true;
-			}
+			$closed = true;
+		}
+		
+		if($_COOKIE[$name] == 'closed') {
+			$closed = true;
+		} elseif($_COOKIE[$name] == 'opened') {
+			$closed = false;
+		}
 			
-			$addAttrs;
-			if($_REQUEST['__TEMPLATE'] == 'xml') {
-				$props = $dbObject->fetchAll('SELECT `left`, `top`, `width`, `height`, `maximized` FROM `window_properties` WHERE `frame_id` = "'.$name.'" AND `user_id` = '.$loginObject->getUserId().';');
-				if(count($props) == 1) {
-					$addAttrs = 'left="'.$props[0]['left'].'" top="'.$props[0]['top'].'" width="'.$props[0]['width'].'" height="'.$props[0]['height'].'" maximized="'.($props[0]['maximized'] ? "true" : "false").'"';
-				}
+		$addAttrs;
+		if($_REQUEST['__TEMPLATE'] == 'xml') {
+			$props = $dbObject->fetchAll('SELECT `left`, `top`, `width`, `height`, `maximized` FROM `window_properties` WHERE `frame_id` = "'.$name.'" AND `user_id` = '.$loginObject->getUserId().';');
+			if(count($props) == 1) {
+				$addAttrs = 'left="'.$props[0]['left'].'" top="'.$props[0]['top'].'" width="'.$props[0]['width'].'" height="'.$props[0]['height'].'" maximized="'.($props[0]['maximized'] ? "true" : "false").'"';
 			}
+		}
     
-      $return = ''
-      .'<div id="'.$name.'" class="frame frame-cover '.$name.''.((strlen($classes)) ? ' '.$classes : '').(((!$this->FirstFrame && !$ignoreFirstFrame) || $closed) ? ' closed-frame' : '').'"'.(($addAttrs != "") ? ' '.$addAttrs : '').'>'
-        .'<div class="frame frame-head">'
-          .'<div class="frame-label">'
-            .$label
-          .'</div>'
-          .'<div class="frame-close">'
-            .'<a class="click-able click-able-roll" href="#"><span>^</span></a>'
-          .'</div>'
-          .'<div class="clear"></div>'
-        .'</div>'
-        .'<div class="frame frame-body">'
-          .$content
-        .'</div>'
-      .'</div>';
-      if(!$ignoreFirstFrame) {
-        $this->FirstFrame = false;
-      }
-      return $return;
+		$return = ''
+		.'<div id="'.$name.'" class="frame frame-cover '.$name.''.((strlen($classes)) ? ' '.$classes : '').(((!$this->FirstFrame && !$ignoreFirstFrame) || $closed) ? ' closed-frame' : '').'"'.(($addAttrs != "") ? ' '.$addAttrs : '').'>'
+			.'<div class="frame frame-head">'
+			.'<div class="frame-label">'
+				.$label
+			.'</div>'
+			.'<div class="frame-close">'
+				.'<a class="click-able click-able-roll" href="#"><span>^</span></a>'
+			.'</div>'
+			.'<div class="clear"></div>'
+			.'</div>'
+			.'<div class="frame frame-body">'
+			.$content
+			.'</div>'
+		.'</div>';
+		if(!$ignoreFirstFrame) {
+			$this->FirstFrame = false;
+		}
+		return $return;
     }
     
     public function getError($msg) {
