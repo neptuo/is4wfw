@@ -12,6 +12,6 @@
    //define("WEB_DB_DATABASE", "tmp_wfw_wp_091231");
    //define("WEB_DB_DATABASE", "tmp_wfw_wp_100323");
    //define("WEB_DB_DATABASE", "tmp_wfw_wp_100808");
-   define("WEB_DB_DATABASE", "tmp_wfw_wp_lfp_20101009");
+   define("WEB_DB_DATABASE", "tmp_wfw_wp_lfp_20101105");
 
 ?>

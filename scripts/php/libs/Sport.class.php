@@ -17,7 +17,7 @@
    * 	all about sport	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-10-16
+   *  @timestamp  2010-11-05
    * 
    */  
   class Sport extends BaseTagLib {
@@ -935,10 +935,11 @@
 				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
 					$seasonId = $_POST['season-id'];
 					$playerId = $_POST['player-id'];
+					$position = $_POST['player-position'];
 					$teamId = $_POST['team-id'];
 				
-					parent::db()->execute('DELETE FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `team` = '.$teamId.' AND `season` = '.$seasonId.';');
-					parent::db()->execute('delete from `w_sport_stats` where `pid` = '.$playerId.' and `season` = '.$seasonId.';');
+					parent::db()->execute('DELETE FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `team` = '.$teamId.' AND `season` = '.$seasonId.' AND `position` = '.$position.';');
+					parent::db()->execute('delete from `w_sport_stats` where `pid` = '.$playerId.' and `season` = '.$seasonId.' and `position` = '.$position.';');
 					$return .= '<h4 class="success">'.$rb->get('players.success.delete').'</h4>';
 				} else {
 					$return .= parent::getError($rb->get('projects.error.permissionsdenied'));
@@ -985,9 +986,9 @@
 				$i = 1;
 				foreach($players as $pl) {
 					if(self::getSeasonId() != '-1') {
-						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' AND `w_sport_player`.`season` = '.self::getSeasonId().' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
+						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`position`, `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' AND `w_sport_player`.`season` = '.self::getSeasonId().' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
 					} else {
-						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
+						$seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`position`, `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = '.$pl['id'].' and `w_sport_season`.`project_id` = '.self::getProjectId().' ORDER BY `w_sport_season`.`start_year` DESC;');
 					}
 					
 					$teaseastr = '';
@@ -995,7 +996,7 @@
 						if(strlen($teaseastr) != 0) {
 							$teaseastr .= ', ';
 						}
-						$teaseastr .= '('.$sea['start_year'].' - '.$sea['end_year'].' / '.$sea['name'].($sea['on_loan'] == 1 ? ' <span class="red">['.$rb->get('players.onloanletter').']</span>' : '').' - '
+						$teaseastr .= '('.$sea['start_year'].' - '.$sea['end_year'].' / '.$sea['name'].' - <span title="'.self::getPlayerPosition($sea['position']).'" class="blue">'.self::getPlayerPositionShortcut($sea['position']).'</span> '.($sea['on_loan'] == 1 ? ' <span class="red">['.$rb->get('players.onloanletter').']</span>' : '').' - '
 						.'<form name="player-edit" method="post" action="'.$actionUrl.'">'
 							.'<input type="hidden" name="player-id" value="'.$pl['id'].'" />'
 							.'<input type="hidden" name="season-id" value="'.$sea['sid'].'" />'
@@ -1007,8 +1008,9 @@
 							.'<input type="hidden" name="player-id" value="'.$pl['id'].'" />'
 							.'<input type="hidden" name="season-id" value="'.$sea['sid'].'" />'
 							.'<input type="hidden" name="team-id" value="'.$sea['tid'].'" />'
+							.'<input type="hidden" name="player-position" value="'.$sea['position'].'" />'
 							.'<input type="hidden" name="player-delete" value="'.$rb->get('players.delete').'" />'
-							.'<input class="confirm" type="image" src="~/images/page_del.png" name="player-delete" value="'.$rb->get('players.delete').'" title="'.$rb->get('players.deletecap').', id ('.$pl['id'].'), season ('.$sea['sid'].'), team ('.$sea['tid'].')" />'
+							.'<input class="confirm" type="image" src="~/images/page_del.png" name="player-delete" value="'.$rb->get('players.delete').'" title="'.$rb->get('players.deletecap').', id ('.$pl['id'].'), season ('.$sea['sid'].'), team ('.$sea['tid'].'), position ('.self::getPlayerPosition($sea['position']).')" />'
 						.'</form> )';
 					}
 			
@@ -1057,8 +1059,8 @@
 		 *	Edit player.
 		 *	C tag.
 		 *	
-     *	@param		useFrames				use frames in output
-     *	@param		showMsg					show messages in output
+		 *	@param		useFrames				use frames in output
+		 *	@param		showMsg					show messages in output
 		 *
 		 */		 		 		 		 		
 		public function showEditPlayerForm($useFrames = false, $showMsg = false) {
@@ -1068,6 +1070,7 @@
 			$ok = true;
 			$player = array();
 			$return = '';
+			$updateType = '';
 			
 			if($_POST['player-save'] == $rb->get('player.form.save')) {
 				if(UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
@@ -1085,6 +1088,7 @@
 					$player['season'] = $_POST['player-edit-season'];
 					$player['team'] = $_POST['player-edit-team'];
 					$player['on_loan'] = $_POST['player-edit-onloan'] == 'on' ? 1 : 0;
+					$updateType = $_POST['update-type'];
 					
 					if($player['url'] == '') {
 						$player['url'] = strtolower(parent::convertToValidUrl($player['name'].'-'.$player['surname']));
@@ -1114,8 +1118,8 @@
 				
 					//parent::db()->setMockMode(true);
 					if($ok) {
-						$pl = $dbObject->fetchAll('SELECT `id` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.';');
-						if(count($pl) == 1) {
+						//$pl = $dbObject->fetchAll('SELECT `id` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.' AND `position` = '.$player['position'].';');
+						if($updateType == 'edit') {
 							$dbObject->execute('UPDATE `w_sport_player` SET `name` = "'.$player['name'].'", `surname` = "'.$player['surname'].'", `url` = "'.$player['url'].'", `birthyear` = '.$player['birthyear'].', `number` = '.$player['number'].', `photo` = "'.$player['photo'].'", `position` = '.$player['position'].', `season` = '.$player['season'].', `team` = '.$player['team'].', `on_loan` = '.$player['on_loan'].' WHERE `id` = '.$playerId.' AND `season` = '.$seasonId.' AND `team` = '.$teamId.';');
 						} else {
 							if($playerId == '') {
@@ -1133,7 +1137,6 @@
 			
 			if($ok == false || $_POST['player-edit'] == $rb->get('players.edit') || $_POST['player-new'] == $rb->get('players.new') || $_POST['player-add'] ==  $rb->get('players.add')) {
 				//$return .= '<h4 class="warning">Coming soon ...</h4>';
-				
 				if($_POST['player-edit'] == $rb->get('players.edit')) {
 					$seasonId = $_POST['season-id'];
 					$playerId = $_POST['player-id'];
@@ -1141,10 +1144,14 @@
 					$player = $dbObject->fetchAll('SELECT `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team`, `on_loan` FROM `w_sport_player` WHERE `id` = '.$playerId.' AND `team` = '.$teamId.' AND `season` = '.$seasonId.';');
 					$player = $player[0];
 					$player['photo'] = str_replace('~', '&#126', $player['photo']);
+					$updateType = 'edit';
 				} elseif ($_POST['player-add'] ==  $rb->get('players.add')) {
 					$playerId = $_POST['player-id'];
 					$player = $dbObject->fetchSingle('SELECT `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `team`, `on_loan` FROM `w_sport_player` WHERE `id` = '.$playerId.' ORDER BY `season` DESC;');
 					$teamId = $player['team'];
+					$updateType = 'add';
+				} elseif ($_POST['player-new'] == $rb->get('players.new')) {
+					$updateType = 'add';
 				}
 				
 				$return .= ''
@@ -1202,6 +1209,7 @@
 							.'<input type="hidden" name="player-id" value="'.$playerId.'" />'
 							.'<input type="hidden" name="season-id" value="'.$seasonId.'" />'
 							.'<input type="hidden" name="team-id" value="'.$teamId.'" />'
+							.'<input type="hidden" name="update-type" value="'.$updateType.'" />'
 							.'<input type="submit" name="player-save" value="'.$rb->get('player.form.save').'" />'
 						.'</div>'
 					.'</form>'
@@ -1985,6 +1993,7 @@
 					$assists1 = $_POST['match-stats-assists1'];
 					$shoots1 = $_POST['match-stats-shoots1'];
 					$penalty1 = $_POST['match-stats-penalty1'];
+					$positions1 = $_POST['match-stats-positions1'];
 				
 					$playerId2 = $_POST['match-stats-player-id2'];
 					$inmatch2 = $_POST['match-stats-inmatch2'];
@@ -1992,6 +2001,7 @@
 					$assists2 = $_POST['match-stats-assists2'];
 					$shoots2 = $_POST['match-stats-shoots2'];
 					$penalty2 = $_POST['match-stats-penalty2'];
+					$positions2 = $_POST['match-stats-positions2'];
 				
 					$match = $dbObject->fetchAll('SELECT `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `season`, `in_table` FROM `w_sport_match` WHERE `id` = '.$matchId.';');
 					if(count($match) > 0) {
@@ -2039,10 +2049,12 @@
 									$assists = (($assists1[$key] != '') ? $assists1[$key] : 0);
 									$shoots = (($shoots1[$key] != '') ? $shoots1[$key] : 0);
 									$penalty = (($penalty1[$key] != '') ? $penalty1[$key] : 0);
+									$pos = (($positions1[$key] != '') ? $positions1[$key] : 0);
+									
 									
 									$stats = $dbObject->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `pid` = '.$pl.' AND `mid` = '.$match['id'].' AND `season` = '.self::getSeasonId().';');
 									if(count($stats) == 0) {
-										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`, `table_id`, `project_id`) VALUES ('.$pl.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.', '.$match['in_table'].', '.self::getProjectId().');');
+										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `pos`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`, `table_id`, `project_id`) VALUES ('.$pl.', '.$pos.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.', '.$match['in_table'].', '.self::getProjectId().');');
 										$return .= '<h4 class="success">Saved!</h4>';
 									} else {
 									
@@ -2055,10 +2067,11 @@
 									$assists = (($assists2[$key] != '') ? $assists2[$key] : 0);
 									$shoots = (($shoots2[$key] != '') ? $shoots2[$key] : 0);
 									$penalty = (($penalty2[$key] != '') ? $penalty2[$key] : 0);
+									$pos = (($positions2[$key] != '') ? $positions2[$key] : 0);
 									
 									$stats = $dbObject->fetchAll('SELECT `pid` FROM `w_sport_stats` WHERE `pid` = '.$pl.' AND `mid` = '.$match['id'].' AND `season` = '.self::getSeasonId().';');
 									if(count($stats) == 0) {
-										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`, `table_id`, `project_id`) VALUES ('.$pl.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.', '.$match['in_table'].', '.self::getProjectId().');');
+										$dbObject->execute('INSERT INTO `w_sport_stats`(`pid`, `pos`, `mid`, `season`, `goals`, `assists`, `shoots`, `penalty`, `table_id`, `project_id`) VALUES ('.$pl.', '.$pos.', '.$match['id'].', '.self::getSeasonId().', '.$goals.', '.$assists.', '.$shoots.', '.$penalty.', '.$match['in_table'].', '.self::getProjectId().');');
 										$return .= '<h4 class="success">Saved!</h4>';
 									} else {
 									
@@ -2084,14 +2097,15 @@
 				$home = $dbObject->fetchAll('SELECT `name` FROM `w_sport_team` WHERE `id` = '.$match['h_team'].';');
 				$away = $dbObject->fetchAll('SELECT `name` FROM `w_sport_team` WHERE `id` = '.$match['a_team'].';');
 				
-				$players1 = $dbObject->fetchAll('SELECT `id`, `name`, `surname`, `position` FROM `w_sport_player` WHERE `team` = '.$match['h_team'].' AND `season` = '.$seasonId.';');
-				$players2 = $dbObject->fetchAll('SELECT `id`, `name`, `surname`, `position` FROM `w_sport_player` WHERE `team` = '.$match['a_team'].' AND `season` = '.$seasonId.';');
+				$players1 = $dbObject->fetchAll('SELECT distinct `id`, `name`, `surname` FROM `w_sport_player` WHERE `team` = '.$match['h_team'].' AND `season` = '.$seasonId.';');
+				$players2 = $dbObject->fetchAll('SELECT distinct `id`, `name`, `surname` FROM `w_sport_player` WHERE `team` = '.$match['a_team'].' AND `season` = '.$seasonId.';');
 				
 				$playersStr1 = $playersStr2 = ''
 				.'<table class="match-stats-table">'
 					.'<tr>'
 						.'<th class="match-stats-name">'.$rb->get('matches.stats.name').':</th>'
 						.'<th class="match-stats-inmatch">'.$rb->get('matches.stats.inmatch').':</th>'
+						.'<th class="match-stats-onposition">'.$rb->get('matches.stats.onposition').':</th>'
 						.'<th class="match-stats-goals">'.$rb->get('matches.stats.goals').':</th>'
 						.'<th class="match-stats-assists">'.$rb->get('matches.stats.assists').':</th>'
 						.'<th class="match-stats-shoots">'.$rb->get('matches.stats.shoots').':</th>'
@@ -2100,19 +2114,34 @@
 
 				$i = 1;
 				foreach($players1 as $pl) {
-					$tmpstats = $dbObject->fetchAll('SELECT `goals`, `assists`, `penalty`, `shoots` FROM `w_sport_stats` WHERE `pid` = '.$pl['id'].' AND `mid` = '.$match['id'].' AND `season` = '.$seasonId.';');
+					$tmpstats = $dbObject->fetchAll('SELECT `goals`, `assists`, `penalty`, `shoots`, `pos` FROM `w_sport_stats` WHERE `pid` = '.$pl['id'].' AND `mid` = '.$match['id'].' AND `season` = '.$seasonId.';');
 					$stats = $tmpstats[0];
+					$selPos1 = 0;
+					$plpos = parent::db()->fetchSingle('select `position` from `w_sport_player` where `id` = '.$pl['id'].' and `season` = '.$seasonId.' and `team` = '.$match['h_team'].';');
+					$pl['position'] = $plpos['position'];
+					if($stats == array()) {
+						$selPos1 = $pl['position'];
+					} else {
+						$selPos1 = $stats['pos'];
+					}
 					$playersStr1 .= ''
 					.'<tr class="'.((($i % 2) == 1) ? 'idle' : 'even').'">'
 						.'<td class="match-stats-name">'
 							.'<label for="match-stats-player'.$pl['id'].'-checkbox">'
 								.$pl['name'].' '.$pl['surname']
-								.($pl['position'] == 1 ? ' <strong>[B]</strong>' : '')
+								//.($pl['position'] == 1 ? ' <strong>[B]</strong>' : '')
 							.'</label>'
 						.'</td>'
 						.'<td class="match-stats-inmatch">'
 							.'<input type="hidden" name="match-stats-player-id1['.$pl['id'].']" value="'.$pl['id'].'" />'
 							.'<input type="checkbox" id="match-stats-player'.$pl['id'].'-checkbox" name="match-stats-inmatch1['.$pl['id'].']"'.((count($tmpstats) == 1) ? ' checked="checked"' : '').' />'
+						.'</td>'
+						.'<td class="match-stats-position">'
+							.'<select name="match-stats-positions1['.$pl['id'].']">'
+								.'<option value="1"'.($selPos1 == 1 ? ' selected="selected"' : '').'>'.$rb->get('player.position-goa').'</option>'
+								.'<option value="2"'.($selPos1 == 2 ? ' selected="selected"' : '').'>'.$rb->get('player.position-def').'</option>'
+								.'<option value="3"'.($selPos1 == 3 ? ' selected="selected"' : '').'>'.$rb->get('player.position-att').'</option>'
+							.'</select>'
 						.'</td>'
 						.'<td class="match-stats-goals">'
 							.'<input type="text" name="match-stats-goals1['.$pl['id'].']" value="'.$stats['goals'].'" />'
@@ -2132,19 +2161,34 @@
 
 				$i = 1;
 				foreach($players2 as $pl) {
-					$tmpstats = $dbObject->fetchAll('SELECT `goals`, `assists`, `penalty`, `shoots` FROM `w_sport_stats` WHERE `pid` = '.$pl['id'].' AND `mid` = '.$match['id'].' AND `season` = '.$seasonId.';');
+					$tmpstats = $dbObject->fetchAll('SELECT `goals`, `assists`, `penalty`, `shoots`, `pos` FROM `w_sport_stats` WHERE `pid` = '.$pl['id'].' AND `mid` = '.$match['id'].' AND `season` = '.$seasonId.';');
 					$stats = $tmpstats[0];
+					$selPos1 = 0;
+					$plpos = parent::db()->fetchSingle('select `position` from `w_sport_player` where `id` = '.$pl['id'].' and `season` = '.$seasonId.' and `team` = '.$match['a_team'].';');
+					$pl['position'] = $plpos['position'];
+					if($stats == array()) {
+						$selPos1 = $pl['position'];
+					} else {
+						$selPos1 = $stats['pos'];
+					}
 					$playersStr2 .= ''
 					.'<tr class="'.((($i % 2) == 1) ? 'idle' : 'even').'">'
 						.'<td class="match-stats-name">'
 							.'<label for="match-stats-player'.$pl['id'].'-checkbox">'
 								.$pl['name'].' '.$pl['surname']
-								.($pl['position'] == 1 ? ' <strong>[B]</strong>' : '')
+								//.($pl['position'] == 1 ? ' <strong>[B]</strong>' : '')
 							.'</label>'
 						.'</td>'
 						.'<td class="match-stats-inmatch">'
 							.'<input type="hidden" name="match-stats-player-id2['.$pl['id'].']" value="'.$pl['id'].'" />'
 							.'<input type="checkbox" id="match-stats-player'.$pl['id'].'-checkbox" name="match-stats-inmatch2['.$pl['id'].']"'.((count($tmpstats) == 1) ? ' checked="checked"' : '').' />'
+						.'</td>'
+						.'<td class="match-stats-position">'
+							.'<select name="match-stats-positions2['.$pl['id'].']">'
+								.'<option value="1"'.($selPos1 == 1 ? ' selected="selected"' : '').'>'.$rb->get('player.position-goa').'</option>'
+								.'<option value="2"'.($selPos1 == 2 ? ' selected="selected"' : '').'>'.$rb->get('player.position-def').'</option>'
+								.'<option value="3"'.($selPos1 == 3 ? ' selected="selected"' : '').'>'.$rb->get('player.position-att').'</option>'
+							.'</select>'
 						.'</td>'
 						.'<td class="match-stats-goals">'
 							.'<input type="text" name="match-stats-goals2['.$pl['id'].']" value="'.$stats['goals'].'" />'
@@ -3366,6 +3410,28 @@
 		
 		// ------------------------------------------------------------------------------------------------------------------- \\
 		
+		public function getPlayerPosition($pos) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			
+			switch($pos) {
+				case 1: return $rb->get('player.position-goa');
+				case 2: return $rb->get('player.position-def');
+				case 3: return $rb->get('player.position-att');
+			}
+		}
+		
+		public function getPlayerPositionShortcut($pos) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			
+			switch($pos) {
+				case 1: return $rb->get('player.position-goa-short');
+				case 2: return $rb->get('player.position-def-short');
+				case 3: return $rb->get('player.position-att-short');
+			}
+		}
+		
 		public function getSeasonsOptions($teamId, $seasonId, $seaselId) {
 			global $dbObject;
 			$return = '';
@@ -3606,13 +3672,16 @@
 					}
 				}
 				if($showGolmans == 'true') {
-					$positionsql = '`player`.`position` = 1';
+					//$positionsql = '`player`.`position` = 1';
+					$positionsql = '(select sum(`mid`) from `w_sport_stats` where `pid` = `player`.`id` and `pos` = 1) > 0';
+					$showGolmans = true;
 				} elseif($showGolmans == 'false') {
-					$positionsql = '(`player`.`position` = 2 OR `player`.`position` = 3)';
+					//$positionsql = '(`player`.`position` = 2 OR `player`.`position` = 3)';
+					$showGolmans = false;
 				}
 				
 				$subqueriessql .= ''
-				.(in_array('total_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `total_matches`,' : '')
+				.(in_array('total_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').' and '.self::resolveGolmanStatsPartSql($showGolmans).') AS `total_matches`,' : '')
 				.(in_array('total_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `total_goals`,' : '')
 				.(in_array('total_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `total_assists`,' : '')
 				.(in_array('total_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `total_penalty`,' : '')
@@ -3636,14 +3705,14 @@
 					}
 					
 					$subqueriessql .= /*(strlen($subqueriessql) != 0 ? ', ' : '')*/''
-					.(in_array('season_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `season_matches`,' : '')
-					.(in_array('season_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `season_goals`,' : '')
-					.(in_array('season_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `season_assists`,' : '')
-					.(in_array('season_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `season_penalty`,' : '')
-					.(in_array('season_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `season_shoots`,' : '')
-					.(in_array('season_percentage', $this->UsedFields) ? '(SELECT (100 / (SUM(`shoots`)) * (SUM(`shoots`) - SUM(`goals`))) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `season_percentage`,' : '')
-					.(in_array('season_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `season_average`,' : '')
-					.(in_array('season_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').') AS `season_points`,' : '');
+					.(in_array('season_matches', $this->UsedFields) ? '(SELECT COUNT(`pid`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').' and '.self::resolveGolmanStatsPartSql($showGolmans).') AS `season_matches`,' : '')
+					.(in_array('season_goals', $this->UsedFields) ? '(SELECT SUM(`goals`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').' and '.self::resolveGolmanStatsPartSql($showGolmans).') AS `season_goals`,' : '')
+					.(in_array('season_assists', $this->UsedFields) ? '(SELECT SUM(`assists`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').' and '.self::resolveGolmanStatsPartSql($showGolmans).') AS `season_assists`,' : '')
+					.(in_array('season_penalty', $this->UsedFields) ? '(SELECT SUM(`penalty`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').' and '.self::resolveGolmanStatsPartSql($showGolmans).') AS `season_penalty`,' : '')
+					.(in_array('season_shoots', $this->UsedFields) ? '(SELECT SUM(`shoots`) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').' and '.self::resolveGolmanStatsPartSql($showGolmans).') AS `season_shoots`,' : '')
+					.(in_array('season_percentage', $this->UsedFields) ? '(SELECT (100 / (SUM(`shoots`)) * (SUM(`shoots`) - SUM(`goals`))) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').' and '.self::resolveGolmanStatsPartSql($showGolmans).') AS `season_percentage`,' : '')
+					.(in_array('season_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').' and '.self::resolveGolmanStatsPartSql($showGolmans).') AS `season_average`,' : '')
+					.(in_array('season_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`season` = '.$seasonId.' AND `pid` = `player`.`id`'.($tableId != '' ? ' and `w_sport_stats`.`table_id` '.self::resolveTableIdPartSql($tableId) : '').' and '.self::resolveGolmanStatsPartSql($showGolmans).') AS `season_points`,' : '');
 				}
 				if(strlen($matchsql) != 0) {
 					if(strlen($conditionssql) != 0) {
@@ -3724,6 +3793,13 @@
 			}
 		}
 		
+		private function resolveGolmanStatsPartSql($showGolmans) {
+			if($showGolmans) {
+				return '`pos` = 1';
+			} else {
+				return '(`pos` = 2 OR pos = 3)';
+			}
+		}
 		
 		/* ======================== PROPERTIES ================================= */
 		
@@ -3922,7 +3998,6 @@
 				return '-1';
 			}
 		}
-		
 		
   }
 
