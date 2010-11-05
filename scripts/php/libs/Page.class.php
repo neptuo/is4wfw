@@ -969,7 +969,7 @@
 										$dbObject->execute('INSERT INTO `content`(`page_id`, `language_id`, `tag_lib_start`, `tag_lib_end`, `head`, `content`) VALUES ('.$newId.', '.$page['language_id'].', "'.$page['tag_lib_start'].'", "'.$page['tag_lib_end'].'", "'.$page['head'].'", "'.$page['content'].'");');
 										$lastId = $page['id'];
 									}
-									$return .= '<h4 class="success">'.$prb->get('pagelist.success.copied').'</h4>';
+									$return .= '<h4 class="success">'.$rb->get('pagelist.success.copied').'</h4>';
 								} else {
 									// zmenit url na nahodnou a vypsat ji.
 									// rekurzivne zkopirovat vsechny stranky atd.
