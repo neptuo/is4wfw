@@ -17,7 +17,7 @@
    * 	all about sport	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-11-05
+   *  @timestamp  2010-11-09
    * 
    */  
   class Sport extends BaseTagLib {
@@ -3134,7 +3134,7 @@
 					case 'surname': $return .= $player['surname']; break;
 					case 'birthyear': $return .= $player['birthyear']; break;
 					case 'number': $return .= $player['number']; break;
-					case 'position': $return .= $player['position']; break;
+					case 'position': $return .= self::getPlayerPosition($player['position']); break;
 					case 'photo': $return .= $player['photo']; break;
 					case 'total_matches': $return .= $player['total_matches']; break;
 					case 'total_points': $return .= $player['total_points']; break;
@@ -3572,6 +3572,8 @@
 				$sortBy = 'surname';
 			} elseif(strtolower($sortBy) == 'number') {
 				$sortBy = 'number';
+			} elseif(strtolower($sortBy) == 'position') {
+				$sortBy = 'position';
 			} elseif(strtolower($sortBy) == 'total_matches') {
 				$sortBy = 'total_matches';
 			} elseif(strtolower($sortBy) == 'total_goals') {
@@ -3674,10 +3676,8 @@
 				if($showGolmans == 'true') {
 					//$positionsql = '`player`.`position` = 1';
 					$positionsql = '(select sum(`mid`) from `w_sport_stats` where `pid` = `player`.`id` and `pos` = 1) > 0';
-					$showGolmans = true;
 				} elseif($showGolmans == 'false') {
 					//$positionsql = '(`player`.`position` = 2 OR `player`.`position` = 3)';
-					$showGolmans = false;
 				}
 				
 				$subqueriessql .= ''
@@ -3794,10 +3794,12 @@
 		}
 		
 		private function resolveGolmanStatsPartSql($showGolmans) {
-			if($showGolmans) {
+			if($showGolmans == 'true') {
 				return '`pos` = 1';
+			} elseif($showGolmans == 'false') {
+				return '(`pos` = 2 OR `pos` = 3)';
 			} else {
-				return '(`pos` = 2 OR pos = 3)';
+				return '(`pos` = 1 OR `pos` = 2 OR `pos` = 3)';
 			}
 		}
 		
