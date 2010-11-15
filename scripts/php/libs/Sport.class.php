@@ -3564,7 +3564,7 @@
 				$sorting = 'DESC';
 			}
 			
-			if(strtolower($sortBy) == 'id') {
+			/*if(strtolower($sortBy) == 'id') {
 				$sortBy = 'id';
 			} elseif(strtolower($sortBy) == 'name') {
 				$sortBy = 'name';
@@ -3624,7 +3624,7 @@
 				$sortBy = 'match_average';
 			} else {
 				$sortBy = 'surname';
-			}
+			}*/
 			
 			if(true) {
 			
