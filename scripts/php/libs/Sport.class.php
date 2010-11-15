@@ -3564,67 +3564,9 @@
 				$sorting = 'DESC';
 			}
 			
-			/*if(strtolower($sortBy) == 'id') {
-				$sortBy = 'id';
-			} elseif(strtolower($sortBy) == 'name') {
-				$sortBy = 'name';
-			} elseif(strtolower($sortBy) == 'surname') {
+			if($sortBy == '') {
 				$sortBy = 'surname';
-			} elseif(strtolower($sortBy) == 'number') {
-				$sortBy = 'number';
-			} elseif(strtolower($sortBy) == 'position') {
-				$sortBy = 'position';
-			} elseif(strtolower($sortBy) == 'total_matches') {
-				$sortBy = 'total_matches';
-			} elseif(strtolower($sortBy) == 'total_goals') {
-				$sortBy = 'total_goals';
-			} elseif(strtolower($sortBy) == 'total_assists') {
-				$sortBy = 'total_assists';
-			} elseif(strtolower($sortBy) == 'total_shoots') {
-				$sortBy = 'total_shoots';
-			} elseif(strtolower($sortBy) == 'total_penalty') {
-				$sortBy = 'total_penalty';
-			} elseif(strtolower($sortBy) == 'total_points') {
-				$sortBy = 'total_points';
-			} elseif(strtolower($sortBy) == 'total_percentage') {
-				$sortBy = 'total_percentage';
-			} elseif(strtolower($sortBy) == 'total_average') {
-				$sortBy = 'total_average';
-			} elseif(strtolower($sortBy) == 'season_matches') {
-				$sortBy = 'season_matches';
-			} elseif(strtolower($sortBy) == 'season_goals') {
-				$sortBy = 'season_goals';
-			} elseif(strtolower($sortBy) == 'season_assists') {
-				$sortBy = 'season_assists';
-			} elseif(strtolower($sortBy) == 'season_shoots') {
-				$sortBy = 'season_shoots';
-			} elseif(strtolower($sortBy) == 'season_penalty') {
-				$sortBy = 'season_penalty';
-			} elseif(strtolower($sortBy) == 'season_points') {
-				$sortBy = 'season_points';
-			} elseif(strtolower($sortBy) == 'season_percentage') {
-				$sortBy = 'season_percentage';
-			} elseif(strtolower($sortBy) == 'season_average') {
-				$sortBy = 'season_average';
-			} elseif(strtolower($sortBy) == 'match_matches') {
-				$sortBy = 'match_matches';
-			} elseif(strtolower($sortBy) == 'match_goals') {
-				$sortBy = 'match_goals';
-			} elseif(strtolower($sortBy) == 'match_assists') {
-				$sortBy = 'match_assists';
-			} elseif(strtolower($sortBy) == 'match_shoots') {
-				$sortBy = 'match_shoots';
-			} elseif(strtolower($sortBy) == 'match_penalty') {
-				$sortBy = 'match_penalty';
-			} elseif(strtolower($sortBy) == 'match_points') {
-				$sortBy = 'match_points';
-			} elseif(strtolower($sortBy) == 'match_percentage') {
-				$sortBy = 'match_percentage';
-			} elseif(strtolower($sortBy) == 'match_average') {
-				$sortBy = 'match_average';
-			} else {
-				$sortBy = 'surname';
-			}*/
+			}
 			
 			if(true) {
 			
@@ -3779,7 +3721,7 @@
 					$conditionssql .= ' `w_sport_table`.`table_id` '.self::resolveTableIdPartSql($tableId);
 				}
 			
-				$players = $dbObject->fetchAll('SELECT '.$cols.', '.$subqueriessql.' FROM `w_sport_player` AS `player` JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`'.((strlen($joinstatssql) != 0) ? ' '.$joinstatssql : '').''.((strlen($conditionssql) != 0) ? ' WHERE '.$conditionssql : '').' GROUP BY `player`.`id`'.' ORDER BY `'.$sortBy.'` '.$sorting.((strlen($limitsql) != 0) ? ' '.$limitsql : '').';');
+				$players = $dbObject->fetchAll('SELECT '.$cols.', '.$subqueriessql.' FROM `w_sport_player` AS `player` JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`'.((strlen($joinstatssql) != 0) ? ' '.$joinstatssql : '').''.((strlen($conditionssql) != 0) ? ' WHERE '.$conditionssql : '').' GROUP BY `player`.`id`'.' ORDER BY '.self::sortByStringToSqlParams($sortBy, $sorting).((strlen($limitsql) != 0) ? ' '.$limitsql : '').';');
 			}
 			
 			return $players;
@@ -3801,6 +3743,18 @@
 			} else {
 				return '(`pos` = 1 OR `pos` = 2 OR `pos` = 3)';
 			}
+		}
+		
+		private function sortByStringToSqlParams($sortBy, $sorting) {
+			$return = '';
+			$sorts = split(',', $sortBy);
+			foreach($sorts as $sort) {
+				if($return != '') {
+					$return .= ', ';
+				}
+				$return .= '`'.$sort.'` '.$sorting;
+			}
+			return $return;
 		}
 		
 		/* ======================== PROPERTIES ================================= */
