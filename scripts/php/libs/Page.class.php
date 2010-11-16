@@ -307,7 +307,7 @@
 					} else {
 						$rights = $dbObject->fetchAll('SELECT `gid` FROM `page_right` WHERE `pid` = '.$parentId.' AND `type` = '.WEB_R_ADDCHILD.';');
 						foreach($rights as $right) {
-							$dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES ('.$pageId.', '.$right['gid'].', '.WEB_R_ADDCHILD.');');
+							$dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES ('.$pageId.', '.$right['gid'].', '.WEB_R_WRITE.');');
 						}
 					}
 					
