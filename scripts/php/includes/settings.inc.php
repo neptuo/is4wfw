@@ -17,6 +17,7 @@
    define("WEB_R_READ", 101);
    define("WEB_R_WRITE", 102);
    define("WEB_R_DELETE", 103);
+   define("WEB_R_ADDCHILD", 104);
 
    define("WEB_GROUP", "web");
    

@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.70</version>
+  <version>1.73</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -400,6 +400,14 @@
       Testovací tag.
     </comment>
   </tag>
+  <property>
+  	<propname>currentPageName</propname>
+  	<setfunction>setCurrentPageName</setfunction>
+  	<getfunction>getCurrentPageName</getfunction>
+    <comment>
+      Vrátí název aktuální stránky. V průběhu renderování
+    </comment>
+  </property>
   <property>
   	<propname>childPage</propname>
   	<setfunction>setChildPage</setfunction>

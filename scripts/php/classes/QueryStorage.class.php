@@ -31,7 +31,7 @@
 			),
 			'user' =>
 			array(
-				'register' => 'insert into `user`(`name`, `surname`, `login`, `password`, `enable`) values ("{name}", "{surname}", "{username}", "{password}", {enable});',
+				'register' => 'insert into `user`(`group_id`, `name`, `surname`, `login`, `password`, `enable`) values ({groupId}, "{name}", "{surname}", "{username}", "{password}", {enable});',
 				'addToGroup' => 'insert into `user_in_group`(`uid`, `gid`) values ({uid}, {gid});',
 				'groupByName' => 'select `gid`, `name` from `group` where `name` = "{name}";',
 				'userByUsername' => 'select `uid`, `name`, `surname`, `login`, `password` from `user` where `login` = "{username}";',

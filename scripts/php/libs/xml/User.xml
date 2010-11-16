@@ -4,7 +4,7 @@
   <name>User management lib</name>
   <classname>User</classname>
   <classpath>php.libs</classpath>
-  <version>1.05</version>
+  <version>1.15</version>
   <count>*</count>
   <comment>
     Třída pro správu uživatelských účtů.
@@ -40,6 +40,17 @@
     </attribute>
     <comment>
       Mazání uživatelských skupin.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>editGroupPerms</tagname>
+    <function>editGroupPerms</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Editace práv skupiny.
     </comment>
   </tag>
   <tag>
@@ -80,7 +91,7 @@
       <attreq>implied</attreq>
     </attribute>
     <comment>
-      "Registrační formulář", groups je čárkou oddělený seznam rolí.
+      "Registrační formulář", groups je čárkou oddělený seznam rolí (první se uloží jako uživatelova hlavní!).
     </comment>
   </tag>
   <property>

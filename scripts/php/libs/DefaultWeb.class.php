@@ -22,7 +22,7 @@
    *  @objectname webObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2010-10-14
+   *  @timestamp  2010-11-12
    *
    */           
   class DefaultWeb extends BaseTagLib {
@@ -187,7 +187,7 @@
     private $ParsingPages = false;
     
     private $CurrentPageTimestamp = 0;
-    
+	
     private $ChildPageId = 0;
     
     public $Diagnostics;
@@ -502,7 +502,7 @@
 				}
 			}
 			
-			$this->TempLoadedContent = self::sortPages($dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `tag_lib_start`, `tag_lib_end`, `head`, `content`, `info`.`timestamp` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`id` IN (".$str.") AND `page`.`wp` = ".$this->ProjectId.";"), $this->PagesId);
+			$this->TempLoadedContent = self::sortPages($dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `title`, `tag_lib_start`, `tag_lib_end`, `head`, `content`, `info`.`timestamp` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = ".$this->LanguageId." AND `page`.`id` IN (".$str.") AND `page`.`wp` = ".$this->ProjectId.";"), $this->PagesId);
 			$this->CurrentPageTimestamp = $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['timestamp'];
 			if(count($this->TempLoadedContent) == count($this->PagesId)) {
 				foreach($this->TempLoadedContent as $page) {
@@ -1099,38 +1099,52 @@
       }
     }
     
-    /**
-     *
-     *  Generates page content and parse c tags.
-     *  
-     *  $return page content          
-     *
-     */                   
-    public function getContent() {
-      global $phpObject;
-      global $dbObject;
+		/**
+		 *
+		 *  Generates page content and parse c tags.
+		 *  
+		 *  $return page content          
+		 *
+		 */                   
+		public function getContent() {
+			global $phpObject;
+			global $dbObject;
       
-      $path = $phpObject->str_tr($this->Path, '/', 1);
-      $return = $this->TempLoadedContent[$this->PagesIdIndex];
+			$path = $phpObject->str_tr($this->Path, '/', 1);
+			$return = $this->TempLoadedContent[$this->PagesIdIndex];
       
-      if(count($this->PagesId) > ($this->PagesIdIndex + 1)) {
-      	self::setChildPage($this->PagesId[$this->PagesIdIndex + 1]);
-      } else {
-      	self::setChildPage(-1);
-      }
+			preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['tag_lib_start']);
+			
+			if(count($this->PagesId) > ($this->PagesIdIndex + 1)) {
+				self::setChildPage($this->PagesId[$this->PagesIdIndex + 1]);
+			} else {
+				self::setChildPage(-1);
+			}
       
-      //$this->CurrentPageTimestamp = $this->TempLoadedContent[$this->PagesIdIndex]['timestamp'];
-      $this->CurrentDynamicPath = $path[0];
-      $tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['href']);
-      $this->ParentId = $this->PagesId[$this->PagesIdIndex];
-    	$this->PagesIdIndex ++;
-      if($return['in_title'] == 1) {
-        $this->PageTitle = $return['name']." - ".$this->PageTitle;
-      }
-      //$this->PageHead .= $return['head'];
-      $this->Keywords .= ((strlen($return['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ','.$return['keywords'] : $return['keywords']) : '');
+			//$this->CurrentPageTimestamp = $this->TempLoadedContent[$this->PagesIdIndex]['timestamp'];
+			$this->CurrentDynamicPath = $path[0];
+			$tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['href']);
+			
+			$this->ParentId = $this->PagesId[$this->PagesIdIndex];
+			$this->PagesIdIndex ++;
+			
+			if($return['in_title'] == 1) {
+				// parse title
+				if(strlen($return['title']) > 0) {
+					$this->PropertyAttr = '';
+					$this->PropertyUse = 'get';
+					$this->PageTitle = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['title'])." - ".$this->PageTitle;
+					//$this->PageTitle = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $return['title'])." - ".$this->PageTitle;
+					//$this->PageTitle = $return['title']." - ".$this->PageTitle;
+				}
+			}
+			//$this->PageHead .= $return['head'];
+			if(strlen($return['keywords']) > 0) {
+				$return['keywords'] = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['keywords']);
+			}
+			$this->Keywords .= ((strlen($return['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ','.$return['keywords'] : $return['keywords']) : '');
       
-      $allHeaders = getallheaders();
+			$allHeaders = getallheaders();
 			$userBrowser = $allHeaders['User-Agent'];
 			$browser = 'for_all';
 			if(preg_match("(Firefox)", $userBrowser)) {
@@ -1147,39 +1161,36 @@
 				$browser = 'for_safari';
 			}
         
-      $files = $dbObject->fetchAll("SELECT `page_file`.`id`, `page_file`.`name`, `page_file`.`type` FROM `page_file_inc` LEFT JOIN `page_file` ON `page_file_inc`.`file_id` = `page_file`.`id` WHERE `page_file_inc`.`page_id` = ".$this->ParentId." AND `page_file_inc`.`language_id` = ".$this->LanguageId." AND `for_all` = 1 OR `".$browser."` = 1;");
-      foreach($files as $file) {
-        switch($file['type']) {
-          //case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="'.WEB_ROOT.'css/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'" type="text/css" />'; break;
-          //case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="'.WEB_ROOT.'js/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'"></script>'; break;
-          case WEB_TYPE_CSS: $this->PageStyles .= ((strtolower($_REQUEST['__TEMPLATE']) == 'xml') ? '<rssmm:link-ref>~/file.php?fid='.$file['id'].'</rssmm:link-ref>' : '<link rel="stylesheet" href="~/file.php?fid='.$file['id'].'" type="text/css" />'); break;
-          case WEB_TYPE_JS: $this->PageScripts .= ((strtolower($_REQUEST['__TEMPLATE']) == 'xml') ? '<rssmm:script-ref>~/file.php?fid='.$file['id'].'</rssmm:script-ref>' : '<script type="text/javascript" src="~/file.php?fid='.$file['id'].'"></script>'); break;
-        }
-      }
+			$files = $dbObject->fetchAll("SELECT `page_file`.`id`, `page_file`.`name`, `page_file`.`type` FROM `page_file_inc` LEFT JOIN `page_file` ON `page_file_inc`.`file_id` = `page_file`.`id` WHERE `page_file_inc`.`page_id` = ".$this->ParentId." AND `page_file_inc`.`language_id` = ".$this->LanguageId." AND `for_all` = 1 OR `".$browser."` = 1;");
+			foreach($files as $file) {
+				switch($file['type']) {
+					//case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="'.WEB_ROOT.'css/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'" type="text/css" />'; break;
+					//case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="'.WEB_ROOT.'js/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'"></script>'; break;
+					case WEB_TYPE_CSS: $this->PageStyles .= ((strtolower($_REQUEST['__TEMPLATE']) == 'xml') ? '<rssmm:link-ref>~/file.php?fid='.$file['id'].'</rssmm:link-ref>' : '<link rel="stylesheet" href="~/file.php?fid='.$file['id'].'" type="text/css" />'); break;
+					case WEB_TYPE_JS: $this->PageScripts .= ((strtolower($_REQUEST['__TEMPLATE']) == 'xml') ? '<rssmm:script-ref>~/file.php?fid='.$file['id'].'</rssmm:script-ref>' : '<script type="text/javascript" src="~/file.php?fid='.$file['id'].'"></script>'); break;
+				}
+			}
       
-      $this->Path = $path[1];
-            
-      preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['tag_lib_start']);
+			$this->Path = $path[1];
       
-      $this->PageHead .= preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['head']);
-      
-      $pageContent = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['content']);
-      
-      //$pageContent = preg_replace_callback('(&web:pathToId=([0-9]+))', array( &$this,'parseproperties'), $pageContent);
-      //$return = preg_replace_callback('(&web:pathToId=([0-9]+))', array( &$this,'parseproperties'), $return);
+			$this->PageHead .= preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['head']);
+			$pageContent = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['content']);
+			
+			//$pageContent = preg_replace_callback('(&web:pathToId=([0-9]+))', array( &$this,'parseproperties'), $pageContent);
+			//$return = preg_replace_callback('(&web:pathToId=([0-9]+))', array( &$this,'parseproperties'), $return);
 			      
-      preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['tag_lib_end']);
+			preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return['tag_lib_end']);
+			
+			$this->PagesIdIndex --;
       
-      $this->PagesIdIndex --;
-      
-      if($this->PagesIdIndex > 0) {
-      	self::setChildPage($this->PagesId[$this->PagesIdIndex]);
-      } else {
-      	self::setChildPage(-1);
-      }
+			if($this->PagesIdIndex > 0) {
+				self::setChildPage($this->PagesId[$this->PagesIdIndex]);
+			} else {
+				self::setChildPage(-1);
+			}
         
-      return $pageContent;
-    }
+			return $pageContent;
+		}
     
     /**
      *
@@ -1959,9 +1970,22 @@
 			
 			if($pid != 0) {
 				$wp = $dbObject->fetchAll('SELECT `url` FROM `web_project` LEFT JOIN `page` ON `web_project`.`id` = `page`.`wp` WHERE `page`.`id` = '.$pid.';');
-				$url = self::composeUrl($pid, false, 'no');
-				$_GET['WEB_PAGE_PATH'] = $url;
-				$this->ServerName = substr($wp[0]['url'], 0, strpos($wp[0]['url'], '/'));
+				$url = '';
+				$pageLang = parent::db()->fetchSingle('select `language_id` from `info` where `page_id` = '.$pid.' and `language_id` = '.$this->LanguageId.';');
+				if($pageLang != array()) {
+					$url = self::composeUrl($pid, $this->LanguageId, 'no');
+				} else {
+					$pageLang = parent::db()->fetchSingle('select `language_id` from `info` where `page_id` = '.$pid.';');
+					if($pageLang != array()) {
+						$url = self::composeUrl($pid, $pageLang['language_id'], 'no');
+					} else {
+						header("HTTP/1.1 404 Not Found");
+						echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+						exit;
+					}
+				}
+				$_GET['WEB_PAGE_PATH'] = substr($url, 1, strlen($url));
+				//$this->ServerName = substr($wp[0]['url'], 0, strpos($wp[0]['url'], '/'));
 				if($_SERVER['HTTPS'] == 'on' && $info[0]['https'] == 1) { 
 					$this->Https = 'on';
 				} elseif($info[0]['http'] == 1) {
@@ -1969,30 +1993,30 @@
 				} else {
 					if($errorCode == 404) {
 						header("HTTP/1.1 404 Not Found");
-  		      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-		        exit;
+						echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
+						exit;
 					} elseif($errorCode == 403) {
 						header("HTTP/1.1 403 Forbidden");
-  	        echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
-	          exit;
+						echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
+						exit;
 					} else {
-	  	      echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
-		        exit;			
+						echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
+						exit;			
 					}
 				}
 				self::processRequest();
 			} else {
 				if($errorCode == 404) {
 					header("HTTP/1.1 404 Not Found");
- 		      echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exist.</p>';
-	        exit;
+					echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exist.</p>';
+					exit;
 				} elseif($errorCode == 403) {
 					header("HTTP/1.1 403 Forbidden");
- 	        echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
-          exit;
+					echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
+					exit;
 				} else {
-  	      echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
-	        exit;			
+					echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
+					exit;			
 				}
 			}
 		}
@@ -2006,6 +2030,14 @@
 		
 		public function getChildPage() {
 			return $this->ChildPageId;
+		}
+		
+		public function setCurrentPageName($name) {
+			return $name;
+		}
+		
+		public function getCurrentPageName() {
+			return $this->TempLoadedContent[$this->PagesIdIndex - 1]['name'];
 		}
 		
 		public function setCurrentTime($time) {

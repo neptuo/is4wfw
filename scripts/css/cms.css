@@ -524,12 +524,21 @@ th.file-head-th {
   text-align: right;
 }
 
-.user-edit-prop input {
+.user-edit-prop input, .user-edit-prop select {
   width: 300px;
 }
 
 .user-edit-prop label {
   float: left;
+}
+
+.user-edit-enable {
+	text-align: left;
+}
+
+.user-edit-enable input {
+	width: auto;
+	margin-left: 120px;
 }
 
 .user-edit-groups {
