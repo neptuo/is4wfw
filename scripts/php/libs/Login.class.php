@@ -127,7 +127,7 @@
         global $dbObject;
         $this->SessionId = $_SESSION[$group.'_session_id'];
         if(is_numeric($this->SessionId)) {
-          $return = $dbObject->fetchAll("SELECT `user`.`uid`, `user`.`login`, `user`.`name`, `user`.`surname`, `user_log`.`timestamp` FROM `user` LEFT JOIN `user_log` ON `user`.`uid` = `user_log`.`user_id` WHERE `user_log`.`session_id` = ".$this->SessionId.";");
+          $return = $dbObject->fetchAll("SELECT `user`.`uid`, `user`.`group_id`, `user`.`login`, `user`.`name`, `user`.`surname`, `user_log`.`timestamp` FROM `user` LEFT JOIN `user_log` ON `user`.`uid` = `user_log`.`user_id` WHERE `user_log`.`session_id` = ".$this->SessionId.";");
           if(count($return) == 1) {
             $groups = $dbObject->fetchAll("SELECT `group`.`gid`, `group`.`name`, `group`.`value` FROM `user_in_group` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE `uid` = ".$return[0]['uid']." ORDER BY `group`.`value`;");
             $groupMinValue = $dbObject->fetchAll("SELECT MIN(`group`.`value`) AS `value` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `uid` = ".$return[0]['uid'].";");
@@ -143,6 +143,7 @@
             $this->UserId = $return[0]['uid'];
             $this->Logtime = $return[0]['timestamp'];
             $this->IsLogged = true;
+			$this->UserGroup = $return[0]['group_id'];
           }
         }
       }
@@ -462,6 +463,10 @@
 			return $this->UserId;
 		}
     
+	public function getMainGroupId() {
+		return $this->UserGroup;
+	}
+	
     /**
      *
      *	Not implemented yet!

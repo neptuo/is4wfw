@@ -50,9 +50,10 @@
 				$passwordAgain = $_POST['user-edit-password-again'];
 				$enable = ($_POST['user-edit-enable'] == 'on' ? 1 : 0);
 				$groups = $_POST['user-edit-groups'];
+				$mainGroup = $_POST['user-edit-main-group'];
         
 				$errors = array();
-				if(strlen($login) < 5) {
+				if(strlen($login) < 4) {
 					$errors[] = $rb->get('reg.error.usernameshort');
 				}
 				if(strlen($password) < 6 && $password != '1a1') {
@@ -61,6 +62,10 @@
 				if($password != $passwordAgain) {
 					$errors[] = $rb->get('reg.error.passwordnotmatch');
 				}
+				if(!in_array($mainGroup, $groups)) {
+					//$errors[] = $rb->get('management.error.maingroupingroups');
+					$groups[] = $mainGroup;
+				}
 				if(count($groups) == 0) {
 					$errors[] = $rb->get('management.error.atleastonegroup');
 				}
@@ -68,9 +73,9 @@
 				if(count($errors) == 0) {
 					if(is_numeric($uid)) {
 						if($password == "1a1") {
-							$dbObject->execute("UPDATE `user` SET `login` = \"".$login."\", `name` = \"".$name."\", `surname` = \"".$surname."\", `enable` = ".$enable." WHERE `uid` = ".$uid.";");
+							$dbObject->execute("UPDATE `user` SET `login` = \"".$login."\", `name` = \"".$name."\", `surname` = \"".$surname."\", `enable` = ".$enable.", `group_id` = ".$mainGroup." WHERE `uid` = ".$uid.";");
 						} else {
-							$dbObject->execute("UPDATE `user` SET `login` = \"".$login."\", `name` = \"".$name."\", `surname` = \"".$surname."\", `password` = \"".sha1($login.$password)."\", `enable` = ".$enable." WHERE `uid` = ".$uid.";");
+							$dbObject->execute("UPDATE `user` SET `login` = \"".$login."\", `name` = \"".$name."\", `surname` = \"".$surname."\", `password` = \"".sha1($login.$password)."\", `enable` = ".$enable.", `group_id` = ".$mainGroup." WHERE `uid` = ".$uid.";");
 						}
 						$rGroups = $dbObject->fetchAll("SELECT `gid` FROM `user_in_group` WHERE `uid` = ".$uid.";");
 						foreach($rGroups as $group) {
@@ -87,7 +92,7 @@
 					} else {
 						$maxUid = $dbObject->fetchAll("SELECT MAX(`uid`) AS `muid` FROM `user`;");
 						$uid = $maxUid[0]['muid'] + 1;
-						$dbObject->execute("INSERT INTO `user`(`uid`, `login`, `name`, `surname`, `password`, `enable`) VALUES (".$uid.", \"".$login."\", \"".$name."\", \"".$surname."\", \"".sha1($login.$password)."\", ".$enable.");");
+						$dbObject->execute("INSERT INTO `user`(`uid`, `login`, `name`, `surname`, `password`, `enable`, `group_id`) VALUES (".$uid.", \"".$login."\", \"".$name."\", \"".$surname."\", \"".sha1($login.$password)."\", ".$enable.", ".$mainGroup.");");
 						foreach($groups as $group) {
 							$dbObject->execute("INSERT INTO `user_in_group`(`uid`, `gid`) VALUES (".$uid.", ".$group.");");
 						}
@@ -113,7 +118,7 @@
 				$uid = $_POST['user-list-uid'];
 				$permission = $dbObject->fetchAll('SELECT DISTINCT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE (`group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `user`.`uid` = '.$loginObject->getUserId().') AND `user`.`uid` = '.$uid.' ORDER BY `user`.`uid`;');
 				if(count($permission) > 0) {
-					$user = $dbObject->fetchAll("SELECT `uid`, `login`, `name`,`surname`, `enable` FROM `user` WHERE `uid` = ".$uid." ORDER BY `uid`;");
+					$user = $dbObject->fetchAll("SELECT `uid`, `login`, `name`,`surname`, `enable`, `group_id` FROM `user` WHERE `uid` = ".$uid." ORDER BY `uid`;");
 					$groups = $dbObject->fetchAll("SELECT `group`.`gid` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `user_in_group`.`uid` = ".$user[0]['uid'].";");
 					$return .= parent::getFrame($rb->get('management.edittitle'), self::editForm($user[0], $groups), '');
 				} else {
@@ -214,7 +219,8 @@
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
       
 			$allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
-			$groupSelect = '<select name="user-edit-groups[]" multiple="multiple" size="6">';
+			$groupSelect = '<select id="user-edit-groups" name="user-edit-groups[]" multiple="multiple" size="6">';
+			$mainGroup = '';
 			foreach($allGroups as $group) {
 				$selected = false;
 				foreach($groups as $gp) {
@@ -223,6 +229,7 @@
 					}
 				}
 				$groupSelect .= '<option'.(($selected) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+				$mainGroup .= '<option'.(($group['gid'] == $user['group_id']) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
 			}
 			$groupSelect .= '</select>';
       
@@ -267,6 +274,12 @@
 							.'<label for="user-edit-password-again">'.$rb->get('reg.password2').': <span>**</span></label> '
 							.'<input type="password" id="user-edit-password-again" name="user-edit-password-again" value="'.$user['password-again'].'" />'
 						.'</div>'
+						.'<div class="user-edit-name">'
+							.'<label for="user-edit-main-group">'.$rb->get('management.maingroup').':</label> '
+							.'<select id="user-edit-main-group" name="user-edit-main-group">'
+								.$mainGroup
+							.'</select>'
+						.'</div>'
 						.'<div class="user-edit-enable">'
 							.'<label for="user-edit-enable">'.$rb->get('management.enabled').':</label> '
 							.'<input type="checkbox" id="user-edit-enable" name="user-edit-enable"'.(($user['enable'] == 0) ? '' : 'checked="checked"').' />'
@@ -291,15 +304,15 @@
 			return $return;
 		}
     
-    /**
-     *
-     *	Adds new user group to system.
-     *	C tag.
-     *	
-     *	@param	useFrames				use frames in output
-     *
-     */		 		 		 		 		     
-    public function addNewGroup($useFrames = false) {
+		/**
+		 *
+		 *	Adds new user group to system.
+		 *	C tag.
+		 *	
+		 *	@param	useFrames				use frames in output
+		 *
+		 */		 		 		 		 		     
+		public function addNewGroup($useFrames = false) {
 			global $dbObject;
 			global $loginObject;
 			$parentGid = 0;
@@ -379,13 +392,13 @@
 		}
 		
 		/**
-     *
-     *	Deletes user group from system.
-     *	C tag.
-     *	
-     *	@param	useFrames				use frames in output
-     *
-     */
+		 *
+		 *	Deletes user group from system.
+		 *	C tag.
+		 *	
+		 *	@param	useFrames				use frames in output
+		 *
+		 */
 		public function deleteGroup($useFrames = false) {
 			global $dbObject;
 			global $loginObject;
@@ -434,6 +447,11 @@
 							.'<td class="group-list-name">'.$group['name'].'</td>'
 							.'<td class="group-list-parent">'.$parentName.'</td>'
 							.'<td class="group-list-action">'
+								.'<form name="group-perms-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+									.'<input type="hidden" name="group-id" value="'.$group['gid'].'" />'
+									.'<input type="hidden" name="group-edit" value="Edit group permissions" />'
+									.'<input type="image" src="~/images/page_edi.png" name="group-edit" value="Edit group permissions" title="Edit group permissions, id('.$group['gid'].')" />'
+								.'</form> '
 							.(((count($dbObject->fetchAll('SELECT `gid` FROM `user_in_group` WHERE `gid` = '.$group['gid'].';')) == 0) && (count($dbObject->fetchAll('SELECT `gid` FROM `group` WHERE `parent_gid` = '.$group['gid'].';')) == 0)) ? ''	
 								.'<form name="group-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 									.'<input type="hidden" name="group-id" value="'.$group['gid'].'" />'
@@ -470,6 +488,106 @@
 					return $return;
 			} else {
 					return parent::getFrame('Group list', $return, "", true);
+			}
+		}
+		
+		
+		public function editGroupPerms($useFrames = false) {
+			$rb = new ResourceBundle();
+			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$return = '';
+			
+			if($_POST['group-perm-save'] == $rb->get('gperm.save')) {
+				$perms['name'] = $_POST['group-perm-name'];
+				$perms['value'] = $_POST['group-perm-value'];
+				$perms['type'] = $_POST['group-perm-type'];
+				
+				foreach($perms['name'] as $id => $name) {
+					$sql = 'update `group_perms` set `name` = "'.$name.'", `value` = "'.$perms['value'][$id].'", `type` = "'.$perms['type'][$id].'" where `id` = '.$id.';';
+					parent::db()->execute($sql);
+				}
+				if($_POST['group-perm-name-new'] != '') {
+					$name = $_POST['group-perm-name-new'];
+					$value = $_POST['group-perm-value-new'];
+					$type = $_POST['group-perm-type-new'];
+					$groupId = $_POST['group-id'];
+					$sql = 'insert into `group_perms`(`group_id`, `name`, `value`, `type`) values('.$groupId.', "'.$name.'", "'.$value.'", "'.$type.'");';
+					parent::db()->execute($sql);
+				}
+				$_POST['group-edit'] = 'Edit group permissions';
+			} elseif($_POST['group-perm-delete'] == $rb->get('gperm.delete')) {
+				$perms = $_POST['group-perm-deletecheck'];
+				foreach($perms as $id => $perm) {
+					if($perm == 'on') {
+						$sql = 'delete from `group_perms` where `id` = '.$id.';';
+						parent::db()->execute($sql);
+					}
+				}
+				$_POST['group-edit'] = 'Edit group permissions';
+			}
+			
+			if($_POST['group-edit'] == 'Edit group permissions') {
+				$groupId = $_POST['group-id'];
+				$perms = parent::db()->fetchAll('select `id`, `name`, `value`, `type` from `group_perms` where `group_id` = '.$groupId.' order by `name`, `id`;');
+				
+				$return .= ''
+				.'<form name="group-perm-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<div class="gray-box">'
+						.'<table class="standart">'
+							.'<tr>'
+								.'<th>'.$rb->get('gperm.name').':</th>'
+								.'<th>'.$rb->get('gperm.value').':</th>'
+								.'<th>'.$rb->get('gperm.type').':</th>'
+								.'<th></th>'
+							.'</tr>';
+				$i = 1;
+				foreach($perms as $perm) {
+					$return .= ''
+					.'<tr class"'.((($i % 2) == 0) ? 'even' : 'idle').'">'
+						.'<td>'
+							.'<input class="w300" type="text" name="group-perm-name['.$perm['id'].']" value="'.$perm['name'].'" />'
+						.'</td>'
+						.'<td>'
+							.'<input class="w300" type="text" name="group-perm-value['.$perm['id'].']" value="'.$perm['value'].'" />'
+						.'</td>'
+						.'<td>'
+							.'<input class="w100" type="text" name="group-perm-type['.$perm['id'].']" value="'.$perm['type'].'" />'
+						.'</td>'
+						.'<td>'
+							.'<input type="checkbox" name="group-perm-deletecheck['.$perm['id'].']" />'
+						.'</td>'
+					.'</tr>';
+					$i ++;
+				}
+				$return .= ''
+							.'<tr class"'.((($i % 2) == 0) ? 'even' : 'idle').'">'
+								.'<td>'
+									.'<input class="w300" type="text" name="group-perm-name-new" value="" />'
+								.'</td>'
+								.'<td>'
+									.'<input class="w300" type="text" name="group-perm-value-new" value="" />'
+								.'</td>'
+								.'<td>'
+									.'<input class="w100" type="text" name="group-perm-type-new" value="" />'
+								.'</td>'
+								.'<td></td>'
+							.'</tr>'
+						.'</table>'
+					.'</div>'
+					.'<hr />'
+					.'<div class="gray-box">'
+						.'<input type="hidden" name="group-id" value="'.$groupId.'" />'
+						.'<input type="submit" name="group-perm-save" value="'.$rb->get('gperm.save').'" /> '
+						.'<input type="submit" name="group-perm-delete" value="'.$rb->get('gperm.delete').'" /> '
+						.'<input type="submit" name="group-perm-close" value="'.$rb->get('gperm.close').'" />'
+					.'</div>'
+				.'</form>';
+			}
+			
+			if($useFrames == "false") {
+				return $return;
+			} else {
+				return parent::getFrame($rb->get('gperm.title').' :: '.$groupId, $return, "", true);
 			}
 		}
 		
@@ -631,10 +749,11 @@
 					$user['password'] = sha1($user['username'].$user['password1']);
 					
 					//parent::db()->setMockMode(true);
+					$groupNames = split(',', $groups);
+					$user['groupId'] = $groupNames[0];
 					parent::db()->execute(parent::query()->get('register', $user, 'user'));
 					$uid = parent::db()->fetchSingle(parent::query()->get('userByUsername', $user, 'user'));
 					$uid = $uid['uid'];
-					$groupNames = split(',', $groups);
 					foreach($groupNames as $gpName) {
 						$gid = parent::db()->fetchSingle(parent::query()->get('groupByName', array('name' => trim($gpName)), 'user'));
 						$gid = $gid['gid'];
@@ -651,6 +770,10 @@
 				foreach($messages as $msg) {
 					$msgHtml .= $msg;
 				}
+			}
+			
+			if(trim($groups) == '') {
+				return parent::getError('User must have at least one group!');
 			}
 			
 			$return .= ''

@@ -10,4 +10,9 @@
 	<script build="256">ALTER TABLE  `w_sport_stats` ADD  `pos` INT NOT NULL AFTER  `pid`;</script>
 	<script build="256">update `w_sport_stats` `wss` set `pos` = (select `position` from `w_sport_player` where `id` = `wss`.`pid`);</script>
 	<script build="256">ALTER TABLE `w_sport_stats` DROP PRIMARY KEY, ADD PRIMARY KEY(`pid`, `pos`, `mid`, `season`, `table_id`);</script>
+	<script build="257">insert into `page_right`(`pid`, `gid`, `type`) (select `pid`, `gid`, 104 as `type` from `page_right` where `type` = 102);</script>
+	<script build="258">ALTER TABLE  `info` ADD  `title` TINYTEXT NOT NULL AFTER  `name`;</script>
+	<script build="258">update `info` set `title` = "&lt;web:getProperty name=\"web:currentPageName\" /&gt;";</script>
+	<script build="258">ALTER TABLE  `article_content` ADD  `keywords` TINYTEXT NOT NULL AFTER  `url`;</script>
+	<script build="263">CREATE TABLE  `group_perms` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , `group_id` INT NOT NULL , `name` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `value` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `type` TINYTEXT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
 </autoupdate>

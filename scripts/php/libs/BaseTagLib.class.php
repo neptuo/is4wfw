@@ -242,6 +242,32 @@
 			return $value;
 		}
 	}
+	
+	protected function escapeHtmlEntities($value) {
+		$escapeChars = array("&" => "&amp;", '>' => '&gt;', '<' => '&lt;', '"' => '&quot;', "~" => "&#126;");
+		$value = strtr($value, $escapeChars);
+		return $value;
+	}
+	
+	protected function getGroupPerm($name, $groupId, $inherited, $default = '') {
+		//echo 'Name: '.$name.', GroupID: '.$groupId.', Inherited: '.($inherited ? 'true' : 'false').', Default: "'.$default.'"<br />';
+		if($groupId != 0) {
+			$perms = self::db()->fetchAll('select `name`, `value`, `type` from `group_perms` where `group_id` = '.$groupId.';');
+			foreach($perms as $perm) {
+				if($name == $perm['name']) {
+					return $perm;
+				}
+			}
+			if($inherited) {
+				$group = self::db()->fetchSingle('select `parent_gid` from `group` where `gid` = '.$groupId.';');
+				if($group != array()) {
+					return self::getGroupPerm($name, $group['parent_gid'], true, $default);
+				}
+			}
+		} else {
+			return array('value' => $default);
+		}
+	}
   }
 
 ?>

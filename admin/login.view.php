@@ -17,7 +17,7 @@
 	<div class="login">
 		<div class="login-head"></div>
 		<div class="login-in">
-			<login:form group="web-admins" pageId="~/in/index.view" autoLoginUserName="admin" autoLoginPassword="111111" />
+			<login:form group="web-admins" pageId="~/in/index.view" />
 		</div>
 	</div>
 	<script type="text/javascript" src="~/js/domready.js"></script>
