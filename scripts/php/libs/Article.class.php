@@ -14,7 +14,7 @@
 	 *  Article class
 	 *      
 	 *  @author     Marek SMM
-	 *  @timestamp  2010-11-12
+	 *  @timestamp  2010-11-27
 	 * 
 	 */  
 	class Article extends BaseTagLib {
@@ -359,11 +359,12 @@
 				return;
 			}
       
-			$article = $dbObject->fetchAll("SELECT `name`, `keywords`, `head`, `content`, `author`, `timestamp` FROM `article_content` WHERE `article_id` = ".$articleId." AND `language_id` = ".$articleLangId.";");
+			$article = $dbObject->fetchAll("SELECT `name`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime` FROM `article_content` WHERE `article_id` = ".$articleId." AND `language_id` = ".$articleLangId.";");
 			if(count($article) == 1) {
 				parent::request()->set('id', $articleId, 'current-article');
 				parent::request()->set('date', $article[0]['timestamp'], 'current-article');
 				parent::request()->set('time', $article[0]['timestamp'], 'current-article');
+				parent::request()->set('datetime', $article[0]['datetime'], 'current-article');
 				parent::request()->set('name', $article[0]['name'], 'current-article');
 				parent::request()->set('keywords', $article[0]['keywords'], 'current-article');
 				parent::request()->set('author', $article[0]['author'], 'current-article');
@@ -1142,9 +1143,13 @@
 			
 			if($_POST['article-save'] == $rb->get('articles.save')) {
 				$article = array('id' => $_POST['article-id'], 'line_id' => $_POST['line-id'], 'visible' => $_POST['article-visible'], 'order' => $_POST['article-id'], 'labels' => $_POST['article-labels']);
-				$articleContent = array('article_id' => $_POST['article-id'], 'name' => $_POST['article-name'], 'head' => $_POST['article-head'], 'content' => $_POST['article-content'], 'author' => $_POST['article-author'], 'timestamp' => time(), 'language_id' => $_POST['language-id'], 'language_old_id' => $_POST['article-old-lang-id'], 'line_old_id' => $_POST['line-old-id'], 'url' => $_POST['article-url'], 'keywords' => $_POST['article-keywords']);
+				$articleContent = array('article_id' => $_POST['article-id'], 'name' => $_POST['article-name'], 'head' => $_POST['article-head'], 'content' => $_POST['article-content'], 'author' => $_POST['article-author'], 'timestamp' => time(), 'datetime' => $_POST['article-datetime'], 'language_id' => $_POST['language-id'], 'language_old_id' => $_POST['article-old-lang-id'], 'line_old_id' => $_POST['line-old-id'], 'url' => $_POST['article-url'], 'keywords' => $_POST['article-keywords']);
 				
-				if($articleContent['url'] == '') {
+				if(trim($articleContent['datetime']) == '') {
+					$articleContent['datetime'] = date("j.n.Y", time());
+				}
+				
+				if(trim($articleContent['url']) == '') {
 					$articleContent['url'] = $articleContent['name'];
 				}
 				
@@ -1173,15 +1178,16 @@
 									$article['id'] = $ac['article_id'] = $maxId[0]['id'] + 1;
 									// Ulozeni - NOVY clanek
 									$maxOrder = parent::db()->fetchSingle('select `order` from `article` order by `order` desc limit 1');
+									$maxOrder['order'] ++;
 									$dbObject->execute("INSERT INTO `article`(`id`, `line_id`, `order`, `visible`) VALUES (".$article['id'].", ".$article['line_id'].", ".$maxOrder['order'].", ".$article['visible'].");");
-									$dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['url']."\", \"".$ac['keywords']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", ".$ac['language_id'].");");
+									$dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['url']."\", \"".$ac['keywords']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", \"".$ac['datetime']."\", ".$ac['language_id'].");");
 									$return .= '<h4 class="success">'.$rb->get('articles.newcreated').'</h4>';
 									$_POST['article-id'] = $article['id'];
 									$_POST['language-id'] = $ac['language_id'];
 								} else {
 									$ac = $articleContent;
 									// Ulozeni - NOVA jaz.verze
-									$dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['url']."\", \"".$ac['keywords']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", ".$ac['language_id'].");");
+									$dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (".$ac['article_id'].", \"".$ac['name']."\", \"".$ac['url']."\", \"".$ac['keywords']."\", \"".$ac['head']."\", \"".$ac['content']."\", \"".$ac['author']."\", ".$ac['timestamp'].", \"".$ac['datetime']."\", ".$ac['language_id'].");");
 									$return .= '<h4 class="success">'.$rb->get('articles.langadded').'</h4>';
 									$_POST['article-id'] = $article['id'];
 									$_POST['language-id'] = $ac['language_id'];
@@ -1189,7 +1195,7 @@
 							} else {
 								$ac = $articleContent;
 								$dbObject->execute("UPDATE `article` SET `line_id` = ".$article['line_id'].", `order` = ".$article['order'].", `visible`= ".$article['visible']." WHERE `id` = ".$article['id'].";");
-								$dbObject->execute("UPDATE `article_content` SET `name` = \"".$ac['name']."\", `url` = \"".$ac['url']."\", `keywords` = \"".$ac['keywords']."\", `head` = \"".$ac['head']."\", `content` = \"".$ac['content']."\", `author` = \"".$ac['author']."\", `timestamp` = ".$ac['timestamp'].", `language_id` = ".$ac['language_id']." WHERE `article_id` = ".$ac['article_id']." AND `language_id` = ".$ac['language_old_id'].";");
+								$dbObject->execute("UPDATE `article_content` SET `name` = \"".$ac['name']."\", `url` = \"".$ac['url']."\", `keywords` = \"".$ac['keywords']."\", `head` = \"".$ac['head']."\", `content` = \"".$ac['content']."\", `author` = \"".$ac['author']."\", `timestamp` = ".$ac['timestamp'].", `datetime` = \"".$ac['datetime']."\", `language_id` = ".$ac['language_id']." WHERE `article_id` = ".$ac['article_id']." AND `language_id` = ".$ac['language_old_id'].";");
 								$_POST['article-id'] = $article['id'];
 								$_POST['language-id'] = $ac['language_id'];
 								$return .= '<h4 class="success">'.$rb->get('articles.updated').'</h4>';
@@ -1215,7 +1221,7 @@
 				
 				if($_POST['article-id'] != '' && array_key_exists('language-id', $_POST)) {
 					// test na prava pro cteni z prislusne rady!
-					$article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`keywords`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article`.`line_id`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) AND `article_content`.`article_id` = '.$articleId.' AND `article_content`.`language_id` = '.$languageId.' ORDER BY `id`;');
+					$article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`keywords`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`datetime`, `article`.`line_id`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) AND `article_content`.`article_id` = '.$articleId.' AND `article_content`.`language_id` = '.$languageId.' ORDER BY `id`;');
 					if(count($article) != 0) {
 						$article = $article[0];
 					} else {
@@ -1238,10 +1244,13 @@
 			} else {
 				$new = true;
 				$userLangs = array();
-				$article = $articleContent;
-				$article['visible'] = 2;
-				$article['author'] = parent::getPropertyValue('Article.author', '');
-				$article['language_id'] = parent::getPropertyValue('Article.languageId', '1');
+				$article = array_merge($article, $articleContent);
+				if(!array_key_exists('visible', $article)) {echo '11';
+					$article['visible'] = 2;
+					$article['author'] = parent::getPropertyValue('Article.author', '');
+					$article['language_id'] = parent::getPropertyValue('Article.languageId', '1');
+					$article['datetime'] = date("j.n.Y", time());
+				}
 			}
 			
 			$langs = $dbObject->fetchAll("SELECT `id`, `language` FROM `language` ORDER BY `language`;");
@@ -1342,6 +1351,10 @@
 					.'<div class="gray-box-float">'
 						.'<label for="article-keywords" class="w60">'.$rb->get('articles.keywords').':</label> '
 						.'<input type="text" class="long-input" name="article-keywords" id="article-keywords" value="'.$article['keywords'].'" />'
+					.'</div>'
+					.'<div class="gray-box-float">'
+						.'<label for="article-datetime" class="w80">'.$rb->get('articles.datetime').':</label> '
+						.'<input type="text" class="w110" name="article-datetime" id="article-datetime" value="'.$article['datetime'].'" />'
 					.'</div>'
 					.'<div class="clear"></div>'
 					.'<div class="gray-box">'
@@ -1821,9 +1834,12 @@
 			return parent::request()->get('id', 'current-article');
 		}
 		
-		public function showDate($format = 'd.m.Y') {
+		public function showDate($format = 'd.m.Y', $type = '') {
 			if($format == '') {
 				$format = 'd.m.Y';
+			}
+			if($type == 'datetime') {
+				return parent::request()->get('datetime', 'current-article');
 			}
 			return date($format, parent::request()->get('date', 'current-article'));
 		}
@@ -1875,7 +1891,7 @@
 		}
 		
 		public function setUrl($url) {
-			$article = parent::db()->fetchSingle('select `article_id` from `article_content` where `url` = "'.$url.'";');
+			$article = parent::db()->fetchSingle('select `article_id` from `article_content` where `url` = "'.$url.'";', true, true, true);
 			if($article != array()) {
 				self::setArticleId($article['article_id']);
 				parent::request()->set('article-url', $url);
