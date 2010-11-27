@@ -370,8 +370,12 @@
       <attname>format</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>type</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
-      Zobrazí datum. "format" je formát.
+      Zobrazí datum. "format" je formát. Pokud je "type" = "datetime", vypise field "datetime", tedy nastavitelne datum
     </comment>
   </tag>
   <tag>
