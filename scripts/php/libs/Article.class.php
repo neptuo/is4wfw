@@ -156,7 +156,7 @@
 			}
         
 			$sort = (strtolower($sort) == 'desc' ? 'DESC' : 'ASC'); 
-			$articles = $dbObject->fetchAll("SELECT distinct `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid`".$labelsJoin." WHERE `article`.`line_id` = ".$lineId." AND `article_content`.`language_id` = ".$articleLangId." AND `article_line_right`.`type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString().")) ".$visible.$labelsWhere." ORDER BY ".$sortBy." " .$sort.$limit.";");
+			$articles = $dbObject->fetchAll("SELECT distinct `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp`, `article_content`.`datetime`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid`".$labelsJoin." WHERE `article`.`line_id` = ".$lineId." AND `article_content`.`language_id` = ".$articleLangId." AND `article_line_right`.`type` = ".WEB_R_READ." AND (`group`.`gid` IN (".$loginObject->getGroupsIdsAsString().") OR `group`.`parent_gid` IN (".$loginObject->getGroupsIdsAsString().")) ".$visible.$labelsWhere." ORDER BY ".$sortBy." " .$sort.$limit.";");
 			if(count($articles) > 0) {
 				$flink = '';
 				parent::request()->set('line-url', $lineInfo['url']);
@@ -166,6 +166,7 @@
 					parent::request()->set('id', $article['id'], 'current-article');
 					parent::request()->set('date', $article['timestamp'], 'current-article');
 					parent::request()->set('time', $article['timestamp'], 'current-article');
+					parent::request()->set('datetime', $article['datetime'], 'current-article');
 					parent::request()->set('name', $article['name'], 'current-article');
 					parent::request()->set('author', $article['author'], 'current-article');
 					parent::request()->set('head', $article['head'], 'current-article');
