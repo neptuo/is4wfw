@@ -1892,7 +1892,7 @@
 		}
 		
 		public function setUrl($url) {
-			$article = parent::db()->fetchSingle('select `article_id` from `article_content` where `url` = "'.$url.'";', true, true, true);
+			$article = parent::db()->fetchSingle('select `article_id` from `article_content` where `url` = "'.$url.'";');
 			if($article != array()) {
 				self::setArticleId($article['article_id']);
 				parent::request()->set('article-url', $url);
