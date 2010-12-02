@@ -4,7 +4,7 @@
   <name>Sport Lib</name>
   <classname>Sport</classname>
   <classpath>php.libs</classpath>
-  <version>2.11</version>
+  <version>2.13</version>
   <count>*</count>
   <comment>
     Třída pro "sport".
@@ -176,6 +176,17 @@
     </attribute>
     <comment>
       Editace týmu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>copyTeamTableStats</tagname>
+    <function>showCopyTeamTableStatsForm</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zkopíruje výsledky týmu z tabulky do jiné tabulky.
     </comment>
   </tag>
   <tag>
@@ -372,6 +383,10 @@
     </attribute>
     <attribute>
       <attname>tableId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>editable</attname>
       <attreq>implied</attreq>
     </attribute>
     <attribute>
