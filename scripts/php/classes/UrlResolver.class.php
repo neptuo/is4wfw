@@ -202,7 +202,9 @@ class UrlResolver extends BaseTagLib {
                     }
                 }
             } else {
-                $key--;
+                if($pageUrls[0] != '') {
+                    $key--;
+                }
             }
             if ($found) {
                 //echo 'Page: '.$page['id'].'<br />';

@@ -345,6 +345,7 @@ class DefaultWeb extends BaseTagLib {
         $prjVirs = self::prepareVirtualPathAsArray($webProject, $lang);
         self::parseAllPagesTagLib('tag_lib_start');
         foreach ($reqVirs as $key => $vir) {
+            //echo 'URL: '.$vir.' : '.$prjVirs[$key].'<br />';
             $this->UrlResolver->parseSingleUrlPart($prjVirs[$key], $vir);
         }
         self::parseAllPagesTagLib('tag_lib_end');
@@ -360,10 +361,15 @@ class DefaultWeb extends BaseTagLib {
         if (strlen($lang['language']) > 0) {
             $pages = array_merge(array($lang['language']), $pages);
         }
-        return array_merge(parent::str_tr($webProject['alias']['virtual_url'], '/'), $pages);
+        $virUrl = parent::str_tr($webProject['alias']['virtual_url'], '/');
+        if(count($virUrl) == 1 && $virUrl[0] == '') {
+            return $pages;
+        }
+        return array_merge($virUrl, $pages);
     }
 
     private function parseAllPagesTagLib($tl) {
+        //print_r($this->TempLoadedContent);
         foreach ($this->TempLoadedContent as $page) {
             $this->UrlResolver->parseContentForCustomTags($page[$tl]);
         }
