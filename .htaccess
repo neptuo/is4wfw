@@ -1,4 +1,5 @@
 RewriteEngine on
+RewriteRule ^service/.*$ service.php
 RewriteRule ^([a-zA-Z0-9/_-]*)$ index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
 RewriteRule ^(.*).view$ view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
 RewriteRule ^js/([a-zA-Z0-9/_-]*).js scripts/js/$1.js

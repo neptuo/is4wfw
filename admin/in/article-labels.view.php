@@ -1,5 +1,5 @@
 <v:template src="~/templates/article-template.view">
-  <a href="~/in/articles.view">&laquo; Back to articles</a>
-  <artc:showLabelEdit />
-  <artc:showLabels />
+    <web:a pageId="~/in/articles.view" text="&laquo; Back to articles" security:requirePerm="CMS.Web.Articles" />
+    <artc:showLabelEdit />
+    <artc:showLabels />
 </v:template>

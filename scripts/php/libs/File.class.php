@@ -7,10 +7,11 @@
    */
   require_once("BaseTagLib.class.php");
   require_once("scripts/php/classes/ResourceBundle.class.php");
+  require_once("scripts/php/classes/UrlResolver.class.php");
   
   /**
    * 
-   *  Class updating web pages.     
+   *  FileSystem Class.
    *      
    *  @author     Marek SMM
    *  @timestamp  2009-12-12
@@ -775,12 +776,11 @@
      *
      */                   
     public function getPhysicalPathTo($dirId, $notUserFsRoot = false) {
-      global $dbObject;
       $path = "";
       
       if($dirId >= 0) {
         while($dirId != 0) {
-          $dirInfo = $dbObject->fetchAll("SELECT `name`, `parent_id` FROM `directory` WHERE `id` = ".$dirId.";");
+          $dirInfo = parent::db()->fetchAll("SELECT `name`, `parent_id` FROM `directory` WHERE `id` = ".$dirId.";");
           if(count($dirInfo) == 1) {
             $dirId = $dirInfo[0]['parent_id'];
             $path = $dirInfo[0]['name'].'/'.$path;
@@ -797,7 +797,7 @@
       }
       
       if(!$notUserFsRoot) {
-        $path = FS_ROOT.$path;
+        $path = UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), FS_ROOT.$path);
       }
       return $path;
     }

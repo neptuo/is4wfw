@@ -1,16 +1,19 @@
 <?php
 
+	require_once("scripts/php/includes/settings.inc.php");
+	require_once("scripts/php/includes/database.inc.php");
+	require_once("scripts/php/libs/Database.class.php");
+	require_once("scripts/php/classes/UrlResolver.class.php");
+	
+	error_reporting(0);
 	session_start();
 
 	if(array_key_exists('selected-project', $_SESSION)) {
 		$projectId = $_SESSION['selected-project'];
 		
-		require_once("scripts/php/includes/settings.inc.php");
-		require_once("scripts/php/includes/database.inc.php");
-  	require_once("scripts/php/libs/Database.class.php");
-	  $dbObject = new Database();
+		$dbObject = new Database();
 	  
-	  $allHeaders = getallheaders();
+		$allHeaders = getallheaders();
 		$userBrowser = $allHeaders['User-Agent'];
 		$browser = 'for_all';
 		if(preg_match("(Firefox)", $userBrowser)) {
@@ -35,12 +38,12 @@
 		}
 		
 		$fileType = "text/css";
-		$return = str_replace("~/", WEB_ROOT, $return);
-    header('Content-Type: '.$fileType);
-    header('Content-Length: '.strlen($return));
-  	header('Content-Transfer-Encoding: binary');
-	  echo $return;
-  	exit;
+		$return = str_replace("~/", UrlResolver::combinePath(WEB_ROOT, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), WEB_ROOT)), $return);
+		header('Content-Type: '.$fileType);
+		header('Content-Length: '.strlen($return));
+		header('Content-Transfer-Encoding: binary');
+		echo $return;
+		exit;
 	}
 
 ?>

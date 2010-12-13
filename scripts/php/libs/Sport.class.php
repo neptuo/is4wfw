@@ -17,7 +17,7 @@ require_once("scripts/php/classes/ResourceBundle.class.php");
  * 	all about sport	     
  *      
  *  @author     Marek SMM
- *  @timestamp  2010-12-01
+ *  @timestamp  2010-12-13
  * 
  */
 class Sport extends BaseTagLib {
@@ -903,7 +903,7 @@ class Sport extends BaseTagLib {
         $return = '';
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
-        
+
         if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
             $ok = true;
             $errors = '';
@@ -914,28 +914,28 @@ class Sport extends BaseTagLib {
             $sourceTableId;
             $destTableId;
             $type;
-            if($_POST['tcopy-submit'] == $rb->get('tcopy.submit')) {
+            if ($_POST['tcopy-submit'] == $rb->get('tcopy.submit')) {
                 $teamId = $_POST['tcopy-team'];
                 $seasonId = $_POST['tcopy-season'];
                 $sourceTableId = $_POST['tcopy-fromtable'];
                 $destTableId = $_POST['tcopy-totable'];
                 $type = $_POST['tcopy-type'];
 
-                if($sourceTableId == $destTableId) {
+                if ($sourceTableId == $destTableId) {
                     $errors .= parent::getError($rb->get('tcopy.error.sametables'));
                     $ok = false;
                 }
 
-                $sourceData = parent::db()->fetchSingle('select `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season` from `w_sport_table` where `team` = '.$teamId.' and `table_id` = '.$sourceTableId.' and `season` = '.$seasonId.';');
-                if($sourceData == array()) {
+                $sourceData = parent::db()->fetchSingle('select `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season` from `w_sport_table` where `team` = ' . $teamId . ' and `table_id` = ' . $sourceTableId . ' and `season` = ' . $seasonId . ';');
+                if ($sourceData == array()) {
                     $errors .= parent::getError($rb->get('tcopy.error.teamnotinsourcetable'));
                     $ok = false;
                 }
-                if($ok) {
-                    $destData = parent::db()->fetchSingle('select `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season` from `w_sport_table` where `team` = '.$teamId.' and `table_id` = '.$destTableId.' and `season` = '.$seasonId.';');
-                    if($destData != array()) {
+                if ($ok) {
+                    $destData = parent::db()->fetchSingle('select `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season` from `w_sport_table` where `team` = ' . $teamId . ' and `table_id` = ' . $destTableId . ' and `season` = ' . $seasonId . ';');
+                    if ($destData != array()) {
                         // Update or delete and insert
-                        if($type == 'append') {
+                        if ($type == 'append') {
                             // Update
                             $destData['matches'] += $sourceData['matches'];
                             $destData['wins'] += $sourceData['wins'];
@@ -945,51 +945,51 @@ class Sport extends BaseTagLib {
                             $destData['r_score'] += $sourceData['r_score'];
                             $destData['points'] += $sourceData['points'];
 
-                            parent::db()->execute('update `w_sport_table` set `matches` = '.$destData['matches'].', `wins` = '.$destData['wins'].', `draws` = '.$destData['draws'].', `loses` = '.$destData['loses'].', `s_score` = '.$destData['s_score'].', `r_score` = '.$destData['r_score'].', `points` = '.$destData['points'].' where `team` = '.$teamId.' and `season` = '.$seasonId.' and `table_id` = '.$destTableId.';');
+                            parent::db()->execute('update `w_sport_table` set `matches` = ' . $destData['matches'] . ', `wins` = ' . $destData['wins'] . ', `draws` = ' . $destData['draws'] . ', `loses` = ' . $destData['loses'] . ', `s_score` = ' . $destData['s_score'] . ', `r_score` = ' . $destData['r_score'] . ', `points` = ' . $destData['points'] . ' where `team` = ' . $teamId . ' and `season` = ' . $seasonId . ' and `table_id` = ' . $destTableId . ';');
                             $errors .= parent::getSuccess($rb->get('tcopy.success.updated'));
                         } else {
                             // Delete
-                            parent::db()->execute('delete from `w_sport_table` where `team` = '.$teamId.' and `table_id` = '.$destTableId.' and `season` = '.$seasonId.';');
+                            parent::db()->execute('delete from `w_sport_table` where `team` = ' . $teamId . ' and `table_id` = ' . $destTableId . ' and `season` = ' . $seasonId . ';');
                             // Insert
-                            parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`, `project_id`) values('.$teamId.', '.$sourceData['matches'].', '.$sourceData['wins'].', '.$sourceData['draws'].', '.$sourceData['loses'].', '.$sourceData['s_score'].', '.$sourceData['r_score'].', '.$sourceData['points'].', '.$seasonId.', '.$destTableId.', '.self::getProjectId().');');
+                            parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`, `project_id`) values(' . $teamId . ', ' . $sourceData['matches'] . ', ' . $sourceData['wins'] . ', ' . $sourceData['draws'] . ', ' . $sourceData['loses'] . ', ' . $sourceData['s_score'] . ', ' . $sourceData['r_score'] . ', ' . $sourceData['points'] . ', ' . $seasonId . ', ' . $destTableId . ', ' . self::getProjectId() . ');');
                             $errors .= parent::getWarning($rb->get('tcopy.warning.deleted'));
                             $errors .= parent::getSuccess($rb->get('tcopy.success.added'));
                         }
                     } else {
                         // Insert
-                        parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`, `project_id`) values('.$teamId.', '.$sourceData['matches'].', '.$sourceData['wins'].', '.$sourceData['draws'].', '.$sourceData['loses'].', '.$sourceData['s_score'].', '.$sourceData['r_score'].', '.$sourceData['points'].', '.$seasonId.', '.$destTableId.', '.self::getProjectId().');');
+                        parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`, `project_id`) values(' . $teamId . ', ' . $sourceData['matches'] . ', ' . $sourceData['wins'] . ', ' . $sourceData['draws'] . ', ' . $sourceData['loses'] . ', ' . $sourceData['s_score'] . ', ' . $sourceData['r_score'] . ', ' . $sourceData['points'] . ', ' . $seasonId . ', ' . $destTableId . ', ' . self::getProjectId() . ');');
                         $errors .= parent::getSuccess($rb->get('tcopy.success.added'));
                     }
                 }
             }
 
             $return .= ''
-            .'<form name="tema-copy-stats" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
-                .$errors
-                .'<div class="gray-box">'
-                    .'<label for="tcopy-team">'.$rb->get('tcopy.team').':</label> '
-                    .'<select name="tcopy-team" id="tcopy-team">'
-                        .self::getTeamsOptions($teamId != '' ? $teamId : self::getTeamId())
-                    .'</select> '
-                    .'<label for="tcopy-fromtable">'.$rb->get('tcopy.fromtable').':</label> '
-                    .'<select name="tcopy-fromtable" id="tcopy-fromtable">'
-                        .self::getTablesOptions($sourceTableId != '' ? $sourceTableId : self::getTableId())
-                    .'</select> '
-                    .'<label for="tcopy-totable">'.$rb->get('tcopy.totable').':</label> '
-                    .'<select name="tcopy-totable" id="tcopy-totable">'
-                        .self::getTablesOptions($destTableId != '' ? $destTableId : self::getTableId())
-                    .'</select> '
-                    .'<label for="tcopy-season">'.$rb->get('tcopy.season').':</label> '
-                    .'<select name="tcopy-season" id="tcopy-season">'
-                        .self::getSeasonsOptions($seasonId != '' ? $seasonId : self::getSeasonId())
-                    .'</select> '
-                    .'<input type="radio" name="tcopy-type" id="tcopy-type1" value="override" title="'.$rb->get('tcopy.overridetitle').'"'.($type == 'override' ? ' checked="checked"' : '').' />'
-                    .'<label for="tcopy-type1" title="'.$rb->get('tcopy.overridetitle').'">'.$rb->get('tcopy.override').'</label> '
-                    .'<input type="radio" name="tcopy-type" id="tcopy-type2" value="append" title="'.$rb->get('tcopy.appendtitle').'"'.($type == 'append' ? ' checked="checked"' : '').' />'
-                    .'<label for="tcopy-type2" title="'.$rb->get('tcopy.appendtitle').'">'.$rb->get('tcopy.append').'</label> '
-                    .'<input type="submit" name="tcopy-submit" value="'.$rb->get('tcopy.submit').'" title="'.$rb->get('tcopy.submittitle').'" />'
-                .'</div>'
-            .'</form>';
+                    . '<form name="tema-copy-stats" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . $errors
+                    . '<div class="gray-box">'
+                    . '<label for="tcopy-team">' . $rb->get('tcopy.team') . ':</label> '
+                    . '<select name="tcopy-team" id="tcopy-team">'
+                    . self::getTeamsOptions($teamId != '' ? $teamId : self::getTeamId())
+                    . '</select> '
+                    . '<label for="tcopy-fromtable">' . $rb->get('tcopy.fromtable') . ':</label> '
+                    . '<select name="tcopy-fromtable" id="tcopy-fromtable">'
+                    . self::getTablesOptions($sourceTableId != '' ? $sourceTableId : self::getTableId())
+                    . '</select> '
+                    . '<label for="tcopy-totable">' . $rb->get('tcopy.totable') . ':</label> '
+                    . '<select name="tcopy-totable" id="tcopy-totable">'
+                    . self::getTablesOptions($destTableId != '' ? $destTableId : self::getTableId())
+                    . '</select> '
+                    . '<label for="tcopy-season">' . $rb->get('tcopy.season') . ':</label> '
+                    . '<select name="tcopy-season" id="tcopy-season">'
+                    . self::getSeasonsOptions($seasonId != '' ? $seasonId : self::getSeasonId())
+                    . '</select> '
+                    . '<input type="radio" name="tcopy-type" id="tcopy-type1" value="override" title="' . $rb->get('tcopy.overridetitle') . '"' . ($type == 'override' ? ' checked="checked"' : '') . ' />'
+                    . '<label for="tcopy-type1" title="' . $rb->get('tcopy.overridetitle') . '">' . $rb->get('tcopy.override') . '</label> '
+                    . '<input type="radio" name="tcopy-type" id="tcopy-type2" value="append" title="' . $rb->get('tcopy.appendtitle') . '"' . ($type == 'append' ? ' checked="checked"' : '') . ' />'
+                    . '<label for="tcopy-type2" title="' . $rb->get('tcopy.appendtitle') . '">' . $rb->get('tcopy.append') . '</label> '
+                    . '<input type="submit" name="tcopy-submit" value="' . $rb->get('tcopy.submit') . '" title="' . $rb->get('tcopy.submittitle') . '" />'
+                    . '</div>'
+                    . '</form>';
 
             if ($useFrames == "false") {
                 return $return;
@@ -1016,128 +1016,131 @@ class Sport extends BaseTagLib {
         $retrun = '';
         $actionUrl = $_SERVER['REDIRECT_URL'];
 
-        if ($pageId != false) {
-            $actionUrl = $webObject->composeUrl($pageId);
+        if (!self::isSetProjectId()) {
+            $return .= parent::getError($rb->get('project.notset'));
         } else {
-            $actionUrl = $_SERVER['REDIRECT_URL'];
-        }
-
-        if ($_POST['player-delete'] == $rb->get('players.delete')) {
-            if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
-                $seasonId = $_POST['season-id'];
-                $playerId = $_POST['player-id'];
-                $position = $_POST['player-position'];
-                $teamId = $_POST['team-id'];
-
-                parent::db()->execute('DELETE FROM `w_sport_player` WHERE `id` = ' . $playerId . ' AND `team` = ' . $teamId . ' AND `season` = ' . $seasonId . ' AND `position` = ' . $position . ';');
-                parent::db()->execute('delete from `w_sport_stats` where `pid` = ' . $playerId . ' and `season` = ' . $seasonId . ' and `position` = ' . $position . ';');
-                $return .= '<h4 class="success">' . $rb->get('players.success.delete') . '</h4>';
+            if ($pageId != false) {
+                $actionUrl = $webObject->composeUrl($pageId);
             } else {
-                $return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+                $actionUrl = $_SERVER['REDIRECT_URL'];
             }
-        } elseif ($_POST['player-deletewhole'] == $rb->get('players.deletewhole')) {
-            if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
-                $playerId = $_POST['player-id'];
-                parent::db()->execute('DELETE FROM `w_sport_player` WHERE `id` = ' . $playerId . ';');
-                parent::db()->execute('delete from `w_sport_stats` where `pid` = ' . $playerId . ';');
-                // mazat i statistiky ??
-                $return .= '<h4 class="success">' . $rb->get('players.success.deletewhole') . '</h4>';
-            } else {
-                $return .= parent::getError($rb->get('projects.error.permissionsdenied'));
-            }
-        }
 
-        $return .= self::showPlayerSearchForm('', "false");
+            if ($_POST['player-delete'] == $rb->get('players.delete')) {
+                if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+                    $seasonId = $_POST['season-id'];
+                    $playerId = $_POST['player-id'];
+                    $position = $_POST['player-position'];
+                    $teamId = $_POST['team-id'];
 
-        $search = self::getPlayerSearchAsPartSql();
-        if (self::getSeasonId() != '-1') {
-            if (self::getTeamId() != '-1') {
-                $players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`season` = ' . self::getSeasonId() . ' AND `w_sport_player`.`team` = ' . self::getTeamId() . ' and `project_id` = ' . self::getProjectId() . ($search != '' ? ' and ' . $search : '') . ' ORDER BY `w_sport_player`.`id` ASC;');
-            } else {
-                $players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`season` = ' . self::getSeasonId() . ' and `project_id` = ' . self::getProjectId() . ($search != '' ? ' and ' . $search : '') . ' ORDER BY `w_sport_player`.`id` ASC;');
-            }
-        } else {
-            if (self::getTeamId() != '-1') {
-                $players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`team` = ' . self::getTeamId() . ' and `project_id` = ' . self::getProjectId() . ($search != '' ? ' and ' . $search : '') . ' ORDER BY `w_sport_player`.`id` ASC;');
-            } else {
-                $players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` where `project_id` = ' . self::getProjectId() . ($search != '' ? ' and ' . $search : '') . ' ORDER BY `w_sport_player`.`id` ASC;');
-            }
-            //$players = $dbObject->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` ORDER BY `w_sport_player`.`id` ASC;');
-        }
-        if (count($players) > 0) {
-            $return .= ''
-                    . '<table class="players-list standart">'
-                    . '<tr>'
-                    . '<th class="players-list-id">' . $rb->get('players.id') . '</th>'
-                    . '<th class="players-list-name">' . $rb->get('players.name') . '</th>'
-                    . '<th class="players-list-surname">' . $rb->get('players.surname') . '</th>'
-                    . '<th class="players-list-teasea">' . $rb->get('players.season') . ' / ' . $rb->get('players.team') . '</th>'
-                    . '</tr>';
-
-            $i = 1;
-            foreach ($players as $pl) {
-                if (self::getSeasonId() != '-1') {
-                    $seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`position`, `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = ' . $pl['id'] . ' AND `w_sport_player`.`season` = ' . self::getSeasonId() . ' and `w_sport_season`.`project_id` = ' . self::getProjectId() . ' ORDER BY `w_sport_season`.`start_year` DESC;');
+                    parent::db()->execute('DELETE FROM `w_sport_player` WHERE `id` = ' . $playerId . ' AND `team` = ' . $teamId . ' AND `season` = ' . $seasonId . ' AND `position` = ' . $position . ';');
+                    parent::db()->execute('delete from `w_sport_stats` where `pid` = ' . $playerId . ' and `season` = ' . $seasonId . ' and `position` = ' . $position . ';');
+                    $return .= '<h4 class="success">' . $rb->get('players.success.delete') . '</h4>';
                 } else {
-                    $seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`position`, `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = ' . $pl['id'] . ' and `w_sport_season`.`project_id` = ' . self::getProjectId() . ' ORDER BY `w_sport_season`.`start_year` DESC;');
+                    $return .= parent::getError($rb->get('projects.error.permissionsdenied'));
                 }
+            } elseif ($_POST['player-deletewhole'] == $rb->get('players.deletewhole')) {
+                if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+                    $playerId = $_POST['player-id'];
+                    parent::db()->execute('DELETE FROM `w_sport_player` WHERE `id` = ' . $playerId . ';');
+                    parent::db()->execute('delete from `w_sport_stats` where `pid` = ' . $playerId . ';');
+                    // mazat i statistiky ??
+                    $return .= '<h4 class="success">' . $rb->get('players.success.deletewhole') . '</h4>';
+                } else {
+                    $return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+                }
+            }
 
-                $teaseastr = '';
-                foreach ($seasons as $sea) {
-                    if (strlen($teaseastr) != 0) {
-                        $teaseastr .= ', ';
+            $return .= self::showPlayerSearchForm('', "false");
+
+            $search = self::getPlayerSearchAsPartSql();
+            if (self::getSeasonId() != '-1') {
+                if (self::getTeamId() != '-1') {
+                    $players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`season` = ' . self::getSeasonId() . ' AND `w_sport_player`.`team` = ' . self::getTeamId() . ' and `project_id` = ' . self::getProjectId() . ($search != '' ? ' and ' . $search : '') . ' ORDER BY `w_sport_player`.`id` ASC;');
+                } else {
+                    $players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`season` = ' . self::getSeasonId() . ' and `project_id` = ' . self::getProjectId() . ($search != '' ? ' and ' . $search : '') . ' ORDER BY `w_sport_player`.`id` ASC;');
+                }
+            } else {
+                if (self::getTeamId() != '-1') {
+                    $players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` WHERE `w_sport_player`.`team` = ' . self::getTeamId() . ' and `project_id` = ' . self::getProjectId() . ($search != '' ? ' and ' . $search : '') . ' ORDER BY `w_sport_player`.`id` ASC;');
+                } else {
+                    $players = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` where `project_id` = ' . self::getProjectId() . ($search != '' ? ' and ' . $search : '') . ' ORDER BY `w_sport_player`.`id` ASC;');
+                }
+                //$players = $dbObject->fetchAll('SELECT DISTINCT `w_sport_player`.`id`, `w_sport_player`.`name`, `w_sport_player`.`surname` FROM `w_sport_player` ORDER BY `w_sport_player`.`id` ASC;');
+            }
+            if (count($players) > 0) {
+                $return .= ''
+                        . '<table class="players-list standart">'
+                        . '<tr>'
+                        . '<th class="players-list-id">' . $rb->get('players.id') . '</th>'
+                        . '<th class="players-list-name">' . $rb->get('players.name') . '</th>'
+                        . '<th class="players-list-surname">' . $rb->get('players.surname') . '</th>'
+                        . '<th class="players-list-teasea">' . $rb->get('players.season') . ' / ' . $rb->get('players.team') . '</th>'
+                        . '</tr>';
+
+                $i = 1;
+                foreach ($players as $pl) {
+                    if (self::getSeasonId() != '-1') {
+                        $seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`position`, `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = ' . $pl['id'] . ' AND `w_sport_player`.`season` = ' . self::getSeasonId() . ' and `w_sport_season`.`project_id` = ' . self::getProjectId() . ' ORDER BY `w_sport_season`.`start_year` DESC;');
+                    } else {
+                        $seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`position`, `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_team`.`name`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = ' . $pl['id'] . ' and `w_sport_season`.`project_id` = ' . self::getProjectId() . ' ORDER BY `w_sport_season`.`start_year` DESC;');
                     }
-                    $teaseastr .= '(' . $sea['start_year'] . ' - ' . $sea['end_year'] . ' / ' . $sea['name'] . ' - <span title="' . self::getPlayerPosition($sea['position']) . '" class="blue">' . self::getPlayerPositionShortcut($sea['position']) . '</span> ' . ($sea['on_loan'] == 1 ? ' <span class="red">[' . $rb->get('players.onloanletter') . ']</span>' : '') . ' - '
-                            . '<form name="player-edit" method="post" action="' . $actionUrl . '">'
-                            . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
-                            . '<input type="hidden" name="season-id" value="' . $sea['sid'] . '" />'
-                            . '<input type="hidden" name="team-id" value="' . $sea['tid'] . '" />'
-                            . '<input type="hidden" name="player-edit" value="' . $rb->get('players.edit') . '" />'
-                            . '<input type="image" src="~/images/page_edi.png" name="player-edit" value="' . $rb->get('players.edit') . '" title="' . $rb->get('players.editcap') . '" />'
-                            . '</form> '
-                            . '<form name="player-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
-                            . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
-                            . '<input type="hidden" name="season-id" value="' . $sea['sid'] . '" />'
-                            . '<input type="hidden" name="team-id" value="' . $sea['tid'] . '" />'
-                            . '<input type="hidden" name="player-position" value="' . $sea['position'] . '" />'
-                            . '<input type="hidden" name="player-delete" value="' . $rb->get('players.delete') . '" />'
-                            . '<input class="confirm" type="image" src="~/images/page_del.png" name="player-delete" value="' . $rb->get('players.delete') . '" title="' . $rb->get('players.deletecap') . ', id (' . $pl['id'] . '), season (' . $sea['sid'] . '), team (' . $sea['tid'] . '), position (' . self::getPlayerPosition($sea['position']) . ')" />'
-                            . '</form> )';
-                }
 
-                $teaseastr .= ''
-                        . ' <form name="player-add" method="post" action="' . $actionUrl . '">'
-                        . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
-                        . '<input type="hidden" name="player-add" value="' . $rb->get('players.add') . '" />'
-                        . '<input type="image" src="~/images/page_add.png" name="player-add" value="' . $rb->get('players.add') . '" title="' . $rb->get('players.addcap') . '" />'
-                        . '</form> '
-                        . '<form name="player-deletewhole" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
-                        . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
-                        . '<input type="hidden" name="player-deletewhole" value="' . $rb->get('players.deletewhole') . '" />'
-                        . '<input class="confirm" type="image" src="~/images/page_del.png" name="player-deletewhole" value="' . $rb->get('players.deletewhole') . '" title="' . $rb->get('players.deletewholecap') . ', id (' . $pl['id'] . ')" />'
-                        . '</form> ';
+                    $teaseastr = '';
+                    foreach ($seasons as $sea) {
+                        if (strlen($teaseastr) != 0) {
+                            $teaseastr .= ', ';
+                        }
+                        $teaseastr .= '(' . $sea['start_year'] . ' - ' . $sea['end_year'] . ' / ' . $sea['name'] . ' - <span title="' . self::getPlayerPosition($sea['position']) . '" class="blue">' . self::getPlayerPositionShortcut($sea['position']) . '</span> ' . ($sea['on_loan'] == 1 ? ' <span class="red">[' . $rb->get('players.onloanletter') . ']</span>' : '') . ' - '
+                                . '<form name="player-edit" method="post" action="' . $actionUrl . '">'
+                                . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
+                                . '<input type="hidden" name="season-id" value="' . $sea['sid'] . '" />'
+                                . '<input type="hidden" name="team-id" value="' . $sea['tid'] . '" />'
+                                . '<input type="hidden" name="player-edit" value="' . $rb->get('players.edit') . '" />'
+                                . '<input type="image" src="~/images/page_edi.png" name="player-edit" value="' . $rb->get('players.edit') . '" title="' . $rb->get('players.editcap') . '" />'
+                                . '</form> '
+                                . '<form name="player-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                                . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
+                                . '<input type="hidden" name="season-id" value="' . $sea['sid'] . '" />'
+                                . '<input type="hidden" name="team-id" value="' . $sea['tid'] . '" />'
+                                . '<input type="hidden" name="player-position" value="' . $sea['position'] . '" />'
+                                . '<input type="hidden" name="player-delete" value="' . $rb->get('players.delete') . '" />'
+                                . '<input class="confirm" type="image" src="~/images/page_del.png" name="player-delete" value="' . $rb->get('players.delete') . '" title="' . $rb->get('players.deletecap') . ', id (' . $pl['id'] . '), season (' . $sea['sid'] . '), team (' . $sea['tid'] . '), position (' . self::getPlayerPosition($sea['position']) . ')" />'
+                                . '</form> )';
+                    }
+
+                    $teaseastr .= ''
+                            . ' <form name="player-add" method="post" action="' . $actionUrl . '">'
+                            . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
+                            . '<input type="hidden" name="player-add" value="' . $rb->get('players.add') . '" />'
+                            . '<input type="image" src="~/images/page_add.png" name="player-add" value="' . $rb->get('players.add') . '" title="' . $rb->get('players.addcap') . '" />'
+                            . '</form> '
+                            . '<form name="player-deletewhole" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                            . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
+                            . '<input type="hidden" name="player-deletewhole" value="' . $rb->get('players.deletewhole') . '" />'
+                            . '<input class="confirm" type="image" src="~/images/page_del.png" name="player-deletewhole" value="' . $rb->get('players.deletewhole') . '" title="' . $rb->get('players.deletewholecap') . ', id (' . $pl['id'] . ')" />'
+                            . '</form> ';
+
+                    $return .= ''
+                            . '<tr class="' . ((($i % 2) == 1) ? 'idle' : 'even') . '">'
+                            . '<td class="players-list-id">' . $pl['id'] . '</td>'
+                            . '<td class="players-list-name">' . $pl['name'] . '</td>'
+                            . '<td class="players-list-surname">' . $pl['surname'] . '</td>'
+                            . '<td class="players-list-teasea">' . $teaseastr . '</td>'
+                            . '</tr>';
+                    $i++;
+                }
 
                 $return .= ''
-                        . '<tr class="' . ((($i % 2) == 1) ? 'idle' : 'even') . '">'
-                        . '<td class="players-list-id">' . $pl['id'] . '</td>'
-                        . '<td class="players-list-name">' . $pl['name'] . '</td>'
-                        . '<td class="players-list-surname">' . $pl['surname'] . '</td>'
-                        . '<td class="players-list-teasea">' . $teaseastr . '</td>'
-                        . '</tr>';
-                $i++;
+                        . '</table>';
+            } else {
+                $return .= '<h4 class="warning">' . $rb->get('players.warning.nodata') . '</h4>';
             }
-
             $return .= ''
-                    . '</table>';
-        } else {
-            $return .= '<h4 class="warning">' . $rb->get('players.warning.nodata') . '</h4>';
+                    . '<hr />'
+                    . '<form name="player-deletewhole" method="post" action="' . $actionUrl . '">'
+                    . '<input type="submit" name="player-new" value="' . $rb->get('players.new') . '" title="' . $rb->get('players.newcap') . '" />'
+                    . '</form>';
         }
-        $return .= ''
-                . '<hr />'
-                . '<form name="player-deletewhole" method="post" action="' . $actionUrl . '">'
-                . '<input type="submit" name="player-new" value="' . $rb->get('players.new') . '" title="' . $rb->get('players.newcap') . '" />'
-                . '</form>';
-
         if ($useFrames == "false") {
             return $return;
         } else {
@@ -1417,53 +1420,61 @@ class Sport extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $retrun = '';
 
-        if ($_POST['table-delete'] == $rb->get('tables.delete')) {
-            $tableId = $_POST['table-id'];
-            if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
-                parent::db()->execute('delete from `w_sport_tables` where `id` = ' . $tableId . ';');
-            } else {
-                $return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+        if (!self::isSetProjectId()) {
+            $return .= parent::getError($rb->get('project.notset'));
+        } else {
+            if ($_POST['table-delete'] == $rb->get('tables.delete')) {
+                $tableId = $_POST['table-id'];
+                if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
+                    parent::db()->execute('delete from `w_sport_tables` where `id` = ' . $tableId . ';');
+                } else {
+                    $return .= parent::getError($rb->get('projects.error.permissionsdenied'));
+                }
             }
-        }
 
-        $tables = parent::db()->fetchAll('select `id`, `name` from `w_sport_tables` where `project_id` = ' . self::getProjectId() . ' order by `id`;');
+            $tables = parent::db()->fetchAll('select `id`, `name` from `w_sport_tables` where `project_id` = ' . self::getProjectId() . ' order by `id`;');
+            if (count($tables) > 0) {
+                $return .= ''
+                        . '<table class="standart">'
+                        . '<tr>'
+                        . '<th>' . $rb->get('tables.id') . ':</th>'
+                        . '<th>' . $rb->get('tables.name') . ':</th>'
+                        . '<th></th>'
+                        . '</tr>';
 
-        $return .= ''
-                . '<table class="standart">'
-                . '<tr>'
-                . '<th>' . $rb->get('tables.id') . ':</th>'
-                . '<th>' . $rb->get('tables.name') . ':</th>'
-                . '<th></th>'
-                . '</tr>';
+                $i = 0;
+                foreach ($tables as $table) {
+                    $return .= ''
+                            . '<tr class="' . ((($i % 2) == 0) ? 'idle' : 'even') . '">'
+                            . '<td>' . $table['id'] . '</td>'
+                            . '<td>' . $table['name'] . '</td>'
+                            . '<td>'
+                            . '<form name="tables-edit" action="' . $_SERVER['REDIRECT_URL'] . '" method="post">'
+                            . '<input type="hidden" name="table-id" value="' . $table['id'] . '" />'
+                            . '<input type="hidden" name="table-edit" value="' . $rb->get('tables.edit') . '" />'
+                            . '<input type="image" src="~/images/page_edi.png" name="table-edit" value="' . $rb->get('tables.edit') . '" title="' . $rb->get('tables.edittitle') . '" />'
+                            . '</form> '
+                            . '<form name="tables-delete" action="' . $_SERVER['REDIRECT_URL'] . '" method="post">'
+                            . '<input type="hidden" name="table-id" value="' . $table['id'] . '" />'
+                            . '<input type="hidden" name="table-delete" value="' . $rb->get('tables.delete') . '" />'
+                            . '<input class="confirm" type="image" src="~/images/page_del.png" name="table-delete" value="' . $rb->get('tables.delete') . '" title="' . $rb->get('tables.deletetitle') . ', id(' . $table['id'] . ')" />'
+                            . '</form>'
+                            . '</td>'
+                            . '</tr>';
+                    $i++;
+                }
+                $return .= ''
+                        . '</table>';
+            } else {
+                $return .= parent::getWarning($rb->get('tables.nodata'));
+            }
 
-        $i = 0;
-        foreach ($tables as $table) {
             $return .= ''
-                    . '<tr class="' . ((($i % 2) == 0) ? 'idle' : 'even') . '">'
-                    . '<td>' . $table['id'] . '</td>'
-                    . '<td>' . $table['name'] . '</td>'
-                    . '<td>'
-                    . '<form name="tables-edit" action="' . $_SERVER['REDIRECT_URL'] . '" method="post">'
-                    . '<input type="hidden" name="table-id" value="' . $table['id'] . '" />'
-                    . '<input type="hidden" name="table-edit" value="' . $rb->get('tables.edit') . '" />'
-                    . '<input type="image" src="~/images/page_edi.png" name="table-edit" value="' . $rb->get('tables.edit') . '" title="' . $rb->get('tables.edittitle') . '" />'
-                    . '</form> '
-                    . '<form name="tables-delete" action="' . $_SERVER['REDIRECT_URL'] . '" method="post">'
-                    . '<input type="hidden" name="table-id" value="' . $table['id'] . '" />'
-                    . '<input type="hidden" name="table-delete" value="' . $rb->get('tables.delete') . '" />'
-                    . '<input class="confirm" type="image" src="~/images/page_del.png" name="table-delete" value="' . $rb->get('tables.delete') . '" title="' . $rb->get('tables.deletetitle') . ', id(' . $table['id'] . ')" />'
-                    . '</form>'
-                    . '</td>'
-                    . '</tr>';
-            $i++;
+                    . '<hr />'
+                    . '<form name="tables-add" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<input type="submit" name="tables-add" value="' . $rb->get('tables.add') . '" />'
+                    . '</form>';
         }
-
-        $return .= ''
-                . '</table>'
-                . '<hr />'
-                . '<form name="tables-add" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
-                . '<input type="submit" name="tables-add" value="' . $rb->get('tables.add') . '" />'
-                . '</form>';
 
         if ($useFrames == "false") {
             return $return;
@@ -1699,18 +1710,18 @@ class Sport extends BaseTagLib {
                     $i++;
                 }
             } else {
-                $return .= '<h4 class="warning">' . $rb->get('matches.warning.nodata') . '</h4>';
+                $return .= parent::getWarning($rb->get('matches.warning.nodata'));
             }
-        } else {
-            $return .= '<h4 class="error">' . $rb->get('season.error.notset') . '</h4>';
-        }
 
-        $return .= ''
-                . '</table>'
-                . '<hr />'
-                . '<form name="match-new" method="post" action="' . $actionUrl . '">'
-                . '<input type="submit" name="match-new" value="' . $rb->get('matches.new') . '" title="' . $rb->get('matches.newcap') . '" />'
-                . '</form>';
+            $return .= ''
+                    . '</table>'
+                    . '<hr />'
+                    . '<form name="match-new" method="post" action="' . $actionUrl . '">'
+                    . '<input type="submit" name="match-new" value="' . $rb->get('matches.new') . '" title="' . $rb->get('matches.newcap') . '" />'
+                    . '</form>';
+        } else {
+            $return .= parent::getError($rb->get('season.error.notset'));
+        }
 
         if ($useFrames == "false") {
             return $return;
@@ -2660,7 +2671,7 @@ class Sport extends BaseTagLib {
             }
 
             if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE) && $_POST['table-c-save'] == $rb->get('table.submit')) {
-                foreach($_POST['table-matches'] as $key=>$matches) {
+                foreach ($_POST['table-matches'] as $key => $matches) {
                     $team['id'] = $key;
                     $team['matches'] = $matches;
                     $team['wins'] = $_POST['table-wins'][$key];
@@ -2670,19 +2681,19 @@ class Sport extends BaseTagLib {
                     $team['r_score'] = $_POST['table-r_score'][$key];
                     $team['points'] = $_POST['table-points'][$key];
 
-                    parent::db()->execute('update `w_sport_table` set `matches` = '.$team['matches'].', `wins` = '.$team['wins'].', `draws` = '.$team['draws'].', `loses` = '.$team['loses'].', `s_score` = '.$team['s_score'].', `r_score` = '.$team['r_score'].', `points` = '.$team['points'].' where `team` = '.$team['id'].' and `season` = '.$seasonId.' and `table_id` = '.$tableId.';');
+                    parent::db()->execute('update `w_sport_table` set `matches` = ' . $team['matches'] . ', `wins` = ' . $team['wins'] . ', `draws` = ' . $team['draws'] . ', `loses` = ' . $team['loses'] . ', `s_score` = ' . $team['s_score'] . ', `r_score` = ' . $team['r_score'] . ', `points` = ' . $team['points'] . ' where `team` = ' . $team['id'] . ' and `season` = ' . $seasonId . ' and `table_id` = ' . $tableId . ';');
                 }
             }
 
             $table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = ' . $seasonId . ' AND `w_sport_team`.`season` = ' . $seasonId . ' AND `w_sport_table`.`table_id` = ' . $tableId . ' and `w_sport_table`.`project_id` = ' . self::getProjectId() . ' ORDER BY `points` DESC, (`w_sport_table`.`s_score` - `w_sport_table`.`r_score`) DESC, `w_sport_table`.`s_score` DESC, `w_sport_table`.`wins` DESC;');
             if (count($table) > 0) {
-                if($editable == 'true') {
-                    $return .= '<form name="table-c-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">';
+                if ($editable == 'true') {
+                    $return .= '<form name="table-c-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">';
                 }
 
                 $return .= ''
-                . '<table class="standart">'
-                    . '<tr>'
+                        . '<table class="standart">'
+                        . '<tr>'
                         . '<th class="table-position">' . $rb->get('table.position') . '</th>'
                         . '<th class="table-name">' . $rb->get('table.name') . '</th>'
                         . '<th class="table-matches">' . $rb->get('table.matches') . '</th>'
@@ -2692,19 +2703,19 @@ class Sport extends BaseTagLib {
                         . '<th class="table-s_score">' . $rb->get('table.s_score') . '</th>'
                         . '<th class="table-r_score">' . $rb->get('table.r_score') . '</th>'
                         . '<th class="table-points">' . $rb->get('table.points') . '</th>'
-                    . '</tr>';
+                        . '</tr>';
 
                 $i = 1;
                 foreach ($table as $team) {
-                    if($editable) {
-                        foreach($team as $key=>$item) {
-                            if($key != 'id' && $key != 'name') {
-                                $team[$key] = '<input class="w30" type="text" name="table-'.$key.'['.$team['id'].']" value="'.$item.'" />';
+                    if ($editable) {
+                        foreach ($team as $key => $item) {
+                            if ($key != 'id' && $key != 'name') {
+                                $team[$key] = '<input class="w30" type="text" name="table-' . $key . '[' . $team['id'] . ']" value="' . $item . '" />';
                             }
                         }
                     }
                     $return .= ''
-                        . '<tr class="' . ((($i % 2) == 1) ? 'idle' : 'even') . '">'
+                            . '<tr class="' . ((($i % 2) == 1) ? 'idle' : 'even') . '">'
                             . '<td class="table-position">' . $i . '</td>'
                             . '<td class="table-name">' . $team['name'] . '</td>'
                             . '<td class="table-matches">' . $team['matches'] . '</td>'
@@ -2714,20 +2725,20 @@ class Sport extends BaseTagLib {
                             . '<td class="table-s_score">' . $team['s_score'] . '</td>'
                             . '<td class="table-r_score">' . $team['r_score'] . '</td>'
                             . '<td class="table-points">' . $team['points'] . '</td>'
-                        . '</tr>';
+                            . '</tr>';
                     $i++;
                 }
 
                 $return .= ''
-                . '</table>';
+                        . '</table>';
 
-                if($editable == 'true') {
+                if ($editable == 'true') {
                     $return .= ''
-                    .'<hr />'
-                    .'<div class="gray-box">'
-                        .'<input type="submit" name="table-c-save" value="'.$rb->get('table.submit').'" />'
-                    .'</div>'
-                    .'</form>';
+                            . '<hr />'
+                            . '<div class="gray-box">'
+                            . '<input type="submit" name="table-c-save" value="' . $rb->get('table.submit') . '" />'
+                            . '</div>'
+                            . '</form>';
                 }
             } else {
                 $return .= parent::getWarning($rb->get('table.nodata'));
@@ -2739,7 +2750,7 @@ class Sport extends BaseTagLib {
         if ($useFrames == "false") {
             return $return;
         } else {
-            return parent::getFrame($rb->get('table.title').' :: ('.$tableId.')', $return, "", true);
+            return parent::getFrame($rb->get('table.title') . ' :: (' . $tableId . ')', $return, "", true);
         }
     }
 

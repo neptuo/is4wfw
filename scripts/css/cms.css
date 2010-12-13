@@ -1,96 +1,96 @@
 /* CSS Document */
 
 body {
-	min-width: 1200px;
-  	margin: 0 auto;
-  	overflow: hidden;
+    min-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 form {
-  	margin: 0;
-  	display: inline;
+    margin: 0;
+    display: inline;
 }
 
 input, select, textarea {
-	border: 2px solid #cccccc;
-	background: white;
+    border: 2px solid #cccccc;
+    background: white;
 }
 
 input.input-focused, select.input-focused, textarea.input-focused {
-	border: 2px solid #04601C;
+    border: 2px solid #04601C;
 }
 
 input[type=image] {
-	border: none !important;
+    border: none !important;
 }
 
 input[disabled] {
-	background: #eeeeee;
+    background: #eeeeee;
 }
 
 input[type=button], input[type=submit], button, .editor-panel input[type=button] {
-	cursor: pointer;
-	font-size: small;
-	margin: 0;
-	padding: 3px 10px;
-	text-decoration: none;
-	background:url("/images/hborder.png") repeat-x scroll 0 -27px transparent;
-	border: 1px outset #CCCCCC;
+    cursor: pointer;
+    font-size: small;
+    margin: 0;
+    padding: 3px 10px;
+    text-decoration: none;
+    background:url("/images/hborder.png") repeat-x scroll 0 -27px transparent;
+    border: 1px outset #CCCCCC;
 }
 
 input[type=button]:hover, input[type=submit]:hover {
-	border-color:#99CCFF #6699EE #6699EE #77AAFF;
+    border-color:#99CCFF #6699EE #6699EE #77AAFF;
 }
 
 input.confirm {
-	color: red;
+    color: red;
 }
 
 textarea {
-  width: 100%;
-  white-space: nowrap;
+    width: 100%;
+    white-space: nowrap;
 }
 
 input[type=image] {
-	margin-bottom: -4px;
+    margin-bottom: -4px;
 }
 
 select[multiple=multiple] {
-	min-width: 150px;
-	min-height: 140px;
+    min-width: 150px;
+    min-height: 140px;
 }
 
-.clickable tr {
-	cursor: Pointer;
+.clickable tr td {
+    cursor: Pointer;
 }
 
 .hspace {
-	padding: 3px;
+    padding: 3px;
 }
 
 .add-rem-text-files-submit {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 .break {
-	height: 10px;
+    height: 10px;
 }
 
 .show-lines table input[type=image], .group-list table input[type=image], .user-log-list input[type=image], .languages-edit input[type=image], .show-projects input[type=image], .page-file-list input[type=image], .template-list input[type=image], .dir-list input[type=image] {
-	margin-bottom: -2px;
+    margin-bottom: -2px;
 }
 
 .closed .frame-body {
-	background: white;
-	display: none;
+    background: white;
+    display: none;
 }
 
 .pages-list td {
-  padding: 2px 10px;
+    padding: 2px 10px;
 }
 
 table.pages-table {
-  border-collapse: collapse;
+    border-collapse: collapse;
 }
 /*
 .inn-1 {
@@ -110,76 +110,76 @@ table.pages-table {
 }
 */
 .page-item {
-  clear: both;
+    clear: both;
 }
 
 .page-edit, .page-edit form {
-  text-align: left;
+    text-align: left;
 }
 
 .float-right {
-  width: 400px;
-  float: right;
+    width: 400px;
+    float: right;
 }
 
 .clear {
-  clear: both;
+    clear: both;
 }
 
 .page-list span {
-  padding: 2px 5px;
+    padding: 2px 5px;
 }
 
 .page-language-version {
-  display: inline;
+    display: inline;
 }
 
 .page-list span.page {
-	display: block;
-	padding: 2px 0 4px 0;
+    display: block;
+    padding: 2px 0 4px 0;
 }
 
 .page-list li span:hover {
-	background: #eeeeee;
+    background: #eeeeee;
 }
 
 .page-id-col {
-  color: #888888;
+    color: #888888;
 }
 
 .page-name {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .page-file-list, .template-list, .system-properties table, .system-notes table {
-  width: 100%;
-  border-top: 1px solid #cccccc;
-  border-collapse: collapse;
+    width: 100%;
+    border-top: 1px solid #cccccc;
+    border-collapse: collapse;
 }
 
 .show-lines table, .group-list table, .user-log-list table, .hp-projection-edit table, 
 table.seasons-list, table.teams-list, table.players-list, table.table, table.match-edit-table, table.matches-table, table.match-stats-table,
 .db-connection table, table.guestbook-list,
 table.standart {
-	margin: 2px;
-  border-top: 1px solid #cccccc;
-  border-collapse: collapse;
+    margin: 2px;
+    border-top: 1px solid #cccccc;
+    border-collapse: collapse;
 }
 
 .dir-list th {
-	height: 20px;
+    height: 20px;
 }
 
 .dir-list td {
-	height: 27px;
+    height: 27px;
 }
 
 .match-stats-name {
-	width: 150px;
+    width: 150px;
 }
 
 table .match-stats-position select {
-	width: 100px;
+    width: 100px;
 }
 
 .show-lines table td, .group-list table td, .user-log-list td, .languages-edit td, .show-projects td, 
@@ -187,8 +187,8 @@ table .match-stats-position select {
 table.seasons-list td, table.teams-list td, table.players-list td, table.table td, table.matches-table td, table.match-stats-table td,
 .system-properties table td, .system-notes table td, .db-connection table td, table.guestbook-list td,
 table.standart td {
-	padding: 2px 10px;
-  border-bottom: 1px solid #cccccc;
+    padding: 2px 10px;
+    border-bottom: 1px solid #cccccc;
 }
 
 .group-list table th, .show-lines table th, .user-log-list th, .user-list-table th, .dir-list th, 
@@ -196,8 +196,8 @@ table.standart td {
 table.match-edit-table th, table.matches-table th, table.match-stats-table th, .system-properties th, .system-notes th,
 .db-connection table th,
 table.standart th {
-	padding: 0 10px;
-	text-align: left;
+    padding: 0 10px;
+    text-align: left;
 }
 
 .file-tr th, .dir-list th, .show-lines th, .template-list th, .group-list th, .user-log-list th, .hp-projection-edit th, 
@@ -205,783 +205,803 @@ table.standart th {
 table.match-edit-table th, table.matches-table th, table.match-stats-table th, .system-properties th, .system-notes th,
 .db-connection table th, table.guestbook-list th,
 table.standart th {
-  text-align: left;
-  background-color: #cccccc;
-  border-bottom: 1px solid black;
+    text-align: left;
+    background-color: #cccccc;
+    border-bottom: 1px solid black;
 }
 
 table.match-stats-table {
-	margin: 10px 0;
+    margin: 10px 0;
 }
 
 table.match-edit-table td {
-	border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
 }
 
 table.match-edit-table td {
-	padding: 6px 8px;
+    padding: 6px 8px;
 }
 
 .match-table-score input, .match-table-shoots input, .match-table-penalty input, .match-edit-round input {
-	width: 40px;
+    width: 40px;
 }
 
 .group-list .group-list-name, .seasons-list-id, .teams-list-name {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .match-stats-goals input, .match-stats-assists input, .match-stats-shoots input, .match-stats-penalty input {
-	width: 40px;
+    width: 40px;
 }
 
 .file-id {
-  width: 20px;
+    width: 20px;
 }
 
 .file-name {
-  width: 130px;
-  font-weight: bold;
+    width: 130px;
+    font-weight: bold;
 }
 
 td.template-id, td.matches-table-round {
-	font-weight: bold;
+    font-weight: bold;
 } 
 
 table .template-id {
-	width: 20px;
+    width: 20px;
 }
 
 .template-name {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
 .file-content, td.template-content {
-  color: #777777;
+    color: #777777;
 }
 
 .template-name {
-	width: 200px;
+    width: 200px;
 }
 
 .file-content-in {
-  width: 560px;
-  overflow: hidden;
+    width: 560px;
+    overflow: hidden;
 }
 
 .file-content-in .foo {
-  width: 1000px;
+    width: 1000px;
 }
 
 .file-tr td, .template-list td {
-  overflow: hidden;
-  padding: 2px 5px;
-  border-bottom: 1px solid #cccccc;
+    overflow: hidden;
+    padding: 2px 5px;
+    border-bottom: 1px solid #cccccc;
 }
 
 .frame-cover {
-  margin-top: 15px;
+    margin-top: 15px;
 }
 
 div.login {
-  width: 256px;
-  margin: 100px 0 0 100px;
-  padding: 10px;
-  float: left;
-  background: #04601C url('/images/cms/login/login-head.jpg') no-repeat 25px 24px;
-  /*border: 5px solid #04601C;*/
-  border: 5px solid #eeeeee;
+    width: 256px;
+    margin: 100px 0 0 100px;
+    padding: 10px;
+    float: left;
+    background: #04601C url('/images/cms/login/login-head.jpg') no-repeat 25px 24px;
+    /*border: 5px solid #04601C;*/
+    border: 5px solid #eeeeee;
 }
-  	
+
 div.login-head {
-  width: 100%;
-  height: 22px;
-  /*background: url('/images/cms/login/login-head.png') no-repeat;*/
+    width: 100%;
+    height: 22px;
+    /*background: url('/images/cms/login/login-head.png') no-repeat;*/
 }
-  	
+
 div.login-in {
-  padding-bottom: 6px;
-  /*background: url('/images/cms/login/login-body.png') no-repeat left bottom;*/
+    padding-bottom: 6px;
+    /*background: url('/images/cms/login/login-body.png') no-repeat left bottom;*/
 }
 
 p.login-submit input[type=checkbox] {
-	margin-left: 10px;
+    margin-left: 10px;
 }
 
 div.login-form {
-  margin: 0 10px;
-  padding: 0 5px;
+    margin: 0 10px;
+    padding: 0 5px;
 }
 
 div.login-form form {
-  margin: 0
+    margin: 0
 }
 
 div.login-form {
-	color: white;
+    color: white;
 }
 
 div.login-form input.input-focused {
-	border-color: #CFBE0C;
+    border-color: #CFBE0C;
 }
 
 div.login-form .login-head {
-	font-weight: bold;
-	visibility: hidden;
+    font-weight: bold;
+    visibility: hidden;
 }
 
 div.login-form p.login-head {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 div.login-form p.login-message {
-	background-color:red;
-	margin: 30px 0 -25px 0;
-	padding: 4px;
-	font-weight: bold;
+    background-color:red;
+    margin: 30px 0 -25px 0;
+    padding: 4px;
+    font-weight: bold;
 }
 
 .dir-list .dir-name input[type=submit] {
-  width: 100%;
-  text-align: left;
-  font-weight: bold;
-  font-family: Times;
-  font-size: 16px;
-  padding: 0;
-  background: white;
-  border: none;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+    font-family: Times;
+    font-size: 16px;
+    padding: 0;
+    background: white;
+    border: none;
 }
 
 .frame-cover {
-	border: 1px solid #04601C;
+    border: 1px solid #04601C;
 }
 
 .frame-head {
-	width: 100%;
-	cursor: Pointer;
-	background-color: #04601C;
+    width: 100%;
+    cursor: Pointer;
+    background-color: #04601C;
 }
 
 .frame-cover .frame-head .click-able-roll {
-  width: 15px;
-  height: 15px;
-  margin: 3px;
-  display: block;
-  background: url('/images/minus.png');
+    width: 15px;
+    height: 15px;
+    margin: 3px;
+    display: block;
+    background: url('/images/minus.png');
 }
 
 .frame-cover.closed-frame .frame-head .click-able-roll {
-  background: url('/images/plus.png');
+    background: url('/images/plus.png');
 }
 
 .frame-cover .frame-head .click-able-roll span {
-  display: none;
+    display: none;
 }
 
 .frame-cover.closed-frame .frame-body {
-	display: none;
+    display: none;
 }
 
 .frame-head .frame-label {
-	color: white;
-	font-weight: bold;
-	float: left;
-	padding: 1px 0 1px 5px;
+    color: white;
+    font-weight: bold;
+    float: left;
+    padding: 1px 0 1px 5px;
 }
 
 .frame-head .frame-close {
-	float: right;
+    float: right;
 }
 
 .frame-body {
-	padding: 5px;
-	background: white;
+    padding: 5px;
+    background: white;
 }
 
 .frames-used .frame-body {
-	display: none;
+    display: none;
 }
 
 th.file-head-th {
-	background-color: #cccccc;
+    background-color: #cccccc;
 }
 
 .dir-list {
-	width: 100%;
-	border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .dir-list .file-edit, .dir-list .dir-edit {
-	width: 60px;
+    width: 60px;
 }
 
 .dir-list .file-icon, .dir-list .file-id, .dir-list .file-type, .dir-list .dir-icon, .dir-list .dir-id, .dir-list .dir-type {
-	width: 20px;
+    width: 20px;
 }
 
 .dir-list .file-name, .dir-list .dir-name {
-	width: 300px;
+    width: 300px;
 }
 
 .dir-list .th-timestamp {
-  width: 100px;
+    width: 100px;
 }
 
 .dir-list .th-dir-physical-path {
-	width: 60px;
+    width: 60px;
 }
 
 .dir-list .th-edit {
-  width: 50px;
+    width: 50px;
 }
 
 .dir-list tr.even, .dir-list tr.even .dir-name input {
-	background-color: #eeeeee;
+    background-color: #eeeeee;
 }
 
 .edit-prop, .edit-rights {
-  float: left;
+    float: left;
 }
 
 .edit-rights div, .text-file-name, .text-file-type, .edit-keywords, .gray-box-float {
-  float: left;
-  padding: 6px 8px;
-  margin: 2px;
-  background-color: #eeeeee;
+    float: left;
+    padding: 6px 8px;
+    margin: 2px;
+    background-color: #eeeeee;
 }
 
 .gray-box {
-  padding: 6px 8px;
-  margin: 2px;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    background-color: #eeeeee;
+}
+
+table.gray-box {
+    padding: 0;
+    border-collapse: collapse;
+}
+
+table.gray-box tr th {
+    padding: 6px 8px;
+    font-weight: normal;
+    text-align: left;
+}
+
+table.gray-box tr td {
+    padding: 6px 8px;
+    border-top: 2px solid white;
 }
 
 .player-search-submit {
-	padding-left: 105px;
+    padding-left: 105px;
 }
 
 
 .edit-prop .edit-in-title input, .edit-prop .edit-menu input, .edit-prop .edit-visible input, .edit-prop .edit-clear-cache input, .edit-prop .edit-language select, .project-edit-http, .project-edit-https, .edit-cache-time select {
-	display: block;
+    display: block;
 }
 
 .edit-prop .edit-name, .edit-prop .edit-href {
-  text-align: right;
+    text-align: right;
 }
 
 .edit-prop .edit-name input, .edit-prop .edit-href input {
-  width: 320px;
+    width: 320px;
 }
 
 .edit-keywords input {
-	width: 700px;
+    width: 700px;
 }
 
 .edit-rights select {
-  width: 116px;
+    width: 116px;
 }
 
 .edit-prop div, .edit-area-editors {
-  padding: 6px 8px;
-  margin: 2px;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    background-color: #eeeeee;
 }
 
 .editors .editors-tab {
-	padding-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 .edit-rights label {
-  display: block;
+    display: block;
 }
 
 .edit-prop div.clear, .edit-rights .clear {
-  float: none;
-  padding: 0;
-  margin: 0;
+    float: none;
+    padding: 0;
+    margin: 0;
 }
 
 .edit-tl-start, .edit-tl-end, .edit-content .edit-head, .edit-content .edit-content, .text-file-content, .user-edit-login, .user-edit-name, .user-edit-surname, .user-edit-password, .user-edit-password-again, .user-edit-submit, .user-edit-info, .user-edit-groups, .directory-name, .user-edit-enable,
 .db-connection-edit div {
-  padding: 6px 8px;
-  margin: 2px;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    background-color: #eeeeee;
 }
 
 .edit-submit, .text-file-submit {
-  padding: 6px 8px;
-  margin: 2px;
-  text-align: right;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    text-align: right;
+    background-color: #eeeeee;
 }
 
 .user-edit-cover span, .directory-name span, .new-group-name span {
-  color: red;
+    color: red;
 }
 
 .user-edit-prop {
-  width: 500px;
-  float: left;
-  text-align: right;
+    width: 500px;
+    float: left;
+    text-align: right;
 }
 
 .user-edit-prop input, .user-edit-prop select {
-  width: 300px;
+    width: 300px;
 }
 
 .user-edit-prop label {
-  float: left;
+    float: left;
 }
 
 .user-edit-enable {
-	text-align: left;
+    text-align: left;
 }
 
 .user-edit-enable input {
-	width: auto;
-	margin-left: 120px;
+    width: auto;
+    margin-left: 120px;
 }
 
 .user-edit-groups {
-  float: left;
+    float: left;
 }
 
 .user-edit-groups label {
-  display: block;
+    display: block;
 }
 
 .note, .warning, .error, .fatal, .success {
-	font-family: Times;
-	font-size: 15px;
-	margin: 2px;
-	padding: 0 0 1px 18px;
-	color: white;
+    font-family: Times;
+    font-size: 15px;
+    margin: 2px;
+    padding: 0 0 1px 18px;
+    color: white;
 }
 
 .note {
-	color: black;
-	background: url('/images/note.png') no-repeat 1px 2px;
+    color: black;
+    background: url('/images/note.png') no-repeat 1px 2px;
 }
 
 .warning {
-	background: url('/images/warning.png') #ff8c2f no-repeat 1px 3px;
+    background: url('/images/warning.png') #ff8c2f no-repeat 1px 3px;
 }
 
 .error {
-	background: url('/images/error.png') #bd2828 no-repeat 1px 3px;
+    background: url('/images/error.png') #bd2828 no-repeat 1px 3px;
 }
 
 .fatal {
-	background: url('/images/error.png')  #660000 no-repeat 1px 3px;
+    background: url('/images/error.png')  #660000 no-repeat 1px 3px;
 }
 
 .success {
-	background: url('/images/success.png') #38cb35 no-repeat 1px 3px;
+    background: url('/images/success.png') #38cb35 no-repeat 1px 3px;
 }
 
 body {
-  overflow: -moz-scrollbars-vertical;
-	background-color: #cccccc;
-	/*background: url('/file.php?rid=155') no-repeat left top;*/
+    overflow: -moz-scrollbars-vertical;
+    background-color: #cccccc;
+    /*background: url('/file.php?rid=155') no-repeat left top;*/
 }
 
 .cms .head {
-	position: absolute;
-	width: 100%;
-	top: 0;
-	left: 0;
-	height: 50px;
-	padding: 1px;
-	z-index: 200000;
-	background: url('/images/cms/design/head-line.png') repeat-x;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 50px;
+    padding: 1px;
+    z-index: 200000;
+    background: url('/images/cms/design/head-line.png') repeat-x;
 }
 
 .cms .template-submit {
-	text-align: right;
+    text-align: right;
 }
 
 .cms .head .refresh-cover {
-	float: right;
-	margin-top: -3px;
+    float: right;
+    margin-top: -3px;
 }
 
 .cms .head .refresh-cover input[type=checkbox] {
-	margin: 0;
+    margin: 0;
 }
 
 .cms .head .logout-form {
-	margin-right: 20px;
-	float: right;
+    margin-right: 20px;
+    float: right;
 }
 
 .cms .head .logout-form form {
-	margin: 0;
+    margin: 0;
 }
 
 .cms .head .logout-form p {
-	margin: 2px 0 9px 0;
+    margin: 2px 0 9px 0;
 }
 
 .cms .head .logout-form input[type=submit] {
-	width: 30px;
-	height: 31px;
-	color: transparent;
-	background: url('/images/cms/design/logout-icon.png') no-repeat;
-	border: none;
+    width: 30px;
+    height: 31px;
+    color: transparent;
+    background: url('/images/cms/design/logout-icon.png') no-repeat;
+    border: none;
 }
 
 .cms .head .user-info, .cms .head .select-project, .cms .head .logon-count-down, .cms .head .refresh-session, .cms .web-version {
-	font-size: 11px;
-	float: right;
-	margin: 2px 10px 0 2px;
-	padding: 2px 4px;
-	background: url('/images/cms/design/dot-transparent.png');
-	border: 1px solid #011D09;
-	height: 28px;
+    font-size: 11px;
+    float: right;
+    margin: 2px 10px 0 2px;
+    padding: 2px 4px;
+    background: url('/images/cms/design/dot-transparent.png');
+    border: 1px solid #011D09;
+    height: 28px;
 }
 
 .cms .head .refresh-session {
-	height: 24px;
-	padding: 4px;
+    height: 24px;
+    padding: 4px;
 }
 
 .cms .head .select-project label {
-	display: none;
+    display: none;
 }
 
 .hidden {
-	display: none;
+    display: none;
 }
 
 .cms .loading {
-	height: 20px;
-	font-weight: bold;
-	font-size: 16px;
-	padding: 6px;
+    height: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 6px;
 }
 
 .cms .web-version .value {
-	text-align: center;
-	font-weight: bold;
+    text-align: center;
+    font-weight: bold;
 }
 
 /* Pro prvni "bublinu" */
 .cms .head .refresh-session {
-	margin-right: 20px;
+    margin-right: 20px;
 }
 
 .cms .head .logon-count-down .count-down-counter {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .cms .head .select-project {
-	font-size: 12px;
-	padding: 4px;
-	height: 24px;
+    font-size: 12px;
+    padding: 4px;
+    height: 24px;
 }
 
 .cms .head .select-project select {
-	min-width: 100px;
+    min-width: 100px;
 }
 
 .cms .head .select-project label {
-	font-weight: bold;
-	border-bottom:1px solid black;
-	border-top:1px solid black;
-	font-weight:bold;
-	padding:2px 0;
+    font-weight: bold;
+    border-bottom:1px solid black;
+    border-top:1px solid black;
+    font-weight:bold;
+    padding:2px 0;
 }
 
 .cms .head .user-info .user-login {
-	margin: 16px 0 0 0;
-	font-size: 10px;
+    margin: 16px 0 0 0;
+    font-size: 10px;
 }
 
 .cms .head .user-info .user-group {
-	margin-left: 10px;
-	float: left;
+    margin-left: 10px;
+    float: left;
 }
 
 .cms .head .user-info .user-name {
-	float: left;
-	font-weight: bold;
+    float: left;
+    font-weight: bold;
 }
 
 .cms .head .cms-menu .menu-root {
-	width: 100px;
-	display: block;
-	font-weight: bold;
-	color: white;
-	cursor: Pointer;
+    width: 100px;
+    display: block;
+    font-weight: bold;
+    color: white;
+    cursor: Pointer;
 }
 
 .cms .head .cms-menu .menu-root a {
-	color: white;
-	text-decoration: none;
+    color: white;
+    text-decoration: none;
 }
 
 .cms .body {
-	/*position: relative;*/
-	margin: 47px 5px 30px 5px;
-	/*margin: 60px 60px 40px 60px;*/
+    /*position: relative;*/
+    margin: 47px 5px 30px 5px;
+    /*margin: 60px 60px 40px 60px;*/
 }
 
 .cms .body .home-cover {
-	padding: 10px 55px 10px 55px;
+    padding: 10px 55px 10px 55px;
 }
 
 .cms .dock-bar {
-	bottom: 0;
-	height: 30px;
-	left: 0;
-	position: fixed;
-	width: 100%;
-	z-index: 100000;
+    bottom: 0;
+    height: 30px;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 100000;
 }
 
 .cms .dock-in {
-	height: 30px;
-	margin: 0 30px;
-	background-color: #eeeeee;
-	border-top: 1px solid #888888;
-	border-left: 1px solid #888888;
-	border-right: 1px solid #888888;
+    height: 30px;
+    margin: 0 30px;
+    background-color: #eeeeee;
+    border-top: 1px solid #888888;
+    border-left: 1px solid #888888;
+    border-right: 1px solid #888888;
 }
 
 .cms .dock-item {
-	border-right: 1px solid #aaaaaa;
-	color:	#000000;
-	float:	left;
-	font-size:	14px;
-	height:	21px;
-	line-height:	22px;
-	/*margin: 3px 5px 0 5px;*/
-	padding: 4px 10px;
-	cursor: Pointer;
+    border-right: 1px solid #aaaaaa;
+    color:	#000000;
+    float:	left;
+    font-size:	14px;
+    height:	21px;
+    line-height:	22px;
+    /*margin: 3px 5px 0 5px;*/
+    padding: 4px 10px;
+    cursor: Pointer;
 }
 
 .cms .dock-left {
-	float: left;
-	padding: 5px 5px;
-	border-right: 1px solid #888888;
-	/*margin: 0 10px 0 0;*/
+    float: left;
+    padding: 5px 5px;
+    border-right: 1px solid #888888;
+    /*margin: 0 10px 0 0;*/
 }
 
 .cms .dock-item:hover, .cms .dock-right .web-ajax-log-cover:hover {
-	background-color: #ffffff !important;
+    background-color: #ffffff !important;
 }
 
 .cms .dock-left img {
-	margin: 0 5px;
-	cursor: Pointer;
-	float: left;
+    margin: 0 5px;
+    cursor: Pointer;
+    float: left;
 }
 
 .cms .dock-right {
-	float: right;
+    float: right;
 }
 
 .cms .dock-mid {
-	font-family: Arial;
+    font-family: Arial;
 }
 
 .cms .dock-mid .dock-item {
-	background-color: #dddddd;
+    background-color: #dddddd;
 }
 
 .cms .dock-mid .dock-item img {
-	margin: 3px 5px 0 0;
-	float: left;
+    margin: 3px 5px 0 0;
+    float: left;
 }
 
 .cms .dock-mid .dock-item .dock-close-x {
-	margin: 3px 0 0 5px;
-	float: right;
+    margin: 3px 0 0 5px;
+    float: right;
 }
 
 .cms .clock, .cms .web-ajax-log-cover {
-	padding: 5px 10px;
-	border-left: 1px solid #888888;
-	margin: 0;
-	float: left;
-	height: 26px;
-	cursor: Pointer;
+    padding: 5px 10px;
+    border-left: 1px solid #888888;
+    margin: 0;
+    float: left;
+    height: 26px;
+    cursor: Pointer;
 }
 
 .cms .run-cover {
-	display: none;
+    display: none;
 }
 
 .cms .run-input {
-	margin: 0;
-	padding: 0;
-	float: left;
+    margin: 0;
+    padding: 0;
+    float: left;
 }
 
 .cms .shown {
-	display: inline !important;
+    display: inline !important;
 }
 
 .cms .web-ajax-log-date {
-	color: #333333;
-	font-weight: bold;
+    color: #333333;
+    font-weight: bold;
 }
 
 .cms .web-ajax-log-cover {
-	padding: 5px 10px 0 10px;
+    padding: 5px 10px 0 10px;
 }
 
 .cms .clock div {
-	display: inline;
+    display: inline;
 }
 
 .cms .refresh-session form {
-	float: left;
+    float: left;
 }
 
 .article-mgm-td.article-mgm-id {
-	width: 40px;
-	font-weight: bold;
+    width: 40px;
+    font-weight: bold;
 }
 
 .article-mgm-td.article-mgm-id span {
-	display: block;
-	background: yellow;
+    display: block;
+    background: yellow;
 }
 
 .article-mgm-td.article-mgm-name {
-	width: 100px;
+    width: 100px;
 }
 
 .article-mgm-td.article-mgm-lang {
-	width: 30px;
+    width: 30px;
 }
 
 .article-mgm-td.article-mgm-edit {
-	width: 50px;
+    width: 50px;
 }
 
 .article-mgm-show form {
-	margin: 0;
+    margin: 0;
 }
 
 .article-head-cover {
-	width: 680px; 
-	overflow: hidden; 
-	white-space: nowrap;
+    width: 680px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .article-head-in {
-	width: 1000px;
+    width: 1000px;
 }
 
 table.article-mgm-table {
-	width: 100%;
-	border-collapse: collapse;
-	border-bottom: 1px solid gray;
+    width: 100%;
+    border-collapse: collapse;
+    border-bottom: 1px solid gray;
 }
 
 table.article-mgm-table th {
-	background-color: #cccccc;
+    background-color: #cccccc;
 }
 
 table.article-mgm-table td {
-	vertical-align: top;
+    vertical-align: top;
 }
 
 .article-mgm-tr td {
-	border-top: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
 }
 
 .article-mgm-first td {
-	border-color: gray;
+    border-color: gray;
 }
 
 td.article-mgm-id, td.article-mgm-lang, td.article-mgm-edit {
-	text-align: center;
+    text-align: center;
 }
 
 td.article-mgm-id input[type=image] {
-	margin: 2px;
+    margin: 2px;
 }
 
 td.article-mgm-head {
-	color: #777777;
+    color: #777777;
 }
 
 td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
-	padding: 4px 0;
+    padding: 4px 0;
 }
 
 .article-name, .article-line, .article-lang, .article-author {
-  float: left;
+    float: left;
 }
 
 .article-name, .article-line, .article-lang, .article-head, .article-content, .article-author {
-  padding: 6px 8px;
-  margin: 2px;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    background-color: #eeeeee;
 }
 
 .article-submit {
-  padding: 6px 8px;
-  margin: 2px;
-  text-align: right;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    text-align: right;
+    background-color: #eeeeee;
 }
 
 .guestbook-line {
-	margin: 4px 0;
-	padding: 4px 0;
+    margin: 4px 0;
+    padding: 4px 0;
 }
 
 .guestbook-head {
-	background-color: #cccccc;
-	clear: both;
+    background-color: #cccccc;
+    clear: both;
 }
 
 .guestbook-editable {
-	float: right;
+    float: right;
 }
 
 .guestbook-editable input[type=image] {
-	margin-top: 2px;
+    margin-top: 2px;
 }
 
 .guestbook-name {
-	float: left;
-	margin-left: 10px;
-	font-weight: bold;
+    float: left;
+    margin-left: 10px;
+    font-weight: bold;
 }
 
 .guestbook-timestamp, .guestbook-content {
-	float: left;
+    float: left;
 }
 
 .guestbook-answers {
-	margin-left: 30px;
+    margin-left: 30px;
 }
 
 .even {
-  background-color: #eeeeee;
+    background-color: #eeeeee;
 }
 
 .idle {
-	background-color: white;
+    background-color: white;
+}
+
+.id {
+    font-weight: bold;
 }
 
 .user-list-table {
-  border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 .user-list-table th {
-  text-align: left;
-  background-color: #cccccc;
-  border-bottom: 1px solid black;
+    text-align: left;
+    background-color: #cccccc;
+    border-bottom: 1px solid black;
 }
 
 .edit-prop, .edit-rights, .project-prop, .project-edit-rights, .article-line-edit-name, .article-line-edit-rights, 
 .template-rights, .up-file-prop, .hp-projection-form, .hp-reference-form {
-  float: left;
+    float: left;
 }
 
 .edit-prop .edit-in-title, .edit-prop .edit-menu, .edit-prop .edit-visible, .edit-clear-cache, .edit-cache-time, 
@@ -989,10 +1009,10 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .project-edit-right-write, .project-edit-right-delete, .project-edit-http, .project-edit-https, .article-line-r-r, 
 .article-line-r-w, .article-line-r-d, .template-right-r, .template-right-w, .template-right-d, .directory-right-r, 
 .directory-right-w, .directory-right-d, .file-right-r, .file-right-w, .file-right-d, .project-edit-styles-wysiwyg {
-  float: left;
-  padding: 6px 8px;
-  margin: 2px;
-  background-color: #eeeeee;
+    float: left;
+    padding: 6px 8px;
+    margin: 2px;
+    background-color: #eeeeee;
 }
 
 .edit-prop .edit-name, .edit-prop .edit-href, 
@@ -1003,63 +1023,63 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .hp-projection-form label, .hp-reference-form label, 
 .project-edit-error-all label, .project-edit-error-404 label, .project-edit-error-403 label
 .season-edit-start label, .season-edit-end label {
-  text-align: right;
+    text-align: right;
 }
 
 .player-edit-form div {
-	text-align: right;
+    text-align: right;
 }
 
 .player-edit-form div label {
-	float: left;
-	margin-right: 10px;
+    float: left;
+    margin-right: 10px;
 }
 
 .team-add-season {
-	margin-left: 10px;
-	padding-left: 10px;
-	border-left: 1px solid #474747;
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 1px solid #474747;
 }
 
 .season-edit-start input, .season-edit-end input {
-	width: 100px;
+    width: 100px;
 }
 
 .team-edit-name input, .team-edit-logo input, .team-edit-season select, .player-edit-form input[type=text], .player-edit-form select {
-	width: 200px;
+    width: 200px;
 }
 
 .player-edit-form .player-edit-birthyear input, .player-edit-form .player-edit-number input, .player-edit-form .player-edit-position input {
-	width: 100px;
+    width: 100px;
 }
 
 .hp-projection-form label, .hp-reference-form label {
-	width: 80px;
-	float: left;
+    width: 80px;
+    float: left;
 }
 
 .hp-projection-form .hp-projection-form-submit, .hp-reference-form .hp-reference-form-submit {
-	text-align: right;
+    text-align: right;
 }
 
 .edit-prop .edit-name input, .edit-prop .edit-href input, .project-edit-name input, .project-edit-url input, .project-edit-alias1 input, .project-edit-alias2 input, .project-edit-alias3 input, .article-line-edit-name input, .file-name input, .up-file-name input, .up-file-title input, .up-file-rs input, .directory-name input, .hp-projection-form input[type=text], .hp-reference-form input[type=text], .project-edit-error-all select, .project-edit-error-404 select, .project-edit-error-403 select {
-  width: 320px;
+    width: 320px;
 }
 
 .edit-prop .edit-name input, .edit-prop .edit-href input {
-	width: 410px;
+    width: 410px;
 }
 
 .new-group-name input {
-	width: 200px;
+    width: 200px;
 }
 
 .new-group-parent select {
-	width: 298px;
+    width: 298px;
 }
 
 .edit-rights select, .project-edit-rights select, .template-rights select, .file-right-r select, .file-right-w select .file-right-d select {
-  width: 116px;
+    width: 116px;
 }
 
 .edit-prop div, .project-prop div, .article-line-edit-name, .article-line-edit-submit, .move-branch, .up-file-name, 
@@ -1069,643 +1089,657 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .project-edit-error-404, .project-edit-error-403,
 .season-edit-id, .season-edit-start, .season-edit-end, .season-edit-submit, .player-edit-form div, .match-edit-form div,
 .select-class-path {
-  padding: 6px 8px;
-  margin: 2px;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    background-color: #eeeeee;
 }
 
 .clear-url-cache .results table {
-	background: white;
-	border: 1px solid #cccccc;
+    background: white;
+    border: 1px solid #cccccc;
 }
 
 .season-edit-id, .season-edit-start, .season-edit-end, .season-edit-submit, .player-edit-submit, .match-edit-submit {
-	text-align: right;
+    text-align: right;
 }
 
 .clear-url-cache input[type=submit] {
-	margin: 0 5px;
+    margin: 0 5px;
 }
 
 .clear-url-cache .part-of-url, .clear-url-cache .page-id, .clear-url-cache .project-id, .season-edit-form, .team-edit-form, .player-edit-form, .match-edit-form {
-	float: left;
+    float: left;
 }
 
 .clear-url-cache .part-of-url input {
-	width: 400px;
+    width: 400px;
 }
 
 .clear-url-cache .project-id select {
-	min-width: 140px;
+    min-width: 140px;
 }
 
 .clear-url-cache .page-id input {
-	width: 37px;
+    width: 37px;
 }
 
 .move-branch select {
-	min-width: 200px;
-	_width: 200px;
+    min-width: 200px;
+    _width: 200px;
 }
 
 .edit-rights label, .project-edit-rights label, .article-line-rights label, .template-rights label, .file-right-r label, .file-right-w label, .file-right-d label, .file-right-r label, .file-right-w label, .file-right-d label, .directory-right-r label, .directory-right-w label, .directory-right-d label {
-  display: block;
+    display: block;
 }
 
 .edit-prop div.clear, .edit-rights .clear {
-  float: none;
-  padding: 0;
-  margin: 0;
+    float: none;
+    padding: 0;
+    margin: 0;
 }
 .edit-tl-start, .edit-tl-end, .edit-content .edit-head, .edit-content .edit-content, .text-file-content, .template-edit-content, .template-submit {
-  padding: 6px 8px;
-  margin: 2px;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    background-color: #eeeeee;
 }
 
 .file-submit, .select-season, .select-table, .select-team {
-  padding: 6px 8px;
-  margin: 2px;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    background-color: #eeeeee;
 }
 
 .select-season select, .match-edit-form select, .select-team select, .select-table select {
-	width: 200px;
+    width: 200px;
 }
 
 .select-season, .select-team, .select-table {
-	float: left;
+    float: left;
 }
 
 .edit-submit, .text-file-submit {
-  padding: 6px 8px;
-  margin: 2px;
-  text-align: right;
-  background-color: #eeeeee;
+    padding: 6px 8px;
+    margin: 2px;
+    text-align: right;
+    background-color: #eeeeee;
 }
 
 .languages-edit, .show-projects, .references-edit table, .url-cache-table {
-	border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 .languages-edit th, .show-projects th, .url-cache-table th {
-	padding: 2px 10px;
-	background-color: #CCCCCC none repeat scroll 0 0;
-	border-bottom: 1px solid black;
-	text-align: left;
+    padding: 2px 10px;
+    background-color: #CCCCCC none repeat scroll 0 0;
+    border-bottom: 1px solid black;
+    text-align: left;
 }
 
 .update-keywords .keywords-input {
-	width: 500px;
+    width: 500px;
 }
 
 .login-user input, .login-passwd input {
-	width: 140px;
+    width: 140px;
 }
 
 .select-webproject option {
-	padding: 0 10px 0 2px;
+    padding: 0 10px 0 2px;
 }
 
 .select-webproject .webproject {
-	background-color: #cccccc;
+    background-color: #cccccc;
 }
 
 .red {
-	color: red;
+    color: red;
 }
 
 .blue {
-	color: blue;
+    color: blue;
 }
 
 .font-right {
-	text-align: right;
+    text-align: right;
 }
 
 .gray-box .small-font, .gray-box-float .small-font {
-	font-size: 11px;
+    font-size: 11px;
 }
 
 .gray-box label.padded, .gray-box-float label.padded {
-	padding: 0 10px 0 0;
+    padding: 0 10px 0 0;
 }
 
 .gray-box .block, .gray-box-float .block {
-	display: block;
+    display: block;
 }
 
-.gray-box .w60, .gray-box-float .w60 {
-	width: 60px;
-	display: inline-block;
+.gray-box .w30, .gray-box-float .w30, .standart .w30 {
+    width: 30px;
+    display: inline-block;
 }
 
-.gray-box .w80, .gray-box-float .w80 {
-	width: 80px;
-	display: inline-block;
+.gray-box .w60, .gray-box-float .w60, .standart .w60 {
+    width: 60px;
+    display: inline-block;
 }
 
-.gray-box .w90, .gray-box-float .w90 {
-	width: 90px;
-	display: inline-block;
+.gray-box .w80, .gray-box-float .w80, .standart .w80 {
+    width: 80px;
+    display: inline-block;
 }
 
-.gray-box .w100, .gray-box-float .w100 {
-	width: 100px;
-	display: inline-block;
+.gray-box .w90, .gray-box-float .w90, .standart .w90 {
+    width: 90px;
+    display: inline-block;
 }
 
-.gray-box .w120, .gray-box-float .w120 {
-	width: 120px;
-	display: inline-block;
+.gray-box .w100, .gray-box-float .w100, .standart .w100 {
+    width: 100px;
+    display: inline-block;
 }
 
-.gray-box .w160, .gray-box-float .w160 {
-	width: 160px;
-	display: inline-block;
+.gray-box .w110, .gray-box-float .w110, .standart .w110 {
+    width: 110px;
+    display: inline-block;
 }
 
-.gray-box .w200, .gray-box-float .w200 {
-	width: 200px;
-	display: inline-block;
+.gray-box .w120, .gray-box-float .w120, .standart .w120 {
+    width: 120px;
+    display: inline-block;
 }
 
-.gray-box .w300, .gray-box-float .w300 {
-	width: 300px;
-	display: inline-block;
+.gray-box .w160, .gray-box-float .w160, .standart .w160 {
+    width: 160px;
+    display: inline-block;
 }
 
-.gray-box .w400, .gray-box-float .w400 {
-	width: 400px;
-	display: inline-block;
+.gray-box .w200, .gray-box-float .w200, .standart .w200 {
+    width: 200px;
+    display: inline-block;
 }
 
-.gray-box .w450, .gray-box-float .w450 {
-	width: 450px;
-	display: inline-block;
+.gray-box .w300, .gray-box-float .w300, .standart .w300 {
+    width: 300px;
+    display: inline-block;
 }
 
-.gray-box .w435, .gray-box-float .w435 {
-	width: 435px;
-	display: inline-block;
+.gray-box .w400, .gray-box-float .w400, .standart .w400 {
+    width: 400px;
+    display: inline-block;
 }
 
-.gray-box .w500, .gray-box-float .w500 {
-	width: 500px;
+.gray-box .w435, .gray-box-float .w435, .standart .w435 {
+    width: 435px;
+    display: inline-block;
 }
 
-.gray-box .wmax, .gray-box-float .wmax {
-	width: 100%;
-	display: block;
+.gray-box .w450, .gray-box-float .w450, .standart .w450 {
+    width: 450px;
+    display: inline-block;
 }
 
-.gray-box .ml160, .gray-box-float .ml160 {
-	margin-left: 160px;
+.gray-box .w500, .gray-box-float .w500, .standart .w500 {
+    width: 500px;
 }
 
-.gray-box .ml100, .gray-box-float .ml100 {
-	margin-left: 100px;
+.gray-box .wmax, .gray-box-float .wmax, .standart .wmax {
+    width: 100%;
+    display: block;
+}
+
+.gray-box .ml100, .gray-box-float .ml100, .standart .ml100 {
+    margin-left: 100px;
+}
+
+.gray-box .ml160, .gray-box-float .ml160, .standart .ml160 {
+    margin-left: 160px;
 }
 
 .gray-box .small-note {
-	color: #777777;
-	font-size: 90%;
+    color: #777777;
+    font-size: 90%;
 }
 
-.gray-box .padded {
-	padding: 0 10px;
+.gray-box .padded, .standart .padded {
+    padding: 0 10px;
 }
 
 .fright {
-  float: right;
+    float: right;
 }
 
 .h30 {
-	min-height: 30px;
+    min-height: 30px;
 }
 
 .h40 {
-	min-height: 40px;
+    min-height: 40px;
 }
 
 .h50 {
-	min-height: 50px;
+    min-height: 50px;
 }
 
 .h60 {
-	min-height: 60px;
+    min-height: 60px;
 }
 
-.gray-box .floatedl, .gray-box-float .floatedl {
-	float: left;
+.floatedl, .gray-box .floatedl, .gray-box-float .floatedl {
+    float: left;
 }
 
 .long-input {
-	width: 500px;
+    width: 500px;
 }
 
 /* ----------------- Hint ----------------------- */
 
 .lib-head, .tag-h2, .lib-tag {
-  padding: 6px 8px;
-  margin: 4px 2px;
-  background-color: #eeeeee;	
+    padding: 6px 8px;
+    margin: 4px 2px;
+    background-color: #eeeeee;
 }
 
 .lib-tag {
-	padding-left: 25px;
+    padding-left: 25px;
 }
 
 .hint-lib h1 {
-	margin: 0;
-	font-size: 23px;
+    margin: 0;
+    font-size: 23px;
 }
 
 .hint-lib .tag-h2 h2 {
-	font-size: 20px;
-	margin: 0;
+    font-size: 20px;
+    margin: 0;
 }
 
 .hint-lib h3 {
-	margin: 0;
-	font-size: 18px;
-	text-decoration: underline;
-	padding: 4px;
+    margin: 0;
+    font-size: 18px;
+    text-decoration: underline;
+    padding: 4px;
 }
 
 .hint-lib strong.version {
-	font-size: 14px;
+    font-size: 14px;
 }
 
 .hint-lib table {
-	border-collapse: collapse;
-	border-top: 1px solid #cccccc;
+    border-collapse: collapse;
+    border-top: 1px solid #cccccc;
 }
 
 .hint-lib table, .hint-lib p {
-	margin-left: 25px;
+    margin-left: 25px;
 }
 
 .hint-lib table td {
-	padding: 2px 10px;
-  border-bottom: 1px solid #cccccc;
+    padding: 2px 10px;
+    border-bottom: 1px solid #cccccc;
 }
 
 .hint-lib table th {
-	padding: 0 10px;
-	text-align: left;
+    padding: 0 10px;
+    text-align: left;
 }
 
 .hint-lib table th {
-  text-align: left;
-  border-bottom: 1px solid black;
+    text-align: left;
+    border-bottom: 1px solid black;
 }
 
 .system-properties table, .system-notes table {
-	width: 100%;
+    width: 100%;
 }
 
 .system-properties .system-properties-delete, .system-notes .system-note-delete {
-	width: 40px;
+    width: 40px;
 }
 
 .system-properties input[type=text], .system-notes input[type=text] {
-	width: 94%;
+    width: 94%;
 }
 
 .cms .head .refresh-session-button {
-	width: 30px;
-	height: 30px;
-	font-size: 1px;
-	color: transparent;
-	background: url('/images/cms/design/refresh-icon.png') no-repeat left top;
-	border: none !important;
+    width: 30px;
+    height: 30px;
+    font-size: 1px;
+    color: transparent;
+    background: url('/images/cms/design/refresh-icon.png') no-repeat left top;
+    border: none !important;
 }
 
 .cms .system-properties-submit, .cms .system-note-submit {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 .cms .dataTables_wrapper {
-	padding: 4px;
-	background-color: #eeeeee;
+    padding: 4px;
+    background-color: #eeeeee;
 }
 
 .cms .dataTables_length, .cms .dataTables_filter {
-	float: left;
-	margin: 2px 4px 2px 0;
+    float: left;
+    margin: 2px 4px 2px 0;
 }
 
 .cms .dataTables_info {
-	display: inline;
-	margin: 2px 4px 2px 0;
+    display: inline;
+    margin: 2px 4px 2px 0;
 }
 
 .cms .dataTables_paginate {
-	height: 16px;
-	float: right;
-	margin: 2px 0 2px 4px;
+    height: 16px;
+    float: right;
+    margin: 2px 0 2px 4px;
 }
 
 .cms .dataTables_paginate div {
-	width: 16px;
-	height: 16px;
-	float: left;
-	margin: 0 0 0 2px;
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin: 0 0 0 2px;
 }
 
 .cms .data-table {
-	background: white;
-	border: 2px solid #cccccc;
+    background: white;
+    border: 2px solid #cccccc;
 }
 
 .cms .guestbook-line {
-	background: white !important;
+    background: white !important;
 }
 
 
 /* ----------------------- ICONS ------------------------------ */
 
 .file-icon {
-	background: url('/images/icons/file.gif') no-repeat center center;
+    background: url('/images/icons/file.gif') no-repeat center center;
 }
 
 .dir-icon {
-	background: url('/images/icons/folder-orange.gif') no-repeat center center;
+    background: url('/images/icons/folder-orange.gif') no-repeat center center;
 }
 
 .file-icon.css {
-	background: url('/images/icons/web-page-orange.gif') no-repeat center center;
+    background: url('/images/icons/web-page-orange.gif') no-repeat center center;
 }
 
 .file-icon.js {
-	background: url('/images/icons/page_script.gif') no-repeat center center;
+    background: url('/images/icons/page_script.gif') no-repeat center center;
 }
 
 .file-icon.jpg, .file-icon.gif, .file-icon.png, .file-icon.bmp {
-	background: url('/images/icons/image.gif') no-repeat center center;
+    background: url('/images/icons/image.gif') no-repeat center center;
 }
 
 .file-icon.pdf {
-	background: url('/images/icons/pdf.gif') no-repeat center center;
+    background: url('/images/icons/pdf.gif') no-repeat center center;
 }
 
 .file-icon.rar, .file-icon.zip {
-	background: url('/images/icons/zip-file.gif') no-repeat center center;
+    background: url('/images/icons/zip-file.gif') no-repeat center center;
 }
 
 .file-icon.txt, .file-icon.sql, .file-icon.c, .file-icon.cpp, .file-icon.h {
-	background: url('/images/icons/text-file.gif') no-repeat center center;
+    background: url('/images/icons/text-file.gif') no-repeat center center;
 }
 
 .file-icon.java {
-	background: url('/images/icons/page_java.gif') no-repeat center center;
+    background: url('/images/icons/page_java.gif') no-repeat center center;
 }
 
 .file-icon.php {
-	background: url('/images/icons/page_php.gif') no-repeat center center;
+    background: url('/images/icons/page_php.gif') no-repeat center center;
 }
 
 .file-icon.html {
-	background: url('/images/icons/page_html.gif') no-repeat center center;
+    background: url('/images/icons/page_html.gif') no-repeat center center;
 }
 
 .file-icon.xml, .file-icon.xsl, .file-icon.dtd {
-	background: url('/images/icons/web-page-blue.gif') no-repeat center center;
+    background: url('/images/icons/web-page-blue.gif') no-repeat center center;
 }
 
 .file-icon.swf {
-	background: url('/images/icons/flash-file.gif') no-repeat center center;
+    background: url('/images/icons/flash-file.gif') no-repeat center center;
 }
 
 .file-icon.mp3 {
-	background: url('/images/icons/mp3-music-file.gif') no-repeat center center;
+    background: url('/images/icons/mp3-music-file.gif') no-repeat center center;
 }
 
 .file-icon.psd {
-	background: url('/images/icons/photoshop-file.gif') no-repeat center center;
+    background: url('/images/icons/photoshop-file.gif') no-repeat center center;
 }
 
 .file-icon.doc {
-	background: url('/images/icons/ms-word.gif') no-repeat center center;
+    background: url('/images/icons/ms-word.gif') no-repeat center center;
 }
 
 .file-icon.ppt {
-	background: url('/images/icons/page_white_powerpoint.png') no-repeat center center;
+    background: url('/images/icons/page_white_powerpoint.png') no-repeat center center;
 }
 
 .file-icon.xls {
-	background: url('/images/icons/excel-file.gif') no-repeat center center;
+    background: url('/images/icons/excel-file.gif') no-repeat center center;
 }
 
 .file-icon.mpeg, .file-icon.avi, .file-icon.mov {
-	background: url('/images/icons/page_video.gif') no-repeat center center;
+    background: url('/images/icons/page_video.gif') no-repeat center center;
 }
 
 /* ---------------------- Login icons ---------------------------------------- */
 
 .login-icons {
-	width: 80px;
-	padding: 5px;
-	margin: 10px;
-	float: right;
-	background: url('/images/cms/design/menu-background.png') repeat;
-	border: 1px solid #cccccc;
+    width: 80px;
+    padding: 5px;
+    margin: 10px;
+    float: right;
+    background: url('/images/cms/design/menu-background.png') repeat;
+    border: 1px solid #cccccc;
 }
 
 .login-icons img {
-	display: block;
-	margin: 2px 0;
+    display: block;
+    margin: 2px 0;
 }
 
 /* ---------------------- CMS MENU ------------------------------------------- */
 
 .cms .head .cms-menu {
-	position: absolute;
-	margin: 10px 0pt 0pt 45px;
+    position: absolute;
+    margin: 10px 0pt 0pt 45px;
 }
 
 .cms .head .cms-menu.cms-menu-2 {
-	position: absolute;
-	margin: 10px 0pt 0pt 110px;
+    position: absolute;
+    margin: 10px 0pt 0pt 110px;
 }
 
 .cms .head .cms-menu.cms-menu-3 {
-	position: absolute;
-	margin: 10px 0pt 0pt 10px;
+    position: absolute;
+    margin: 10px 0pt 0pt 10px;
 }
 
 .cms .head .cms-menu.cms-menu-4 {
-	position: absolute;
-	margin: 10px 0pt 0pt 200px;
-}
-
-.cms .head .cms-menu-4 .menu-root {
-	width: 160px;
+    position: absolute;
+    margin: 10px 0pt 0pt 200px;
 }
 
 .cms .head .cms-menu .menu-root a {
-	padding: 1px 0 1px 24px;
-	background: url('/images/icons/at.png') no-repeat 4px 3px;
+    padding: 1px 0 1px 24px;
+    background: url('/images/icons/at.png') no-repeat 4px 3px;
 }
 
 .cms .head .cms-menu.cms-menu-2 .menu-root a {
-	padding: 1px 0 1px 24px;
-	background: url('/images/icons/floorball/ball.png') no-repeat 4px 3px;
+    padding: 1px 0 1px 24px;
+    background: url('/images/icons/floorball/ball.png') no-repeat 4px 3px;
 }
 
 .cms .head .cms-menu.cms-menu-3 .menu-root a {
-	padding: 1px 0 1px 24px;
-	background: url('/images/icons/hint.png') no-repeat 4px 3px;
+    padding: 1px 0 1px 24px;
+    background: url('/images/icons/hint.png') no-repeat 4px 3px;
 }
 
 .cms .head .cms-menu.cms-menu-4 .menu-root a {
-	padding: 1px 0 1px 24px;
-	background: url('/images/icons/radioactive.png') no-repeat 4px 3px;
+    padding: 1px 0 1px 24px;
+    background: url('/images/icons/radioactive.png') no-repeat 4px 3px;
 }
 
 .cms .head .cms-menu.cms-menu-5 .menu-root a {
-	padding: 1px 0 1px 24px;
-	background: url('/images/icons/cog.png') no-repeat 4px 3px;
+    padding: 1px 0 1px 24px;
+    background: url('/images/icons/cog.png') no-repeat 4px 3px;
 }
 
 .cms .head .cms-menu .menu {
-	width: 184px;
-	margin: 11px 0 0;
-	padding: 2px 10px 10px;
-	display: none;
-	padding: 2px 0 10px 0;
-	background: transparent url('/images/cms/design/menu-background.png') repeat;
-	border: 1px solid #011D09;
-	border-top: none;
+    width: 184px;
+    margin: 11px 0 0;
+    padding: 2px 10px 10px;
+    display: none;
+    padding: 2px 0 10px 0;
+    background: transparent url('/images/cms/design/menu-background.png') repeat;
+    border: 1px solid #011D09;
+    border-top: none;
 }
 
 
 .cms .head .cms-menu .menu .menu-item a {
-	width: 150px;
-	padding: 1px 10px 1px 24px;
-	display: block;
-	color: #04601C;
-	text-decoration: none;
+    width: 150px;
+    padding: 1px 10px 1px 24px;
+    display: block;
+    color: #04601C;
+    text-decoration: none;
 }
 
 .cms .head .cms-menu .menu .menu-item a:hover {
-	color: white;
-	background-color: #04601C;
+    color: white;
+    background-color: #04601C;
 }
 
 .cms .head .cms-menu:hover .menu {
-	display: block;
+    display: block;
 }
 
 .cms .head .cms-menu ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .cms-menu li.menu-item.li-1 a {
-	background: url('/images/icons/page_tag_red.gif') no-repeat 4px center;
+    background: url('/images/icons/page_tag_red.gif') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-2 a {
-	background: url('/images/icons/page_script.gif') no-repeat 4px center;
+    background: url('/images/icons/page_script.gif') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-3 a {
-	background: url('/images/icons/page_code.png') no-repeat 4px center;
+    background: url('/images/icons/page_code.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-4 a {
-	background: url('/images/icons/page_attachment.gif') no-repeat 4px center;
+    background: url('/images/icons/script_link.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-5 a {
-	background: url('/images/icons/drive.png') no-repeat 4px center;
+    background: url('/images/icons/page_attachment.gif') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-6 a {
-	background: url('/images/icons/book_open.png') no-repeat 4px center;
+    background: url('/images/icons/drive.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-7 a {
-	background: url('/images/icons/comment.png') no-repeat 4px center;
+    background: url('/images/icons/book_open.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-8 a {
-	background: url('/images/icons/building.png') no-repeat 4px center;
+    background: url('/images/icons/comment.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-9 a {
+    background: url('/images/icons/arrow_branch.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-10 a {
+    background: url('/images/icons/building.png') no-repeat 4px center;
 }
 
 
 
 .cms-menu-2 li.menu-item.li-1 a {
-	background: url('/images/icons/floorball/projects.gif') no-repeat 4px center;
+    background: url('/images/icons/floorball/projects.gif') no-repeat 4px center;
 }
 
 .cms-menu-2 li.menu-item.li-2 a {
-	background: url('/images/icons/floorball/seasons.png') no-repeat 4px center;
+    background: url('/images/icons/floorball/seasons.png') no-repeat 4px center;
 }
 
-.cms-menu-2 li.menu-item.li-3 a {
-	background: url('/images/icons/floorball/table.png') no-repeat 4px center;
+.cms-menu-2 li.menu-item.li-3 a, .cms-menu-2 li.menu-item.li-8 a {
+    background: url('/images/icons/floorball/table.png') no-repeat 4px center;
 }
 
 .cms-menu-2 li.menu-item.li-4 a {
-	background: url('/images/icons/floorball/rounds.gif') no-repeat 4px center;
+    background: url('/images/icons/floorball/rounds.gif') no-repeat 4px center;
 }
 
 .cms-menu-2 li.menu-item.li-5 a {
-	background: url('/images/icons/floorball/teams.png') no-repeat 4px center;
+    background: url('/images/icons/floorball/teams.png') no-repeat 4px center;
 }
 
 .cms-menu-2 li.menu-item.li-6 a {
-	background: url('/images/icons/floorball/players.png') no-repeat 4px center;
+    background: url('/images/icons/floorball/players.png') no-repeat 4px center;
 }
 
 .cms-menu-2 li.menu-item.li-7 a {
-	background: url('/images/icons/floorball/matches.png') no-repeat 4px center;
+    background: url('/images/icons/floorball/matches.png') no-repeat 4px center;
 }
 
 
 
 .cms-menu-4 li.menu-item.li-1 a {
-	background: url('/images/icons/cog.png') no-repeat 4px center;
+    background: url('/images/icons/cog.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-2 a {
-	background: url('/images/lang_add.png') no-repeat 4px center;
+    background: url('/images/lang_add.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-3 a {
-	background: url('/images/icons/book_open.png') no-repeat 4px center;
+    background: url('/images/icons/book_open.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-4 a {
-	background: url('/images/icons/user.png') no-repeat 4px center;
+    background: url('/images/icons/user.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-5 a {
-	background: url('/images/icons/userlog.png') no-repeat 4px center;
+    background: url('/images/icons/userlog.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-6 a {
-	background: url('/images/icons/log.png') no-repeat 4px center;
+    background: url('/images/icons/log.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-7 a {
-	background: url('/images/icons/page_code.png') no-repeat 4px center;
+    background: url('/images/icons/page_code.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-8 a {
-	background: url('/images/icons/properties.png') no-repeat 4px center;
+    background: url('/images/icons/properties.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-9 a {
-	background: url('/images/page_edi.png') no-repeat 4px center;
+    background: url('/images/page_edi.png') no-repeat 4px center;
 }
 
 
 
 .cms-menu-5 li.menu-item a {
-	background-image: url('') !important;
+    background-image: url('') !important;
 }

@@ -4,7 +4,7 @@
   <name>Article Lib</name>
   <classname>Article</classname>
   <classpath>php.libs</classpath>
-  <version>1.43</version>
+  <version>1.44</version>
   <count>*</count>
   <comment>
     Třída pro články.

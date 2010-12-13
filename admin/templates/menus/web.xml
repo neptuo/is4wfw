@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu>
-	<item name="Pages" url="~/in/pages.view" />
-	<item name="Text files (css/js)" url="~/in/text-files.view" />
-	<item name="Templates" url="~/in/templates.view" />
-	<item name="Custom forms" url="~/in/custom-forms.view" />
-	<item name="File manager" url="~/in/files.view" />
-	<item name="Articles" url="~/in/articles.view" />
-	<item name="Guestbooks" url="~/in/guestbooks.view" />
-	<item name="Web projects" url="~/in/web-projects.view" security:requireGroup="admins" />
+    <item name="Pages" url="~/in/pages.view" security:requirePerm="CMS.Web.Pages" />
+    <item name="Text files (css/js)" url="~/in/text-files.view" security:requirePerm="CMS.Web.TextFiles" />
+    <item name="Templates" url="~/in/templates.view" security:requirePerm="CMS.Web.Templates" />
+    <item name="Embedded Resources" url="~/in/embedded-resources.view" security:requirePerm="CMS.Web.EmbeddedResources" />
+    <item name="Custom forms" url="~/in/custom-forms.view" security:requirePerm="CMS.Web.CustomForms" />
+    <item name="File manager" url="~/in/files.view" security:requirePerm="CMS.Web.FileManager" />
+    <item name="Articles" url="~/in/articles.view" security:requirePerm="CMS.Web.Articles" />
+    <item name="Guestbooks" url="~/in/guestbooks.view" security:requirePerm="CMS.Web.Guestbooks" />
+    <item name="Web forwards" url="~/in/web-forwards.view" security:requirePerm="CMS.Web.WebForwards" />
+    <item name="Web projects" url="~/in/web-projects.view" security:requirePerm="CMS.Web.WebProjects" />
 </menu>
