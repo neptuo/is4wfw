@@ -23,6 +23,7 @@
 
    define("WEB_GROUP", "web");
    
-   define("VIEW_ROOT", 'admin');
+   define("VIEW_VIRTUAL_ROOT", 'admin');
+   define("VIEW_ROOT", '');
 
 ?>

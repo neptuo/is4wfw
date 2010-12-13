@@ -322,6 +322,13 @@ class UrlResolver extends BaseTagLib {
     }
 
     public static function combinePath($path1, $path2, $delim = '/') {
+        if($path1 == $delim) {
+            if($path2{0} == $delim) {
+                return $path2;
+            } else {
+                return $delim.$path2;
+            }
+        }
         if ($path1 != '' && $path2 != '' && $path1{strlen($path1) - 1} != $delim && $path2{0} != $delim) {
             return $path1 . $delim . $path2;
         } elseif ($path1 == $delim && $path2 == $delim) {
