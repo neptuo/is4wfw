@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu>
-	<item name="Url cache" url="~/in/url-cache.view" security:requireGroup="admins" />
-	<item name="Languages" url="~/in/languages.view" security:requireGroup="admins" />
-	<item name="Keywords &amp; robots.txt" url="~/in/keywords.view" security:requireGroup="admins" />
-	<item name="Users &amp; Roles" url="~/in/users.view" security:requireGroup="admins" />
-	<item name="User log" url="~/in/user-log.view" security:requireGroup="admins" />
-	<item name="Application log" url="~/in/application-log.view" security:requireGroup="admins" />
-	<item name="Database connections" url="~/in/database-connections.view" security:requireGroup="admins" />
-	<item name="Personal properties" url="~/in/personal-properties.view" />
-	<item name="Personal notes" url="~/in/personal-notes.view" />
+    <item name="Url cache" url="~/in/url-cache.view" security:requirePerm="CMS.Settings.UrlCache" />
+    <item name="Languages" url="~/in/languages.view" security:requirePerm="CMS.Settings.Languages" />
+    <item name="Keywords &amp; robots.txt" url="~/in/keywords.view" security:requirePerm="CMS.Settings.Keywords" />
+    <item name="Users &amp; Roles" url="~/in/users.view" security:requirePerm="CMS.Settings.Users" />
+    <item name="User log" url="~/in/user-log.view" security:requirePerm="CMS.Settings.UserLog" />
+    <item name="Application log" url="~/in/application-log.view" security:requirePerm="CMS.Settings.ApplicationLog" />
+    <item name="Database connections" url="~/in/database-connections.view" security:requirePerm="CMS.Settings.DatabaseConnections" />
+    <item name="Personal properties" url="~/in/personal-properties.view" security:requirePerm="CMS.Settings.PersonalProperties" />
+    <item name="Personal notes" url="~/in/personal-notes.view" security:requirePerm="CMS.Settings.PersonalNotes" />
 </menu>

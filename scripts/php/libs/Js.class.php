@@ -1,11 +1,12 @@
 <?php
 
-  /**
-   *
-   *  Require base tag lib class.
-   *
-   */
-  require_once("BaseTagLib.class.php");
+	/**
+	 *
+	 *  Require base tag lib class.
+	 *
+	 */
+	require_once("BaseTagLib.class.php");
+	require_once("scripts/php/classes/UrlResolver.class.php");
   
   /**
    * 
@@ -87,7 +88,7 @@
 					.'<script type="text/javascript" src="~/tiny-mce/tiny_mce.js"></script>'
 					.'<script type="text/javascript" src="~/scripts/js/initTiny.js"></script>';
     	}
-    	$return = str_replace("~/", WEB_ROOT, $return); 
+    	$return = str_replace("~/", UrlResolver::combinePath(WEB_ROOT, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), WEB_ROOT)), $return); 
     	
     	return $return;
     }
@@ -113,7 +114,7 @@
     	return $return;
     }
     
-    public function addResourcesToPage($names, $type, $as = fale) {
+    public function addResourcesToPage($names, $type, $as = false) {
     	global $phpObject;
     	$return .= '';  
     	

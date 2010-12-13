@@ -1,18 +1,38 @@
 <autoupdate>
-	<script build="245">ALTER TABLE  `article` ADD  `order` INT NOT NULL;</script>
-	<script build="245">ALTER TABLE  `article` ADD  `visible` INT NOT NULL DEFAULT  '2';</script>
-	<script build="245">update `article` set `order` = `id`;</script>
-	<script build="249">CREATE TABLE  `article_label` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , `name` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
-	<script build="249">CREATE TABLE  `article_line_label` (`line_id` INT NOT NULL , `label_id` INT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
-	<script build="249">ALTER TABLE  `article_label` ADD  `url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL;</script>
-	<script build="249">CREATE TABLE  `article_attached_label` (`article_id` INT NOT NULL , `label_id` INT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
-	<script build="256">ALTER TABLE `w_sport_player` DROP PRIMARY KEY, ADD PRIMARY KEY(`id`, `position`, `season`, `team`);</script>
-	<script build="256">ALTER TABLE  `w_sport_stats` ADD  `pos` INT NOT NULL AFTER  `pid`;</script>
-	<script build="256">update `w_sport_stats` `wss` set `pos` = (select `position` from `w_sport_player` where `id` = `wss`.`pid`);</script>
-	<script build="256">ALTER TABLE `w_sport_stats` DROP PRIMARY KEY, ADD PRIMARY KEY(`pid`, `pos`, `mid`, `season`, `table_id`);</script>
-	<script build="257">insert into `page_right`(`pid`, `gid`, `type`) (select `pid`, `gid`, 104 as `type` from `page_right` where `type` = 102);</script>
-	<script build="258">ALTER TABLE  `info` ADD  `title` TINYTEXT NOT NULL AFTER  `name`;</script>
-	<script build="258">update `info` set `title` = "&lt;web:getProperty name=\"web:currentPageName\" /&gt;";</script>
-	<script build="258">ALTER TABLE  `article_content` ADD  `keywords` TINYTEXT NOT NULL AFTER  `url`;</script>
-	<script build="263">CREATE TABLE  `group_perms` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , `group_id` INT NOT NULL , `name` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `value` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `type` TINYTEXT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="245">ALTER TABLE  `article` ADD  `order` INT NOT NULL;</script>
+    <script build="245">ALTER TABLE  `article` ADD  `visible` INT NOT NULL DEFAULT  '2';</script>
+    <script build="245">update `article` set `order` = `id`;</script>
+    <script build="249">CREATE TABLE  `article_label` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , `name` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="249">CREATE TABLE  `article_line_label` (`line_id` INT NOT NULL , `label_id` INT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="249">ALTER TABLE  `article_label` ADD  `url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL;</script>
+    <script build="249">CREATE TABLE  `article_attached_label` (`article_id` INT NOT NULL , `label_id` INT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="256">ALTER TABLE `w_sport_player` DROP PRIMARY KEY, ADD PRIMARY KEY(`id`, `position`, `season`, `team`);</script>
+    <script build="256">ALTER TABLE  `w_sport_stats` ADD  `pos` INT NOT NULL AFTER  `pid`;</script>
+    <script build="256">update `w_sport_stats` `wss` set `pos` = (select `position` from `w_sport_player` where `id` = `wss`.`pid`);</script>
+    <script build="256">ALTER TABLE `w_sport_stats` DROP PRIMARY KEY, ADD PRIMARY KEY(`pid`, `pos`, `mid`, `season`, `table_id`);</script>
+    <script build="257">insert into `page_right`(`pid`, `gid`, `type`) (select `pid`, `gid`, 104 as `type` from `page_right` where `type` = 102);</script>
+    <script build="258">ALTER TABLE  `info` ADD  `title` TINYTEXT NOT NULL AFTER  `name`;</script>
+    <script build="258">update `info` set `title` = "&lt;web:getProperty name=\"web:currentPageName\" /&gt;";</script>
+    <script build="258">ALTER TABLE  `article_content` ADD  `keywords` TINYTEXT NOT NULL AFTER  `url`;</script>
+    <script build="263">CREATE TABLE  `group_perms` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , `group_id` INT NOT NULL , `name` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `value` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `type` TINYTEXT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="275">ALTER TABLE  `article_content` ADD  `datetime` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL AFTER  `timestamp`;</script>
+    <script build="275">CREATE TABLE  `web_url` ( `id` INT NOT NULL , `project_id` INT NOT NULL , `domain_url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `root_url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `virtual` INT NOT NULL ,`http` INT NOT NULL , `https` INT NOT NULL , `enabled` INT NOT NULL , PRIMARY KEY (  `id` ) ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="275">ALTER TABLE  `web_url` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT;</script>
+    <script build="275">ALTER TABLE  `web_url` CHANGE  `virtual`  `virtual_url` TINYTEXT NOT NULL;</script>
+    <script build="275">DROP TABLE  `web_alias`;</script>
+    <script build="275">ALTER TABLE  `web_project` DROP `url` , DROP  `http` , DROP  `https`;</script>
+    <script build="275">DROP TABLE `urlcache`;</script>
+    <script build="275">CREATE TABLE  `urlcache` ( `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , `url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `def_url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `project_id` INT NOT NULL , `pages_id` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `language_id` INT NOT NULL , `cachetime` INT NOT NULL , `lastcache` INT NOT NULL ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="275">ALTER TABLE  `urlcache` ADD  `http` INT NOT NULL AFTER  `url` , ADD  `https` INT NOT NULL AFTER  `http`;</script>
+    <script build="275">ALTER TABLE  `urlcache` DROP  `def_url`;</script>
+    <script build="275">ALTER TABLE  `urlcache` ADD  `domain_url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL AFTER  `url` , ADD  `root_url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL AFTER  `domain_url` , ADD  `virtual_url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL AFTER  `root_url`;</script>
+    <script build="289">CREATE TABLE  `embedded_resource` ( `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , `type` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `rid` INT NULL , `cache` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="289">CREATE TABLE  `web_forward` ( `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY , `rule` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `condition` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `enabled` INT NOT NULL ) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="289">ALTER TABLE  `web_forward` ADD  `page_id` INT NOT NULL AFTER  `condition` , ADD  `lang_id` INT NOT NULL AFTER  `page_id;</script>
+    <script build="289">ALTER TABLE  `web_forward` ADD  `type` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL AFTER  `id`;</script>
+    <script build="289">ALTER TABLE  `web_forward` ADD  `order` INT NOT NULL AFTER  `lang_id`;</script>
+    <script build="289">ALTER TABLE  `web_url` ADD  `default` INT NOT NULL AFTER  `https`;</script>
+    <script build="295">delete from `user_in_group` where `gid` in (select `gid` from `group` where `name` in ("cms-access", "floorball-access"));</script>
+    <script build="295">delete from `group` where `name` in ("cms-access", "floorball-access");</script>
+    <script build="295">insert into `group_perms`(`group_id`, `name`, `value`, `type`) values (1, 'CMS.Web.Pages', 'true', 'bool'),(1, 'CMS.Web', 'true', 'bool'),(1, 'CMS.Web.TextFiles', 'true', 'bool'),(1, 'CMS.Web.Templates', 'true', 'bool'),(1, 'CMS.Web.Articles', 'true', 'bool'),(1, 'CMS.Web.Guestbooks', 'true', 'bool'),(1, 'CMS.Web.EmbeddedResources', 'true', 'bool'),(1, 'CMS.Web.WebForwards', 'true', 'bool'),(1, 'CMS.Web.WebProjects', 'true', 'bool'),(1, 'CMS.Web.FileManager', 'true', 'bool'),(1, 'CMS.Web.CustomForms', 'true', 'bool'),(1, 'CMS.Hint', 'true', 'bool'),(1, 'CMS.HintProperties', 'true', 'bool'),(1, 'CMS.HintPerms', 'true', 'bool'),(1, 'CMS.Web.Floorball', 'true', 'bool'),(1, 'CMS.Floorball.Projects', 'true', 'bool'),(1, 'CMS.Floorball.Seasons', 'true', 'bool'),(1, 'CMS.Floorball.Rounds', 'true', 'bool'),(1, 'CMS.Floorball.Tables', 'true', 'bool'),(1, 'CMS.Floorball.Teams', 'true', 'bool'),(1, 'CMS.Floorball.Players', 'true', 'bool'),(1, 'CMS.Floorball.Matches', 'true', 'bool'),(1, 'CMS.Floorball.TablesContent', 'true', 'bool'),(1, 'CMS.Web.Settings', 'true', 'bool'),(1, 'CMS.Settings.Users', 'true', 'bool'),(1, 'CMS.Settings.UrlCache', 'true', 'bool'),(1, 'CMS.Settings.UserLog', 'true', 'bool'),(1, 'CMS.Settings.Languages', 'true', 'bool'),(1, 'CMS.Settings.Keywords', 'true', 'bool'),(1, 'CMS.Settings.ApplicationLog', 'true', 'bool'),(1, 'CMS.Settings.DatabaseConnections', 'true', 'bool'),(1, 'CMS.Settings.PersonalProperties', 'true', 'bool'),(1, 'CMS.Settings.PersonalNotes', 'true', 'bool'),(1, 'CMS.Settings.Groups', 'true', 'bool'),(1, 'CMS.Settings', 'true', 'bool'),(1, 'CMS.Floorball', 'true', 'bool'),(1, 'CMS.Web.ArticleLabels', 'true', 'bool'),(1, 'CMS.Web.ArticleLines', 'true', 'bool');</script>
 </autoupdate>

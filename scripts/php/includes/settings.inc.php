@@ -18,6 +18,8 @@
    define("WEB_R_WRITE", 102);
    define("WEB_R_DELETE", 103);
    define("WEB_R_ADDCHILD", 104);
+   
+   define("WEB_USE_URLCACHE", true);
 
    define("WEB_GROUP", "web");
    

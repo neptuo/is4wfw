@@ -4,7 +4,7 @@
   <name>Page Lib</name>
   <classname>Page</classname>
   <classpath>php.libs</classpath>
-  <version>1.49</version>
+  <version>1.53</version>
   <count>*</count>
   <comment>
     Třída pro správu obsahu jednotlivých stránek.
@@ -120,6 +120,50 @@
     </attribute>
     <comment>
       Zobrazí editaci jednotlivého templatu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showEmbeddedResources</tagname>
+    <function>showEmbeddedResources</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí výpis "EmbeddedResource"
+    </comment>
+  </tag>
+  <tag>
+    <tagname>editEmbeddedResource</tagname>
+    <function>showEditEmbeddedResourceFrom</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí editaci "EmbeddedResource"
+    </comment>
+  </tag>
+  <tag>
+    <tagname>showWebForwards</tagname>
+    <function>showWebForwards</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí výpis "WebForwards"
+    </comment>
+  </tag>
+  <tag>
+    <tagname>editWebForward</tagname>
+    <function>showEditWebForwardFrom</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí editaci "WebForward"
     </comment>
   </tag>
 </taglib>
