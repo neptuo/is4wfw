@@ -8,8 +8,7 @@ class ViewHelper {
         } elseif (strpos($path, '.php') == '') {
             $path .= '.php';
         }
-        $path = str_replace('~/', VIEW_VIRTUAL_ROOT . '/', $path);
-        //echo VIEW_VIRTUAL_ROOT." .. ".$path;
+        $path = str_replace('~/', VIEW_ROOT . '/', $path);
         if (file_exists($path)) {
             return file_get_contents($path);
         } else {
@@ -22,11 +21,11 @@ class ViewHelper {
     }
 
     public static function resolveViewRoot($path) {
-        return str_replace('~/', VIEW_VIRTUAL_ROOT . '/', $path);
+        return str_replace('~/', VIEW_ROOT . '/', $path);
     }
 
     public static function resolveUrl($url) {
-        return str_replace('~/', '/' . VIEW_ROOT, $url);
+        return str_replace('~/', WEB_ROOT, $url);
     }
 
 }
