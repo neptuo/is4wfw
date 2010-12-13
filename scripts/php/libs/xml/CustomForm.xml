@@ -73,11 +73,15 @@
       <attname>emailAddresses</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>emailSubject</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Zobrazí formulář, "formId" je identifikátor formuláře, "templateId" je id šablony
       s formulářem, "pageId" je id stránky po přesměrování po vyplnění, "rowId" slouží pro editaci již existujícího záznamu.
       "type" je 'db' nebo 'email', pokud je 'email', tak nemusí být formulář registrovaný, v tom případě
-      jsou pak atributy "emailTemplateId" a "emailAddresses" (seznam emailových adres oddělený čárkami) povinné!
+      jsou pak atributy "emailTemplateId" a "emailAddresses" (seznam emailových adres oddělený čárkami) povinné! "emailSubject" je predmet emailu.
     </comment>
   </tag>
   <tag>

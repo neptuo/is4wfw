@@ -36,6 +36,7 @@ class CustomForm extends BaseTagLib {
     private $ViewFieldsFound = array();
     private $ViewAllFields = array();
     private $ViewDataRow = array();
+    private $EmailPhase = 0;
 
     public function __construct() {
         global $webObject;
@@ -169,7 +170,7 @@ class CustomForm extends BaseTagLib {
 
     /* ===================== FORM =========================================== */
 
-    public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false) {
+    public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false) {
         global $webObject;
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -237,8 +238,6 @@ class CustomForm extends BaseTagLib {
                     $this->ViewDataRow = $this->FormData[$this->FormId];
                     $this->FormPhase = 0;
                     $this->EmailPhase = 1;
-                    // coze???
-                    //self::setRowId($row['id']);
 
                     $Parser = new CustomTagParser();
                     $Parser->setContent($templateContent);
@@ -247,11 +246,13 @@ class CustomForm extends BaseTagLib {
 
                     $this->EmailPhase = 0;
 
+                    $subject = ($emailSubject == '') ? 'Email from CustomForms' : $emailSubject;
+
                     //echo $content;
                     // Nastaveni SMTP??
                     //ini_set("SMTP", "smtp.google.com");
                     //ini_set('sendmail_from', 'user@example.com');
-                    mail($emailAddresses, 'Email from CustomForms', $content);
+                    mail($emailAddresses, $subject, $content);
 
                     $webObject->redirectTo($pageId);
                 }
@@ -262,7 +263,7 @@ class CustomForm extends BaseTagLib {
                 $this->ValidationError = false;
             } else {
                 // Show errors
-                echo 'error';
+                //echo 'error';
             }
         }
 
@@ -422,8 +423,11 @@ class CustomForm extends BaseTagLib {
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
-
-        if ($this->FormPhase == 1) {
+        
+        if ($this->EmailPhase == 1) {
+            $fname = $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $name);
+            return $_POST[$fname];
+        } elseif ($this->FormPhase == 1) {
             if ($transient != 'true') {
                 echo $transient;
                 $this->FormFieldsFound[] = array($name, $type);
@@ -432,6 +436,9 @@ class CustomForm extends BaseTagLib {
             $fname = $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $name);
             $id = self::creatorChooseValue($elementId, $name);
             $value = self::fieldGetValue($name, $type, $fname, $default);
+            if($requiredValue != '') {
+              parent::session()->set($fname.'-req', $requiredValue, 'cf');
+            }
             if ($viewType == '' || $viewType == 'edit') {
                 switch ($type) {
                     case 'string':
@@ -512,9 +519,11 @@ class CustomForm extends BaseTagLib {
             $fname = $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $name);
             $value = $_POST[$fname];
             if ($viewType == 'edit' || $viewType == '') {
-                if (($required == 'true' && $value == '') || ($type == 'date' && strtotime($value) == '') || !self::fieldCustomValidation($value, $type, $validation) || ($requiredValue != '' && $requiredValue != $value)) {
+                if (($required == 'true' && $value == '') || ($type == 'date' && strtotime($value) == '') || !self::fieldCustomValidation($value, $type, $validation) || ($requiredValue != '' && parent::session()->get($fname.'-req', 'cf') != $value)) {
                     $error = true;
                     parent::request()->set($fname . '_e', $errorMessage == '' ? $rb->get('cf.field.error.required') : $errorMessage);
+                } else {
+                    parent::session()->clear($fname.'-req', 'cf');
                 }
                 if (!$error) {
                     if ($transient != 'true') {
@@ -522,7 +531,7 @@ class CustomForm extends BaseTagLib {
                         $this->FormData[$this->FormId][$name]['value'] = $value;
                     }
                 } else {
-                    echo $name;
+                    //echo $name;
                     $this->ValidationError = true;
                 }
             }
@@ -538,9 +547,6 @@ class CustomForm extends BaseTagLib {
             } else {
                 $return .= $this->ViewDataRow[$name];
             }
-        } elseif ($this->EmailPhase == 1) {
-            $fname = $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $name);
-            $return .= $_POST[$fname];
         }
 
         return $return;
