@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  *
  *  Require base tag lib class.
@@ -21,200 +20,197 @@ require_once ("scripts/php/classes/ViewHelper.class.php");
  */
 class View extends BaseTagLib {
 
-	private $BundleName = 'view';
-	private $BundleLang = 'cs';
+    private $BundleName = 'view';
+    private $BundleLang = 'cs';
+    private $Resources;
+    private $Content;
+    private $FullParser;
+    private $Log;
+    private $Title;
+    private $CurrentTemplateContent;
+    private $CurrentTemplatePointer;
 
-	private $Resources;
-	private $Content;
-	private $FullParser;
+    public function __construct() {
+        global $webObject;
+        parent :: setTagLibXml("xml/View.xml");
 
-	private $Log;
-	private $Title;
+        if ($webObject->LanguageName != '') {
+            $rb = new ResourceBundle();
+            if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
+                $this->BundleLang = $webObject->LanguageName;
+            }
+        }
+    }
 
-	private $CurrentTemplateContent;
-	private $CurrentTemplatePointer;
+    /* ======================= TAGS ========================================= */
 
-	public function __construct() {
-		global $webObject;
-		parent :: setTagLibXml("xml/View.xml");
+    public function processView($path) {
+        $this->Resources = array();
+        $this->Content = array();
+        $this->Log = '';
+        $this->Title = '';
+        $this->CurrentTemplateContent = array();
+        $this->CurrentTemplatePointer = 0;
 
-		if ($webObject->LanguageName != '') {
-			$rb = new ResourceBundle();
-			if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-				$this->BundleLang = $webObject->LanguageName;
-			}
-		}
-	}
+        try {
+            $this->FullParser = new FullTagParser();
+            $this->FullParser->setContent(ViewHelper :: getViewContent('~/' . $_REQUEST['WEB_PAGE_PATH']));
+            $this->FullParser->startParsing();
+        } catch (Exception $ex) {
+            echo parent :: getError($ex->getMessage());
+        }
 
-	/* ======================= TAGS ========================================= */
+        self :: flush($this->FullParser->getResult());
+    }
 
-	public function processView($path) {
-		$this->Resources = array ();
-		$this->Content = array ();
-		$this->Log = '';
-		$this->Title = '';
-		$this->CurrentTemplateContent = array ();
-		$this->CurrentTemplatePointer = 0;
+    public function useTemplate($content, $src) {
+        $return = '';
+        $this->CurrentTemplateContent[$this->CurrentTemplatePointer] = $content;
+        $this->CurrentTemplatePointer++;
 
-		try {
-			$this->FullParser = new FullTagParser();
-			$this->FullParser->setContent(ViewHelper :: getViewContent('~/' . $_REQUEST['WEB_PAGE_PATH']));
-			$this->FullParser->startParsing();
-		} catch (Exception $ex) {
-			echo parent :: getError($ex->getMessage());
-		}
+        $parser = new FullTagParser();
+        $parser->setContent(ViewHelper::getViewContent($src));
+        $parser->startParsing();
+        $return = $parser->getResult();
 
-		self :: flush($this->FullParser->getResult());
-	}
+        return $return;
+    }
 
-	public function useTemplate($content, $src) {
-		$return = '';
-		$this->CurrentTemplateContent[$this->CurrentTemplatePointer] = $content;
-		$this->CurrentTemplatePointer++;
-		
-		$parser = new FullTagParser();
-		$parser->setContent(ViewHelper::getViewContent($src));
-		$parser->startParsing();
-		$return = $parser->getResult();
+    public function getContent() {
+        $return = '';
 
-		return $return;
-	}
+        $this->CurrentTemplatePointer--;
+        $parser = new FullTagParser();
+        $parser->setContent($this->CurrentTemplateContent[$this->CurrentTemplatePointer]);
+        $parser->startParsing();
+        $return = $parser->getResult();
 
-	public function getContent() {
-		$return = '';
+        return $return;
+    }
 
-		$this->CurrentTemplatePointer--;
-		$parser = new FullTagParser();
-		$parser->setContent($this->CurrentTemplateContent[$this->CurrentTemplatePointer]);
-		$parser->startParsing();
-		$return = $parser->getResult();
+    public function addHeader($name, $value) {
+        return '';
+    }
 
-		return $return;
-	}
+    public function addResource($type, $src) {
+        if (!in_array($src, $this->Resources[$type])) {
+            $this->Resources[$type][] = $src;
+        }
+    }
 
-	public function addHeader($name, $value) {
-		return '';
-	}
+    public function setTitle($title) {
+        $this->Title = $title;
+    }
 
-	public function addResource($type, $src) {
-		if (!in_array($src, $this->Resources[$type])) {
-			$this->Resources[$type][] = $src;
-		}
-	}
+    public function showPanel($content, $id = false, $class = false) {
+        $return = '';
 
-	public function setTitle($title) {
-		$this->Title = $title;
-	}
+        $parser = new FullTagParser();
+        $parser->setContent($content);
+        $parser->startParsing();
+        $return = $parser->getResult();
 
-	public function showPanel($content, $id = false, $class = false) {
-		$return = '';
+        $att = '';
+        if ($id != '') {
+            $att .= ' id="' . $id . '"';
+        }
+        if ($class != '') {
+            $att .= ' class="' . $class . '"';
+        }
+        $return = '<div' . $att . '>' . $return . '</div>';
 
-		$parser = new FullTagParser();
-		$parser->setContent($content);
-		$parser->startParsing();
-		$return = $parser->getResult();
+        return $return;
+    }
 
-		$att = '';
-		if ($id != '') {
-			$att .= ' id="' . $id . '"';
-		}
-		if ($class != '') {
-			$att .= ' class="' . $class . '"';
-		}
-		$return = '<div' . $att . '>' . $return . '</div>';
+    /* ============================= FUNCTIONS =========================================== */
 
-		return $return;
-	}
+    private function flush($content) {
+        if (strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
+            $styles = '';
+            foreach ($this->Resources['css'] as $res) {
+                $styles .= '<rssmm:link-ref>' . ViewHelper :: resolveUrl($res) . '</rssmm:link-ref>';
+            }
+            $scripts = '';
+            foreach ($this->Resources['js'] as $res) {
+                $scripts .= '<rssmm:script-ref>' . ViewHelper :: resolveUrl($res) . '</rssmm:script-ref>';
+            }
 
-	/* ============================= FUNCTIONS =========================================== */
+            $return = '' .
+                    '<rssmm:response>' .
+                    ((strlen($this->Log) != 0) ? '' .
+                            '<rssmm:log>' .
+                            $this->Log .
+                            '</rssmm:log>' : '') .
+                    '<rssmm:head>' .
+                    '<rssmm:title>' . $this->Title . '</rssmm:title>' .
+                    '<rssmm:styles>' . $styles . '</rssmm:styles>' .
+                    '<rssmm:scripts>' . $scripts . '</rssmm:scripts>' .
+                    '</rssmm:head>' .
+                    '<rssmm:content>' . $content . '</rssmm:content>' .
+                    '</rssmm:response>';
+        } else {
+            $styles = '';
+            foreach ($this->Resources['css'] as $res) {
+                $styles .= '<link rel="stylesheet" href="' . ViewHelper :: resolveUrl($res) . '" type="text/css" />';
+            }
+            $scripts = '';
+            foreach ($this->Resources['js'] as $res) {
+                echo $res;
+                $scripts .= '<script type="text/javascript" src="' . ViewHelper :: resolveUrl($res) . '"></script>';
+            }
 
-	private function flush($content) {
-		if (strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
-			$styles = '';
-			foreach ($this->Resources['css'] as $res) {
-				$styles .= '<rssmm:link-ref>' . ViewHelper :: resolveUrl($res) . '</rssmm:link-ref>';
-			}
-			$scripts = '';
-			foreach ($this->Resources['js'] as $res) {
-				$scripts .= '<rssmm:script-ref>' . ViewHelper :: resolveUrl($res) . '</rssmm:script-ref>';
-			}
+            $content = ViewHelper :: resolveUrl($content);
 
-			$return = '' .
-			'<rssmm:response>' .
-			 ((strlen($this->Log) != 0) ? '' .
-			'<rssmm:log>' .
-			$this->Log .
-			'</rssmm:log>' : '') .
-			'<rssmm:head>' .
-			'<rssmm:title>' . $this->Title . '</rssmm:title>' .
-			'<rssmm:styles>' . $styles . '</rssmm:styles>' .
-			'<rssmm:scripts>' . $scripts . '</rssmm:scripts>' .
-			'</rssmm:head>' .
-			'<rssmm:content>' . $content . '</rssmm:content>' .
-			'</rssmm:response>';
-		} else {
-			$styles = '';
-			foreach ($this->Resources['css'] as $res) {
-				$styles .= '<link rel="stylesheet" href="' . ViewHelper :: resolveUrl($res) . '" type="text/css" />';
-			}
-			$scripts = '';
-			foreach ($this->Resources['js'] as $res) {
-				$scripts .= '<script type="text/javascript" src="' . ViewHelper :: resolveUrl($res) . '"></script>';
-			}
+            $return = '' .
+                    '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' .
+                    '<html xmlns="http://www.w3.org/1999/xhtml">' .
+                    '<head>' .
+                    '<meta http-equiv="content-type" content="text/html; charset=utf-8" />' .
+                    '<meta name="description" content="' . $this->Title . '" />' .
+                    '<meta name="robots" content="all, index, follow" />' .
+                    '<meta name="author" content="Marek Fišera" />' .
+                    '<title>' . $this->Title . '</title>' .
+                    $styles .
+                    '</head>' .
+                    '<body>' . $content . $scripts . '</body>' .
+                    '</html>';
+        }
 
-			$content = ViewHelper :: resolveUrl($content);
+        $return = preg_replace_callback('(<web:frame( title="([^"]*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array(
+                    & $this,
+                    'parsepostframes'
+                        ), $return);
+        self :: tryToComprimeContent($return);
+    }
 
-			$return = '' .
-			'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' .
-			'<html xmlns="http://www.w3.org/1999/xhtml">' .
-			'<head>' .
-			'<meta http-equiv="content-type" content="text/html; charset=utf-8" />' .
-			'<meta name="description" content="' . $this->Title . '" />' .
-			'<meta name="robots" content="all, index, follow" />' .
-			'<meta name="author" content="Marek Fišera" />' .
-			'<title>' . $this->Title . '</title>' .
-			$styles .
-			'</head>' .
-			'<body>' . $content . $scripts . '</body>' .
-			'</html>';
-		}
+    private function tryToComprimeContent($content) {
+        $acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
+        if (headers_sent ()) {
+            $encoding = false;
+        } elseif (strpos($acceptEnc, 'x-gzip') !== false) {
+            $encoding = 'x-gzip';
+        } elseif (strpos($acceptEnc, 'gzip') !== false) {
+            $encoding = 'gzip';
+        } else {
+            $encoding = false;
+        }
 
-		$return = preg_replace_callback('(<web:frame( title="([^"]*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array (
-			& $this,
-			'parsepostframes'
-		), $return);
-		self :: tryToComprimeContent($return);
-	}
+        $return = $content;
 
-	private function tryToComprimeContent($content) {
-		$acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
-		if (headers_sent()) {
-			$encoding = false;
-		}
-		elseif (strpos($acceptEnc, 'x-gzip') !== false) {
-			$encoding = 'x-gzip';
-		}
-		elseif (strpos($acceptEnc, 'gzip') !== false) {
-			$encoding = 'gzip';
-		} else {
-			$encoding = false;
-		}
-
-		$return = $content;
-
-		if ($encoding) {
-			header('Content-Encoding: ' . $encoding);
-			print ("\x1f\x8b\x08\x00\x00\x00\x00\x00");
-			$size = strlen($return);
-			$return = gzcompress($return, 9);
-			$return = substr($return, 0, $size);
-			print ($return);
-			exit ();
-		} else {
-			echo $return;
-			exit ();
-		}
-	}
+        if ($encoding) {
+            header('Content-Encoding: ' . $encoding);
+            print ("\x1f\x8b\x08\x00\x00\x00\x00\x00");
+            $size = strlen($return);
+            $return = gzcompress($return, 9);
+            $return = substr($return, 0, $size);
+            print ($return);
+            exit ();
+        } else {
+            echo $return;
+            exit ();
+        }
+    }
 
 }
+
 ?>

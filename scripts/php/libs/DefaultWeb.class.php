@@ -14,6 +14,7 @@ require_once("scripts/php/classes/FullTagParser.class.php");
 require_once("scripts/php/classes/UniversalPermission.class.php");
 require_once("scripts/php/classes/UrlResolver.class.php");
 require_once("scripts/php/classes/UrlCache.class.php");
+require_once("scripts/php/classes/ViewHelper.class.php");
 require_once("scripts/php/classes/manager/WebForwardManager.class.php");
 
 /**
@@ -1096,7 +1097,7 @@ class DefaultWeb extends BaseTagLib {
         $lastPageId = 0;
         $pageProjectId = 0;
         if (!is_numeric($pageId)) {
-            return str_replace('~/', WEB_ROOT, $pageId);
+            return ViewHelper::resolveUrl($pageId);
         }
         while ($pageId != 0) {
             $return = parent::db()->fetchAll("SELECT `parent_id`, `href`, `wp` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = " . $pageId . " AND `info`.`language_id` = " . $languageId . ";");
@@ -1144,6 +1145,7 @@ class DefaultWeb extends BaseTagLib {
     private function composeUrlProjectPart($pageUrl, $project, $absolute) {
         $pageUrl = UrlResolver::combinePath($project['alias']['virtual_url'], $pageUrl);
         $pageUrl = UrlResolver::combinePath($project['alias']['root_url'], $pageUrl);
+
         if ($absolute) {
             $pageUrl = UrlResolver::combinePath($project['alias']['domain_url'], $pageUrl);
 
