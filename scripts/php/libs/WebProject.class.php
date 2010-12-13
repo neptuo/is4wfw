@@ -177,7 +177,7 @@ class WebProject extends BaseTagLib {
 
             $i = 1;
             foreach ($projects as $project) {
-                $rights = $dbObject->fetchAll("SELECT `group`.`name` FROM `group` LEFT JOIN `web_project_right` ON `group`.`gid` = `web_project_right`.`gid` WHERE `web_project_right`.`pid` = " . $project['id'] . " AND `web_project_right`.`type` = " . WEB_R_WRITE . ";");
+                $rights = $dbObject->fetchAll("SELECT `group`.`name` FROM `group` LEFT JOIN `web_project_right` ON `group`.`gid` = `web_project_right`.`gid` WHERE `web_project_right`.`wp` = " . $project['id'] . " AND `web_project_right`.`type` = " . WEB_R_WRITE . ";");
                 $ok = true;
                 if (count($rights) > 0) {
                     $ok = false;
