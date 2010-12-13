@@ -26,4 +26,6 @@
    define("VIEW_VIRTUAL_ROOT", 'admin');
    define("VIEW_ROOT", '');
 
+   define("IS_STOPPED", false);
+
 ?>

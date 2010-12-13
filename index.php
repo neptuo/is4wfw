@@ -74,6 +74,14 @@
  */
 
 require_once("scripts/php/includes/settings.inc.php");
+
+if(IS_STOPPED) {
+    echo file_get_contents("updating.html");
+    exit;
+}
+
+
+
 require_once("scripts/php/includes/database.inc.php");
 require_once("scripts/php/includes/version.inc.php");
 require_once("scripts/php/includes/extensions.inc.php");
