@@ -3223,12 +3223,14 @@ class Sport extends BaseTagLib {
             $_SESSION['sport']['players']['season-id'] = $_SESSION['sport']['season-id'];
             $_SESSION['sport']['players']['i'] = $_SESSION['sport']['i'];
             $oldteam = self::getTeamId();
+            $oldPlayer = self::getPlayerId();
             foreach ($players as $player) {
                 parent::request()->set('player', $player, 'sport-data');
                 $_SESSION['sport']['player-id'] = $player['id'];
                 $_SESSION['sport']['team-id'] = $player['team-id'];
                 $_SESSION['sport']['season-id'] = $seasonId;
                 self::setTeamId($player['team-id']);
+                self::setPlayerId($player['id']);
                 $_SESSION['sport']['i'] = $i;
                 $parser = new CustomTagParser();
                 $parser->setContent($templateContent);
@@ -3237,6 +3239,7 @@ class Sport extends BaseTagLib {
                 $i++;
             }
             self::setTeamId($oldteam);
+            self::setPlayerId($oldPlayer);
             $_SESSION['sport']['round'] = $_SESSION['sport']['players']['round'];
             $_SESSION['sport']['team-id'] = $_SESSION['sport']['players']['team-id'];
             $_SESSION['sport']['season-id'] = $_SESSION['sport']['players']['season-id'];
