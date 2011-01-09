@@ -3187,7 +3187,7 @@ class Sport extends BaseTagLib {
      * 	@param		limit
      *
      */
-    public function showPlayers($templateId, $sorting, $sortBy, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $offset = false, $noDataMessage = false) {
+    public function showPlayers($templateId, $sorting, $sortBy, $playerId = false, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $offset = false, $noDataMessage = false) {
         global $dbObject;
         global $loginObject;
         $rb = new ResourceBundle();
@@ -3197,7 +3197,7 @@ class Sport extends BaseTagLib {
         if ($offset == '') {
             $offset = 0;
         }
-
+        
         $templateContent = parent::getTemplateContent($templateId);
 
         $oldFields = $this->UsedFields;
@@ -3954,7 +3954,7 @@ class Sport extends BaseTagLib {
                 $conditionssql .= ' `w_sport_table`.`table_id` ' . self::resolveTableIdPartSql($tableId);
             }
 
-            $players = $dbObject->fetchAll('SELECT ' . $cols . ', ' . $subqueriessql . ' FROM `w_sport_player` AS `player` JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`' . ((strlen($joinstatssql) != 0) ? ' ' . $joinstatssql : '') . '' . ((strlen($conditionssql) != 0) ? ' WHERE ' . $conditionssql : '') . ' GROUP BY `player`.`id`' . ' ORDER BY ' . self::sortByStringToSqlParams($sortBy, $sorting) . ((strlen($limitsql) != 0) ? ' ' . $limitsql : '') . ';');
+            $players = $dbObject->fetchAll('SELECT ' . $cols . (strlen($subqueriessql) != 0 ? ', ' : '') . $subqueriessql . ' FROM `w_sport_player` AS `player` JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`' . ((strlen($joinstatssql) != 0) ? ' ' . $joinstatssql : '') . '' . ((strlen($conditionssql) != 0) ? ' WHERE ' . $conditionssql : '') . ' GROUP BY `player`.`id`' . ' ORDER BY ' . self::sortByStringToSqlParams($sortBy, $sorting) . ((strlen($limitsql) != 0) ? ' ' . $limitsql : '') . ';');
         }
 
         return $players;

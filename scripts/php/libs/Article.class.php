@@ -950,7 +950,7 @@ class Article extends BaseTagLib {
             $actionUrl = $webObject->composeUrl($detailPageId);
         }
 
-        $lines = $dbObject->fetchAll('SELECT `article_line`.`id`, `article_line`.`name`, `article_line`.`url` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `id`;');
+        $lines = $dbObject->fetchAll('SELECT distinct `article_line`.`id`, `article_line`.`name`, `article_line`.`url` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `id`;');
         if (count($lines) > 0) {
             $return .= ''
                     . '<div class="show-lines standart clickable"> '
