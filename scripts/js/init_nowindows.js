@@ -37,7 +37,7 @@ Event.domReady.add(init);
 
 function init(event) {
 	//initWebAjaxLog(event);
-	initClock(event);
+	//initClock(event);
 	//initDockLeftIcons(event);
 	//initDesktopRefresh(event);
 
@@ -284,11 +284,11 @@ function initClosers(event) {
 }
 
 function initClock(event) {
-	clockHours = document.getElementById('hours');
-	clockMinutes = document.getElementById('minutes');
-	clockSeconds = document.getElementById('seconds');
+	//clockHours = document.getElementById('hours');
+	//clockMinutes = document.getElementById('minutes');
+	//clockSeconds = document.getElementById('seconds');
 	
-	window.setInterval('clockNext()', 1000);
+	//window.setInterval('clockNext()', 1000);
 }
 
 function initWebAjaxLog(event) {
