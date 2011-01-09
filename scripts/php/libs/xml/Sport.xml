@@ -575,6 +575,10 @@
       <attreq>required</attreq>
     </attribute>
     <attribute>
+      <attname>playerId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>tableId</attname>
       <attreq>implied</attreq>
     </attribute>
