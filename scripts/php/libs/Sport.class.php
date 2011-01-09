@@ -230,7 +230,7 @@ class Sport extends BaseTagLib {
             }
         }
 
-        $projectsOptions = self::getProjectsOptions(self::getProjectId(), WEB_R_READ);
+        $projectsOptions = self::getProjectsOptions(self::getProjectId(), WEB_R_WRITE);
 
         if ($projectsOptions != '') {
             $return .= ''
@@ -238,7 +238,7 @@ class Sport extends BaseTagLib {
                     . '<form name="select-project" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                     . '<label for="select-project">' . $rb->get('project.selectlab') . ':</label> '
                     . '<select name="select-project" id="select-project" class="w160">'
-                    . self::getProjectsOptions(self::getProjectId(), WEB_R_READ)
+                    . $projectsOptions
                     . '</select> '
                     . '<input type="submit" name="select-project-submit" value="' . $rb->get('project.select') . '" />'
                     . '</form>'
