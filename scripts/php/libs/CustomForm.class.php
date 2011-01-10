@@ -1149,7 +1149,7 @@ class CustomForm extends BaseTagLib {
     }
 
 	public function setCustom($value) {
-		return $value
+		return $value;
 	}
 	
 	public function getCustom() {
