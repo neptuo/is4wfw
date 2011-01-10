@@ -4,7 +4,7 @@
   <name>Custom Form Lib</name>
   <classname>CustomForm</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
+  <version>1.01</version>
   <count>*</count>
   <comment>
     Knihovna pro tvorbu formulářů
@@ -200,6 +200,17 @@
     </comment>
   </tag>
   <tag>
+    <tagname>setCustomProperty</tagname>
+    <function>setCustomProperty</function>
+    <attribute>
+      <attname>value</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Nastaví custom property na zadanou hodnotu.
+    </comment>
+  </tag>
+  <tag>
     <tagname>formList</tagname>
     <function>formList</function>
     <attribute>
@@ -227,6 +238,14 @@
   	<getfunction>getRowId</getfunction>
     <comment>
       Vrací id vybraného řádku při procházení seznamu.
+    </comment>
+  </property>
+  <property>
+  	<propname>custom</propname>
+  	<setfunction>setCustomProperty</setfunction>
+  	<getfunction>getCustomProperty</getfunction>
+    <comment>
+      Vratí hodnotu custom property
     </comment>
   </property>
 </taglib>
