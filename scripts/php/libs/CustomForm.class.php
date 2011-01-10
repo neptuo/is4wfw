@@ -15,7 +15,7 @@ require_once("scripts/php/classes/CustomTagParser.class.php");
  *  Class CustomForm.
  *      
  *  @author     Marek SMM
- *  @timestamp  2010-08-08
+ *  @timestamp  2011-01-10
  * 
  */
 class CustomForm extends BaseTagLib {
@@ -781,6 +781,10 @@ class CustomForm extends BaseTagLib {
 
         return $fields;
     }
+	
+	public function setCustomProperty($value) {
+		parent::request()->set('custom-property', $value, 'cf');
+	}
 
     /* ===================== CREATOR ======================================== */
 
@@ -1144,6 +1148,13 @@ class CustomForm extends BaseTagLib {
         }
     }
 
+	public function setCustomProperty($value) {
+		return $value
+	}
+	
+	public function getCustomProperty() {
+		return parent::request()->get('custom-property', $value, 'cf');
+	}
 }
 
 ?>
