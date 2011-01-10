@@ -1148,11 +1148,11 @@ class CustomForm extends BaseTagLib {
         }
     }
 
-	public function setCustomProperty($value) {
+	public function setCustom($value) {
 		return $value
 	}
 	
-	public function getCustomProperty() {
+	public function getCustom() {
 		return parent::request()->get('custom-property', $value, 'cf');
 	}
 }
