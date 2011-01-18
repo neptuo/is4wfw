@@ -1817,6 +1817,7 @@ class Sport extends BaseTagLib {
                 }
 
                 //parent::db()->setMockMode(true);
+				parent::db()->disableCache();
                 if ($ok) {
                     $tmpma = parent::db()->fetchSingle(parent::query()->get('selectMatchByIdSeasonId', array('id' => $match['id'], 'seasonId' => $match['season']), 'sport'));
                     if ($tmpma != array()) {
@@ -1907,6 +1908,7 @@ class Sport extends BaseTagLib {
                     $_POST['match-new'] = $rb->get('matches.new');
                 }
                 //parent::db()->setMockMode(false);
+				parent::db()->enableCache();
             } else {
                 $return .= parent::getError($rb->get('projects.error.permissionsdenied'));
             }
