@@ -46,6 +46,7 @@
     private $queriesPerRequest = 0;
 	
 	private $cacheResults = 'REQUEST';
+	private $oldCacheStrategy = '';
     
     /**
      *
@@ -68,6 +69,15 @@
     
 	public function setCacheResults($val) {
 		$this->cacheResults = $val;
+	}
+	
+	public function disableCache() {
+		$this->oldCacheStrategy = $this->cacheResults;
+		$this->cacheResults = 'NONE';
+	}
+	
+	public function enableCache() {
+		$this->cacheResults = $this->oldCacheStrategy;
 	}
 	
     /**
