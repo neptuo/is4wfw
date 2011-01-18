@@ -3198,7 +3198,7 @@ class Sport extends BaseTagLib {
 
         if ($offset == '') {
             $offset = 0;
-        }
+        }     
         
         $templateContent = parent::getTemplateContent($templateId);
 
@@ -3212,7 +3212,7 @@ class Sport extends BaseTagLib {
         $parser->startParsing();
 
         //print_r($this->UsedFields);
-        //parent::db()->setMockMode(true);
+        //parent::db()->setMockMode(true);  
         $players = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, $limit, $playerId, $offset);
         //echo $_SESSION['sport']['match-id'];
         //unset($_SESSION['sport']['match-id']);
@@ -4033,13 +4033,13 @@ class Sport extends BaseTagLib {
         }
     }
 
-    public function setTeamId($teamId) {
+    public function setTeamId($teamId) { 
         parent::session()->set('team-id', $teamId, 'sport');
         return $teamId;
     }
 
     public function getTeamId() {
-        if (parent::session()->exists('team-id', 'sport')) {
+        if (parent::session()->exists('team-id', 'sport')) {   
             return parent::session()->get('team-id', 'sport');
         } else {
             return '-1';
