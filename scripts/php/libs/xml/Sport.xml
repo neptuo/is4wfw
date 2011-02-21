@@ -4,7 +4,7 @@
   <name>Sport Lib</name>
   <classname>Sport</classname>
   <classpath>php.libs</classpath>
-  <version>2.13</version>
+  <version>2.14</version>
   <count>*</count>
   <comment>
     Třída pro "sport".
@@ -540,8 +540,16 @@
       <attname>onlyPlayed</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>startId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>maxId</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
-      Výpis kol, sorting má hodnotu DESC nebo ASC.
+      Výpis kol, sorting má hodnotu DESC nebo ASC. startId je minimalni id kola, které bude vypsáno. maxId je nejvyšší id kola, které bude vypsáno.
     </comment>
   </tag>
   <tag>
