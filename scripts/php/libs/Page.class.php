@@ -18,7 +18,7 @@ require_once("System.class.php");
  *  Class updating web pages.     
  *      
  *  @author     Marek SMM
- *  @timestamp  2010-11-28
+ *  @timestamp  2011-02-21
  * 
  */
 class Page extends BaseTagLib {
@@ -344,10 +344,10 @@ class Page extends BaseTagLib {
                 }
 
                 if ($clearUrlCache) {
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"%-" . $pageId . "-%\" AND `language_id` = " . $languageId . ";");
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"" . $pageId . "-%\" AND `language_id` = " . $languageId . ";");
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"%-" . $pageId . "\" AND `language_id` = " . $languageId . ";");
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` = \"" . $pageId . "\" AND `language_id` = " . $languageId . ";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` LIKE \"%-" . $pageId . "-%\" AND `language_id` = " . $languageId . ";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` LIKE \"" . $pageId . "-%\" AND `language_id` = " . $languageId . ";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` LIKE \"%-" . $pageId . "\" AND `language_id` = " . $languageId . ";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` = \"" . $pageId . "\" AND `language_id` = " . $languageId . ";");
                 }
 
                 if ($_POST['edit-save'] == $rb->get('page.action.save')) {
@@ -879,10 +879,10 @@ class Page extends BaseTagLib {
                         $dbObject->execute("DELETE FROM `page_file_inc` WHERE `page_id` = " . $pageId . ";");
                     }
 
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"%-" . $pageId . "-%\" AND `language_id` = " . $languageId . ";");
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"" . $pageId . "-%\" AND `language_id` = " . $languageId . ";");
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"%-" . $pageId . "\" AND `language_id` = " . $languageId . ";");
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` = \"" . $pageId . "\" AND `language_id` = " . $languageId . ";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` LIKE \"%-" . $pageId . "-%\" AND `language_id` = " . $languageId . ";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` LIKE \"" . $pageId . "-%\" AND `language_id` = " . $languageId . ";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` LIKE \"%-" . $pageId . "\" AND `language_id` = " . $languageId . ";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` = \"" . $pageId . "\" AND `language_id` = " . $languageId . ";");
 
                     $return .= parent::getFrame("Success Message", '<h4 class="success">Laguage version deleted!</h4>', "", true);
                 } else {
@@ -892,10 +892,10 @@ class Page extends BaseTagLib {
                     $dbObject->execute("DELETE FROM `page_right` WHERE `pid` = " . $pageId . ";");
                     $dbObject->execute("DELETE FROM `page_file_inc` WHERE `page_id` = " . $pageId . ";");
 
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"%-" . $pageId . "-%\";");
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"" . $pageId . "-%\";");
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` LIKE \"%-" . $pageId . "\";");
-                    $dbObject->execute("DELETE FROM `urlcache` WHERE `page-ids` = \"" . $pageId . "\";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` LIKE \"%-" . $pageId . "-%\";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` LIKE \"" . $pageId . "-%\";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` LIKE \"%-" . $pageId . "\";");
+                    $dbObject->execute("DELETE FROM `urlcache` WHERE `pages_id` = \"" . $pageId . "\";");
 
                     $this->MessageFromEdit .= '<h4 class="success">' . $rb->get('pagelist.success.deleted') . '!</h4>';
                 }
