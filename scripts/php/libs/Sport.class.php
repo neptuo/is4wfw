@@ -3514,7 +3514,7 @@ class Sport extends BaseTagLib {
             $where .= ' and `w_sport_stats`.`mid` = ' . $matchId;
         }
         if ($positions != '') {
-            $where .= ' and `w_sport_player`.`position` in (' . $positions . ')';
+            $where .= ' and `w_sport_stats`.`pos` in (' . $positions . ')';
         }
         if ($partWhere != '') {
             $where .= ' and (' . $partWhere . ')';
