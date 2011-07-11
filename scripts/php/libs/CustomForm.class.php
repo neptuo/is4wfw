@@ -252,7 +252,7 @@ class CustomForm extends BaseTagLib {
                     // Nastaveni SMTP??
                     //ini_set("SMTP", "smtp.google.com");
                     //ini_set('sendmail_from', 'user@example.com');
-                    mail($emailAddresses, $subject, $content);
+                    mail($emailAddresses, $subject, $content, 1);
 
                     $webObject->redirectTo($pageId);
                 }
