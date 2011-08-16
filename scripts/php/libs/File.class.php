@@ -14,7 +14,7 @@
    *  FileSystem Class.
    *      
    *  @author     Marek SMM
-   *  @timestamp  2009-12-12
+   *  @timestamp  2011-08-16
    * 
    */  
   class File extends BaseTagLib {
@@ -1014,7 +1014,7 @@
      *  @param    dirId     directory id to show
      *
      */                        
-    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $orderFilesBy = false, $orderDirsBy = false, $desc = false) {
+    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $recursively = false, $orderFilesBy = false, $orderDirsBy = false, $desc = false) {
       global $webObject;
       global $dbObject;
       $return = "";
@@ -1058,7 +1058,7 @@
       .'<div '.(($lightbox == "true") ? 'id="light-gallery-'.$lightId.'"' : "").' class="gallery-cover">'
         .'';
       
-      if($showSubDirs == "true") {
+      if($showSubDirs == "true" || $recursively == "true") {
       	$order = "name";
       	switch(strtolower($orderDirsBy)) {
 					case "id": $order = "id"; break;
@@ -1083,6 +1083,7 @@
               .'<div class="gallery-thumb">'
               .'</div>'
               .'<div class="gallery-name">'.((strlen($url) != 0) ? '<a href="'.$url.'">'.$dir['name'].'</a> ' : $dir['name']).'</div>'
+			  .($recursively == "true" ? self::galleryFromDirectory($method, $pageId, $langId, $dir['id'], false, $showSubDirs, $showNames, $showTitles, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $orderFilesBy, $orderDirsBy, $desc) : "")
             .'</div>';
         }
         $_REQUEST['dir-id'] = $tmpDirId;
@@ -1119,7 +1120,7 @@
       $images = $dbObject->fetchAll("SELECT `id`, `name`, `title`, `type` FROM `file` WHERE `dir_id` = ".$dirId." AND (`type` = ".WEB_TYPE_JPG." OR `type` = ".WEB_TYPE_GIF." OR `type` = ".WEB_TYPE_PNG.") ORDER BY `".$order."` ".(($desc == true) ? " DESC" : "").";");
       
 			foreach($images as $image) {
-      	if($lightbox == "true") {
+      	if($lightbox == "true" || $lightbox == "added") {
       		$link = ''
        		.'<a href="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$lsize : self::getPhysicalPathTo($dirId, false).$image['name'].".".$this->FileEx[$image['type']]).'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
         		.'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalPathTo($dirId, false).$image['name'].".".$this->FileEx[$image['type']]).'" alt="'.$image['title'].'" />'
