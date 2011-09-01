@@ -1496,7 +1496,7 @@ class Page extends BaseTagLib {
                                 . '<input type="hidden" name="copy-branch" value="' . $rb->get('pagelist.action.copy') . '" />'
                                 . '<input type="image" src="' . WEB_ROOT . 'images/page_cop.png" title="' . $rb->get('pagelist.field.copy') . '" name="copy-branch" value="' . $rb->get('pagelist.action.copy') . '" />'
                                 . '</form> ' : '')
-                        . ((self::getGroupPermCached('Page.Move')) ? ''
+                        . ((self::getGroupPermCached('Page.MoveUpDown')) ? ''
                                 . '<form name="page-move3" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="page-move3">'
                                 . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                 . '<input type="hidden" name="move-up" value="' . $rb->get('pagelist.action.up') . '" /> '

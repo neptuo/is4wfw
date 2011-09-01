@@ -2,12 +2,13 @@
 
 <menu>
     <item name="Url cache" url="~/in/url-cache.view" security:requirePerm="CMS.Settings.UrlCache" />
-    <item name="Languages" url="~/in/languages.view" security:requirePerm="CMS.Settings.Languages" />
-    <item name="Keywords &amp; robots.txt" url="~/in/keywords.view" security:requirePerm="CMS.Settings.Keywords" />
-    <item name="Users &amp; Roles" url="~/in/users.view" security:requirePerm="CMS.Settings.Users" />
+    <item name="Languages" name-cs="Jazyky" url="~/in/languages.view" security:requirePerm="CMS.Settings.Languages" />
+    <item name="Keywords &amp; robots.txt" name-cs="Klíčová slova" url="~/in/keywords.view" security:requirePerm="CMS.Settings.Keywords" />
+    <item name="Users &amp; Roles" name-cs="Uživatelé a role" url="~/in/users.view" security:requirePerm="CMS.Settings.Users" />
     <item name="User log" url="~/in/user-log.view" security:requirePerm="CMS.Settings.UserLog" />
     <item name="Application log" url="~/in/application-log.view" security:requirePerm="CMS.Settings.ApplicationLog" />
     <item name="Database connections" url="~/in/database-connections.view" security:requirePerm="CMS.Settings.DatabaseConnections" />
-    <item name="Personal properties" url="~/in/personal-properties.view" security:requirePerm="CMS.Settings.PersonalProperties" />
-    <item name="Personal notes" url="~/in/personal-notes.view" security:requirePerm="CMS.Settings.PersonalNotes" />
+    <item name="Personal properties" name-cs="Uživatelské nastavení" url="~/in/personal-properties.view" security:requirePerm="CMS.Settings.PersonalProperties" />
+    <item name="Personal notes" name-cs="Uživatelské poznámky" url="~/in/personal-notes.view" security:requirePerm="CMS.Settings.PersonalNotes" />
+    <item name="Admin menu" url="~/in/edit-admin-menu.view" security:requirePerm="CMS.Settings.AdminMenu" />
 </menu>

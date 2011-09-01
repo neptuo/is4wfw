@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div id="loading" class="web-version lorequireGroupading">
-	      Loading ...
+				Loading ...
             </div>
             <div id="cms-menus">
                 <v:panel class="cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
@@ -38,12 +38,31 @@
                     <m:xmlMenu file="~/templates/menus/web.xml" />
                 </v:panel>
                 <v:panel class="cms-menu cms-menu-2" security:requirePerm="CMS.Floorball">
-                    <span class="menu-root"><web:a pageId="~/in/floorball/seasons.view" text="Floorball" /></span>
+                    <span class="menu-root">
+						<a href="~/in/floorball/seasons.view">
+							<web:static value="Floorball" lang="en" />
+							<web:static value="Florbal" lang="cs" />
+						</a>
+					</span>
                     <m:xmlMenu file="~/templates/menus/floorball.xml" />
                 </v:panel>
                 <v:panel class="cms-menu cms-menu-4" security:requirePerm="CMS.Settings">
-                    <span class="menu-root"><a href="~/in/personal-notes.view">Settings</a></span>
+                    <span class="menu-root">
+						<a href="~/in/personal-notes.view">
+							<web:static value="Settings" lang="en" />
+							<web:static value="Nastavení" lang="cs" />
+						</a>
+					</span>
                     <m:xmlMenu file="~/templates/menus/settings.xml" />
+                </v:panel>
+                <v:panel class="cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
+                    <span class="menu-root">
+						<a href="~/in/personal-notes.view">
+							<web:static value="Custom" lang="en" />
+							<web:static value="Další" lang="cs" />
+						</a>
+					</span>
+                    <sys:adminMenu url="~/in/admin-menu.view" />
                 </v:panel>
             </div>
         </div>
@@ -59,11 +78,11 @@
                     </div>
                     <div id="clock" class="clock">
                         <div id="hours" class="clock-hours">
-	          --
+							--
                         </div>:<div id="minutes" class="clock-minutes">
-	          --
+							--
                         </div>:<div id="seconds" class="clock-seconds">
-	          --
+							--
                         </div>
                     </div>
                 </div>

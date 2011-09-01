@@ -162,6 +162,8 @@ class DefaultWeb extends BaseTagLib {
     private $UrlResolver;
     private $UrlCache;
     private $FullUrl;
+	private $IsSubstituting = false;
+	
     /**
      *
      * 	Keywords.
@@ -241,6 +243,7 @@ class DefaultWeb extends BaseTagLib {
             self::parseSingleUrlParts($domainUrl, $rootUrl, $virtualUrl);
             $found = true;
         } else {
+			//echo $domainUrl.', '.$rootUrl.', '.$virtualUrl.'<br />';
             if ($this->UrlResolver->resolveUrl($domainUrl, $rootUrl, $virtualUrl)) {
                 // Stranka existuje
                 self::loadPageData();
@@ -266,14 +269,22 @@ class DefaultWeb extends BaseTagLib {
     }
 
     public function substituteRequestFor($pageId, $langId) {
+		$this->IsSubstituting = true;
         //echo 'Substituting ...'.'<br />'.'<br />';
 
-        $pageUrl = self::composeUrl($pageId, $langId);
+        $pageUrl = self::composeUrl($pageId, $langId, false);
         $url = parent::db()->fetchSingle('select `http`, `https`, `domain_url`, `root_url`, `virtual_url` from `web_url` join `page` on `web_url`.`project_id` = `page`.`wp` where `page`.`id` = '.$pageId.' order by `web_url`.`default` desc, `web_url`.`id`;');
-
-        $pageUrl = substr($pageUrl, strlen($url['root_url']) + 1, strlen($pageUrl));
+		
+		if(strpos($pageUrl, 'http://') != -1 || strpos($pageUrl, 'https://') != -1) {
+			$pageUrl = substr($pageUrl, strpos($pageUrl, '/', 8), strlen($pageUrl));
+		}
+		
         $scriptUrl = UrlResolver::combinePath($url['root_url'], '/index.php');
         $domainUrl = $url['domain_url'];
+
+        $_SERVER['HTTP_HOST'] = $domainUrl;
+        $_SERVER['SCRIPT_NAME'] = $scriptUrl;
+        $_REQUEST['WEB_PAGE_PATH'] = $pageUrl;
 
         /*echo $_SERVER['HTTP_HOST'].'<br />';
         echo $_SERVER['SCRIPT_NAME'].'<br />';
@@ -281,10 +292,6 @@ class DefaultWeb extends BaseTagLib {
         echo $domainUrl.'<br />';
         echo $scriptUrl.'<br />';
         echo $pageUrl.'<br />';*/
-
-        $_SERVER['HTTP_HOST'] = $domainUrl;
-        $_SERVER['SCRIPT_NAME'] = $scriptUrl;
-        $_REQUEST['WEB_PAGE_PATH'] = $pageUrl;
 
         if($this->Protocol == 'https' && $url['https'] == 1) {
             $_SERVER['https'] = 'on';
@@ -419,7 +426,7 @@ class DefaultWeb extends BaseTagLib {
             $rule = '/'.  str_replace('/', '\/', $forward->getRule()).'/';
             if(preg_match($rule, $fullUrl) > 0) {
                 // Presmerovat
-                if($forward->getType() == 'Substitute') {
+                if($forward->getType() == 'Substitute' && !$this->IsSubstituting) {
                     self::substituteRequestFor($forward->getPageId(), $forward->getLangId());
                 } elseif($forward->getType() == 'Forward') {
                     self::redirectTo($forward->getPageId(), $forward->getLangId());

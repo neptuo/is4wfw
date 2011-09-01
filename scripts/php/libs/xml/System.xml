@@ -4,7 +4,7 @@
   <name>System setup lib</name>
   <classname>System</classname>
   <classpath>php.libs</classpath>
-  <version>1.03</version>
+  <version>1.04</version>
   <count>*</count>
   <comment>
     Třída pro správu webového frameworku.
@@ -52,6 +52,43 @@
     </attribute>
     <comment>
       Zobrazí uživatelské poznámky.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>editAdminMenu</tagname>
+    <function>editAdminMenu</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showMsg</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí editaci Admin menu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>adminMenu</tagname>
+    <function>adminMenu</function>
+    <attribute>
+      <attname>url</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>classes</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí Admin menu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>adminMenuItem</tagname>
+    <function>adminMenuItem</function>
+    <comment>
+      Zobrazí iframe s obsahem.
     </comment>
   </tag>
   <tag>

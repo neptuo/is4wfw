@@ -217,6 +217,7 @@
 		.'</div>'
 		.'<div class="gray-box">'
 			.'<ul>'
+				.'<li>Admin.Language</li>'
 				.'<li>Article.author</li>'
 				.'<li>Article.editAreaHeadRows</li>'
 				.'<li>Article.editors</li>'

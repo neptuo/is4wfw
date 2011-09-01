@@ -10,7 +10,7 @@
             <br />
             CMS.Floorball, CMS.Floorball.Projects, CMS.Floorball.Seasons, CMS.Floorball.Rounds, CMS.Floorball.Tables, CMS.Floorball.Teams, CMS.Floorball.Players, CMS.Floorball.Matches, CMS.Floorball.TablesContent
             <br />
-            CMS.Settings, CMS.Settings.UrlCache, CMS.Settings.Languages, CMS.Settings.Keywords, CMS.Settings.Users, CMS.Settings.Groups, CMS.Settings.UserLog, CMS.Settings.ApplicationLog, CMS.Settings.PersonalProperties, CMS.Settings.PersonalNotes
+            CMS.Settings, CMS.Settings.UrlCache, CMS.Settings.Languages, CMS.Settings.Keywords, CMS.Settings.Users, CMS.Settings.Groups, CMS.Settings.UserLog, CMS.Settings.ApplicationLog, CMS.Settings.PersonalProperties, CMS.Settings.PersonalNotes, CMS.Settings.AdminMenu
         </web:frame>
     </v:panel>
 </v:template>
