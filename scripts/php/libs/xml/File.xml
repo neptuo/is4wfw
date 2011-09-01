@@ -4,7 +4,7 @@
   <name>File Lib</name>
   <classname>File</classname>
   <classpath>php.libs</classpath>
-  <version>1.18</version>
+  <version>1.22</version>
   <count>*</count>
   <comment>
     Třída pro správu souborů.
@@ -47,6 +47,10 @@
       <attname>useFrames</attname>
       <attreq>implied</attreq>
     </attribute>
+	<attribute>
+	  <attname>useRights</attname>
+	  <attreq>implied</attreq>
+	</attribute>
     <comment>
       Zobrazí formulář pro přidání adresáře.
     </comment>
@@ -124,6 +128,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>limit</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>detailWidth</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -157,6 +165,10 @@
     </attribute>
     <attribute>
       <attname>recursively</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>dirDateFormat</attname>
       <attreq>implied</attreq>
     </attribute>
     <attribute>

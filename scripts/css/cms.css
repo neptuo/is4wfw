@@ -1567,7 +1567,12 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .cms .head .cms-menu.cms-menu-4 {
     position: absolute;
-    margin: 10px 0pt 0pt 200px;
+    margin: 10px 0pt 0pt 210px;
+}
+
+.cms .head .cms-menu.cms-menu-5 {
+    position: absolute;
+    margin: 10px 0pt 0pt 300px;
 }
 
 .cms .head .cms-menu .menu-root a {
@@ -1593,6 +1598,11 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .cms .head .cms-menu.cms-menu-5 .menu-root a {
     padding: 1px 0 1px 24px;
     background: url('/images/icons/cog.png') no-repeat 4px 3px;
+}
+
+.cms .head .cms-menu.cms-menu-5 .menu-root a {
+    padding: 1px 0 1px 24px;
+    background: none;
 }
 
 .cms .head .cms-menu .menu {

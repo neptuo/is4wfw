@@ -1472,7 +1472,7 @@ class Sport extends BaseTagLib {
             $return .= ''
                     . '<hr />'
                     . '<form name="tables-add" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
-                    . '<input type="submit" name="tables-add" value="' . $rb->get('tables.add') . '" />'
+						. '<input type="submit" name="tables-add" value="' . $rb->get('tables.add') . '" /> '
                     . '</form>';
         }
 

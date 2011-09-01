@@ -10,10 +10,10 @@
   /**
    * 
    *  Class System.
-   * 	management of web framework.	     
+   *  Management of web framework.	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-08-08
+   *  @timestamp  2011-08-30
    * 
    */  
   class System extends BaseTagLib {
@@ -228,6 +228,180 @@
 				return $return;
 			} else {
 				return parent::getFrame('System notes print', $return, "", true);
+			}
+		}
+		
+		public function adminMenuItem() {
+			global $dbObject;
+			global $webObject;
+			$return  = '';
+			
+			$id = $_GET['adminId'];
+			$data = $dbObject->fetchSingle('select `page_id` from `system_adminmenu` where `id` = '.$id.';');
+			if($data != array()) {
+				$return .= '<iframe style="border: none;" src="'.$data['page_id'].'"></iframe>';
+				$return .= ''
+				.'<script type="text/javascript">'
+					.'$(function() {'
+						.'$("iframe").each(function() {'
+							.'$(this).width($(this).parent().width()).load(function() {'
+								.'$(this).height($(this).document().height);'
+							.'});'
+						.'})'
+					.'})'
+				.'</script>';
+			}
+			
+			return $return;
+		}
+		
+		public function adminMenu($url, $classes = false) {
+			global $dbObject;
+			global $webObject;
+			$inn = 1;
+			$data = $dbObject->fetchAll('select `id`, `name`, `icon`, `perm` from `system_adminmenu` order by `id`');
+		
+			$content .= '<div class="menu menu-' . $inn . ((strlen($classes) > 0) ? ' ' . $classes : '') . '"><ul class="ul-' . $inn . '">';
+            $i = 1;
+            foreach ($data as $lnk) {
+				if ($lnk['perm'] != '') {
+					global $loginObject;
+					$perm = $loginObject->getGroupPerm($lnk['perm'], $loginObject->getMainGroupId(), false, 'false');
+					if($perm['value'] != 'true') {
+						continue;
+					}
+				}
+			
+                $active = false;
+				$href = $url . '?adminId=' . $lnk['id'];
+                if ($href == '/' . $_REQUEST['WEB_PAGE_PATH']) {
+                    $active = true;
+                }
+
+                $content .= ''
+                        . '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . ' ' . '">'
+                        . '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
+                        . '<a href="' . $href . '"' . (($rel != false) ? ' rel="' . $rel . '"' : '') . ' style="background-image: url(\''.$lnk['icon'].'\') !important;">'
+                        . '<span>' . $lnk['name'] . '</span>'
+                        . '</a>'
+                        . '</div>'
+                        . '</li>';
+                $i++;
+            }
+            $inner--;
+            $content .= "</ul></div>";
+			
+			return $content;
+		}
+		
+		public function editAdminMenu($useFrames = false, $shpwMsg = false) {
+			global $dbObject;
+			global $loginObject;
+			$return = '';
+			
+			if($_POST['adminmenu-delete'] == "Delete") {
+				$id = $_POST['adminmenu-id'];
+				$dbObject->execute('delete from `system_adminmenu` where `id` = '.$id.';');
+				$return = parent::getSuccess('Admin menu item with id '.$id.' deleted.');
+			}
+			
+			if($_POST['adminmenu-save'] == "Save") {
+				$data = array();
+				$data['id'] = $_POST['adminmenu-id'];
+				$data['name'] = $_POST['adminmenu-name'];
+				$data['page_id'] = $_POST['adminmenu-pageid'];
+				$data['icon'] = $_POST['adminmenu-icon'];
+				$data['perm'] = $_POST['adminmenu-perm'];
+				
+				if($data['id'] == "") {
+					$dbObject->execute('insert into `system_adminmenu`(`name`, `page_id`, `icon`, `perm`) values ("'.$data['name'].'", "'.$data['page_id'].'", "'.$data['icon'].'", "'.$data['perm'].'");');
+					$return = parent::getSuccess('Admin menu item with name '.$name.' save.');
+				} else {
+					$dbObject->execute('update `system_adminmenu` set `name` = "'.$data['name'].'", `page_id` = "'.$data['page_id'].'", `icon` = "'.$data['icon'].'", `perm` = "'.$data['perm'].'" where `id` = '.$data['id'].';');
+					$return = parent::getSuccess('Admin menu item with name '.$name.' updated.');
+				}
+			}
+			
+			if($_POST['adminmenu-new'] == "Create" || $_POST['adminmenu-edit'] == "Edit") {
+				$data = array();
+				if($_POST['adminmenu-edit'] == "Edit") {
+					$id = $_POST['adminmenu-id'];
+					$data = $dbObject->fetchSingle('select `id`, `name`, `page_id`, `icon`, `perm` from `system_adminmenu` where `id` = '.$id.';');
+				}
+				
+				$return .= ''
+				.'<form method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<div class="gray-box">'
+						.'<label for="adminmenu-name" class="w160">Name:</label>'
+						.'<input type="text" name="adminmenu-name" id="adminmenu-name" value="'.$data['name'].'" class="w160" />'
+					.'</div>'
+					.'<div class="gray-box">'
+						.'<label for="adminmenu-pageid" class="w160">Page id (url):</label>'
+						.'<input type="text" name="adminmenu-pageid" id="adminmenu-pageid" value="'.$data['page_id'].'" class="w400" />'
+					.'</div>'
+					.'<div class="gray-box">'
+						.'<label for="adminmenu-icon" class="w160">Icon:</label>'
+						.'<input type="text" name="adminmenu-icon" id="adminmenu-icon" value="'.$data['icon'].'" class="w400" />'
+					.'</div>'
+					.'<div class="gray-box">'
+						.'<label for="adminmenu-perm" class="w160">Permission:</label>'
+						.'<input type="text" name="adminmenu-perm" id="adminmenu-perm" value="'.$data['perm'].'" class="w200" />'
+					.'</div>'
+					.'<div class="gray-box">'
+						.'<input type="hidden" name="adminmenu-id" value="'.$data['id'].'" />'
+						.'<input type="submit" name="adminmenu-save" value="Save" /> '
+						.'<input type="submit" name="adminmenu-cancel" value="Cancel" />'
+					.'</div>'
+				.'</form>'
+				.'<hr />';
+			}
+			
+			$return .= ''
+			.'<div class="system-adminmenu">'
+				.'<table class="standart clickable">'
+					.'<tr>'
+						.'<th>Name</th>'
+						.'<th>Page id (url)</th>'
+						.'<th>Icon</th>'
+						.'<th>Permission</th>'
+						.'<th></th>'
+					.'</tr>';
+			$data = $dbObject->fetchAll('select `id`, `name`, `page_id`, `icon`, `perm` from `system_adminmenu` order by `id`');
+			$i = 1;
+			foreach($data as $item) {
+				$return .= ''
+				.'<tr class="'.((($i % 2) == 0) ? 'even' : 'idle').'">'
+					.'<td>'.$item['name'].'</td>'
+					.'<td>'.$item['page_id'].'</td>'
+					.'<td>'.$item['icon'].'</td>'
+					.'<td>'.$item['perm'].'</td>'
+					.'<td>'
+						.'<form method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+							.'<input type="hidden" name="adminmenu-id" value="'.$item['id'].'" />'
+							.'<input type="hidden" name="adminmenu-edit" value="Edit" />'
+							.'<input type="image" src="~/images/page_edi.png" name="adminmenu-edit" value="Edit" title="Edit admin menu item, id '.$item['id'].'" />'
+						.'</form> '
+						.'<form method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+							.'<input type="hidden" name="adminmenu-id" value="'.$item['id'].'" />'
+							.'<input type="hidden" name="adminmenu-delete" value="Delete" />'
+							.'<input type="image" src="~/images/page_del.png" name="adminmenu-delete" value="Delete" title="Delete admin menu item, id '.$item['id'].'" />'
+						.'</form>'
+					.'</td>'
+				.'</tr>';
+				$i++;
+			}
+			$return .= '</table></div>'
+			.'<hr />'
+			.'<div class="gray-box">'
+				.'<form method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<input type="submit" name="adminmenu-new" value="Create" title="Create admin menu item" />'
+				.'</form>'
+			.'</div>';
+			
+			if($useFrames == "false") {
+				return $return;
+			} else {
+				return parent::getFrame('Admin menu', $return, "", true);
 			}
 		}
 		

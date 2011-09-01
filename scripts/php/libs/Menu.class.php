@@ -15,7 +15,7 @@ require_once("scripts/php/classes/ViewHelper.class.php");
  *  Class View.	     
  *      
  *  @author     Marek SMM
- *  @timestamp  2010-08-06
+ *  @timestamp  2011-08-22
  * 
  */
 class Menu extends BaseTagLib {
@@ -38,6 +38,7 @@ class Menu extends BaseTagLib {
     /* ======================= TAGS ========================================= */
 
     public function showXmlMenu($path) {
+		global $webObject;
         $return = '';
 
         $xml = new SimpleXMLElement(file_get_contents(ViewHelper::resolveViewRoot($path)));
@@ -70,6 +71,9 @@ class Menu extends BaseTagLib {
             }
 
             $name = $attrs['name'];
+			if(isset($attrs['name-' . $webObject->LanguageName])) {
+				$name = $attrs['name-' . $webObject->LanguageName];
+			}
             $url = ViewHelper::resolveUrl($attrs['url']);
             if ($url == '/' . $_REQUEST['WEB_PAGE_PATH']) {
                 $active = true;
