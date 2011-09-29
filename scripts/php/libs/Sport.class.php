@@ -4153,7 +4153,7 @@ class Sport extends BaseTagLib {
     }
 
     public function setTeamUrl($url) {
-        $row = parent::db()->fetchAll('select `id` from `w_sport_team` where `url` = "' . $url . '"'.(self::getSeasonId() != '-1' ? ' and `season` = '.self::getSeasonId() : '').'' . (self::getProjectId() != '-1' ? ' and `project_id` = ' . self::getProjectId() : '') . ';', true, true, true);
+        $row = parent::db()->fetchAll('select `id` from `w_sport_team` where `url` = "' . $url . '"'.(self::getSeasonId() != '-1' ? ' and `season` = '.self::getSeasonId() : '').'' . (self::getProjectId() != '-1' ? ' and `project_id` = ' . self::getProjectId() : '') . ';');
         if (count($row) == 1) {
             self::setTeamId($row[0]['id']);
             return $url;
