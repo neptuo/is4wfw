@@ -252,7 +252,11 @@ class UrlResolver extends BaseTagLib {
             return $return;
         } else {
             //echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
-            return $cprop;
+			if(is_array($cprop)) {
+				return $cprop[0];
+			} else {
+				return $cprop;
+			}
         }
     }
 
