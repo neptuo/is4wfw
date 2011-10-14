@@ -1191,7 +1191,7 @@ class Article extends BaseTagLib {
                             }
                         } else {
                             $ac = $articleContent;
-                            $dbObject->execute("UPDATE `article` SET `line_id` = " . $article['line_id'] . ", `order` = " . $article['order'] . ", `visible`= " . $article['visible'] . " WHERE `id` = " . $article['id'] . ";");
+                            $dbObject->execute("UPDATE `article` SET `line_id` = " . $article['line_id'] . ", `visible`= " . $article['visible'] . " WHERE `id` = " . $article['id'] . ";");
                             $dbObject->execute("UPDATE `article_content` SET `name` = \"" . $ac['name'] . "\", `url` = \"" . $ac['url'] . "\", `keywords` = \"" . $ac['keywords'] . "\", `head` = \"" . $ac['head'] . "\", `content` = \"" . $ac['content'] . "\", `author` = \"" . $ac['author'] . "\", `timestamp` = " . $ac['timestamp'] . ", `datetime` = \"" . $ac['datetime'] . "\", `language_id` = " . $ac['language_id'] . " WHERE `article_id` = " . $ac['article_id'] . " AND `language_id` = " . $ac['language_old_id'] . ";");
                             $_POST['article-id'] = $article['id'];
                             $_POST['language-id'] = $ac['language_id'];
