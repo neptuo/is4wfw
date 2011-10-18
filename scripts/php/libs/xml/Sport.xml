@@ -548,6 +548,10 @@
       <attname>maxId</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>limit</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Výpis kol, sorting má hodnotu DESC nebo ASC. startId je minimalni id kola, které bude vypsáno. maxId je nejvyšší id kola, které bude vypsáno.
     </comment>
