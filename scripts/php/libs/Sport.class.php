@@ -17,7 +17,7 @@ require_once("scripts/php/classes/ResourceBundle.class.php");
  * 	all about sport	     
  *      
  *  @author     Marek SMM
- *  @timestamp  2011-02-21
+ *  @timestamp  2011-10-18
  * 
  */
 class Sport extends BaseTagLib {
@@ -3094,9 +3094,9 @@ class Sport extends BaseTagLib {
         if ($seasonId != '-1') {
             if ($onlyPlayed) {
                 // join pres zapasy pro zobrazeni jen kol s odehranymi zapasy ...
-                $rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `w_sport_round`.`name`, `w_sport_round`.`number` from `w_sport_match` left join `w_sport_round` on `w_sport_match`.`round` = `w_sport_round`.`id` where `w_sport_round`.`project_id` = ' . self::getProjectId() . ' and `w_sport_round`.`season_id` = ' . $seasonId . $teamSql . ' and `w_sport_match`.`notplayed` = 0 and `w_sport_round`.`visible` = 1'.($startRoundId != "" ? ' and `w_sport_round`.`id` >= '.$startRoundId : '').($maxRoundId != "" ? ' and `w_sport_round`.`id` <= '.$maxRoundId : '').' order by `w_sport_round`.`number` ' . $sorting . ($limit != "" ? 'limit ' . $limit : "") . ';');
+                $rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `w_sport_round`.`name`, `w_sport_round`.`number` from `w_sport_match` left join `w_sport_round` on `w_sport_match`.`round` = `w_sport_round`.`id` where `w_sport_round`.`project_id` = ' . self::getProjectId() . ' and `w_sport_round`.`season_id` = ' . $seasonId . $teamSql . ' and `w_sport_match`.`notplayed` = 0 and `w_sport_round`.`visible` = 1'.($startRoundId != "" ? ' and `w_sport_round`.`id` >= '.$startRoundId : '').($maxRoundId != "" ? ' and `w_sport_round`.`id` <= '.$maxRoundId : '').' order by `w_sport_round`.`number` ' . $sorting . ($limit != "" ? ' limit ' . $limit : "") . ';');
             } else {
-                $rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `name`, `number` from `w_sport_round`' . $joinSql . ' where `w_sport_round`.`project_id` = ' . self::getProjectId() . ' and `season_id` = ' . $seasonId . $teamSql . ' and `visible` = 1'.($startRoundId != "" ? ' and `w_sport_round`.`id` >= '.$startRoundId : '').($maxRoundId != "" ? ' and `w_sport_round`.`id` <= '.$maxRoundId : '').' order by `number` ' . $sorting . ';');
+                $rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `name`, `number` from `w_sport_round`' . $joinSql . ' where `w_sport_round`.`project_id` = ' . self::getProjectId() . ' and `season_id` = ' . $seasonId . $teamSql . ' and `visible` = 1'.($startRoundId != "" ? ' and `w_sport_round`.`id` >= '.$startRoundId : '').($maxRoundId != "" ? ' and `w_sport_round`.`id` <= '.$maxRoundId : '').' order by `number` ' . $sorting . ($limit != "" ? ' limit ' . $limit : "") . ';');
             }
             if (count($rounds) > 0) {
                 $templateContent = parent::getTemplateContent($templateId);
