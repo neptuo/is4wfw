@@ -2490,7 +2490,7 @@ class Sport extends BaseTagLib {
                 $round['project_id'] = self::getProjectId();
 
                 //parent::db()->setMockMode(true);
-                $roothnum = parent::db()->fetchAll(parent::query()->get('roundsIdByNumberNotId', array('number' => $round['number'], 'id' => $round['id']), 'sport'));
+                $roothnum = parent::db()->fetchAll(parent::query()->get('roundsIdByNumberNotId', array('number' => $round['number'], 'id' => $round['id'], 'seasonId' => $round['season_id']), 'sport'));
                 if (count($roothnum) > 0) {
                     $return .= parent::getError($rb->get('rounds.numberunique'));
                     $ok = false;
