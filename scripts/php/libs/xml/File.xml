@@ -184,7 +184,7 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
-      <attname></attname>
+      <attname>filesBeforeFolders</attname>
       <attreq>implied</attreq>
     </attribute>
     <comment>
