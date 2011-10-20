@@ -1044,7 +1044,7 @@
      *  @param    dirId     directory id to show
      *
      */                        
-    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $limit = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $recursively = false, $dirDateFormat = false, $orderFilesBy = false, $orderDirsBy = false, $desc = false) {
+    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $limit = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $recursively = false, $dirDateFormat = false, $orderFilesBy = false, $orderDirsBy = false, $desc = false, $filesBeforeFolders = false) {
       global $webObject;
       global $dbObject;
       $return = "";
@@ -1088,40 +1088,11 @@
       .'<div '.(($lightbox == "true") ? 'id="light-gallery-'.$lightId.'"' : "").' class="gallery-cover">'
         .'';
       
-      if($showSubDirs == "true" || $recursively == "true") {
-      	$order = "name";
-      	switch(strtolower($orderDirsBy)) {
-					case "id": $order = "id"; break;
-					case "url": $order = "url"; break;
-					case "timestamp": $order = "timestamp"; break;
-				}
-        $dirs = $dbObject->fetchAll("SELECT `id`, `name`, `url`, `timestamp` FROM `directory` WHERE `parent_id` = ".$dirId." ORDER BY `".$order."`".(($desc == true) ? " DESC" : "").";");
-        
-        //print_r($_REQUEST);
-        
-        $tmpDirId = $_REQUEST['dir-id'];
-        $tmpDirUrl = $_REQUEST['dir-url'];
-        foreach($dirs as $dir) {
-        	if($pageId != false) {
-						$_REQUEST['dir-id'] = $dir['id'];
-						$_REQUEST['dir-url'] = $dir['url'];
-						$url = $webObject->composeUrl($pageId);
-					}
-        
-          $return .= ''
-            .'<div class="gallery-item gallery-dir">'
-              .'<div class="gallery-thumb">'
-              .'</div>'
-              .'<div class="gallery-name">'
-				.((strlen($url) != 0) ? '<a href="'.$url.'">'.$dir['name'].'</a> ' : $dir['name'])
-				.(($dirDateFormat != "") ? date($dirDateFormat, $dir['timestamp']) : "")
-			  .'</div>'
-			  .($recursively == "true" ? self::galleryFromDirectory($method, $pageId, $langId, $dir['id'], false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc) : "")
-            .'</div>';
-        }
-        $_REQUEST['dir-id'] = $tmpDirId;
-        $_REQUEST['dir-url'] = $tmpDirUrl;
-      }
+	  if($filesBeforeFolders != "true") {
+		  if($showSubDirs == "true" || $recursively == "true") {
+			$return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders);
+		  }
+	  }
       
       $size = '';
       if($detailWidth > 0 && $detailHeight > 0) {
@@ -1174,6 +1145,12 @@
             .(($showTitles == "true") ? '<div class="gallery-title">'.$image['title'].'</div>' : '')
           .'</div>';
       }
+	  
+	  if($filesBeforeFolders == "true") {
+		  if($showSubDirs == "true" || $recursively == "true") {
+			$return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders);
+		  }
+	  }
       
       $return .= ''
 				.'<div class="clear"></div>'
@@ -1181,6 +1158,47 @@
       
       return $return;
     }
+	
+	private function galleryShowDirectories($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $limit = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $recursively = false, $dirDateFormat = false, $orderFilesBy = false, $orderDirsBy = false, $desc = false) {
+      global $webObject;
+      global $dbObject;
+      $return = "";
+	  
+		$order = "name";
+      	switch(strtolower($orderDirsBy)) {
+					case "id": $order = "id"; break;
+					case "url": $order = "url"; break;
+					case "timestamp": $order = "timestamp"; break;
+				}
+        $dirs = $dbObject->fetchAll("SELECT `id`, `name`, `url`, `timestamp` FROM `directory` WHERE `parent_id` = ".$dirId." ORDER BY `".$order."`".(($desc == true) ? " DESC" : "").";");
+        
+        //print_r($_REQUEST);
+        
+        $tmpDirId = $_REQUEST['dir-id'];
+        $tmpDirUrl = $_REQUEST['dir-url'];
+        foreach($dirs as $dir) {
+        	if($pageId != false) {
+						$_REQUEST['dir-id'] = $dir['id'];
+						$_REQUEST['dir-url'] = $dir['url'];
+						$url = $webObject->composeUrl($pageId);
+					}
+        
+          $return .= ''
+            .'<div class="gallery-item gallery-dir">'
+              .'<div class="gallery-thumb">'
+              .'</div>'
+              .'<div class="gallery-name">'
+				.((strlen($url) != 0) ? '<a href="'.$url.'">'.$dir['name'].'</a> ' : $dir['name'])
+				.(($dirDateFormat != "") ? date($dirDateFormat, $dir['timestamp']) : "")
+			  .'</div>'
+			  .($recursively == "true" ? self::galleryFromDirectory($method, $pageId, $langId, $dir['id'], false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders) : "")
+            .'</div>';
+        }
+        $_REQUEST['dir-id'] = $tmpDirId;
+        $_REQUEST['dir-url'] = $tmpDirUrl;
+		
+		return $return;
+	}
     
     public function galleryDetail($fileId = false, $showName = false, $showTitle = false) {
       global $dbObject;
