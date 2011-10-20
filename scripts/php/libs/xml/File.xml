@@ -183,6 +183,10 @@
       <attname>desc</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname></attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vrátí všechny obrázky z daného adresáře(přímo v tagu nebo v $_REQUEST['dir-id']). 
       Odkaz na skutečnou velikost fotky je v pageId, pokud není zadána, zobrazí se jen miniatury.
@@ -191,7 +195,8 @@
       Atributy s prefixem light, slouzi pro lightbox, je ovsem nutne lightbox samostny (JS + CSS) prilozit 
 	  ke strance, pro useDirectLink="true", zobrazi u lightbox galerie primy odkaz na soubor.
 	  Atributy "orderFilesBy" a "orderDirsBy" určují řazení, "desc" pokud je true, pak desc, jinak asc.
-	  "recursively" slouží k rekurzivnímu výpisu i všech pod adresářů
+	  "recursively" slouží k rekurzivnímu výpisu i všech pod adresářů.
+	  "filesBeforeFolders" zobrazí nejprve soubory až pak složky z dané složky.
     </comment>
   </tag>
   <tag>
