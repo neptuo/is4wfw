@@ -1091,6 +1091,7 @@
 	  if($filesBeforeFolders != "true") {
 		  if($showSubDirs == "true" || $recursively == "true") {
 			$return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders);
+			$return .= '<div class="clear"></div>';
 		  }
 	  }
       
@@ -1147,6 +1148,7 @@
       }
 	  
 	  if($filesBeforeFolders == "true") {
+		$return .= '<div class="clear"></div>';
 		  if($showSubDirs == "true" || $recursively == "true") {
 			$return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders);
 		  }
