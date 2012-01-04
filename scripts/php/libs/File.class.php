@@ -14,7 +14,7 @@
    *  FileSystem Class.
    *      
    *  @author     Marek SMM
-   *  @timestamp  2011-08-26
+   *  @timestamp  2012-01-04
    * 
    */  
   class File extends BaseTagLib {
@@ -1044,7 +1044,10 @@
      *  @param    dirId     directory id to show
      *
      */                        
-    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $limit = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $recursively = false, $dirDateFormat = false, $orderFilesBy = false, $orderDirsBy = false, $desc = false, $filesBeforeFolders = false) {
+    public function galleryFromDirectory($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, 
+		$showNames = false, $showTitles = false, $limit = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, 
+		$lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $recursively = false, $dirDateFormat = false, $orderFilesBy = false, 
+		$orderDirsBy = false, $desc = false, $filesBeforeFolders = false, $dirPageSize = false, $filePageSize = false) {
       global $webObject;
       global $dbObject;
       $return = "";
@@ -1090,7 +1093,7 @@
       
 	  if($filesBeforeFolders != "true") {
 		  if($showSubDirs == "true" || $recursively == "true") {
-			$return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders);
+			$return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders, $dirPageSize, $filePageSize);
 			$return .= '<div class="clear"></div>';
 		  }
 	  }
@@ -1150,7 +1153,7 @@
 	  if($filesBeforeFolders == "true") {
 		$return .= '<div class="clear"></div>';
 		  if($showSubDirs == "true" || $recursively == "true") {
-			$return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders);
+			$return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders, $dirPageSize, $filePageSize);
 		  }
 	  }
       
@@ -1161,18 +1164,30 @@
       return $return;
     }
 	
-	private function galleryShowDirectories($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, $showNames = false, $showTitles = false, $limit = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, $lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $recursively = false, $dirDateFormat = false, $orderFilesBy = false, $orderDirsBy = false, $desc = false) {
+	private function galleryShowDirectories($method = false, $pageId = false, $langId = false, $dirId = false, $defaultDirId = false, $showSubDirs = false, 
+		$showNames = false, $showTitles = false, $limit = false, $detailWidth = false, $detailHeight = false, $lightbox = false, $lightWidth = false, 
+		$lightHeight = false, $lightTitle = false, $lightId = false, $useDirectLink = false, $recursively = false, $dirDateFormat = false, 
+		$orderFilesBy = false, $orderDirsBy = false, $desc = false, $filesBeforeFolders, $dirPageSize = false, $filePageSize = false) {
       global $webObject;
       global $dbObject;
       $return = "";
 	  
 		$order = "name";
       	switch(strtolower($orderDirsBy)) {
-					case "id": $order = "id"; break;
-					case "url": $order = "url"; break;
-					case "timestamp": $order = "timestamp"; break;
-				}
-        $dirs = $dbObject->fetchAll("SELECT `id`, `name`, `url`, `timestamp` FROM `directory` WHERE `parent_id` = ".$dirId." ORDER BY `".$order."`".(($desc == true) ? " DESC" : "").";");
+			case "id": $order = "id"; break;
+			case "url": $order = "url"; break;
+			case "timestamp": $order = "timestamp"; break;
+		}
+		
+		$sql = "SELECT `id`, `name`, `url`, `timestamp` FROM `directory` WHERE `parent_id` = ".$dirId." ORDER BY `".$order."`".(($desc == true) ? " DESC" : "");
+		if($dirPageSize != '') {
+			$start = self::getDirOffset();
+		
+			$sql .= ' limit ' . $start . ',' . $dirPageSize;
+		}
+		$sql .= ";";
+				
+        $dirs = $dbObject->fetchAll($sql);
         
         //print_r($_REQUEST);
         
@@ -1180,10 +1195,13 @@
         $tmpDirUrl = $_REQUEST['dir-url'];
         foreach($dirs as $dir) {
         	if($pageId != false) {
-						$_REQUEST['dir-id'] = $dir['id'];
-						$_REQUEST['dir-url'] = $dir['url'];
-						$url = $webObject->composeUrl($pageId);
-					}
+				$_REQUEST['dir-id'] = $dir['id'];
+				$_REQUEST['dir-url'] = $dir['url'];
+				$url = $webObject->composeUrl($pageId);
+				if(self::getDirOffset() != 0) {
+					$url .= '?dir-offset=' . self::getDirOffset();
+				}
+			}
         
           $return .= ''
             .'<div class="gallery-item gallery-dir">'
@@ -1193,13 +1211,41 @@
 				.((strlen($url) != 0) ? '<a href="'.$url.'">'.$dir['name'].'</a> ' : $dir['name'])
 				.(($dirDateFormat != "") ? date($dirDateFormat, $dir['timestamp']) : "")
 			  .'</div>'
-			  .($recursively == "true" ? self::galleryFromDirectory($method, $pageId, $langId, $dir['id'], false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders) : "")
+			  .($recursively == "true" ? self::galleryFromDirectory($method, $pageId, $langId, $dir['id'], false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders, $dirPageSize, $filePageSize) : "")
             .'</div>';
         }
         $_REQUEST['dir-id'] = $tmpDirId;
         $_REQUEST['dir-url'] = $tmpDirUrl;
 		
+		if($dirPageSize != '') {
+			$start = self::getDirOffset();
+		
+			$sql = "SELECT count(`id`) as `count` FROM `directory` WHERE `parent_id` = ".$dirId;
+			$result = $dbObject->fetchSingle($sql);
+		
+			$pages = '';
+			for($i = 0; $i < ($result['count'] / $dirPageSize); $i ++) {
+				$offset = $i * $dirPageSize;
+				$pages .= '<a class="'.($start == $offset ? 'current' : '').'" href="?dir-offset='. $offset .'">'. ($i + 1) .'</a> | ';
+			}
+			$pages = substr($pages, 0, strlen($pages) - 3);
+		
+			$return .= ''
+			.'<div class="gallery-paging">'
+				.'Strana: ' . $pages
+			.'</div>';
+		}
+		
 		return $return;
+	}
+	
+	private function getDirOffset() {
+		$start = 0;
+		if(array_key_exists("dir-offset", $_REQUEST)) {
+			$start = $_REQUEST["dir-offset"];
+		}
+		
+		return $start;
 	}
     
     public function galleryDetail($fileId = false, $showName = false, $showTitle = false) {
@@ -1263,21 +1309,31 @@
 		}
     
     public function setDirectoryIdFromUrl($dirUrl) {
-    	global $dbObject;
-    	$dirs = $dbObject->fetchAll('SELECT `id` FROM `directory` WHERE `url` = "'.$dirUrl.'";');
-    	if(count($dirs) > 0) {
-				$_REQUEST['dir-id'] = $dirs[0]['id'];
-				$_REQUEST['dir-url'] = $dirUrl;
-				return $dirUrl;
-			} else {
-				return 'wrong-dir-url';
-			}
+		global $dbObject;
+		$dirs = $dbObject->fetchAll('SELECT `id` FROM `directory` WHERE `url` = "'.$dirUrl.'";');
+		if(count($dirs) > 0) {
+			$_REQUEST['dir-id'] = $dirs[0]['id'];
+			$_REQUEST['dir-url'] = $dirUrl;
+			return $dirUrl;
+		} else {
+			return 'wrong-dir-url';
 		}
+	}
 		
-		public function getDirectoryUrl() {
-			return $_REQUEST['dir-url'];
-		}
+	public function getDirectoryUrl() {
+		return $_REQUEST['dir-url'];
+	}
+	
+	public function setDirectoryName($name) {
+		return $name;
+	}
     
+	public function getDirectoryName() {
+		global $dbObject;
+		$sql = 'select `name` from `directory` where `id` = ' . self::getDirectoryId();
+		$result = $dbObject->fetchSingle($sql);
+		return $result['name'];
+	}
   }
 
 ?>
