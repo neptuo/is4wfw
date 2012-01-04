@@ -4,7 +4,7 @@
   <name>File Lib</name>
   <classname>File</classname>
   <classpath>php.libs</classpath>
-  <version>1.22</version>
+  <version>1.24</version>
   <count>*</count>
   <comment>
     Třída pro správu souborů.
@@ -187,6 +187,14 @@
       <attname>filesBeforeFolders</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>dirPageSize</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>filePageSize</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vrátí všechny obrázky z daného adresáře(přímo v tagu nebo v $_REQUEST['dir-id']). 
       Odkaz na skutečnou velikost fotky je v pageId, pokud není zadána, zobrazí se jen miniatury.
@@ -241,6 +249,14 @@
   	<getfunction>getDirectoryUrl</getfunction>
     <comment>
       Vlastnost aktuálního adresáře, používá pro uchování hodnoty $_REQUEST['dir-id']. Očekává url adresáře
+    </comment>
+  </property>
+  <property>
+  	<propname>dirName</propname>
+  	<setfunction>setDirectoryName</setfunction>
+  	<getfunction>getDirectoryName</getfunction>
+    <comment>
+      Vrátí název aktuálního adresáře
     </comment>
   </property>
 </taglib>
