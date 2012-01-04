@@ -1231,6 +1231,7 @@
 			$pages = substr($pages, 0, strlen($pages) - 3);
 		
 			$return .= ''
+			.'<div class="clear"></div>'
 			.'<div class="gallery-paging">'
 				.'Strana: ' . $pages
 			.'</div>';
