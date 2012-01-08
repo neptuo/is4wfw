@@ -38,4 +38,9 @@
 	<script build="303">CREATE TABLE `system_adminmenu` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`name` TINYTEXT NOT NULL ,`page_id` TINYTEXT NOT NULL ,`icon` TINYTEXT NOT NULL ,`perm` TINYTEXT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci</script>
 	<script build="303">INSERT INTO `group_perms` (`group_id` ,`name` ,`value` ,`type`) VALUES ('1',  'CMS.Settings.AdminMenu',  'true',  'bool');</script>
 	<script build="303">INSERT INTO `group_perms` (`group_id` ,`name` ,`value` ,`type`) VALUES ('1',  'CMS.AdminMenu',  'true',  'bool');</script>
+	<script build="307">CREATE TABLE `inquiry` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`question` TINYTEXT NOT NULL ,`enabled` BOOL NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+	<script build="307">CREATE TABLE `inquiry_answer` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`inquiry_id` INT NOT NULL ,`answer` TINYTEXT NOT NULL ,`count` INT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+	<script build="307">CREATE TABLE `inquiry_vote` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,`inquiry_id` INT NOT NULL ,`answer_id` INT NOT NULL, `timestamp` INT NOT NULL ,`ip_address` TINYTEXT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+	<script build="307">INSERT INTO `group_perms` (`id` ,`group_id` ,`name` ,`value` ,`type`)VALUES (NULL ,  '1',  'CMS.Web.Inquiries',  'true',  'bool';</script>
+	<script build="307">ALTER TABLE  `inquiry` ADD  `allow_multiple` BOOL NOT NULL;</script>
 </autoupdate>

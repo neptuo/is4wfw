@@ -5,20 +5,20 @@
  * 	Build version
  *
  */
-define("BUILD_VERSION", 306);
+define("BUILD_VERSION", 308);
 
 /**
  *
  * 	Web framework version.
  *
  */
-define("WEB_VERSION", "1.9.24." . BUILD_VERSION);
+define("WEB_VERSION", "1.9.25." . BUILD_VERSION);
 
 /**
  *
  * 	Cms framework version.
  *
  */
-define("CMS_VERSION", "5.05");
+define("CMS_VERSION", "5.06");
 
 ?>

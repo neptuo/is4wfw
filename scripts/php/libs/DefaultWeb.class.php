@@ -2210,6 +2210,30 @@ class DefaultWeb extends BaseTagLib {
         return $this->TempLoadedContent[$this->PagesIdIndex - 1]['name'];
     }
 
+    public function setCurrentPageTitle($name) {
+        return $name;
+    }
+
+    public function getCurrentPageTitle() {
+        return $this->TempLoadedContent[$this->PagesIdIndex - 1]['title'];
+    }
+
+    public function setLastPageName($name) {
+        return $name;
+    }
+
+    public function getLastPageName() {
+        return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['name'];
+    }
+
+    public function setLastPageTitle($name) {
+        return $name;
+    }
+
+    public function getLastPageTitle() {
+        return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['title'];
+    }
+
     public function setCurrentTime($time) {
         return $time;
     }

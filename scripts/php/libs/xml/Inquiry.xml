@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib>
+  <name>Inquiry Lib</name>
+  <classname>Inquiry</classname>
+  <classpath>php.libs</classpath>
+  <version>1.01</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro tvorbu anket a dotazníků
+  </comment>
+  <tag>
+    <tagname>list</tagname>
+    <function>getInquiries</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí seznam anket k editaci
+    </comment>
+  </tag>
+  <tag>
+    <tagname>edit</tagname>
+    <function>editInquiry</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí editaci ankety
+    </comment>
+  </tag>
+  <tag>
+    <tagname>listAnswers</tagname>
+    <function>getAnswers</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí seznam odpovědí k editaci
+    </comment>
+  </tag>
+  <tag>
+    <tagname>editAnswer</tagname>
+    <function>editAnswer</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí editaci odpovědí
+    </comment>
+  </tag>
+  <tag>
+    <tagname>setCurrentId</tagname>
+    <function>setCurrentId</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí výběr aktuální ankety
+    </comment>
+  </tag>
+  
+  <tag>
+    <tagname>view</tagname>
+    <function>renderView</function>
+    <attribute>
+      <attname>inquiryId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zobrazí anketu
+    </comment>
+  </tag>
+  
+  <property>
+  	<propname>currentId</propname>
+  	<setfunction>setCurrentInquiryId</setfunction>
+  	<getfunction>getCurrentInquiryId</getfunction>
+    <comment>
+      Vratí hodnotu vybrané ankety
+    </comment>
+  </property>
+</taglib>
+

@@ -9,6 +9,7 @@
     <item name="File manager" name-cs="Správce souborů" url="~/in/files.view" security:requirePerm="CMS.Web.FileManager" />
     <item name="Articles" name-cs="Články" url="~/in/articles.view" security:requirePerm="CMS.Web.Articles" />
     <item name="Guestbooks" name-cs="Knihy návštěv" url="~/in/guestbooks.view" security:requirePerm="CMS.Web.Guestbooks" />
+    <item name="Inquiries" name-cs="Ankety" url="~/in/inquiries.view" security:requirePerm="CMS.Web.Inquiries" />
     <item name="Web forwards" name-cs="Přesměrování" url="~/in/web-forwards.view" security:requirePerm="CMS.Web.WebForwards" />
     <item name="Web projects" name-cs="Webové projekty" url="~/in/web-projects.view" security:requirePerm="CMS.Web.WebProjects" />
 </menu>

@@ -176,6 +176,7 @@ class Article extends BaseTagLib {
                         $flink = $link . '/' . $article['id'];
                     }
                 }
+				parent::request()->set('link', $flink, 'current-article');
                 $_SESSION['current-article']['link'] = $flink;
 
                 $Parser = new CustomTagParser();

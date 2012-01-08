@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.85</version>
+  <version>1.86</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -409,11 +409,35 @@
     </comment>
   </property>
   <property>
+  	<propname>currentPageTitle</propname>
+  	<setfunction>setCurrentPageTitle</setfunction>
+  	<getfunction>getCurrentPageTitle</getfunction>
+    <comment>
+      Vrátí titulek aktuální stránky. V průběhu renderování
+    </comment>
+  </property>
+  <property>
+  	<propname>lastPageName</propname>
+  	<setfunction>setLastPageName</setfunction>
+  	<getfunction>getLastPageName</getfunction>
+    <comment>
+      Vrátí název poslední stránky, která se má renderovat (té, co již neobsahuje web:content)
+    </comment>
+  </property>
+  <property>
+  	<propname>lastPageTitle</propname>
+  	<setfunction>setLastPageTitle</setfunction>
+  	<getfunction>getLastPageTitle</getfunction>
+    <comment>
+      Vrátí titulek poslední stránky, která se má renderovat (té, co již neobsahuje web:content)
+    </comment>
+  </property>
+  <property>
   	<propname>childPage</propname>
   	<setfunction>setChildPage</setfunction>
   	<getfunction>getChildPage</getfunction>
     <comment>
-      Vrátí ID další vykreslovaní stránky. Pokud bude PAGES={1,2,3,4}, a aktuálně se bude vykreslovat stránka ID=3, pak property web:childPage bude mít hodnotu 4.
+      Vrátí ID další vykreslované stránky. Pokud bude PAGES={1,2,3,4}, a aktuálně se bude vykreslovat stránka ID=3, pak property web:childPage bude mít hodnotu 4.
     </comment>
   </property>
   <property>
