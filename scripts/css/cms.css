@@ -1673,10 +1673,14 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu li.menu-item.li-9 a {
-    background: url('/images/icons/arrow_branch.png') no-repeat 4px center;
+    background: url('/images/icons/magnifier.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-10 a {
+    background: url('/images/icons/arrow_branch.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-11 a {
     background: url('/images/icons/building.png') no-repeat 4px center;
 }
 
