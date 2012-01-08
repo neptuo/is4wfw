@@ -20,7 +20,7 @@ require_once("scripts/php/classes/ResourceBundle.class.php");
 class Inquiry extends BaseTagLib {
 
     private $BundleName = 'inquiry';
-    private $BundleLang = 'en';
+    private $BundleLang = 'cs';
 
     public function __construct() {
         global $webObject;
