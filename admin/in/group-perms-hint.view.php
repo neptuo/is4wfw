@@ -2,7 +2,7 @@
     <v:panel security:requireGroup="admins">
         <web:a pageId="~/in/user-groups.view" text="&laquo; Back to user groups" security:requirePerm="CMS.Settings.Groups"/>
         <web:frame title="Group perms">
-            Page.EditDetail, Page.AddNew, Page.ManageFiles, Page.Delete, Page.MoveTree, Page.CopyTree, Page.MoveUpDown, Page.AddLang, Page.Delete, Page.ManageRights, Page.TagLibs
+            Page.EditDetail, Page.AddNew, Page.ManageFiles, Page.Delete, Page.MoveTree, Page.CopyTree, Page.MoveUpDown, Page.AddLang, Page.Delete, Page.ManageRights, Page.TagLibs, Page.Head
             <br />
             CMS.Hint, CMS.HintProperties, CMS.HintPerms
             <br />
