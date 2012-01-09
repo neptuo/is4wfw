@@ -1244,7 +1244,6 @@ class Article extends BaseTagLib {
             $userLangs = array();
             $article = array_merge($article, $articleContent);
             if (!array_key_exists('visible', $article)) {
-                echo '11';
                 $article['visible'] = 2;
                 $article['author'] = parent::getPropertyValue('Article.author', '');
                 $article['language_id'] = parent::getPropertyValue('Article.languageId', '1');
