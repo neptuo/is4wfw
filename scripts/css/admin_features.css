@@ -1,0 +1,54 @@
+.content {
+    margin-bottom: 10px;
+}
+
+.user-group, .user-login {
+    display: none;
+}
+
+.user-info, .logout-form { 
+    float: left;
+}
+
+.user-name {
+    margin: 3px 10px;
+}
+
+.menu, .select-project {
+    float: left;
+}
+
+.select-project {
+    margin-right: 10px;
+}
+
+.menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.menu ul li {
+    float: left;
+}
+
+.menu a {
+    color: Black;
+    text-decoration: none;
+    float: left;
+    display: block;
+    margin-right: 5px;
+    padding: 4px 8px;
+    background: white;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid #cccccc;
+}
+
+.menu a:hover {
+    background: yellow;
+}
+
+.menu .active-item a, .menu .active-parent a {
+    border-width: 1px;
+    border-bottom-color: white;
+}
