@@ -2220,7 +2220,7 @@ class DefaultWeb extends BaseTagLib {
 		if (strlen($page['title']) > 0) {
 			$this->PropertyAttr = '';
 			$this->PropertyUse = 'get';
-			return $this->PageTitle = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['title']);
+			return preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['title']);
 		}
     }
 
@@ -2242,7 +2242,7 @@ class DefaultWeb extends BaseTagLib {
 		if (strlen($page['title']) > 0) {
 			$this->PropertyAttr = '';
 			$this->PropertyUse = 'get';
-			return $this->PageTitle = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['title']);
+			return preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['title']);
 		}
     }
 
