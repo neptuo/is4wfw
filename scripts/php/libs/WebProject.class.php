@@ -107,7 +107,9 @@ class WebProject extends BaseTagLib {
                     . '</form>'
                     . '</div>';
         } else {
-            $return .= '<div class="select-project">' . parent::getWarning('No projects') . '</div>';
+			if ($showMsg != 'false') {
+				$return .= '<div class="select-project">' . parent::getWarning('No projects') . '</div>';
+			}
         }
 
         if ($useFrames == "false") {
