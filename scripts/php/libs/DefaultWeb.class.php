@@ -2215,7 +2215,13 @@ class DefaultWeb extends BaseTagLib {
     }
 
     public function getCurrentPageTitle() {
-        return $this->TempLoadedContent[$this->PagesIdIndex - 1]['title'];
+		// parse title
+		$page = $this->TempLoadedContent[$this->PagesIdIndex - 1];
+		if (strlen($page['title']) > 0) {
+			$this->PropertyAttr = '';
+			$this->PropertyUse = 'get';
+			return $this->PageTitle = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['title']);
+		}
     }
 
     public function setLastPageName($name) {
@@ -2231,7 +2237,13 @@ class DefaultWeb extends BaseTagLib {
     }
 
     public function getLastPageTitle() {
-        return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['title'];
+		// parse title
+		$page = $this->TempLoadedContent[count($this->TempLoadedContent) - 1];
+		if (strlen($page['title']) > 0) {
+			$this->PropertyAttr = '';
+			$this->PropertyUse = 'get';
+			return $this->PageTitle = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['title']);
+		}
     }
 
     public function setCurrentTime($time) {
