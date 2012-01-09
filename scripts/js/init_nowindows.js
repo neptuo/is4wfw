@@ -64,14 +64,16 @@ function init(event) {
 	
 	initClickableGrid();
 	
-	var inputs = document.getElementById('cms-head').getElementsByTagName('input');
+	var inputs = document.getElementsByTagName('input');
 	for(var i = 0; i < inputs.length; i ++) {
 		if(inputs[i].name == 'logout') {
 			AjaxLogoutInput = inputs[i];
 		}
 	}
-	
-	AjaxCountDown.onReachZero = ajaxAutoRedirect;
+
+	if (AjaxCountDown != null) {
+	    AjaxCountDown.onReachZero = ajaxAutoRedirect;
+	}
 	
 	hideLoading();
 	
@@ -554,13 +556,16 @@ function fileNameInit(event) {
 
 function initCountDown(event) {
 	var cdl = document.getElementById('logon-count-down');
-	var value = parseInt(document.getElementById('count-down-counter').innerHTML);
-	cdl.innerHTML = '';
-	if(!value || value < 0) {
-		value = 15;
-	}
-	AjaxCountDown = new CountDown('Login session <br />expires in: ', value * 60, cdl);
-	AjaxCountDown.start();
+    var x = document.getElementById('count-down-counter');
+    if(x != null) {
+	    var value = parseInt(x.innerHTML);
+	    cdl.innerHTML = '';
+	    if(!value || value < 0) {
+		    value = 15;
+	    }
+	    AjaxCountDown = new CountDown('Login session <br />expires in: ', value * 60, cdl);
+	    AjaxCountDown.start();
+    }
 }
 
 function initCountDown2(event) {
@@ -568,44 +573,46 @@ function initCountDown2(event) {
 }
 
 function initRefreshButton(event) {
-	var cdl = document.getElementById('logon-count-down');
-	var refresh = document.createElement('div');
-	refresh.className = 'refresh-session';
-	var form = document.createElement('form');
-	form.action = '';
-	form.name = 'refresh-session';
-	form.method = 'post';
-	var button = document.createElement('input');
-	button.name = 'refresh-session';
-	button.className = 'refresh-session-button';
-	button.value = 'Refresh';
-	button.type = 'submit';
-	form.appendChild(button);
-	refresh.appendChild(form);
-	cdl.parentNode.insertBefore(refresh, cdl);
-	
-	function refreshSessionClicked(event) {
-		
-	}
-	addEvent(button, 'click', refreshSessionClicked, false);
-			
-	var pform = new ProcessForm(form);
-	pform.setStartPageId(5);
-	pform.setResponseTemplate('xml');
-	pform.setUseStartPageId(true);
-	pform.setUpdateLocation(false);
-	pform.onSubmitButton = function() {
-		return true;
-	};
-	pform.beforeSubmit = function(event, form) {
-		AjaxLastLoadedUrl = form.action;
-		showLoading();
-	};
-	
-	pform.onSuccess = function(xmlhttp, event) {
-		initCountDown2(event);
-		hideLoading();
-	};
+    var cdl = document.getElementById('logon-count-down');
+    if (cdl != null) {
+        var refresh = document.createElement('div');
+        refresh.className = 'refresh-session';
+        var form = document.createElement('form');
+        form.action = '';
+        form.name = 'refresh-session';
+        form.method = 'post';
+        var button = document.createElement('input');
+        button.name = 'refresh-session';
+        button.className = 'refresh-session-button';
+        button.value = 'Refresh';
+        button.type = 'submit';
+        form.appendChild(button);
+        refresh.appendChild(form);
+        cdl.parentNode.insertBefore(refresh, cdl);
+
+        function refreshSessionClicked(event) {
+
+        }
+        addEvent(button, 'click', refreshSessionClicked, false);
+
+        var pform = new ProcessForm(form);
+        pform.setStartPageId(5);
+        pform.setResponseTemplate('xml');
+        pform.setUseStartPageId(true);
+        pform.setUpdateLocation(false);
+        pform.onSubmitButton = function () {
+            return true;
+        };
+        pform.beforeSubmit = function (event, form) {
+            AjaxLastLoadedUrl = form.action;
+            showLoading();
+        };
+
+        pform.onSuccess = function (xmlhttp, event) {
+            initCountDown2(event);
+            hideLoading();
+        };
+    }
 }
 
 function initClearCache(event) {
@@ -703,7 +710,7 @@ function initClearCache(event) {
 }
 
 function initWebprojectSelectButton(event) {
-	var forms = document.getElementById('cms-head').getElementsByTagName('form');
+	var forms = document.getElementsByTagName('form');
 	for(var i = 0; i < forms.length; i ++) {
 		if(forms[i].name == 'select-project') {
 			var form = forms[i];
@@ -981,17 +988,23 @@ function initClickableGrid() {
 }
 
 function showLoading() {
-	document.getElementById('loading').style.display = 'block';
-	//$(document).blockUI({ message: '<h1>Loading ...</h1>' });
-	//$.blockUI({ message: '<h1>Loading ...</h1>' });
-	
-	if(AjaxCountDown.getCount() == 0) {
-		ajaxAutoRedirect();
-	}
+    var x = document.getElementById('loading');
+    if (x != null) {
+        x.style.display = 'block';
+        //$(document).blockUI({ message: '<h1>Loading ...</h1>' });
+        //$.blockUI({ message: '<h1>Loading ...</h1>' });
+
+        if (AjaxCountDown.getCount() == 0) {
+            ajaxAutoRedirect();
+        }
+    }
 }
 
 function hideLoading() {
-	document.getElementById('loading').style.display = 'none';
+    var x = document.getElementById('loading');
+    if(x != null) {
+        x.style.display = 'none';
+    }
 	//$.unblockUI({ message: '<h1>Loading ...</h1>' });
 }
 

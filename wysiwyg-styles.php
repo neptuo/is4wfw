@@ -2,8 +2,18 @@
 
 	require_once("scripts/php/includes/settings.inc.php");
 	require_once("scripts/php/includes/database.inc.php");
+	require_once("scripts/php/classes/RequestStorage.class.php");
+	require_once("scripts/php/classes/SessionStorage.class.php");
+	require_once("scripts/php/classes/QueryStorage.class.php");
 	require_once("scripts/php/libs/Database.class.php");
 	require_once("scripts/php/classes/UrlResolver.class.php");
+	
+	global $requestStorage;
+	$requestStorage = new RequestStorage();
+	global $sessionStorage;
+	$sessionStorage = new SessionStorage();
+	global $queryStorage;
+	$queryStorage = new QueryStorage();
 	
 	error_reporting(0);
 	session_start();
