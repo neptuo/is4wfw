@@ -21,7 +21,7 @@
   
   	private $BundleName = 'guestbook';
   	
-  	private $BundleLang = 'en';                      
+  	private $BundleLang = 'cs';
   	
   	private $GuestbookId = 0;
   
