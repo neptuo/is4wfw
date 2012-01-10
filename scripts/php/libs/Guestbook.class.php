@@ -326,7 +326,7 @@
             : '')
             .'<div class="guestbook-timestamp">'
               .'<span class="guestbook-time">'.date("H:i:s", $row['timestamp']).'</span> '
-              .'<span class="guestbook-date">'.date("d:m:Y", $row['timestamp']).'</span>'
+              .'<span class="guestbook-date">'.date("d.m.Y", $row['timestamp']).'</span>'
             .'</div>'
             .'<div class="guestbook-name">'.$row['name'].'</div>'
             .'<div class="guestboo-clear clear"></div>'
