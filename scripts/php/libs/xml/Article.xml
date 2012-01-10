@@ -254,6 +254,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>hideWhenOnlyOne</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>showError</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -264,6 +268,8 @@
     <comment>
       Zobrazí formulář pro nastavení line-id. Argument 'method' (get | post | session) určuje
       metodu jakou se má hodnota předat, defaultně 'post'. 
+	  Pokud je k dispozici pouze jedna řada, automaticky se vybere.
+	  Pokud "hideWhenOnlyOne" je true, pak když má uživatel k dispozici pouze jednu řadu, celý formulář se skryje.
     </comment>
   </tag>
   <tag>

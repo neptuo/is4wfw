@@ -32,7 +32,7 @@ class User extends BaseTagLib {
         }
     }
 
-    public function showUserManagement($attUserId = false) {
+    public function showUserManagement($attUserId = false, $defaultMainGroupId = false) {
         global $dbObject;
         global $loginObject;
         $return = '';
@@ -48,7 +48,7 @@ class User extends BaseTagLib {
             $passwordAgain = $_POST['user-edit-password-again'];
             $enable = ($_POST['user-edit-enable'] == 'on' ? 1 : 0);
             $groups = $_POST['user-edit-groups'];
-            $mainGroup = $_POST['user-edit-main-group'];
+            $mainGroup = $defaultMainGroupId != '' ? $defaultMainGroupId : $_POST['user-edit-main-group'];
 
             $errors = array();
             if (strlen($login) < 4) {
@@ -91,6 +91,7 @@ class User extends BaseTagLib {
                     $maxUid = $dbObject->fetchAll("SELECT MAX(`uid`) AS `muid` FROM `user`;");
                     $uid = $maxUid[0]['muid'] + 1;
                     $dbObject->execute("INSERT INTO `user`(`uid`, `login`, `name`, `surname`, `password`, `enable`, `group_id`) VALUES (" . $uid . ", \"" . $login . "\", \"" . $name . "\", \"" . $surname . "\", \"" . sha1($login . $password) . "\", " . $enable . ", " . $mainGroup . ");");
+					$dbObject->execute('insert into `personal_property`(`user_id`, `name`, `value`, `type`) select '.$uid.', `name`, `value`, `type` from `personal_property` where `user_id` = 0;');
                     foreach ($groups as $group) {
                         $dbObject->execute("INSERT INTO `user_in_group`(`uid`, `gid`) VALUES (" . $uid . ", " . $group . ");");
                     }
@@ -103,7 +104,7 @@ class User extends BaseTagLib {
                 $return .= parent::getFrame($rb->get('management.error.title'), $errorList, "", true);
 
                 $user = array('uid' => "", 'login' => $login, 'name' => $name, 'surname' => $surname);
-                $return .= parent::getFrame($rb->get('management.edit'), self::editForm($user, $groups), '');
+                $return .= parent::getFrame($rb->get('management.edit'), self::editForm($user, $groups, $defaultMainGroupId == ''), '');
             }
         }
 
@@ -118,7 +119,7 @@ class User extends BaseTagLib {
             if (count($permission) > 0) {
                 $user = $dbObject->fetchAll("SELECT `uid`, `login`, `name`,`surname`, `enable`, `group_id` FROM `user` WHERE `uid` = " . $uid . " ORDER BY `uid`;");
                 $groups = $dbObject->fetchAll("SELECT `group`.`gid` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `user_in_group`.`uid` = " . $user[0]['uid'] . ";");
-                $return .= parent::getFrame($rb->get('management.edittitle'), self::editForm($user[0], $groups), '');
+                $return .= parent::getFrame($rb->get('management.edittitle'), self::editForm($user[0], $groups, $defaultMainGroupId == ''), '');
             } else {
                 $return .= parent::getFrame($rb->get('management.edittitle'), parent::getError($rb->get('management.permdenied')), '');
             }
@@ -136,7 +137,7 @@ class User extends BaseTagLib {
         }
 
         if ($_POST['new-user'] == $rb->get('management.new')) {
-            $return .= parent::getFrame($rb->get('management.edittitle'), self::editForm(array(), array()), '');
+            $return .= parent::getFrame($rb->get('management.edittitle'), self::editForm(array('enable' => 1), array(), $defaultMainGroupId == ''), '');
         }
 
         if ($attUserId == false) {
@@ -210,7 +211,7 @@ class User extends BaseTagLib {
         return $return;
     }
 
-    private function editForm($user, $groups) {
+    private function editForm($user, $groups, $showMain) {
         global $dbObject;
         global $loginObject;
         $rb = new ResourceBundle();
@@ -248,56 +249,58 @@ class User extends BaseTagLib {
         }
 
         $return .= ''
-                . '<div class="user-edit-cover">'
-                . '<form name="user-edit-form" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+		. '<div class="user-edit-cover">'
+			. '<form name="user-edit-form" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                 . '<div class="user-edit-prop">'
-                . '<div class="user-edit-login">'
-                . '<label for="user-edit-login">' . $rb->get('reg.username') . ': <span>*</span></label> '
-                . '<input type="text" id="user-edit-login" name="user-edit-login" value="' . $user['login'] . '" />'
-                . '</div>'
-                . '<div class="user-edit-name">'
-                . '<label for="user-edit-name">' . $rb->get('reg.name') . ':</label> '
-                . '<input type="text" id="user-edit-name" name="user-edit-name" value="' . $user['name'] . '" />'
-                . '</div>'
-                . '<div class="user-edit-surname">'
-                . '<label for="user-edit-surname">' . $rb->get('reg.surname') . ':</label> '
-                . '<input type="text" id="user-edit-surname" name="user-edit-surname" value="' . $user['surname'] . '" />'
-                . '</div>'
-                . '<div class="user-edit-password">'
-                . (($generated) ? '<div class="generated-password">' . $rb->get('management.generatedpwd') . ': <strong>' . $user['password'] . '</strong></div>' : '')
-                . '<label for="user-edit-password">' . $rb->get('reg.password1') . ': <span>**</span></label> '
-                . '<input type="password" id="user-edit-password" name="user-edit-password" value="' . $user['password'] . '" />'
-                . '</div>'
-                . '<div class="user-edit-password-again">'
-                . '<label for="user-edit-password-again">' . $rb->get('reg.password2') . ': <span>**</span></label> '
-                . '<input type="password" id="user-edit-password-again" name="user-edit-password-again" value="' . $user['password-again'] . '" />'
-                . '</div>'
-                . '<div class="user-edit-name">'
-                . '<label for="user-edit-main-group">' . $rb->get('management.maingroup') . ':</label> '
-                . '<select id="user-edit-main-group" name="user-edit-main-group">'
-                . $mainGroup
-                . '</select>'
-                . '</div>'
-                . '<div class="user-edit-enable">'
-                . '<label for="user-edit-enable">' . $rb->get('management.enabled') . ':</label> '
-                . '<input type="checkbox" id="user-edit-enable" name="user-edit-enable"' . (($user['enable'] == 0) ? '' : 'checked="checked"') . ' />'
-                . '</div>'
+					. '<div class="user-edit-login">'
+						. '<label for="user-edit-login">' . $rb->get('reg.username') . ': <span>*</span></label> '
+						. '<input type="text" id="user-edit-login" name="user-edit-login" value="' . $user['login'] . '" />'
+					. '</div>'
+					. '<div class="user-edit-name">'
+						. '<label for="user-edit-name">' . $rb->get('reg.name') . ':</label> '
+						. '<input type="text" id="user-edit-name" name="user-edit-name" value="' . $user['name'] . '" />'
+					. '</div>'
+					. '<div class="user-edit-surname">'
+						. '<label for="user-edit-surname">' . $rb->get('reg.surname') . ':</label> '
+						. '<input type="text" id="user-edit-surname" name="user-edit-surname" value="' . $user['surname'] . '" />'
+					. '</div>'
+					. '<div class="user-edit-password">'
+						. (($generated) ? '<div class="generated-password">' . $rb->get('management.generatedpwd') . ': <strong>' . $user['password'] . '</strong></div>' : '')
+						. '<label for="user-edit-password">' . $rb->get('reg.password1') . ': <span>**</span></label> '
+						. '<input type="password" id="user-edit-password" name="user-edit-password" value="' . $user['password'] . '" />'
+					. '</div>'
+					. '<div class="user-edit-password-again">'
+						. '<label for="user-edit-password-again">' . $rb->get('reg.password2') . ': <span>**</span></label> '
+						. '<input type="password" id="user-edit-password-again" name="user-edit-password-again" value="' . $user['password-again'] . '" />'
+					. '</div>'
+					. ($showMain ? ''
+						. '<div class="user-edit-name">'
+							. '<label for="user-edit-main-group">' . $rb->get('management.maingroup') . ':</label> '
+							. '<select id="user-edit-main-group" name="user-edit-main-group">'
+								. $mainGroup
+							. '</select>'
+						. '</div>'
+					: '')
+					. '<div class="user-edit-enable">'
+						. '<label for="user-edit-enable">' . $rb->get('management.enabled') . ':</label> '
+						. '<input type="checkbox" id="user-edit-enable" name="user-edit-enable"' . (($user['enable'] == 0) ? '' : 'checked="checked"') . ' />'
+					. '</div>'
                 . '</div>'
                 . '<div class="user-edit-groups">'
-                . '<label for="user-edit-groups">' . $rb->get('management.groups') . ':</label> '
-                . $groupSelect
-                . '</div>'
-                . '<div class="clear"></div>'
+					. '<label for="user-edit-groups">' . $rb->get('management.groups') . ':</label> '
+					. $groupSelect
+				. '</div>'
+				. '<div class="clear"></div>'
                 . '<div class="user-edit-info">'
-                . '<div class="user-edit-1-dot"><span>*</span> ' . $rb->get('reg.error.usernameshort') . '.</div>'
-                . '<div class="user-edit-2-dot"><span>**</span> ' . $rb->get('reg.error.passwordshort') . '.</div>'
+					. '<div class="user-edit-1-dot"><span>*</span> ' . $rb->get('reg.error.usernameshort') . '.</div>'
+					. '<div class="user-edit-2-dot"><span>**</span> ' . $rb->get('reg.error.passwordshort') . '.</div>'
                 . '</div>'
                 . '<div class="user-edit-submit">'
-                . '<input type="hidden" name="user-edit-uid" value="' . $user['uid'] . '" />'
-                . '<input type="submit" name="user-edit-save" value="' . $rb->get('management.save') . '" title="' . $rb->get('management.savetitle') . '" />'
+					. '<input type="hidden" name="user-edit-uid" value="' . $user['uid'] . '" />'
+					. '<input type="submit" name="user-edit-save" value="' . $rb->get('management.save') . '" title="' . $rb->get('management.savetitle') . '" />'
                 . '</div>'
-                . '</form>'
-                . '</div>';
+			. '</form>'
+		. '</div>';
 
         return $return;
     }

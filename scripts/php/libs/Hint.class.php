@@ -13,7 +13,7 @@
    *  Manual for custom tags	     
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-10-21
+   *  @timestamp  2012-01-10
    * 
    */  
   class Hint extends BaseTagLib {
@@ -51,84 +51,93 @@
     public function showHintForLib($classPath = false, $useFrames = false, $showMsg = false) {
     	global $phpObject;
     	$rb = new ResourceBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
-			$return = '';
-			
-			$cpArray = $phpObject->str_tr($classPath, '.');
-			$xmlPath = SCRIPTS;
-			for($i = 0; $i < count($cpArray); $i ++) {
-				if($i < count($cpArray) - 1) {
-					$xmlPath .= $cpArray[$i].'/';
-				} else {
-					$xmlPath .= 'xml/'.$cpArray[$i].'.xml';
-				}
+		$rb->loadBundle($this->BundleName, $this->BundleLang);
+		$return = '';
+		
+		$cpArray = $phpObject->str_tr($classPath, '.');
+		$xmlPath = SCRIPTS;
+		for($i = 0; $i < count($cpArray); $i ++) {
+			if($i < count($cpArray) - 1) {
+				$xmlPath .= $cpArray[$i].'/';
+			} else {
+				$xmlPath .= 'xml/'.$cpArray[$i].'.xml';
 			}
+		}
 			
-			if(is_file($xmlPath)) {
-        $xml = new SimpleXMLElement(file_get_contents($xmlPath));
+		if(is_file($xmlPath)) {
+			$xml = new SimpleXMLElement(file_get_contents($xmlPath));
+			
+			$links = '<div class="gray-box">';
+			foreach($xml->tag as $tag) {
+				$links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+			}
+			$links .= '</div>';
+			echo strlen($links);
         
-        $return .= ''
-        .'<div class="hint-lib">'
-        	.'<div class="lib-head">'
-						.'<h1>'.$xml->name.' ( '.$xml->classpath.'.'.$xml->classname.' )</h1>'
-	    	    .'<strong class="version">'.$rb->get('lib.version').': '.$xml->version.', '.$rb->get('lib.count-of-instances').': '.$xml->count.'</strong>'
-        	.'</div>'
-        	.'<div class="clear"></div>'
-        	.'<div class="tag-h2">'
-        		.'<h2>'.$rb->get('lib.tags').':</h2>'
-        	.'</div>'
-				.'';
-        
-        foreach($xml->tag as $tag) {
-    	    $attributes = '';
-  	      for($i = 0; $i < count($tag->attribute); $i ++) {
-	        $attributes .= ''
-        	  .'<tr>'
-      	  	  .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
-    	      	.'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
-  	      	.'</tr>';
-	        }
-        	$return .= ''
-        	.'<div class="lib-tag">'
-        		.'<div class="lib-tag-head">'
-        			.'<h3>'.$tag->tagname.'</h3><p>'.$tag->comment.'</p>'
-        			.'<div class="clear"></div>'
-        		.'</div>'
-        		.'<div class="lib-tag-attrs">'
-        			.((strlen($attributes) > 0) ? ''
-        			.'<table>'
-        				.'<tr>'
-	        				.'<th class="att-name">'.$rb->get('lib.attname').'</th>'
-  	      				.'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
-        				.'</tr>'
-        				.$attributes
-          		.'</table>'
-          		: '<p>'.$rb->get('lib.noattrs').'</p>')
-          	.'</div>'
-          .'</div>';
-        }
-        $return .= ''	
-					.'<div class="tag-h2">'
-        		.'<h2>'.$rb->get('lib.properties').':</h2>'
-        	.'</div>'
-				.'';
-        
-        foreach($xml->property as $prop) {
-        	$return .= ''
-        	.'<div class="lib-tag">'
-        		.'<div class="lib-tag-head">'
-        			.'<h3>'.$prop->propname.'</h3><p>'.$prop->comment.'</p>'
-        			.'<div class="clear"></div>'
-        		.'</div>'
-          .'</div>';
-        }
-        $return .= '</div>';
-      } else {
-        $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-        if($showMsg != 'false') {
-					$return .= $str;
+			$return .= ''
+			.'<div class="hint-lib">'
+				.'<div class="lib-head">'
+					.'<h1>'.$xml->name.' ( '.$xml->classpath.'.'.$xml->classname.' )</h1>'
+					.'<strong class="version">'.$rb->get('lib.version').': '.$xml->version.', '.$rb->get('lib.count-of-instances').': '.$xml->count.'</strong>'
+				.'</div>'
+				.'<div class="clear"></div>'
+				.'<div class="tag-h2">'
+					.'<h2>'.$rb->get('lib.tags').':</h2>'
+				.'</div>'
+				.$links;
+			
+			foreach($xml->tag as $tag) {
+				$attributes = '';
+				for($i = 0; $i < count($tag->attribute); $i ++) {
+					$attributes .= ''
+					.'<tr>'
+						.'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
+						.'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
+					.'</tr>';
 				}
-      }
+				
+				$return .= ''
+				.'<div class="lib-tag">'
+					.'<div class="lib-tag-head">'
+						.'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3><p>'.$tag->comment.'</p>'
+						.'<div class="clear"></div>'
+					.'</div>'
+					.'<div class="lib-tag-attrs">'
+						.((strlen($attributes) > 0) ? ''
+							.'<table>'
+								.'<tr>'
+									.'<th class="att-name">'.$rb->get('lib.attname').'</th>'
+								.'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+								.'</tr>'
+								.$attributes
+							.'</table>'
+						: '<p>'.$rb->get('lib.noattrs').'</p>')
+					.'</div>'
+				.'</div>';
+			}
+			$return .= ''	
+						.'<div class="tag-h2">'
+					.'<h2>'.$rb->get('lib.properties').':</h2>'
+				.'</div>'
+					.'';
+			
+			foreach($xml->property as $prop) {
+				$return .= ''
+				.'<div class="lib-tag">'
+					.'<div class="lib-tag-head">'
+						.'<h3>'.$prop->propname.'</h3><p>'.$prop->comment.'</p>'
+						.'<div class="clear"></div>'
+					.'</div>'
+			  .'</div>';
+			}
+			$return .= '</div>';
+			
+		} else {
+			$str = "Xml library definition doesn't exists! [".$xmlPath."]";
+			if($showMsg != 'false') {
+				$return .= $str;
+			}
+		}
 			
     
 			if($useFrames == "false") {

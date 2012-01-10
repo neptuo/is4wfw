@@ -4,7 +4,7 @@
   <name>Custom Form Lib</name>
   <classname>CustomForm</classname>
   <classpath>php.libs</classpath>
-  <version>1.01</version>
+  <version>1.02</version>
   <count>*</count>
   <comment>
     Knihovna pro tvorbu formulářů
@@ -25,6 +25,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>filter</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>sortBy</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -40,6 +44,7 @@
       Zobrazí seznam dat z formuláře "formId", "templateId" je id šablony, "rowId" je id řádku (pak zobrazuje pouze jeden řádek),
       "sortBy" jméno sloupce podle kterého řadit, "desc" pokud je 'true', pak se řadí desc, jinak asc. "noDataMessage" je zpráva,
       která se zobrazí pokud neodpovídají žádné řádky.
+	  "filter" je komplexní atribut pro filtrování hodnot podle hodnot ve sloupcích, formát: filter="poradi:1,povoleny:ano".
     </comment>
   </tag>
   <tag>
@@ -144,6 +149,10 @@
     </attribute>
     <attribute>
       <attname>data</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>cssClass</attname>
       <attreq>implied</attreq>
     </attribute>
     <comment>

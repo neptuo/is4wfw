@@ -15,7 +15,7 @@ require_once("scripts/php/classes/CustomTagParser.class.php");
  *  Class CustomForm.
  *      
  *  @author     Marek SMM
- *  @timestamp  2011-01-10
+ *  @timestamp  2012-01-10
  * 
  */
 class CustomForm extends BaseTagLib {
@@ -53,7 +53,7 @@ class CustomForm extends BaseTagLib {
 
     /* ===================== LIST =========================================== */
 
-    public function listRows($formId, $templateId, $rowId = false, $sortBy = false, $desc = false, $noDataMessage = false) {
+    public function listRows($formId, $templateId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $noDataMessage = false) {
         global $webObject;
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -69,6 +69,8 @@ class CustomForm extends BaseTagLib {
         }
 
         if (self::listFindFieldsInTemplate($formId, $templateContent)) {
+			$rules = self::listParseFilter($rules, $filter);
+		
             $sql = 'select ';
             $fields = '';
             foreach ($this->ViewFieldsFound as $fi) {
@@ -82,10 +84,18 @@ class CustomForm extends BaseTagLib {
             if ($rules != '') {
                 $sql .= ' where ' . $rules;
             }
-
-            $sortBy = self::listChooseSortBy($sortBy);
-            $sql .= ' order by `' . $sortBy . '`';
-            $sql .= ( $desc == 'true') ? ' desc' : ' asc';
+			
+			$sortByParsed = explode(",", $sortBy);
+			foreach($sortByParsed as $sBy) {
+				$sBy = self::listChooseSortBy($sBy);
+				if(strrpos($sql, 'order by') == '') {
+					$sql .= ' order by ';
+				} else {
+					$sql .= ', ';
+				}
+				$sql .= '`' . $sBy . '`';
+				$sql .= ( $desc == 'true') ? ' desc' : ' asc';
+			}
             $sql .= ';';
 
             $data = parent::db()->fetchAll($sql);
@@ -112,8 +122,27 @@ class CustomForm extends BaseTagLib {
 
         return $return;
     }
+	
+	private function listParseFilter($rules, $filter) {
+		$filterParsed = explode(',', $filter);
+		foreach($filterParsed as $item) {
+			$f = explode(':', $item);
+			if(count($f) == 2) {
+				$rules = self::listAddToRules($rules, $f[0], $f[1]);
+			}
+		}
+		return $rules;
+	}
 
-    private function listAddToRules($rules, $key, $value, $type) {
+    private function listAddToRules($rules, $key, $value, $type = null) {
+		if($type == null) {
+			if(is_numeric($value)) {
+				$type = 'number';
+			} else {
+				$type = 'string';
+			}
+		}
+	
         switch ($type) {
             case 'string': $value = '"' . $value . '"';
             case 'number': $value = $value;
@@ -121,7 +150,7 @@ class CustomForm extends BaseTagLib {
         if (strlen($rules) == 0) {
             $rules .= '`' . $key . '` = ' . $value;
         } else {
-            $rules .= ', `' . $key . '` = ' . $value;
+            $rules .= ' and `' . $key . '` = ' . $value;
         }
         return $rules;
     }
@@ -167,6 +196,10 @@ class CustomForm extends BaseTagLib {
         }
         return 'id';
     }
+	
+	private function parseFilterValue($filter) {
+		
+	}
 
     /* ===================== FORM =========================================== */
 
@@ -330,6 +363,7 @@ class CustomForm extends BaseTagLib {
             $fields = self::parseFieldsFromString($formInfo[0]['fields']);
             //print_r($fields);
             //print_r($this->FormFieldsFound);
+			//echo count($this->FormFieldsFound) == count($fields);
             if (count($this->FormFieldsFound) == count($fields)) {
                 $ok = true;
                 for ($i = 0; $i < count($fields); $i++) {
@@ -418,7 +452,7 @@ class CustomForm extends BaseTagLib {
     /* ===================== FIELD ========================================== */
 
     // pro date -> formatovac!!!
-    public function field($name, $viewType = false, $type = false, $required = false, $validation = false, $elementId = false, $transformation = false, $default = false, $errorMessage = false, $requiredValue = false, $transient = false, $data = false) {
+    public function field($name, $viewType = false, $type = false, $required = false, $validation = false, $elementId = false, $transformation = false, $default = false, $errorMessage = false, $requiredValue = false, $transient = false, $data = false, $cssClass = false) {
         global $webObject;
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -442,13 +476,13 @@ class CustomForm extends BaseTagLib {
             if ($viewType == '' || $viewType == 'edit') {
                 switch ($type) {
                     case 'string':
-                        $return .= '<input type="text" name="' . $fname . '" id="' . $id . '" value="' . $value . '" /> ';
+                        $return .= '<input type="text" name="' . $fname . '" id="' . $id . '" value="' . $value . '" class="'.$cssClass.'" /> ';
                         if ($validation != '') {
                             // parse validation on client side
                         }
                         break;
                     case 'dropdown':
-                        $return .= '<select name="' . $fname . '" id="' . $id . '"> ';
+                        $return .= '<select name="' . $fname . '" id="' . $id . '" class="'.$cssClass.'"> ';
                         $items = split(',', $data);
                         foreach ($items as $item) {
                             $return .= '<option value="' . $item . '"' . (($default == $item) ? ' selected="selected"' : '') . '>' . $item . '</option>';
@@ -459,14 +493,14 @@ class CustomForm extends BaseTagLib {
                         }
                         break;
                     case 'longstring':
-                        $return .= '<textarea name="' . $fname . '" id="' . $id . '">' . $value . '</textarea> ';
+                        $return .= '<textarea name="' . $fname . '" id="' . $id . '" class="'.$cssClass.'">' . $value . '</textarea> ';
                         if ($validation != '') {
                             // parse validation on client side
                         }
                         break;
                     case 'number':
                         $return .= ''
-                                . '<input type="text" name="' . $fname . '" id="' . $id . '" value="' . $value . '" /> ';
+                                . '<input type="text" name="' . $fname . '" id="' . $id . '" value="' . $value . '" class="'.$cssClass.'" /> ';
                         //.self::fieldScripts('mask')
                         //.'<script type="text/javascript"> $("#'.$id.'").mask("", {placeholder:" "});</script>';
                         if ($validation != '') {
@@ -479,7 +513,7 @@ class CustomForm extends BaseTagLib {
                         }
                         $return .= ''
                                 //.'<span id="'.$id.'" class="like-input"></span>'
-                                . '<input type="text" name="' . $fname . '" id="' . $id . '" value="' . $value . '" /> '
+                                . '<input type="text" name="' . $fname . '" id="' . $id . '" value="' . $value . '" class="'.$cssClass.'" /> '
                                 //.self::fieldScripts('date')
                                 //.self::fieldScripts('mask')
                                 //.'<script type="text/javascript"> $("#'.$id.'").mask("99.99.9999", {placeholder:" "});</script>';
@@ -512,7 +546,7 @@ class CustomForm extends BaseTagLib {
                     $return .= '<span class="error">' . parent::request()->get($fname . '_e') . '</span>';
                 }
             } elseif ($viewType == 'value') {
-                $return .= '<span id="' . $id . '">' . $value . '</span>';
+                $return .= '<span id="' . $id . '" class="'.$cssClass.'">' . $value . '</span>';
             }
         } elseif ($this->FormPhase == 3) {
             $error = false;
@@ -666,10 +700,10 @@ class CustomForm extends BaseTagLib {
                     break;
                 case "delete":
                     $return .= ''
-                            . '<form name="cf-delete-row" method="post" action="">'
-                            . '<input type="hidden" name="cf-delete-row-id" value="' . $this->ViewDataRow['id'] . '" />'
-                            . '<input type="submit" name="cf-delete-row-button" value="' . $value . '" />'
-                            . '</form>';
+					. '<form name="cf-delete-row" method="post" action="">'
+						. '<input type="hidden" name="cf-delete-row-id" value="' . $this->ViewDataRow['id'] . '" />'
+						. '<input type="submit" name="cf-delete-row-button" value="' . $value . '" class="confirm" />'
+					. '</form>';
                     break;
             }
         }
@@ -849,7 +883,7 @@ class CustomForm extends BaseTagLib {
             if (self::creatorValidate2()) {
                 self::creatorSaveData2();
                 $http = $_SERVER['SERVER_PROTOCOL'];
-                $url = substr($http, 0, stripos($http, '/')) . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REDIRECT_URL'];
+                $url = substr($http, 0, stripos($http, '/')) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REDIRECT_URL'];
                 header('Location: ' . $url);
                 exit;
                 return 0;
