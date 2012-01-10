@@ -1253,7 +1253,7 @@ class DefaultWeb extends BaseTagLib {
                 return $return;
             }
         } else {
-            echo "<h4 class=\"error\">This tag isn't registered! [" . $object[0] . "]</h4>";
+            echo parent::getError('This tag isn\'t registered! [' . $object[0] . '] ['.$object[1].']');
             return "";
         }
     }
@@ -1279,7 +1279,7 @@ class DefaultWeb extends BaseTagLib {
             return $return;
         } else {
             //echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
-            return $cprop;
+            return $cprop[0];
         }
     }
 

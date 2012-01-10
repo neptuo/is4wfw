@@ -8,6 +8,7 @@ body {
 }
 
 .header .top {
+	height: 29px;
     background: #fcda9d;
     border-bottom: 1px solid orange;
 }

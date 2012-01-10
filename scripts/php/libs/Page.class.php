@@ -18,7 +18,7 @@ require_once("System.class.php");
  *  Class updating web pages.     
  *      
  *  @author     Marek SMM
- *  @timestamp  2011-02-21
+ *  @timestamp  2012-01-10
  * 
  */
 class Page extends BaseTagLib {
@@ -628,156 +628,156 @@ class Page extends BaseTagLib {
                     $editAreaTLEndRows = parent::system()->getPropertyValue('Page.editAreaTLEndRows');
 
                     $returnTmp .= ''
-                            . '</div>'
-                            . ((self::getGroupPermCached('Page.ManageRights')) ? ''
-                                    . '<div class="edit edit-rights">'
-                                    . (($show['read']) ? ''
-                                            . '<div class="edit edit-right-read">'
-                                            . '<label for="right-edit-groups-r">' . $rb->get('page.field.rreadlabel') . ':</label>'
-                                            . $groupSelectR
-                                            . '</div>' : '')
-                                    . (($show['write']) ? ''
-                                            . '<div class="edit edit-right-write">'
-                                            . '<label for="right-edit-groups-w">' . $rb->get('page.field.rwritelabel') . ':</label>'
-                                            . $groupSelectW
-                                            . '</div>' : '')
-                                    . (($show['delete']) ? ''
-                                            . '<div class="edit edit-right-delete">'
-                                            . '<label for="right-edit-groups-d">' . $rb->get('page.field.rdeletelabel') . ':</label>'
-                                            . $groupSelectD
-                                            . '</div>' : '')
-                                    . (($show['addchild']) ? ''
-                                            . '<div class="edit edit-right-addchild">'
-                                            . '<label for="right-edit-groups-a">' . $rb->get('page.field.raddchildlabel') . ':</label>'
-                                            . $groupSelectA
-                                            . '</div>' : '')
-                                    . '<div class="clear"></div>'
-                                    . '</div>'
-                                    . '<div class="clear"></div>' : '')
-                            . '</div>'
-                            . '<div class="clear"></div>';
+					. '</div>'
+					. ((self::getGroupPermCached('Page.ManageRights')) ? ''
+							. '<div class="edit edit-rights">'
+							. (($show['read']) ? ''
+									. '<div class="edit edit-right-read">'
+									. '<label for="right-edit-groups-r">' . $rb->get('page.field.rreadlabel') . ':</label>'
+									. $groupSelectR
+									. '</div>' : '')
+							. (($show['write']) ? ''
+									. '<div class="edit edit-right-write">'
+									. '<label for="right-edit-groups-w">' . $rb->get('page.field.rwritelabel') . ':</label>'
+									. $groupSelectW
+									. '</div>' : '')
+							. (($show['delete']) ? ''
+									. '<div class="edit edit-right-delete">'
+									. '<label for="right-edit-groups-d">' . $rb->get('page.field.rdeletelabel') . ':</label>'
+									. $groupSelectD
+									. '</div>' : '')
+							. (($show['addchild']) ? ''
+									. '<div class="edit edit-right-addchild">'
+									. '<label for="right-edit-groups-a">' . $rb->get('page.field.raddchildlabel') . ':</label>'
+									. $groupSelectA
+									. '</div>' : '')
+							. '<div class="clear"></div>'
+							. '</div>'
+							. '<div class="clear"></div>' : '')
+					. '</div>'
+					. '<div class="clear"></div>';
 
                     if ($propertyEditors == 'edit_area') {
                         $returnTmp .= ''
-                                . '<div id="editors" class="editors edit-area-editors">'
-                                . '<div id="editors-tab" class="editors-tab"></div>'
-                                . ((self::getGroupPermCached('Page.TagLibs')) ? ''
-                                        . '<div id="cover-page-edit-tag-lib-start">'
-                                        . '<label for="page-edit-tag-lib-start">' . $rb->get('page.field.tlstartlabel') . ':</label>'
-                                        . '<textarea id="page-edit-tag-lib-start" class="edit-area html" name="edit-tl-start" rows="' . ($editAreaTLStartRows > 0 ? $editAreaTLStartRows : 20) . '">' . $sql_return[0]['tag_lib_start'] . '</textarea>'
-                                        . '</div>'
-                                        . '<div id="cover-page-edit-tag-lib-end">'
-                                        . '<label for="page-edit-tag-lib-end">' . $rb->get('page.field.tlendlabel') . ':</label>'
-                                        . '<textarea id="page-edit-tag-lib-end" class="edit-area html" name="edit-tl-end" rows="' . ($editAreaTLEndRows > 0 ? $editAreaTLEndRows : 20) . '">' . $sql_return[0]['tag_lib_end'] . '</textarea>'
-                                        . '</div>' : '')
-								. ((self::getGroupPermCached('Page.Head')) ? ''
-									. '<div id="cover-page-edit-head">'
+						. '<div id="editors" class="editors edit-area-editors">'
+							. '<div id="editors-tab" class="editors-tab"></div>'
+							. ((self::getGroupPermCached('Page.TagLibs')) ? ''
+								. '<div id="cover-page-edit-tag-lib-start">'
+									. '<label for="page-edit-tag-lib-start">' . $rb->get('page.field.tlstartlabel') . ':</label>'
+									. '<textarea id="page-edit-tag-lib-start" class="edit-area html" name="edit-tl-start" rows="' . ($editAreaTLStartRows > 0 ? $editAreaTLStartRows : 20) . '">' . $sql_return[0]['tag_lib_start'] . '</textarea>'
+								. '</div>'
+								. '<div id="cover-page-edit-tag-lib-end">'
+									. '<label for="page-edit-tag-lib-end">' . $rb->get('page.field.tlendlabel') . ':</label>'
+									. '<textarea id="page-edit-tag-lib-end" class="edit-area html" name="edit-tl-end" rows="' . ($editAreaTLEndRows > 0 ? $editAreaTLEndRows : 20) . '">' . $sql_return[0]['tag_lib_end'] . '</textarea>'
+								. '</div>' : '')
+							. ((self::getGroupPermCached('Page.Head')) ? ''
+								. '<div id="cover-page-edit-head">'
 									. '<label for="page-edit-head">' . $rb->get('page.field.headlabel') . ':</label>'
 									. '<textarea id="page-edit-head" class="edit-area html" name="edit-head" rows="' . ($editAreaHeadRows > 0 ? $editAreaHeadRows : 20) . '">' . $sql_return[0]['head'] . '</textarea>'
-									. '</div>' : '')
-                                . '<div id="cover-page-edit-content">'
+								. '</div>' : '')
+							. '<div id="cover-page-edit-content">'
                                 . '<label for="page-edit-content">' . $rb->get('page.field.contentlabel') . ':</label>'
-                                . '<textarea id="page-edit-content" class="edit-area html" name="edit-content" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . $sql_return[0]['content'] . '</textarea>'
-                                . '</div>'
-                                . '</div>';
+								. '<textarea id="page-edit-content" class="edit-area html" name="edit-content" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . $sql_return[0]['content'] . '</textarea>'
+							. '</div>'
+						. '</div>';
                     } elseif ($propertyEditors == 'tiny') {
                         $returnTmp .= ''
-                                . ((self::getGroupPermCached('Page.TagLibs')) ? ''
-									. '<div class="edit edit-tag-lib">'
-									. '<div class="edit edit-tl-start">'
+						. ((self::getGroupPermCached('Page.TagLibs')) ? ''
+							. '<div class="edit edit-tag-lib">'
+								. '<div class="edit edit-tl-start">'
 									. '<label for="edit-tl-start">' . $rb->get('page.field.tlstartlabel') . ':</label>'
 									. '<div class="editor-cover">'
-									. '<div class="textarea-cover">'
-									. '<textarea name="edit-tl-start" class="editor-textarea editor-closed" wrap="off" rows="' . ($editAreaTLStartRows > 0 ? $editAreaTLStartRows : 20) . '">' . $sql_return[0]['tag_lib_start'] . '</textarea>'
+										. '<div class="textarea-cover">'
+											. '<textarea name="edit-tl-start" class="editor-textarea editor-closed" wrap="off" rows="' . ($editAreaTLStartRows > 0 ? $editAreaTLStartRows : 20) . '">' . $sql_return[0]['tag_lib_start'] . '</textarea>'
+										. '</div>'
+										. '<div class="clear"></div>'
 									. '</div>'
-									. '<div class="clear"></div>'
-									. '</div>'
-									. '</div>'
-									. '<div class="edit edit-tl-end">'
+								. '</div>'
+								. '<div class="edit edit-tl-end">'
 									. '<label for="edit-tl-end">' . $rb->get('page.field.tlendlabel') . ':</label>'
 									. '<div class="editor-cover">'
-									. '<div class="textarea-cover">'
-									. '<textarea name="edit-tl-end" class="editor-textarea editor-closed" wrap="off" rows="' . ($editAreaTLEndRows > 0 ? $editAreaTLEndRows : 20) . '">' . $sql_return[0]['tag_lib_end'] . '</textarea>'
+										. '<div class="textarea-cover">'
+											. '<textarea name="edit-tl-end" class="editor-textarea editor-closed" wrap="off" rows="' . ($editAreaTLEndRows > 0 ? $editAreaTLEndRows : 20) . '">' . $sql_return[0]['tag_lib_end'] . '</textarea>'
+										. '</div>'
+										. '<div class="clear"></div>'
 									. '</div>'
-									. '<div class="clear"></div>'
-									. '</div>'
-									. '</div>'
-									. '</div>' : '')
-								. ((self::getGroupPermCached('Page.Head')) ? ''
-									. '<div class="edit edit-content">'
-									. '<div class="edit edit-head">'
+								. '</div>'
+							. '</div>' : '')
+						. '<div class="edit edit-content">'
+							. ((self::getGroupPermCached('Page.Head')) ? ''
+								. '<div class="edit edit-head">'
 									. '<label for="edit-head">' . $rb->get('page.field.headlabel') . ':</label>'
 									. '<div class="editor-cover">'
-									. '<div class="textarea-cover">'
-									. '<textarea name="edit-head" class="editor-textarea editor-closed" wrap="off" rows="' . ($editAreaHeadRows > 0 ? $editAreaHeadRows : 20) . '">' . $sql_return[0]['head'] . '</textarea>'
+										. '<div class="textarea-cover">'
+											. '<textarea name="edit-head" class="editor-textarea editor-closed" wrap="off" rows="' . ($editAreaHeadRows > 0 ? $editAreaHeadRows : 20) . '">' . $sql_return[0]['head'] . '</textarea>'
+										. '</div>'
+										. '<div class="clear"></div>'
+									. '</div>'
+								. '</div>' : '')
+							. '<div class="edit edit-content">'
+								. '<label for="page-content">' . $rb->get('page.field.contentlabel') . ':</label>'
+								. '<div class="editor-cover">'
+									. '<div class="tiny-cover">'
+										. '<textarea name="edit-content" class="" id="page-content" wrap="off" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . str_replace('~', '&#126', $sql_return[0]['content']) . '</textarea>'
 									. '</div>'
 									. '<div class="clear"></div>'
-									. '</div>'
-									. '</div>' : '')
-                                . '<div class="edit edit-content">'
-                                . '<label for="page-content">' . $rb->get('page.field.contentlabel') . ':</label>'
-                                . '<div class="editor-cover">'
-                                . '<div class="tiny-cover">'
-                                . '<textarea name="edit-content" class="" id="page-content" wrap="off" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . str_replace('~', '&#126', $sql_return[0]['content']) . '</textarea>'
-                                . '</div>'
-                                . '<div class="clear"></div>'
-                                . '</div>'
-                                . '</div>'
-                                . '</div>'
-                                . '<script type="text/javascript">'
-                                . 'initTiny("page-content");'
-                                . 'tinyMCE.execCommand("mceAddControl", true, "page-content");'
-                                . '</script>';
+								. '</div>'
+							. '</div>'
+						. '</div>'
+						. '<script type="text/javascript">'
+						. 'initTiny("page-content");'
+						. 'tinyMCE.execCommand("mceAddControl", true, "page-content");'
+						. '</script>';
                     } else {
                         $returnTmp .= ''
-                                . ((self::getGroupPermCached('Page.TagLibs')) ? ''
-									. '<div class="edit edit-tag-lib">'
-									. '<div class="edit edit-tl-start">'
+						. ((self::getGroupPermCached('Page.TagLibs')) ? ''
+							. '<div class="edit edit-tag-lib">'
+								. '<div class="edit edit-tl-start">'
 									. '<label for="edit-tl-start">' . $rb->get('page.field.tlstartlabel') . ':</label>'
 									. '<div class="editor-cover">'
-									. '<div class="textarea-cover">'
-									. '<textarea name="edit-tl-start" class="editor-textarea editor-closed" wrap="off" rows="4">' . $sql_return[0]['tag_lib_start'] . '</textarea>'
+										. '<div class="textarea-cover">'
+											. '<textarea name="edit-tl-start" class="editor-textarea editor-closed" wrap="off" rows="4">' . $sql_return[0]['tag_lib_start'] . '</textarea>'
+										. '</div>'
+										. '<div class="clear"></div>'
 									. '</div>'
-									. '<div class="clear"></div>'
-									. '</div>'
-									. '</div>'
-									. '<div class="edit edit-tl-end">'
+								. '</div>'
+								. '<div class="edit edit-tl-end">'
 									. '<label for="edit-tl-end">' . $rb->get('page.field.tlendlabel') . ':</label>'
 									. '<div class="editor-cover">'
-									. '<div class="textarea-cover">'
-									. '<textarea name="edit-tl-end" class="editor-textarea editor-closed" wrap="off" rows="4">' . $sql_return[0]['tag_lib_end'] . '</textarea>'
+										. '<div class="textarea-cover">'
+											. '<textarea name="edit-tl-end" class="editor-textarea editor-closed" wrap="off" rows="4">' . $sql_return[0]['tag_lib_end'] . '</textarea>'
+										. '</div>'
+										. '<div class="clear"></div>'
 									. '</div>'
-									. '<div class="clear"></div>'
-									. '</div>'
-									. '</div>'
-									. '</div>' : '')
-								. ((self::getGroupPermCached('Page.Head')) ? ''
-									. '<div class="edit edit-content">'
-									. '<div class="edit edit-head">'
+								. '</div>'
+							. '</div>' : '')
+						. '<div class="edit edit-content">'
+						. ((self::getGroupPermCached('Page.Head')) ? ''
+								. '<div class="edit edit-head">'
 									. '<label for="edit-head">' . $rb->get('page.field.headlabel') . ':</label>'
 									. '<div class="editor-cover">'
+										. '<div class="textarea-cover">'
+											. '<textarea name="edit-head" class="editor-textarea editor-closed" wrap="off" rows="4">' . $sql_return[0]['head'] . '</textarea>'
+										. '</div>'
+										. '<div class="clear"></div>'
+									. '</div>'
+								. '</div>' : '')
+							. '<div class="edit edit-content">'
+                                . '<label for="edit-content">' . $rb->get('page.field.contentlabel') . ':</label>'
+								. '<div class="editor-cover">'
 									. '<div class="textarea-cover">'
-									. '<textarea name="edit-head" class="editor-textarea editor-closed" wrap="off" rows="4">' . $sql_return[0]['head'] . '</textarea>'
+										. '<textarea name="edit-content" class="editor-textarea editor-tiny" wrap="off" rows="15">' . $sql_return[0]['content'] . '</textarea>'
 									. '</div>'
 									. '<div class="clear"></div>'
-									. '</div>'
-									. '</div>' : '')
-                                . '<div class="edit edit-content">'
-                                . '<label for="edit-content">' . $rb->get('page.field.contentlabel') . ':</label>'
-                                . '<div class="editor-cover">'
-                                . '<div class="textarea-cover">'
-                                . '<textarea name="edit-content" class="editor-textarea editor-tiny" wrap="off" rows="15">' . $sql_return[0]['content'] . '</textarea>'
-                                . '</div>'
-                                . '<div class="clear"></div>'
-                                . '</div>'
-                                . '</div>'
-                                . '</div>';
+								. '</div>'
+							. '</div>'
+						. '</div>';
                     }
 
                     $returnTmp .= ''
-                            . '<div class="edit edit-submit">'
-                            . '<input type="hidden" name="parent-id" value="' . $parentId . '" />'
-                            . '<input type="hidden" name="page-id" value="' . $pageId . '" />';
+					. '<div class="edit edit-submit">'
+						. '<input type="hidden" name="parent-id" value="' . $parentId . '" />'
+						. '<input type="hidden" name="page-id" value="' . $pageId . '" />';
 
                     if ($type != "add-new-page" && $type != "page-add-lang-ver") {
                         $returnTmp .= '<input type="hidden" name="language" value="' . $langId . '" />';
@@ -787,8 +787,8 @@ class Page extends BaseTagLib {
                             . '<input type="submit" name="edit-save" value="' . $rb->get('page.action.save') . '" /> '
                             . '<input type="submit" name="edit-save" value="' . $rb->get('page.action.saveandclose') . '" /> '
                             . '<input type="submit" name="edit-close" value="' . $rb->get('page.action.close') . '" /> '
-                            . '</div>'
-                            . ' </form>';
+						. '</div>'
+					. ' </form>';
                 } else {
                     $returnTmp .= '<h4 class="warning">' . $rb->get('page.warning.nopage') . '</h4>';
                 }
@@ -1456,7 +1456,7 @@ class Page extends BaseTagLib {
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
-                                    . '<input type="hidden" name="page-edit" value="' . $rb->get('pagelist.field.edit') . '" /> '
+                                    . '<input type="hidden" name="page-edit" value="' . $rb->get('page.action.edit') . '" /> '
                                     . '<input type="image" title="' . $rb->get('pagelist.field.edit') . '" src="' . WEB_ROOT . 'images/page_edi.png" name="page-edit" value="' . $rb->get('page.action.edit') . '" /> '
                                     . '</form>' : '')
                             . ((self::getGroupPermCached('Page.AddNew')) ? ''

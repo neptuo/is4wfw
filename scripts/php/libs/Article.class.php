@@ -1028,7 +1028,7 @@ class Article extends BaseTagLib {
      *  @return form for selecting line id
      *
      */
-    public function setLine($method = false, $showError = false, $useFrames = false) {
+    public function setLine($method = false, $hideWhenOnlyOne = false, $showError = false, $useFrames = false) {
         global $dbObject;
         global $loginObject;
         $return = '';
@@ -1059,6 +1059,10 @@ class Article extends BaseTagLib {
 
         $lines = $dbObject->fetchAll('SELECT distinct `article_line`.`id`, `article_line`.`name` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `id`;');
         if (count($lines) > 0) {
+			if(count($lines) == 1) {
+				$_SESSION['article-line-id'] = $lines[0]['id'];
+			}
+		
             $return .= ''
                     . '<div class="gray-box">'
                     . '<form name="article-select-line" method="' . (($method == "get") ? 'get' : 'post') . '" action="' . $_SERVER['REDIRECT_URL'] . '">'
@@ -1077,6 +1081,10 @@ class Article extends BaseTagLib {
                 $return .= '<h4 class="error">' . $rb->get('lines.nolines') . '</h4>';
             }
         }
+		
+		if(count($lines) == 1 && $hideWhenOnlyOne == 'true') {
+			return;
+		}
 
         if ($useFrames != "false") {
             return parent::getFrame($rb->get('lines.selecttitle'), $return, "", true);

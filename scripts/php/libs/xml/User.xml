@@ -4,7 +4,7 @@
   <name>User management lib</name>
   <classname>User</classname>
   <classpath>php.libs</classpath>
-  <version>1.15</version>
+  <version>1.16</version>
   <count>*</count>
   <comment>
     Třída pro správu uživatelských účtů.
@@ -14,6 +14,10 @@
     <function>showUserManagement</function>
     <attribute>
       <attname>userId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>defaultMainGroupId</attname>
       <attreq>implied</attreq>
     </attribute>
     <comment>

@@ -10,6 +10,10 @@
     float: left;
 }
 
+.logout-form input {
+	padding: 2px 4px;
+}
+
 .user-name {
     margin: 3px 10px;
 }
@@ -51,4 +55,17 @@
 .menu .active-item a, .menu .active-parent a {
     border-width: 1px;
     border-bottom-color: white;
+}
+
+.required {
+    font-weight: bold;
+    color: red;
+}
+
+.cf-list input[type=submit] {
+	color: blue;
+	text-decoration: underline;
+	padding: 0;
+	background: none;
+	border: none;
 }
