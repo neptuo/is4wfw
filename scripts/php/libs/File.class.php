@@ -134,9 +134,9 @@
       }
       
       if($useFrames != 'false') {
-      	return parent::getFrame($rb->get('dir.filelist')." :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable, $showParent == "false" ? false : true, $showTitleInsteadOfName == "true" ? true : false), "", true);
+			return parent::getFrame($rb->get('dir.filelist')." :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable, $showParent == "false" ? false : true, $showTitleInsteadOfName == "true"), "", true);
       } else {
-				return $return.self::getList($dirId, true);
+				return $return.self::getList($dirId, $editable, $showParent == "false" ? false : true, $showTitleInsteadOfName == "true");
 			}
     }
     
@@ -224,7 +224,7 @@
       
       //$files = $dbObject->fetchAll("SELECT `id`, `name`, `title`, `timestamp`, `type` FROM `file` WHERE `dir_id` = ".$dirId." ORDER BY `name`;");
       $files = $dbObject->fetchAll('SELECT distinct `file`.`id`, `file`.`name`, `file`.`title`, `file`.`timestamp`, `file`.`type` FROM `file` LEFT JOIN `file_right` ON `file`.`id` = `file_right`.`fid` LEFT JOIN `group` ON `file_right`.`gid` = `group`.`gid` WHERE `dir_id` = '.$dirId.' AND `file_right`.`type` = '.WEB_R_READ.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `name`;');
-        
+		
       foreach($files as $file) {
         $return .= ''
         .'<tr class="'.((($n % 2) == 0) ? 'even' : 'idle').'">'
