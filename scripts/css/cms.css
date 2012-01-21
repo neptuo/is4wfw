@@ -1735,34 +1735,38 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu-4 li.menu-item.li-2 a {
-    background: url('/images/lang_add.png') no-repeat 4px center;
+    background: url('/images/icons/cog.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-3 a {
-    background: url('/images/icons/book_open.png') no-repeat 4px center;
+    background: url('/images/lang_add.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-4 a {
-    background: url('/images/icons/user.png') no-repeat 4px center;
+    background: url('/images/icons/book_open.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-5 a {
-    background: url('/images/icons/userlog.png') no-repeat 4px center;
+    background: url('/images/icons/user.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-6 a {
-    background: url('/images/icons/log.png') no-repeat 4px center;
+    background: url('/images/icons/userlog.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-7 a {
-    background: url('/images/icons/page_code.png') no-repeat 4px center;
+    background: url('/images/icons/log.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-8 a {
-    background: url('/images/icons/properties.png') no-repeat 4px center;
+    background: url('/images/icons/page_code.png') no-repeat 4px center;
 }
 
 .cms-menu-4 li.menu-item.li-9 a {
+    background: url('/images/icons/properties.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-10 a {
     background: url('/images/page_edi.png') no-repeat 4px center;
 }
 

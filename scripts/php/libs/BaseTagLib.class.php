@@ -189,6 +189,11 @@ class BaseTagLib {
         return $phpObject;
     }
 
+    public function web() {
+        global $webObject;
+        return $webObject;
+    }
+
     public function db() {
         global $dbObject;
         return $dbObject;

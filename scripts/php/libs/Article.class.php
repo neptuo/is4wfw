@@ -7,6 +7,7 @@
  */
 require_once("BaseTagLib.class.php");
 require_once("scripts/php/classes/CustomTagParser.class.php");
+require_once("scripts/php/classes/RoleHelper.class.php");
 require_once("scripts/php/classes/ui/BaseGrid.class.php");
 
 /**
@@ -14,10 +15,15 @@ require_once("scripts/php/classes/ui/BaseGrid.class.php");
  *  Article class
  *      
  *  @author     Marek SMM
- *  @timestamp  2010-11-27
+ *  @timestamp  2012-01-21
  * 
  */
 class Article extends BaseTagLib {
+	public static $LineRightDesc = array(
+		'article_line_right', 'line_id', 'gid', 'type'
+	);
+	
+	public static $ArticlePageSize = 10;
 
     /**
      *
@@ -39,8 +45,14 @@ class Article extends BaseTagLib {
                 $this->BundleLang = $webObject->LanguageName;
             }
         }
+		
+		parent::loadResourceBundle('article');
     }
-
+	
+	protected function canUser($objectId, $rightType) {
+		return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(Article::$LineRightDesc, $objectId, $rightType));
+	}
+	
     /**
      * 
      *  Shows articles from line.
@@ -60,7 +72,7 @@ class Article extends BaseTagLib {
      *  @return   	list of articles
      *
      */
-    public function showLine($lineId = false, $template = fales, $templateId = false, $pageId = false, $pageLangId = false, $articleLangId = false, $method = false, $sortBy = false, $sort = false, $noDataMessage = false, $limit = false, $visible = false, $labelIds = false) {
+    public function showLine($lineId = false, $template = fales, $templateId = false, $pageId = false, $pageLangId = false, $articleLangId = false, $method = false, $sortBy = false, $sort = false, $noDataMessage = false, $limit = false, $visible = false, $labelIds = false, $pageable = false) {
         global $webObject;
         global $dbObject;
         global $loginObject;
@@ -83,7 +95,9 @@ class Article extends BaseTagLib {
         if ($pageId != false) {
             $detail = true;
             $link = $webObject->composeUrl($pageId, $pageLangId);
-        }
+        } else {
+			$pageId = parent::web()->getPageId();
+		}
 
         $lineInfo = parent::db()->fetchSingle('select `name`, `url` from `article_line` where `id` = ' . $lineId . ';');
 
@@ -119,7 +133,11 @@ class Article extends BaseTagLib {
             $sortBy = '`article_content`.`timestamp`';
         }
 
-        if ($limit != '') {
+		$pageSize = 0;
+		if($pageable) {
+			$pageSize = $limit;
+			$limit = ' limit ' . (self::getArticlePage() * $limit).', '.$limit;
+		} elseif ($limit != '') {
             $limit = ' limit ' . $limit;
         }
 
@@ -151,8 +169,10 @@ class Article extends BaseTagLib {
         }
 
         $sort = (strtolower($sort) == 'desc' ? 'DESC' : 'ASC');
-        $articles = $dbObject->fetchAll("SELECT distinct `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp`, `article_content`.`datetime`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid`" . $labelsJoin . " WHERE `article`.`line_id` = " . $lineId . " AND `article_content`.`language_id` = " . $articleLangId . " AND `article_line_right`.`type` = " . WEB_R_READ . " AND (`group`.`gid` IN (" . $loginObject->getGroupsIdsAsString() . ") OR `group`.`parent_gid` IN (" . $loginObject->getGroupsIdsAsString() . ")) " . $visible . $labelsWhere . " ORDER BY " . $sortBy . " " . $sort . $limit . ";");
-        if (count($articles) > 0) {
+		$fromWhere = "FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` " . $labelsJoin . " WHERE `article`.`line_id` = " . $lineId . " AND `article_content`.`language_id` = " . $articleLangId . " " . $visible . $labelsWhere . " ORDER BY " . $sortBy . " " . $sort;
+		
+        $articles = $dbObject->fetchAll("SELECT distinct `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp`, `article_content`.`datetime`, `article`.`visible` ".$fromWhere . $limit . ";");
+        if (count($articles) > 0 && self::canUser($lineId, WEB_R_READ)) {
             $flink = '';
             parent::request()->set('line-url', $lineInfo['url']);
             $articleOldId = self::getArticleId();
@@ -184,6 +204,11 @@ class Article extends BaseTagLib {
                 $Parser->startParsing();
                 $return .= $Parser->getResult();
             }
+			if($pageable) {
+				$total = parent::db()->fetchSingle('select count(`article`.`id`) as `id` '.$fromWhere.';');
+				$return .= self::getPaging($total['id'], $pageSize, self::getArticlePage(), $pageId, $pageLangId);
+			}
+			
             self::setArticleId($articleOldId);
             unset($_SESSION['article-id']);
             unset($_SESSION['current-article']);
@@ -197,6 +222,31 @@ class Article extends BaseTagLib {
 
         return $return;
     }
+	
+	private function getArticlePage() {
+		$start = 0;
+		if(array_key_exists("article-page", $_REQUEST)) {
+			$start = $_REQUEST["article-page"] - 1;
+		}
+		
+		return $start;
+	}
+	
+	private function getPaging($total, $size, $index, $pageId, $pageLangId) {
+		//echo 'Paging: '.$total.', '.$size;
+	
+		$return = '<div class="article-nav">';
+		$url = parent::web()->composeUrl($pageId, $pageLangId);
+		for($i = 0; $i < ($total / $size); $i ++) {
+			if($i != 0) {
+				$return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="'.$url.'?article-page='.($i + 1).'">['.($i + 1).']</a> ';
+			} else {
+				$return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="'.$url.'">['.($i + 1).']</a> ';
+			}
+		}
+		
+		return $return.'</div>';
+	}
 
     /**
      *
@@ -286,7 +336,7 @@ class Article extends BaseTagLib {
      *  @return   	article id in template
      *
      */
-    public function showDetail($template = false, $templateId = false, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = false) {
+    public function showDetail($template = false, $templateId = false, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = false, $nextLinkText = '', $prevLinkText = '') {
         global $webObject;
         global $dbObject;
         global $loginObject;
@@ -372,11 +422,49 @@ class Article extends BaseTagLib {
             $Parser->setContent($templateContent);
             $Parser->startParsing();
             $return .= $Parser->getResult();
+			$return .= self::nextPrevNavigation($articleId, $lineId, $webObject->getPageId(), $nextLinkText, $prevLinkText);
         } else {
             $return .= '<div class="no-article">' . $rb->get('articles.notselected') . '</div>';
         }
         return $return;
     }
+	
+	private function nextPrevNavigation($articleId, $lineId, $pageId, $nextLinkText, $prevLinkText) {
+		
+		$result = '';
+		if(($nextLinkText != '' || $prevLinkText != '') && $lineId != 0) {
+			$oldId = self::getArticleId();
+			$prevId = 0;
+			$nextId = 0;
+			
+			$articles = parent::db()->fetchAll('select `id` from `article` where `line_id` = '.$lineId.' order by `order` desc;');
+			for($i = 0; $i < count($articles); $i ++) {
+				if($articles[$i]['id'] == $articleId) {
+					if($i > 0) {
+						$prevId = $articles[$i - 1]['id'];
+					}
+					if($i < (count($articles) - 1)) {
+						$nextId = $articles[$i + 1]['id'];
+					}
+				}
+			}
+			//echo $articleId.'>'.$prevId.'--'.$nextId;
+			
+			self::setArticleId($prevId);
+			$prevUrl = parent::web()->composeUrl($pageId);
+			self::setArticleId($nextId);
+			$nextUrl = parent::web()->composeUrl($pageId);
+			
+			$result .= ''
+			.'<div class="article-nav">'
+				.($prevId != 0 ? '<a href="'.$prevUrl.'" class="article-nav-prev">'.$prevLinkText.'</a>' : '')
+				.($nextId != 0 ? '<a href="'.$nextUrl.'" class="article-nav-next">'.$nextLinkText.'</a>' : '')
+			.'</div>';
+			
+			self::setArticleId($oldId);
+		}
+		return $result;
+	}
 
     /**
      *
@@ -507,7 +595,7 @@ class Article extends BaseTagLib {
      *  @return   complete article management
      *
      */
-    public function showManagement($lineId = false, $detailPageId = false, $method = false, $useFrames = false, $newArticleButton = false) {
+    public function showManagement($lineId = false, $detailPageId = false, $method = false, $useFrames = false, $newArticleButton = false, $pageable = false, $pageId = false) {
         global $dbObject;
         global $loginObject;
         global $webObject;
@@ -530,18 +618,14 @@ class Article extends BaseTagLib {
             }
         }
 
-        // test na prava zapisu do rady clanku
-        $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $lineId . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
-        if (count($permission) > 0) {
-            $ok = true;
-        } else {
-            $return .= '<h4 class="error">' . $rb->get('articles.selectline') . '</h4>';
+		if(!self::canUser($lineId, WEB_R_WRITE)) {
+			$return .= parent::getError(parent::rb('articles.selectline'));
             if ($useFrames != "false") {
                 return parent::getFrame($rb->get('articles.inlinetitle'), $return, '');
             } else {
                 return $return;
             }
-        }
+		}
 
         if ($_POST['article-move-up'] == $rb->get('articles.moveup')) {
             $artcId = $_POST['article-id'];
@@ -607,97 +691,106 @@ class Article extends BaseTagLib {
             }
         }
 
-        $articles = $dbObject->fetchAll("SELECT `id` FROM `article` WHERE `line_id` = " . $lineId . " order by `order` desc;");
+        $articles = $dbObject->fetchAll("SELECT `id` FROM `article` WHERE `line_id` = " . $lineId . " order by `order` desc".($pageable ? ' limit '.(self::getArticlePage() * self::getArticlePageSize()).','.self::getArticlePageSize() : '').";");
         if (count($articles) > 0) {
             $returnTmp .= ''
-                    . '<div class="article-mgm-show">'
-                    . '<table class="article-mgm-table">'
+			. '<div class="article-mgm-show">'
+				. '<table class="article-mgm-table">'
                     . '<thead>'
-                    . '<tr class="article-mgm-tr article-mgm-tr-head">'
-                    . '<th class="article-mgm-th article-mgm-id">' . $rb->get('articles.id') . ':</th>'
-                    . '<th class="article-mgm-th article-mgm-lang">' . $rb->get('articles.lang') . ':</th>'
-                    . '<th class="article-mgm-th article-mgm-head">' . $rb->get('articles.head') . '</th>'
-                    . '<th class="article-mgm-th article-mgm-edit">' . $rb->get('articles.action') . '</th>'
-                    . '</tr>'
+						. '<tr class="article-mgm-tr article-mgm-tr-head">'
+							. '<th class="article-mgm-th article-mgm-id">' . $rb->get('articles.id') . ':</th>'
+							. '<th class="article-mgm-th article-mgm-lang">' . $rb->get('articles.lang') . ':</th>'
+							. '<th class="article-mgm-th article-mgm-head">' . $rb->get('articles.head') . '</th>'
+							. '<th class="article-mgm-th article-mgm-edit">' . $rb->get('articles.action') . '</th>'
+						. '</tr>'
                     . '</thead>'
-                    . '<tbody>';
+					. '<tbody>';
             foreach ($articles as $article) {
                 $infos = $dbObject->fetchAll("SELECT `article_content`.`name`, `article_content`.`head`, `language`.`id` AS `lang_id`, `language`.`language` FROM `article_content` LEFT JOIN `language` ON `article_content`.`language_id` = `language`.`id` WHERE `article_content`.`article_id` = " . $article['id'] . " ORDER BY `language`.`language`;");
                 $lnVersions = count($infos);
                 $first = true;
                 foreach ($infos as $info) {
                     $returnTmp .= ''
-                            . '<tr class="article-mgm-tr' . (($first) ? ' article-mgm-first' : '') . '">'
-                            . (($first) ? ''
-                                    . '<td rowspan="' . $lnVersions . '" class="article-mgm-td article-mgm-id">'
-                                    . '<span>' . $article['id'] . '</span>'
-                                    . '<div class="clear"></div>'
-                                    . '<form name="article-add-lang1" method="post" action="' . $actionUrl . '">'
+					. '<tr class="article-mgm-tr' . (($first) ? ' article-mgm-first' : '') . '">'
+						. (($first) ? ''
+							. '<td rowspan="' . $lnVersions . '" class="article-mgm-td article-mgm-id">'
+								. '<span>' . $article['id'] . '</span>'
+								. '<div class="clear"></div>'
+								. '<form name="article-add-lang1" method="post" action="' . $actionUrl . '">'
                                     . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
                                     . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
                                     . '<input type="hidden" name="article-add-lang" value="' . $rb->get('articles.addlang') . '" />'
                                     . '<input type="image" src="~/images/lang_add.png" name="article-add-lang" value="' . $rb->get('articles.addlang') . '" title="' . $rb->get('articles.addlangcap') . '" />'
-                                    . '</form>'
-                                    . '<form name="article-move-up" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+								. '</form>'
+								. '<form name="article-move-up" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                                     . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
                                     . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
                                     . '<input type="hidden" name="article-move-up" value="' . $rb->get('articles.moveup') . '" />'
                                     . '<input type="image" src="~/images/arro_up.png" name="article-move-up" value="' . $rb->get('articles.moveup') . '" title="' . $rb->get('articles.moveupcap') . '" /> '
-                                    . '</form>'
-                                    . '<div class="clear"></div>'
-                                    . '<form name="article-add-lang2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+								. '</form>'
+								. '<div class="clear"></div>'
+								. '<form name="article-add-lang2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                                     . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
                                     . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
                                     . '<input type="hidden" name="article-delete" value="' . $rb->get('articles.delete') . '" />'
                                     . '<input type="image" src="~/images/page_del.png" class="confirm" name="article-delete" value="' . $rb->get('articles.delete') . '" title="' . $rb->get('articles.deletecap') . ', id(' . $article['id'] . ')" >'
-                                    . '</form>'
-                                    . '<form name="article-move-down" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+								. '</form>'
+								. '<form name="article-move-down" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                                     . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
                                     . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
                                     . '<input type="hidden" name="article-move-down" value="' . $rb->get('articles.movedown') . '" />'
                                     . '<input type="image" src="~/images/arro_do.png" name="article-move-down" value="' . $rb->get('articles.movedown') . '" title="' . $rb->get('articles.movedowncap') . '" /> '
-                                    . '</form>'
-                                    . '</td>' : '')
+								. '</form>'
+							. '</td>' : '')
                             . '<td class="article-mgm-td article-mgm-lang">'
-                            . $info['language']
+								. $info['language']
                             . '</td>'
                             . '<td class="article-mgm-td article-mgm-head">'
-                            . '<div class="article-head-cover">'
-                            . '<span class="article-head-in">'
-                            . htmlspecialchars($info['name'] . ' - ' . $info['head'])
-                            . '</span>'
-                            . '</div>'
+								. '<div class="article-head-cover">'
+									. '<span class="article-head-in">'
+										. htmlspecialchars($info['name'] . ' - ' . $info['head'])
+									. '</span>'
+								. '</div>'
                             . '</td>'
                             . '<td class="article-mgm-td article-mgm-edit">'
-                            . '<form name="article-edit" method="post" action="' . $actionUrl . '">'
-                            . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
-                            . '<input type="hidden" name="language-id" value="' . $info['lang_id'] . '" />'
-                            . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
-                            . '<input type="hidden" name="article-edit" value="' . $rb->get('articles.edit') . '" />'
-                            . '<input type="image" src="~/images/page_edi.png" name="article-edit" value="' . $rb->get('articles.edit') . '" title="' . $rb->get('articles.editcap') . '" /> '
-                            . '</form>'
-                            . '<form name="article-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
-                            . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
-                            . '<input type="hidden" name="language-id" value="' . $info['lang_id'] . '" />'
-                            . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
-                            . '<input type="hidden" name="article-delete-lang" value="' . $rb->get('articles.deletelang') . '" />'
-                            . '<input type="image" src="~/images/lang_del.png" class="confirm" name="article-delete-lang" value="' . $rb->get('articles.deletelang') . '" title="' . $rb->get('articles.deletelangcap') . ', id(' . $article['id'] . ')" />'
-                            . '</form>'
+								. '<form name="article-edit" method="post" action="' . $actionUrl . '">'
+									. '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
+									. '<input type="hidden" name="language-id" value="' . $info['lang_id'] . '" />'
+									. '<input type="hidden" name="line-id" value="' . $lineId . '" />'
+									. '<input type="hidden" name="article-edit" value="' . $rb->get('articles.edit') . '" />'
+									. '<input type="image" src="~/images/page_edi.png" name="article-edit" value="' . $rb->get('articles.edit') . '" title="' . $rb->get('articles.editcap') . '" /> '
+								. '</form>'
+								. '<form name="article-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+									. '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
+									. '<input type="hidden" name="language-id" value="' . $info['lang_id'] . '" />'
+									. '<input type="hidden" name="line-id" value="' . $lineId . '" />'
+									. '<input type="hidden" name="article-delete-lang" value="' . $rb->get('articles.deletelang') . '" />'
+									. '<input type="image" src="~/images/lang_del.png" class="confirm" name="article-delete-lang" value="' . $rb->get('articles.deletelang') . '" title="' . $rb->get('articles.deletelangcap') . ', id(' . $article['id'] . ')" />'
+								. '</form>'
                             . '</td>'
-                            . '</tr>';
+						. '</tr>';
                     $first = false;
                 }
             }
             $returnTmp .= ''
                     . '</tbody>'
-                    . '</table>'
-                    . '</div>';
+				. '</table>'
+			. '</div>';
         } else {
             $returnTmp .= '<div class="no-articles"><h4 class="error">' . $rb->get('articled.noinline') . '</h4></div>';
         }
+		
+		if($pageable) {
+			$total = $dbObject->fetchSingle("SELECT count(`id`) as `id` FROM `article` WHERE `line_id` = " . $lineId . " order by `order` desc");
+			
+			$returnTmp .= ''
+			.'<div class="gray-box">'
+			.self::getPaging($total['id'], self::getArticlePageSize(), self::getArticlePage(), $_SERVER['REDIRECT_URL'], 0)
+			.'</div>';
+		}
 
         if ($newArticleButton == 'true') {
-            $returnTmp .= '<div class="hspace"></div>' . self::createArticle($lineId, $detailPageId, $method, "false", false);
+            $returnTmp .= self::createArticle($lineId, $detailPageId, $method, "false", false);
         }
 
         if ($useFrames != "false") {
@@ -706,6 +799,10 @@ class Article extends BaseTagLib {
             return $return;
         }
     }
+	
+	private function getArticlePageSize() {
+		return parent::getPropertyValue('Article.pageSize', Article::$ArticlePageSize);
+	}
 
     /**
      *
@@ -747,17 +844,16 @@ class Article extends BaseTagLib {
             $actionUrl = $webObject->composeUrl($detailPageId);
         }
 
-        $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $lineId . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND `article_line_right`.`line_id` = ' . $lineId . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;;');
-        if (count($permission) > 0) {
+        if (self::canUser($lineId, WEB_R_WRITE)) {
             $return .= ''
-                    . '<div class="article-new gray-box">'
-                    . '<form name="article-new" method="post" action="' . $actionUrl . '">'
+			. '<div class="article-new gray-box">'
+				. '<form name="article-new" method="post" action="' . $actionUrl . '">'
                     . '<input type="submit" name="article-new" value="' . $rb->get('articles.newcap') . '" />'
-                    . '</form>'
-                    . '</div>';
+				. '</form>'
+			. '</div>';
         } else {
             if ($showError != 'false') {
-                $return .= '<h4 class="error">' . $rb->get('articles.selectline') . '</h4>';
+                $return .= parent::getError(parent::rb('articles.selectline'));
             }
         }
 
@@ -767,147 +863,7 @@ class Article extends BaseTagLib {
             return $return;
         }
     }
-
-    /**
-     *
-     *  Generates form for editing article.
-     *
-     *  @param    article         array as db table 'article'
-     *  @param    articleContent  array as db table 'article_content'
-     *  @return   form for editing article
-     *
-     * 	DEPRECATED!!
-     *
-     */
-    private function editArticleForm($article, $articleContent) {
-        global $dbObject;
-        $return = '';
-        $rb = new ResourceBundle();
-        $rb->loadBundle($this->BundleName, $this->BundleLang);
-
-        return parent::getError('DEPRECATED C-TAG');
-
-        $usedLangs = $dbObject->fetchAll("SELECT `language_id` FROM `article_content` WHERE `article_id` = " . $article['id'] . ";");
-        $langs = $dbObject->fetchAll("SELECT `id`, `language` FROM `language` ORDER BY `language`;");
-        $langSelect = '<select name="article-lang-id">';
-        foreach ($langs as $lang) {
-            $ok = true;
-            foreach ($usedLangs as $usedLang) {
-                if (in_array($lang['id'], $usedLang)) {
-                    $ok = false;
-                }
-                if (($lang['id'] == $articleContent['language_id'])) {
-                    $ok = true;
-                }
-            }
-            if ($ok) {
-                $langSelect .= '<option value="' . $lang['id'] . '"' . (($lang['id'] == $articleContent['language_id']) ? ' selected="selected"' : '') . '>' . $lang['language'] . '</option>';
-            }
-        }
-        $langSelect .= '</select>';
-
-        $lines = $dbObject->fetchAll("SELECT `id`, `name` FROM `article_line`;");
-        $lineSelect = '<select name="line-id">';
-        foreach ($lines as $line) {
-            $lineSelect .= '<option value="' . $line['id'] . '"' . (($line['id'] == $article['line_id']) ? ' selected="selected"' : '') . '>' . $line['name'] . '</option>';
-        }
-        $lineSelect .= '</select>';
-
-        $name = 'Article.editors';
-        $propertyEditors = parent::system()->getPropertyValue($name);
-        $editAreaContentRows = parent::system()->getPropertyValue('Article.editAreaContentRows');
-        $editAreaHeadRows = parent::system()->getPropertyValue('Article.editAreaHeadRows');
-
-        $return .= ''
-                . '<div class="article-mgm-edit">'
-                . '<form name="article-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
-                . '<div class="article-prop">'
-                . '<div class="article-name">'
-                . '<label for="article-name">' . $rb->get('articles.name') . ':</label> '
-                . '<input type="text" name="article-name" value="' . $articleContent['name'] . '" />'
-                . '</div>'
-                . '<div class="article-line">'
-                . '<label for="line-id">' . $rb->get('articles.lines') . ':</label> '
-                . $lineSelect
-                . '</div>'
-                . '<div class="article-lang">'
-                . '<label for="article-lang-id">' . $rb->get('articles.lang') . ':</label> '
-                . $langSelect
-                . '</div>'
-                . '<div class="article-author">'
-                . '<label for="article-author">' . $rb->get('articles.author') . ':</label> '
-                . '<input type="text" name="article-author" value="' . $articleContent['author'] . '" />'
-                . '</div>'
-                . '<div class="clear"></div>'
-                . '</div>'
-                . '<div class="gray-box">'
-                . '<input type="text" class="long-input" name="article-url" value="' . $article['url'] . '" />'
-                . '</div>';
-        if ($propertyEditors == 'edit_area') {
-            $return .= ''
-                    . '<div id="editors" class="editors edit-area-editors">'
-                    . '<div id="editors-tab" class="editors-tab"></div>'
-                    . '<div id="cover-article-head">'
-                    . '<label for="article-head">' . $rb->get('acticles.head2') . ':</label>'
-                    . '<textarea id="article-head" class="edit-area html" name="article-head" rows="' . ($editAreaHeadRows > 0 ? $editAreaHeadRows : 10) . '">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $articleContent['head']))) . '</textarea>'
-                    . '</div>'
-                    . '<div id="cover-article-content">'
-                    . '<label for="article-content">' . $rb->get('articles.content2') . ':</label>'
-                    . '<textarea id="article-content" class="edit-area html" name="article-content" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $articleContent['content']))) . '</textarea>'
-                    . '</div>'
-                    . '</div>';
-        } else if ($propertyEditors == 'tiny') {
-            $return .= ''
-                    . '<div id="cover-article-head">'
-                    . '<label for="article-head">' . $rb->get('acticles.head2') . ':</label>'
-                    . '<textarea id="article-head" name="article-head" rows="' . ($editAreaHeadRows > 0 ? $editAreaHeadRows : 10) . '">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $articleContent['head']))) . '</textarea>'
-                    . '</div>'
-                    . '<div id="cover-article-content">'
-                    . '<label for="article-content">' . $rb->get('articles.content2') . ':</label>'
-                    . '<textarea id="article-content" name="article-content" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $articleContent['content']))) . '</textarea>'
-                    . '</div>'
-                    . '<script type="text/javascript">'
-                    . 'initTiny("article-head"); initTiny("article-content");'
-                    . '</script>';
-        } else {
-            $return .= ''
-                    . '<div class="article-head">'
-                    . '<label for="article-head">' . $rb->get('acticles.head2') . ':</label> '
-                    . '<div class="editor-cover">'
-                    . '<div class="textarea-cover">'
-                    . '<textarea name="article-head" class="editor-textarea editor-closed" rows="5">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $articleContent['head']))) . '</textarea>'
-                    . '</div>'
-                    . '<div class="clear"></div>'
-                    . '</div>'
-                    . '</div>'
-                    . '<div class="article-content">'
-                    . '<label for="article-content">' . $rb->get('acticles.content2') . ':</label> '
-                    . '<div class="editor-cover">'
-                    . '<div class="textarea-cover">'
-                    . '<textarea name="article-content" class="editor-textarea editor-tiny" rows="15">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $articleContent['content']))) . '</textarea>'
-                    . '</div>'
-                    . '<div class="clear"></div>'
-                    . '</div>'
-                    . '</div>';
-        }
-        $return .= ''
-                . '<div class="article-bottom">'
-                . '<div class="article-submit">'
-                . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
-                . '<input type="hidden" name="line-old-id" value="' . $article['line_id'] . '" />'
-                . '<input type="hidden" name="article-old-lang-id" value="' . $articleContent['language_id'] . '" />'
-                . '<input type="submit" name="article-save" value="' . $rb->get('articles.save') . '" /> '
-                . '<input type="submit" name="article-save" value="' . $rb->get('articles.saveandclose') . '" /> '
-                . '<input type="submit" name="article-close" value="' . $rb->get('articles.close') . '" />'
-                . '</div>'
-                . '<div class="clear"></div>'
-                . '</div>'
-                . '</form>'
-                . '</div>';
-
-        return $return;
-    }
-
+	
     /**
      *
      *  Show Article lines.
@@ -931,8 +887,7 @@ class Article extends BaseTagLib {
         if ($_POST['article-line-delete'] == $rb->get('lines.delete')) {
             $lineId = $_POST['delete-line-id'];
             // test na prava pro delete!
-            $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $lineId . ' AND `article_line_right`.`type` = ' . WEB_R_DELETE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
-            if (count($permission) > 0) {
+            if (self::canUser($lineId, WEB_R_DELETE)) {
                 $pages = $dbObject->fetchAll('SELECT `id` FROM `article` WHERE `line_id` = ' . $lineId . ';');
                 if (count($pages) == 0) {
                     $dbObject->execute('DELETE FROM `article_line_right` WHERE `line_id` = ' . $lineId . ';');
@@ -951,7 +906,7 @@ class Article extends BaseTagLib {
             $actionUrl = $webObject->composeUrl($detailPageId);
         }
 
-        $lines = $dbObject->fetchAll('SELECT distinct `article_line`.`id`, `article_line`.`name`, `article_line`.`url` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `id`;');
+        $lines = $dbObject->fetchAll('SELECT distinct `article_line`.`id`, `article_line`.`name`, `article_line`.`url` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') ORDER BY `id`;');
         if (count($lines) > 0) {
             $return .= ''
                     . '<div class="show-lines standart clickable"> '
@@ -1038,8 +993,7 @@ class Article extends BaseTagLib {
         if ($_POST['select-article-line'] == $rb->get('lines.select')) {
             $lineId = $_POST['line-id'];
             // test na prava pro zapis do rady clanku.
-            $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $lineId . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
-            if (count($permission) > 0) {
+            if (self::canUser($lineId, WEB_R_WRITE)) {
                 if ($method == 'session') {
                     $_SESSION['article-line-id'] = $lineId;
                 }
@@ -1057,7 +1011,7 @@ class Article extends BaseTagLib {
             $actualiLineId = $_SESSION['article-line-id'];
         }
 
-        $lines = $dbObject->fetchAll('SELECT distinct `article_line`.`id`, `article_line`.`name` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `id`;');
+        $lines = $dbObject->fetchAll('SELECT distinct `article_line`.`id`, `article_line`.`name` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') ORDER BY `id`;');
         if (count($lines) > 0) {
 			if(count($lines) == 1) {
 				$_SESSION['article-line-id'] = $lines[0]['id'];
@@ -1172,9 +1126,9 @@ class Article extends BaseTagLib {
             $urls = parent::db()->fetchAll('select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "' . $articleContent['url'] . '" and `line_id` = ' . $article['line_id'] . $idSql . $langId . ';');
             if (count($urls) == 0 || (count($urls) == 1 && $urls[0]['article_id'] == $article['id'])) {
                 $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $article['line_id'] . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
-                if (count($permission) > 0) {
+                if (self::canUser($article['line_id'], WEB_R_WRITE)) {
                     $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $articleContent['line_old_id'] . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' ORDER BY `value` DESC;');
-                    if (count($permission) > 0 && ($permission[0]['value'] >= $loginObject->getGroupValue())) {
+                    if (self::canUser($articleContent['line_old_id'], WEB_R_WRITE)) {
                         $artc = $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = " . $article['id'] . " AND `language_id` = " . $articleContent['language_old_id'] . ";");
                         if (count($artc) == 0) {
                             $artc = $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = " . $article['id'] . ";");
@@ -1213,7 +1167,7 @@ class Article extends BaseTagLib {
                         }
                     }
                 } else {
-                    $return .= '<h4 class="error">' . $rb->get('articles.noperm') . '</h4>';
+                    $return .= parent::getError(parent::rb('articles.noperm'));
                 }
             } else {
                 $return .= parent::getError($rb->get('articles.notuniqueurl'));
@@ -1227,7 +1181,7 @@ class Article extends BaseTagLib {
 
             if ($_POST['article-id'] != '' && array_key_exists('language-id', $_POST)) {
                 // test na prava pro cteni z prislusne rady!
-                $article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`keywords`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`datetime`, `article`.`line_id`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) AND `article_content`.`article_id` = ' . $articleId . ' AND `article_content`.`language_id` = ' . $languageId . ' ORDER BY `id`;');
+                $article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`keywords`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`datetime`, `article`.`line_id`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') AND `article_content`.`article_id` = ' . $articleId . ' AND `article_content`.`language_id` = ' . $languageId . ' ORDER BY `id`;');
                 if (count($article) != 0) {
                     $article = $article[0];
                 } else {
@@ -1287,7 +1241,7 @@ class Article extends BaseTagLib {
         }
 
         // Testovat prava zapisu do rady!!!
-        $lines = $dbObject->fetchAll('SELECT DISTINCT `article_line`.`id`, `article_line`.`name` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '));');
+        $lines = $dbObject->fetchAll('SELECT DISTINCT `article_line`.`id`, `article_line`.`name` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ');');
         $lineSelect = '<select id="line-id" name="line-id" class="w160">';
         foreach ($lines as $line) {
             $lineSelect .= '<option value="' . $line['id'] . '"' . (($line['id'] == $article['line_id']) ? ' selected="selected"' : '') . '>' . $line['name'] . '</option>';
@@ -1477,8 +1431,7 @@ class Article extends BaseTagLib {
 
         $lineId = ((array_key_exists('edit-line-id', $_POST)) ? $_POST['edit-line-id'] : 0);
         // test na prava zapisu do rady clanku
-        $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $lineId . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;;');
-        if (count($permission) > 0) {
+        if (self::canUser($lineId, WEB_R_WRITE)) {
             $ok = true;
         } else {
             $return .= parent::getError($rb->get('articles.noperm'));
@@ -1592,7 +1545,7 @@ class Article extends BaseTagLib {
             $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `article_line_right` WHERE `line_id` = " . $lineId . " AND `type` = " . WEB_R_READ . ";");
             $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `article_line_right` WHERE `line_id` = " . $lineId . " AND `type` = " . WEB_R_WRITE . ";");
             $groupsD = $dbObject->fetchAll("SELECT `gid` FROM `article_line_right` WHERE `line_id` = " . $lineId . " AND `type` = " . WEB_R_DELETE . ";");
-            $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value`;');
+            $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') ORDER BY `value`;');
             $groupSelectR = '<select id="article-right-edit-groups-r" name="article-right-edit-groups-r[]" multiple="multiple" size="5">';
             $groupSelectW = '<select id="article-right-edit-groups-w" name="article-right-edit-groups-w[]" multiple="multiple" size="5">';
             $groupSelectD = '<select id="article-right-edit-groups-d" name="article-right-edit-groups-d[]" multiple="multiple" size="5">';
@@ -1885,18 +1838,19 @@ class Article extends BaseTagLib {
     // =============== PROPERTIES ======================================
 
     public function setArticleId($id) {
+		//echo 'set ID: '.$id.'<br />';
         parent::request()->set('article-id', $id);
         return $id;
     }
 
     public function getArticleId() {
+		//echo 'get ID: '.parent::request()->get('article-id').'<br />';
         return parent::request()->get('article-id');
     }
 
     public function setUrl($url) {
         $article = parent::db()->fetchSingle('select `article_id` from `article_content` where `url` = "' . $url . '";');
         if ($article != array()) {
-            //echo $url.' == '.$article['article_id'].'<br />';
             self::setArticleId($article['article_id']);
             parent::request()->set('article-url', $url);
             return $url;
@@ -1906,7 +1860,12 @@ class Article extends BaseTagLib {
     }
 
     public function getUrl() {
-        return parent::request()->get('article-url');
+		// $url = parent::request()->get('article-url');
+		// if(!parent::request()->exists('article-url')) {
+			$article = parent::db()->fetchSingle('select `url` from `article_content` where `article_id` = ' . self::getArticleId() . ';');
+			$url = $article['url'];
+		// }
+        return $url;
     }
 
     public function setLineUrl($url) {

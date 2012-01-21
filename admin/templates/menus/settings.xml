@@ -2,6 +2,7 @@
 
 <menu>
     <item name="Url cache" url="~/in/url-cache.view" security:requirePerm="CMS.Settings.UrlCache" />
+    <item name="Role cache" url="~/in/role-cache.view" security:requirePerm="CMS.Settings.RoleCache" />
     <item name="Languages" name-cs="Jazyky" url="~/in/languages.view" security:requirePerm="CMS.Settings.Languages" />
     <item name="Keywords &amp; robots.txt" name-cs="Klíčová slova" url="~/in/keywords.view" security:requirePerm="CMS.Settings.Keywords" />
     <item name="Users &amp; Roles" name-cs="Uživatelé a role" url="~/in/users.view" security:requirePerm="CMS.Settings.Users" />

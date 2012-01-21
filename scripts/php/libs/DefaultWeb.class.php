@@ -26,7 +26,7 @@ require_once("scripts/php/classes/manager/WebForwardManager.class.php");
  *  @objectname webObject
  *  
  *  @author     Marek SMM
- *  @timestamp  2010-12-13
+ *  @timestamp  2012-01-21
  *
  */
 class DefaultWeb extends BaseTagLib {
@@ -1099,17 +1099,29 @@ class DefaultWeb extends BaseTagLib {
      *  @return composed url
      *
      */
-    public function composeUrl($pageId, $languageId = false, $absolutePath = false) {
+    public function composeUrl($pageId, $languageId = false, $absolutePath = false, $forceDefProp = false) {
         $languageId = ($languageId === false) ? $this->LanguageId : $languageId;
         $lastPageId = 0;
         $pageProjectId = 0;
         if (!is_numeric($pageId)) {
             return ViewHelper::resolveUrl($pageId);
         }
+		
+		$currentValues = array();
+		$props = parent::dao('PageProperty')->getPage($pageId);
+		foreach($props as $prop) {
+			$currentValue = self::getProperty($prop['name']);
+			if(!$currentValue || $forceDefProp) {
+				self::setProperty($prop['name'], $prop['value']);
+				$currentValues[$prop['name']] = $currentValue;
+			}
+		}
+		
         while ($pageId != 0) {
             $return = parent::db()->fetchAll("SELECT `parent_id`, `href`, `wp` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = " . $pageId . " AND `info`.`language_id` = " . $languageId . ";");
             if (count($return) == 1) {
                 if (strlen($return[0]['href']) != 0 && !preg_match($this->TAG_RE, $return[0]['href'])) {
+					$this->PropertyUse = 'get';
                     $return[0]['href'] = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $return[0]['href']);
                     $this->CurrentPath = "/" . $return[0]['href'] . $this->CurrentPath;
                 }
@@ -1123,6 +1135,10 @@ class DefaultWeb extends BaseTagLib {
                 return '#';
             }
         }
+		
+		foreach($currentValues as $key => $item) {
+			self::setProperty($key, $item);
+		}
 
         $return = parent::db()->fetchAll("SELECT `language` FROM `language` WHERE `id` = " . $languageId . ";");
         if (count($return) == 1) {
@@ -1411,7 +1427,7 @@ class DefaultWeb extends BaseTagLib {
                 if (count($rights) == 0) {
                     continue;
                 }
-                $href = self::composeUrl($lnk['id'], $this->LanguageId);
+                $href = self::composeUrl($lnk['id'], $this->LanguageId, false, true);
                 $parent = (in_array($lnk['id'], $this->PagesId)) ? true : false;
                 //$active = (($lnk['id'] == $this->PagesId[count($this->PagesId) - 1]) ? true : false);
 
@@ -2027,14 +2043,20 @@ class DefaultWeb extends BaseTagLib {
         return $this->LanguageId;
     }
 
-    public function setProperty($prefix, $name, $value) {
+    public function setProperty($prop, $value, $value2 = null) {
+		if($value2 != null) {
+			$prop = $prop . ':' . $value;
+			$value = $value2;
+		}
+	
         $this->PropertyAttr = $value;
         $this->PropertyUse = 'set';
-        $name = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $prefix . ':' . $name);
+        preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $prop);
     }
 
-    public function getProperty($name) {
-        return $name;
+    public function getProperty($prop) {
+        $this->PropertyUse = 'get';
+        return preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $prop);
     }
 
     // min, max, scope + property pro jeho vypsani!!!!
@@ -2199,6 +2221,10 @@ class DefaultWeb extends BaseTagLib {
             }
         }
     }
+	
+	public function getPageId() {
+		return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['id'];
+	}
 
     /* ================== PROPERTIES ================================================== */
 

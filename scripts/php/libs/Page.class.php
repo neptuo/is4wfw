@@ -18,10 +18,13 @@ require_once("System.class.php");
  *  Class updating web pages.     
  *      
  *  @author     Marek SMM
- *  @timestamp  2012-01-10
+ *  @timestamp  2012-01-21
  * 
  */
 class Page extends BaseTagLib {
+	public static $PageRightDesc = array(
+		'page_right', 'pid', 'gid', 'type'
+	);
 
     private $BundleName = 'page';
     private $BundleLang = 'cs';
@@ -37,6 +40,8 @@ class Page extends BaseTagLib {
                 $this->BundleLang = $webObject->LanguageName;
             }
         }
+		
+		parent::loadResourceBundle('page');
     }
 
     public function showEditPage() {
@@ -1469,11 +1474,17 @@ class Page extends BaseTagLib {
                                     . '</form>' : '')
                             . ((self::getGroupPermCached('Page.ManageFiles')) ? ''
                                     . '<form name="page3" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="form-page3">'
-                                    . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
-                                    . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
-                                    . '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
-                                    . '<input type="hidden" name="added-files" value="' . $rb->get('pagelist.field.addedfiles') . '" /> '
-                                    . '<input type="image" title="' . $rb->get('pagelist.field.addedfiles') . '" src="' . WEB_ROOT . 'images/file_bws.png" name="added-files" value="' . $rb->get('pagelist.action.addedfiles') . '" /> '
+										. '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
+										. '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
+										. '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
+										. '<input type="hidden" name="added-files" value="' . $rb->get('pagelist.field.addedfiles') . '" /> '
+										. '<input type="image" title="' . $rb->get('pagelist.field.addedfiles') . '" src="' . WEB_ROOT . 'images/file_bws.png" name="added-files" value="' . $rb->get('pagelist.action.addedfiles') . '" /> '
+                                    . '</form>' : '')
+                            . ((self::getGroupPermCached('Page.ManageProperties')) ? ''
+									. '<form name="page3" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="form-page5">'
+										. '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
+										. '<input type="hidden" name="manage-properties" value="' . $rb->get('pagelist.field.manageprops') . '" /> '
+										. '<input type="image" title="' . $rb->get('pagelist.field.manageprops') . '" src="' . WEB_ROOT . 'images/page_pro.png" name="manage-properties" value="' . $rb->get('pagelist.action.manageprops') . '" /> '
                                     . '</form>' : '')
                             . ((self::getGroupPermCached('Page.Delete') && (!$parent || !$thisParent)) ? ''
                                     . '<form name="page4" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="form-page4">'
@@ -1714,6 +1725,45 @@ class Page extends BaseTagLib {
         return $return;
     }
 
+	//C-tag
+	public function managePageProperties($useFrames) {
+		$pageId = $_POST['page-id'];
+		
+		if($_POST['manageprops-delete'] == parent::rb('button.deleteselected')) {
+			foreach($_POST['manageprops-delete-item'] as $i => $item) {
+				parent::dao('PageProperty')->delete($i);
+			}
+		
+			$_POST['manage-properties'] = parent::rb('pagelist.action.manageprops');
+		}
+		
+		if($_POST['manageprops-save'] == parent::rb('button.save')) {
+			//Update
+			foreach($_POST['manageprops-name'] as $i => $name) {
+				$item = array('name' => $_POST['manageprops-name'][$i], 'value' => $_POST['manageprops-value'][$i], 'page_id' => $pageId, 'id' => $i);
+				parent::dao('PageProperty')->update($item);
+			}
+			
+			//New
+			$new = array('name' => $_POST['manageprops-name-new'], 'value' => $_POST['manageprops-value-new'], 'page_id' => $pageId);
+			if(strlen($new['name']) > 0) {
+				parent::dao('PageProperty')->insert($new);
+			}
+			$_POST['manage-properties'] = parent::rb('pagelist.action.manageprops');
+		}
+	
+		if($_POST['manage-properties'] == parent::rb('pagelist.action.manageprops')) {
+			
+			$dataModel = array('items' => parent::dao('PageProperty')->getPage($pageId), 'page_id' => $pageId);
+		
+			if($useFrames) {
+				return parent::getFrame(parent::rb('title.manageprops'), $return.parent::view('page-manageprops', $dataModel), true);
+			} else {
+				return $return.parent::view('page-manageprops', $dataModel);
+			}	
+		}
+	}
+	
     /**
      *
      *  Generates table with informations about page files.
