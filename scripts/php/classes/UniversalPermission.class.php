@@ -90,15 +90,15 @@
 			$name = 'universal-permissions-'.$discriminator.'-';
 			switch($type) {
 				case WEB_R_READ: $return .= '<select id="'.$name.'r" name="'.$name.'r[]" multiple="multiple" size="5">'; break;
-      	case WEB_R_WRITE: $return .= '<select id="'.$name.'w" name="'.$name.'w[]" multiple="multiple" size="5">'; break;
-      	case WEB_R_DELETE: $return .= '<select id="'.$name.'d" name="'.$name.'d[]" multiple="multiple" size="5">'; break;
-      }
-      foreach($avGroups as $group) {
-      	$return .= '<option'.((in_array($group['name'], $selGroups)) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-      }
-      $return .= '</select>';
-      
-      return $return;
+				case WEB_R_WRITE: $return .= '<select id="'.$name.'w" name="'.$name.'w[]" multiple="multiple" size="5">'; break;
+				case WEB_R_DELETE: $return .= '<select id="'.$name.'d" name="'.$name.'d[]" multiple="multiple" size="5">'; break;
+			}
+			foreach($avGroups as $group) {
+				$return .= '<option'.((in_array($group['name'], $selGroups)) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+			}
+			$return .= '</select>';
+			
+			return $return;
 		}
 		
 		/**

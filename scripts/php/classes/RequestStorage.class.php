@@ -22,6 +22,10 @@
 		}
 		
 		public function exists($key, $storage = 'default') {
+			if(!array_key_exists($storage, $this->data)) {
+				return false;
+			}
+		
 			return array_key_exists($key, $this->data[$storage]);
 		}
 		

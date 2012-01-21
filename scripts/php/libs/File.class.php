@@ -6,6 +6,7 @@
    *
    */
   require_once("BaseTagLib.class.php");
+  require_once("FileAdmin.class.php");
   require_once("scripts/php/classes/ResourceBundle.class.php");
   require_once("scripts/php/classes/UrlResolver.class.php");
   
@@ -41,25 +42,7 @@
 		global $webObject;
 		
 		parent::setTagLibXml("xml/File.xml");
-      
-		$this->FileEx = array(WEB_TYPE_CSS => "css", WEB_TYPE_JS => "js", WEB_TYPE_JPG => "jpg", WEB_TYPE_GIF => "gif", 
-                            WEB_TYPE_PNG => "png", WEB_TYPE_PDF => "pdf", WEB_TYPE_RAR => "rar", WEB_TYPE_ZIP => "zip", 
-                            WEB_TYPE_TXT => "txt", WEB_TYPE_XML => "xml", WEB_TYPE_XSL => "xsl", WEB_TYPE_DTD => "dtd",
-                            WEB_TYPE_HTML => "html", WEB_TYPE_PHP => "php", WEB_TYPE_SQL => "sql", WEB_TYPE_C => "c",
-                            WEB_TYPE_CPP => "cpp", WEB_TYPE_H => "h", WEB_TYPE_JAVA => "java", WEB_TYPE_SWF => "swf",
-														WEB_TYPE_MP3 => "mp3", WEB_TYPE_PSD => "psd", WEB_TYPE_DOC => "doc", WEB_TYPE_PPT => "ppt",
-														WEB_TYPE_XLS => "xls", WEB_TYPE_MPEG => "mpeg", WEB_TYPE_MOV => "mov",
-														WEB_TYPE_BMP => "bmp", WEB_TYPE_AVI => "avi", WEB_TYPE_ICO => "ico");
-      
-		$this->FileMimeType = array(WEB_TYPE_CSS => "text/css", WEB_TYPE_JS => "application/x-javascript", WEB_TYPE_JPG => "image/jpeg", WEB_TYPE_GIF => "image/gif", 
-                            		WEB_TYPE_PNG => "image/png", WEB_TYPE_PDF => "application/pdf", WEB_TYPE_RAR => "application/octet-stream", WEB_TYPE_ZIP => "application/zip", 
-                            		WEB_TYPE_TXT => "text/plain", WEB_TYPE_XML => "text/xml", WEB_TYPE_XSL => "text/plain", WEB_TYPE_DTD => "text/plain",
-                            		WEB_TYPE_HTML => "text/html", WEB_TYPE_PHP => "application/octet-stream", WEB_TYPE_SQL => "text/plain", WEB_TYPE_C => "text/plain",
-                            		WEB_TYPE_CPP => "text/plain", WEB_TYPE_H => "text/plain", WEB_TYPE_JAVA => "text/plain", WEB_TYPE_SWF => "application/x-shockwave-flash",
-									WEB_TYPE_MP3 => "audio/mpeg", WEB_TYPE_PSD => "application/octet-stream", WEB_TYPE_DOC => "application/msword", WEB_TYPE_PPT => "application/vnd.ms-powerpoint",
-									WEB_TYPE_XLS => "application/vnd.ms-excel", WEB_TYPE_MPEG => "video/mpeg", WEB_TYPE_MOV => "video/quicktime",
-									WEB_TYPE_BMP => "image/bmp", WEB_TYPE_AVI => "video/x-msvideo", WEB_TYPE_ICO => "image/x-icon");
-      //$_SESSION['dir-id'] = 0;
+		//$_SESSION['dir-id'] = 0;
 	  
       	if($webObject->LanguageName != '') {
 			$rb = new ResourceBundle();
@@ -76,7 +59,7 @@
     /**
      *
      *  Generates list of directories and files from FS.
-     *  C tag.
+     *  C tag. DEPRECATED: Use FileAdmin
      *  
      *  @param    dirId   				id of parent directory
      *  @param		useFrames		    use frames in output
@@ -124,7 +107,7 @@
     	      $dbObject->execute("DELETE FROM `file` WHERE `id` = ".$fileId.";");
     	      $dbObject->execute("DELETE FROM `file_right` WHERE `id` = ".$fileId.";");
       	    $path = self::getPhysicalPathTo($file[0]['dir_id']);
-        	  $filePath = $_SERVER['DOCUMENT_ROOT'].$path.$file[0]['name'].".".$this->FileEx[$file[0]['type']];
+        	  $filePath = $_SERVER['DOCUMENT_ROOT'].$path.$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
           	//echo $filePath;
 	          unlink($filePath);
   	      }
@@ -231,7 +214,7 @@
       foreach($files as $file) {
         $return .= ''
         .'<tr class="'.((($n % 2) == 0) ? 'even' : 'idle').'">'
-          .'<td class="file-icon '.$this->FileEx[$file['type']].'"></td>'
+          .'<td class="file-icon '.FileAdmin::$FileExtensions[$file['type']].'"></td>'
           .'<td class="file-id"><span>'.$file['id'].'</span></td>'
           .'<td class="file-name">'
             .'<a target="_blank" title="'.$file['title'].'" href="~/file.php?rid='.$file['id'].'">'
@@ -243,13 +226,13 @@
 			.'</a>'
           .'</td>'
           .'<td class="dir-physical-path">'
-						.'<a href="'.self::getPhysicalPathTo($dirId, false).$file['name'].".".$this->FileEx[$file['type']].'" target="_blank">open</a>'
+						.'<a href="'.self::getPhysicalPathTo($dirId, false).$file['name'].".".FileAdmin::$FileExtensions[$file['type']].'" target="_blank">open</a>'
 					.'</td>'
           .'<td class="file-timestamp">'
 			.'<span class="file-timestamp-date">'.date('d.m.Y', $file['timestamp']).'</span> '
 			.'<span class="file-timestamp-time">'.date('H:i:s', $file['timestamp']).'</span> '
 		  .'</td>'
-          .'<td class="file-type">'.$this->FileEx[$file['type']].'</td>'
+          .'<td class="file-type">'.FileAdmin::$FileExtensions[$file['type']].'</td>'
           .(($editable != "false") ? ''
           .'<td class="file-edit">'
             .'<form name="dir-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
@@ -277,7 +260,7 @@
     /**
      *
      *  Shows form for add new directory.
-     *  C tag.     
+     *  C tag. DEPRECATED: Use FileAdmin
      *  
      *  @param    dirId   				parent dir id
      *  @param		useFrames				use frames in output
@@ -508,7 +491,7 @@
     /**
      *
      *  Shows form for upload new file.
-     *  C tag.
+     *  C tag. DEPRECATED: Use FileAdmin
      *  
      *  @param    dirId   		dir id to put in
      *  @param		useRights		use manaul setting rights or use auto setting
@@ -669,14 +652,14 @@
 		        if(count($files) == 0) {
         		  if($extType > 0) {
             		$path = self::getPhysicalPathTo($dirId);
-		            $moved = move_uploaded_file($original, $_SERVER['DOCUMENT_ROOT'].$path.$fileName.".".$this->FileEx[$extType]);
+		            $moved = move_uploaded_file($original, $_SERVER['DOCUMENT_ROOT'].$path.$fileName.".".FileAdmin::$FileExtensions[$extType]);
     		        
         		    if($moved) {
         		    	if(array_key_exists('file-id', $_POST)) {
         		    		$files = $dbObject->fetchAll("SELECT `id`, `name`, `type`, `dir_id` FROM `file` WHERE `dir_id` = ".$dirId." AND `id` = ".$fileId.";");
         		    		$oldFile = $files[0];
 							$path = self::getPhysicalPathTo($oldFile['dir_id']);
-							$filePath = $_SERVER['DOCUMENT_ROOT'].$path.$oldFile['name'].".".$this->FileEx[$oldFile['type']];
+							$filePath = $_SERVER['DOCUMENT_ROOT'].$path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
 				          	//echo $filePath;
 				          	if($fileName != $oldFile['name'] || $extType != $oldFile['type']) {
 								unlink($filePath);
@@ -767,7 +750,7 @@
 				$files = $dbObject->fetchAll("SELECT `id`, `name`, `type`, `dir_id` FROM `file` WHERE `dir_id` = ".$dirId." AND `id` = ".$fileId.";");
 				$oldFile = $files[0];
 				$path = self::getPhysicalPathTo($oldFile['dir_id']);
-				$filePath = $_SERVER['DOCUMENT_ROOT'].$path.$oldFile['name'].".".$this->FileEx[$oldFile['type']];
+				$filePath = $_SERVER['DOCUMENT_ROOT'].$path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
 				if($fileName != $oldFile['name']) {
 					$i = rename($filePath, str_replace($oldFile['name'], $fileName, $filePath));
 				}
@@ -864,13 +847,13 @@
       $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = ".$fileId.";");
       
       if(count($file) == 1) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".$this->FileEx[$file[0]['type']];
-        $fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".$this->FileEx[$file[0]['type']] : "document/".$file[0]['type'];
+        $filePath = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
+        $fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".FileAdmin::$FileExtensions[$file[0]['type']] : "document/".$file[0]['type'];
         
         if(array_key_exists("width", $_GET) && array_key_exists("height", $_GET)) {
           $width = $_GET['width'];
           $height = $_GET['height'];
-          $thumbPath = 'cache/images/'.$file[0]['dir_id'].'-'.$file[0]['id'].'-'.$file[0]['name'].'_'.$width.'x'.$height.'.'.$this->FileEx[$file[0]['type']];
+          $thumbPath = 'cache/images/'.$file[0]['dir_id'].'-'.$file[0]['id'].'-'.$file[0]['name'].'_'.$width.'x'.$height.'.'.FileAdmin::$FileExtensions[$file[0]['type']];
           
           if(file_exists($thumbPath) && is_readable($thumbPath)) {
             $filePath = $thumbPath;
@@ -884,7 +867,7 @@
           $ratio = $width / $orWidth;
           $height = round($ratio * $orHeight);
           
-          $thumbPath = 'cache/images/'.$file[0]['dir_id'].'-'.$file[0]['id'].'-'.$file[0]['name'].'_'.$width.'x'.$height.'.'.$this->FileEx[$file[0]['type']];
+          $thumbPath = 'cache/images/'.$file[0]['dir_id'].'-'.$file[0]['id'].'-'.$file[0]['name'].'_'.$width.'x'.$height.'.'.FileAdmin::$FileExtensions[$file[0]['type']];
           
           if(file_exists($thumbPath) && is_readable($thumbPath)) {
             $filePath = $thumbPath;
@@ -898,7 +881,7 @@
           $ratio = $height / $orHeight;
           $width = round($ratio * $orWidth);
           
-          $thumbPath = 'cache/images/'.$file[0]['dir_id'].'-'.$file[0]['id'].'-'.$file[0]['name'].'_'.$width.'x'.$height.'.'.$this->FileEx[$file[0]['type']];
+          $thumbPath = 'cache/images/'.$file[0]['dir_id'].'-'.$file[0]['id'].'-'.$file[0]['name'].'_'.$width.'x'.$height.'.'.FileAdmin::$FileExtensions[$file[0]['type']];
           
           if(file_exists($thumbPath) && is_readable($thumbPath)) {
             $filePath = $thumbPath;
@@ -926,7 +909,7 @@
           
           header('Content-Type: '.$fileExt);
           header('Content-Length: '.$fileSize);
-          header('Content-Disposition: attachment; filename='.$file[0]['name'].".".$this->FileEx[$file[0]['type']]);
+          header('Content-Disposition: attachment; filename='.$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']]);
           header('Content-Transfer-Encoding: binary');
           $file = @ fopen($filePath, 'rb');
           if ($file) {
@@ -1007,7 +990,7 @@
      *
      */                   
     public function getWebFileType($fileName) {
-      foreach($this->FileEx as $key => $ext) {
+      foreach(FileAdmin::$FileExtensions as $key => $ext) {
         $ext = ".".$ext;
         if(strtolower(substr($fileName, strlen($fileName) - strlen($ext))) == $ext) {
           return $key;
@@ -1058,19 +1041,19 @@
       global $dbObject;
       $return = "";
     
-      if($dirId == false) {
-        if(array_key_exists("dir-id", $_REQUEST)) {
-          $dirId = $_REQUEST['dir-id'];
-        } else {
-        	if($defaultDirId != false) {
-						$dirId = $defaultDirId;
-					} else {
-    	      $message = "DirId isn't set! [file:gallery]";
-  	        echo "<h4 class=\"error\">".$message."</h4>";
-	          trigger_error($message, E_USER_ERROR);
-          }
-        }
-      }
+		if($dirId == '') {
+			if(array_key_exists("dir-id", $_REQUEST)) {
+				$dirId = $_REQUEST['dir-id'];
+			} else {
+				if($defaultDirId != false) {
+					$dirId = $defaultDirId;
+				} else {
+					$message = "DirId isn't set! [file:gallery]";
+					echo "<h4 class=\"error\">".$message."</h4>";
+					trigger_error($message, E_USER_ERROR);
+				}
+			}
+		}
       
       if($method === false || ($method != "static" && $method != "dynamic")) {
         $method = "static";
@@ -1136,13 +1119,13 @@
 			foreach($images as $image) {
       	if($lightbox == "true" || $lightbox == "added") {
       		$link = ''
-       		.'<a class="gallery-link" title="'.$image['title'].'" href="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$lsize : self::getPhysicalPathTo($dirId, false).$image['name'].".".$this->FileEx[$image['type']]).'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
-        		.'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalPathTo($dirId, false).$image['name'].".".$this->FileEx[$image['type']]).'" alt="'.$image['title'].'" />'
+       		.'<a class="gallery-link" title="'.$image['title'].'" href="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$lsize : self::getPhysicalPathTo($dirId, false).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
+        		.'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalPathTo($dirId, false).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
         	.'</a>';
         } else {
         	$link = ''
 					.(($pageId != false) ? '<a class="gallery-link" title="'.$image['title'].'" href="'.$webObject->composeUrl($pageId, $langId).(($method == "dynamic") ? '/'.$image['id'].'-'.$image['name'] : '?file-id='.$image['id']).'">' : '')
-        		.'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalPathTo($dirId, false).$image['name'].".".$this->FileEx[$image['type']]).'" alt="'.$image['title'].'" />'
+        		.'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalPathTo($dirId, false).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
         	.(($pageId != false) ? '</a>' : '');
 				}
       

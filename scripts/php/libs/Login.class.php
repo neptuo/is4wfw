@@ -408,6 +408,16 @@ class Login extends BaseTagLib {
         }
         return $return;
     }
+	
+	public function getGroupsIds() {
+		$return = array();
+		$id = 0;
+        foreach ($this->Groups as $gp) {
+            $return[$i] = $gp['gid'];
+			$i++;
+        }
+        return $return;
+	}
 
     /**
      *

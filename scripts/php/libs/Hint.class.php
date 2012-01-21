@@ -72,7 +72,6 @@
 				$links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
 			}
 			$links .= '</div>';
-			echo strlen($links);
         
 			$return .= ''
 			.'<div class="hint-lib">'

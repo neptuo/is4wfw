@@ -1,0 +1,31 @@
+<tr class="{IdleEven}">
+	<td>{Binding id}</td>
+	<td>{Binding question}</td>
+	<td>{BindingCondition enabled Ano : Ne}</td>
+	<td>{BindingCondition allow_multiple Ano : Ne}</td>
+	<td>{Binding answer_count}</td>
+	<td>{Binding vote_count}</td>
+	<td>
+		<form name="inquiry-edit" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="inquiry-id" value="{Binding id}" />
+			<input type="hidden" name="inquiry-edit" value="{Resource button.edit}" />
+			<input type="image" src="~/images/page_edi.png" name="inquiry-edit" value="{Resource button.edit}" title="{Resource button.edithint}" />
+		</form>
+		<form name="inquiry-delete" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="inquiry-id" value="{Binding id}" />
+			<input type="hidden" name="inquiry-delete" value="{Resource button.delete}" />
+			<input class="confirm" type="image" src="~/images/page_del.png" name="inquiry-delete" value="{Resource button.delete}" title="{Resource button.deletehint}" />
+		</form> -
+		<form name="inquiry-answer-add" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="inquiry-id" value="{Binding id}" />
+			<input type="hidden" name="inquiry-answer-create" value="{Resource button.answercreate}" />
+			<input type="hidden" name="inquiry-answers" value="{Resource button.answers}" />
+			<input type="image" src="~/images/page_add.png" name="inquiry-answer-create" value="{Resource button.answercreate}" title="{Resource button.answercreatehint}" />
+		</form>
+		<form name="inquiry-answers" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="inquiry-id" value="{Binding id}" />
+			<input type="hidden" name="inquiry-answers" value="{Resource button.answers}" />
+			<input type="image" src="~/images/page_edi.png" name="inquiry-answers" value="{Resource button.answers}" title="{Resource button.answershint}" />
+		</form>
+	</td>
+</tr>

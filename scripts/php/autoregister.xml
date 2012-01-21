@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<autoregister>
+	<reg prefix="a" class="php.libs.Article" />
+	<reg prefix="cn" class="php.libs.Counter" />
+	<reg prefix="cf" class="php.libs.CustomForm" />
+	<reg prefix="f" class="php.libs.File" />
+	<reg prefix="fa" class="php.libs.FileAdmin" />
+	<reg prefix="g" class="php.libs.Guestbook" />
+	<reg prefix="i" class="php.libs.Inquiry" />
+	<reg prefix="p" class="php.libs.Page" />
+	<reg prefix="s" class="php.libs.Sport" />
+	<reg prefix="sys" class="php.libs.System" />
+	<reg prefix="u" class="php.libs.User" />
+	<reg prefix="wp" class="php.libs.WebProject" />
+	<reg prefix="js" class="php.libs.Js" />
+</autoregister>

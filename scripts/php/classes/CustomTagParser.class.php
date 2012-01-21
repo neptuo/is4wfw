@@ -137,7 +137,7 @@ class CustomTagParser {
                     }
                     $i++;
                 }
-                //echo '$return =  $'.$object[0].'Object->'.$func.'('.$attstring.');';
+                //echo '$return =  $'.$object[0].'Object->'.$func.'('.$attstring.');<br />';
                 if ($this->UseCaching) {
                     self::addSingletonGlobalObject('$' . $object[0] . 'Object');
                     //$return = '\'.$'.$object[0].'Object->'.$func.'('.$attstring.').\'';

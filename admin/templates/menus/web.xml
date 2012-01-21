@@ -6,7 +6,7 @@
     <item name="Templates" name-cs="Šablony" url="~/in/templates.view" security:requirePerm="CMS.Web.Templates" />
     <item name="Embedded Resources" name-cs="Vložené zdroje" url="~/in/embedded-resources.view" security:requirePerm="CMS.Web.EmbeddedResources" />
     <item name="Custom forms" name-cs="Uživatelské formuláře" url="~/in/custom-forms.view" security:requirePerm="CMS.Web.CustomForms" />
-    <item name="File manager" name-cs="Správce souborů" url="~/in/files.view" security:requirePerm="CMS.Web.FileManager" />
+    <item name="File manager" name-cs="Správce souborů" url="~/in/filesng.view" security:requirePerm="CMS.Web.FileManager" />
     <item name="Articles" name-cs="Články" url="~/in/articles.view" security:requirePerm="CMS.Web.Articles" />
     <item name="Guestbooks" name-cs="Knihy návštěv" url="~/in/guestbooks.view" security:requirePerm="CMS.Web.Guestbooks" />
     <item name="Inquiries" name-cs="Ankety" url="~/in/inquiries.view" security:requirePerm="CMS.Web.Inquiries" />

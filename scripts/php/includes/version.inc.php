@@ -5,14 +5,14 @@
  * 	Build version
  *
  */
-define("BUILD_VERSION", 309);
+define("BUILD_VERSION", 312);
 
 /**
  *
  * 	Web framework version.
  *
  */
-define("WEB_VERSION", "1.9.25." . BUILD_VERSION);
+define("WEB_VERSION", "1.9.27." . BUILD_VERSION);
 
 /**
  *
