@@ -1,0 +1,30 @@
+<tr class="{GlobalIdleEven}">
+	<td class="dir-icon dir"></td>
+	<td class="dir"><span>{Binding id}</span></td>
+	<td>
+		<form name="dir-edit" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="dir-id" value="{Binding parent_id}" />
+			<input type="hidden" name="directory-id" value="{Binding id}" />
+			<input type="hidden" name="edit-dir" value="{Resource dir.edit}" />
+			<input type="image" src="~/images/page_edi.png" name="edit-dir" value="{Resource dir.edit}" title="{Resource dir.edithint}" />
+		</form> 
+		<form name="dir-edit" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="dir-id" value="{Binding parent_id}" />
+			<input type="hidden" name="directory-id" value="{Binding id}" />
+			<input type="hidden" name="delete-dir" value="{Resource dir.delete}" />
+			<input class="confirm" type="image" src="~/images/page_del.png" name="delete-dir" value="{Resource dir.delete}" title="{Resource dir.deletehint}, id({Binding id})" />
+		</form>
+	</td>
+	<td>
+		<form name="dir-form" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="dir-id" value="{Binding id}" />
+			<input type="submit" name="ch-dir" value="{Binding name}" />
+		</form>
+	</td>
+	<td></td>
+	<td>
+		<span class="dir-timestamp-date">{DateBinding timestamp d.m.Y}</span> 
+		<span class="dir-timestamp-time">{DateBinding timestamp H:i:s}</span> 
+	</td>
+	<td></td>
+</tr>

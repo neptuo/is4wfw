@@ -1232,7 +1232,7 @@ class DefaultWeb extends BaseTagLib {
                 $attributes[$att[0]] = str_replace("\"", "", $att[1]);
             }
         }
-
+		
         global $phpObject;
         if ($phpObject->isRegistered($object[0]) && $phpObject->isTag($object[0], $object[1], $attributes)) {
             $attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
@@ -1275,8 +1275,12 @@ class DefaultWeb extends BaseTagLib {
         if ($phpObject->isRegistered($object[0]) && $phpObject->isProperty($object[0], $object[1])) {
             global ${$object[0] . "Object"};
             $func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
-            eval('$return =  ${$object[0]."Object"}->{$func}("' . $this->PropertyAttr . '");');
-            return $return;
+			if($func) {
+				eval('$return =  ${$object[0]."Object"}->{$func}("' . $this->PropertyAttr . '");');
+				return $return;
+			} else {
+				return $cprop[0];
+			}
         } else {
             //echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
             return $cprop[0];
@@ -2077,39 +2081,44 @@ class DefaultWeb extends BaseTagLib {
      *
      */
     public function plainFunction() {
-        $return = '';
+        // $return = '';
 
-        //parent::db()->fetchAll(parent::query()->get('selectProjects', array(0 => 5, 1 => 6), 'sport'), true, true, true);
+        // //parent::db()->fetchAll(parent::query()->get('selectProjects', array(0 => 5, 1 => 6), 'sport'), true, true, true);
 
-        require_once("/scripts/php/classes/ui/BaseGrid.class.php");
-        require_once("/scripts/php/classes/ui/BaseForm.class.php");
+        // require_once("/scripts/php/classes/ui/BaseGrid.class.php");
+        // require_once("/scripts/php/classes/ui/BaseForm.class.php");
 
-        $form = new BaseForm();
-        $form->setFormAttrs('text-form', 'post', $_SERVER['REDIRECT_URL'], 'text-form-class-name');
-        $form->addField('text', 'name', 'Name:', 'Your name ...', 'w160', 'w300');
-        $form->addField('textarea', 'content', 'Content:', '', 'w160', 'w300');
-        $form->addDropDown('type', 'Type:', array(array('key' => 0, 'value' => 'Comment'), array('key' => 1, 'value' => 'New topic'), array('key' => 2, 'value' => 'Note')), 2, 'w160', 'w200');
-        $form->addSubmit('save', 'Save', 'save-button');
+        // $form = new BaseForm();
+        // $form->setFormAttrs('text-form', 'post', $_SERVER['REDIRECT_URL'], 'text-form-class-name');
+        // $form->addField('text', 'name', 'Name:', 'Your name ...', 'w160', 'w300');
+        // $form->addField('textarea', 'content', 'Content:', '', 'w160', 'w300');
+        // $form->addDropDown('type', 'Type:', array(array('key' => 0, 'value' => 'Comment'), array('key' => 1, 'value' => 'New topic'), array('key' => 2, 'value' => 'Note')), 2, 'w160', 'w200');
+        // $form->addSubmit('save', 'Save', 'save-button');
 
-        if ($form->isSubmited()) {
-            echo 'Submited ...<br />';
-            if ($form->pressed('save')) {
-                echo 'Pressed "Save" ... <br />';
-                print_r($_POST);
+        // if ($form->isSubmited()) {
+            // echo 'Submited ...<br />';
+            // if ($form->pressed('save')) {
+                // echo 'Pressed "Save" ... <br />';
+                // print_r($_POST);
 
-                $types = array('Comment', 'New topic', 'Note');
+                // $types = array('Comment', 'New topic', 'Note');
 
-                $grid = new BaseGrid();
-                $grid->setHeader(array('name' => 'Name:', 'content' => 'Content:', 'type' => 'Type:'));
-                $grid->addRow(array('name' => $form->getValue('name'), 'content' => $form->getValue('content'), 'type' => $types[$form->getValue('type')]));
-                $return .= $grid->render();
-            }
-        }
+                // $grid = new BaseGrid();
+                // $grid->setHeader(array('name' => 'Name:', 'content' => 'Content:', 'type' => 'Type:'));
+                // $grid->addRow(array('name' => $form->getValue('name'), 'content' => $form->getValue('content'), 'type' => $types[$form->getValue('type')]));
+                // $return .= $grid->render();
+            // }
+        // }
 
 
-        $return .= $form->render();
+        // $return .= $form->render();
 
-        return $return;
+        // return $return;
+		
+		require_once('scripts/php/classes/RoleHelper.class.php');
+		require_once('scripts/php/libs/FileAdmin.class.php');
+		//RoleHelper::refreshCache();
+		RoleHelper::setRights(FileAdmin::$DirectoryRightDesc, 19, array(3, 14), array(1), WEB_R_READ);
     }
 
     /**
@@ -2191,7 +2200,7 @@ class DefaultWeb extends BaseTagLib {
         }
     }
 
-    // PROPERTIES
+    /* ================== PROPERTIES ================================================== */
 
     public function setChildPage($pageId) {
         $this->ChildPageId = $pageId;

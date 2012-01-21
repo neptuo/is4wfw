@@ -1,0 +1,44 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>TODO supply a title</title>
+        <script type="text/javascript" src="/js/jquery/jquery.js"></script>
+    </head>
+    <body>
+        <input type="text" id="url" value="/service/login" style="width: 200px" />
+        <select id="method">
+            <option value="GET">GET</option>
+            <option value="POST" selected="selected">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+        </select>
+        <input type="text" id="params" value="username=mara&amp;password=1111" style="width: 300px" />
+        <input type="text" id="format" value="xml" style="width: 100px" />
+        <button id="button">Send request!</button>
+        <p id="p"></p>
+
+        <script type="text/javascript">
+
+$('#button').click(function() {
+    $.ajax({
+        type: $('#method').val(), // GET, POST, PUT, DELETE etc.
+        url: $('#url').val(), // The actual URL to make the request
+        data: $('#params').val(), // Any data/parameters to send to the server
+        cache: true,
+        beforeSend: function(xmlHttpRequest) {
+          xmlHttpRequest.setRequestHeader('Accept', $('#format').val()); // MIME Type
+        },
+        success: function(data) {
+            $('#p').html(data);
+        }
+    });
+});
+
+        </script>
+    </body>
+</html>

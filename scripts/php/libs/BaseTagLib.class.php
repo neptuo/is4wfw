@@ -1,6 +1,8 @@
 <?php
 
-include_once('System.class.php');
+require_once('System.class.php');
+require_once('FileAdmin.class.php');
+require_once("scripts/php/classes/ExtensionParser.class.php");
 
 /**
  *
@@ -73,16 +75,7 @@ class BaseTagLib {
      *
      */
     public function getFileEx() {
-        return array(
-            WEB_TYPE_CSS => "css", WEB_TYPE_JS => "js", WEB_TYPE_JPG => "jpg", WEB_TYPE_GIF => "gif",
-            WEB_TYPE_PNG => "png", WEB_TYPE_PDF => "pdf", WEB_TYPE_RAR => "rar", WEB_TYPE_ZIP => "zip",
-            WEB_TYPE_TXT => "txt", WEB_TYPE_XML => "xml", WEB_TYPE_XSL => "xsl", WEB_TYPE_DTD => "dtd",
-            WEB_TYPE_HTML => "html", WEB_TYPE_PHP => "php", WEB_TYPE_SQL => "sql", WEB_TYPE_C => "c",
-            WEB_TYPE_CPP => "cpp", WEB_TYPE_H => "h", WEB_TYPE_JAVA => "java", WEB_TYPE_SWF => "swf",
-            WEB_TYPE_MP3 => "mp3", WEB_TYPE_PSD => "psd", WEB_TYPE_DOC => "doc", WEB_TYPE_PPT => "ppt",
-            WEB_TYPE_XLS => "xls", WEB_TYPE_MPEG => "mpeg", WEB_TYPE_MOV => "mov",
-            WEB_TYPE_BMP => "bmp", WEB_TYPE_AVI => "avi", WEB_TYPE_ICO => "ico"
-        );
+        return FileAdmin::$FileExtensions;
     }
 
     /**
@@ -191,37 +184,37 @@ class BaseTagLib {
         return $templateContent;
     }
 
-    protected function php() {
+    public function php() {
         global $phpObject;
         return $phpObject;
     }
 
-    protected function db() {
+    public function db() {
         global $dbObject;
         return $dbObject;
     }
 
-    protected function login() {
+    public function login() {
         global $loginObject;
         return $loginObject;
     }
 
-    protected function system() {
+    public function system() {
         global $sysObject;
         return $sysObject;
     }
 
-    protected function request() {
+    public function request() {
         global $requestStorage;
         return $requestStorage;
     }
 
-    protected function session() {
+    public function session() {
         global $sessionStorage;
         return $sessionStorage;
     }
 
-    protected function query() {
+    public function query() {
         global $queryStorage;
         return $queryStorage;
     }
@@ -297,7 +290,64 @@ class BaseTagLib {
             return $s;
         }
     }
-
+	
+	public function getSystemProperty($name) {
+		$val = self::db()->fetchSingle('select `value` from `system_property` where `key` = "'.$name.'";');
+		return $val['value'];
+	}
+	
+	public function setSystemProperty($name, $value) {
+		if(self::db()->fetchSingle('select `value` from `system_property` where `key` = "'.$name.'";') == array()) {
+			self::db()->execute('insert into `system_property`(`value`, `key`) values("'.$value.'", "'.$name.'");');
+		} else {
+			self::db()->execute('update `system_property` set `value` = "'.$value.'" where `key` = "'.$name.'";');
+		}
+	}
+	
+	private $ResourceBundle;
+	private $BundleName;
+    private $BundleLang = 'cs';
+	
+	public function loadResourceBundle($name) {
+		$this->BundleName = $name;
+	
+		if ($webObject->LanguageName != '') {
+            $rb = new ResourceBundle();
+            if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
+                $this->BundleLang = $webObject->LanguageName;
+            }
+        }
+		
+		$this->ResourceBundle = new ResourceBundle();
+		$this->ResourceBundle->loadBundle($this->BundleName, $this->BundleLang);
+	}
+	
+	public function rb($key = false) {
+		if($key == false) {
+			return $this->ResourceBundle;
+		} else {
+			return $this->ResourceBundle->get($key);
+		}
+	}
+	
+	public function view($name, $data) {
+		$parser = ExtensionParser::initialize($name, self::rb(), $data);
+		return $parser->parse();
+	}
+	
+	private $daos = array();
+	
+	public function dao($name) {
+		if(!array_key_exists($name, $this->daos)) {
+			require_once(PHP_SCRIPTS.'classes/dataaccess/'.$name.'Dao.class.php');
+			$classname = $name.'Dao';
+			$dao = new $classname;
+			$dao->setDataAccess(self::db()->getDataAccess());
+			$this->daos[$name] = $dao;
+		}
+		
+		return $this->daos[$name];
+	}
 }
 
 ?>

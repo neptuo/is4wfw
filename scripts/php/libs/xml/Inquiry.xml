@@ -57,6 +57,14 @@
     <tagname>setCurrentId</tagname>
     <function>setCurrentId</function>
     <attribute>
+      <attname>label</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>label2</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>useFrames</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -83,6 +91,14 @@
   	<getfunction>getCurrentInquiryId</getfunction>
     <comment>
       Vratí hodnotu vybrané ankety
+    </comment>
+  </property>
+  <property>
+  	<propname>currentId2</propname>
+  	<setfunction>setCurrentInquiryId2</setfunction>
+  	<getfunction>getCurrentInquiryId2</getfunction>
+    <comment>
+      Vratí hodnotu vybrané ankety 2
     </comment>
   </property>
 </taglib>

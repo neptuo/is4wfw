@@ -1,0 +1,23 @@
+<tr class="{IdleEven}">
+	<td>{Binding id}</td>
+	<td>{Binding answer}</td>
+	<td>{Binding count}</td>
+	<td>
+		<form name="inquiry-answer-edit" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="inquiry-id" value="{Binding inquiry_id}" />
+			<input type="hidden" name="inquiry-answers" value="{Resource button.answers}" />
+			
+			<input type="hidden" name="inquiry-answer-id" value="{Binding id}" />
+			<input type="hidden" name="inquiry-answer-edit" value="{Resource button.answeredit}" />
+			<input type="image" src="~/images/page_edi.png" name="inquiry-answer-edit" value="{Resource button.answeredit}" title="{Resource button.answeredithint}" />
+		</form> 
+		<form name="inquiry-answer-delete" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="inquiry-id" value="{Binding inquiry_id}" />
+			<input type="hidden" name="inquiry-answers" value="{Resource button.answers}" />
+			
+			<input type="hidden" name="inquiry-answer-id" value="{Binding id}" />
+			<input type="hidden" name="inquiry-answer-delete" value="{Resource button.answerdelete}" />
+			<input class="confirm" type="image" src="~/images/page_del.png" name="inquiry-answer-delete" value="{Resource button.answerdelete}" title="{Resource button.answerdeletehint}" />
+		</form>
+	</td>
+</tr>

@@ -16,7 +16,7 @@
    *  @objectname phpObject
    *  
    *  @author     Marek SMM
-   *  @timestamp  2010-08-07
+   *  @timestamp  2012-01-17
    *
    */        
   class DefaultPhp extends BaseTagLib {
@@ -43,6 +43,8 @@
     private $_CLASSES = array("php.libs.DefaultPhp" => 1, "php.libs.DefaultWeb" => 1, 
                               "php.libs.Error" => 1, "php.libs.Log" => 1, "php.libs.Database" => 1,
                               "php.libs.Login" => 1, "php.libs.System" => 1);
+							  
+	private $_AUTOXML = null;
     
     /**
      *
@@ -74,51 +76,52 @@
      *  @param  $attlist  array with required parameters (tagPrefix & classPath)          
      *
      */                        
-    public function register($tagPrefix, $classPath) {
-      $classJPath = $classPath;
-      //$tagPrefix = $attlist['tagPrefix'];
-      //$classPath = $attlist['classPath'];
-      
-      // KONTROLOVAT POCET INSTANCI PODLE <count> V XML!!!
-      if(!array_key_exists($tagPrefix, $this->_REGISTERED) && !array_key_exists($tagPrefix, $this->_DEFAULT)) {
-        if(self::checkIfClassExists($tagPrefix, $classPath)) {
-          $classArray = self::str_tr($classPath, ".");
-          $classDir = "";
-          for($i = 0; $i < count($classArray) - 1; $i ++) {
-            $classDir .= $classArray[$i];
-            if($i < (count($classArray) - 2)) {
-              $classDir .= ".";
-            }
-          }
-          $className = $classArray[count($classArray) - 1];
-          $classPath = self::parseClassPath($classPath);
-          require_once(SCRIPTS.$classPath.".class.php");
-          
-          if(self::isCountOfInstances($className, $classDir)) {
-            $GLOBALS[$tagPrefix."Object"] = new $className;
-            if(array_key_exists($classJPath, $this->_CLASSES)) {
-              $this->_CLASSES[$classJPath] ++;
-            } else {
-              $this->_CLASSES[$classJPath] = 1;
-            }
-            $this->_REGISTERED[$tagPrefix] = $classDir;
-          } else {
-            $str = "Too much instances of tag lib! [".$classJPath."]";
-            trigger_error($str , E_USER_WARNING);
-            echo "<h4 class=\"error\">".$str."</h4>";
-          }
-        } else {
-          $str = "This class doesn't existecho '-'.$return.'-';! [".$classJPath."]";
-          trigger_error($str , E_USER_WARNING);
-          echo "<h4 class=\"error\">".$str."</h4>";
-        }
-      } else {
-        $str = "This tag prefix also used! [".$tagPrefix."]";
-        trigger_error($str , E_USER_WARNING);
-        echo "<h4 class=\"error\">".$str."</h4>";
-      }
-      return "";
-    }
+	public function register($tagPrefix, $classPath) {
+		$classJPath = $classPath;
+		//echo $tagPrefix.', '.$classPath.'<br />';
+		//$tagPrefix = $attlist['tagPrefix'];
+		//$classPath = $attlist['classPath'];
+
+		// KONTROLOVAT POCET INSTANCI PODLE <count> V XML!!!
+		if(!array_key_exists($tagPrefix, $this->_REGISTERED) && !array_key_exists($tagPrefix, $this->_DEFAULT)) {
+			if(self::checkIfClassExists($tagPrefix, $classPath)) {
+				$classArray = self::str_tr($classPath, '.');
+				$classDir = "";
+				for($i = 0; $i < count($classArray) - 1; $i ++) {
+					$classDir .= $classArray[$i];
+					if($i < (count($classArray) - 2)) {
+						$classDir .= ".";
+					}
+				}
+				$className = $classArray[count($classArray) - 1];
+				$classPath = self::parseClassPath($classPath);
+				require_once(SCRIPTS.$classPath.".class.php");
+				
+				if(self::isCountOfInstances($className, $classDir)) {
+					$GLOBALS[$tagPrefix."Object"] = new $className;
+					if(array_key_exists($classJPath, $this->_CLASSES)) {
+						$this->_CLASSES[$classJPath] ++;
+					} else {
+						$this->_CLASSES[$classJPath] = 1;
+					}
+					$this->_REGISTERED[$tagPrefix] = $classDir;
+				} else {
+					$str = "Too much instances of tag lib! [".$classJPath."]";
+					trigger_error($str , E_USER_WARNING);
+					echo "<h4 class=\"error\">".$str."</h4>";
+				}
+			} else {
+				$str = "This class doesn't existecho '-'.$return.'-';! [".$classJPath."]";
+				trigger_error($str , E_USER_WARNING);
+				echo "<h4 class=\"error\">".$str."</h4>";
+			}
+		} else {
+			$str = "This tag prefix also used! [".$tagPrefix."]";
+			trigger_error($str , E_USER_WARNING);
+			echo "<h4 class=\"error\">".$str."</h4>";
+		}
+		return "";
+	}
   
     /**
      *
@@ -223,12 +226,29 @@
      *
      */                   
     public function isRegistered($tagPrefix) {
-      if(array_key_exists($tagPrefix, $this->_REGISTERED) || array_key_exists($tagPrefix, $this->_DEFAULT)) {
-        return true;
-      } else {
-        return false;
-      }
+		if(array_key_exists($tagPrefix, $this->_REGISTERED) || array_key_exists($tagPrefix, $this->_DEFAULT)) {
+			return true;
+		} else {
+			return self::autoRegisterPrefix($tagPrefix);
+		}
     }
+	
+	public function autoRegisterPrefix($prefix) {
+		if($this->_AUTOXML == null) {
+			$this->_AUTOXML = new SimpleXMLElement(file_get_contents(PHP_SCRIPTS.'autoregister.xml'));
+		}
+		
+		$xml = $this->_AUTOXML;
+		foreach($xml->reg as $reg) {
+			$attrs = $reg->attributes();
+			if($attrs['prefix'] == $prefix) {
+				self::register($prefix, (string)$attrs['class']);
+				return true;
+			}
+		}
+		
+		return false;
+	}
     
     /**
      *
@@ -391,30 +411,31 @@
      *
      */                   
     private function isCountOfInstances($className, $classDir) {
-      $count = 0;
-      
-      if(array_key_exists($classDir.".".$className, $this->_CLASSES)) {
-        $count = $this->_CLASSES[$classDir.".".$className];
-      }
-      
-      $tmp = new $className();
-      $xmlPath = str_replace(".", "/", $classDir)."/".$tmp->getTagLibXml();
-      if(is_file(SCRIPTS.$xmlPath)) {
-          $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
-          
-          if((string)$xml->count == "*") {
-            return true;
-          } else if((int)$xml->count > $count) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
-          trigger_error($str , E_USER_WARNING);
-          echo "<h4 class=\"error\">".$str."</h4>";
-          return false;
-        }
+		$count = 0;
+
+		if(array_key_exists($classDir.".".$className, $this->_CLASSES)) {
+			$count = $this->_CLASSES[$classDir.".".$className];
+		}
+		
+		//echo ' '.$className.'<br />';
+		$tmp = new $className();
+		$xmlPath = str_replace(".", "/", $classDir)."/".$tmp->getTagLibXml();
+		if(is_file(SCRIPTS.$xmlPath)) {
+			$xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+
+			if((string)$xml->count == "*") {
+				return true;
+			} else if((int)$xml->count > $count) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			$str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
+			trigger_error($str , E_USER_WARNING);
+			echo "<h4 class=\"error\">".$str."</h4>";
+			return false;
+		}
     }
     
     /**
@@ -448,14 +469,16 @@
                 $att = $tag->attribute[$i];
                 if(array_key_exists((string)$att->attname, $atts)) {
                   $return[(string)$att->attname] = $atts[(string)$att->attname];
-                } else {
+                } elseif(isset($att->attdef)) {
+					eval('$val = '. $att->attdef.';');
+					$return[(string)$att->attname] = $val;
+				} else {
                   $return[(string)$att->attname] = false;
                 }
               }
               break;
             }
           }
-          
           return $return;
         } else {
           $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
@@ -639,11 +662,11 @@
               } elseif(strtolower($use) == 'get') {
               	return (string)$prop->getfunction;
               } else {
-								$str = "Bad use!";
-          			trigger_error($str , E_USER_WARNING);
-      		    	echo "<h4 class=\"error\">".$str."</h4>";
-			          return false;			
-							}
+					//$str = "Bad use!";
+          			//trigger_error($str , E_USER_WARNING);
+      		    	//echo "<h4 class=\"error\">".$str."</h4>";
+				    return false;			
+				}
             }
           }
           

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>FileAdmin Lib</name>
+  <classname>FileAdmin</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro správu souborového systému, náhrada za admin funkce z File class.
+  </comment>
+  <tag>
+    <tagname>browser</tagname>
+    <function>fileBrowser</function>
+    <attribute>
+      <attname>dirId</attname>
+      <attreq>implied</attreq>
+	  <attdef>0</attdef>
+    </attribute>
+    <attribute>
+      <attname>browsable</attname>
+      <attreq>implied</attreq>
+	  <attdef>true</attdef>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+	  <attdef>true</attdef>
+    </attribute>
+    <comment>
+      Zobrazí browser souborovým systémem
+    </comment>
+  </tag>
+  <tag>
+    <tagname>upload</tagname>
+    <function>fileUpload</function>
+    <attribute>
+      <attname>dirId</attname>
+      <attreq>implied</attreq>
+	  <attdef>0</attdef>
+    </attribute>
+    <attribute>
+      <attname>useRights</attname>
+      <attreq>implied</attreq>
+	  <attdef>true</attdef>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+	  <attdef>true</attdef>
+    </attribute>
+    <comment>
+      Zobrazí formulář nahrání souborů
+    </comment>
+  </tag>
+  <tag>
+    <tagname>directoryEditor</tagname>
+    <function>directoryEditor</function>
+    <attribute>
+      <attname>useRights</attname>
+      <attreq>implied</attreq>
+	  <attdef>true</attdef>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+	  <attdef>true</attdef>
+    </attribute>
+    <comment>
+      Zobrazí formulář pro editaci složky
+    </comment>
+  </tag>
+  
+  <property>
+  	<propname>currentId</propname>
+  	<setfunction>setCurrentInquiryId</setfunction>
+  	<getfunction>getCurrentInquiryId</getfunction>
+    <comment>
+      Vratí hodnotu vybrané ankety
+    </comment>
+  </property>
+</taglib>
+

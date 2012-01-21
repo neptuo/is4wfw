@@ -1,0 +1,45 @@
+<form name="file-upload" method="post" action="{Server REDIRECT_URL}" enctype="multipart/form-data">
+	<div class="file-upload">
+		<div class="gray-box">
+			<label for="file-name" class="w60">{Resource label.name}:</label>
+			<input type="text" name="file-name[]" id="file-name" value="{Binding name}" class="w300" />
+		</div>
+		<div class="gray-box">
+			<label for="file-title" class="w60">{Resource label.title}:</label>
+			<input type="text" name="file-title[]" id="file-title" value="{Binding title}" class="w400" />
+		</div>
+		<div class="gray-box">
+			<label for="file-upload" class="w60">{Resource label.upload}:</label>
+			<input type="file" name="file-upload[]" id="file-upload" class="w250" />
+		</div>
+		<hr />
+	</div>
+	{Template this fileadmin-file-perm fa:canUseRights}
+	<div class="clear"></div>
+	<div class="gray-box jq-buttons">
+		<input type="hidden" name="dir-id" value="{Binding dir_id}" />
+		<input type="hidden" name="file-id" value="{Binding id}" />
+		<input type="hidden" name="zip-out" value="{Binding zip-out}" />
+		<input type="submit" name="file-save" value="{Resource button.save}" />
+	</div>
+</form>
+
+<script type="text/javascript">
+	
+	var binding = '{Binding id}';
+	
+	$(function() {
+		var fn = new FileName($('.file-upload').find('input[type=file]').get(0), $('.file-upload').find('input[type=text]').first().get(0));
+		
+		if(binding == '') {
+			$('<a />').html('Pridat soubor').attr('href', 'javascript::').appendTo($('.jq-buttons')).click(function() {
+				$form = $('.file-upload');
+				$clone = $form.first().clone();
+				$form.last().after($clone);
+				
+				var fn2 = new FileName($clone.find('input[type=file]').get(0), $clone.find('input[type=text]').first().get(0));
+			});
+		}
+	});
+
+</script>

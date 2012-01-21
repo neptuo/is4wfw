@@ -1,0 +1,31 @@
+<tr class="{GlobalIdleEven}">
+	<td class="file-icon {Function fa:getFileExtension}"></td>
+	<td class="{Function fa:getFileExtension}"><span>{Binding id}</span></td>
+	<td>
+		<form name="dir-edit" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="dir-id" value="{Binding dir_id}" />
+			<input type="hidden" name="file-id" value="{Binding id}" />
+			<input type="hidden" name="edit-file" value="{Resource file.edit}" />
+			<input type="image" src="~/images/page_edi.png" name="edit-file" value="{Resource file.edit}" title="{Resource file.edithint}" />
+		</form> 
+		<form name="dir-edit" method="post" action="{Server REDIRECT_URL}">
+			<input type="hidden" name="dir-id" value="{Binding dir_id}" />
+			<input type="hidden" name="file-id" value="{Binding id}" />
+			<input type="hidden" name="delete-file" value="{Resource file.delete}" />
+			<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="{Resource file.delete}" title="{Resource file.deletehint}, id({Binding id})" />
+		</form>
+	</td>
+	<td>
+		<a target="_blank" title="{Binding title}" href="~/file.php?rid={Binding id}">
+		{Binding name}
+		</a>
+	</td>
+	<td>
+		<a href="{Function fa:getFileDirectUrl}" target="_blank">{Resource file.open}</a>
+	</td>
+	<td>
+		<span class="file-timestamp-date">{DateBinding timestamp d.m.Y}</span> 
+		<span class="file-timestamp-time">{DateBinding timestamp H:i:s}</span> 
+	</td>
+	<td>{Function fa:getFileExtension}</td>
+</tr>

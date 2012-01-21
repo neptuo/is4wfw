@@ -3,8 +3,8 @@ body {
 }
 
 .cms .head {
-    /*position: static;*/
-    position: fixed;
+    position: static;
+    /*position: fixed;*/
 }
 
 .cms .body {
@@ -30,5 +30,5 @@ body {
 }
 
 .standart tr.idle:hover td, .standart tr.even:hover td {
-    background: yellow !important;
+    background-color: yellow !important;
 }

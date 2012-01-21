@@ -1,0 +1,25 @@
+<div class="gray-box">
+	<form name="browser-manage" method="post" action="{Server REDIRECT_URL}">
+		<input type="hidden" name="dir-id" value="{Binding parent.id}" />
+		<input type="submit" name="new-file" value="{Resource button.newfile}" />
+		<input type="submit" name="new-directory" value="{Resource button.newdirectory}" />
+		|
+		<input type="submit" name="new-zipfile" value="{Resource button.newzipfile}" />
+		<input type="submit" name="new-import" value="{Resource button.import}" class="confirm" />
+	</form>
+</div>
+
+<table class="dir-list standart">
+	<tr>
+		<th class="w20"></th>
+		<th class="w30 th-id"><span>{Resource file.id}</span></th>
+		<th class="w40 th-edit"></th>
+		<th class="th-name">{Resource file.name}</th>
+		<th class="w100 th-dir-physical-path">{Resource file.directlink}</th>
+		<th class="w160 th-timestamp">{Resource file.timestamp}</th>
+		<th class="w60 th-type">{Resource file.type}</th>
+	</tr>
+	{Template parent fileadmin-parentdir-row fa:canReadDirectory}
+	{ForEach dirs fileadmin-dir-row fa:canReadDirectory}
+	{ForEach files fileadmin-file-row fa:canReadFile}
+</table>

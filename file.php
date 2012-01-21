@@ -91,13 +91,14 @@ if (array_key_exists('fid', $_REQUEST)) {
     require_once("scripts/php/includes/extensions.inc.php");
     require_once("scripts/php/libs/Database.class.php");
     require_once("scripts/php/libs/File.class.php");
+	require_once("scripts/php/libs/FileAdmin.class.php");
     $dbObject = new Database();
     $dbObject->setCacheResults('NONE');
     $flObject = new File();
     $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = " . $fileId . ";");
 
     if (count($file) == 1) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0]['name'] . "." . $flObject->FileEx[$file[0]['type']];
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
         //echo $filePath;
         $updTime = filemtime($filePath);
 
@@ -113,13 +114,13 @@ if (array_key_exists('fid', $_REQUEST)) {
             exit;
         }
 
-        //$fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".$flObject->FileEx[$file[0]['type']] : "document/".$file[0]['type'];
-        $fileExt = $flObject->FileMimeType[$file[0]['type']];
+        //$fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".FileAdmin::$FileExtensions[$file[0]['type']] : "document/".$file[0]['type'];
+        $fileExt = FileAdmin::$FileMimeTypes[$file[0]['type']];
 
         if (array_key_exists("width", $_GET) && array_key_exists("height", $_GET)) {
             $width = $_GET['width'];
             $height = $_GET['height'];
-            $thumbPath = 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . $flObject->FileEx[$file[0]['type']];
+            $thumbPath = 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -133,7 +134,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             $ratio = $width / $orWidth;
             $height = round($ratio * $orHeight);
 
-            $thumbPath = 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . $flObject->FileEx[$file[0]['type']];
+            $thumbPath = 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -147,7 +148,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             $ratio = $height / $orHeight;
             $width = round($ratio * $orWidth);
 
-            $thumbPath = 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . $flObject->FileEx[$file[0]['type']];
+            $thumbPath = 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -162,7 +163,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             header('Content-Type: ' . $fileExt);
             header('Accept-Ranges: bytes');
             header('Content-Length: ' . $fileSize);
-            header('Content-Disposition: attachment; filename=' . $file[0]['name'] . "." . $flObject->FileEx[$file[0]['type']]);
+            header('Content-Disposition: attachment; filename=' . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']]);
             header('Content-Transfer-Encoding: binary');
             header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
             $file = @ fopen($filePath, 'rb');
@@ -191,6 +192,7 @@ if (array_key_exists('fid', $_REQUEST)) {
     require_once("scripts/php/includes/extensions.inc.php");
     require_once("scripts/php/libs/Database.class.php");
     require_once("scripts/php/libs/File.class.php");
+	require_once("scripts/php/libs/FileAdmin.class.php");
     $dbObject = new Database();
     $flObject = new File();
 
@@ -214,7 +216,7 @@ if (array_key_exists('fid', $_REQUEST)) {
         header('Content-Type: ' . $fileExt);
         header('Accept-Ranges: bytes');
         header('Content-Length: ' . $fileSize);
-        header('Content-Disposition: attachment; filename=' . $file[0]['name'] . "." . $flObject->FileEx[$file[0]['type']]);
+        header('Content-Disposition: attachment; filename=' . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']]);
         header('Content-Transfer-Encoding: binary');
         header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
         $file = @ fopen($filePath, 'rb');
