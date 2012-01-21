@@ -113,6 +113,17 @@ class RoleHelper {
 		return self::getRoles(RoleHelper::$instance->login()->getGroupsIds());
 	}
 	
+	public static function getUserRoles($uid) {
+		$sql = 'select `gid` from `user_in_group` where `uid` = '.$uid.';';
+		$result = RoleHelper::$instance->db()->getDataAccess()->fetchAll($sql);
+		$return = array();
+		foreach($result as $gp) {
+			$return[count($return)] = $gp['gid'];
+		}
+		
+		return self::getRoles($return);
+	}
+	
 	public static function getRights($tableDesc, $objectId, $type = 0) {
 		return self::getRights2($tableDesc[0], $tableDesc[1], $tableDesc[2], $tableDesc[3], $objectId, $type);
 	}
@@ -171,6 +182,10 @@ class RoleHelper {
 	}
 	
 	public static function deleteRights2($table, $objectColumn, $groupColumn, $typeColumn, $objectId) {
+		if(RoleHelper::$instance == null) {
+			RoleHelper::$instance = new RoleCacheHelper();
+		}
+		
 		$sql = 'delete from `'.$table.'` where `'.$objectColumn.'` = '.$objectId.';';
 		RoleHelper::$instance->db()->getDataAccess()->transaction();
 		RoleHelper::$instance->db()->getDataAccess()->execute($sql);
@@ -178,12 +193,20 @@ class RoleHelper {
 	}
 	
 	public static function getPermissionsOrDefalt($tableDesc, $objectId, $type, $altTableDesc = array(), $altObjectId = null) {
-	   return self::getPermissionsOrDefalt2($tableDesc[0], $tableDesc[1], $tableDesc[2], $tableDesc[3], $objectId, $type, $altTableDesc[0], $altTableDesc[1], $altTableDesc[2], $altTableDesc[3], $altObjectId);
+	   if(RoleHelper::$instance == null) {
+			RoleHelper::$instance = new RoleCacheHelper();
+		}
+		
+		return self::getPermissionsOrDefalt2($tableDesc[0], $tableDesc[1], $tableDesc[2], $tableDesc[3], $objectId, $type, $altTableDesc[0], $altTableDesc[1], $altTableDesc[2], $altTableDesc[3], $altObjectId);
 	}
 	
 	public static function getPermissionsOrDefalt2($table, $objectColumn, $groupColumn, $typeColumn, $objectId, $type, 
 	       $altTable = null, $altObjectColumn = null, $altGroupColumn = null, $altTypeColumn = null, $altObjectId = null) {
 		   
+		if(RoleHelper::$instance == null) {
+			RoleHelper::$instance = new RoleCacheHelper();
+		}
+		
 		$result = array();
 		if($objectId != '' && $objectId != 0 && $objectId > 0) {
 			$sql = 'select `'.$objectColumn.'`, `'.$groupColumn.'`, `'.$typeColumn.'` from `'.$table.'` where `'.$objectColumn.'` = '.$objectId.' and `'.$typeColumn.'` = '.$type.';';
@@ -194,6 +217,28 @@ class RoleHelper {
 		}
 		
 		return $result;
+	}
+	
+	public static function canCurrentEditUser($uid) {
+		if(RoleHelper::$instance == null) {
+			RoleHelper::$instance = new RoleCacheHelper();
+		}
+		
+		if(RoleHelper::$instance->login()->getUserId() == $uid) {
+			return true;
+		}
+	
+		$current = self::getCurrentRoles();
+		$target = self::getUserRoles($uid);
+		
+		$currentMax = RoleHelper::$instance->db()->getDataAccess()->fetchSingle(self::getCurrentEditUserSql($current));
+		$targetMax = RoleHelper::$instance->db()->getDataAccess()->fetchSingle(self::getCurrentEditUserSql($target));
+		
+		return $currentMax['value'] < $targetMax['value'];
+	}
+	
+	private static function getCurrentEditUserSql($roles) {
+		return 'select min(`value`) as `value` from `group` where `gid` in ('.implode(',', $roles).');';
 	}
 	
 	/* ================== HTML ======================================================== */

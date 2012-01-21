@@ -6,6 +6,7 @@
    *
    */
   require_once("BaseTagLib.class.php");
+  require_once("scripts/php/classes/RoleHelper.class.php");
   
   /**
    * 
@@ -582,6 +583,27 @@
 			
 			return $return;
 		}
+		
+	public function manageRoleCache($buttonOnly = false, $useFrames = true) {
+		$return = '';
+		
+		if($_POST['rolecache-refresh'] == 'Refresh role cache') {
+			RoleHelper::refreshCache();
+			$return .= parent::getSuccess('Refreshed ...');
+		}
+		
+		if($buttonOnly) {
+			return $return.parent::view('system-rolecache-button', array());
+		}
+		
+		$dataModel = array('items' => parent::dao('RoleCache')->getList());
+		
+		if($useFrames) {
+			return parent::getFrame('Role cache', $return.parent::view('system-rolecache', $dataModel), "", true);
+		} else {
+			return $return.parent::view('system-rolecache', $dataModel);
+		}
+	}
 		
 		/* ---------- PROPERTIES ---------------------- */
 		

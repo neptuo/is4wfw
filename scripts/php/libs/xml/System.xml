@@ -4,7 +4,7 @@
   <name>System setup lib</name>
   <classname>System</classname>
   <classpath>php.libs</classpath>
-  <version>1.04</version>
+  <version>1.05</version>
   <count>*</count>
   <comment>
     Třída pro správu webového frameworku.
@@ -119,6 +119,23 @@
     </attribute>
     <comment>
       Zobrazí výpis připojení k db.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>manageRoleCache</tagname>
+    <function>manageRoleCache</function>
+    <attribute>
+      <attname>buttonOnly</attname>
+      <attreq>implied</attreq>
+	  <attdef>false</attdef>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+	  <attdef>true</attdef>
+    </attribute>
+    <comment>
+      Zobrazí správu role-cache.
     </comment>
   </tag>
   <property>

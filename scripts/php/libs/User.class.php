@@ -6,6 +6,7 @@
  *
  */
 require_once("BaseTagLib.class.php");
+require_once("scripts/php/classes/RoleHelper.class.php");
 
 /**
  *
@@ -115,8 +116,7 @@ class User extends BaseTagLib {
 
         if ($_POST['user-list-edit'] == $rb->get('management.edit')) {
             $uid = $_POST['user-list-uid'];
-            $permission = $dbObject->fetchAll('SELECT DISTINCT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE (`group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `user`.`uid` = ' . $loginObject->getUserId() . ') AND `user`.`uid` = ' . $uid . ' ORDER BY `user`.`uid`;');
-            if (count($permission) > 0) {
+            if (RoleHelper::canCurrentEditUser($uid)) {
                 $user = $dbObject->fetchAll("SELECT `uid`, `login`, `name`,`surname`, `enable`, `group_id` FROM `user` WHERE `uid` = " . $uid . " ORDER BY `uid`;");
                 $groups = $dbObject->fetchAll("SELECT `group`.`gid` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `user_in_group`.`uid` = " . $user[0]['uid'] . ";");
                 $return .= parent::getFrame($rb->get('management.edittitle'), self::editForm($user[0], $groups, $defaultMainGroupId == ''), '');
@@ -127,8 +127,7 @@ class User extends BaseTagLib {
 
         if ($_POST['user-list-delete'] == $rb->get('management.delete')) {
             $uid = $_POST['user-list-uid'];
-            $permission = $dbObject->fetchAll('SELECT DISTINCT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE (`group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `user`.`uid` = ' . $loginObject->getUserId() . ') AND `user`.`uid` = ' . $uid . ' ORDER BY `user`.`uid`;');
-            if (count($permission) > 0) {
+            if (RoleHelper::canCurrentEditUser($uid)) {
                 $dbObject->execute("DELETE FROM `user_in_group` WHERE `uid` = " . $uid . ";");
                 $dbObject->execute("DELETE FROM `user` WHERE `uid` = " . $uid . ";");
             } else {
@@ -153,8 +152,12 @@ class User extends BaseTagLib {
                     . '<th class="user-list-th user-list-group">' . $rb->get('management.groups') . ':</th>'
                     . '<th class="user-list-th user-list-edit"></th>'
                     . '</tr>';
-            $users = $dbObject->fetchAll('SELECT DISTINCT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `user`.`uid` = ' . $loginObject->getUserId() . ' ORDER BY `user`.`uid`;');
+            $users = $dbObject->fetchAll('SELECT DISTINCT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname` FROM `user` ORDER BY `user`.`uid`;');
             foreach ($users as $user) {
+				if(!RoleHelper::canCurrentEditUser($user['this_uid'])) {
+					continue;
+				}
+			
                 $groups = $dbObject->fetchAll("SELECT `group`.`name` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `user_in_group`.`uid` = " . $user['this_uid'] . ";");
 
                 $groupList = '';
@@ -217,7 +220,7 @@ class User extends BaseTagLib {
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
-        $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value`;');
+        $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') ORDER BY `value`;');
         $groupSelect = '<select id="user-edit-groups" name="user-edit-groups[]" multiple="multiple" size="6">';
         $mainGroup = '';
         foreach ($allGroups as $group) {
@@ -476,7 +479,11 @@ class User extends BaseTagLib {
                         . $groupsList
                         . '</table>'
                         . '</form>'
-                        . '</div>';
+                        . '</div>'
+						.'<hr />'
+						.'<div class="gray-box">'
+							.parent::system()->manageRoleCache(true)
+						.'</div>';
             } else {
                 $return .= '<h4 class="warning">No groups to edit!</h4>';
             }

@@ -27,12 +27,13 @@
 <script type="text/javascript">
 	
 	var binding = '{Binding id}';
+	var linkText = '{Resource button.addfile}';
 	
 	$(function() {
 		var fn = new FileName($('.file-upload').find('input[type=file]').get(0), $('.file-upload').find('input[type=text]').first().get(0));
 		
 		if(binding == '') {
-			$('<a />').html('Pridat soubor').attr('href', 'javascript::').appendTo($('.jq-buttons')).click(function() {
+			$('<a />').html(linkText).attr('href', 'javascript::').appendTo($('.jq-buttons')).click(function() {
 				$form = $('.file-upload');
 				$clone = $form.first().clone();
 				$form.last().after($clone);

@@ -4,7 +4,7 @@
   <name>Article Lib</name>
   <classname>Article</classname>
   <classpath>php.libs</classpath>
-  <version>1.44</version>
+  <version>1.46</version>
   <count>*</count>
   <comment>
     Třída pro články.
@@ -64,12 +64,18 @@
       <attname>labelIds</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>pageable</attname>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+    </attribute>
     <comment>
       Vypíše všechny všechny články z řady. Pokud je zadáno pageId, je to stránka,
       na kterou povede odkaz na detail článku, method (static | dynamic) pak udává jesi
       má být použit dynamický překlad adres nebo předání parametrem.
       Musí být zadán buď template(deprecated) nebo templateId. Sort = asc ( default ) / desc.
-	  LabelIds je čárkou oddělený seznam id štíků
+	  LabelIds je čárkou oddělený seznam id štíků.
+	  "pageable" pokud je true, pak se zobrazí stránkování (je vyžadován atribut limit[jakožto pageSize] a pageId!)
     </comment>
   </tag>
   <tag>
@@ -129,10 +135,20 @@
     <attribute>
       <attname>lineId</attname>
       <attreq>implied</attreq>
+      <attdef>0</attdef>
+    </attribute>
+    <attribute>
+      <attname>nextLinkText</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>prevLinkText</attname>
+      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí detail článku do templatu. Parametr 'articleId' může být také zadán jako
-      _REQUEST['article-id']. "lineId" je doplňující informace při novém použití article:url! (pro jednoznačnost výběru článku - není povinná, ale vhodná)
+      _REQUEST['article-id']. "lineId" je doplňující informace při novém použití article:url! (pro jednoznačnost výběru článku - není povinná, ale vhodná).
+	  "nextLinkText" a "prevLinkText" jsou texty odkazů na další/předchozí článek (řazeno podle pořadí).
     </comment>
   </tag>
   <tag>
@@ -215,8 +231,14 @@
       <attname>newArticleButton</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>pageable</attname>
+      <attreq>implied</attreq>
+	  <attdef>false</attdef>
+    </attribute>
     <comment>
-      Správa článků. Argument 'lineId' může být předán přes _REQUEST['line-id'] nebo _SESSION['article-line-id']
+      Správa článků. Argument 'lineId' může být předán přes _REQUEST['line-id'] nebo _SESSION['article-line-id'].
+	  "pageable" umožňuje stránkování (vyžaduje pageId).
     </comment>
   </tag>
   <tag>

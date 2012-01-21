@@ -4,7 +4,7 @@
   <name>Page Lib</name>
   <classname>Page</classname>
   <classpath>php.libs</classpath>
-  <version>1.53</version>
+  <version>1.54</version>
   <count>*</count>
   <comment>
     Třída pro správu obsahu jednotlivých stránek.
@@ -25,6 +25,18 @@
     </attribute>
     <comment>
       Zobrazí kompletní administrační výpis stránek. Navazující prvek pro editaci je <strong>showEditPage</strong>.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>pageProperties</tagname>
+    <function>managePageProperties</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+      <attdef>true</attdef>
+    </attribute>
+    <comment>
+      Zobrazí správu výchozích vlastností stránky.
     </comment>
   </tag>
   <tag>

@@ -45,4 +45,7 @@
 	<script build="307">INSERT INTO `group_perms` (`id` ,`group_id` ,`name` ,`value` ,`type`)VALUES (NULL ,  '1',  'CMS.Web.Inquiries',  'true',  'bool';</script>
 	<script build="307">ALTER TABLE  `inquiry` ADD  `allow_multiple` BOOL NOT NULL;</script>
 	<script build="312">CREATE TABLE `rolecache` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`source_id` INT NOT NULL ,`target_id` INT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+	<script build="313">INSERT INTO `group_perms` (`group_id` ,`name` ,`value` ,`type`) VALUES ('1',  'CMS.Settings.RoleCache',  'true',  'bool');</script>
+	<script build="314">INSERT INTO `group_perms` (`group_id` ,`name` ,`value` ,`type`) VALUES ('1',  'Page.ManageProperties',  'true',  'bool');</script>
+	<script build="315">CREATE TABLE `page_property_value` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`page_id` INT NOT NULL ,`name` TINYTEXT NOT NULL ,`value` TINYTEXT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
 </autoupdate>

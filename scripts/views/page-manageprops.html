@@ -1,0 +1,17 @@
+<form name="manage-properties" method="post" action="{Server REDIRECT_URL}">
+	<table class="standart" style="width: 99.8%">
+		<tr>
+			<th>{Resource label.name}:</th>
+			<th>{Resource label.value}:</th>
+			<th class="w40">{Resource label.delete}:</th>
+		</tr>
+		{ForEach items page-manageprops-row}
+		{Template page-manageprops-newrow}
+	</table>
+	<hr />
+	<div class="gray-box">
+		<input type="hidden" name="page-id" value="{Binding page_id}" />
+		<input type="submit" name="manageprops-save" value="{Resource button.save}" />
+		<input type="submit" name="manageprops-delete" value="{Resource button.deleteselected}" class="confirm" />
+	</div>
+</form>
