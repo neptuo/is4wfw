@@ -247,7 +247,13 @@ class FileAdmin extends BaseTagLib {
 						continue;
 					}
 					
-					$dataItem = array('name' => $info['filename'], 'type' => self::getWebFileType($info['basename']), 'dir_id' => $rootId, 'timestamp' => time());
+					$dataItem = array(
+						'name' => $info['filename'], 
+						'type' => self::getWebFileType($info['basename']), 
+						'dir_id' => $rootId, 
+						'timestamp' => time(), 
+						'url' => parent::convertToUrlValid($info['filename'])
+					);
 					
 					if(parent::dao('File')->insert($dataItem) != 0) {
 						continue;
@@ -331,6 +337,10 @@ class FileAdmin extends BaseTagLib {
 	
 	protected function processFileUpload($dataItem, $fileTmpName, $readRights, $writeRights, $deleteRights) {
 		$new = $dataItem['id'] == '';
+		
+		if($dataItem['url'] == '') {
+			$dataItem['url'] = strtolower(parent::convertToUrlValid($dataItem['name']));
+		}
 		
 		if($fileTmpName == '') {
 			$fileTmpName = null;
@@ -435,25 +445,38 @@ class FileAdmin extends BaseTagLib {
 		}
 		
 		if($_POST['file-save'] == parent::rb('button.save')) {
+			$parentId = $_POST['dir-id'];
+		
 			$read = $_POST['file-right-r'];
 			if($read == array()) {
-				$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $_POST['dir_id'], WEB_R_READ);
+				$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_READ);
 			}
 			$write = $_POST['file-right-w'];
 			if($write == array()) {
-				$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $_POST['dir_id'], WEB_R_WRITE);
+				$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_WRITE);
 			}
 			$delete = $_POST['file-right-d'];
 			if($delete == array()) {
-				$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $_POST['dir_id'], WEB_R_DELETE);
+				$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_DELETE);
 			}
 				
 			if(!$_POST['zip-out']) {
 				$fileNames = $_POST['file-name'];
 				
 				foreach($fileNames as $i => $name) {
-					$dataItem = array('id' => $_POST['file-id'], 'name' => $name, 'title' => $_POST['file-title'][$i], 'dir_id' => $_POST['dir-id'], 'type' => self::getWebFileType($_FILES['file-upload']['name'][$i]), 'timestamp' => time());
+					$dataItem = array(
+						'id' => $_POST['file-id'], 
+						'name' => $name, 
+						'title' => $_POST['file-title'][$i], 
+						'dir_id' => $parentId, 
+						'type' => self::getWebFileType($_FILES['file-upload']['name'][$i]), 
+						'timestamp' => time(),
+						'url' => $_POST['file-url'][$i]
+					);
 					
+					//print_r($read);
+					//print_r($write);
+					//print_r($delete);
 					$result = self::processFileUpload($dataItem, $_FILES['file-upload']['tmp_name'][$i], $read, $write, $delete);
 					if($result != null) {
 						$_POST['new-file'] = parent::rb('button.newfile');
@@ -551,23 +574,28 @@ class FileAdmin extends BaseTagLib {
 		}
 		
 		if($_POST['directory-save'] == parent::rb('button.save')) {
+			$parentId = $_POST['dir-id'];
 			
 			$read = $_POST['directory-right-r'];
 			if($read == array()) {
-				$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['parent_id'], WEB_R_READ);
+				$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_READ);
+				print_r($read);
 			}
 			$write = $_POST['directory-right-w'];
 			if($write == array()) {
-				$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['parent_id'], WEB_R_WRITE);
+				$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_WRITE);
 			}
 			$delete = $_POST['directory-right-d'];
 			if($delete == array()) {
-				$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['parent_id'], WEB_R_DELETE);
+				$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_DELETE);
 			}
 			
 			
-			$dataItem = array('id' => $_POST['directory-id'], 'name' => $_POST['dir-name'], 'url' => $_POST['dir-url'], 'parent_id' => $_POST['dir-id'], 'timestamp' => time());
+			$dataItem = array('id' => $_POST['directory-id'], 'name' => $_POST['dir-name'], 'url' => $_POST['dir-url'], 'parent_id' => $parentId, 'timestamp' => time());
 			
+			//print_r($read);
+			//print_r($write);
+			//print_r($delete);
 			$result = self::processDirectoryEdit($dataItem, $read, $write, $delete);
 			if($result != null) {
 				$_POST['new-directory'] = parent::rb('button.newdirectory');

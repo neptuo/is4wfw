@@ -216,7 +216,12 @@ class RoleHelper {
 			$result = RoleHelper::$instance->db()->getDataAccess()->fetchAll($sql);
 		}
 		
-		return $result;
+		$return = array();
+		foreach($result as $item) {
+			$return[count($return)] = $item[$groupColumn];
+		}
+		
+		return $return;
 	}
 	
 	public static function canCurrentEditUser($uid) {
