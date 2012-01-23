@@ -184,6 +184,7 @@
 						.'<option value="php.libs.Guestbook"'.($_SESSION['select-class-path'] == 'php.libs.Guestbook' ? 'selected="selected"' : '').'>php.libs.Guestbook</option>'
 						.'<option value="php.libs.Hint"'.($_SESSION['select-class-path'] == 'php.libs.Hint' ? 'selected="selected"' : '').'>php.libs.Hint</option>'
 						.'<option value="php.libs.hp.Hotproject"'.($_SESSION['select-class-path'] == 'php.libs.hp.Hotproject' ? 'selected="selected"' : '').'>php.libs.hp.Hotproject</option>'
+						.'<option value="php.libs.Inquiry"'.($_SESSION['select-class-path'] == 'php.libs.Inquiry' ? 'selected="selected"' : '').'>php.libs.Inquiry</option>'
 						.'<option value="php.libs.Js"'.($_SESSION['select-class-path'] == 'php.libs.Js' ? 'selected="selected"' : '').'>php.libs.Js</option>'
 						.'<option value="php.libs.Log"'.($_SESSION['select-class-path'] == 'php.libs.Log' ? 'selected="selected"' : '').'>php.libs.Log</option>'
 						.'<option value="php.libs.Login"'.($_SESSION['select-class-path'] == 'php.libs.Login' ? 'selected="selected"' : '').'>php.libs.Login</option>'
