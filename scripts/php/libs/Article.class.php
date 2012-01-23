@@ -234,10 +234,14 @@ class Article extends BaseTagLib {
 	
 	private function getPaging($total, $size, $index, $pageId, $pageLangId) {
 		//echo 'Paging: '.$total.', '.$size;
+		$pages = ceil($total / $size);
+		if($pages == 1) {
+			return;
+		}
 	
 		$return = '<div class="article-nav">';
 		$url = parent::web()->composeUrl($pageId, $pageLangId);
-		for($i = 0; $i < ($total / $size); $i ++) {
+		for($i = 0; $i < $pages; $i ++) {
 			if($i != 0) {
 				$return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="'.$url.'?article-page='.($i + 1).'">['.($i + 1).']</a> ';
 			} else {

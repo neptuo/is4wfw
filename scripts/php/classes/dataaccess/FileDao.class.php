@@ -15,7 +15,7 @@ class FileDao extends AbstractDao {
 	}
 	
 	public static function getFields() {
-		return array("id", "dir_id", "name", "title", "type", "timestamp");
+		return array("id", "dir_id", "name", "title", "type", "timestamp", 'url');
 	}
 	
 	public static function getIdField() {
