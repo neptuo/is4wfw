@@ -579,7 +579,6 @@ class FileAdmin extends BaseTagLib {
 			$read = $_POST['directory-right-r'];
 			if($read == array()) {
 				$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_READ);
-				print_r($read);
 			}
 			$write = $_POST['directory-right-w'];
 			if($write == array()) {
