@@ -249,7 +249,7 @@ class Article extends BaseTagLib {
 			}
 		}
 		
-		return $return.'</div>';
+		return $return.'<div class="clear"></div></div>';
 	}
 
     /**
