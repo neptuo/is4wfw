@@ -463,6 +463,7 @@ class Article extends BaseTagLib {
 			.'<div class="article-nav">'
 				.($prevId != 0 ? '<a href="'.$prevUrl.'" class="article-nav-prev">'.$prevLinkText.'</a>' : '')
 				.($nextId != 0 ? '<a href="'.$nextUrl.'" class="article-nav-next">'.$nextLinkText.'</a>' : '')
+				.'<div class="clear"></div>'
 			.'</div>';
 			
 			self::setArticleId($oldId);
