@@ -1365,7 +1365,7 @@ class DefaultWeb extends BaseTagLib {
             $browser = 'for_safari';
         }
 
-        $files = $dbObject->fetchAll("SELECT `page_file`.`id`, `page_file`.`name`, `page_file`.`type` FROM `page_file_inc` LEFT JOIN `page_file` ON `page_file_inc`.`file_id` = `page_file`.`id` WHERE `page_file_inc`.`page_id` = " . $this->ParentId . " AND `page_file_inc`.`language_id` = " . $this->LanguageId . " AND `for_all` = 1 OR `" . $browser . "` = 1;");
+        $files = $dbObject->fetchAll("SELECT `page_file`.`id`, `page_file`.`name`, `page_file`.`type` FROM `page_file_inc` LEFT JOIN `page_file` ON `page_file_inc`.`file_id` = `page_file`.`id` WHERE `page_file_inc`.`page_id` = " . $this->ParentId . " AND `page_file_inc`.`language_id` = " . $this->LanguageId . " AND (`for_all` = 1 OR `" . $browser . "` = 1);");
         foreach ($files as $file) {
             switch ($file['type']) {
                 //case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="'.WEB_ROOT.'css/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'" type="text/css" />'; break;
