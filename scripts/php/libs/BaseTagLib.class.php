@@ -115,6 +115,11 @@ class BaseTagLib {
         } elseif ($_COOKIE[$name] == 'opened') {
             $closed = false;
         }
+		
+		$defaultClosed = !$this->FirstFrame && !$ignoreFirstFrame;
+		if(self::system->getPropertyValue('Frames.leaveOpened') == 'true') {
+			$defaultClosed = false;
+		}
 
         $addAttrs;
         if ($_REQUEST['__TEMPLATE'] == 'xml') {
@@ -125,7 +130,7 @@ class BaseTagLib {
         }
 
         $return = ''
-        . '<div id="' . $name . '" class="frame frame-cover ' . $name . '' . ((strlen($classes)) ? ' ' . $classes : '') . (((!$this->FirstFrame && !$ignoreFirstFrame) || $closed) ? ' closed-frame' : '') . '"' . (($addAttrs != "") ? ' ' . $addAttrs : '') . '>'
+        . '<div id="' . $name . '" class="frame frame-cover ' . $name . '' . ((strlen($classes)) ? ' ' . $classes : '') . (($defaultClosed || $closed) ? ' closed-frame' : '') . '"' . (($addAttrs != "") ? ' ' . $addAttrs : '') . '>'
             . '<div class="frame frame-head">'
                 . '<div class="frame-label">'
                     . $label
