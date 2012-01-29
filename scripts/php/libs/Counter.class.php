@@ -33,35 +33,35 @@
      *
      */                        
     public function countAccess($id = false, $every = false) {
-      global $dbObject;
-      $userIp = $_SERVER['REMOTE_ADDR'];
-      
-      if($id == false) {
-        $id = 1;
-      }
-      if($every == false) {
-        $every = "day";
-      }
-      
-      $lastTime = time();
-      switch($every) {
-        case "every": $lastTime = time(); break;
-        case "minute": $lastTime = time() - (60); break;
-        case "hour": $lastTime = time() - (60 * 60); break;
-        case "day": $lastTime = mktime(0, 0, 0, date("n"), date("j"), date("Y")); break;
-        case "week": $lastTime = time() - (60 * 60 * 24 * 7); break;
-      }
-      
-      $counterItem = $dbObject->fetchAll("SELECT `timestamp`, `count` FROM `counter` WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$id.";");
-      if(count($counterItem) > 0) {
-        if($counterItem[0]['timestamp'] > $lastTime) {
-          $dbObject->execute("UPDATE `counter` SET `timestamp` = ".time()." WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$id.";");
-        } else {
-          $dbObject->execute("UPDATE `counter` SET `timestamp` = ".time().", `count` = ".($counterItem[0]['count'] + 1)." WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$id.";");
-        }
-      } else {
-        $dbObject->execute("INSERT INTO `counter`(`ip`, `timestamp`, `count`, `counter_id`) VALUES (\"".$userIp."\", ".time().", 1, ".$id.");");
-      }
+		global $dbObject;
+		$userIp = $_SERVER['REMOTE_ADDR'];
+
+		if($id == false) {
+			$id = 1;
+		}
+		if($every == false) {
+			$every = "day";
+		}
+
+		$lastTime = time();
+		switch($every) {
+			case "every": $lastTime = time(); break;
+			case "minute": $lastTime = time() - (60); break;
+			case "hour": $lastTime = time() - (60 * 60); break;
+			case "day": $lastTime = mktime(0, 0, 0, date("n"), date("j"), date("Y")); break;
+			case "week": $lastTime = time() - (60 * 60 * 24 * 7); break;
+		}
+
+		$counterItem = $dbObject->fetchAll("SELECT `timestamp`, `count` FROM `counter` WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$id.";");
+		if(count($counterItem) > 0) {
+			if($counterItem[0]['timestamp'] > $lastTime) {
+				$dbObject->execute("UPDATE `counter` SET `timestamp` = ".time()." WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$id.";");
+			} else {
+				$dbObject->execute("UPDATE `counter` SET `timestamp` = ".time().", `count` = ".($counterItem[0]['count'] + 1)." WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$id.";");
+			}
+		} else {
+			$dbObject->execute("INSERT INTO `counter`(`ip`, `timestamp`, `count`, `counter_id`) VALUES (\"".$userIp."\", ".time().", 1, ".$id.");");
+		}
     }
     
     /**
