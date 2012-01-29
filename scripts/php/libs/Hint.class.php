@@ -232,6 +232,7 @@
 				.'<li>Article.editors</li>'
 				.'<li>Article.languageId</li>'
 				.'<li>Article.pageSize</li>'
+				.'<li>Frames.leaveOpened</li>'
 				.'<li>Login.session</li>'
 				.'<li>Page.editAreaContentRows</li>'
 				.'<li>Page.editAreaHeadRows</li>'
