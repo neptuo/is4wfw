@@ -4,7 +4,7 @@
   <name>WebProject Lib</name>
   <classname>WebProject</classname>
   <classpath>php.libs</classpath>
-  <version>1.06</version>
+  <version>1.07</version>
   <count>*</count>
   <comment>
     Třída pro správu webových projektů. 
@@ -13,6 +13,11 @@
   <tag>
     <tagname>selectProject</tagname>
     <function>selectProject</function>
+    <attribute>
+      <attname>label</attname>
+      <attreq>implied</attreq>
+	  <attdef>false</attdef>
+    </attribute>
     <attribute>
       <attname>useFrames</attname>
       <attreq>implied</attreq>
