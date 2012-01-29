@@ -117,7 +117,7 @@ class BaseTagLib {
         }
 		
 		$defaultClosed = !$this->FirstFrame && !$ignoreFirstFrame;
-		if(self::system->getPropertyValue('Frames.leaveOpened') == 'true') {
+		if(self::system()->getPropertyValue('Frames.leaveOpened') == 'true') {
 			$defaultClosed = false;
 		}
 

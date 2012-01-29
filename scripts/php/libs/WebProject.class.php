@@ -14,7 +14,7 @@ require_once("System.class.php");
  *  management of web projects
  *      
  *  @author     Marek SMM
- *  @timestamp  2010-11-28
+ *  @timestamp  2012-01-29
  * 
  */
 class WebProject extends BaseTagLib {
@@ -43,7 +43,7 @@ class WebProject extends BaseTagLib {
      * 	C tag.
      *
      */
-    public function selectProject($useFrames = false, $showMsg = false) {
+    public function selectProject($label = false, $useFrames = false, $showMsg = false) {
         global $dbObject;
         global $loginObject;
         $rb = new ResourceBundle();
@@ -89,10 +89,14 @@ class WebProject extends BaseTagLib {
         $projectId = $_SESSION['selected-project'];
 
         if (count($projects) > 0) {
+			if($label == false) {
+				$label = $rb->get('selectproject.label');
+			}
+		
             $return .= ''
                     . '<div class="select-project">'
                     . '<form name="select-project" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
-                    . '<label for="select-project">' . $rb->get('selectproject.label') . '</label> '
+                    . '<label for="select-project">' . $label . '</label> '
                     . '<select id="select-project" name="project-id">';
             $projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `web_project`.`name`;');
             foreach ($projects as $project) {
