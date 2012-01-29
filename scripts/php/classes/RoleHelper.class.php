@@ -261,12 +261,12 @@ class RoleHelper {
 		
 		$result = self::getPermissionsOrDefalt2($table, $objectColumn, $groupColumn, $typeColumn, $objectId, $type, $altTable, $altObjectColumn, $altGroupColumn, $altTypeColumn, $altObjectId);
 		
-		$selected = array();
-		foreach($result as $perm) {
-			$selected[count($selected)] = $perm[$groupColumn];
-		}
+		//$selected = array();
+		//foreach($result as $perm) {
+		//	$selected[count($selected)] = $perm[$groupColumn];
+		//}
 		
-		return self::getFormPart3($baseName, self::getCurrentRoles(), $selected, $type);
+		return self::getFormPart3($baseName, self::getCurrentRoles(), $result, $type);
 	}
 	
 	public static function getFormPart3($baseName, $availableGroups, $selectedGroups, $type) {
@@ -284,6 +284,7 @@ class RoleHelper {
 		}
 		$return .= ' multiple="multiple" size="5">';
 		
+		//print_r($selectedGroups);
 		foreach($availableGroups as $group) {
 			$return .= '<option'.((in_array($group['gid'], $selectedGroups)) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
 		}
