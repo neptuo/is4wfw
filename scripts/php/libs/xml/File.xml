@@ -4,7 +4,7 @@
   <name>File Lib</name>
   <classname>File</classname>
   <classpath>php.libs</classpath>
-  <version>1.24</version>
+  <version>1.25</version>
   <count>*</count>
   <comment>
     Třída pro správu souborů.
@@ -31,6 +31,11 @@
     <attribute>
       <attname>showTitleInsteadOfName</attname>
       <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>browsable</attname>
+      <attreq>implied</attreq>
+	  <attdef>true</attdef>
     </attribute>
     <comment>
       Zobrazí kompletní obsah adresáře z FS. "showParent" zobrazuje odkaz na rodičovský adresář (default true), "showTitleInsteadOfName" zobrazí popis(pokud není prázdný) místo názvu souboru.

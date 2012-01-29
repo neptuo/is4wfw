@@ -15,7 +15,7 @@
    *  FileSystem Class.
    *      
    *  @author     Marek SMM
-   *  @timestamp  2012-01-04
+   *  @timestamp  2012-01-29
    * 
    */  
   class File extends BaseTagLib {
@@ -66,14 +66,17 @@
      *  @return   list of directories and files from FS.
      *
      */                   
-    public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false) {
+    public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false, $browsable = true) {
       global $dbObject;
       global $loginObject;
 		$rb = new ResourceBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
       $return = "";
       $origDirId = $dirId;
-      $dirId = self::setDirId($dirId);
+	  
+	  if($browsable) {
+		$dirId = self::setDirId($dirId);
+	  }
       
       if($_POST['delete-dir'] == $rb->get('dir.delete')) {
         $directoryId = $_POST['directory-id'];
