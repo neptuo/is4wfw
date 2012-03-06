@@ -397,6 +397,11 @@
       <attname>showMsg</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>thenByFix</attname>
+      <attreq>implied</attreq>
+	  <attdef>false</attdef>
+    </attribute>
     <comment>
       Výpis tabulky.
     </comment>
