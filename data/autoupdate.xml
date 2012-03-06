@@ -49,4 +49,5 @@
 	<script build="314">INSERT INTO `group_perms` (`group_id` ,`name` ,`value` ,`type`) VALUES ('1',  'Page.ManageProperties',  'true',  'bool');</script>
 	<script build="315">CREATE TABLE `page_property_value` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`page_id` INT NOT NULL ,`name` TINYTEXT NOT NULL ,`value` TINYTEXT NOT NULL) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
 	<script build="318">ALTER TABLE  `file` ADD  `url` TINYTEXT NULL AFTER  `title`;</script>
+	<script build="319">ALTER TABLE  `w_sport_table` ADD  `positionfix` INT NOT NULL AFTER  `season`;</script>
 </autoupdate>

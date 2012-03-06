@@ -623,7 +623,7 @@ class Sport extends BaseTagLib {
                         $dbObject->execute('INSERT INTO `w_sport_team`(`id`, `name`, `logo`, `url`, `season`, `project_id`) VALUES(' . $addteam . ', "' . $reteam[0]['name'] . '", "' . $reteam[0]['logo'] . '", "' . $reteam[0]['url'] . '", ' . $addseason . ', ' . self::getProjectId() . ');');
                         $tables = parent::db()->fetchAll('select `table_id` from `w_sport_table` where `team` = ' . $addteam . ' and `season` = ' . $reteam[0]['season'] . ';');
                         foreach ($tables as $table) {
-                            parent::db()->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `project_id`, `table_id`) VALUES(' . $addteam . ', 0, 0, 0, 0, 0, 0, 0, ' . $addseason . ', ' . self::getProjectId() . ', ' . $table['table_id'] . ');');
+                            parent::db()->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `positionfix`, `project_id`, `table_id`) VALUES(' . $addteam . ', 0, 0, 0, 0, 0, 0, 0, ' . $addseason . ', 0, ' . self::getProjectId() . ', ' . $table['table_id'] . ');');
                         }
                         //parent::db()->setMockMode(false);
                         //$dbObject->execute('INSERT INTO `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `project_id`) VALUES('.$addteam.', 0, 0, 0, 0, 0, 0, 0, '.$addseason.', '.self::getProjectId().');');
@@ -796,9 +796,9 @@ class Sport extends BaseTagLib {
                         if ($values != '') {
                             $values .= ', ';
                         }
-                        $values .= '(' . $teamId . ', 0, 0, 0, 0, 0, 0, 0, ' . $season . ', ' . $tbl . ', ' . self::getProjectId() . ')';
+                        $values .= '(' . $teamId . ', 0, 0, 0, 0, 0, 0, 0, ' . $season . ', 0, ' . $tbl . ', ' . self::getProjectId() . ')';
                     }
-                    parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`, `project_id`) values ' . $values);
+                    parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `positionfix`, `table_id`, `project_id`) values ' . $values);
 
                     //parent::db()->setMockMode(false);
                 } else {
@@ -951,13 +951,13 @@ class Sport extends BaseTagLib {
                             // Delete
                             parent::db()->execute('delete from `w_sport_table` where `team` = ' . $teamId . ' and `table_id` = ' . $destTableId . ' and `season` = ' . $seasonId . ';');
                             // Insert
-                            parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`, `project_id`) values(' . $teamId . ', ' . $sourceData['matches'] . ', ' . $sourceData['wins'] . ', ' . $sourceData['draws'] . ', ' . $sourceData['loses'] . ', ' . $sourceData['s_score'] . ', ' . $sourceData['r_score'] . ', ' . $sourceData['points'] . ', ' . $seasonId . ', ' . $destTableId . ', ' . self::getProjectId() . ');');
+                            parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `positionfix`, `table_id`, `project_id`) values(' . $teamId . ', ' . $sourceData['matches'] . ', ' . $sourceData['wins'] . ', ' . $sourceData['draws'] . ', ' . $sourceData['loses'] . ', ' . $sourceData['s_score'] . ', ' . $sourceData['r_score'] . ', ' . $sourceData['points'] . ', ' . $seasonId . ', 0, ' . $destTableId . ', ' . self::getProjectId() . ');');
                             $errors .= parent::getWarning($rb->get('tcopy.warning.deleted'));
                             $errors .= parent::getSuccess($rb->get('tcopy.success.added'));
                         }
                     } else {
                         // Insert
-                        parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `table_id`, `project_id`) values(' . $teamId . ', ' . $sourceData['matches'] . ', ' . $sourceData['wins'] . ', ' . $sourceData['draws'] . ', ' . $sourceData['loses'] . ', ' . $sourceData['s_score'] . ', ' . $sourceData['r_score'] . ', ' . $sourceData['points'] . ', ' . $seasonId . ', ' . $destTableId . ', ' . self::getProjectId() . ');');
+                        parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `positionfix`, `table_id`, `project_id`) values(' . $teamId . ', ' . $sourceData['matches'] . ', ' . $sourceData['wins'] . ', ' . $sourceData['draws'] . ', ' . $sourceData['loses'] . ', ' . $sourceData['s_score'] . ', ' . $sourceData['r_score'] . ', ' . $sourceData['points'] . ', ' . $seasonId . ', 0, ' . $destTableId . ', ' . self::getProjectId() . ');');
                         $errors .= parent::getSuccess($rb->get('tcopy.success.added'));
                     }
                 }
@@ -2653,7 +2653,7 @@ class Sport extends BaseTagLib {
      * 	@param		showMsg					show messages in output
      *
      */
-    public function showTable($seasonId = false, $tableId = false, $editable = false, $useFrames = false, $showMsg = false) {
+    public function showTable($seasonId = false, $tableId = false, $editable = false, $useFrames = false, $showMsg = false, $thenByFix = false) {
         global $dbObject;
         global $loginObject;
         $rb = new ResourceBundle();
@@ -2682,12 +2682,19 @@ class Sport extends BaseTagLib {
                     $team['s_score'] = $_POST['table-s_score'][$key];
                     $team['r_score'] = $_POST['table-r_score'][$key];
                     $team['points'] = $_POST['table-points'][$key];
+					$team['positionfix'] = $_POST['table-positionfix'][$key];
 
-                    parent::db()->execute('update `w_sport_table` set `matches` = ' . $team['matches'] . ', `wins` = ' . $team['wins'] . ', `draws` = ' . $team['draws'] . ', `loses` = ' . $team['loses'] . ', `s_score` = ' . $team['s_score'] . ', `r_score` = ' . $team['r_score'] . ', `points` = ' . $team['points'] . ' where `team` = ' . $team['id'] . ' and `season` = ' . $seasonId . ' and `table_id` = ' . $tableId . ';');
+                    parent::db()->execute('update `w_sport_table` set `matches` = ' . $team['matches'] . ', `wins` = ' . $team['wins'] . ', `draws` = ' . $team['draws'] . ', `loses` = ' . $team['loses'] . ', `s_score` = ' . $team['s_score'] . ', `r_score` = ' . $team['r_score'] . ', `points` = ' . $team['points'] . ', `positionfix` = '.$team['positionfix'].' where `team` = ' . $team['id'] . ' and `season` = ' . $seasonId . ' and `table_id` = ' . $tableId . ';');
                 }
             }
 
-            $table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = ' . $seasonId . ' AND `w_sport_team`.`season` = ' . $seasonId . ' AND `w_sport_table`.`table_id` = ' . $tableId . ' and `w_sport_table`.`project_id` = ' . self::getProjectId() . ' ORDER BY `points` DESC, (`w_sport_table`.`s_score` - `w_sport_table`.`r_score`) DESC, `w_sport_table`.`s_score` DESC, `w_sport_table`.`wins` DESC;');
+			$orderBy = ' ORDER BY `points` DESC, ';
+			if($thenByFix) {
+				$orderBy .= '`w_sport_table`.`positionfix` DESC, ';
+			}
+			$orderBy .= '(`w_sport_table`.`s_score` - `w_sport_table`.`r_score`) DESC, `w_sport_table`.`s_score` DESC, `w_sport_table`.`wins` DESC';
+			
+            $table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points`, `w_sport_table`.`positionfix` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = ' . $seasonId . ' AND `w_sport_team`.`season` = ' . $seasonId . ' AND `w_sport_table`.`table_id` = ' . $tableId . ' and `w_sport_table`.`project_id` = ' . self::getProjectId() . $orderBy .';');
             if (count($table) > 0) {
                 if ($editable == 'true') {
                     $return .= '<form name="table-c-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">';
@@ -2705,11 +2712,14 @@ class Sport extends BaseTagLib {
                         . '<th class="table-s_score">' . $rb->get('table.s_score') . '</th>'
                         . '<th class="table-r_score">' . $rb->get('table.r_score') . '</th>'
                         . '<th class="table-points">' . $rb->get('table.points') . '</th>'
+						. (($editable == 'true') ? ''
+							. '<th class="table-positionfix">' . $rb->get('table.positionfix') . '</th>'
+					    : '')
                         . '</tr>';
 
                 $i = 1;
                 foreach ($table as $team) {
-                    if ($editable) {
+                    if ($editable == 'true') {
                         foreach ($team as $key => $item) {
                             if ($key != 'id' && $key != 'name') {
                                 $team[$key] = '<input class="w30" type="text" name="table-' . $key . '[' . $team['id'] . ']" value="' . $item . '" />';
@@ -2727,6 +2737,9 @@ class Sport extends BaseTagLib {
                             . '<td class="table-s_score">' . $team['s_score'] . '</td>'
                             . '<td class="table-r_score">' . $team['r_score'] . '</td>'
                             . '<td class="table-points">' . $team['points'] . '</td>'
+							. (($editable == 'true') ? ''
+								. '<td class="table-positionfix">' . $team['positionfix'] . '</td>'
+							: '')
                             . '</tr>';
                     $i++;
                 }
