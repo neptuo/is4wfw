@@ -66,21 +66,25 @@
      *  @return   list of directories and files from FS.
      *
      */                   
-    public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false, $browsable = true, $parentName = false, $nameWithExtension = false) {
-      global $dbObject;
-      global $loginObject;
+    public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false, $browsable = true, $parentName = false, $nameWithExtension = false, $fileNameHeader = false) {
+		global $dbObject;
+		global $loginObject;
 		$rb = new ResourceBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
-      $return = "";
-      $origDirId = $dirId;
-	  
-	  if(!$parentName) {
-		$parentName = '..';
+		$return = "";
+		$origDirId = $dirId;
+
+		if(!$parentName) {
+			$parentName = '..';
 		}
-	  
-	  if($browsable) {
-		$dirId = self::setDirId($dirId);
-	  }
+		
+		if(!$fileNameHeader) {
+			$fileNameHeader = $rb->get('file.name');
+		}
+
+		if($browsable) {
+			$dirId = self::setDirId($dirId);
+		}
       
       if($_POST['delete-dir'] == $rb->get('dir.delete')) {
         $directoryId = $_POST['directory-id'];
@@ -132,9 +136,9 @@
 		}
 		
 		if($useFrames != 'false') {
-			return parent::getFrame($rb->get('dir.filelist')." :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true"), "", true, $parentName, $nameWithExtension);
+			return parent::getFrame($rb->get('dir.filelist')." :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true"), "", true, $parentName, $nameWithExtension, $fileNameHeader);
 		} else {
-			return $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true", $parentName, $nameWithExtension);
+			return $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true", $parentName, $nameWithExtension, $fileNameHeader);
 		}
     }
     
@@ -147,7 +151,7 @@
      *  @return   list of files     
      *
      */                        
-    private function getList($dirId, $editable, $showParent, $showTitleInsteadOfName, $parentName, $nameWithExtension) {
+    private function getList($dirId, $editable, $showParent, $showTitleInsteadOfName, $parentName, $nameWithExtension, $fileNameHeader) {
 		global $dbObject;
 		global $loginObject;
 		$rb = new ResourceBundle();
@@ -162,7 +166,7 @@
         .'<tr class="dir-header-row">'
           .'<th class="th-icon"></th>'
           .'<th class="th-id"><span>'.$rb->get('file.id').':</span></th>'
-          .'<th class="th-name">'.$rb->get('file.name').':</th>'
+          .'<th class="th-name">'.$fileNameHeader.':</th>'
           .'<th class="th-dir-physical-path">'.$rb->get('file.directlink').':</th>'
           .'<th class="th-timestamp">'.$rb->get('file.timestamp').'</th>'
           .'<th class="th-type">'.$rb->get('file.type').'</th>'

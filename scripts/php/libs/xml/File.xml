@@ -46,6 +46,11 @@
       <attreq>implied</attreq>
 	  <attdef>false</attdef>
     </attribute>
+    <attribute>
+      <attname>fileNameHeader</attname>
+      <attreq>implied</attreq>
+	  <attdef>false</attdef>
+    </attribute>
     <comment>
       Zobrazí kompletní obsah adresáře z FS. "showParent" zobrazuje odkaz na rodičovský adresář (default true), "showTitleInsteadOfName" zobrazí popis(pokud není prázdný) místo názvu souboru.
     </comment>
