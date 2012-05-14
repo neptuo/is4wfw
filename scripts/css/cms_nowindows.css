@@ -3,8 +3,8 @@ body {
 }
 
 .cms .head {
-    position: static;
-    /*position: fixed;*/
+    /*position: static;*/
+    position: fixed;
 }
 
 .cms .body {
