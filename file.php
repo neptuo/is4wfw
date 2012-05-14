@@ -95,10 +95,10 @@ if (array_key_exists('fid', $_REQUEST)) {
     $dbObject = new Database();
     $dbObject->setCacheResults('NONE');
     $flObject = new File();
-    $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = " . $fileId . ";");
+    $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `url`, `type`, `timestamp` FROM `file` WHERE `id` = " . $fileId . ";");
 
     if (count($file) == 1) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
         //echo $filePath;
         $updTime = filemtime($filePath);
 
