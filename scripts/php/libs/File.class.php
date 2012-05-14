@@ -66,13 +66,17 @@
      *  @return   list of directories and files from FS.
      *
      */                   
-    public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false, $browsable = true) {
+    public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false, $browsable = true, $parentName = false, $nameWithExtension = false) {
       global $dbObject;
       global $loginObject;
 		$rb = new ResourceBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
       $return = "";
       $origDirId = $dirId;
+	  
+	  if(!$parentName) {
+		$parentName = '..';
+		}
 	  
 	  if($browsable) {
 		$dirId = self::setDirId($dirId);
@@ -119,11 +123,19 @@
 				}
       }
       
-      if($useFrames != 'false') {
-			return parent::getFrame($rb->get('dir.filelist')." :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable, $showParent == "false" ? false : true, $showTitleInsteadOfName == "true"), "", true);
-      } else {
-				return $return.self::getList($dirId, $editable, $showParent == "false" ? false : true, $showTitleInsteadOfName == "true");
-			}
+		if($showParent == "false") {
+			$showParent = false;
+		} else if($showParent == "root") {
+			$showParent = $origDirId != $dirId;
+		} else {
+			$showParent = true;
+		}
+		
+		if($useFrames != 'false') {
+			return parent::getFrame($rb->get('dir.filelist')." :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true"), "", true, $parentName, $nameWithExtension);
+		} else {
+			return $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true", $parentName, $nameWithExtension);
+		}
     }
     
     /**
@@ -135,7 +147,7 @@
      *  @return   list of files     
      *
      */                        
-    private function getList($dirId, $editable, $showParent, $showTitleInsteadOfName) {
+    private function getList($dirId, $editable, $showParent, $showTitleInsteadOfName, $parentName, $nameWithExtension) {
 		global $dbObject;
 		global $loginObject;
 		$rb = new ResourceBundle();
@@ -163,7 +175,7 @@
           .'<td class="dir-name">'
             .'<form name="dir-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
               .'<input type="hidden" name="dir-id" value="'.(($dirId != 0) ? $dir[0]['parent_id'] : $dirId).'" />'
-              .'<input type="submit" name="ch-dir" value=".." />'
+              .'<input type="submit" name="ch-dir" value="'.$parentName.'" />'
             .'</form>'
           .'</td>'
           .'<td class="dir-physical-path"></td>'
@@ -226,6 +238,7 @@
 				: ''
 				.$file['name']
 				)
+				.($nameWithExtension ? '.'.FileAdmin::$FileExtensions[$file['type']] : '')
 			.'</a>'
           .'</td>'
           .'<td class="dir-physical-path">'
