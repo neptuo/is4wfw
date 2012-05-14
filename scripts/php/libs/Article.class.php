@@ -753,7 +753,7 @@ class Article extends BaseTagLib {
                             . '<td class="article-mgm-td article-mgm-head">'
 								. '<div class="article-head-cover">'
 									. '<span class="article-head-in">'
-										. htmlspecialchars($info['name'] . ' - ' . $info['head'])
+										. '<span style="color: black;">'.htmlspecialchars($info['name']) . '</span> - ' . htmlspecialchars($info['head'])
 									. '</span>'
 								. '</div>'
                             . '</td>'
