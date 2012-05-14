@@ -301,8 +301,15 @@ class BaseTagLib {
         }
     }
 	
-	public function getSystemProperty($name) {
+	public function getSystemProperty($name, $cache = true) {
+		if(!$cache) {
+			self::db()->disableCache();
+		}
 		$val = self::db()->fetchSingle('select `value` from `system_property` where `key` = "'.$name.'";');
+		if(!$cache) {
+			self::db()->enableCache();
+		}
+		
 		return $val['value'];
 	}
 	

@@ -27,6 +27,8 @@ class FileAdmin extends BaseTagLib {
 		'file_right', 'fid', 'gid', 'type'
 	);
 
+	public static $FileSystemItemPath = 'id';
+	
 	public static $FileExtensions = array(
 		WEB_TYPE_CSS => "css", WEB_TYPE_JS => "js", WEB_TYPE_JPG => "jpg", WEB_TYPE_GIF => "gif", 
         WEB_TYPE_PNG => "png", WEB_TYPE_PDF => "pdf", WEB_TYPE_RAR => "rar", WEB_TYPE_ZIP => "zip", 
@@ -54,6 +56,8 @@ class FileAdmin extends BaseTagLib {
 
         parent::setTagLibXml("xml/FileAdmin.xml");
 		parent::loadResourceBundle('fileadmin');
+		
+		self::transformFileSystem();
     }
 	
 	protected function canUserDir($objectId, $rightType) {
@@ -69,11 +73,11 @@ class FileAdmin extends BaseTagLib {
 		if($dirId >= 0) {
 			while($dirId != 0) {
 				parent::db()->getDataAccess()->disableCache();
-				$dirInfo = parent::dao('Directory')->select(Select::factory()->where('id', '=', $dirId)->result(), false, array('name', 'parent_id'));
+				$dirInfo = parent::dao('Directory')->select(Select::factory()->where('id', '=', $dirId)->result(), false, array(FileAdmin::$FileSystemItemPath, 'parent_id'));
 				parent::db()->getDataAccess()->enableCache();
 				if(count($dirInfo) == 1) {
 					$dirId = $dirInfo[0]['parent_id'];
-					$path = $dirInfo[0]['name'].'/'.$path;
+					$path = $dirInfo[0][FileAdmin::$FileSystemItemPath].'/'.$path;
 				} else {
 					$message = "Directory doesn't exists!";
 					echo "<h4 class=\"error\">".$message."</h4>";
@@ -94,7 +98,7 @@ class FileAdmin extends BaseTagLib {
 	
 	public function getPhysicalPathToFile($file) {
 		$path = self::getPhysicalPathTo($file['dir_id']);
-		$filePath = $_SERVER['DOCUMENT_ROOT'].$path.$file['name'].".".self::getFileExtension($file);
+		$filePath = $_SERVER['DOCUMENT_ROOT'].$path.$file[FileAdmin::$FileSystemItemPath].".".self::getFileExtension($file);
 		return $filePath;
 	}
 	
@@ -113,7 +117,7 @@ class FileAdmin extends BaseTagLib {
 	}
 	
 	public function getFileDirectUrl($file) {
-		return self::getPhysicalPathTo($file['dir_id'], false).$file['name'].".".self::$FileExtensions[$file['type']];
+		return self::getPhysicalPathTo($file['dir_id'], false).$file[FileAdmin::$FileSystemItemPath].".".self::$FileExtensions[$file['type']];
 	}
 	
 	/* ================== ADMIN ======================================================= */
@@ -214,12 +218,12 @@ class FileAdmin extends BaseTagLib {
 		
 		$dirNames = array();
 		foreach($dirs as $dir) {
-			$dirNames[count($dirNames)] = $dir['name'];
+			$dirNames[count($dirNames)] = $dir[FileAdmin::$FileSystemItemPath];
 		}
 		
 		$fileNames = array();
 		foreach($files as $file) {
-			$fileNames[count($fileNames)] = $file['name'].'.'.self::getFileExtension($file);
+			$fileNames[count($fileNames)] = $file[FileAdmin::$FileSystemItemPath].'.'.self::getFileExtension($file);
 		}
 		
 		if($readRights == null) {
@@ -235,7 +239,18 @@ class FileAdmin extends BaseTagLib {
 		$path = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($rootId);
 	
 		if ($handle = opendir($path)) {
+			$newDirs = array();
+			$newFiles = array();
+		
+			$itemsList = array();
 			while (false !== ($entry = readdir($handle))) {
+				$itemsList[] = array('name' => $entry, 'mtime' => filemtime($path.$entry));
+			}
+			closedir($handle);
+			usort($itemsList, 'CompareFileImport');
+			
+			foreach($itemsList as $item) {
+				$entry = $item['name'];
 				if(is_file($path.$entry)) {
 					if(in_array($entry, $fileNames)) {
 						continue;
@@ -260,6 +275,10 @@ class FileAdmin extends BaseTagLib {
 					}
 					$dataItem['id'] = parent::dao('File')->getLastId();
 					
+					//Rename to match filesystem item path
+					self::transformFileSystemFiles(array($dataItem));
+					array_push($newFiles, $dataItem);
+					
 					RoleHelper::setRights(FileAdmin::$FileRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $readRights, WEB_R_READ);
 					RoleHelper::setRights(FileAdmin::$FileRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $writeRights, WEB_R_WRITE);
 					RoleHelper::setRights(FileAdmin::$FileRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $deleteRights, WEB_R_DELETE);
@@ -270,12 +289,21 @@ class FileAdmin extends BaseTagLib {
 						continue;
 					}
 				
-					$dataItem = array('name' => $entry, 'url' => strtolower(parent::convertToUrlValid($entry)), 'parent_id' => $rootId, 'timestamp' => time());
+					$dataItem = array(
+						'name' => $entry, 
+						'url' => strtolower(parent::convertToUrlValid($entry)), 
+						'parent_id' => $rootId, 
+						'timestamp' => time()
+					);
 					
 					if(parent::dao('Directory')->insert($dataItem) != 0) {
 						continue;
 					}
 					$dataItem['id'] = parent::dao('Directory')->getLastId();
+					
+					//Rename to match filesystem item path
+					self::transformFileSystemDirs(array($dataItem));
+					array_push($newDirs, $dataItem);
 					
 					RoleHelper::setRights(FileAdmin::$DirectoryRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $readRights, WEB_R_READ);
 					RoleHelper::setRights(FileAdmin::$DirectoryRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $writeRights, WEB_R_WRITE);
@@ -287,6 +315,9 @@ class FileAdmin extends BaseTagLib {
 					parent::db()->getDataAccess()->enableCache();
 				}
 			}
+			
+			//self::transformFileSystemDirs($newDirs);
+			//self::transformFileSystemFiles($newFiles);
 		}
 	}
 	
@@ -388,21 +419,20 @@ class FileAdmin extends BaseTagLib {
 			if($fileTmpName != null) {
 				unlink(self::getPhysicalPathToFile($file));
 			} else {
-				rename(self::getPhysicalPathToFile($file), self::getPhysicalPathToFile($dataItem));
+				//rename(self::getPhysicalPathToFile($file), self::getPhysicalPathToFile($dataItem));
 			}
 		}
 		
 		if($fileTmpName != null) {
-			//echo self::getPhysicalPathToFile($dataItem);
-			$moved = move_uploaded_file($fileTmpName, self::getPhysicalPathToFile($dataItem));
-			if($moved) {
-				if($new) {
-					if(parent::dao('File')->insert($dataItem) != 0) {
-						return parent::dao('File')->getErrorMessage();
-					}
-					$dataItem['id'] = parent::dao('File')->getLastId();
+			//echo self::getPhysicalPathToFile($dataItem);			
+			if($new) {
+				if(parent::dao('File')->insert($dataItem) != 0) {
+					return parent::dao('File')->getErrorMessage();
 				}
+				$dataItem['id'] = parent::dao('File')->getLastId();
 			}
+			$moved = move_uploaded_file($fileTmpName, self::getPhysicalPathToFile($dataItem));
+			//TODO: Show error!
 		}
 		
 		if(!$new) {
@@ -543,19 +573,19 @@ class FileAdmin extends BaseTagLib {
 		
 		if(!$new) {
 			$path = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($dir['parent_id']);
-			rename($path.$dir['name'], $path.$dataItem['name']);
+			//rename($path.$dir['name'], $path.$dataItem['name']);
 			
 			if(parent::dao('Directory')->update($dataItem) != 0) {
 				return parent::dao('Directory')->getErrorMessage();
 			}
 		} else {
-			$path = self::getPhysicalPathTo($dataItem['parent_id']).$dataItem['name'];
-			mkdir($_SERVER['DOCUMENT_ROOT'].$path);
-			
 			if(parent::dao('Directory')->insert($dataItem) != 0) {
 				return parent::dao('Directory')->getErrorMessage();
 			}
 			$dataItem['id'] = parent::dao('Directory')->getLastId();
+			
+			$path = self::getPhysicalPathTo($dataItem['parent_id']).$dataItem[FileAdmin::$FileSystemItemPath];
+			mkdir($_SERVER['DOCUMENT_ROOT'].$path);
 		}
 		
 		RoleHelper::setRights(FileAdmin::$DirectoryRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $readRights, WEB_R_READ);
@@ -618,6 +648,45 @@ class FileAdmin extends BaseTagLib {
 		}
 	}
 	
+	protected function transformFileSystem() {
+		$transformed = parent::getSystemProperty('FileAdmin.fileSystemTransformed', false);
+		if(!$transformed) {
+			self::transformSubFileSystem(0);
+			parent::setSystemProperty('FileAdmin.fileSystemTransformed', 1);
+		}
+	}
+	
+	protected function transformSubFileSystem($dirId) {
+		$dirs = parent::dao('Directory')->getFromDirectory($dirId);
+		self::transformFileSystemDirs($dirs);
+		
+		$files = parent::dao('File')->getFromDirectory($dirId);
+		self::transformFileSystemFiles($files);
+	}
+	
+	protected function transformFileSystemDirs($dirs) {
+		foreach($dirs as $dir) {
+			$path = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($dir['parent_id']);
+			$oldPath = $path.$dir['name'];
+			$newPath = $path.$dir[FileAdmin::$FileSystemItemPath];
+			
+			//echo $oldPath.' => '.$newPath.'<br />';
+			$result = rename($oldPath, $newPath);
+			//echo $result ? "Ok" : "Failed";
+			self::transformSubFileSystem($dir['id']);
+		}
+	}
+	
+	protected function transformFileSystemFiles($files) {
+		foreach($files as $file) {
+			$path = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($file['dir_id']);
+			$oldPath = $path.$file['name'].".".self::getFileExtension($file);
+			$newPath = self::getPhysicalPathToFile($file);
+			
+			//echo $oldPath.' => '.$newPath.'<br />';
+			rename($oldPath, $newPath);
+		}
+	}
 	
 	/* ================== WEB ========================================================= */
 	
@@ -641,6 +710,14 @@ class FileAdmin extends BaseTagLib {
 		return $this->currentId;
 		
 	}
+}
+
+function CompareFileImport($a, $b)
+{
+    if ($a == $b) {
+        return 0;
+    }
+    return ($a > $b) ? -1 : 1;
 }
 
 ?>

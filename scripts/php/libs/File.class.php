@@ -798,30 +798,31 @@
      *
      */                   
     public function getPhysicalPathTo($dirId, $notUserFsRoot = false) {
-      $path = "";
+		$path = "";
+		if($dirId >= 0) {
+			while($dirId != 0) {
+				parent::db()->getDataAccess()->disableCache();
+				$dirInfo = parent::dao('Directory')->select(Select::factory()->where('id', '=', $dirId)->result(), false, array(FileAdmin::$FileSystemItemPath, 'parent_id'));
+				parent::db()->getDataAccess()->enableCache();
+				if(count($dirInfo) == 1) {
+					$dirId = $dirInfo[0]['parent_id'];
+					$path = $dirInfo[0][FileAdmin::$FileSystemItemPath].'/'.$path;
+				} else {
+					$message = "Directory doesn't exists!";
+					echo "<h4 class=\"error\">".$message."</h4>";
+					trigger_error($message, E_USER_ERROR);
+				}
+			}
+		} else {
+			$message = "Directory doesn't exists!";
+			echo "<h4 class=\"error\">".$message."</h4>";
+			trigger_error($message, E_USER_ERROR);
+		}
       
-      if($dirId >= 0) {
-        while($dirId != 0) {
-          $dirInfo = parent::db()->fetchAll("SELECT `name`, `parent_id` FROM `directory` WHERE `id` = ".$dirId.";");
-          if(count($dirInfo) == 1) {
-            $dirId = $dirInfo[0]['parent_id'];
-            $path = $dirInfo[0]['name'].'/'.$path;
-          } else {
-            $message = "Directory doesn't exists!";
-            echo "<h4 class=\"error\">".$message."</h4>";
-            trigger_error($message, E_USER_ERROR);
-          }
-        }
-      } else {
-        $message = "Directory doesn't exists!";
-        echo "<h4 class=\"error\">".$message."</h4>";
-        trigger_error($message, E_USER_ERROR);
-      }
-      
-      if(!$notUserFsRoot) {
-        $path = UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), FS_ROOT.$path);
-      }
-      return $path;
+		if(!$notUserFsRoot) {
+			$path = UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), FS_ROOT.$path);
+		}
+		return $path;
     }
     
     /**
