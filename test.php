@@ -1,6 +1,7 @@
 <?php
 	//+ěščřžýáíéúů
-
+	
+	/*
 	require_once('scripts/php/includes/settings.inc.php');
 	require_once("scripts/php/includes/database.inc.php");
 	require_once("scripts/php/libs/Database.class.php");
@@ -100,5 +101,5 @@
 	$db->execute('update `directory` set `name` = "Den Země v 1.B", `timestamp` = 1336984431 where `name` = "Den Zeme v 1.B" and `parent_id` = 25;');
 	$db->execute('update `directory` set `name` = "Indiánská školička", `timestamp` = 1336984432 where `name` = "Indianska skolicka" and `parent_id` = 25;');
 	$db->execute('update `directory` set `name` = "Den čarodějnic", `timestamp` = 1336984433 where `name` = "Den carodejnic" and `parent_id` = 25;');
-
+	*/
 ?>
