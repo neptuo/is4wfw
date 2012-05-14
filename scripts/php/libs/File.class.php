@@ -79,7 +79,7 @@
 		}
 		
 		if(!$fileNameHeader) {
-			$fileNameHeader = $rb->get('file.name');
+			$fileNameHeader = $rb->get('file.name').':';
 		}
 
 		if($browsable) {
@@ -166,7 +166,7 @@
         .'<tr class="dir-header-row">'
           .'<th class="th-icon"></th>'
           .'<th class="th-id"><span>'.$rb->get('file.id').':</span></th>'
-          .'<th class="th-name">'.$fileNameHeader.':</th>'
+          .'<th class="th-name">'.$fileNameHeader.'</th>'
           .'<th class="th-dir-physical-path">'.$rb->get('file.directlink').':</th>'
           .'<th class="th-timestamp">'.$rb->get('file.timestamp').'</th>'
           .'<th class="th-type">'.$rb->get('file.type').'</th>'
