@@ -159,7 +159,7 @@
       
       $return .= '' 
       .'<table class="dir-list">'
-        .'<tr>'
+        .'<tr class="dir-parent-row">'
           .'<th class="th-icon"></th>'
           .'<th class="th-id"><span>'.$rb->get('file.id').':</span></th>'
           .'<th class="th-name">'.$rb->get('file.name').':</th>'
