@@ -68,16 +68,20 @@ class FileAdmin extends BaseTagLib {
 		return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(FileAdmin::$FileRightDesc, $objectId, $rightType));
 	}
 	
-	public function getPhysicalPathTo($dirId, $notUserFsRoot = false) {
+	public function getPhysicalPathTo($dirId, $notUserFsRoot = false, $itemPath = '') {
 		$path = "";
+		if($itemPath == '') {
+			$itemPath = FileAdmin::$FileSystemItemPath;
+		}
+		
 		if($dirId >= 0) {
 			while($dirId != 0) {
 				parent::db()->getDataAccess()->disableCache();
-				$dirInfo = parent::dao('Directory')->select(Select::factory()->where('id', '=', $dirId)->result(), false, array(FileAdmin::$FileSystemItemPath, 'parent_id'));
+				$dirInfo = parent::dao('Directory')->select(Select::factory()->where('id', '=', $dirId)->result(), false, array($itemPath, 'parent_id'));
 				parent::db()->getDataAccess()->enableCache();
 				if(count($dirInfo) == 1) {
 					$dirId = $dirInfo[0]['parent_id'];
-					$path = $dirInfo[0][FileAdmin::$FileSystemItemPath].'/'.$path;
+					$path = $dirInfo[0][$itemPath].'/'.$path;
 				} else {
 					$message = "Directory doesn't exists!";
 					echo "<h4 class=\"error\">".$message."</h4>";
@@ -360,7 +364,7 @@ class FileAdmin extends BaseTagLib {
 		$dataModel = array('files' => $files, 'dirs' => $dirs, 'parent' => $parentDir);
 		
 		if($useFrames) {
-			return parent::getFrame(parent::rb('title.browser').' :: /'.self::getPhysicalPathTo($dirId, true), $return.parent::view('fileadmin-list', $dataModel), true);
+			return parent::getFrame(parent::rb('title.browser').' :: /'.self::getPhysicalPathTo($dirId, true, 'name'), $return.parent::view('fileadmin-list', $dataModel), true);
 		} else {
 			return $return.parent::view('fileadmin-list', $dataModel);
 		}
