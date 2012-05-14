@@ -159,7 +159,7 @@
       
       $return .= '' 
       .'<table class="dir-list">'
-        .'<tr class="dir-parent-row">'
+        .'<tr class="dir-header-row">'
           .'<th class="th-icon"></th>'
           .'<th class="th-id"><span>'.$rb->get('file.id').':</span></th>'
           .'<th class="th-name">'.$rb->get('file.name').':</th>'
@@ -169,7 +169,7 @@
           .(($editable != "false") ? '<th class="th-edit">'.$rb->get('file.action').'</th>' : '' )
         .'</tr>'
 		.($showParent ? ''
-        .'<tr>'
+        .'<tr class="dir-parent-row">'
           .'<td class="dir-icon"></td>'
           .'<td class="dir-id"></td>'
           .'<td class="dir-name">'
