@@ -3,8 +3,8 @@
 	
 	
 	require_once('scripts/php/includes/settings.inc.php');
-	require_once("scripts/php/includes/database.inc.php");');
-	require_once("scripts/php/libs/Database.class.php");');
+	require_once("scripts/php/includes/database.inc.php");
+	require_once("scripts/php/libs/Database.class.php");
 
 	$db = new Database();
     $db->execute('insert into `article`(`id`, `line_id`, `order`, `visible`) values (287, 17, 287, 2);');
