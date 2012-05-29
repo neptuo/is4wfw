@@ -237,7 +237,24 @@ class DefaultWeb extends BaseTagLib {
             $this->UrlResolver->setPagesId(self::parsePagesId($item['pages_id']));
             $this->UrlResolver->selectProjectById($item['project_id'], $item['domain_url'], $item['root_url'], $item['virtual_url']);
             $this->UrlResolver->selectLanguage($item['language_id']);
-            $this->UrlCache->updateLastCache($fullUrl);
+			
+			if($item['cachetime'] != -1) {
+				// Pouzijeme cache
+				$this->CacheFile = sha1($this->FullUrl).'.cache.html';
+				$cacheUsed = false;
+				if($item['cachetime'] == 0 || $item['cachetime'] + $item['lastcache'] >= time()) {
+					if(file_exists(self::getPageCachePath() . $this->CacheFile)) {
+						$cacheUsed = true;
+						self::tryToComprimeContent(file_get_contents(self::getPageCachePath() . $this->CacheFile));
+					}
+				} 
+
+				if(!$cacheUsed) {
+					$this->IsCached = true;
+					$this->CacheInfo = $item;
+					$this->UrlCache->updateLastCache($fullUrl);
+				}
+			}
 
             self::loadPageData();
             self::parseSingleUrlParts($domainUrl, $rootUrl, $virtualUrl);
@@ -322,6 +339,7 @@ class DefaultWeb extends BaseTagLib {
     private function findCachetime() {
         $cachetime = 10000000000;
         foreach ($this->TempLoadedContent as $page) {
+			//echo $cachetime . '<br />';
             if ($cachetime != -1 && ($page['cachetime'] < $cachetime || $cachetime == 0)) {
                 if ($page['cachetime'] != 0) {
                     $cachetime = $page['cachetime'];
@@ -971,10 +989,10 @@ class DefaultWeb extends BaseTagLib {
         }
         if (array_key_exists('query-stats', $_GET)) {
             $diacont .= ''
-                    . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                    . '<div style="color: red; font-weight: bold;">Database queries:</div>'
-                    . '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
-                    . '</div>';
+			. '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
+				. '<div style="color: red; font-weight: bold;">Database queries:</div>'
+				. '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
+			. '</div>';
         }
 
         if (strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
@@ -1013,10 +1031,7 @@ class DefaultWeb extends BaseTagLib {
         $return = self::resolveWebRoot($return);
 
         if ($this->IsCached) {
-            $webProject = $this->UrlResolver->getWebProject();
-            $path = $_SERVER['DOCUMENT_ROOT'] . (UrlResolver::combinePath(WEB_ROOT, $webProject['alias']['root_url'])) . $this->CacheDir . '/pages/';
-            $name = $this->CacheFile;
-            file_put_contents($path . $name, $return);
+            file_put_contents(self::getPageCachePath() . $this->CacheFile, $return);
         }
 
         // Rewrite anchors
@@ -1024,13 +1039,18 @@ class DefaultWeb extends BaseTagLib {
         // Generate web:frames
         $return = preg_replace_callback('(<web:frame( title="([^"]*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array(&$this, 'parsepostframes'), $return);
 
-        if ($this->CacheInfo['cachetime'] != -1) {
-            parent::db()->execute('UPDATE `urlcache` SET `lastcache` = ' . (time() + $this->CacheInfo['cachetime']) . ' WHERE `id` = ' . $this->CacheInfo['id'] . ';');
-            file_put_contents($this->CacheInfo['path'], $return);
-        }
+        //if ($this->CacheInfo['cachetime'] != -1) {
+        //    parent::db()->execute('UPDATE `urlcache` SET `lastcache` = ' . (time() + $this->CacheInfo['cachetime']) . ' WHERE `id` = ' . $this->CacheInfo['id'] . ';');
+        //    file_put_contents($this->CacheInfo['path'], $return);
+        //}
 
         self::tryToComprimeContent($return);
     }
+	
+	private function getPageCachePath() {
+		$webProject = $this->UrlResolver->getWebProject();
+		return $_SERVER['DOCUMENT_ROOT'] . (UrlResolver::combinePath(WEB_ROOT, $webProject['alias']['root_url'])) . $this->CacheDir . '/pages/';;
+	}
 
     private function resolveWebRoot($content) {
         $webProject = $this->UrlResolver->getWebProject();
@@ -1317,7 +1337,8 @@ class DefaultWeb extends BaseTagLib {
         $path = $phpObject->str_tr($this->Path, '/', 1);
         $return = $this->TempLoadedContent[$this->PagesIdIndex];
 
-        preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['tag_lib_start']);
+        //preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['tag_lib_start']);
+		self::parseContent($return['tag_lib_start']);
 
         if (count($this->PagesId) > ($this->PagesIdIndex + 1)) {
             self::setChildPage($this->PagesId[$this->PagesIdIndex + 1]);
@@ -1325,9 +1346,10 @@ class DefaultWeb extends BaseTagLib {
             self::setChildPage(-1);
         }
 
-        //$this->CurrentPageTimestamp = $this->TempLoadedContent[$this->PagesIdIndex]['timestamp'];
         $this->CurrentDynamicPath = $path[0];
-        $tmp_path = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['href']);
+		
+        //$tmp_path = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['href']);
+		$tmp_path = self::parseContent($return['href']);
 
         $this->ParentId = $this->PagesId[$this->PagesIdIndex];
         $this->PagesIdIndex++;
@@ -1337,14 +1359,13 @@ class DefaultWeb extends BaseTagLib {
             if (strlen($return['title']) > 0) {
                 $this->PropertyAttr = '';
                 $this->PropertyUse = 'get';
-                $this->PageTitle = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['title']) . " - " . $this->PageTitle;
-                //$this->PageTitle = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $return['title'])." - ".$this->PageTitle;
-                //$this->PageTitle = $return['title']." - ".$this->PageTitle;
+                //$this->PageTitle = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['title']) . " - " . $this->PageTitle;
+				$this->PageTitle = self::parseContent($return['title']) . " - " . $this->PageTitle;
             }
         }
-        //$this->PageHead .= $return['head'];
         if (strlen($return['keywords']) > 0) {
-            $return['keywords'] = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['keywords']);
+            //$return['keywords'] = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['keywords']);
+			$return['keywords'] = self::parseContent($return['keywords']);
         }
         $this->Keywords .= ( (strlen($return['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ',' . $return['keywords'] : $return['keywords']) : '');
 
@@ -1376,16 +1397,15 @@ class DefaultWeb extends BaseTagLib {
                     break;
             }
         }
-
         $this->Path = $path[1];
 
-        $this->PageHead .= preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['head']);
-        $pageContent = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['content']);
+        //$this->PageHead .= preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['head']);
+		$this->PageHead .= self::parseContent($return['head']);
+        //$pageContent = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['content']);
+		$pageContent = self::parseContent($return['content']);
 
-        //$pageContent = preg_replace_callback('(&web:pathToId=([0-9]+))', array( &$this,'parseproperties'), $pageContent);
-        //$return = preg_replace_callback('(&web:pathToId=([0-9]+))', array( &$this,'parseproperties'), $return);
-
-        preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['tag_lib_end']);
+        //preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['tag_lib_end']);
+		self::parseContent($return['tag_lib_end']);
 
         $this->PagesIdIndex--;
 
@@ -1397,6 +1417,14 @@ class DefaultWeb extends BaseTagLib {
 
         return $pageContent;
     }
+	
+	private function parseContent($content) {
+		$parser = new FullTagParser();
+        $parser->setContent($content);
+        $parser->startParsing();
+        $return = $parser->getResult();
+		return $return;
+	}
 
     /**
      *
@@ -1808,7 +1836,8 @@ class DefaultWeb extends BaseTagLib {
     }
 
     /**
-     *
+     *	DEPRECATED!
+	 *
      *  Dynamicly rewrite address.
      *  C tag.
      *  
