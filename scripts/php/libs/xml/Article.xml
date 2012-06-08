@@ -4,7 +4,7 @@
   <name>Article Lib</name>
   <classname>Article</classname>
   <classpath>php.libs</classpath>
-  <version>1.46</version>
+  <version>1.47</version>
   <count>*</count>
   <comment>
     Třída pro články.
@@ -229,6 +229,10 @@
     </attribute>
     <attribute>
       <attname>newArticleButton</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>labelFilter</attname>
       <attreq>implied</attreq>
     </attribute>
     <attribute>
