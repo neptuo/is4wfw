@@ -52,6 +52,17 @@ class Article extends BaseTagLib {
 	protected function canUser($objectId, $rightType) {
 		return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(Article::$LineRightDesc, $objectId, $rightType));
 	}
+
+    private function getGroupPermCached($name, $default = 'true') {
+        if (parent::request()->exists($name, 'article-gperm')) {
+            return parent::request()->get($name, 'article-gperm');
+        } else {
+            $value = parent::getGroupPerm($name, parent::login()->getMainGroupId(), true, $default);
+            $value = ($value['value'] == 'true' ? true : false);
+            parent::request()->set($name, $value, 'article-gperm');
+            return $value;
+        }
+    }
 	
     /**
      * 
@@ -600,7 +611,7 @@ class Article extends BaseTagLib {
      *  @return   complete article management
      *
      */
-    public function showManagement($lineId = false, $detailPageId = false, $method = false, $useFrames = false, $newArticleButton = false, $pageable = false, $pageId = false) {
+    public function showManagement($lineId = false, $detailPageId = false, $method = false, $useFrames = false, $newArticleButton = false, $labelFilter = false, $pageable = false) {
         global $dbObject;
         global $loginObject;
         global $webObject;
@@ -696,10 +707,50 @@ class Article extends BaseTagLib {
             }
         }
 
-        $articles = $dbObject->fetchAll("SELECT `id` FROM `article` WHERE `line_id` = " . $lineId . " order by `order` desc".($pageable ? ' limit '.(self::getArticlePage() * self::getArticlePageSize()).','.self::getArticlePageSize() : '').";");
+		$returnTmp .= ''
+			. '<div class="article-mgm-show">';
+			
+		if($labelFilter) {
+			if($_POST['filter-labels'] == parent::rb('lines.select')) {
+				$labels = array();
+				foreach($_POST['label-filter'] as $key=>$value) {
+					$labels[] = $key;
+				}
+				parent::session()->set('filter-labels', $labels, 'article');
+			}
+		
+			$labels = parent::db()->fetchAll('select `al`.`id`, `al`.`name` from `article_line_label` as `all` left join `article_label` as `al` on `all`.`label_id` = `al`.`id` where `all`.`line_id` = '.$lineId.' order by `al`.`name`;');
+			$options = '';
+			foreach($labels as $label) {
+				$options .= ''
+					.'<input type="checkbox" name="label-filter['.$label['id'].']" id="label-filter-'.$label['id'].'"'.(self::isLabelFiltered($label['id']) ? ' checked="checked"' : '').' />'
+					.'<label for="label-filter-'.$label['id'].'">'.$label['name'].'</label>';
+			}
+		
+			$returnTmp .= ''
+			.'<div class="article-mgm-label-filter gray-box">'
+				.'<form name="article-mgm-label-filter" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.parent::rb('label.edittitle').': '
+					.$options.' '
+					.'<input type="submit" name="filter-labels" value="'.parent::rb('lines.select').'" />'
+				.'</form>'
+			.'</div>';
+		}
+		
+		$sql = '';
+		$countSql = '';
+		if(!parent::session()->exists('filter-labels', 'article')) {
+			$sql = 'SELECT `id` FROM `article` WHERE `line_id` = ' . $lineId;
+			$countSql = 'SELECT count(`id`) as `id` FROM `article` WHERE `line_id` = ' . $lineId . ' order by `order` desc';
+		} else {
+			$sql = 'SELECT `id` FROM `article` left join `article_attached_label` on `article`.`id` = `article_attached_label`.`article_id` WHERE `line_id` = ' . $lineId . ' and `label_id` in ('.self::filteredLabelsSql().')';
+			$countSql = 'SELECT count(`id`) as `id` FROM `article` left join `article_attached_label` on `article`.`id` = `article_attached_label`.`article_id` WHERE `line_id` = ' . $lineId . ' and `label_id` in ('.self::filteredLabelsSql().') order by `order` desc';
+		}
+		
+		
+        $articles = $dbObject->fetchAll($sql . " order by `order` desc".($pageable ? ' limit '.(self::getArticlePage() * self::getArticlePageSize()).','.self::getArticlePageSize() : '').";");
         if (count($articles) > 0) {
             $returnTmp .= ''
-			. '<div class="article-mgm-show">'
 				. '<table class="article-mgm-table">'
                     . '<thead>'
 						. '<tr class="article-mgm-tr article-mgm-tr-head">'
@@ -786,7 +837,7 @@ class Article extends BaseTagLib {
         }
 		
 		if($pageable) {
-			$total = $dbObject->fetchSingle("SELECT count(`id`) as `id` FROM `article` WHERE `line_id` = " . $lineId . " order by `order` desc");
+			$total = $dbObject->fetchSingle($countSql);
 			
 			$returnTmp .= ''
 			.'<div class="gray-box">'
@@ -804,6 +855,35 @@ class Article extends BaseTagLib {
             return $return;
         }
     }
+	
+	private function filteredLabelsSql() {
+		if(!parent::session()->exists('filter-labels', 'article')) {
+			return '';
+		}
+		
+		$result = '';
+		foreach(parent::session()->get('filter-labels', 'article') as $label) {
+			if(strlen($result) != '') {
+				$result .= ', ';
+			}
+			$result .= $label;
+		}
+		return $result;
+	}
+	
+	private function isLabelFiltered($labelId) {
+		if(!parent::session()->exists('filter-labels', 'article')) {
+			return true;
+		}
+	
+		foreach(parent::session()->get('filter-labels', 'article') as $label) {
+			if($label == $labelId) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	private function getArticlePageSize() {
 		return parent::getPropertyValue('Article.pageSize', Article::$ArticlePageSize);
@@ -1328,21 +1408,25 @@ class Article extends BaseTagLib {
                 . '<span class="padded small-note">' . $rb->get('lines.labelnote') . '</span>'
                 . '</div>'
                 . '<div class="clear"></div>';
+		
         if ($propertyEditors == 'edit_area') {
             $return .= ''
                     . '<div id="editors" class="editors edit-area-editors">'
                     . '<div id="editors-tab" class="editors-tab"></div>'
+					. ((self::getGroupPermCached('Article.Head')) ? ''
                     . '<div id="cover-article-head">'
                     . '<label for="article-head">' . $rb->get('articles.head2') . ':</label>'
                     . '<textarea id="article-head" class="edit-area html" name="article-head" rows="' . ($editAreaHeadRows > 0 ? $editAreaHeadRows : 10) . '">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $article['head']))) . '</textarea>'
-                    . '</div>'
+                    . '</div>' : '')
+					. ((self::getGroupPermCached('Article.Content')) ? ''
                     . '<div id="cover-article-content">'
-                    . '<label for="article-content">' . $rb->get('articles.content2') . ':</label>'
-                    . '<textarea id="article-content" class="edit-area html" name="article-content" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $article['content']))) . '</textarea>'
-                    . '</div>'
+						. '<label for="article-content">' . $rb->get('articles.content2') . ':</label>'
+						. '<textarea id="article-content" class="edit-area html" name="article-content" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $article['content']))) . '</textarea>'
+					. '</div>' : '')
                     . '</div>';
         } elseif (($propertyEditors == 'tiny')) {
             $return .= ''
+					. ((self::getGroupPermCached('Article.Head')) ? ''
                     . '<div class="article-head">'
                     . '<label for="article-head">' . $rb->get('articles.head2') . ':</label> '
                     . '<div class="editor-cover">'
@@ -1351,7 +1435,8 @@ class Article extends BaseTagLib {
                     . '</div>'
                     . '<div class="clear"></div>'
                     . '</div>'
-                    . '</div>'
+                    . '</div>' : '')
+					. ((self::getGroupPermCached('Article.Content')) ? ''
                     . '<div class="article-content">'
                     . '<label for="article-content">' . $rb->get('articles.content2') . ':</label> '
                     . '<div class="editor-cover">'
@@ -1360,7 +1445,7 @@ class Article extends BaseTagLib {
                     . '</div>'
                     . '<div class="clear"></div>'
                     . '</div>'
-                    . '</div>'
+                    . '</div>' : '')
                     . '<script type="text/javascript">'
                     . 'initTiny("article-head");'
                     . 'initTiny("article-content");'
@@ -1369,6 +1454,7 @@ class Article extends BaseTagLib {
                     . '</script>';
         } else {
             $return .= ''
+					. ((self::getGroupPermCached('Article.Head')) ? ''
                     . '<div class="article-head">'
                     . '<label for="article-head">' . $rb->get('articles.head2') . ':</label> '
                     . '<div class="editor-cover">'
@@ -1378,6 +1464,8 @@ class Article extends BaseTagLib {
                     . '<div class="clear"></div>'
                     . '</div>'
                     . '</div>'
+					: '')
+					. ((self::getGroupPermCached('Article.Content')) ? ''
                     . '<div class="article-content">'
                     . '<label for="article-content">' . $rb->get('articles.content2') . ':</label> '
                     . '<div class="editor-cover">'
@@ -1386,7 +1474,7 @@ class Article extends BaseTagLib {
                     . '</div>'
                     . '<div class="clear"></div>'
                     . '</div>'
-                    . '</div>';
+                    . '</div>' : '');
         }
 
         $return .= ''
