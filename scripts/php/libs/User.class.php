@@ -52,7 +52,7 @@ class User extends BaseTagLib {
             $mainGroup = $defaultMainGroupId != '' ? $defaultMainGroupId : $_POST['user-edit-main-group'];
 
             $errors = array();
-            if (strlen($login) < 4) {
+            if (strlen($login) < 3) {
                 $errors[] = $rb->get('reg.error.usernameshort');
             }
             if (strlen($password) < 6 && $password != '1a1') {
