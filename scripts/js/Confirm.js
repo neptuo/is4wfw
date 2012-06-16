@@ -17,8 +17,12 @@ function stopEvent (event) {
     event.preventDefault();
     window.event.returnValue=false;
   } else {
-    event.preventDefault();
-    event.stopPropagation();
+	if(typeof event.preventDefault == 'function') {
+		event.preventDefault();
+	}
+	if(typeof event.stopPropagation == 'function') {
+		event.stopPropagation();
+	}
     event.cancelBubble = true;
     event.returnValue = false;
     window.event.returnValue=false;
@@ -42,8 +46,10 @@ function initConfirm(event) {
 				//stopEvent(event); 
 				if(!confirm("Do you really want to do " + title + "?")) {
 					stopEvent(event);
+					return false;
+				} else {
+					return true;
 				}
-				return false; 
 			}
 			
 			addEvent(confs[i], 'click', onClickConfirm, false);
