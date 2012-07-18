@@ -110,7 +110,7 @@
     	  return;
 			}
 			
-      require_once("scripts/php/classes/CustomTagParser.class.php");  
+      require_once("scripts/php/classes/FullTagParser.class.php");  
       $cols = $dbObject->fetchAll("SELECT `ip`, `timestamp`, `count` FROM `counter` WHERE `counter_id` = ".$id.";");
       $_SESSION['counter'] = array();
       $_SESSION['counter']['all'] = 0;
@@ -166,7 +166,7 @@
         $templateContent = str_replace('<tpl:'.$key.' />', $col, $templateContent);
       }*/
       
-      $Parser = new CustomTagParser();
+      $Parser = new FullTagParser();
 			$Parser->setContent($templateContent);
 			$Parser->startParsing();
  			$return .= $Parser->getResult();

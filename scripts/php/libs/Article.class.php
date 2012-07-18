@@ -6,7 +6,7 @@
  *
  */
 require_once("BaseTagLib.class.php");
-require_once("scripts/php/classes/CustomTagParser.class.php");
+require_once("scripts/php/classes/FullTagParser.class.php");
 require_once("scripts/php/classes/RoleHelper.class.php");
 require_once("scripts/php/classes/ui/BaseGrid.class.php");
 
@@ -210,7 +210,7 @@ class Article extends BaseTagLib {
 				parent::request()->set('link', $flink, 'current-article');
                 $_SESSION['current-article']['link'] = $flink;
 
-                $Parser = new CustomTagParser();
+                $Parser = new FullTagParser();
                 $Parser->setContent($templateContent);
                 $Parser->startParsing();
                 $return .= $Parser->getResult();
@@ -433,7 +433,7 @@ class Article extends BaseTagLib {
             parent::request()->set('head', $article[0]['head'], 'current-article');
             parent::request()->set('content', $article[0]['content'], 'current-article');
 
-            $Parser = new CustomTagParser();
+            $Parser = new FullTagParser();
             $Parser->setContent($templateContent);
             $Parser->startParsing();
             $return .= $Parser->getResult();
@@ -529,7 +529,7 @@ class Article extends BaseTagLib {
                 parent::request()->set('i', $i, 'current-label');
                 parent::request()->set('label', $label, 'current-label');
                 self::setLabelId($label['id']);
-                $parser = new CustomTagParser();
+                $parser = new FullTagParser();
                 $parser->setContent($templateContent);
                 $parser->startParsing();
                 $return .= $parser->getResult();

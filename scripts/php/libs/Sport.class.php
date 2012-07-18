@@ -8,7 +8,7 @@
 require_once("BaseTagLib.class.php");
 require_once("scripts/php/classes/ui/BaseGrid.class.php");
 require_once("scripts/php/classes/ui/BaseForm.class.php");
-require_once("scripts/php/classes/CustomTagParser.class.php");
+require_once("scripts/php/classes/FullTagParser.class.php");
 require_once("scripts/php/classes/ResourceBundle.class.php");
 
 /**
@@ -2566,7 +2566,7 @@ class Sport extends BaseTagLib {
         $seasons = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` where `project_id` = ' . self::getProjectId() . ' ORDER BY `start_year` ' . $sorting . ';');
         if (count($seasons) > 0) {
             $content = parent::getTemplateContent($templateId);
-            $parser = new CustomTagParser();
+            $parser = new FullTagParser();
             $i = 0;
             $prevId = self::getSeasonId();
             foreach ($seasons as $season) {
@@ -2809,7 +2809,7 @@ class Sport extends BaseTagLib {
                 self::setSeasonId($seasonId);
                 self::setTeamId($team['id']);
 
-                $parser = new CustomTagParser();
+                $parser = new FullTagParser();
                 $parser->setContent($content);
                 $parser->startParsing();
                 $return .= $parser->getResult();
@@ -2964,7 +2964,7 @@ class Sport extends BaseTagLib {
                 self::setHomeTeamId($match['h_team']);
                 self::setAwayTeamId($match['a_team']);
 
-                $parser = new CustomTagParser();
+                $parser = new FullTagParser();
                 $parser->setContent($content);
                 $parser->startParsing();
                 $return .= $parser->getResult();
@@ -3121,7 +3121,7 @@ class Sport extends BaseTagLib {
                     parent::request()->set('i', $i, 'sport-data');
                     self::setRoundId($round['id']);
                     self::setSeasonId($seasonId);
-                    $Parser = new CustomTagParser();
+                    $Parser = new FullTagParser();
                     $Parser->setContent($templateContent);
                     $Parser->startParsing();
                     $return .= $Parser->getResult();
@@ -3220,7 +3220,7 @@ class Sport extends BaseTagLib {
         $this->UsedFields = array();
         $this->ViewPhase = 1;
 
-        $parser = new CustomTagParser();
+        $parser = new FullTagParser();
         $parser->setContent($templateContent);
         $parser->startParsing();
 
@@ -3247,7 +3247,7 @@ class Sport extends BaseTagLib {
                 self::setTeamId($player['team-id']);
                 self::setPlayerId($player['id']);
                 $_SESSION['sport']['i'] = $i;
-                $parser = new CustomTagParser();
+                $parser = new FullTagParser();
                 $parser->setContent($templateContent);
                 $parser->startParsing();
                 $return .= $parser->getResult();
@@ -3438,7 +3438,7 @@ class Sport extends BaseTagLib {
                 self::setTeamId($player['team']);
                 self::setPlayerId($player['id']);
 
-                $parser = new CustomTagParser();
+                $parser = new FullTagParser();
                 $parser->setContent($templateContent);
                 $parser->startParsing();
                 $return .= $parser->getResult();
@@ -3585,7 +3585,7 @@ class Sport extends BaseTagLib {
                     self::setPlayerId($stat['pid']);
                     self::setTableId($stat['table_id']);
 
-                    $parser = new CustomTagParser();
+                    $parser = new FullTagParser();
                     $parser->setContent($templateContent);
                     $parser->startParsing();
                     $return .= $parser->getResult();

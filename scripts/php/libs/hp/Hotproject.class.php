@@ -200,13 +200,13 @@
 			if(count($template) > 0) {
 				$templateContent = $template[0]['content'];
 				$projections = $dbObject->fetchAll('SELECT `name`, `subname`, `value` FROM `w_projection` WHERE `visible` = 1 ORDER BY `position`;');
-				require_once("scripts/php/classes/CustomTagParser.class.php");
+				require_once("scripts/php/classes/FullTagParser.class.php");
 				foreach($projections as $prj) {
       	  $_SESSION['current-projection']['name'] = $prj['name'];
         	$_SESSION['current-projection']['subname'] = $prj['subname'];
 	        $_SESSION['current-projection']['value'] = $prj['value'];
   	      
-					$Parser = new CustomTagParser();
+					$Parser = new FullTagParser();
 				  $Parser->setContent($templateContent);
 			  	$Parser->startParsing();
 	 				$return .= $Parser->getResult();
@@ -417,14 +417,14 @@
 			if(count($template) > 0) {
 				$templateContent = $template[0]['content'];
 				$references = $dbObject->fetchAll('SELECT `name`, `subname`, `type` FROM `w_reference` WHERE `visible` = 1 ORDER BY `position`;');
-				require_once("scripts/php/classes/CustomTagParser.class.php");
+				require_once("scripts/php/classes/FullTagParser.class.php");
 				foreach($references as $ref) {
       	  $_SESSION['current-reference']['name'] = $ref['name'];
         	$_SESSION['current-reference']['subname'] = $ref['subname'];
 	        $_SESSION['current-reference']['type'] = $ref['type'];
 	        $_SESSION['current-reference']['type-name'] = $ref['type'];
   	      
-					$Parser = new CustomTagParser();
+					$Parser = new FullTagParser();
 				  $Parser->setContent($templateContent);
 			  	$Parser->startParsing();
 	 				$return .= $Parser->getResult();

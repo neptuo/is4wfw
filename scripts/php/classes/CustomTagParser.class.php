@@ -42,6 +42,8 @@ class CustomTagParser {
      */
     protected $GlobalObjects = array();
     protected $UseCaching = true;
+	
+	protected $TagsToParse = array();
 
     /**
      *
@@ -60,13 +62,17 @@ class CustomTagParser {
      * 	Use caching
      *
      */
-    protected function setUseCaching($val) {
+    public function setUseCaching($val) {
         if ($val == false) {
             $this->UseCaching = false;
         } else {
             $this->UseCaching = true;
         }
     }
+	
+	public function setTagsToParse($tags) {
+		$this->TagsToParse = $tags;
+	}
 
     protected function addSingletonGlobalObject($obj) {
         if (!in_array($obj, $this->GlobalObjects)) {
@@ -86,6 +92,20 @@ class CustomTagParser {
         $object = explode(":", $ctag[1]);
         $attributes = array();
         $this->Attributes = array();
+		
+		if($this->TagsToParse != array()) {
+			$skip = true;
+			foreach($this->TagsToParse as $tag) {
+				if($ctag[1] == $tag) {
+					$skip = false;
+					break;
+				}
+			}
+			
+			if($skip) {
+				return $ctag[0];
+			}
+		}
 
         preg_replace_callback($this->ATT_RE, array(&$this, 'parseatt'), $ctag[3]);
 
@@ -223,6 +243,12 @@ class CustomTagParser {
             $this->Result = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $this->Content);
         }
     }
+	
+	public function parseProperty($value) {		
+		$this->PropertyAttr = '';
+		$this->PropertyUse = 'get';
+		return preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $value);
+	}
 
     public function OnOutput($data) {
         $this->Result .= $data;

@@ -8,14 +8,15 @@
 require_once("BaseTagLib.class.php");
 
 require_once("scripts/php/classes/ResourceBundle.class.php");
-require_once("scripts/php/classes/CustomTagParser.class.php");
+require_once("scripts/php/classes/FullTagParser.class.php");
+require_once("scripts/php/libs/FileAdmin.class.php");
 
 /**
  * 
  *  Class CustomForm.
  *      
  *  @author     Marek SMM
- *  @timestamp  2012-01-10
+ *  @timestamp  2012-07-18
  * 
  */
 class CustomForm extends BaseTagLib {
@@ -53,7 +54,7 @@ class CustomForm extends BaseTagLib {
 
     /* ===================== LIST =========================================== */
 
-    public function listRows($formId, $templateId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $noDataMessage = false) {
+    public function listRows($formId, $templateId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = false, $noDataMessage = false) {
         global $webObject;
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -70,6 +71,7 @@ class CustomForm extends BaseTagLib {
 
         if (self::listFindFieldsInTemplate($formId, $templateContent)) {
 			$rules = self::listParseFilter($rules, $filter);
+			//print_r($rules);
 		
             $sql = 'select ';
             $fields = '';
@@ -96,23 +98,30 @@ class CustomForm extends BaseTagLib {
 				$sql .= '`' . $sBy . '`';
 				$sql .= ( $desc == 'true') ? ' desc' : ' asc';
 			}
+			
+			if($limit > 0) {
+				$sql .= ' limit '.$limit;
+			}
             $sql .= ';';
 
             $data = parent::db()->fetchAll($sql);
             if (count($data) > 0) {
                 $this->ViewPhase = 2;
                 $i = 1;
+				
+				$rowIdValue = self::getRowId();
                 foreach ($data as $row) {
                     parent::request()->set('i', $i, 'custom-form');
                     $this->ViewDataRow = $row;
                     self::setRowId($row['id']);
 
-                    $Parser = new CustomTagParser();
+                    $Parser = new FullTagParser();
                     $Parser->setContent($templateContent);
                     $Parser->startParsing();
                     $return .= $Parser->getResult();
                     $i++;
                 }
+				self::setRowId($rowIdValue);
             } else {
                 $return .= $noDataMessage;
             }
@@ -126,7 +135,7 @@ class CustomForm extends BaseTagLib {
 	private function listParseFilter($rules, $filter) {
 		$filterParsed = explode(',', $filter);
 		foreach($filterParsed as $item) {
-			$f = explode(':', $item);
+			$f = explode(':', $item, 2);
 			if(count($f) == 2) {
 				$rules = self::listAddToRules($rules, $f[0], $f[1]);
 			}
@@ -135,6 +144,10 @@ class CustomForm extends BaseTagLib {
 	}
 
     private function listAddToRules($rules, $key, $value, $type = null) {
+		$Parser = new FullTagParser();
+		$Parser->setUseCaching(false);
+		$value = $Parser->parseProperty($value);
+	
 		if($type == null) {
 			if(is_numeric($value)) {
 				$type = 'number';
@@ -160,11 +173,13 @@ class CustomForm extends BaseTagLib {
         $this->ViewFieldsFound = array();
         $this->ViewFieldsFound[] = array('id', 'number');
 
-        $Parser = new CustomTagParser();
+        $Parser = new FullTagParser();
         $Parser->setContent($templateContent);
+		$Parser->setTagsToParse(array('cf:field'));
         $Parser->startParsing();
         $Parser->getResult();
 
+		//print_r($this->ViewFieldsFound);
         $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');
         if (count($formInfo) == 1) {
             $fields = self::parseFieldsFromString($formInfo[0]['fields']);
@@ -179,7 +194,7 @@ class CustomForm extends BaseTagLib {
                         break;
                     }
                 }
-                if (!$iok) {
+                if (!$iok) {echo 'xxxxx-'.$ff[0].'-'.$formId;
                     $ok = false;
                     break;
                 }
@@ -197,10 +212,15 @@ class CustomForm extends BaseTagLib {
         return 'id';
     }
 	
-	private function parseFilterValue($filter) {
-		
+	public function setFieldAsCustomProperty($fieldName) {
+		self::setCustomProperty($this->ViewDataRow[$fieldName]);
 	}
-
+	
+	public function setupCustomUrl($formId, $fieldName) {
+		parent::request()->set('customurl-formid', $formId, 'cf');
+		parent::request()->set('customurl-fieldname', $fieldName, 'cf');
+	}
+	
     /* ===================== FORM =========================================== */
 
     public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false) {
@@ -213,6 +233,7 @@ class CustomForm extends BaseTagLib {
 
         if (array_key_exists('cf_gen-id', $_POST) && array_key_exists('cf_form-id', $_POST) && $_POST['cf_form-id'] == $formId) {
             // Phase 3
+			//print_r($_POST);
             $this->ValidationError = false;
             self::processForm($formId, $templateContent);
             if (!self::validationError($formId, $templateContent)) {
@@ -222,6 +243,7 @@ class CustomForm extends BaseTagLib {
                     $values = "";
                     $pairs = '';
                     foreach ($this->FormData[$this->FormId] as $name => $value) {
+						$editedValue = true;
                         switch ($value['type']) {
                             case 'string':
                                 $value['value'] = '"' . $value['value'] . '"';
@@ -238,30 +260,40 @@ class CustomForm extends BaseTagLib {
                             case 'number':
                                 $value['value'] = $value['value'];
                                 break;
+							case 'file':
+								if(array_key_exists('cf_row-id', $_POST) && $value['value'] == array()) {
+									$editedValue = false;
+								} else {
+									$value['value'] = self::formProcessFileUpload($value['value']['file'], $value['value']['dirId']);
+								}
                         }
 
                         if (!array_key_exists('cf_row-id', $_POST)) {
-                            if ($names == "") {
-                                $names .= '`' . $name . '`';
-                                $values .= $value['value'];
-                            } else {
-                                $names .= ', `' . $name . '`';
-                                $values .= ', ' . $value['value'];
-                            }
+							if ($names == "") {
+								$names .= '`' . $name . '`';
+								$values .= $value['value'];
+							} else {
+								$names .= ', `' . $name . '`';
+								$values .= ', ' . $value['value'];
+							}
                         } else {
-                            if ($pairs == '') {
-                                $pairs .= '`' . $name . '` = ' . $value['value'];
-                            } else {
-                                $pairs .= ', `' . $name . '` = ' . $value['value'];
-                            }
+							if($editedValue) {
+								if ($pairs == '') {
+									$pairs .= '`' . $name . '` = ' . $value['value'];
+								} else {
+									$pairs .= ', `' . $name . '` = ' . $value['value'];
+								}
+							}
                         }
                     }
 
                     if (!array_key_exists('cf_row-id', $_POST)) {
                         $sql = 'insert into `cf_' . $this->FormId . '`(' . $names . ') values(' . $values . ');';
+						//echo $sql;
                         parent::db()->execute($sql);
                     } else {
                         $sql = 'update `cf_' . $this->FormId . '` set ' . $pairs . ' where `id` = ' . $_POST['cf_row-id'] . ';';
+						//echo $sql;
                         parent::db()->execute($sql);
                     }
                     $webObject->redirectTo($pageId);
@@ -272,7 +304,7 @@ class CustomForm extends BaseTagLib {
                     $this->FormPhase = 0;
                     $this->EmailPhase = 1;
 
-                    $Parser = new CustomTagParser();
+                    $Parser = new FullTagParser();
                     $Parser->setContent($templateContent);
                     $Parser->startParsing();
                     $content .= $Parser->getResult();
@@ -353,7 +385,7 @@ class CustomForm extends BaseTagLib {
         $this->FormPhase = 1;
         $this->FormFieldsFound = array();
 
-        $Parser = new CustomTagParser();
+        $Parser = new FullTagParser();
         $Parser->setContent($templateContent);
         $Parser->startParsing();
         $return .= $Parser->getResult();
@@ -398,7 +430,7 @@ class CustomForm extends BaseTagLib {
         $this->ResourcesToAdd = '';
 
         $return .= ''
-                . '<form name="cf_' . $formId . '" method="post" action="">'
+                . '<form name="cf_' . $formId . '" method="post" enctype="multipart/form-data" action="' . $_SERVER['REDIRECT_URL'] . '">'
                 . '<input type="hidden" name="cf_gen-id" value="' . $this->GeneratedFormId . '" />'
                 . '<input type="hidden" name="cf_form-id" value="' . $this->FormId . '" />';
         if ($rowId != '') {
@@ -406,7 +438,7 @@ class CustomForm extends BaseTagLib {
                     . '<input type="hidden" name="cf_row-id" value="' . $rowId . '" />';
         }
 
-        $Parser = new CustomTagParser();
+        $Parser = new FullTagParser();
         $Parser->setContent($templateContent);
         $Parser->startParsing();
         $fcontent = $Parser->getResult();
@@ -431,12 +463,27 @@ class CustomForm extends BaseTagLib {
         $this->FormId = $formId;
         $this->GeneratedFormId = $_POST['cf_gen-id'];
 
-        $Parser = new CustomTagParser();
+        $Parser = new FullTagParser();
         $Parser->setContent($templateContent);
         $Parser->startParsing();
         $return .= $Parser->getResult();
     }
 
+	private function formProcessFileUpload($file, $dirId) {
+		$fileAdmin = new FileAdmin();
+		
+		$dataItem = array(
+			'id' => '', 
+			'url' => '', 
+			'name' => time(), 
+			'dir_id' => $dirId, 
+			'type' => $fileAdmin->getWebFileType($file['name']), 
+			'timestamp' => time()
+		);
+		$err = $fileAdmin->processFileUploadBasic($dataItem, $file['tmp_name']);
+		return parent::dao('File')->getLastId();
+	}
+	
     private function validationError($formId, $templateContent) {
         return $this->ValidationError;
     }
@@ -452,7 +499,7 @@ class CustomForm extends BaseTagLib {
     /* ===================== FIELD ========================================== */
 
     // pro date -> formatovac!!!
-    public function field($name, $viewType = false, $type = false, $required = false, $validation = false, $elementId = false, $transformation = false, $default = false, $errorMessage = false, $requiredValue = false, $transient = false, $data = false, $cssClass = false) {
+    public function field($name, $viewType = false, $type = false, $required = false, $validation = false, $elementId = false, $transformation = false, $default = false, $errorMessage = false, $requiredValue = false, $transient = false, $data = false, $cssClass = false, $dirId = false, $referenceFormId = false, $referenceCaptionField = false) {
         global $webObject;
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -471,7 +518,7 @@ class CustomForm extends BaseTagLib {
             $id = self::creatorChooseValue($elementId, $name);
             $value = self::fieldGetValue($name, $type, $fname, $default);
             if($requiredValue != '') {
-              parent::session()->set($fname.'-req', $requiredValue, 'cf');
+				parent::session()->set($fname.'-req', $requiredValue, 'cf');
             }
             if ($viewType == '' || $viewType == 'edit') {
                 switch ($type) {
@@ -538,6 +585,14 @@ class CustomForm extends BaseTagLib {
                         if ($validation != '') {
                             // parse validation on client side
                         }
+                        break;
+					case 'file':
+						$return .= '<input type="file" name="' . $fname . '" id="' . $id . '" value="' . $value . '" class="'.$cssClass.'" /> ';
+                        break;
+					case 'reference':
+						$return .= self::fieldGenerateReferenceDropDown($referenceFormId, $referenceCaptionField, $fname, $id, $default, $cssClass);
+                        break;
+					
                 }
                 if ($required == 'true') {
                     $return .= '<span class="required">*</span> ';
@@ -552,8 +607,23 @@ class CustomForm extends BaseTagLib {
             $error = false;
             $fname = $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $name);
             $value = $_POST[$fname];
+			
+			$editingWithoutFile = (array_key_exists($fname, $_FILES) && $type == 'file' && array_key_exists('cf_row-id', $_POST) && $_FILES[$fname]['error'] == 4);
+			$fileOk = false;
+			if((array_key_exists($fname, $_FILES) && $_FILES[$fname]['error'] == 0)
+				|| $editingWithoutFile
+			) {
+				$fileOk = true;
+				$value = $_FILES[$fname]['name'];
+			}
+			
             if ($viewType == 'edit' || $viewType == '') {
-                if (($required == 'true' && $value == '') || ($type == 'date' && strtotime($value) == '') || !self::fieldCustomValidation($value, $type, $validation) || ($requiredValue != '' && parent::session()->get($fname.'-req', 'cf') != $value)) {
+                if (($type != 'file' && $required == 'true' && $value == '') 
+			      || ($type == 'file' && $required == 'true' && (!$fileOk || !self::fieldDirExists($dirId)))
+				  || ($type == 'date' && strtotime($value) == '') 
+				  || !self::fieldCustomValidation($value, $type, $validation) 
+				  || ($requiredValue != '' && parent::session()->get($fname.'-req', 'cf') != $value)
+				) {
                     $error = true;
                     parent::request()->set($fname . '_e', $errorMessage == '' ? $rb->get('cf.field.error.required') : $errorMessage);
                 } else {
@@ -561,6 +631,14 @@ class CustomForm extends BaseTagLib {
                 }
                 if (!$error) {
                     if ($transient != 'true') {
+						if($fileOk) {
+							if(!$editingWithoutFile) {
+								$value = array('file' => $_FILES[$fname], 'dirId' => $dirId);
+							} else {
+								$value = array();
+							}
+						}
+					
                         $this->FormData[$this->FormId][$name]['type'] = $type;
                         $this->FormData[$this->FormId][$name]['value'] = $value;
                     }
@@ -579,12 +657,23 @@ class CustomForm extends BaseTagLib {
             if ($transformation != '') {
                 $return .= self::fieldTransformations($name, $this->ViewDataRow[$name], $transformation);
             } else {
-                $return .= $this->ViewDataRow[$name];
+				if($type == 'reference') {
+					$sql = 'select `'.$referenceCaptionField.'` from `cf_'.$referenceFormId.'` where `id` = '.$this->ViewDataRow[$name].';';
+					$data = parent::db()->fetchSingle($sql);
+					$return .= $data[$referenceCaptionField];
+				} else {
+					$return .= $this->ViewDataRow[$name];
+				}
             }
         }
 
         return $return;
     }
+	
+	private function fieldDirExists($dirId) {
+		$fileAdmin = new FileAdmin();
+		return $fileAdmin->canWriteDirectory(array('id' => $dirId));
+	}
 
     private function fieldGetValue($name, $type, $fname, $default) {
         if (array_key_exists($fname, $_POST)) {
@@ -676,6 +765,21 @@ class CustomForm extends BaseTagLib {
         $this->ResourcesToAdd[] = array($type, $name);
     }
 
+	private function fieldGenerateReferenceDropDown($referenceFormId, $referenceCaptionField, $fname, $id, $default, $cssClass) {
+		$result = '';
+		
+		$sql = 'select `id`, `'.$referenceCaptionField.'` from `cf_'.$referenceFormId.'` order by `'.$referenceCaptionField.'`;';
+		$data = parent::db()->fetchAll($sql);
+		
+		$result .= '<select name="' . $fname . '" id="' . $id . '" class="'.$cssClass.'"> ';
+		foreach($data as $item) {
+			$result .= '<option value="' . $item['id'] . '"' . (($default == $item['id']) ? ' selected="selected"' : '') . '>' . $item[$referenceCaptionField] . '</option>';
+		}
+		$result .= '</select>';
+		
+		return $result;
+	}
+	
     /* ===================== BUTTON ========================================= */
 
     public function button($type = false, $value = false, $elementId = false) {
@@ -686,6 +790,7 @@ class CustomForm extends BaseTagLib {
             $sql = 'delete from `cf_' . $this->FormId . '` where `id` = ' . $id . ';';
             parent::db()->execute($sql);
             unset($_POST['cf-delete-row-button']);
+			parent::web()->redirect($_SERVER['REDIRECT_URL']);
         }
 
         $id = self::creatorChooseValue($elementId, $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $type));
@@ -700,7 +805,7 @@ class CustomForm extends BaseTagLib {
                     break;
                 case "delete":
                     $return .= ''
-					. '<form name="cf-delete-row" method="post" action="">'
+					. '<form name="cf-delete-row" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
 						. '<input type="hidden" name="cf-delete-row-id" value="' . $this->ViewDataRow['id'] . '" />'
 						. '<input type="submit" name="cf-delete-row-button" value="' . $value . '" class="confirm" />'
 					. '</form>';
@@ -785,7 +890,7 @@ class CustomForm extends BaseTagLib {
                         . '<td>' . $form['name'] . '</td>'
                         . '<td>' . self::listFormatFields($form['fields']) . '</td>'
                         . '<td>'
-                        . '<form name="list-delete" method="post" action="">'
+                        . '<form name="list-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                         . '<input type="hidden" name="list-id" value="' . $form['name'] . '" />'
                         . '<input class="confirm" type="image" src="~/images/page_del.png" name="list-delete" value="' . $rb->get('cf.list.delete') . '" title="' . $rb->get('cf.list.delete-title') . ', name=' . $form['name'] . '" />'
                         . '</form>'
@@ -819,7 +924,7 @@ class CustomForm extends BaseTagLib {
 	public function setCustomProperty($value) {
 		parent::request()->set('custom-property', $value, 'cf');
 	}
-
+	
     /* ===================== CREATOR ======================================== */
 
     public function formCreator($useFrames = false) {
@@ -902,7 +1007,7 @@ class CustomForm extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return = ''
-                . '<form name="creator-step-0" method="post" action="">'
+                . '<form name="creator-step-0" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                 . '<div class="gray-box">'
                 . $rb->get('cf.creator.step0.label')
                 . '</div>'
@@ -963,7 +1068,7 @@ class CustomForm extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return .= ''
-                . '<form name="creator-step-1" method="post" ation="">'
+                . '<form name="creator-step-1" method="post" ation="' . $_SERVER['REDIRECT_URL'] . '">'
                 . '<div class="gray-box">'
                 . $rb->get('cf.creator.step1.label')
                 . '</div>'
@@ -1031,7 +1136,9 @@ class CustomForm extends BaseTagLib {
                 . '<option' . ('string' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>string</option>'
                 . '<option' . ('dropdown' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>dropdown</option>'
                 . '<option' . ('longstring' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>longstring</option>'
-                . '<option' . ('date' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>date</option>';
+                . '<option' . ('date' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>date</option>'
+                . '<option' . ('file' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>file</option>'
+                . '<option' . ('reference' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>reference</option>';
 
         return $return;
     }
@@ -1043,6 +1150,8 @@ class CustomForm extends BaseTagLib {
             case "dropdown": return "TINYTEXT";
             case "longstring": return "TEXT";
             case "date": return "INT";
+			case "file": return "INT";
+			case "reference": return "INT";
         }
     }
 
@@ -1061,7 +1170,7 @@ class CustomForm extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return .= ''
-                . '<form name="creator-step-2" method="post" action="">'
+                . '<form name="creator-step-2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                 . '<div class="gray-box">'
                 . $rb->get('cf.creator.step2.label')
                 . '</div>'
@@ -1127,7 +1236,7 @@ class CustomForm extends BaseTagLib {
     }
 
     private function creatorFormOverview1() {
-        $return = '<c:form formId="' . $_SESSION['cf']['creator']['form-id'] . '" templateId="TEMPLATE_ID" type="db" pageId="PAGE_ID_FOR_REDIRECTION" />';
+        $return = '<cf:form formId="' . $_SESSION['cf']['creator']['form-id'] . '" templateId="TEMPLATE_ID" type="db" pageId="PAGE_ID_FOR_REDIRECTION" />';
         $return = str_replace('<', '&lt;', $return);
         $return = str_replace('>', '&gt;', $return);
         return $return;
@@ -1138,12 +1247,13 @@ class CustomForm extends BaseTagLib {
 
         for ($i = 0; $i < $_SESSION['cf']['creator']['fields']; $i++) {
             $id = $_SESSION['cf']['creator']['form-id'] . '-' . $_SESSION['cf']['creator']['field']['i' . $i]['name'];
+			$type = strtolower($_SESSION['cf']['creator']['field']['i' . $i]['type']);
             $return .= ''
                     . '<p>
 '
                     . '    <label for="' . $id . '">' . ucfirst($_SESSION['cf']['creator']['field']['i' . $i]['name']) . ':</label>
 '
-                    . '    <c:field name="' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '" type="' . strtolower($_SESSION['cf']['creator']['field']['i' . $i]['type']) . '" elementId="' . $id . '" required="true" />
+                    . '    <cf:field name="' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '" type="' . $type . '" elementId="' . $id . '" required="true" '.($type == 'file' ? ' dir="DIRECTORY_ID"' : '').($type == 'reference' ? ' referenceFormId="TARGET_FORM_ID" referenceCaptionField="CAPTION_FIELD"' : '').' />
 '
                     . '</p>
 ';
@@ -1152,7 +1262,7 @@ class CustomForm extends BaseTagLib {
         $return .= ''
                 . '<p>
 '
-                . '    <c:button type="submit" value="Save" />
+                . '    <cf:button type="submit" value="Save" />
 '
                 . '</p>
 ';
@@ -1187,7 +1297,30 @@ class CustomForm extends BaseTagLib {
 	}
 	
 	public function getCustom() {
-		return $this->ViewDataRow[parent::request()->get('custom-property', $value, 'cf')];
+		return parent::request()->get('custom-property', 'cf');
+	}
+	
+	public function setCustomUrl($value) {
+		$formId = parent::request()->get('customurl-formid', 'cf');
+		$fieldName = parent::request()->get('customurl-fieldname', 'cf');
+		
+		if($formId != '' && $fieldName != '') {
+			$sql = 'select `id`, `'.$fieldName.'` from `cf_'.$formId.'`';
+			$data = parent::db()->fetchAll($sql);
+			foreach($data as $item) {
+				if(parent::convertToUrlValid($item[$fieldName]) == $value) {
+					self::setRowId($item['id']);
+					return $value;
+				}
+			}
+		}
+		
+		return "-1===-1";
+	}
+	
+	public function getCustomUrl() {
+		$fieldName = parent::request()->get('customurl-fieldname', 'cf');
+		return parent::convertToUrlValid($this->ViewDataRow[$fieldName]);
 	}
 }
 
