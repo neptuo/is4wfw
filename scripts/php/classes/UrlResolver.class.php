@@ -6,7 +6,7 @@
  *
  */
 require_once("scripts/php/libs/BaseTagLib.class.php");
-require_once("scripts/php/classes/CustomTagParser.class.php");
+require_once("scripts/php/classes/FullTagParser.class.php");
 
 /**
  *
@@ -24,7 +24,7 @@ class UrlResolver extends BaseTagLib {
     private $PagesId = array();
 
     public function __construct() {
-        $this->Parser = new CustomTagParser();
+        $this->Parser = new FullTagParser();
     }
 
     public function resolveUrl($domainUrl, $rootUrl, $pageUrl) {

@@ -8,7 +8,7 @@
   require_once("BaseTagLib.class.php");
 
   require_once("scripts/php/classes/ResourceBundle.class.php");  
-  require_once("scripts/php/classes/CustomTagParser.class.php");
+  require_once("scripts/php/classes/FullTagParser.class.php");
   
   /**
    * 
@@ -139,7 +139,7 @@
 			
 			if(count($pages > 0)) {
 				$templateContent = $webObject->getTemplateContent($templateId);
-				$Parser = new CustomTagParser();
+				$Parser = new FullTagParser();
 				$Parser->setContent($templateContent);
 				$unset = false;
 				if(!array_key_exists('pageid' ,$_SESSION['pageng'])) {
@@ -231,7 +231,7 @@
 			}
 			
 			$templateContent = $webObject->getTemplateContent($templateId);
-			$Parser = new CustomTagParser();
+			$Parser = new FullTagParser();
 			$Parser->setContent($templateContent);
 			$Parser->startParsing();
   		$return .= $Parser->getResult();

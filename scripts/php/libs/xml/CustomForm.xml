@@ -4,7 +4,7 @@
   <name>Custom Form Lib</name>
   <classname>CustomForm</classname>
   <classpath>php.libs</classpath>
-  <version>1.02</version>
+  <version>1.05</version>
   <count>*</count>
   <comment>
     Knihovna pro tvorbu formulářů
@@ -37,6 +37,11 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>limit</attname>
+      <attreq>implied</attreq>
+      <attdef>-1</attdef>
+    </attribute>
+    <attribute>
       <attname>noDataMessage</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -45,6 +50,21 @@
       "sortBy" jméno sloupce podle kterého řadit, "desc" pokud je 'true', pak se řadí desc, jinak asc. "noDataMessage" je zpráva,
       která se zobrazí pokud neodpovídají žádné řádky.
 	  "filter" je komplexní atribut pro filtrování hodnot podle hodnot ve sloupcích, formát: filter="poradi:1,povoleny:ano".
+    </comment>
+  </tag>
+  <tag>
+    <tagname>setupCustomUrl</tagname>
+    <function>setupCustomUrl</function>
+    <attribute>
+      <attname>formId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>fieldName</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Nastaví custom form a property pro použití cf:customUrl
     </comment>
   </tag>
   <tag>
@@ -155,6 +175,18 @@
       <attname>cssClass</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>dirId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>referenceFormId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>referenceCaptionField</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Zobrazí jedno pole z formuláře s daným "name", "viewType" udává zda zobrazit
       editační pole či jen hodnotu (defaultně se řídí rodičovským prvkem, tedy pokud
@@ -220,6 +252,17 @@
     </comment>
   </tag>
   <tag>
+    <tagname>setFieldAsCustomProperty</tagname>
+    <function>setFieldAsCustomProperty</function>
+    <attribute>
+      <attname>fieldName</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Nastaví custom property na hodnotu fieldu.
+    </comment>
+  </tag>
+  <tag>
     <tagname>formList</tagname>
     <function>formList</function>
     <attribute>
@@ -251,10 +294,18 @@
   </property>
   <property>
   	<propname>custom</propname>
-  	<setfunction>setCustomProperty</setfunction>
-  	<getfunction>getCustomProperty</getfunction>
+  	<setfunction>setCustom</setfunction>
+  	<getfunction>getCustom</getfunction>
     <comment>
       Vratí hodnotu custom property
+    </comment>
+  </property>
+  <property>
+  	<propname>customUrl</propname>
+  	<setfunction>setCustomUrl</setfunction>
+  	<getfunction>getCustomUrl</getfunction>
+    <comment>
+      Custom url feature. Použít s cf:setupCustomUrl.
     </comment>
   </property>
 </taglib>

@@ -319,6 +319,7 @@ class DefaultWeb extends BaseTagLib {
 
     private function loadPageData() {
         $this->TempLoadedContent = self::sortPages(parent::db()->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `title`, `tag_lib_start`, `tag_lib_end`, `head`, `content`, `info`.`timestamp`, `cachetime` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = " . $this->UrlResolver->getLanguageId() . " AND `page`.`id` IN (" . self::pagesIdAsString() . ") AND `page`.`wp` = " . $this->UrlResolver->getWebProjectId() . ";"), $this->UrlResolver->getPagesId());
+		//print_r($this->TempLoadedContent);
     }
 
     private function parsePagesId($item) {
@@ -367,6 +368,7 @@ class DefaultWeb extends BaseTagLib {
             $this->UrlResolver->parseSingleUrlPart($part, $reqRoots[$key]);
         }
 
+		//echo $virtualUrl;
         $reqVirs = parent::str_tr($virtualUrl, '/');
         $prjVirs = self::prepareVirtualPathAsArray($webProject, $lang);
         self::parseAllPagesTagLib('tag_lib_start');
@@ -375,6 +377,10 @@ class DefaultWeb extends BaseTagLib {
             $this->UrlResolver->parseSingleUrlPart($prjVirs[$key], $vir);
         }
         self::parseAllPagesTagLib('tag_lib_end');
+		
+		foreach($this->TempLoadedContent as $page) {
+			
+		}
     }
 
     private function prepareVirtualPathAsArray($webProject, $lang) {
@@ -1685,8 +1691,8 @@ class DefaultWeb extends BaseTagLib {
         if (($whenLogged == true && $loginObject->isLogged() == true) || ($whenNotLogged == true && $loginObject->isLogged() == false) || ($whenLogged == false && $whenNotLogged == false && $browser == false) || $incForBrowser) {
             $template = $dbObject->fetchAll('SELECT `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = ' . $templateId . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '));');
             if (count($template) == 1) {
-                require_once("scripts/php/classes/CustomTagParser.class.php");
-                $Parser = new CustomTagParser();
+                require_once("scripts/php/classes/FullTagParser.class.php");
+                $Parser = new FullTagParser();
                 $Parser->setContent($template[0]['content']);
                 $Parser->startParsing();
                 $return = $Parser->getResult();

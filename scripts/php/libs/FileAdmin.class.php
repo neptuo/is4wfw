@@ -136,6 +136,14 @@ class FileAdmin extends BaseTagLib {
 		return self::canUserDir($data['id'], WEB_R_READ);
 	}
 	
+	public function canWriteDirectory($data) {
+		if($data == array() || $data['id'] == 0) {
+			return false;
+		}
+	
+		return self::canUserDir($data['id'], WEB_R_WRITE);
+	}
+	
 	public function canReadFile($data) {
 		return self::canUserFile($data['id'], WEB_R_READ);
 	}
@@ -370,7 +378,15 @@ class FileAdmin extends BaseTagLib {
 		}
 	}
 	
-	protected function processFileUpload($dataItem, $fileTmpName, $readRights, $writeRights, $deleteRights) {
+	public function processFileUploadBasic($dataItem, $fileTmpName) {
+		$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_READ);
+		$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_WRITE);
+		$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_DELETE);
+		
+		return self::processFileUpload($dataItem, $fileTmpName, $read, $write, $delete);
+	}
+	
+	public function processFileUpload($dataItem, $fileTmpName, $readRights, $writeRights, $deleteRights) {
 		$new = $dataItem['id'] == '';
 		
 		if($dataItem['url'] == '') {
