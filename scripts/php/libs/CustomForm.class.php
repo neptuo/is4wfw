@@ -647,7 +647,9 @@ class CustomForm extends BaseTagLib {
                     $this->ValidationError = true;
                 }
             }
-        } elseif ($this->ViewPhase == 1) {
+        }
+
+        if ($this->ViewPhase == 1) {
             // Add to ViewFieldsFound
             $this->ViewFieldsFound[] = array($name, $type);
         } elseif ($this->ViewPhase == 2) {
