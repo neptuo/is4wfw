@@ -2172,10 +2172,11 @@ class DefaultWeb extends BaseTagLib {
 
         // return $return;
 		
-		require_once('scripts/php/classes/RoleHelper.class.php');
-		require_once('scripts/php/libs/FileAdmin.class.php');
+		//require_once('scripts/php/classes/RoleHelper.class.php');
+		//require_once('scripts/php/libs/FileAdmin.class.php');
 		//RoleHelper::refreshCache();
-		RoleHelper::setRights(FileAdmin::$DirectoryRightDesc, 19, array(3, 14), array(1), WEB_R_READ);
+		//RoleHelper::setRights(FileAdmin::$DirectoryRightDesc, 19, array(3, 14), array(1), WEB_R_READ);
+		echo '<br />plain';
     }
 
     /**

@@ -143,9 +143,9 @@
           }
         }
       } else {
-        $str = "This tag prefix doesn't exist! [".$tagPrefix."]";
-        trigger_error($str , E_USER_WARNING);
-        echo "<h4 class=\"error\">".$str."</h4>";
+        //$str = "This tag prefix doesn't exist! [".$tagPrefix."]";
+        //trigger_error($str , E_USER_WARNING);
+        //echo "<h4 class=\"error\">".$str."</h4>";
       }
       
       return "";
