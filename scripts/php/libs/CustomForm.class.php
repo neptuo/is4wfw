@@ -128,6 +128,7 @@ class CustomForm extends BaseTagLib {
         } else {
             $return .= $rb->get('cf.list.error.content');
         }
+		$this->ViewPhase = 0;
 
         return $return;
     }
@@ -230,6 +231,10 @@ class CustomForm extends BaseTagLib {
         $return = "";
 
         $templateContent = parent::getTemplateContent($templateId);
+		
+		if($rowId == '') {
+			$this->ViewDataRow = array();
+		}
 
         if (array_key_exists('cf_gen-id', $_POST) && array_key_exists('cf_form-id', $_POST) && $_POST['cf_form-id'] == $formId) {
             // Phase 3
@@ -374,6 +379,7 @@ class CustomForm extends BaseTagLib {
                 $return .= parent::getError($rb->get('cf.form.error.content'));
             }
         }
+		$this->FormPhase = 0;
 
         return $return;
     }
@@ -1276,6 +1282,7 @@ class CustomForm extends BaseTagLib {
     /* ================== PROPERTIES ================================================== */
 
     public function setRowId($id) {
+		//echo '<br />Setting row id: '.$id;
         if ($id != '') {
             parent::request()->set('custom-form-row-id', $id);
         } else {
