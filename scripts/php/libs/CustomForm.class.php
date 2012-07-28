@@ -793,7 +793,7 @@ class CustomForm extends BaseTagLib {
 
         if ($_POST['cf-delete-row-button'] == $value) {
             $id = $_POST['cf-delete-row-id'];
-            $sql = 'delete from `cf_' . $this->FormId . '` where `id` = ' . $id . ';';
+            $sql = 'delete from `cf_' . $_POST['cf-delete-form-id'] . '` where `id` = ' . $id . ';';
             parent::db()->execute($sql);
             unset($_POST['cf-delete-row-button']);
 			parent::web()->redirect($_SERVER['REDIRECT_URL']);
@@ -812,6 +812,7 @@ class CustomForm extends BaseTagLib {
                 case "delete":
                     $return .= ''
 					. '<form name="cf-delete-row" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+						. '<input type="hidden" name="cf-delete-form-id" value="' . $this->FormId . '" />'
 						. '<input type="hidden" name="cf-delete-row-id" value="' . $this->ViewDataRow['id'] . '" />'
 						. '<input type="submit" name="cf-delete-row-button" value="' . $value . '" class="confirm" />'
 					. '</form>';
