@@ -18,7 +18,7 @@
     margin: 3px 10px;
 }
 
-.menu, .select-project {
+.tabs, .select-project {
     float: left;
 }
 
@@ -26,17 +26,17 @@
     margin-right: 10px;
 }
 
-.menu ul {
+.tabs ul {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.menu ul li {
+.tabs ul li {
     float: left;
 }
 
-.menu a {
+.tabs a {
     color: Black;
     text-decoration: none;
     float: left;
@@ -48,11 +48,11 @@
     border: 1px solid #cccccc;
 }
 
-.menu a:hover {
+.tabs a:hover {
     background: yellow;
 }
 
-.menu .active-item a, .menu .active-parent a {
+.tabs .active-item a, .menu .active-parent a {
     border-width: 1px;
     border-bottom-color: white;
 }
