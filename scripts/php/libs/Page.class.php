@@ -44,13 +44,20 @@ class Page extends BaseTagLib {
 		parent::loadResourceBundle('page');
     }
 
-    public function showEditPage() {
+    public function showEditPage($paramPageId = false, $paramLangId = false) {
         global $dbObject;
         global $loginObject;
         global $webObject;
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
+		
+		if($paramPageId != 0 && $paramLangId != 0) {
+			$_POST['page-edit'] = $rb->get('page.action.edit');
+			$_POST['page-id']  = $paramPageId;
+            $_POST['parent-id'] = parent::db()->fetchSingle('select `parent_id` from `page` where `id` = '.$paramPageId.';')['parent_id'];
+            $_POST['page-lang-id'] = $paramLangId;
+		}
 
         $projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`value` >= ' . $loginObject->getGroupValue() . ';');
         if (count($projects) != 0) {
