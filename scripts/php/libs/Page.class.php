@@ -55,7 +55,8 @@ class Page extends BaseTagLib {
 		if($paramPageId != 0 && $paramLangId != 0) {
 			$_POST['page-edit'] = $rb->get('page.action.edit');
 			$_POST['page-id']  = $paramPageId;
-            $_POST['parent-id'] = parent::db()->fetchSingle('select `parent_id` from `page` where `id` = '.$paramPageId.';')['parent_id'];
+			$dataItem = parent::db()->fetchSingle('select `parent_id` from `page` where `id` = '.$paramPageId.';');
+            $_POST['parent-id'] = $dataItem['parent_id'];
             $_POST['page-lang-id'] = $paramLangId;
 		}
 
