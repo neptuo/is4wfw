@@ -1259,7 +1259,7 @@ class CustomForm extends BaseTagLib {
 '
                     . '    <label for="' . $id . '">' . ucfirst($_SESSION['cf']['creator']['field']['i' . $i]['name']) . ':</label>
 '
-                    . '    <cf:field name="' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '" type="' . $type . '" elementId="' . $id . '" required="true" '.($type == 'file' ? ' dir="DIRECTORY_ID"' : '').($type == 'reference' ? ' referenceFormId="TARGET_FORM_ID" referenceCaptionField="CAPTION_FIELD"' : '').' />
+                    . '    <cf:field name="' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '" type="' . $type . '" elementId="' . $id . '" required="true" '.($type == 'file' ? ' dirId="DIRECTORY_ID"' : '').($type == 'reference' ? ' referenceFormId="TARGET_FORM_ID" referenceCaptionField="CAPTION_FIELD"' : '').' />
 '
                     . '</p>
 ';
