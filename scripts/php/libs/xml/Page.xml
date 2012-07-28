@@ -4,7 +4,7 @@
   <name>Page Lib</name>
   <classname>Page</classname>
   <classpath>php.libs</classpath>
-  <version>1.54</version>
+  <version>1.55</version>
   <count>*</count>
   <comment>
     Třída pro správu obsahu jednotlivých stránek.
@@ -12,6 +12,16 @@
   <tag>
     <tagname>showEditPage</tagname>
     <function>showEditPage</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>implied</attreq>
+      <attdef>0</attdef>
+    </attribute>
+    <attribute>
+      <attname>langId</attname>
+      <attreq>implied</attreq>
+      <attdef>0</attdef>
+    </attribute>
     <comment>
       Zobrazí formulář pro editaci vybrané stránky.
     </comment>
