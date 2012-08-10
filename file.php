@@ -163,7 +163,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             header('Content-Type: ' . $fileExt);
             header('Accept-Ranges: bytes');
             header('Content-Length: ' . $fileSize);
-            header('Content-Disposition: attachment; filename=' . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']]);
+            header('Content-Disposition: inline; filename=' . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']]);
             header('Content-Transfer-Encoding: binary');
             header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
             $file = @ fopen($filePath, 'rb');
@@ -216,7 +216,7 @@ if (array_key_exists('fid', $_REQUEST)) {
         header('Content-Type: ' . $fileExt);
         header('Accept-Ranges: bytes');
         header('Content-Length: ' . $fileSize);
-        header('Content-Disposition: attachment; filename=' . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']]);
+        header('Content-Disposition: inline; filename=' . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']]);
         header('Content-Transfer-Encoding: binary');
         header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
         $file = @ fopen($filePath, 'rb');
