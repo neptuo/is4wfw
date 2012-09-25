@@ -17,7 +17,7 @@ require_once("scripts/php/classes/ResourceBundle.class.php");
  * 	all about sport	     
  *      
  *  @author     Marek SMM
- *  @timestamp  2011-10-18
+ *  @timestamp  2012-09-25
  * 
  */
 class Sport extends BaseTagLib {
@@ -3722,8 +3722,14 @@ class Sport extends BaseTagLib {
         if (!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
             return '';
         }
+		
+        $tablewhere = '';
+		$seasonId = self::getSeasonId();
+		if($seasonId != -1) {
+			$tablewhere .= ' and `w_sport_round`.`season_id` = '.$seasonId.'';
+		}
 
-        $tabsql = $dbObject->fetchAll('select `id`, `name` from `w_sport_round` where `project_id` = ' . self::getProjectId() . ' ORDER BY `number`;');
+        $tabsql = $dbObject->fetchAll('select `id`, `name` from `w_sport_round` where `project_id` = ' . self::getProjectId() . $tablewhere . ' ORDER BY `number`;');
         foreach ($tabsql as $tab) {
             $return .= '<option value="' . $tab['id'] . '"' . (($tab['id'] == $tabselId) ? ' selected="selectd"' : '') . '>' . $tab['name'] . '</option>';
         }
@@ -3745,6 +3751,11 @@ class Sport extends BaseTagLib {
             $tablesql = ' join `w_sport_table` on `w_sport_team`.`id` = `w_sport_table`.`team`';
             $tablewhere = ' and `w_sport_table`.`table_id` = ' . self::getTableId();
         }
+		
+		$seasonId = self::getSeasonId();
+		if($seasonId != -1) {
+			$tablewhere .= ' and `w_sport_team`.`season` = '.$seasonId.'';
+		}
 
         $teams = $dbObject->fetchAll('select distinct `id`, `name` from `w_sport_team`' . $tablesql . ' where `w_sport_team`.`project_id` = ' . self::getProjectId() . $tablewhere . ' order by `name`;');
         foreach ($teams as $team) {
