@@ -19,7 +19,7 @@ class DataAccess {
 		$this->connection = mysql_connect($hostname, $user, $passwd);
 		mysql_query("use ".$database);
 		echo mysql_error();
-		//mysql_set_charset("utf8"); 
+		mysql_set_charset("utf8"); 
 		
 		if ($this->connection) {
 			$this->isOpened = true;
@@ -137,9 +137,11 @@ class DataAccess {
 				$return = array();
 				$result = array();
 				$hashQuery = sha1($query);
-				if($this->cacheResults == 'REQUEST' && $requestStorage->exists($hashQuery, 'database-cache')) {
-					$return = $requestStorage->get($hashQuery, 'database-cache');
-					return $return;
+				if($this->cacheResults == 'REQUEST') {
+					if($requestStorage->exists($hashQuery, 'database-cache')) {
+						$return = $requestStorage->get($hashQuery, 'database-cache');
+						return $return;
+					}
 				} else {
 					$this->queriesPerRequest ++;
 					$result = mysql_query($query);
