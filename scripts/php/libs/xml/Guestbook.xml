@@ -4,7 +4,7 @@
   <name>Guestbook Lib</name>
   <classname>Guestbook</classname>
   <classpath>php.libs</classpath>
-  <version>1.05</version>
+  <version>1.06</version>
   <count>*</count>
   <comment>
     Uživatelská kniha návštěv.

@@ -14,7 +14,7 @@
    *  Class Guestbook.
    *      
    *  @author     Marek SMM
-   *  @timestamp  2010-06-02
+   *  @timestamp  2012-11-06
    * 
    */  
   class Guestbook extends BaseTagLib {
@@ -98,7 +98,7 @@
       
       $a = rand(1, 9);
       $b = rand(1, 9);
-      $formula = $a.' + '.$b;
+      $formula = $rb->get('gb.formula.'.$a).' plus '.$rb->get('gb.formula.'.$b);
       $r = $a + $b;
       $hash = sha1($r);
       
@@ -113,7 +113,7 @@
             .'<input type="text" name="guestbook-name" id="guestbook-name" value="'.$name.'" />'
           .'</p>'
           .'<p class="guestbook-content">'
-            .'<label for="guestbook-name">'.$rb->get('gb.label.content').':</label> '
+            .'<label for="guestbook-content">'.$rb->get('gb.label.content').':</label> '
             .'<textarea name="guestbook-content" id="guestbook-content" rows="5" cols="20">'.$content.'</textarea>'
           .'</p>'
           .'<p class="guestbook-formula">'
