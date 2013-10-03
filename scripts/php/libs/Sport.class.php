@@ -2425,10 +2425,12 @@ class Sport extends BaseTagLib {
                     $form = ''
                             . '<form name="rounds-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '"> '
                             . '<input type="hidden" name="round-id" value="' . $d['id'] . '" /> '
+                            . '<input type="hidden" name="round-edit" value="' . $rb->get('rounds.edit') . '" /> '
                             . '<input type="image" src="~/images/page_edi.png" name="round-edit" value="' . $rb->get('rounds.edit') . '" title="' . $rb->get('rounds.editcap') . ', id=' . $d['id'] . '" />'
                             . '</form> '
                             . '<form name="rounds-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '"> '
                             . '<input type="hidden" name="round-id" value="' . $d['id'] . '" /> '
+                            . '<input type="hidden" name="round-delete" value="' . $rb->get('rounds.delete') . '" /> '
                             . '<input class="confirm" type="image" src="~/images/page_del.png" name="round-delete" value="' . $rb->get('rounds.delete') . '" title="' . $rb->get('rounds.deletecap') . ', id=' . $d['id'] . '" /> '
                             . '</form>';
                     $data[$key]['form'] = $form;
