@@ -1076,7 +1076,7 @@ class Sport extends BaseTagLib {
                         . '<th class="players-list-surname">' . $rb->get('players.surname') . '</th>'
                         . '<th class="players-list-teasea">' . $rb->get('players.season') . ' / ' . $rb->get('players.team') . '</th>'
                         . '</tr>';
-		
+
                 $i = 1;
                 foreach ($players as $pl) {
                     if (self::getSeasonId() != '-1') {
@@ -1084,7 +1084,7 @@ class Sport extends BaseTagLib {
                     } else {
                         $seasons = parent::db()->fetchAll('SELECT DISTINCT `w_sport_player`.`position`, `w_sport_player`.`on_loan`, `w_sport_team`.`id` AS `tid`, `w_sport_season`.`id` AS `sid`, `w_sport_season`.`start_year`, `w_sport_season`.`end_year` FROM `w_sport_player` LEFT JOIN `w_sport_season` ON `w_sport_player`.`season` = `w_sport_season`.`id` LEFT JOIN `w_sport_team` ON `w_sport_player`.`team` = `w_sport_team`.`id` WHERE `w_sport_player`.`id` = ' . $pl['id'] . ' and `w_sport_season`.`project_id` = ' . self::getProjectId() . ' ORDER BY `w_sport_season`.`start_year` DESC;');
                     }
-
+					
                     $teaseastr = '';
                     foreach ($seasons as $sea) {
 					
@@ -3410,8 +3410,11 @@ class Sport extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
-        $where = ' `project_id` = ' . self::getProjectId() . ' and `season` = ' . $seasonId . ' and `on_loan` = 0';
-
+        $where = ' `project_id` = ' . self::getProjectId() . ' and `on_loan` = 0';
+		
+		if($seasonId != '') {
+			$where .= ' and `season` = ' . $seasonId;
+		}
         if ($playerId != '') {
             $where .= ' and `id` = ' . $playerId;
         }

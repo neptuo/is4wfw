@@ -229,11 +229,16 @@ class BaseTagLib {
         return $queryStorage;
     }
 
-    public function convertToUrlValid($value) {
+    public function convertToUrlValid($value, $allowSlash = true) {
         $value = str_replace(' - ', '-', $value);
 
-        $escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n", "Ě" => "E", "É" => "E", "Ř" => "R", "Ť" => "T", "Ý" => "Y", "Ú" => "U", "Ů" => "U", "Í" => "I", "Ó" => "O", "Á" => "A", "Š" => "S", "Ď" => "D", "Ž" => "Z", "Č" => "C", "Ň" => "N", "." => "-", " " => '-');
+        $escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n", "Ě" => "E", "É" => "E", "Ř" => "R", "Ť" => "T", "Ý" => "Y", "Ú" => "U", "Ů" => "U", "Í" => "I", "Ó" => "O", "Á" => "A", "Š" => "S", "Ď" => "D", "Ž" => "Z", "Č" => "C", "Ň" => "N", "." => "-", " " => '-', "\"" => '-', "'" => '-', "(" => '-', ")" => '-', "[" => '-', "]" => '-', "{" => '-', "}" => '-');
         $value = strtr($value, $escapeChars);
+		
+		if(!$allowSlash) {
+			$value = strtr($value, array("/" => "-"));
+		}
+		
         return $value;
     }
 

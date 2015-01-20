@@ -1199,7 +1199,7 @@ class Article extends BaseTagLib {
             }
 
             //parent::db()->setMockMode(true);
-            $articleContent['url'] = strtolower(parent::convertToUrlValid($articleContent['url']));
+            $articleContent['url'] = strtolower(parent::convertToUrlValid($articleContent['url'], false));
             $idSql = '';
             if ($article['id'] != '') {
                 $idSql = ' and `article_id` = ' . $article['id'];
