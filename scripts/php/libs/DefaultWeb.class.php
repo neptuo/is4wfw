@@ -1149,10 +1149,11 @@ class DefaultWeb extends BaseTagLib {
                 if (strlen($return[0]['href']) != 0 && !preg_match($this->TAG_RE, $return[0]['href'])) {
 					$this->PropertyUse = 'get';
                     $return[0]['href'] = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $return[0]['href']);
-                    if(strpos($return[0]['href'], "http") == 0) {
+                    if(strpos($return[0]['href'], "http") === 0) {
+                        echo $return[0]['href'];
                         $tmpPath = $return[0]['href'] . $this->CurrentPath;
                         $this->CurrentPath = "";
-                        return self::addSpecialParams(self::composeUrlProjectPart($tmpPath, $this->UrlResolver->getWebProject(), $absolutePath));
+                        return self::addSpecialParams($tmpPath);
                     }
                     
                     $this->CurrentPath = "/" . $return[0]['href'] . $this->CurrentPath;
