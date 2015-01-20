@@ -712,7 +712,7 @@ function initClearCache(event) {
 function initWebprojectSelectButton(event) {
 	var forms = document.getElementsByTagName('form');
 	for(var i = 0; i < forms.length; i ++) {
-		if(forms[i].name == 'select-project') {
+	    if (forms[i].name == 'select-project' && forms[i].parentElement.className != 'gray-box-float') {
 			var form = forms[i];
 			var inputs = form.getElementsByTagName('input');
 			inputs[0].style.display = 'none';
