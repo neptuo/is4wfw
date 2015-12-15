@@ -709,6 +709,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>includeOnLoan</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>positions</attname>
       <attreq>implied</attreq>
     </attribute>

@@ -1150,7 +1150,7 @@ class DefaultWeb extends BaseTagLib {
 					$this->PropertyUse = 'get';
                     $return[0]['href'] = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $return[0]['href']);
                     if(strpos($return[0]['href'], "http") === 0) {
-                        echo $return[0]['href'];
+                        //echo $return[0]['href'];
                         $tmpPath = $return[0]['href'] . $this->CurrentPath;
                         $this->CurrentPath = "";
                         return self::addSpecialParams($tmpPath);

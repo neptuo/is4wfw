@@ -3403,17 +3403,17 @@ class Sport extends BaseTagLib {
         return $return;
     }
 
-    public function showPlayersNG($templateId, $noDataMessage, $seasonId = false, $tableId = false, $matchId = false, $playerId = false, $teamId = false, $positions = false, $sortBy = false, $sorting = false) {
+    public function showPlayersNG($templateId, $noDataMessage, $seasonId = false, $tableId = false, $matchId = false, $playerId = false, $teamId = false, $includeOnLoan = false, $positions = false, $sortBy = false, $sorting = false) {
         global $dbObject;
         global $loginObject;
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
-        $where = ' `project_id` = ' . self::getProjectId() . ' and `on_loan` = 0';
+        $where = ' `project_id` = ' . self::getProjectId();
 		
-		if($seasonId != '') {
-			$where .= ' and `season` = ' . $seasonId;
+		if($includeOnLoan != 'true') {
+			$where .= ' and `on_loan` = 0';
 		}
         if ($playerId != '') {
             $where .= ' and `id` = ' . $playerId;
