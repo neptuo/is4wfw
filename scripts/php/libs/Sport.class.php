@@ -3218,6 +3218,11 @@ class Sport extends BaseTagLib {
         if ($offset == '') {
             $offset = 0;
         }     
+		
+		//echo '"' . $only . '"<br />';
+		//echo '"' . $scope . '"<br />';
+		//echo '"' . $showGolmans . '"<br />';
+
         
         $templateContent = parent::getTemplateContent($templateId);
 
@@ -3414,6 +3419,9 @@ class Sport extends BaseTagLib {
 		
 		if($includeOnLoan != 'true') {
 			$where .= ' and `on_loan` = 0';
+		}
+		if($seasonId != '') {
+			$where .= ' and `season` = ' . $seasonId;
 		}
         if ($playerId != '') {
             $where .= ' and `id` = ' . $playerId;
@@ -3810,7 +3818,7 @@ class Sport extends BaseTagLib {
         $joinstatssql = '';
         $subqueriessql = '';
         $conditionssql = '';
-
+		
         //echo $_SESSION['sport']['match-id'];
         //unset($_SESSION['sport']['team-id']);
         if ($seasonId == false) {
@@ -3939,13 +3947,6 @@ class Sport extends BaseTagLib {
                         . (in_array('match_average', $this->UsedFields) ? '(SELECT (SUM(`goals`) / COUNT(`pid`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = ' . $fromMatchId . ' AND `pid` = `player`.`id`' . ($tableId != '' ? ' and `w_sport_stats`.`table_id` ' . self::resolveTableIdPartSql($tableId) : '') . ') AS `match_average`,' : '')
                         . (in_array('match_points', $this->UsedFields) ? '(SELECT (SUM(`goals`) + SUM(`assists`)) AS `matches` FROM `w_sport_stats` WHERE `w_sport_stats`.`mid` = ' . $fromMatchId . ' AND `pid` = `player`.`id`' . ($tableId != '' ? ' and `w_sport_stats`.`table_id` ' . self::resolveTableIdPartSql($tableId) : '') . ') AS `match_points`,' : '');
             }
-            if (strlen($onlysql) != 0) {
-                if (strlen($conditionssql) != 0) {
-                    $conditionssql .= ' AND ' . $onlysql;
-                } else {
-                    $conditionssql .= ' ' . $onlysql;
-                }
-            }
             if (strlen($positionsql) != 0) {
                 if (strlen($conditionssql) != 0) {
                     $conditionssql .= ' AND ' . $positionsql;
@@ -3988,8 +3989,15 @@ class Sport extends BaseTagLib {
                 }
                 $conditionssql .= ' `w_sport_table`.`table_id` ' . self::resolveTableIdPartSql($tableId);
             }
-
-            $players = $dbObject->fetchAll('SELECT ' . $cols . (strlen($subqueriessql) != 0 ? ', ' : '') . $subqueriessql . ' FROM `w_sport_player` AS `player` JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`' . ((strlen($joinstatssql) != 0) ? ' ' . $joinstatssql : '') . '' . ((strlen($conditionssql) != 0) ? ' WHERE ' . $conditionssql : '') . ' GROUP BY `player`.`id`' . ' ORDER BY ' . self::sortByStringToSqlParams($sortBy, $sorting) . ((strlen($limitsql) != 0) ? ' ' . $limitsql : '') . ';');
+			
+			$sqlQuery = 'SELECT ' . $cols . (strlen($subqueriessql) != 0 ? ', ' : '') . $subqueriessql . ' FROM `w_sport_player` AS `player` JOIN `w_sport_team` ON `player`.`team` = `w_sport_team`.`id`' . ((strlen($joinstatssql) != 0) ? ' ' . $joinstatssql : '') . '' . ((strlen($conditionssql) != 0) ? ' WHERE ' . $conditionssql : '') . ' GROUP BY `player`.`id`' . ' ORDER BY ' . self::sortByStringToSqlParams($sortBy, $sorting) . ((strlen($limitsql) != 0) ? ' ' . $limitsql : '');
+            
+			if (strlen($onlysql) != 0) {
+				$sqlQuery = 'SELECT * FROM (' . $sqlQuery . ') AS q WHERE ' . $onlysql;
+            }
+			
+			$sqlQuery .= ';';
+            $players = $dbObject->fetchAll($sqlQuery);
         }
 
         return $players;
