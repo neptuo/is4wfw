@@ -96,9 +96,15 @@ class Page extends BaseTagLib {
             $content = str_replace('&#126', '~', $content);
             $tlStart = str_replace('&#126', '~', $tlStart);
             $tlEnd = str_replace('&#126', '~', $tlEnd);
+            $head = str_replace('"', '\"', $head);
+            $content = str_replace('"', '\"', $content);
+            $tlStart = str_replace('"', '\"', $tlStart);
+            $tlEnd = str_replace('"', '\"', $tlEnd);
             $type = $_POST['type'];
             $keywords = str_replace('&#126', '~', $_POST['edit-keywords']);
+            $keywords = str_replace('"', '\"', $keywords);
             $title = str_replace('&#126', '~', $_POST['edit-title']);
+            $title = str_replace('"', '\"', $title);
             $clearUrlCache = $_POST['edit-clearurlcache'];
             $cacheTime = $_POST['edit-cachetime'];
             $errors = array();
