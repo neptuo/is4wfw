@@ -1686,6 +1686,7 @@ class Page extends BaseTagLib {
             }
             $fileName = $_POST['file-name'];
             $fileContent = str_replace('&#126', '~', $_POST['file-content']);
+            $fileContent = str_replace('"', '\"', $fileContent);
             $fileType = $_POST['file-type'];
             $browser['all'] = (($_POST['browser-all'] == "on") ? 1 : 0);
             $browser['msie6'] = (($_POST['browser-ie6'] == "on") ? 1 : 0);
