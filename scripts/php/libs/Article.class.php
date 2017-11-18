@@ -695,16 +695,30 @@ class Article extends BaseTagLib {
         if ($_POST['article-delete'] == $rb->get('articles.delete')) {
             $artcId = $_POST['article-id'];
 
+            $article = $dbObject->fetchSingle("SELECT `directory_id` from `article` where `id` = " . $artcId . ";");
+
             $dbObject->execute("DELETE FROM `article_content` WHERE `article_id` = " . $artcId . ";");
             $dbObject->execute("DELETE FROM `article` WHERE `id` = " . $artcId . ";");
+
+            if($article['directory_id'] != '') {
+                $fa = new FileAdmin();
+                $fa->deleteDirectory($article['directory_id'], true);
+            }
         } elseif ($_POST['article-delete-lang'] == $rb->get('articles.deletelang')) {
             $artcId = $_POST['article-id'];
             $langId = $_POST['language-id'];
 
-            $dbObject->execute("DELETE FROM `article_content` WHERE `article_id` = " . $artcId . " AND `language_id` = " . $langId . ";");
+            $dbObject->execute("DELETE FROM `article_content` WHERE `article_id` = " . $artcId . " AND `language_id` = " . $langId . ";", true);
             $artcs = $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = " . $artcId . ";");
             if (count($artcs) == 0) {
+                $article = $dbObject->fetchSingle("SELECT `directory_id` from `article` where `id` = " . $artcId . ";");
+                
                 $dbObject->execute("DELETE FROM `article` WHERE `id` = " . $artcId . ";");
+                
+                if($article['directory_id'] != null) {
+                    $fa = new FileAdmin();
+                    $fa->deleteDirectory($article['directory_id'], true);
+                }
             }
         }
 
@@ -1174,7 +1188,7 @@ class Article extends BaseTagLib {
      * 	C tag.
      *
      */
-    public function showEditForm($useFrames = false, $submitPageId = false, $parentDirectoryId = '') {
+    public function showEditForm($useFrames = false, $submitPageId = false) {
         global $dbObject;
         global $webObject;
         global $loginObject;
@@ -1231,10 +1245,14 @@ class Article extends BaseTagLib {
                                 $_POST['article-id'] = $article['id'];
                                 $_POST['language-id'] = $ac['language_id'];
 
-                                if($parentDirectoryId != '') {
+                                $line = $dbObject->fetchSingle("SELECT `parentdirectory_id` from `article_line` where `id` = " . $article['line_id'] . ";");
+                                if($line['parentdirectory_id'] != '') {
                                     $fa = new FileAdmin();
                                     $directoryName = $article['id'] . " - " . $ac['name'];
-                                    $fa->createDirectory($parentDirectoryId, $directoryName);
+                                    $directory = $fa->createDirectory($line['parentdirectory_id'], $directoryName);
+                                    if($directory['id'] != '') {
+                                        $dbObject->execute("UPDATE `article` SET `directory_id` = " . $directory['id'] . " WHERE `id` = " . $article['id'] . ";");
+                                    }
                                 }
                             } else {
                                 $ac = $articleContent;

@@ -189,7 +189,7 @@ class FileAdmin extends BaseTagLib {
 		}
 	}
 	
-	protected function deleteDirectory($directoryId, $recursive = true) {
+	public function deleteDirectory($directoryId, $recursive = true) {
 		if(self::canUserDir($directoryId, WEB_R_DELETE)) {
 			$dirs = parent::dao('Directory')->getFromDirectory($directoryId);
 			$files = parent::dao('File')->getFromDirectory($directoryId);
@@ -560,10 +560,11 @@ class FileAdmin extends BaseTagLib {
 		$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_WRITE);
 		$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_DELETE);
 		
-		$dataItem = array('id' => $_POST['directory-id'], 'name' => $name, 'url' => $url, 'parent_id' => $parentId, 'timestamp' => time());
-		
+		$dataItem = array('id' => '', 'name' => $name, 'url' => $url, 'parent_id' => $parentId, 'timestamp' => time());
 		$result = self::processDirectoryEdit($dataItem, $read, $write, $delete);
-		return $result;
+		$dataItem['id'] = $_POST['new-directory-id'];
+
+		return $dataItem;
 	}
 	
 	protected function processDirectoryEdit($dataItem, $readRights, $writeRights, $deleteRights) {
@@ -614,6 +615,7 @@ class FileAdmin extends BaseTagLib {
 				return parent::dao('Directory')->getErrorMessage();
 			}
 			$dataItem['id'] = parent::dao('Directory')->getLastId();
+			$_POST['new-directory-id'] = $dataItem['id'];
 			
 			$path = self::getPhysicalPathTo($dataItem['parent_id']).$dataItem[FileAdmin::$FileSystemItemPath];
 			mkdir($_SERVER['DOCUMENT_ROOT'].$path);

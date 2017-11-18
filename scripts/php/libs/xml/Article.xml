@@ -369,13 +369,8 @@
       <attname>submitPageId</attname>
       <attreq>implied</attreq>
     </attribute>
-    <attribute>
-      <attname>parentDirectoryId</attname>
-      <attreq>implied</attreq>
-    </attribute>
     <comment>
       Zobrazí formulář pro editaci článku. 
-      Pokud je vyplněný 'parentDirectoryId' vytvoří v této složce složku pro každý nový článek.
     </comment>
   </tag>
   <tag>
