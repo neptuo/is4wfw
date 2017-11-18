@@ -554,6 +554,17 @@ class FileAdmin extends BaseTagLib {
 			}	
 		}
 	}
+
+	public function createDirectory($parentId, $name, $url = '') {
+		$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_READ);
+		$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_WRITE);
+		$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_DELETE);
+		
+		$dataItem = array('id' => $_POST['directory-id'], 'name' => $name, 'url' => $url, 'parent_id' => $parentId, 'timestamp' => time());
+		
+		$result = self::processDirectoryEdit($dataItem, $read, $write, $delete);
+		return $result;
+	}
 	
 	protected function processDirectoryEdit($dataItem, $readRights, $writeRights, $deleteRights) {
 		$new = $dataItem['id'] == '';
