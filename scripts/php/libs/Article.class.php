@@ -853,11 +853,11 @@ class Article extends BaseTagLib {
 		
 		if($pageable) {
 			$total = $dbObject->fetchSingle($countSql);
-			
-			$returnTmp .= ''
-			.'<div class="gray-box">'
-			.self::getPaging($total['id'], self::getArticlePageSize(), self::getArticlePage(), $_SERVER['REDIRECT_URL'], 0)
-			.'</div>';
+            $paging = self::getPaging($total['id'], self::getArticlePageSize(), self::getArticlePage(), $_SERVER['REDIRECT_URL'], 0);
+            
+            if(strlen($paging) > 0) {
+			    $returnTmp .= '<div class="gray-box">' . $paging . '</div>';
+            }
 		}
 
         if ($newArticleButton == 'true') {
@@ -1188,7 +1188,7 @@ class Article extends BaseTagLib {
      * 	C tag.
      *
      */
-    public function showEditForm($useFrames = false, $submitPageId = false) {
+    public function showEditForm($useFrames = false, $submitPageId = false, $backPageId = false) {
         global $dbObject;
         global $webObject;
         global $loginObject;
@@ -1201,7 +1201,7 @@ class Article extends BaseTagLib {
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
-        if ($_POST['article-save'] == $rb->get('articles.save')) {
+        if ($_POST['article-save'] == $rb->get('articles.save') || $_POST['article-save-close'] == $rb->get('articles.saveandclose')) {
             $article = array('id' => $_POST['article-id'], 'line_id' => $_POST['line-id'], 'visible' => $_POST['article-visible'], 'order' => $_POST['article-id'], 'labels' => $_POST['article-labels']);
             $articleContent = array('article_id' => $_POST['article-id'], 'name' => $_POST['article-name'], 'head' => $_POST['article-head'], 'content' => $_POST['article-content'], 'author' => $_POST['article-author'], 'timestamp' => time(), 'datetime' => $_POST['article-datetime'], 'language_id' => $_POST['language-id'], 'language_old_id' => $_POST['article-old-lang-id'], 'line_old_id' => $_POST['line-old-id'], 'url' => $_POST['article-url'], 'keywords' => $_POST['article-keywords']);
 
@@ -1283,6 +1283,11 @@ class Article extends BaseTagLib {
                 $return .= parent::getError($rb->get('articles.notuniqueurl'));
             }
             //parent::db()->setMockMode(false);
+        }
+
+        if ($_POST['article-save-close'] == $rb->get('articles.saveandclose') || $_POST['article-close'] == $rb->get('articles.close')) {
+            $url = $webObject->composeUrl($backPageId);
+            header("Location: ".$url);            
         }
 
         if (array_key_exists('article-id', $_POST) && $_POST['article-id'] != '') {
@@ -1502,6 +1507,13 @@ class Article extends BaseTagLib {
                     . '</div>' : '');
         }
 
+        $returnBack = '';
+        if($backPageId != false) {
+            $returnBack = ''
+            . '<input type="submit" name="article-save-close" value="' . $rb->get('articles.saveandclose') . '" /> '
+            . '<input type="submit" name="article-close" value="' . $rb->get('articles.close') . '" /> ';
+        }
+
         $return .= ''
                 . '<div class="article-bottom">'
                 . '<div class="article-submit">'
@@ -1509,6 +1521,7 @@ class Article extends BaseTagLib {
                 . '<input type="hidden" name="line-old-id" value="' . (($new) ? $lines[0]['id'] : $article['line_id']) . '" />'
                 . '<input type="hidden" name="article-old-lang-id" value="' . $article['language_id'] . '" />'
                 . '<input type="submit" name="article-save" value="' . $rb->get('articles.save') . '" /> '
+                . $returnBack
                 . '</div>'
                 . '<div class="clear"></div>'
                 . '</div>'

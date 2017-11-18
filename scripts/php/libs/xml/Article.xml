@@ -369,8 +369,13 @@
       <attname>submitPageId</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>backPageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Zobrazí formulář pro editaci článku. 
+      Pokud je vyplněný 'backPageId', zobrazí se tlačítka "Uložit a zpět" a "Zpět".
     </comment>
   </tag>
   <tag>
