@@ -843,8 +843,6 @@ class Page extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
-        $webObject->PageLog .= $_SERVER['REQUEST_URI'];
-
         $projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`value` >= ' . $loginObject->getGroupValue() . ';');
         if (count($projects) != 0) {
             if (array_key_exists('selected-project', $_SESSION)) {
