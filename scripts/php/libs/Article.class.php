@@ -697,7 +697,7 @@ class Article extends BaseTagLib {
 
             $dbObject->execute("DELETE FROM `article_content` WHERE `article_id` = " . $artcId . ";");
             $dbObject->execute("DELETE FROM `article` WHERE `id` = " . $artcId . ";");
-        } elseif ($_POST['article-delete-lang'] == "Delete Lang") {
+        } elseif ($_POST['article-delete-lang'] == $rb->get('articles.deletelang')) {
             $artcId = $_POST['article-id'];
             $langId = $_POST['language-id'];
 
