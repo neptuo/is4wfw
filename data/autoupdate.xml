@@ -51,4 +51,5 @@
 	<script build="318">ALTER TABLE  `file` ADD  `url` TINYTEXT NULL AFTER  `title`;</script>
 	<script build="319">ALTER TABLE  `w_sport_table` ADD  `positionfix` INT NOT NULL AFTER  `season`;</script>
 	<script build="331">ALTER TABLE `article_line` ADD `parentdirectory_id` INT NULL DEFAULT NULL AFTER `url`;</script>
+	<script build="331">ALTER TABLE `article` ADD `directory_id` INT NULL DEFAULT NULL AFTER `visible`;</script>
 </autoupdate>
