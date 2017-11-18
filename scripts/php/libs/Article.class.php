@@ -9,6 +9,7 @@ require_once("BaseTagLib.class.php");
 require_once("scripts/php/classes/FullTagParser.class.php");
 require_once("scripts/php/classes/RoleHelper.class.php");
 require_once("scripts/php/classes/ui/BaseGrid.class.php");
+require_once("scripts/php/libs/FileAdmin.class.php");
 
 /**
  * 
@@ -1173,7 +1174,7 @@ class Article extends BaseTagLib {
      * 	C tag.
      *
      */
-    public function showEditForm($useFrames = false, $submitPageId = false) {
+    public function showEditForm($useFrames = false, $submitPageId = false, $parentDirectoryId = '') {
         global $dbObject;
         global $webObject;
         global $loginObject;
@@ -1229,6 +1230,12 @@ class Article extends BaseTagLib {
                                 $return .= '<h4 class="success">' . $rb->get('articles.newcreated') . '</h4>';
                                 $_POST['article-id'] = $article['id'];
                                 $_POST['language-id'] = $ac['language_id'];
+
+                                if($parentDirectoryId != '') {
+                                    $fa = new FileAdmin();
+                                    $directoryName = $article['id'] . " - " . $ac['name'];
+                                    $fa->createDirectory($parentDirectoryId, $directoryName);
+                                }
                             } else {
                                 $ac = $articleContent;
                                 // Ulozeni - NOVA jaz.verze
