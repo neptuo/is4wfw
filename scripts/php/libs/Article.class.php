@@ -708,7 +708,7 @@ class Article extends BaseTagLib {
             $artcId = $_POST['article-id'];
             $langId = $_POST['language-id'];
 
-            $dbObject->execute("DELETE FROM `article_content` WHERE `article_id` = " . $artcId . " AND `language_id` = " . $langId . ";", true);
+            $dbObject->execute("DELETE FROM `article_content` WHERE `article_id` = " . $artcId . " AND `language_id` = " . $langId . ";");
             $artcs = $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = " . $artcId . ";");
             if (count($artcs) == 0) {
                 $article = $dbObject->fetchSingle("SELECT `directory_id` from `article` where `id` = " . $artcId . ";");
@@ -1592,6 +1592,10 @@ class Article extends BaseTagLib {
                         $lineId = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `article_line`;');
                         $lineId = $lineId[0]['id'];
                     } else {
+                        if($parentDirectoryId == '') {
+                            $parentDirectoryId = 'NULL';
+                        }
+
                         $dbObject->execute('UPDATE `article_line` SET `name` = "' . $name . '", `url` = "' . $url . '", `parentdirectory_id` = ' . $parentDirectoryId . ' WHERE `id` = ' . $lineId . ';');
                         $return .= '<h4 class="success">' . $rb->get('lines.updated') . '</h4>';
                     }
