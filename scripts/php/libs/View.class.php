@@ -180,7 +180,7 @@ class View extends BaseTagLib {
             if(strlen($webObject->PageLog) != 0) {
                 $diacont .= ''
                 . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                    . '<div style="color: red; font-weight: bold;">Database queries:</div>'
+                    . '<div style="color: red; font-weight: bold;">Page Log:</div>'
                     . '<div>' . $webObject->PageLog . '</div>'
                 . '</div>';
             }

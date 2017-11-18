@@ -1003,7 +1003,7 @@ class DefaultWeb extends BaseTagLib {
         if(strlen($this->PageLog) != 0) {
             $diacont .= ''
 			. '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-				. '<div style="color: red; font-weight: bold;">Database queries:</div>'
+				. '<div style="color: red; font-weight: bold;">Page Log:</div>'
 				. '<div>' . $this->PageLog . '</div>'
 			. '</div>';
         }
