@@ -1550,6 +1550,7 @@ class Article extends BaseTagLib {
             if ($_POST['article-line-edit-submit'] == $rb->get('lines.save')) {
                 $name = $_POST['article-line-edit-name'];
                 $url = strtolower(parent::convertToValidUrl(strlen($_POST['article-line-edit-url']) == 0 ? $name : $_POST['article-line-edit-url']));
+                $parentDirectoryId = $_POST['article-line-edit-parentdirectoryid'];
                 $lineId = $_POST['article-line-edit-id'];
                 $read = $_POST['article-right-edit-groups-r'];
                 $write = $_POST['article-right-edit-groups-w'];
@@ -1568,12 +1569,12 @@ class Article extends BaseTagLib {
 
                 if (strlen($name) > 3 && strlen($url) > 0 && $ok) {
                     if ($lineId == 0) {
-                        $dbObject->execute('INSERT INTO `article_line`(`name`, `url`) VALUES ("' . $name . '", "' . $url . '");');
+                        $dbObject->execute('INSERT INTO `article_line`(`name`, `url`, `parentdirectory_id`) VALUES ("' . $name . '", "' . $url . '", ' . $parentDirectoryId . ');');
                         $return .= '<h4 class="success">' . $rb->get('lines.created') . '</h4>';
                         $lineId = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `article_line`;');
                         $lineId = $lineId[0]['id'];
                     } else {
-                        $dbObject->execute('UPDATE `article_line` SET `name` = "' . $name . '", `url` = "' . $url . '" WHERE `id` = ' . $lineId . ';');
+                        $dbObject->execute('UPDATE `article_line` SET `name` = "' . $name . '", `url` = "' . $url . '", `parentdirectory_id` = ' . $parentDirectoryId . ' WHERE `id` = ' . $lineId . ';');
                         $return .= '<h4 class="success">' . $rb->get('lines.updated') . '</h4>';
                     }
 
@@ -1695,7 +1696,7 @@ class Article extends BaseTagLib {
                         . '<label for="article-line-labels-' . $label['id'] . '">' . $label['name'] . '</label> ';
             }
 
-            $line = $dbObject->fetchAll('SELECT `name`, `url` FROM `article_line` WHERE `id` = ' . $lineId . ';');
+            $line = $dbObject->fetchAll('SELECT `name`, `url`, `parentdirectory_id` FROM `article_line` WHERE `id` = ' . $lineId . ';');
             if (count($line) != 0 || $lineId == 0) {
                 $return .= ''
                         . '<div class="article-line-edit">'
@@ -1708,6 +1709,11 @@ class Article extends BaseTagLib {
                         . '<div class="article-url gray-box-float">'
                         . '<label for="article-line-edit-url" class="w60">' . $rb->get('articles.url') . ':</label> '
                         . '<input type="text" id="article-line-edit-url" name="article-line-edit-url" value="' . $line[0]['url'] . '" class="w300" />'
+                        . '</div>'
+                        . '<div class="clear"></div>'
+                        . '<div class="article-url gray-box-float">'
+                        . '<label for="article-line-edit-parentdirectoryid" title="' . $rb->get('lines.parentdirectoryid-title') . '" class="w60">' . $rb->get('lines.parentdirectoryid') . ':</label> '
+                        . '<input type="text" id="article-line-edit-parentdirectoryid" name="article-line-edit-parentdirectoryid" value="' . $line[0]['parentdirectory_id'] . '" class="w60" />'
                         . '</div>'
                         . '<div class="clear"></div>'
                         . '<div class="article-line-rights">'
