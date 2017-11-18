@@ -125,6 +125,8 @@ class View extends BaseTagLib {
     /* ============================= FUNCTIONS =========================================== */
 
     private function flush($content) {
+        global $webObject;
+        
         if (strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
             $styles = '';
             foreach ($this->Resources['css'] as $res) {
@@ -161,6 +163,28 @@ class View extends BaseTagLib {
 
             $content = ViewHelper :: resolveUrl($content);
 
+            $diacont = "";
+            if (array_key_exists('mem-stats', $_GET)) {
+                $diacont = $webObject->Diagnostics->printMemoryStats();
+            }
+            if (array_key_exists('duration-stats', $_GET)) {
+                $diacont .= $webObject->Diagnostics->printDuration();
+            }
+            if (array_key_exists('query-stats', $_GET)) {
+                $diacont .= ''
+                . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
+                    . '<div style="color: red; font-weight: bold;">Database queries:</div>'
+                    . '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
+                . '</div>';
+            }
+            if(strlen($webObject->PageLog) != 0) {
+                $diacont .= ''
+                . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
+                    . '<div style="color: red; font-weight: bold;">Database queries:</div>'
+                    . '<div>' . $webObject->PageLog . '</div>'
+                . '</div>';
+            }
+
             $return = '' .
                     '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' .
                     '<html xmlns="http://www.w3.org/1999/xhtml">' .
@@ -172,7 +196,7 @@ class View extends BaseTagLib {
                     '<title>' . $this->Title . '</title>' .
                     $styles .
                     '</head>' .
-                    '<body>' . $content . $scripts . '</body>' .
+                    '<body>' . $content . $scripts . $diacont . '</body>' .
                     '</html>';
         }
 
