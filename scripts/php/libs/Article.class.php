@@ -183,13 +183,15 @@ class Article extends BaseTagLib {
         $sort = (strtolower($sort) == 'desc' ? 'DESC' : 'ASC');
 		$fromWhere = "FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` " . $labelsJoin . " WHERE `article`.`line_id` = " . $lineId . " AND `article_content`.`language_id` = " . $articleLangId . " " . $visible . $labelsWhere . " ORDER BY " . $sortBy . " " . $sort;
 		
-        $articles = $dbObject->fetchAll("SELECT distinct `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp`, `article_content`.`datetime`, `article`.`visible` ".$fromWhere . $limit . ";");
+        $articles = $dbObject->fetchAll("SELECT distinct `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp`, `article_content`.`datetime`, `article`.`visible`, `article`.`directory_id` ".$fromWhere . $limit . ";");
         if (count($articles) > 0 && self::canUser($lineId, WEB_R_READ)) {
             $flink = '';
             parent::request()->set('line-url', $lineInfo['url']);
             $articleOldId = self::getArticleId();
+            $articleDirectoryOldId = self::getArticleDirectoryId();
             foreach ($articles as $article) {
                 self::setArticleId($article['id']);
+                self::setArticleDirectoryId($article['directory_id']);
                 parent::request()->set('id', $article['id'], 'current-article');
                 parent::request()->set('date', $article['timestamp'], 'current-article');
                 parent::request()->set('time', $article['timestamp'], 'current-article');
@@ -222,6 +224,7 @@ class Article extends BaseTagLib {
 			}
 			
             self::setArticleId($articleOldId);
+            self::setArticleDirectoryId($articleDirectoryOldId);
             unset($_SESSION['article-id']);
             unset($_SESSION['current-article']);
         } else {
@@ -422,9 +425,13 @@ class Article extends BaseTagLib {
             return;
         }
 
-        $article = $dbObject->fetchAll("SELECT `name`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime` FROM `article_content` WHERE `article_id` = " . $articleId . " AND `language_id` = " . $articleLangId . ";");
+        $article = $dbObject->fetchAll("SELECT `name`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `article`.`directory_id` FROM `article_content` JOIN `article` ON `article_content`.`article_id` = `article`.`id` WHERE `article_id` = " . $articleId . " AND `language_id` = " . $articleLangId . ";");
         if (count($article) == 1) {
+            $directoryOldId = self::getArticleDirectoryId();
+            self::setArticleDirectoryId($article[0]['directory_id']);
+            
             parent::request()->set('id', $articleId, 'current-article');
+            parent::request()->set('directoryid', $article[0]['directory_id'], 'current-article');
             parent::request()->set('date', $article[0]['timestamp'], 'current-article');
             parent::request()->set('time', $article[0]['timestamp'], 'current-article');
             parent::request()->set('datetime', $article[0]['datetime'], 'current-article');
@@ -438,7 +445,9 @@ class Article extends BaseTagLib {
             $Parser->setContent($templateContent);
             $Parser->startParsing();
             $return .= $Parser->getResult();
-			$return .= self::nextPrevNavigation($articleId, $lineId, $webObject->getPageId(), $nextLinkText, $prevLinkText);
+            $return .= self::nextPrevNavigation($articleId, $lineId, $webObject->getPageId(), $nextLinkText, $prevLinkText);
+            
+            self::setArticleDirectoryId($directoryOldId);
         } else {
             $return .= '<div class="no-article">' . $rb->get('articles.notselected') . '</div>';
         }
@@ -1987,6 +1996,15 @@ class Article extends BaseTagLib {
     public function getArticleId() {
 		//echo 'get ID: '.parent::request()->get('article-id').'<br />';
         return parent::request()->get('article-id');
+    }
+    
+    public function setArticleDirectoryId($directoryId) {
+        parent::request()->set('article-directory-id', $directoryId);
+        return $directoryId;
+    }
+
+    public function getArticleDirectoryId() {
+        return parent::request()->get('article-directory-id');
     }
 
     public function setUrl($url) {

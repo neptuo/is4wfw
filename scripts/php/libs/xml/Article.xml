@@ -492,6 +492,14 @@
     </comment>
   </property>
   <property>
+  	<propname>directoryId</propname>
+  	<setfunction>setArticleDirectoryId</setfunction>
+  	<getfunction>getArticleDirectoryId</getfunction>
+    <comment>
+      Vrací / Nastavuje id složky pro soubory článku
+    </comment>
+  </property>
+  <property>
   	<propname>lineUrl</propname>
   	<setfunction>setLineUrl</setfunction>
   	<getfunction>getLineUrl</getfunction>
