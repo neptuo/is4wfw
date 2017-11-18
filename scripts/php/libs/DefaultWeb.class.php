@@ -1000,6 +1000,13 @@ class DefaultWeb extends BaseTagLib {
 				. '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
 			. '</div>';
         }
+        if(strlen($this->PageLog) != 0) {
+            $diacont .= ''
+			. '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
+				. '<div style="color: red; font-weight: bold;">Database queries:</div>'
+				. '<div>' . $this->PageLog . '</div>'
+			. '</div>';
+        }
 
         if (strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
             $return = ''
