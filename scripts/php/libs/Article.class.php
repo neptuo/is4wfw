@@ -429,7 +429,7 @@ class Article extends BaseTagLib {
         if (count($article) == 1) {
             $directoryOldId = self::getArticleDirectoryId();
             self::setArticleDirectoryId($article[0]['directory_id']);
-            
+
             parent::request()->set('id', $articleId, 'current-article');
             parent::request()->set('directoryid', $article[0]['directory_id'], 'current-article');
             parent::request()->set('date', $article[0]['timestamp'], 'current-article');
@@ -1755,7 +1755,7 @@ class Article extends BaseTagLib {
                         . '<input type="text" id="article-line-edit-url" name="article-line-edit-url" value="' . $line[0]['url'] . '" class="w300" />'
                         . '</div>'
                         . '<div class="clear"></div>'
-                        . '<div class="article-url gray-box-float">'
+                        . '<div class="article-directory gray-box-float">'
                         . '<label for="article-line-edit-parentdirectoryid" title="' . $rb->get('lines.parentdirectoryid-title') . '" class="w60">' . $rb->get('lines.parentdirectoryid') . ':</label> '
                         . '<input type="text" id="article-line-edit-parentdirectoryid" name="article-line-edit-parentdirectoryid" value="' . $line[0]['parentdirectory_id'] . '" class="w60" />'
                         . '</div>'
