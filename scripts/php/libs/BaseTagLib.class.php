@@ -374,7 +374,11 @@ class BaseTagLib {
 		}
 		
 		return $this->daos[$name];
-	}
+    }
+    
+    protected function log($message) {
+		$this->web()->PageLog .= $message;
+    }
 }
 
 ?>

@@ -248,9 +248,9 @@ class Article extends BaseTagLib {
 	}
 	
 	private function getPaging($total, $size, $index, $pageId, $pageLangId) {
-		//echo 'Paging: '.$total.', '.$size;
 		$pages = ceil($total / $size);
-		if($pages == 1) {
+		//parent::log('Paging: '.$total.', '.$size.', '.$pages);
+		if($pages == 0 || $pages == 1) {
 			return;
 		}
 	
@@ -1574,7 +1574,10 @@ class Article extends BaseTagLib {
         if (self::canUser($lineId, WEB_R_WRITE)) {
             $ok = true;
         } else {
-            $return .= parent::getError($rb->get('articles.noperm'));
+            if($lineId != 0) {
+                $return .= parent::getError($rb->get('articles.noperm'));
+            }
+
             if ($useFrames != "false") {
                 return parent::getFrame($rb->get('lines.edittitle2'), $return, '');
             } else {
