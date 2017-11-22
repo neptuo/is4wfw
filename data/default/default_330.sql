@@ -211,7 +211,7 @@ CREATE TABLE `directory_right` (
 INSERT INTO `directory_right` (`did`, `gid`, `type`) VALUES
 (0, 1, 101),
 (0, 1, 102),
-(0, 1, 103);
+(0, 3, 103);
 
 -- --------------------------------------------------------
 
@@ -743,6 +743,15 @@ CREATE TABLE `template_right` (
   `gid` int(11) NOT NULL,
   `type` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+--
+-- Dumping data for table `system_property`
+--
+
+INSERT INTO `template_right` (`tid`, `gid`, `type`) VALUES 
+(0, 1, 101), 
+(0, 1, 102), 
+(0, 3, 103);
 
 -- --------------------------------------------------------
 
