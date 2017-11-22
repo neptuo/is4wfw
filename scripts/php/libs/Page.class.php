@@ -2522,6 +2522,7 @@ class Page extends BaseTagLib {
             $templateId = $_POST['template-id'];
             $templateName = $_POST['template-name'];
             $templateContent = str_replace('&#126;', '~', $_POST['template-content']);
+            $templateContent = str_replace('"', '\"', $templateContent);
             //$templateContent = str_replace('"', '\"', $templateContent);
             $templateR = $_POST['template-right-edit-groups-r'];
             $templateW = $_POST['template-right-edit-groups-w'];
