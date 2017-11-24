@@ -2278,8 +2278,6 @@ class DefaultWeb extends BaseTagLib {
     
     public function showWhenConditionIsSatified($content, $when) {
         $return = "";
-        
-        parent::web()->PageLog .= $content;
 
         if($when === true || $when == "true") {
             $parser = new FullTagParser();
