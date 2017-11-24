@@ -192,6 +192,8 @@ class Article extends BaseTagLib {
             foreach ($articles as $article) {
                 self::setArticleId($article['id']);
                 self::setArticleDirectoryId($article['directory_id']);
+                self::setHasHead(strlen($article['head']) > 0);
+                self::setHasContent(strlen($article['content']) > 0);
                 parent::request()->set('id', $article['id'], 'current-article');
                 parent::request()->set('date', $article['timestamp'], 'current-article');
                 parent::request()->set('time', $article['timestamp'], 'current-article');
@@ -429,6 +431,8 @@ class Article extends BaseTagLib {
         if (count($article) == 1) {
             $directoryOldId = self::getArticleDirectoryId();
             self::setArticleDirectoryId($article[0]['directory_id']);
+            self::setHasHead(strlen($article['head']) > 0);
+            self::setHasContent(strlen($article['content']) > 0);
 
             parent::request()->set('id', $articleId, 'current-article');
             parent::request()->set('directoryid', $article[0]['directory_id'], 'current-article');
@@ -2038,7 +2042,7 @@ class Article extends BaseTagLib {
     public function getLineUrl() {
         return parent::request()->get('line-url');
     }
-
+    
     public function setLabelId($labelId) {
         parent::request()->set('label-id', $labelId);
         return $labelId;
@@ -2046,6 +2050,24 @@ class Article extends BaseTagLib {
 
     public function getLabelId() {
         return parent::request()->get('label-id');
+    }
+        
+    public function setHasContent($hasContent) {
+        parent::request()->set('article-has-content', $hasContent ? 'true' : 'false');
+        return $hasContent;
+    }
+
+    public function getHasContent() {
+        return parent::request()->get('article-has-content');
+    }
+    
+    public function setHasHead($hasHead) {
+        parent::request()->set('article-has-head', $hasHead ? 'true' : 'false');
+        return $hasHead;
+    }
+
+    public function getHasHead() {
+        return parent::request()->get('article-has-head');
     }
 
     public function setLabelUrl($url) {

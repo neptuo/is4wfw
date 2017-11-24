@@ -4,7 +4,7 @@
   <name>Article Lib</name>
   <classname>Article</classname>
   <classpath>php.libs</classpath>
-  <version>1.47</version>
+  <version>1.48</version>
   <count>*</count>
   <comment>
     Třída pro články.
@@ -521,6 +521,22 @@
   	<getfunction>getLabelUrl</getfunction>
     <comment>
       Vrací / Nastavuje url štítku
+    </comment>
+  </property>
+  <property>
+  	<propname>hasHead</propname>
+  	<setfunction>setHasHead</setfunction>
+  	<getfunction>getHasHead</getfunction>
+    <comment>
+      Vrací / Nastavuje, zda článek má vyplněnou hlavičku (strlen > 0)
+    </comment>
+  </property>
+  <property>
+  	<propname>hasContent</propname>
+  	<setfunction>setHasContent</setfunction>
+  	<getfunction>getHasContent</getfunction>
+    <comment>
+      Vrací / Nastavuje, zda článek má vyplněný obsah (strlen > 0)
     </comment>
   </property>
 </taglib>
