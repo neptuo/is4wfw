@@ -67,11 +67,19 @@
 		if(is_file($xmlPath)) {
 			$xml = new SimpleXMLElement(file_get_contents($xmlPath));
 			
-			$links = '<div class="gray-box">';
+			$links = '<div class="gray-box"><div>'.$rb->get('lib.tags').':';
 			foreach($xml->tag as $tag) {
 				$links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
 			}
-			$links .= '</div>';
+			$links .= '</div><div>'.$rb->get('lib.fulltags').':';
+			foreach($xml->fulltag as $tag) {
+				$links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+			}
+			$links .= '</div><div>'.$rb->get('lib.properties').':';
+			foreach($xml->property as $prop) {
+				$links .= '<a href="#'.$prop->propname.'">'.$prop->propname.'</a> ';
+			}
+			$links .= '</div></div>';
         
 			$return .= ''
 			.'<div class="hint-lib">'
@@ -80,12 +88,47 @@
 					.'<strong class="version">'.$rb->get('lib.version').': '.$xml->version.', '.$rb->get('lib.count-of-instances').': '.$xml->count.'</strong>'
 				.'</div>'
 				.'<div class="clear"></div>'
+				.$links
 				.'<div class="tag-h2">'
 					.'<h2>'.$rb->get('lib.tags').':</h2>'
-				.'</div>'
-				.$links;
+				.'</div>';
 			
 			foreach($xml->tag as $tag) {
+				$attributes = '';
+				for($i = 0; $i < count($tag->attribute); $i ++) {
+					$attributes .= ''
+					.'<tr>'
+						.'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
+						.'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
+					.'</tr>';
+				}
+				
+				$return .= ''
+				.'<div class="lib-tag">'
+					.'<div class="lib-tag-head">'
+						.'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3><p>'.$tag->comment.'</p>'
+						.'<div class="clear"></div>'
+					.'</div>'
+					.'<div class="lib-tag-attrs">'
+						.((strlen($attributes) > 0) ? ''
+							.'<table>'
+								.'<tr>'
+									.'<th class="att-name">'.$rb->get('lib.attname').'</th>'
+								.'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+								.'</tr>'
+								.$attributes
+							.'</table>'
+						: '<p>'.$rb->get('lib.noattrs').'</p>')
+					.'</div>'
+				.'</div>';
+			}
+			$return .= ''	
+						.'<div class="tag-h2">'
+					.'<h2>'.$rb->get('lib.fulltags').':</h2>'
+				.'</div>'
+					.'';
+					
+			foreach($xml->fulltag as $tag) {
 				$attributes = '';
 				for($i = 0; $i < count($tag->attribute); $i ++) {
 					$attributes .= ''
@@ -180,6 +223,7 @@
 						.'<option value="php.libs.DefaultWeb"'.($_SESSION['select-class-path'] == 'php.libs.DefaultWeb' ? 'selected="selected"' : '').'>php.libs.DefaultWeb</option>'
 						.'<option value="php.libs.Error"'.($_SESSION['select-class-path'] == 'php.libs.Error' ? 'selected="selected"' : '').'>php.libs.Error</option>'
 						.'<option value="php.libs.File"'.($_SESSION['select-class-path'] == 'php.libs.File' ? 'selected="selected"' : '').'>php.libs.File</option>'
+						.'<option value="php.libs.FileAdmin"'.($_SESSION['select-class-path'] == 'php.libs.FileAdmin' ? 'selected="selected"' : '').'>php.libs.FileAdmin</option>'
 						.'<option value="php.libs.Form"'.($_SESSION['select-class-path'] == 'php.libs.Form' ? 'selected="selected"' : '').'>php.libs.Form</option>'
 						.'<option value="php.libs.Guestbook"'.($_SESSION['select-class-path'] == 'php.libs.Guestbook' ? 'selected="selected"' : '').'>php.libs.Guestbook</option>'
 						.'<option value="php.libs.Hint"'.($_SESSION['select-class-path'] == 'php.libs.Hint' ? 'selected="selected"' : '').'>php.libs.Hint</option>'
@@ -188,11 +232,13 @@
 						.'<option value="php.libs.Js"'.($_SESSION['select-class-path'] == 'php.libs.Js' ? 'selected="selected"' : '').'>php.libs.Js</option>'
 						.'<option value="php.libs.Log"'.($_SESSION['select-class-path'] == 'php.libs.Log' ? 'selected="selected"' : '').'>php.libs.Log</option>'
 						.'<option value="php.libs.Login"'.($_SESSION['select-class-path'] == 'php.libs.Login' ? 'selected="selected"' : '').'>php.libs.Login</option>'
+						.'<option value="php.libs.Menu"'.($_SESSION['select-class-path'] == 'php.libs.Menu' ? 'selected="selected"' : '').'>php.libs.Menu</option>'
 						.'<option value="php.libs.Page"'.($_SESSION['select-class-path'] == 'php.libs.Page' ? 'selected="selected"' : '').'>php.libs.Page</option>'
 						.'<option value="php.libs.PageNG"'.($_SESSION['select-class-path'] == 'php.libs.PageNG' ? 'selected="selected"' : '').'>php.libs.PageNG</option>'
 						.'<option value="php.libs.Sport"'.($_SESSION['select-class-path'] == 'php.libs.Sport' ? 'selected="selected"' : '').'>php.libs.Sport</option>'
 						.'<option value="php.libs.System"'.($_SESSION['select-class-path'] == 'php.libs.System' ? 'selected="selected"' : '').'>php.libs.System</option>'
-						.'<option value="php.libs.user"'.($_SESSION['select-class-path'] == 'php.libs.User' ? 'selected="selected"' : '').'>php.libs.User</option>'
+						.'<option value="php.libs.User"'.($_SESSION['select-class-path'] == 'php.libs.User' ? 'selected="selected"' : '').'>php.libs.User</option>'
+						.'<option value="php.libs.View"'.($_SESSION['select-class-path'] == 'php.libs.View' ? 'selected="selected"' : '').'>php.libs.View</option>'
 						.'<option value="php.libs.WebProject"'.($_SESSION['select-class-path'] == 'php.libs.WebProject' ? 'selected="selected"' : '').'>php.libs.WebProject</option>'
 					.'</select> '
 					.'<input type="submit" name="select-class-path-submit" value="'.$rb->get('select-class-path.submit').'" />'
