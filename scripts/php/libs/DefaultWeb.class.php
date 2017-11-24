@@ -2274,7 +2274,22 @@ class DefaultWeb extends BaseTagLib {
 	
 	public function getPageId() {
 		return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['id'];
-	}
+    }
+    
+    public function showWhenConditionIsSatified($content, $when) {
+        $return = "";
+        
+        parent::web()->PageLog .= $content;
+
+        if($when === true || $when == "true") {
+            $parser = new FullTagParser();
+            $parser->setContent($content);
+            $parser->startParsing();
+            $return = $parser->getResult();
+        }
+
+        return $return;
+    }
 
     /* ================== PROPERTIES ================================================== */
 

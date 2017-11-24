@@ -4,7 +4,7 @@
   <name>Default web lib</name>
   <classname>DefaultWeb</classname>
   <classpath>php.libs</classpath>
-  <version>1.86</version>
+  <version>1.87</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -400,6 +400,17 @@
       Testovací tag.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>condition</tagname>
+    <function>showWhenConditionIsSatified</function>
+    <attribute>
+      <attname>when</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Zobrazí svůj obsah pokud je atribut "condition" hodnoty true (bool nebo string).
+    </comment>
+  </fulltag>
   <property>
   	<propname>currentPageName</propname>
   	<setfunction>setCurrentPageName</setfunction>
