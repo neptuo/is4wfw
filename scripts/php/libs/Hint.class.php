@@ -167,7 +167,7 @@
 				$return .= ''
 				.'<div class="lib-tag">'
 					.'<div class="lib-tag-head">'
-						.'<h3>'.$prop->propname.'</h3><p>'.$prop->comment.'</p>'
+						.'<h3 id="'.$prop->propname.'">'.$prop->propname.'</h3><p>'.$prop->comment.'</p>'
 						.'<div class="clear"></div>'
 					.'</div>'
 			  .'</div>';
