@@ -2279,7 +2279,7 @@ class DefaultWeb extends BaseTagLib {
     public function showWhenConditionIsSatified($content, $when) {
         $return = "";
 
-        if($when === true || $when == "true") {
+        if($when === true || $when == "true" || ($when != 'false' && (strlen($when) != 0))) {
             $parser = new FullTagParser();
             $parser->setContent($content);
             $parser->startParsing();
