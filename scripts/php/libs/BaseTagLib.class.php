@@ -399,6 +399,12 @@ class BaseTagLib {
 
         return $url;
     }
+
+    public function redirectUrlWithQueryString() {
+        $actionUrl = $_SERVER['REDIRECT_URL'];
+        $actionUrl = $this->addUrlQueryString($actionUrl);
+        return $actionUrl;
+    }
 }
 
 ?>
