@@ -146,11 +146,49 @@
       <attreq>implied</attreq>
     </attribute>
     <comment>
-      Zobrazí detail článku do templatu. Parametr 'articleId' může být také zadán jako
+      Zobrazí detail článku do templatu (atribut template, templateId). Parametr 'articleId' může být také zadán jako
       _REQUEST['article-id']. "lineId" je doplňující informace při novém použití article:url! (pro jednoznačnost výběru článku - není povinná, ale vhodná).
 	  "nextLinkText" a "prevLinkText" jsou texty odkazů na další/předchozí článek (řazeno podle pořadí).
     </comment>
   </tag>
+  <fulltag>
+    <tagname>detail</tagname>
+    <function>showDetailFullTag</function>
+    <attribute>
+      <attname>articleId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>articleLangId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>defaultArticleId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>showError</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>lineId</attname>
+      <attreq>implied</attreq>
+      <attdef>0</attdef>
+    </attribute>
+    <attribute>
+      <attname>nextLinkText</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>prevLinkText</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí detail článku dle obsahu svého těla. Parametr 'articleId' může být také zadán jako
+      _REQUEST['article-id']. "lineId" je doplňující informace při novém použití article:url! (pro jednoznačnost výběru článku - není povinná, ale vhodná).
+	    "nextLinkText" a "prevLinkText" jsou texty odkazů na další/předchozí článek (řazeno podle pořadí).
+    </comment>
+  </fulltag>
   <tag>
     <tagname>labels</tagname>
     <function>showLabels</function>

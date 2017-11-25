@@ -358,6 +358,40 @@ class Article extends BaseTagLib {
      *
      */
     public function showDetail($template = false, $templateId = false, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = false, $nextLinkText = '', $prevLinkText = '') {
+        global $dbObject;
+        global $loginObject;
+
+        $templateContent = '';
+        if ($templateId != false) {
+            // ziskani templatu ...
+            $rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_READ . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '));');
+            if (count($rights) > 0 && $templateId > 0) {
+                $template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = ' . $templateId . ';');
+                $templateContent = $template[0]['content'];
+            } else {
+                $message = "Permission Denied when reading template[templateId = " . $templateId . "]!";
+                trigger_error($message, E_USER_WARNING);
+                return;
+            }
+        } elseif ($template != false) {
+            if (is_file($template) && is_readable($template)) {
+                $templateContent = file_get_contents($template);
+            } else {
+                $message = "Template file doesn't exist or is un-readable!";
+                trigger_error($message, E_USER_WARNING);
+                return;
+            }
+        } else {
+            $message = "Template or TemplateId must be set!";
+            trigger_error($message, E_USER_WARNING);
+            return;
+        }
+
+        return $this->showDetailFullTag($templateContent, $articleId, $articleLangId, $defaultArticleId, $showError, $lineId, $nextLinkText, $prevLinkText);
+    }
+
+    // C-tag
+    public function showDetailFullTag($templateContent, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = false, $nextLinkText = '', $prevLinkText = '') {
         global $webObject;
         global $dbObject;
         global $loginObject;
@@ -399,32 +433,6 @@ class Article extends BaseTagLib {
                 }
                 return;
             }
-        }
-
-        $templateContent = '';
-        if ($templateId != false) {
-            // ziskani templatu ...
-            $rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_READ . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '));');
-            if (count($rights) > 0 && $templateId > 0) {
-                $template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = ' . $templateId . ';');
-                $templateContent = $template[0]['content'];
-            } else {
-                $message = "Permission Denied when reading template[templateId = " . $templateId . "]!";
-                trigger_error($message, E_USER_WARNING);
-                return;
-            }
-        } elseif ($template != false) {
-            if (is_file($template) && is_readable($template)) {
-                $templateContent = file_get_contents($template);
-            } else {
-                $message = "Template file doesn't exist or is un-readable!";
-                trigger_error($message, E_USER_WARNING);
-                return;
-            }
-        } else {
-            $message = "Template or TemplateId must be set!";
-            trigger_error($message, E_USER_WARNING);
-            return;
         }
 
         $article = $dbObject->fetchAll("SELECT `name`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `article`.`directory_id` FROM `article_content` JOIN `article` ON `article_content`.`article_id` = `article`.`id` WHERE `article_id` = " . $articleId . " AND `language_id` = " . $articleLangId . ";");
@@ -1219,8 +1227,7 @@ class Article extends BaseTagLib {
         global $loginObject;
 
         $return = '';
-        $actionUrl = $_SERVER['REDIRECT_URL'];
-        $actionUrl = parent::addUrlQueryString($actionUrl);
+        $actionUrl = parent::redirectUrlWithQueryString();
 
         $article = array();
         $articleContent = array();
