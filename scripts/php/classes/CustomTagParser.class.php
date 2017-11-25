@@ -32,7 +32,7 @@ class CustomTagParser {
      *
      */
     protected $ATT_RE = '(([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="([^"]*)")';
-    protected $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
+    protected $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9-]+))';
     protected $PropertyAttr = '';
     protected $PropertyUse = '';
     /**
