@@ -655,7 +655,19 @@ class Article extends BaseTagLib {
             } else {
                 return $return;
             }
-		}
+        }
+        
+        if($_POST['article-edit'] == $rb->get('articles.edit')) {
+            $url = parent::addUrlParameter($actionUrl, 'article-id', $_POST['article-id']);
+            $url = parent::addUrlParameter($url, 'language-id', $_POST['language-id']);
+            header("Location: ". $url);
+            return;
+        } elseif($_POST['article-add-lang'] == $rb->get('articles.addlang')) {
+            $url = parent::addUrlParameter($actionUrl, 'article-id', $_POST['article-id']);
+            $url = parent::addUrlParameter($url, 'line-id', $_POST['line-id']);
+            header("Location: ". $url);
+            return;
+        }
 
         if ($_POST['article-move-up'] == $rb->get('articles.moveup')) {
             $artcId = $_POST['article-id'];
@@ -800,7 +812,7 @@ class Article extends BaseTagLib {
 							. '<td rowspan="' . $lnVersions . '" class="article-mgm-td article-mgm-id">'
 								. '<span>' . $article['id'] . '</span>'
 								. '<div class="clear"></div>'
-								. '<form name="article-add-lang1" method="post" action="' . $actionUrl . '">'
+								. '<form name="article-add-lang1" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                                     . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
                                     . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
                                     . '<input type="hidden" name="article-add-lang" value="' . $rb->get('articles.addlang') . '" />'
@@ -837,7 +849,7 @@ class Article extends BaseTagLib {
 								. '</div>'
                             . '</td>'
                             . '<td class="article-mgm-td article-mgm-edit">'
-								. '<form name="article-edit" method="post" action="' . $actionUrl . '">'
+								. '<form name="article-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
 									. '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
 									. '<input type="hidden" name="language-id" value="' . $info['lang_id'] . '" />'
 									. '<input type="hidden" name="line-id" value="' . $lineId . '" />'
@@ -1208,11 +1220,15 @@ class Article extends BaseTagLib {
 
         $return = '';
         $actionUrl = $_SERVER['REDIRECT_URL'];
+        $actionUrl = parent::addUrlQueryString($actionUrl);
+
         $article = array();
         $articleContent = array();
         $usedLangs = array();
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
+        
+        $isClosing = $_POST['article-save-close'] == $rb->get('articles.saveandclose') || $_POST['article-close'] == $rb->get('articles.close');
 
         if ($_POST['article-save'] == $rb->get('articles.save') || $_POST['article-save-close'] == $rb->get('articles.saveandclose')) {
             $article = array('id' => $_POST['article-id'], 'line_id' => $_POST['line-id'], 'visible' => $_POST['article-visible'], 'order' => $_POST['article-id'], 'labels' => $_POST['article-labels']);
@@ -1267,6 +1283,14 @@ class Article extends BaseTagLib {
                                         $dbObject->execute("UPDATE `article` SET `directory_id` = " . $directory['id'] . " WHERE `id` = " . $article['id'] . ";");
                                     }
                                 }
+                                
+                                if(!$isClosing) {
+                                    $actionUrl = $_SERVER['REDIRECT_URL'];
+                                    $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['id']);
+                                    $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $ac['language_id']);
+                                    header('location: ' . $actionUrl);
+                                    return;
+                                }
                             } else {
                                 $ac = $articleContent;
                                 // Ulozeni - NOVA jaz.verze
@@ -1274,6 +1298,14 @@ class Article extends BaseTagLib {
                                 $return .= '<h4 class="success">' . $rb->get('articles.langadded') . '</h4>';
                                 $_POST['article-id'] = $article['id'];
                                 $_POST['language-id'] = $ac['language_id'];
+                                
+                                if(!$isClosing) {
+                                    $actionUrl = $_SERVER['REDIRECT_URL'];
+                                    $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['id']);
+                                    $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $ac['language_id']);
+                                    header('location: ' . $actionUrl);
+                                    return;
+                                }
                             }
                         } else {
                             $ac = $articleContent;
@@ -1298,16 +1330,16 @@ class Article extends BaseTagLib {
             //parent::db()->setMockMode(false);
         }
 
-        if ($_POST['article-save-close'] == $rb->get('articles.saveandclose') || $_POST['article-close'] == $rb->get('articles.close')) {
+        if ($isClosing) {
             $url = $webObject->composeUrl($backPageId);
-            header("Location: ".$url);            
+            header("Location: ".$url);
         }
 
-        if (array_key_exists('article-id', $_POST) && $_POST['article-id'] != '') {
-            $articleId = $_POST['article-id'];
-            $languageId = $_POST['language-id'];
+        if (array_key_exists('article-id', $_REQUEST) && $_REQUEST['article-id'] != '') {
+            $articleId = $_REQUEST['article-id'];
+            $languageId = $_REQUEST['language-id'];
 
-            if ($_POST['article-id'] != '' && array_key_exists('language-id', $_POST)) {
+            if ($_REQUEST['article-id'] != '' && array_key_exists('language-id', $_REQUEST)) {
                 // test na prava pro cteni z prislusne rady!
                 $article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`keywords`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`datetime`, `article`.`line_id`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') AND `article_content`.`article_id` = ' . $articleId . ' AND `article_content`.`language_id` = ' . $languageId . ' ORDER BY `id`;');
                 if (count($article) != 0) {
@@ -1321,9 +1353,9 @@ class Article extends BaseTagLib {
                     }
                 }
                 $new = false;
-            } elseif (array_key_exists('article-id', $_POST)) {
-                $article['article_id'] = $_POST['article-id'];
-                $articleId = $_POST['article-id'];
+            } elseif (array_key_exists('article-id', $_REQUEST)) {
+                $article['article_id'] = $_REQUEST['article-id'];
+                $articleId = $_REQUEST['article-id'];
                 $new = true;
             } else {
                 $new = true;

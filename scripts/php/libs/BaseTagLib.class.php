@@ -379,6 +379,26 @@ class BaseTagLib {
     protected function log($message) {
 		$this->web()->PageLog .= $message;
     }
+    
+    protected function addUrlParameter($url, $name, $value) {
+        if(strpos($url, '?') !== false) {
+            $url .= '&' . $name . '=' . $value;
+        } else {
+            $url .= '?' . $name . '=' . $value;
+        }
+
+        return $url;
+    }
+    
+    protected function addUrlQueryString($url) {
+        foreach ($_GET as $key => $value) {
+            if($key != 'WEB_PAGE_PATH') {
+                $url = $this->addUrlParameter($url, $key, $value);
+            }
+        }
+
+        return $url;
+    }
 }
 
 ?>
