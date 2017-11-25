@@ -199,6 +199,10 @@ class CustomTagParser {
                 eval('$return =  ${$object[0]."Object"}->{$func}("' . $this->PropertyAttr . '");');
             }
             return $return;
+        } elseif($object[0] == 'query' && strlen($object[1]) > 0){
+            return $_GET[$object[1]];
+        } elseif($object[0] == 'post' && strlen($object[1]) > 0){
+            return $_POST[$object[1]];
         } else {
             //echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
             return $cprop[0];
