@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Image library</name>
+  <classname>Image</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro lepší zobrazování galerií.
+  </comment>
+  <fulltag>
+    <tagname>directory</tagname>
+    <function>directoryList</function>
+    <attribute>
+      <attname>id</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>limit</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>noDataMessage</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí seznam obrázků ze složky "id" dle šablony ze svého těla.
+    </comment>
+  </fulltag>
+  <fulltag>
+    <tagname>file</tagname>
+    <function>file</function>
+    <attribute>
+      <attname>id</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>noDataMessage</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí obrázek podle "id" dle šablony ze svého těla.
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>url</tagname>
+    <function>imageUrl</function>
+    <attribute>
+      <attname>width</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>height</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vrací URL pro obrázek uvnitř ga:images.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>name</tagname>
+    <function>imageName</function>
+    <comment>
+      Vrací název obrázku uvnitř ga:images.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>title</tagname>
+    <function>imageTitle</function>
+    <comment>
+      Vrací titulek obrázku uvnitř ga:images.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>type</tagname>
+    <function>imageType</function>
+    <comment>
+      Vrací číselný typ obrázku uvnitř ga:images.
+    </comment>
+  </tag>
+  
+  <property>
+  	<propname>fileId</propname>
+  	<setfunction>setFileId</setfunction>
+  	<getfunction>getFileId</getfunction>
+    <comment>
+      Vlastnost ID aktuálního souboru.
+    </comment>
+  </property>
+  <property>
+  	<propname>fileUrl</propname>
+  	<setfunction>setFileUrl</setfunction>
+  	<getfunction>getFileUrl</getfunction>
+    <comment>
+      Vlastnost URL aktuálního souboru.
+    </comment>
+  </property>
+</taglib>
+

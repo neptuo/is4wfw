@@ -66,6 +66,27 @@ class Select{
 		return $this;
 	}
 	/*
+	 * funkce pro vytvoření klauzule and ve formátu $column in ($value).
+	 * 
+	 * @param column - jméno sloupce
+	 * @param values - porovnavaná hodnota
+	 * @param ignor - má se ignorovat, nebo ne
+	 */
+	public function conjunctIn($column, $values, $ignore=false){
+		if (!$ignore){
+			if ($this->result != null){
+				if(count($values) == 0) {
+					$values = array(-1);
+				}
+
+				$value = implode("','", $values);
+				$this->result .= " AND " . $column . " IN ('" .$value."')";
+			}
+		}
+		
+		return $this;
+	}
+	/*
 	 * funkce pro vytvoření klauzule order by
 	 * 
 	 * @param column - jméno sloupce
