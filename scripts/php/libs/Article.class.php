@@ -1481,7 +1481,7 @@ class Article extends BaseTagLib {
                 . '<div class="clear"></div>'
                 . '</div>'
                 . '<div class="gray-box-float">'
-                . '<label for="article-url" class="w60" title="' . $rb->get('articles.url.tooltip') . '">' . $rb->get('articles.url') . ':</label> '
+                . '<label for="article-url" class="w60" title="' . $rb->get('articles.url-title') . '">' . $rb->get('articles.url') . ':</label> '
                 . '<input type="text" class="long-input" name="article-url" id="article-url" value="' . $article['url'] . '" />'
                 . '</div>'
                 . '<div class="gray-box-float">'
