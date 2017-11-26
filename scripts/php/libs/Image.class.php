@@ -35,7 +35,7 @@ class Image extends BaseTagLib {
 	public function directoryList($content, $id, $limit = false, $noDataMessage = false) {
 		$Parser = new FullTagParser();
 		
-		$images = parent::dao('File')->getImagesFromDirectory($id);
+		$images = parent::dao('File')->getImagesFromDirectory($id, $limit);
 		$return = '';
 
 		if(count($images) == 0) {
