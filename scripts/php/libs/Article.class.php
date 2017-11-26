@@ -194,6 +194,7 @@ class Article extends BaseTagLib {
                 self::setArticleDirectoryId($article['directory_id']);
                 self::setHasHead(strlen($article['head']) > 0);
                 self::setHasContent(strlen($article['content']) > 0);
+                self::setIsExternalUrl(strpos($article['url'], '://') !== false);
                 parent::request()->set('id', $article['id'], 'current-article');
                 parent::request()->set('date', $article['timestamp'], 'current-article');
                 parent::request()->set('time', $article['timestamp'], 'current-article');
@@ -441,6 +442,7 @@ class Article extends BaseTagLib {
             self::setArticleDirectoryId($article[0]['directory_id']);
             self::setHasHead(strlen($article['head']) > 0);
             self::setHasContent(strlen($article['content']) > 0);
+            self::setIsExternalUrl(strpos($article['url'], '://') !== false);
 
             parent::request()->set('id', $articleId, 'current-article');
             parent::request()->set('directoryid', $article[0]['directory_id'], 'current-article');
@@ -1239,7 +1241,20 @@ class Article extends BaseTagLib {
 
         if ($_POST['article-save'] == $rb->get('articles.save') || $_POST['article-save-close'] == $rb->get('articles.saveandclose')) {
             $article = array('id' => $_POST['article-id'], 'line_id' => $_POST['line-id'], 'visible' => $_POST['article-visible'], 'order' => $_POST['article-id'], 'labels' => $_POST['article-labels']);
-            $articleContent = array('article_id' => $_POST['article-id'], 'name' => $_POST['article-name'], 'head' => $_POST['article-head'], 'content' => $_POST['article-content'], 'author' => $_POST['article-author'], 'timestamp' => time(), 'datetime' => $_POST['article-datetime'], 'language_id' => $_POST['language-id'], 'language_old_id' => $_POST['article-old-lang-id'], 'line_old_id' => $_POST['line-old-id'], 'url' => $_POST['article-url'], 'keywords' => $_POST['article-keywords']);
+            $articleContent = array(
+                'article_id' => $_POST['article-id'], 
+                'name' => $_POST['article-name'], 
+                'head' => $_POST['article-head'], 
+                'content' => $_POST['article-content'], 
+                'author' => $_POST['article-author'], 
+                'timestamp' => time(), 
+                'datetime' => $_POST['article-datetime'], 
+                'language_id' => $_POST['language-id'], 
+                'language_old_id' => $_POST['article-old-lang-id'], 
+                'line_old_id' => $_POST['line-old-id'], 
+                'url' => $_POST['article-url'], 
+                'keywords' => $_POST['article-keywords']
+            );
 
             if (trim($articleContent['datetime']) == '') {
                 $articleContent['datetime'] = date("j.n.Y", time());
@@ -1250,7 +1265,10 @@ class Article extends BaseTagLib {
             }
 
             //parent::db()->setMockMode(true);
-            $articleContent['url'] = strtolower(parent::convertToUrlValid($articleContent['url'], false));
+            if(strpos($articleContent['url'], '://') === false) {
+                $articleContent['url'] = strtolower(parent::convertToUrlValid($articleContent['url'], false));
+            }
+
             $idSql = '';
             if ($article['id'] != '') {
                 $idSql = ' and `article_id` = ' . $article['id'];
@@ -1276,7 +1294,7 @@ class Article extends BaseTagLib {
                                 $maxOrder = parent::db()->fetchSingle('select `order` from `article` order by `order` desc limit 1');
                                 $maxOrder['order']++;
                                 $dbObject->execute("INSERT INTO `article`(`id`, `line_id`, `order`, `visible`) VALUES (" . $article['id'] . ", " . $article['line_id'] . ", " . $maxOrder['order'] . ", " . $article['visible'] . ");");
-                                $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (" . $ac['article_id'] . ", \"" . $ac['name'] . "\", \"" . $ac['url'] . "\", \"" . $ac['keywords'] . "\", \"" . $ac['head'] . "\", \"" . $ac['content'] . "\", \"" . $ac['author'] . "\", " . $ac['timestamp'] . ", \"" . $ac['datetime'] . "\", " . $ac['language_id'] . ");");
+                                $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (" . $ac['article_id'] . ", \"" . mysql_real_escape_string($ac['name']) . "\", \"" . $ac['url'] . "\", \"" . mysql_real_escape_string($ac['keywords']) . "\", \"" . $ac['head'] . "\", \"" . $ac['content'] . "\", \"" . $ac['author'] . "\", " . $ac['timestamp'] . ", \"" . $ac['datetime'] . "\", " . $ac['language_id'] . ");");
                                 $return .= '<h4 class="success">' . $rb->get('articles.newcreated') . '</h4>';
                                 $_POST['article-id'] = $article['id'];
                                 $_POST['language-id'] = $ac['language_id'];
@@ -1301,7 +1319,7 @@ class Article extends BaseTagLib {
                             } else {
                                 $ac = $articleContent;
                                 // Ulozeni - NOVA jaz.verze
-                                $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (" . $ac['article_id'] . ", \"" . $ac['name'] . "\", \"" . $ac['url'] . "\", \"" . $ac['keywords'] . "\", \"" . $ac['head'] . "\", \"" . $ac['content'] . "\", \"" . $ac['author'] . "\", " . $ac['timestamp'] . ", \"" . $ac['datetime'] . "\", " . $ac['language_id'] . ");");
+                                $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (" . $ac['article_id'] . ", \"" . mysql_real_escape_string($ac['name']) . "\", \"" . $ac['url'] . "\", \"" . mysql_real_escape_string($ac['keywords']) . "\", \"" . $ac['head'] . "\", \"" . $ac['content'] . "\", \"" . $ac['author'] . "\", " . $ac['timestamp'] . ", \"" . $ac['datetime'] . "\", " . $ac['language_id'] . ");");
                                 $return .= '<h4 class="success">' . $rb->get('articles.langadded') . '</h4>';
                                 $_POST['article-id'] = $article['id'];
                                 $_POST['language-id'] = $ac['language_id'];
@@ -1317,7 +1335,7 @@ class Article extends BaseTagLib {
                         } else {
                             $ac = $articleContent;
                             $dbObject->execute("UPDATE `article` SET `line_id` = " . $article['line_id'] . ", `visible`= " . $article['visible'] . " WHERE `id` = " . $article['id'] . ";");
-                            $dbObject->execute("UPDATE `article_content` SET `name` = \"" . $ac['name'] . "\", `url` = \"" . $ac['url'] . "\", `keywords` = \"" . $ac['keywords'] . "\", `head` = \"" . $ac['head'] . "\", `content` = \"" . $ac['content'] . "\", `author` = \"" . $ac['author'] . "\", `timestamp` = " . $ac['timestamp'] . ", `datetime` = \"" . $ac['datetime'] . "\", `language_id` = " . $ac['language_id'] . " WHERE `article_id` = " . $ac['article_id'] . " AND `language_id` = " . $ac['language_old_id'] . ";");
+                            $dbObject->execute("UPDATE `article_content` SET `name` = \"" . mysql_real_escape_string($ac['name']) . "\", `url` = \"" . $ac['url'] . "\", `keywords` = \"" . mysql_real_escape_string($ac['keywords']) . "\", `head` = \"" . $ac['head'] . "\", `content` = \"" . $ac['content'] . "\", `author` = \"" . $ac['author'] . "\", `timestamp` = " . $ac['timestamp'] . ", `datetime` = \"" . $ac['datetime'] . "\", `language_id` = " . $ac['language_id'] . " WHERE `article_id` = " . $ac['article_id'] . " AND `language_id` = " . $ac['language_old_id'] . ";");
                             $_POST['article-id'] = $article['id'];
                             $_POST['language-id'] = $ac['language_id'];
                             $return .= '<h4 class="success">' . $rb->get('articles.updated') . '</h4>';
@@ -1463,7 +1481,7 @@ class Article extends BaseTagLib {
                 . '<div class="clear"></div>'
                 . '</div>'
                 . '<div class="gray-box-float">'
-                . '<label for="article-url" class="w60">' . $rb->get('articles.url') . ':</label> '
+                . '<label for="article-url" class="w60" title="' . $rb->get('articles.url.tooltip') . '">' . $rb->get('articles.url') . ':</label> '
                 . '<input type="text" class="long-input" name="article-url" id="article-url" value="' . $article['url'] . '" />'
                 . '</div>'
                 . '<div class="gray-box-float">'
@@ -2089,7 +2107,7 @@ class Article extends BaseTagLib {
 
     public function getLabelId() {
         return parent::request()->get('label-id');
-    }
+}
         
     public function setHasContent($hasContent) {
         parent::request()->set('article-has-content', $hasContent ? 'true' : 'false');
@@ -2107,6 +2125,15 @@ class Article extends BaseTagLib {
 
     public function getHasHead() {
         return parent::request()->get('article-has-head');
+    }
+    
+    public function setIsExternalUrl($value) {
+        parent::request()->set('article-is-external-url', $value ? 'true' : 'false');
+        return $value;
+    }
+
+    public function getIsExternalUrl() {
+        return parent::request()->get('article-is-external-url');
     }
 
     public function setLabelUrl($url) {

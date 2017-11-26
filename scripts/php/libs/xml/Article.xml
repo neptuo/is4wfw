@@ -4,7 +4,7 @@
   <name>Article Lib</name>
   <classname>Article</classname>
   <classpath>php.libs</classpath>
-  <version>1.48</version>
+  <version>1.49</version>
   <count>*</count>
   <comment>
     Třída pro články.
@@ -575,6 +575,14 @@
   	<getfunction>getHasContent</getfunction>
     <comment>
       Vrací / Nastavuje, zda článek má vyplněný obsah (strlen > 0)
+    </comment>
+  </property>
+  <property>
+  	<propname>isExternalUrl</propname>
+  	<setfunction>setIsExternalUrl</setfunction>
+  	<getfunction>getIsExternalUrl</getfunction>
+    <comment>
+      Vrací / Nastavuje, zda URL článku odkazuje na externí web.
     </comment>
   </property>
 </taglib>
