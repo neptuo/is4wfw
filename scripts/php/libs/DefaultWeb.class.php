@@ -1543,13 +1543,10 @@ class DefaultWeb extends BaseTagLib {
                 $langs[$ln['id']] = WEB_ROOT . $ln['language'];
             }
 
-            foreach ($this->PagesId as $pg) {
-                $return = $dbObject->fetchAll("SELECT `info`.`href`, `info`.`language_id` FROM `info` WHERE `info`.`page_id` = " . $pg . ";");
-                foreach ($return as $ln) {
-                    if ($ln['href'] != '') {
-                        $langs[$ln['language_id']] .= '/' . $ln['href'];
-                    }
-                }
+            $pageId = $this->PagesId[count($this->PagesId) - 1];
+            $return = $dbObject->fetchAll("SELECT `info`.`language_id` FROM `info` WHERE `info`.`page_id` = " . $pageId . ";");
+            foreach ($return as $ln) {
+                $langs[$ln['language_id']] = self::composeUrl($pageId, $ln['language_id']);
             }
 
             $ret = "<div class=\"languages\">";
