@@ -155,7 +155,7 @@
     <tagname>detail</tagname>
     <function>showDetailFullTag</function>
     <attribute>
-      <attname>articleId</attname>
+      <attname>id</attname>
       <attreq>implied</attreq>
     </attribute>
     <attribute>
@@ -184,7 +184,7 @@
       <attreq>implied</attreq>
     </attribute>
     <comment>
-      Zobrazí detail článku dle obsahu svého těla. Parametr 'articleId' může být také zadán jako
+      Zobrazí detail článku dle obsahu svého těla. Parametr 'id' může být také zadán jako
       _REQUEST['article-id']. "lineId" je doplňující informace při novém použití article:url! (pro jednoznačnost výběru článku - není povinná, ale vhodná).
 	    "nextLinkText" a "prevLinkText" jsou texty odkazů na další/předchozí článek (řazeno podle pořadí).
     </comment>
