@@ -1,24 +1,27 @@
 <form name="file-upload" method="post" action="{Function fa:redirectUrlWithQueryString}" enctype="multipart/form-data">
 	<div class="file-upload">
-		<div class="gray-box">
+		<div class="gray-box file-upload-name">
 			<label for="file-name" class="w60">{Resource label.name}:</label>
 			<input type="text" name="file-name[]" id="file-name" value="{Binding name}" class="w300" />
 		</div>
-		<div class="gray-box">
+		<div class="gray-box file-upload-title">
 			<label for="file-title" class="w60">{Resource label.title}:</label>
 			<input type="text" name="file-title[]" id="file-title" value="{Binding title}" class="w400" />
 		</div>
-		<div class="gray-box">
+		<div class="gray-box file-upload-url">
 			<label for="file-url" class="w60">{Resource label.url}:</label>
 			<input type="text" name="file-url[]" id="file-url" value="{Binding url}" class="w400" />
 		</div>
-		<div class="gray-box">
+		<div class="gray-box file-upload-fileinput">
 			<label for="file-upload" class="w60">{Resource label.upload}:</label>
 			<input type="file" name="file-upload[]" id="file-upload" class="w250" />
 		</div>
 		<hr />
 	</div>
-	{Template this fileadmin-file-perm fa:canUseRights}
+	<div class="file-rights">
+		{Template this fileadmin-file-perm fa:canUseRights}
+		<div class="clear"></div>
+	</div>
 	<div class="clear"></div>
 	<div class="gray-box jq-buttons">
 		<input type="hidden" name="dir-id" value="{Binding dir_id}" />
