@@ -67,6 +67,38 @@ body {
     border-bottom-color: white;
 }
 
+.sub-menu ul {
+    float: left;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sub-menu ul.ul-1 {
+    border-bottom: 1px solid #ccc;
+}
+
+.sub-menu ul li {
+    float: left;
+    padding: 0;
+}
+
+.sub-menu ul li div.link {
+    float: left;
+}
+
+.sub-menu ul li div.link a {
+    display: block;
+    padding: 10px;
+    color: black;
+    text-decoration: none;
+}
+
+.sub-menu ul li div.link a:hover {
+    color: black;
+    background: #FDFE1D;
+}
+
 .body .action-panel {
     float: right;
     margin-right: 20px;

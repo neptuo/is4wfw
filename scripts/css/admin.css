@@ -7,6 +7,13 @@ form p {
     margin: 0;
 }
 
+label[title]::after {
+    content: "?";
+    padding: 0 3px;
+    background: yellow;
+    margin-left: 3px;
+}
+
 input, select, textarea {
     border: 1px solid #cccccc;
     background: white;
