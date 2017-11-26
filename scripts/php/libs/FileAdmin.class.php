@@ -489,8 +489,8 @@ class FileAdmin extends BaseTagLib {
 		$this->useRights = $useRights;
 		
 		//print_r($_POST);
-		
-		if(array_key_exists('dir-id', $_POST)) {
+
+		if($dirId == '' && array_key_exists('dir-id', $_POST)) {
 			$dirId = $_POST['dir-id'];
 		}
 		
@@ -544,6 +544,10 @@ class FileAdmin extends BaseTagLib {
 			if(array_key_exists('file-id', $_POST)) {
 				$fileId = $_POST['file-id'];
 				$dataItem = parent::dao('File')->get($fileId);
+
+				if($dataItem['dir_id'] == '') {
+					$dataItem['dir_id'] = $dirId;
+				}
 			}
 			$dataItem['zip-out'] = ($_POST['new-zipfile'] == parent::rb('button.newzipfile'));
 		

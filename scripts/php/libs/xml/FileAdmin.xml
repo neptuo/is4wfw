@@ -24,7 +24,7 @@
     <attribute>
       <attname>useFrames</attname>
       <attreq>implied</attreq>
-	  <attdef>true</attdef>
+	    <attdef>true</attdef>
     </attribute>
     <comment>
       Zobrazí browser souborovým systémem
