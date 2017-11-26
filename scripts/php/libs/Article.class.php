@@ -1485,7 +1485,7 @@ class Article extends BaseTagLib {
                 . '<input type="text" class="long-input" name="article-url" id="article-url" value="' . $article['url'] . '" />'
                 . '</div>'
                 . '<div class="gray-box-float">'
-                . '<label for="article-visible" class="w60">' . $rb->get('articles.visible') . ':</label> '
+                . '<label for="article-visible" class="w80">' . $rb->get('articles.visible') . ':</label> '
                 . '<select name="article-visible" id="article-visible">'
                 . '<option' . ($article['visible'] == 0 ? ' selected="selected"' : '') . ' value="0">' . $rb->get('articles.visible.0') . '</option>'
                 . '<option' . ($article['visible'] == 1 ? ' selected="selected"' : '') . ' value="1">' . $rb->get('articles.visible.1') . '</option>'
