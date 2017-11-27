@@ -1942,6 +1942,7 @@ class Article extends BaseTagLib {
             $label['id'] = $_POST['label-edit-id'];
             $label['name'] = $_POST['label-edit-name'];
             $label['url'] = strtolower(parent::convertToValidUrl(strlen($_POST['label-edit-url']) != 0 ? $_POST['label-edit-url'] : $label['name']));
+            $label['language_id'] = $_POST['label-edit-language'];
 
             if (strlen($label['name']) < 2) {
                 $ok = false;
@@ -1959,10 +1960,10 @@ class Article extends BaseTagLib {
 
             if ($ok) {
                 if ($label['id'] != '') {
-                    parent::db()->execute('update `article_label` set `name` = "' . $label['name'] . '", `url` = "' . $label['url'] . '" where `id` = ' . $label['id'] . ';');
+                    parent::db()->execute('update `article_label` set `name` = "' . $label['name'] . '", `url` = "' . $label['url'] . '", `language_id` = ' . $label['language_id'] . ' where `id` = ' . $label['id'] . ';');
                     $return .= parent::getSuccess($rb->get('label.saved'));
                 } else {
-                    parent::db()->execute('insert into `article_label`(`name`, `url`) values("' . $label['name'] . '", "' . $label['url'] . '");');
+                    parent::db()->execute('insert into `article_label`(`name`, `url`, `language_id`) values("' . $label['name'] . '", "' . $label['url'] . '", ' . $label['language_id'] . ');');
                     $return .= parent::getSuccess($rb->get('label.updated'));
                 }
             }
@@ -1971,7 +1972,15 @@ class Article extends BaseTagLib {
         if ($_POST['label-edit'] == $rb->get('label.edit') || $_POST['label-new'] == $rb->get('label.new') || $ok == false) {
             if ($_POST['label-id'] != '') {
                 $labelId = $_POST['label-id'];
-                $label = parent::db()->fetchSingle('select `id`, `name`, `url` from `article_label` where `id` = ' . $labelId . ';');
+                $label = parent::db()->fetchSingle('select `id`, `name`, `url`, `language_id` from `article_label` where `id` = ' . $labelId . ';');
+            }
+
+            $languagesHtml = '';
+            $languages = parent::dao('Language')->getList();
+
+            $languagesHtml .= '<option value="' . 'null' . '"' . ((null == $label['language_id']) ? ' selected="selected"' : '') . '>'. $rb->get('label.language-all') .'</option>';
+            foreach ($languages as $language) {
+                $languagesHtml .= '<option value="' . $language['id'] . '"' . (($language['id'] == $label['language_id']) ? ' selected="selected"' : '') . '>'. $language['language'] .'</option>';
             }
 
             $return .= ''
@@ -1983,6 +1992,10 @@ class Article extends BaseTagLib {
                     . '<div class="gray-box">'
                     . '<label for="label-edit-url" class="w60">' . $rb->get('label.url') . '</label>'
                     . '<input type="text" class="w200" name="label-edit-url" id="label-edit-url" value="' . $label['url'] . '" />'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                    . '<label for="label-edit-language" class="w60" title="' . $rb->get('label.language-title') . '">' . $rb->get('label.language') . '</label>'
+                    . '<select  class="w200" name="label-edit-language" id="label-edit-language">'. $languagesHtml .'</select>'
                     . '</div>'
                     . '<div class="gray-box">'
                     . '<input type="hidden" name="label-edit-id" value="' . $label['id'] . '" />'
