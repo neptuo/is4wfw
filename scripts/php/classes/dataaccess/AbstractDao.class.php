@@ -156,7 +156,20 @@ abstract class AbstractDao {
 	
 	public function get($id) {
 		$select = new Select();
-		$select->where($this->getIdField(), '=', $id);
+		$idField = $this->getIdField();
+		if(is_array($idField)) {
+			$isFirst = true;
+			foreach($idField as $field) {
+				if($isFirst) {
+					$select->where($key, '=', $id[$idField]);
+					$isFirst = false;
+				} else {
+					$select->conjunct($key, '=', $id[$idField]);
+				}
+			}
+		} else {
+			$select->where($this->getIdField(), '=', $id);
+		}
 		
 		$sql = self::selectSql($select->result(), true);
 		return $this->dataAccess->fetchSingle($sql);

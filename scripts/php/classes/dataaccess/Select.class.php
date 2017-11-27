@@ -137,21 +137,21 @@ class Select{
 	 * 
 	 * @param $dao2 - 2.tabulka (nazev)
 	 * @param field2 - nazev sloupecku 2.tabulky  
-	 * @param $dao -  puvodni tabulka (nazev)
+	 * @param $dao1 -  puvodni tabulka (nazev)
 	 * @param field1 - nazev sloupecku puvodni tabulky
 	 * @param type - typ joinu (LEFT, ...)
 	 * @param ignore - má se ignorovat, nebo ne
 	 */
-	public function join($dao2, $dao, $type, $field1 = null, $field2 = null, $ignore = false){
+	public function join($dao1, $dao2, $type, $field1 = null, $field2 = null, $ignore = false){
 		if (!$ignore){
 			if ($field1 == null && $field2 == null){
-				$this->result .=  /*mb_convert_case($type, "MB_CASE_UPPER")*/" " . $type . " JOIN `" . DATABAZE . "`.`" . $dao->getTableName() . "` ON `" . DATABAZE . "`.`" . $dao->getTableName() . "`.`" . $dao->getIdField() .  "` = `" . DATABAZE . "`.`" . $dao2->getTableName() . "`.`" . $dao->getIdField() . "`";	
+				$this->result .=  /*mb_convert_case($type, "MB_CASE_UPPER")*/" " . $type . " JOIN `" . WEB_DB_DATABASE . "`.`" . $dao2->getTableName() . "` ON `" . WEB_DB_DATABASE . "`.`" . $dao1->getTableAlias() . "`.`" . $dao1->getIdField() .  "` = `" . WEB_DB_DATABASE . "`.`" . $dao2->getTableName() . "`.`" . $dao2->getIdField() . "`";	
 			} else if ($field1 == null){
-				$this->result .=  /*mb_convert_case($type, "MB_CASE_UPPER")*/" " . $type . " JOIN `" . DATABAZE . "`.`" . $dao->getTableName() . "` ON `" . DATABAZE . "`.`" . $dao->getTableName() . "`.`" . $dao->getIdField() .  "` = `" . DATABAZE . "`.`" . $dao2->getTableName() . "`.`" . $field2 . "`";
+				$this->result .=  /*mb_convert_case($type, "MB_CASE_UPPER")*/" " . $type . " JOIN `" . WEB_DB_DATABASE . "`.`" . $dao2->getTableName() . "` ON `" . WEB_DB_DATABASE . "`.`" . $dao1->getTableAlias() . "`.`" . $dao1->getIdField() .  "` = `" . WEB_DB_DATABASE . "`.`" . $dao2->getTableName() . "`.`" . $field2 . "`";
 			} else if ($field2 == null){
-				$this->result .=  /*mb_convert_case($type, "MB_CASE_UPPER")*/" " . $type . " JOIN `" . DATABAZE . "`.`" . $dao->getTableName() . "` ON `" . DATABAZE . "`.`" . $dao->getTableName() . "`.`" . $field1 .  "` = `" . DATABAZE . "`.`" . $dao2->getTableName() . "`.`" . $dao2->getIdField() . "`";
+				$this->result .=  /*mb_convert_case($type, "MB_CASE_UPPER")*/" " . $type . " JOIN `" . WEB_DB_DATABASE . "`.`" . $dao2->getTableName() . "` ON `" . WEB_DB_DATABASE . "`.`" . $dao1->getTableAlias() . "`.`" . $field1 .  "` = `" . WEB_DB_DATABASE . "`.`" . $dao2->getTableName() . "`.`" . $dao2->getIdField() . "`";
 			} else {
-				$this->result .=  /*mb_convert_case($type, "MB_CASE_UPPER")*/" " . $type . " JOIN `" . DATABAZE . "`.`" . $dao->getTableName() . "` ON `" . DATABAZE . "`.`" . $dao->getTableName() . "`.`" . $field1 .  "` = `" . DATABAZE . "`.`" . $dao2->getTableName() . "`.`" . $field2 . "`";
+				$this->result .=  /*mb_convert_case($type, "MB_CASE_UPPER")*/" " . $type . " JOIN `" . WEB_DB_DATABASE . "`.`" . $dao2->getTableName() . "` ON `" . WEB_DB_DATABASE . "`.`" . $dao1->getTableAlias() . "`.`" . $field1 .  "` = `" . WEB_DB_DATABASE . "`.`" . $dao2->getTableName() . "`.`" . $field2 . "`";
 			}
 		}
 		

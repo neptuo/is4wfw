@@ -769,7 +769,7 @@ class Article extends BaseTagLib {
 				parent::session()->set('filter-labels', $labels, 'article');
 			}
 		
-			$labels = parent::db()->fetchAll('select `al`.`id`, `al`.`name` from `article_line_label` as `all` left join `article_label` as `al` on `all`.`label_id` = `al`.`id` where `all`.`line_id` = '.$lineId.' order by `al`.`name`;');
+			$labels = parent::db()->fetchAll('select `id`, `name` from `article_line_label` as `all` left join `article_label` as `al` on `all`.`label_id` = `id` where `all`.`line_id` = '.$lineId.' order by `name`;');
 			$options = '';
 			foreach($labels as $label) {
 				$options .= ''
@@ -1885,27 +1885,23 @@ class Article extends BaseTagLib {
             $return .= parent::getSuccess($rb->get('label.deleted'));
         }
 
-        $labels = parent::db()->fetchAll('select `al`.`id`, `al`.`name`, `al`.`url`, `lang`.`language` from `article_label` as `al` left join `language` lang on `al`.`language_id` = `lang`.`id` order by `al`.`id`;');
+        $labels = parent::db()->fetchAll('select `id`, `name`, `url` from `article_label` order by `id`;');
         if (count($labels) > 0) {
             foreach ($labels as $key => $label) {
-                if($labels[$key]['language'] == null) {
-                    $labels[$key]['language'] = $rb->get('label.language-all');
-                }
-
                 $labels[$key]['form'] = ''
-                        . '<form name="label-edit" method="post" action="' . $actionUrl . '">'
-                        . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
-                        . '<input type="hidden" name="label-edit" value="' . $rb->get('label.edit') . '" />'
-                        . '<input type="image" src="~/images/page_edi.png" name="label-edit" value="' . $rb->get('label.edit') . '" title="' . $rb->get('label.edittitle2') . ', id=' . $label['id'] . '" />'
-                        . '</form> '
-                        . '<form name="label-delete" method="post" action="' . $actionUrl . '">'
-                        . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
-                        . '<input type="hidden" name="label-delete" value="' . $rb->get('label.delete') . '" />'
-                        . '<input class="confirm" type="image" src="~/images/page_del.png" name="label-delete" value="' . $rb->get('label.delete') . '" title="' . $rb->get('label.deletetitle') . ', id=' . $label['id'] . '" />'
-                        . '</form>';
+                    . '<form name="label-edit" method="post" action="' . $actionUrl . '">'
+                    . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
+                    . '<input type="hidden" name="label-edit" value="' . $rb->get('label.edit') . '" />'
+                    . '<input type="image" src="~/images/page_edi.png" name="label-edit" value="' . $rb->get('label.edit') . '" title="' . $rb->get('label.edittitle2') . ', id=' . $label['id'] . '" />'
+                    . '</form> '
+                    . '<form name="label-delete" method="post" action="' . $actionUrl . '">'
+                    . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
+                    . '<input type="hidden" name="label-delete" value="' . $rb->get('label.delete') . '" />'
+                    . '<input class="confirm" type="image" src="~/images/page_del.png" name="label-delete" value="' . $rb->get('label.delete') . '" title="' . $rb->get('label.deletetitle') . ', id=' . $label['id'] . '" />'
+                    . '</form>';
             }
             $grid = new BaseGrid();
-            $grid->setHeader(array('id' => $rb->get('label.id'), 'name' => $rb->get('label.name'), 'url' => $rb->get('label.url'), 'language' => $rb->get('label.language'), 'form' => ''));
+            $grid->setHeader(array('id' => $rb->get('label.id'), 'name' => $rb->get('label.name'), 'url' => $rb->get('label.url'), 'form' => ''));
             $grid->addRows($labels);
             $grid->addClass('clickable');
 
@@ -1945,10 +1941,13 @@ class Article extends BaseTagLib {
         if ($_POST['label-edit-save'] == $rb->get('label.save')) {
             $label['id'] = $_POST['label-edit-id'];
             $label['name'] = $_POST['label-edit-name'];
-            $label['url'] = strtolower(parent::convertToValidUrl(strlen($_POST['label-edit-url']) != 0 ? $_POST['label-edit-url'] : $label['name']));
-            $label['language_id'] = $_POST['label-edit-language'];
-
-            if (strlen($label['name']) < 2) {
+            $label['url'] = $_POST['label-edit-url'];
+            
+            foreach($label['url'] as $key => $value) {
+                $label['url'][$key] = strtolower(parent::convertToValidUrl(strlen($value) != 0 ? $value : $label['name'][$key]));
+            }
+            
+            if (strlen($label['name']['null']) < 2) {
                 $ok = false;
                 $return .= parent::getError($rb->get('label.namelength'));
             }
@@ -1956,19 +1955,36 @@ class Article extends BaseTagLib {
             if ($label['id'] != '') {
                 $idSql = ' and `id` != ' . $label['id'];
             }
-            $labels = parent::db()->fetchAll('select `id` from `article_label` where `url` = "' . $label['url'] . '"' . $idSql . ';');
-            if (strlen($label['url']) < 2 || count($labels) != 0) {
+
+            $labels = parent::db()->fetchAll('select `id` from `article_label` where `url` = "' . $label['url']['null'] . '"' . $idSql . ';');
+            if (strlen($label['url']['null']) < 2 || count($labels) != 0) {
                 $ok = false;
                 $return .= parent::getError($rb->get('label.uniqueurlandlength'));
             }
 
             if ($ok) {
                 if ($label['id'] != '') {
-                    parent::db()->execute('update `article_label` set `name` = "' . $label['name'] . '", `url` = "' . $label['url'] . '", `language_id` = ' . $label['language_id'] . ' where `id` = ' . $label['id'] . ';');
+                    parent::db()->execute('update `article_label` set `name` = "' . $label['name']['null'] . '", `url` = "' . $label['url']['null'] . '" where `id` = ' . $label['id'] . ';');
                     $return .= parent::getSuccess($rb->get('label.saved'));
                 } else {
-                    parent::db()->execute('insert into `article_label`(`name`, `url`, `language_id`) values("' . $label['name'] . '", "' . $label['url'] . '", ' . $label['language_id'] . ');');
+                    parent::db()->execute('insert into `article_label`(`name`, `url`) values("' . $label['name']['null'] . '", "' . $label['url']['null'] . '");');
+                    $label['id'] = $_POST['label-id'] = parent::db()->getLastId();
                     $return .= parent::getSuccess($rb->get('label.updated'));
+                }
+
+                foreach($label['name'] as $languageId => $name) {
+                    if($languageId != 'null') {
+                        if(strlen($label['name'] > 0) && strlen($label['url'][$languageId]) > 0) {
+                            $existing = parent::db()->fetchSingle('select count(`label_id`) as `count` from `article_label_language` where `label_id` = ' . $label['id'] . ' and `language_id` = ' . $languageId . ';');
+                            if($existing['count'] > 0) {
+                                parent::db()->execute('update `article_label_language` set `name` = "' . $label['name'][$languageId] . '", `url` = "' . $label['url'][$languageId] . '" where `label_id` = ' . $label['id'] . ' and `language_id` = ' . $languageId . ';');
+                            } else {
+                                parent::db()->execute('insert into `article_label_language`(`label_id`, `language_id`, `name`, `url`) values(' . $label['id'] . ', ' . $languageId . ', "' . $label['name'][$languageId] . '", "' . $label['url'][$languageId] . '");');
+                            }
+                        } else {
+                            $existing = parent::db()->fetchSingle('delete from `article_label_language` where `label_id` = ' . $label['id'] . ' and `language_id` = ' . $languageId . ';');
+                        }
+                    }
                 }
             }
         }
@@ -1976,31 +1992,45 @@ class Article extends BaseTagLib {
         if ($_POST['label-edit'] == $rb->get('label.edit') || $_POST['label-new'] == $rb->get('label.new') || $ok == false) {
             if ($_POST['label-id'] != '') {
                 $labelId = $_POST['label-id'];
-                $label = parent::db()->fetchSingle('select `id`, `name`, `url`, `language_id` from `article_label` where `id` = ' . $labelId . ';');
+                $label = parent::db()->fetchSingle('select `id`, `name`, `url` from `article_label` where `id` = ' . $labelId . ';');
             }
 
-            $languagesHtml = '';
+            $languageFormHtml = '';
             $languages = parent::dao('Language')->getList();
+            $translations = array();
+            if($labelId != '') {
+                $rawData = parent::dao('ArticleLabelLanguage')->getList(Select::factory()->where('label_id', '=', $labelId));
+                foreach($rawData as $item) {
+                    $translations[$item['language_id']] = $item;
+                }
+            }
 
-            $languagesHtml .= '<option value="' . 'null' . '"' . ((null == $label['language_id']) ? ' selected="selected"' : '') . '>'. $rb->get('label.language-all') .'</option>';
             foreach ($languages as $language) {
-                $languagesHtml .= '<option value="' . $language['id'] . '"' . (($language['id'] == $label['language_id']) ? ' selected="selected"' : '') . '>'. $language['language'] .'</option>';
+                $languageFormHtml .= ''
+                . '<div class="article-label-language-' . $language['id'] . '">'
+                    . '<strong>' . (strlen($language['language']) == 0 ? $rb->get('label.language-default') : $language['language']) . '</strong>'
+                    . '<div class="gray-box">'
+                        . '<label for="label-edit-name-' . $language['id'] . '" class="w60">' . $rb->get('label.name') . '</label>'
+                        . '<input type="text" class="w200" name="label-edit-name[' . $language['id'] . ']" id="label-edit-name-' . $language['id'] . '" value="' . $translations[$language['id']]['name'] . '" />'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<label for="label-edit-url-' . $language['id'] . '" class="w60">' . $rb->get('label.url') . '</label>'
+                        . '<input type="text" class="w200" name="label-edit-url[' . $language['id'] . ']" id="label-edit-url-' . $language['id'] . '" value="' . $translations[$language['id']]['url'] . '" />'
+                    . '</div>'
+                . '</div>';
             }
 
             $return .= ''
                     . '<form name="label-edit-form" method="post" action="' . $artionUrl . '">'
                     . '<div class="gray-box">'
                     . '<label for="label-edit-name" class="w60">' . $rb->get('label.name') . '</label>'
-                    . '<input type="text" class="w200" name="label-edit-name" id="label-edit-name" value="' . $label['name'] . '" />'
+                    . '<input type="text" class="w200" name="label-edit-name[null]" id="label-edit-name" value="' . $label['name'] . '" />'
                     . '</div>'
                     . '<div class="gray-box">'
                     . '<label for="label-edit-url" class="w60">' . $rb->get('label.url') . '</label>'
-                    . '<input type="text" class="w200" name="label-edit-url" id="label-edit-url" value="' . $label['url'] . '" />'
+                    . '<input type="text" class="w200" name="label-edit-url[null]" id="label-edit-url" value="' . $label['url'] . '" />'
                     . '</div>'
-                    . '<div class="gray-box">'
-                    . '<label for="label-edit-language" class="w60" title="' . $rb->get('label.language-title') . '">' . $rb->get('label.language') . '</label>'
-                    . '<select  class="w200" name="label-edit-language" id="label-edit-language">'. $languagesHtml .'</select>'
-                    . '</div>'
+                    . $languageFormHtml
                     . '<div class="gray-box">'
                     . '<input type="hidden" name="label-edit-id" value="' . $label['id'] . '" />'
                     . '<input type="submit" name="label-edit-save" value="' . $rb->get('label.save') . '" title="' . $rb->get('label.savetitle') . '" />'
