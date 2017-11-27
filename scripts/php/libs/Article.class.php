@@ -1885,9 +1885,13 @@ class Article extends BaseTagLib {
             $return .= parent::getSuccess($rb->get('label.deleted'));
         }
 
-        $labels = parent::db()->fetchAll('select `id`, `name`, `url` from `article_label` order by `id`;');
+        $labels = parent::db()->fetchAll('select `al`.`id`, `al`.`name`, `al`.`url`, `lang`.`language` from `article_label` as `al` left join `language` lang on `al`.`language_id` = `lang`.`id` order by `al`.`id`;');
         if (count($labels) > 0) {
             foreach ($labels as $key => $label) {
+                if($labels[$key]['language'] == null) {
+                    $labels[$key]['language'] = $rb->get('label.language-all');
+                }
+
                 $labels[$key]['form'] = ''
                         . '<form name="label-edit" method="post" action="' . $actionUrl . '">'
                         . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
@@ -1901,7 +1905,7 @@ class Article extends BaseTagLib {
                         . '</form>';
             }
             $grid = new BaseGrid();
-            $grid->setHeader(array('id' => $rb->get('label.id'), 'name' => $rb->get('label.name'), 'url' => $rb->get('label.url'), 'form' => ''));
+            $grid->setHeader(array('id' => $rb->get('label.id'), 'name' => $rb->get('label.name'), 'url' => $rb->get('label.url'), 'language' => $rb->get('label.language'), 'form' => ''));
             $grid->addRows($labels);
             $grid->addClass('clickable');
 
