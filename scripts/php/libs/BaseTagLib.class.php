@@ -380,6 +380,10 @@ class BaseTagLib {
 		$this->web()->PageLog .= $message;
     }
     
+    protected function logVar($variable) {
+		self::log("<pre>" . var_export($variable, true) . "</pre>");
+    }
+    
     protected function addUrlParameter($url, $name, $value) {
         if(strpos($url, '?') !== false) {
             $url .= '&' . $name . '=' . $value;

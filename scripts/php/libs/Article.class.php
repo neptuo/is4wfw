@@ -1993,17 +1993,21 @@ class Article extends BaseTagLib {
             if ($_POST['label-id'] != '') {
                 $labelId = $_POST['label-id'];
                 $label = parent::db()->fetchSingle('select `id`, `name`, `url` from `article_label` where `id` = ' . $labelId . ';');
+                $label['name'] = array('null' => $label['name']);
+                $label['url'] = array('null' => $label['url']);
             }
 
             $languageFormHtml = '';
             $languages = parent::dao('Language')->getList();
-            $translations = array();
             if($labelId != '') {
                 $rawData = parent::dao('ArticleLabelLanguage')->getList(Select::factory()->where('label_id', '=', $labelId));
                 foreach($rawData as $item) {
-                    $translations[$item['language_id']] = $item;
+                    $label['name'][$item['language_id']] = $item['name'];
+                    $label['url'][$item['language_id']] = $item['url'];
                 }
             }
+
+            parent::logVar($label);
 
             foreach ($languages as $language) {
                 $languageFormHtml .= ''
@@ -2011,11 +2015,11 @@ class Article extends BaseTagLib {
                     . '<strong>' . (strlen($language['language']) == 0 ? $rb->get('label.language-default') : $language['language']) . '</strong>'
                     . '<div class="gray-box">'
                         . '<label for="label-edit-name-' . $language['id'] . '" class="w60">' . $rb->get('label.name') . '</label>'
-                        . '<input type="text" class="w200" name="label-edit-name[' . $language['id'] . ']" id="label-edit-name-' . $language['id'] . '" value="' . $translations[$language['id']]['name'] . '" />'
+                        . '<input type="text" class="w200" name="label-edit-name[' . $language['id'] . ']" id="label-edit-name-' . $language['id'] . '" value="' . $label['name'][$language['id']] . '" />'
                     . '</div>'
                     . '<div class="gray-box">'
                         . '<label for="label-edit-url-' . $language['id'] . '" class="w60">' . $rb->get('label.url') . '</label>'
-                        . '<input type="text" class="w200" name="label-edit-url[' . $language['id'] . ']" id="label-edit-url-' . $language['id'] . '" value="' . $translations[$language['id']]['url'] . '" />'
+                        . '<input type="text" class="w200" name="label-edit-url[' . $language['id'] . ']" id="label-edit-url-' . $language['id'] . '" value="' . $label['url'][$language['id']] . '" />'
                     . '</div>'
                 . '</div>';
             }
@@ -2024,11 +2028,11 @@ class Article extends BaseTagLib {
                     . '<form name="label-edit-form" method="post" action="' . $artionUrl . '">'
                     . '<div class="gray-box">'
                     . '<label for="label-edit-name" class="w60">' . $rb->get('label.name') . '</label>'
-                    . '<input type="text" class="w200" name="label-edit-name[null]" id="label-edit-name" value="' . $label['name'] . '" />'
+                    . '<input type="text" class="w200" name="label-edit-name[null]" id="label-edit-name" value="' . $label['name']['null'] . '" />'
                     . '</div>'
                     . '<div class="gray-box">'
                     . '<label for="label-edit-url" class="w60">' . $rb->get('label.url') . '</label>'
-                    . '<input type="text" class="w200" name="label-edit-url[null]" id="label-edit-url" value="' . $label['url'] . '" />'
+                    . '<input type="text" class="w200" name="label-edit-url[null]" id="label-edit-url" value="' . $label['url']['null'] . '" />'
                     . '</div>'
                     . $languageFormHtml
                     . '<div class="gray-box">'
