@@ -2007,8 +2007,6 @@ class Article extends BaseTagLib {
                 }
             }
 
-            parent::logVar($label);
-
             foreach ($languages as $language) {
                 $languageFormHtml .= ''
                 . '<div class="article-label-language-' . $language['id'] . '">'
@@ -2188,13 +2186,19 @@ class Article extends BaseTagLib {
     }
 
     public function setLabelUrl($url) {
-        $label = parent::db()->fetchSingle('select `id` from `article_label` where `url` = "' . $url . '";');
+        $label = parent::db()->fetchSIngle('select `id` from `article_label` al left join `article_label_langauge` all on al.`id` = all.`label_id` where all.`url` = "' . $url . '" and all.`language_id` = ' . parent::web()->LanguageId . ';');
         if ($label != array()) {
             self::setLabelId($label['id']);
             return $url;
-        } else {
-            return 'false.false';
         }
+
+        $label = parent::db()->fetchSingle('select `id` from `article_label` where `url` = "' . $url . '" and not exists(select * from `article_label_language` where `label_id` = `label_id` and `language_id` = ' . parent::web()->LanguageId . ');');
+        if ($label != array()) {
+            self::setLabelId($label['id']);
+            return $url;
+        }
+
+        return 'false.false';
     }
 
     public function getLabelUrl() {
