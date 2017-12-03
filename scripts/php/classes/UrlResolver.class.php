@@ -158,18 +158,23 @@ class UrlResolver extends BaseTagLib {
             $langs = parent::db()->fetchAll('select `id`, `language` from `language` where `id` = ' . parent::request()->get('language-id', 'web') . ';');
         }
         $langs = parent::db()->fetchAll('select `id`, `language` from `language`;');
+
+        $oldLangId = parent::request()->get('language-id', 'web');
         foreach ($langs as $lang) {
             if ($lang['language'] == $pageUrls[0] || $lang['language'] == '') {
                 // Nalezen jazyk, zkusit najit stranky, jinak se vratit, a projit i dalsi jazyky
                 $found = true;
                 $curPageUrls = $lang['language'] == '' ? $pageUrls : self::subarray($pageUrls, 1);
                 $parentId = 0;
+                parent::request()->set('language-id', $lang['id'], 'web');
                 if (self::parsePageUrlWithLang($curPageUrls, $projectId, $parentId, $lang['id'])) {
-                    $this->Language = $lang;
+                    self::setLanguage($lang);
                     return true;
                 }
             }
         }
+
+        parent::request()->set('language-id', $oldLangId, 'web');
         return false;
     }
 
@@ -271,7 +276,8 @@ class UrlResolver extends BaseTagLib {
     }
 
     public function selectLanguage($id) {
-        $this->Language = parent::db()->fetchSingle('select `id`, `language` from `language` where `id` = ' . $id . ';');
+        $language = parent::db()->fetchSingle('select `id`, `language` from `language` where `id` = ' . $id . ';');
+        self::setLanguage($language);
     }
 
     public function subarray($origin, $fromIndex, $toIndex = -1) {
@@ -303,6 +309,7 @@ class UrlResolver extends BaseTagLib {
 
     public function setLanguage($language) {
         $this->Language = $language;
+        parent::request()->set('language-id', $this->Language['id'], 'web');
     }
 
     public function getLanguageId() {

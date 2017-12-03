@@ -2211,10 +2211,13 @@ class Article extends BaseTagLib {
     }
 
     public function setLabelUrl($url) {
-        $label = parent::db()->fetchSIngle('select `id` from `article_label` al left join `article_label_langauge` all on al.`id` = all.`label_id` where all.`url` = "' . $url . '" and all.`language_id` = ' . parent::web()->LanguageId . ';');
-        if ($label != array()) {
-            self::setLabelId($label['id']);
-            return $url;
+        $languageId = parent::web()->getLanguageIdWhenParsing();
+        if(!is_null($languageId)) {
+            $label = parent::db()->fetchSingle('select `label_id` as `id` from `article_label_language` where `url` = "' . $url . '" and `language_id` = ' . $languageId . ';');
+            if ($label != array()) {
+                self::setLabelId($label['id']);
+                return $url;
+            }
         }
 
         $label = parent::db()->fetchSingle('select `id` from `article_label` where `url` = "' . $url . '" and not exists(select * from `article_label_language` where `label_id` = `label_id` and `language_id` = ' . parent::web()->LanguageId . ');');
