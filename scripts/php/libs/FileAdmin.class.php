@@ -488,9 +488,9 @@ class FileAdmin extends BaseTagLib {
 	public function fileUpload($dirId = false, $useRights = false, $useFrames = false) {
 		$this->useRights = $useRights;
 		
-		//print_r($_POST);
+		//parent::logVar($_POST);
 
-		if($dirId == '' && array_key_exists('dir-id', $_POST)) {
+		if(($dirId == '' || $dirId == 0) && array_key_exists('dir-id', $_POST)) {
 			$dirId = $_POST['dir-id'];
 		}
 		
