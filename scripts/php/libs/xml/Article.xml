@@ -205,6 +205,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>languageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>sortBy</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -222,6 +226,8 @@
     </attribute>
     <comment>
       Zobrazí seznam štítků, pokud je vyplněno lineId nebo articleId, pak jen štítky vstahující se ke článku nebo řadě.
+      Pokud je nastaven 'languageId', vypisují se jen štítky, které mají vyplněnou danou jazykovou verzi.
+      Pokud není, vypisují se všechny, ale je preferovaný jazyková verze.
     </comment>
   </tag>
   <tag>

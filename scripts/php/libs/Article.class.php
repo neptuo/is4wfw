@@ -512,28 +512,39 @@ class Article extends BaseTagLib {
      * 	C tag.
      *
      */
-    public function showLabels($templateId, $articleId = false, $lineId = false, $sortBy = false, $sort = false, $limit = false, $noDataMessage = false) {
+    public function showLabels($templateId, $articleId = false, $lineId = false, $languageId = false, $sortBy = false, $sort = false, $limit = false, $noDataMessage = false) {
         $return = '';
+        $columnSql = ' al.`id`, al.`name`, al.`url`';
         $whereSql = '';
         $joinSql = '';
 
+        $isLanguageRequired = false;
+        $joinLanguageId = parent::web()->LanguageId;
+        if($languageId != '') {
+            $joinLanguageId = $languageId;
+            $isLanguageRequired = true;
+        }
+
+        $joinSql .= ($languageId != '' ? '' : ' LEFT') . ' JOIN `article_label_language` `all` ON al.`id` = `all`.`label_id` AND `all`.`language_id` = ' . $joinLanguageId;
+        $columnSql .= ', `all`.`name` AS `all_name`, `all`.`url` AS `all_url`';
+
         if ($articleId != '') {
             if ($whereSql == '') {
-                $whereSql .= ' where';
+                $whereSql .= ' WHERE';
             } else {
-                $whereSql .= ' and';
+                $whereSql .= ' AND';
             }
             $whereSql .= ' `article_attached_label`.`article_id` = ' . $articleId;
-            $joinSql .= ' join `article_attached_label` on `article_label`.`id` = `article_attached_label`.`label_id`';
+            $joinSql .= ' JOIN `article_attached_label` ON al.`id` = `article_attached_label`.`label_id`';
         }
         if ($lineId != '') {
             if ($whereSql == '') {
-                $whereSql .= ' where';
+                $whereSql .= ' WHERE';
             } else {
-                $whereSql .= ' and';
+                $whereSql .= ' AND';
             }
             $whereSql .= ' `article_line_label`.`line_id` = ' . $lineId;
-            $joinSql .= ' join `article_line_label` on `article_label`.`id` = `article_line_label`.`label_id`';
+            $joinSql .= ' JOIN `article_line_label` ON al.`id` = `article_line_label`.`label_id`';
         }
         if ($sort != 'desc') {
             $sort = 'asc';
@@ -542,17 +553,31 @@ class Article extends BaseTagLib {
             $sortBy = 'id';
         }
         if ($limit != '') {
-            $limit = 'limit ' . $limit;
+            $limit = 'LIMIT ' . $limit;
         }
-        $labels = parent::db()->fetchAll('select `id`, `name`, `url` from `article_label`' . $joinSql . $whereSql . ' order by ' . $sortBy . ' ' . $sort . ' ' . $limit . ';');
+
+        $sortBy = '`' . $sortBy . '`';
+        if($isLanguageRequired && $sortBy != '`id`') {
+            $sortBy = '`all`.' . $sortBy;
+        }
+
+        $labels = parent::db()->fetchAll('SELECT' . $columnSql . ' FROM `article_label` AS al' . $joinSql . $whereSql . ' ORDER BY ' . $sortBy . ' ' . $sort . ' ' . $limit . ';');
         if (count($labels) > 0) {
             $templateContent = parent::getTemplateContent($templateId);
             $i = 1;
             $labelOldId = self::getLabelId();
             foreach ($labels as $label) {
+                $item = array('id' => $label['id'], 'name' => $label['name'], 'url' => $label['url']);
+                if($label['all_name'] != '') {
+                    $item['name'] = $label['all_name'];
+                }
+                if($label['all_url'] != '') {
+                    $item['url'] = $label['all_url'];
+                }
+
                 parent::request()->set('i', $i, 'current-label');
-                parent::request()->set('label', $label, 'current-label');
-                self::setLabelId($label['id']);
+                parent::request()->set('label', $item, 'current-label');
+                self::setLabelId($item['id']);
                 $parser = new FullTagParser();
                 $parser->setContent($templateContent);
                 $parser->startParsing();
