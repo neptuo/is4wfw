@@ -2202,6 +2202,11 @@ class Article extends BaseTagLib {
     }
 
     public function getLabelUrl() {
+        $label = parent::db()->fetchSingle('select `url` from `article_label_language` where `label_id` = "' . self::getLabelId() . '" and `language_id` = ' . parent::web()->LanguageId . ';');
+        if ($label != array()) {
+            return $label['url'];
+        }
+
         $label = parent::db()->fetchSingle('select `url` from `article_label` where `id` = "' . self::getLabelId() . '";');
         return $label['url'];
     }
