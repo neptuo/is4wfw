@@ -242,7 +242,9 @@
       <attreq>implied</attreq>
     </attribute>
     <comment>
-      Zobrazí fíld štítku. Nutno použít uvnitř a:labels!
+      Zobrazí fíld štítku. Type může být: name, url, a id.
+      Při zadání 'labelId' nepodporuje jazykové verze.
+      Nutno použít uvnitř 'a:labels'!
     </comment>
   </tag>
   <tag>
@@ -565,6 +567,14 @@
   	<getfunction>getLabelUrl</getfunction>
     <comment>
       Vrací / Nastavuje url štítku
+    </comment>
+  </property>
+  <property>
+  	<propname>labelIsActive</propname>
+  	<setfunction>setIsActiveLabel</setfunction>
+  	<getfunction>getIsActiveLabel</getfunction>
+    <comment>
+      Vrací / Nastavuje zda aktuální štítek (uvnitř a:labels) je shodný si aktuální a:labelId pro daný request.
     </comment>
   </property>
   <property>

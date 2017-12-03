@@ -561,6 +561,8 @@ class Article extends BaseTagLib {
             $sortBy = '`all`.' . $sortBy;
         }
 
+        $oldLabelId = self::getLabelId();
+
         $labels = parent::db()->fetchAll('SELECT' . $columnSql . ' FROM `article_label` AS al' . $joinSql . $whereSql . ' ORDER BY ' . $sortBy . ' ' . $sort . ' ' . $limit . ';');
         if (count($labels) > 0) {
             $templateContent = parent::getTemplateContent($templateId);
@@ -577,6 +579,7 @@ class Article extends BaseTagLib {
 
                 parent::request()->set('i', $i, 'current-label');
                 parent::request()->set('label', $item, 'current-label');
+                self::setIsActiveLabel($label['id'] == $oldLabelId);
                 self::setLabelId($item['id']);
                 $parser = new FullTagParser();
                 $parser->setContent($templateContent);
@@ -590,6 +593,8 @@ class Article extends BaseTagLib {
                 $return .= parent::getWarning($noDataMessage);
             }
         }
+
+        self::setLabelId($oldLabelId);
         return $return;
     }
 
@@ -606,6 +611,7 @@ class Article extends BaseTagLib {
         } else {
             $label = parent::db()->fetchSingle('select `id`, `name`, `url` from `article_label` where `id` = ' . $labelId);
         }
+
         switch ($type) {
             case 'i': $return .= parent::request()->get('i', 'current-label');
                 break;
@@ -2181,7 +2187,16 @@ class Article extends BaseTagLib {
 
     public function getLabelId() {
         return parent::request()->get('label-id');
-}
+    }
+    
+    public function setIsActiveLabel($value) {
+        parent::request()->set('label-is-active', $value);
+        return $labelId;
+    }
+
+    public function getIsActiveLabel() {
+        return parent::request()->get('label-is-active');
+    }
         
     public function setHasContent($hasContent) {
         parent::request()->set('article-has-content', $hasContent ? 'true' : 'false');

@@ -407,8 +407,13 @@
       <attname>when</attname>
       <attreq>required</attreq>
     </attribute>
+    <attribute>
+      <attname>isInverted</attname>
+      <attreq>optional</attreq>
+    </attribute>
     <comment>
       Zobrazí svůj obsah pokud je atribut "condition" hodnoty true (bool nebo string).
+      Pomocí "isInverted" je možné podmínku otočit.
     </comment>
   </fulltag>
   <property>

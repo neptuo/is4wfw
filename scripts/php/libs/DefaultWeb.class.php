@@ -2277,10 +2277,15 @@ class DefaultWeb extends BaseTagLib {
 		return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['id'];
     }
     
-    public function showWhenConditionIsSatified($content, $when) {
+    public function showWhenConditionIsSatified($content, $when, $isInverted) {
         $return = "";
 
-        if($when === true || $when == "true" || ($when != 'false' && (strlen($when) != 0))) {
+        $condition = $when === true || $when == "true" || ($when != 'false' && (strlen($when) != 0));
+        if($isInverted == 'true') {
+            $condition = !$condition;
+        }
+
+        if($condition) {
             $parser = new FullTagParser();
             $parser->setContent($content);
             $parser->startParsing();
