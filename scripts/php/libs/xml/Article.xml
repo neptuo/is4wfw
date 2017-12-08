@@ -419,9 +419,14 @@
       <attname>backPageId</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>lineId</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Zobrazí formulář pro editaci článku. 
       Pokud je vyplněný 'backPageId', zobrazí se tlačítka "Uložit a zpět" a "Zpět".
+      Pokud je zadán 'lineId', se tato řada před vybere pro nový článek.
     </comment>
   </tag>
   <tag>

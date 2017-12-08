@@ -1250,11 +1250,11 @@ class Article extends BaseTagLib {
 
     /**
      *
-     * 	Generated edit form article editation
+     * 	Generates artcile edit form.
      * 	C tag.
      *
      */
-    public function showEditForm($useFrames = false, $submitPageId = false, $backPageId = false) {
+    public function showEditForm($useFrames = false, $submitPageId = false, $backPageId = false, $lineId = false) {
         global $dbObject;
         global $webObject;
         global $loginObject;
@@ -1267,7 +1267,7 @@ class Article extends BaseTagLib {
         $usedLangs = array();
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
-        
+
         $isClosing = $_POST['article-save-close'] == $rb->get('articles.saveandclose') || $_POST['article-close'] == $rb->get('articles.close');
 
         if ($_POST['article-save'] == $rb->get('articles.save') || $_POST['article-save-close'] == $rb->get('articles.saveandclose')) {
@@ -1325,7 +1325,7 @@ class Article extends BaseTagLib {
                                 $maxOrder = parent::db()->fetchSingle('select `order` from `article` order by `order` desc limit 1');
                                 $maxOrder['order']++;
                                 $dbObject->execute("INSERT INTO `article`(`id`, `line_id`, `order`, `visible`) VALUES (" . $article['id'] . ", " . $article['line_id'] . ", " . $maxOrder['order'] . ", " . $article['visible'] . ");");
-                                $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (" . $ac['article_id'] . ", \"" . mysql_real_escape_string($ac['name']) . "\", \"" . $ac['url'] . "\", \"" . mysql_real_escape_string($ac['keywords']) . "\", \"" . $ac['head'] . "\", \"" . $ac['content'] . "\", \"" . $ac['author'] . "\", " . $ac['timestamp'] . ", \"" . $ac['datetime'] . "\", " . $ac['language_id'] . ");");
+                                $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (" . $ac['article_id'] . ", \"" . mysql_real_escape_string($ac['name']) . "\", \"" . mysql_real_escape_string($ac['url']) . "\", \"" . mysql_real_escape_string($ac['keywords']) . "\", \"" . mysql_real_escape_string($ac['head']) . "\", \"" . mysql_real_escape_string($ac['content']) . "\", \"" . mysql_real_escape_string($ac['author']) . "\", " . $ac['timestamp'] . ", \"" . mysql_real_escape_string($ac['datetime']) . "\", " . $ac['language_id'] . ");");
                                 $return .= '<h4 class="success">' . $rb->get('articles.newcreated') . '</h4>';
                                 $_POST['article-id'] = $article['id'];
                                 $_POST['language-id'] = $ac['language_id'];
@@ -1350,7 +1350,7 @@ class Article extends BaseTagLib {
                             } else {
                                 $ac = $articleContent;
                                 // Ulozeni - NOVA jaz.verze
-                                $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (" . $ac['article_id'] . ", \"" . mysql_real_escape_string($ac['name']) . "\", \"" . $ac['url'] . "\", \"" . mysql_real_escape_string($ac['keywords']) . "\", \"" . $ac['head'] . "\", \"" . $ac['content'] . "\", \"" . $ac['author'] . "\", " . $ac['timestamp'] . ", \"" . $ac['datetime'] . "\", " . $ac['language_id'] . ");");
+                                $dbObject->execute("INSERT INTO `article_content`(`article_id`, `name`, `url`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `language_id`) VALUES (" . $ac['article_id'] . ", \"" . mysql_real_escape_string($ac['name']) . "\", \"" . mysql_real_escape_string($ac['url']) . "\", \"" . mysql_real_escape_string($ac['keywords']) . "\", \"" . mysql_real_escape_string($ac['head']) . "\", \"" . mysql_real_escape_string($ac['content']) . "\", \"" . mysql_real_escape_string($ac['author']) . "\", " . $ac['timestamp'] . ", \"" . mysql_real_escape_string($ac['datetime']) . "\", " . $ac['language_id'] . ");");
                                 $return .= '<h4 class="success">' . $rb->get('articles.langadded') . '</h4>';
                                 $_POST['article-id'] = $article['id'];
                                 $_POST['language-id'] = $ac['language_id'];
@@ -1366,7 +1366,7 @@ class Article extends BaseTagLib {
                         } else {
                             $ac = $articleContent;
                             $dbObject->execute("UPDATE `article` SET `line_id` = " . $article['line_id'] . ", `visible`= " . $article['visible'] . " WHERE `id` = " . $article['id'] . ";");
-                            $dbObject->execute("UPDATE `article_content` SET `name` = \"" . mysql_real_escape_string($ac['name']) . "\", `url` = \"" . $ac['url'] . "\", `keywords` = \"" . mysql_real_escape_string($ac['keywords']) . "\", `head` = \"" . $ac['head'] . "\", `content` = \"" . $ac['content'] . "\", `author` = \"" . $ac['author'] . "\", `timestamp` = " . $ac['timestamp'] . ", `datetime` = \"" . $ac['datetime'] . "\", `language_id` = " . $ac['language_id'] . " WHERE `article_id` = " . $ac['article_id'] . " AND `language_id` = " . $ac['language_old_id'] . ";");
+                            $dbObject->execute("UPDATE `article_content` SET `name` = \"" . mysql_real_escape_string($ac['name']) . "\", `url` = \"" . mysql_real_escape_string($ac['url']) . "\", `keywords` = \"" . mysql_real_escape_string($ac['keywords']) . "\", `head` = \"" . mysql_real_escape_string($ac['head']) . "\", `content` = \"" . mysql_real_escape_string($ac['content']) . "\", `author` = \"" . mysql_real_escape_string($ac['author']) . "\", `timestamp` = " . $ac['timestamp'] . ", `datetime` = \"" . mysql_real_escape_string($ac['datetime']) . "\", `language_id` = " . $ac['language_id'] . " WHERE `article_id` = " . $ac['article_id'] . " AND `language_id` = " . $ac['language_old_id'] . ";");
                             $_POST['article-id'] = $article['id'];
                             $_POST['language-id'] = $ac['language_id'];
                             $return .= '<h4 class="success">' . $rb->get('articles.updated') . '</h4>';
@@ -1449,7 +1449,9 @@ class Article extends BaseTagLib {
         $langSelect .= '</select>';
 
         if ($article['line_id'] == '') {
-            if (array_key_exists('article-line-id', $_SESSION)) {
+            if ($lineId != false) {
+                $article['line_id'] = $lineId;
+            } else if (array_key_exists('article-line-id', $_SESSION)) {
                 $article['line_id'] = $_SESSION['article-line-id'];
             } elseif (array_key_exists('line-id', $_REQUEST)) {
                 $article['line_id'] = $_REQUEST['line-id'];
@@ -1703,16 +1705,16 @@ class Article extends BaseTagLib {
                 }
 
                 if (strlen($name) > 3 && strlen($url) > 0 && $ok) {
+                    if($parentDirectoryId == '') {
+                        $parentDirectoryId = 'NULL';
+                    }
+
                     if ($lineId == 0) {
                         $dbObject->execute('INSERT INTO `article_line`(`name`, `url`, `parentdirectory_id`) VALUES ("' . $name . '", "' . $url . '", ' . $parentDirectoryId . ');');
                         $return .= '<h4 class="success">' . $rb->get('lines.created') . '</h4>';
                         $lineId = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `article_line`;');
                         $lineId = $lineId[0]['id'];
                     } else {
-                        if($parentDirectoryId == '') {
-                            $parentDirectoryId = 'NULL';
-                        }
-
                         $dbObject->execute('UPDATE `article_line` SET `name` = "' . $name . '", `url` = "' . $url . '", `parentdirectory_id` = ' . $parentDirectoryId . ' WHERE `id` = ' . $lineId . ';');
                         $return .= '<h4 class="success">' . $rb->get('lines.updated') . '</h4>';
                     }
