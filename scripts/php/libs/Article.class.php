@@ -1472,7 +1472,11 @@ class Article extends BaseTagLib {
 
         $labelList = '';
         $labels = parent::db()->fetchAll('select `id`, `name` from `article_label` join `article_line_label` on `article_label`.`id` = `article_line_label`.`label_id` where `line_id` = ' . $article['line_id'] . ' order by `name`');
-        $usedLabels = parent::db()->fetchAll('select `label_id` from `article_attached_label` where `article_id` = ' . $articleId . ';');
+        if($articleId != '') {
+            $usedLabels = parent::db()->fetchAll('select `label_id` from `article_attached_label` where `article_id` = ' . $articleId . ';');
+        } else {
+            $usedLabels = array();
+        }
         foreach ($labels as $label) {
             $used = false;
             foreach ($usedLabels as $ul) {
