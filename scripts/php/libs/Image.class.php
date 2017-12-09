@@ -30,30 +30,45 @@ class Image extends BaseTagLib {
 	protected function canUserFile($objectId, $rightType) {
 		return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(FileAdmin::$FileRightDesc, $objectId, $rightType));
 	}
+
+	private function renderImage($parser, $content, $image) {
+		if ($this->canUserFile($image['id'], WEB_R_READ)) {
+			$this->setFileId($image['id']);
+			$this->setFileUrl($image['url']);
+			parent::request()->set('name', $image['name'], 'g:image');
+			parent::request()->set('dir_id', $image['dir_id'], 'g:image');
+			parent::request()->set('title', $image['title'], 'g:image');
+			parent::request()->set('type', $image['type'], 'g:image');
+
+			$parser->setContent($content);
+			$parser->startParsing();
+			return $parser->getResult();
+		}
+
+		return '';
+	}
 	
 	//C-tag
-	public function directoryList($content, $id, $limit = false, $noDataMessage = false) {
-		$Parser = new FullTagParser();
+	public function directoryList($content, $id, $limit = false, $noDataMessage = false, $noDataImageId = false) {
+		$parser = new FullTagParser();
 		
 		$images = parent::dao('File')->getImagesFromDirectory($id, $limit);
 		$return = '';
 
-		if(count($images) == 0) {
-			$return .= $noDataMessage;
+		if (count($images) == 0) {
+			if($noDataImageId != '') {
+				$image = parent::dao('File')->get($noDataImageId);
+				if (count($image) != 0) {
+					$return .= self::renderImage($parser, $content, $image);
+				} else {
+					$return .= $noDataMessage;
+				}
+			} else {
+				$return .= $noDataMessage;
+			}
 		} else {
 			foreach($images as $image) {
-				if($this->canUserFile($image['id'], WEB_R_READ)) {
-					$this->setFileId($image['id']);
-					$this->setFileUrl($image['url']);
-					parent::request()->set('name', $image['name'], 'g:image');
-					parent::request()->set('dir_id', $image['dir_id'], 'g:image');
-					parent::request()->set('title', $image['title'], 'g:image');
-					parent::request()->set('type', $image['type'], 'g:image');
-
-					$Parser->setContent($content);
-					$Parser->startParsing();
-					$return .= $Parser->getResult();
-				}
+				$return .= self::renderImage($parser, $content, $image);
 			}
 		}
 
@@ -62,7 +77,7 @@ class Image extends BaseTagLib {
 	
 	//C-tag
 	public function file($content, $id, $noDataMessage = false) {
-		$Parser = new FullTagParser();
+		$parser = new FullTagParser();
 		
 		$image = parent::dao('File')->get($id);
 		$return = '';
@@ -70,18 +85,7 @@ class Image extends BaseTagLib {
 		if(count($image) == 0) {
 			$return .= $noDataMessage;
 		} else {
-			if($this->canUserFile($image['id'], WEB_R_READ)) {
-				$this->setFileId($image['id']);
-				$this->setFileUrl($image['url']);
-				parent::request()->set('name', $image['name'], 'g:image');
-				parent::request()->set('dir_id', $image['dir_id'], 'g:image');
-				parent::request()->set('title', $image['title'], 'g:image');
-				parent::request()->set('type', $image['type'], 'g:image');
-
-				$Parser->setContent($content);
-				$Parser->startParsing();
-				$return .= $Parser->getResult();
-			}
+			$return .= self::renderImage($parser, $content, $image);
 		}
 
 		return $return;

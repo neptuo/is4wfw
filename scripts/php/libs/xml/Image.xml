@@ -23,8 +23,13 @@
       <attname>noDataMessage</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>noDataImageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Zobrazí seznam obrázků ze složky "id" dle šablony ze svého těla.
+      Pokud je vyplněný 'noDataImageId', bude se chovat jako kdyby složka obsahovala jeden soubor, práve s tím id.
     </comment>
   </fulltag>
   <fulltag>
