@@ -1701,7 +1701,7 @@ class Article extends BaseTagLib {
                 $ok = true;
                 $urlOk = true;
                 if ($lineId != 0) {
-                    $otherLines = parent::db()->fetchAll('select `name` from `article_line` where `url` = "' . $url . '" abd `id` = ' . $lineId . ';');
+                    $otherLines = parent::db()->fetchAll('select `name` from `article_line` where `url` = "' . $url . '" and `id` = ' . $lineId . ';');
                     if (count($otherLines) != 0) {
                         $ok = false;
                         $urlOk = false;
