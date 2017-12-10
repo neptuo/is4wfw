@@ -174,4 +174,27 @@ input[type=button].link-button, input[type=submit].link-button {
     text-decoration: underline;
     padding: 0;
     margin: 0;
-    background: transpa
+    background: transparent;
+}
+
+.button-edit {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    background: url('/images/page_edi.png');
+}
+
+input[type=submit][name=cf-delete-row-button] {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    vertical-align: middle;
+    color: transparent;
+    background: url('/images/page_del.png');
+    border: none;
+}
+
+.button-edit span {
+    display: none;
+}

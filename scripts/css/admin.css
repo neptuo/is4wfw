@@ -31,7 +31,7 @@ input[disabled] {
     background: #eeeeee;
 }
 
-input[type=button], input[type=submit], button, .editor-panel input[type=button] {
+input[type=button], input[type=submit], button, .editor-panel input[type=button], a.button, .buttons a {
     cursor: pointer;
     font-size: small;
     margin: 0;
