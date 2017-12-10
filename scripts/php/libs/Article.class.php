@@ -1254,7 +1254,7 @@ class Article extends BaseTagLib {
      * 	C tag.
      *
      */
-    public function showEditForm($useFrames = false, $submitPageId = false, $backPageId = false, $lineId = false) {
+    public function showEditForm($useFrames = false, $submitPageId = false, $backPageId = false, $lineId = false, $customFormId, $customFormTemplateId) {
         global $dbObject;
         global $webObject;
         global $loginObject;
@@ -1269,6 +1269,11 @@ class Article extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $isClosing = $_POST['article-save-close'] == $rb->get('articles.saveandclose') || $_POST['article-close'] == $rb->get('articles.close');
+        $hasCustomForm = $customFormId != '' && $customFormTemplateId != '';
+        if($hasCustomForm) {
+            parent::php()->autoRegisterPrefix('cf');
+            global $cfObject;
+        }
 
         if ($_POST['article-save'] == $rb->get('articles.save') || $_POST['article-save-close'] == $rb->get('articles.saveandclose')) {
             $article = array('id' => $_POST['article-id'], 'line_id' => $_POST['line-id'], 'visible' => $_POST['article-visible'], 'order' => $_POST['article-id'], 'labels' => $_POST['article-labels']);
@@ -1545,7 +1550,11 @@ class Article extends BaseTagLib {
                 . '<span class="padded small-note">' . $rb->get('lines.labelnote') . '</span>'
                 . '</div>'
                 . '<div class="clear"></div>';
-		
+        
+        if ($hasCustomForm) {
+            $return .= $cfObject->form($customFormId, $customFormTemplateId, 'db', $articleId);
+        }
+
         if ($propertyEditors == 'edit_area') {
             $return .= ''
                     . '<div id="editors" class="editors edit-area-editors">'
