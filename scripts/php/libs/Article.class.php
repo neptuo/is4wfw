@@ -1988,9 +1988,13 @@ class Article extends BaseTagLib {
             $label['id'] = $_POST['label-edit-id'];
             $label['name'] = $_POST['label-edit-name'];
             $label['url'] = $_POST['label-edit-url'];
-            
+            $label['nourl'] = $_POST['label-edit-nourl'];
+
             foreach($label['url'] as $key => $value) {
-                $label['url'][$key] = strtolower(parent::convertToValidUrl(strlen($value) != 0 ? $value : $label['name'][$key]));
+                if (strlen($value) == 0 && $label['nourl'][$key] != 'on') {
+                    $value = $label['name'][$key];
+                }
+                $label['url'][$key] = strtolower(parent::convertToValidUrl($value));
             }
             
             if (strlen($label['name']['null']) < 2) {
@@ -2003,7 +2007,7 @@ class Article extends BaseTagLib {
             }
 
             $labels = parent::db()->fetchAll('select `id` from `article_label` where `url` = "' . $label['url']['null'] . '"' . $idSql . ';');
-            if (strlen($label['url']['null']) < 2 || count($labels) != 0) {
+            if (count($labels) != 0) {
                 $ok = false;
                 $return .= parent::getError($rb->get('label.uniqueurlandlength'));
             }
@@ -2020,7 +2024,7 @@ class Article extends BaseTagLib {
 
                 foreach($label['name'] as $languageId => $name) {
                     if($languageId != 'null') {
-                        if(strlen($label['name'] > 0) && strlen($label['url'][$languageId]) > 0) {
+                        if(strlen($label['name'] > 0)) {
                             $existing = parent::db()->fetchSingle('select count(`label_id`) as `count` from `article_label_language` where `label_id` = ' . $label['id'] . ' and `language_id` = ' . $languageId . ';');
                             if($existing['count'] > 0) {
                                 parent::db()->execute('update `article_label_language` set `name` = "' . $label['name'][$languageId] . '", `url` = "' . $label['url'][$languageId] . '" where `label_id` = ' . $label['id'] . ' and `language_id` = ' . $languageId . ';');
@@ -2055,35 +2059,39 @@ class Article extends BaseTagLib {
 
             foreach ($languages as $language) {
                 $languageFormHtml .= ''
-                . '<div class="article-label-language-' . $language['id'] . '">'
-                    . '<strong>' . (strlen($language['language']) == 0 ? $rb->get('label.language-default') : $language['language']) . '</strong>'
-                    . '<div class="gray-box">'
-                        . '<label for="label-edit-name-' . $language['id'] . '" class="w60">' . $rb->get('label.name') . '</label>'
-                        . '<input type="text" class="w200" name="label-edit-name[' . $language['id'] . ']" id="label-edit-name-' . $language['id'] . '" value="' . $label['name'][$language['id']] . '" />'
-                    . '</div>'
-                    . '<div class="gray-box">'
-                        . '<label for="label-edit-url-' . $language['id'] . '" class="w60">' . $rb->get('label.url') . '</label>'
-                        . '<input type="text" class="w200" name="label-edit-url[' . $language['id'] . ']" id="label-edit-url-' . $language['id'] . '" value="' . $label['url'][$language['id']] . '" />'
-                    . '</div>'
-                . '</div>';
+                    . '<div class="article-label-language-' . $language['id'] . '">'
+                        . '<strong>' . (strlen($language['language']) == 0 ? $rb->get('label.language-default') : $language['language']) . '</strong>'
+                        . '<div class="gray-box">'
+                            . '<label for="label-edit-name-' . $language['id'] . '" class="w60">' . $rb->get('label.name') . '</label>'
+                            . '<input type="text" class="w200" name="label-edit-name[' . $language['id'] . ']" id="label-edit-name-' . $language['id'] . '" value="' . $label['name'][$language['id']] . '" />'
+                        . '</div>'
+                        . '<div class="gray-box">'
+                            . '<label for="label-edit-url-' . $language['id'] . '" class="w60">' . $rb->get('label.url') . '</label>'
+                            . '<input type="text" class="w200" name="label-edit-url[' . $language['id'] . ']" id="label-edit-url-' . $language['id'] . '" value="' . $label['url'][$language['id']] . '" />'
+                            . '<input type="checkbox" name="label-edit-nourl[' . $language['id'] . ']" id="label-edit-nourl-' . $language['id'] . '"' . (strlen($label['name'][$language['id']]) > 0 && strlen($label['url'][$language['id']]) == 0 ? ' checked="checked"' : '') . ' />'
+                            . '<label for="label-edit-nourl-' . $language['id'] . '">' . $rb->get('label.nourl') . '</label>'
+                        . '</div>'
+                    . '</div>';
             }
 
             $return .= ''
-                    . '<form name="label-edit-form" method="post" action="' . $artionUrl . '">'
+                . '<form name="label-edit-form" method="post" action="' . $artionUrl . '">'
                     . '<div class="gray-box">'
-                    . '<label for="label-edit-name" class="w60">' . $rb->get('label.name') . '</label>'
-                    . '<input type="text" class="w200" name="label-edit-name[null]" id="label-edit-name" value="' . $label['name']['null'] . '" />'
+                        . '<label for="label-edit-name" class="w60">' . $rb->get('label.name') . '</label>'
+                        . '<input type="text" class="w200" name="label-edit-name[null]" id="label-edit-name" value="' . $label['name']['null'] . '" />'
                     . '</div>'
                     . '<div class="gray-box">'
-                    . '<label for="label-edit-url" class="w60">' . $rb->get('label.url') . '</label>'
-                    . '<input type="text" class="w200" name="label-edit-url[null]" id="label-edit-url" value="' . $label['url']['null'] . '" />'
+                        . '<label for="label-edit-url" class="w60">' . $rb->get('label.url') . '</label>'
+                        . '<input type="text" class="w200" name="label-edit-url[null]" id="label-edit-url" value="' . $label['url']['null'] . '" />'
+                        . '<input type="checkbox" name="label-edit-nourl[null]" id="label-edit-nourl"' . (strlen($label['name']['null']) > 0 && strlen($label['url']['null']) == 0 ? ' checked="checked"' : '') . ' />'
+                        . '<label for="label-edit-nourl">' . $rb->get('label.nourl') . '</label>'
                     . '</div>'
                     . $languageFormHtml
                     . '<div class="gray-box">'
-                    . '<input type="hidden" name="label-edit-id" value="' . $label['id'] . '" />'
-                    . '<input type="submit" name="label-edit-save" value="' . $rb->get('label.save') . '" title="' . $rb->get('label.savetitle') . '" />'
+                        . '<input type="hidden" name="label-edit-id" value="' . $label['id'] . '" />'
+                        . '<input type="submit" name="label-edit-save" value="' . $rb->get('label.save') . '" title="' . $rb->get('label.savetitle') . '" />'
                     . '</div>'
-                    . '</form>';
+                . '</form>';
 
             if ($useFrames != "false") {
                 return parent::getFrame($rb->get('label.edittitle3'), $return, '');
