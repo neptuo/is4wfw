@@ -376,9 +376,10 @@ class DefaultWeb extends BaseTagLib {
         $reqVirs = parent::str_tr($virtualUrl, '/');
         $prjVirs = self::prepareVirtualPathAsArray($webProject, $lang);
         self::parseAllPagesTagLib('tag_lib_start');
-        foreach ($reqVirs as $key => $vir) {
-            //echo 'URL: '.$vir.' : '.$prjVirs[$key].'<br />';
-            $this->UrlResolver->parseSingleUrlPart($prjVirs[$key], $vir);
+        foreach ($prjVirs as $key => $prj) {
+            $vir = $reqVirs[$key];
+            //parent::log('URL: '.$vir.' : '.$prj.'<br />');
+            $this->UrlResolver->parseSingleUrlPart($prj, $vir);
         }
         self::parseAllPagesTagLib('tag_lib_end');
 		
@@ -1167,7 +1168,9 @@ class DefaultWeb extends BaseTagLib {
                         return self::addSpecialParams($tmpPath);
                     }
                     
-                    $this->CurrentPath = "/" . $return[0]['href'] . $this->CurrentPath;
+                    if (strlen($return[0]['href']) > 0) {
+                        $this->CurrentPath = "/" . $return[0]['href'] . $this->CurrentPath;
+                    }
                 }
                 $lastPageId = $pageId;
                 $pageProjectId = $return[0]['wp'];
