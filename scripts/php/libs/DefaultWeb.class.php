@@ -2387,6 +2387,15 @@ class DefaultWeb extends BaseTagLib {
         return null;
     }
 
+    private $IsInsideForm = false;
+    
+    public function getIsInsideForm() {
+        return $this->IsInsideForm;
+    }
+    
+    public function setIsInsideForm($value) {
+        return $this->IsInsideForm = $value;
+    }
 }
 
 ?>

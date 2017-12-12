@@ -472,5 +472,13 @@
       Vrácí / Nastavuje náhodné číslo v session, pro nastavení lépe použít web:genRandNum
     </comment>
   </property>
+  <property>
+  	<propname>isInsideForm</propname>
+  	<setfunction>setIsInsideForm</setfunction>
+  	<getfunction>getIsInsideForm</getfunction>
+    <comment>
+      Vrácí / Nastavuje zda se aktuálně nacházíme uvnitř formuláře (při generování obsahu, například uvnitř šablony a pod).
+    </comment>
+  </property>
 </taglib>
 

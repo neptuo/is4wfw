@@ -38,6 +38,7 @@ class CustomForm extends BaseTagLib {
     private $ViewAllFields = array();
     private $ViewDataRow = array();
     private $EmailPhase = 0;
+    private $AdditionalKeys = array();
 
     public function __construct() {
         global $webObject;
@@ -231,10 +232,31 @@ class CustomForm extends BaseTagLib {
         $return = "";
 
         $templateContent = parent::getTemplateContent($templateId);
-		
+        
+        if(is_array($rowId)) {
+            $array = $rowId;
+            $rowId = $array['id'];
+            $this->AdditionalKeys[$formId] = array();
+            foreach ($array as $name => $value) {
+                if($name != 'id') {
+                    $this->AdditionalKeys[$formId][$name] = $value;
+                }
+            }
+        }
+
 		if($rowId == '') {
-			$this->ViewDataRow = array();
-		}
+            $this->ViewDataRow = array();
+            $rowId = $_POST['cf_row-id'];
+        }
+        
+        $where = '';
+        foreach ($this->AdditionalKeys[$formId] as $name => $value) {
+            if ($where == '') {
+                $where .= '`' . $name . '` = ' . $value;
+            } else {
+                $where .= ' and `' . $name . '` = ' . $value;
+            }
+        }
 
         if (array_key_exists('cf_gen-id', $_POST) && array_key_exists('cf_form-id', $_POST) && $_POST['cf_form-id'] == $formId) {
             // Phase 3
@@ -266,42 +288,54 @@ class CustomForm extends BaseTagLib {
                                 $value['value'] = $value['value'];
                                 break;
 							case 'file':
-								if(array_key_exists('cf_row-id', $_POST) && $value['value'] == array()) {
+								if($rowId != '' && $value['value'] == array()) {
 									$editedValue = false;
 								} else {
 									$value['value'] = self::formProcessFileUpload($value['value']['file'], $value['value']['dirId']);
 								}
                         }
 
-                        if (!array_key_exists('cf_row-id', $_POST)) {
-							if ($names == "") {
-								$names .= '`' . $name . '`';
-								$values .= $value['value'];
-							} else {
-								$names .= ', `' . $name . '`';
-								$values .= ', ' . $value['value'];
-							}
+                        if ($names == "") {
+                            $names .= '`' . $name . '`';
+                            $values .= $value['value'];
                         } else {
-							if($editedValue) {
-								if ($pairs == '') {
-									$pairs .= '`' . $name . '` = ' . $value['value'];
-								} else {
-									$pairs .= ', `' . $name . '` = ' . $value['value'];
-								}
-							}
+                            $names .= ', `' . $name . '`';
+                            $values .= ', ' . $value['value'];
+                        }
+
+                        if($editedValue) {
+                            if ($pairs == '') {
+                                $pairs .= '`' . $name . '` = ' . $value['value'];
+                            } else {
+                                $pairs .= ', `' . $name . '` = ' . $value['value'];
+                            }
                         }
                     }
 
-                    if (!array_key_exists('cf_row-id', $_POST)) {
+                    foreach ($this->AdditionalKeys[$formId] as $name => $value) {
+                        if ($names == "") {
+                            $names .= '`' . $name . '`';
+                            $values .= $value['value'];
+                        } else {
+                            $names .= ', `' . $name . '`';
+                            $values .= ', ' . $value['value'];
+                        }
+                    }
+
+                    if ($rowId == '') {
                         $sql = 'insert into `cf_' . $this->FormId . '`(' . $names . ') values(' . $values . ');';
-						//echo $sql;
+                        parent::db()->execute($sql);
+                    } else if(parent::db()->fetchSingle('select count(`id`) as `count` from `cf_' . $this->FormId . '` where `id` = ' . $rowId . ' and ' . $where . ';')['count'] == 0) {
+                        $sql = 'insert into `cf_' . $this->FormId . '`(`id`, ' . $names . ') values(' . $rowId . ', ' . $values . ');';
                         parent::db()->execute($sql);
                     } else {
-                        $sql = 'update `cf_' . $this->FormId . '` set ' . $pairs . ' where `id` = ' . $_POST['cf_row-id'] . ';';
-						//echo $sql;
+                        $sql = 'update `cf_' . $this->FormId . '` set ' . $pairs . ' where `id` = ' . $rowId . ' and ' . $where . ';';
                         parent::db()->execute($sql);
                     }
-                    $webObject->redirectTo($pageId);
+
+                    if($pageId) {
+                        $webObject->redirectTo($pageId);
+                    }
                 } elseif ($type == 'email') {
                     $content = '';
                     $templateContent = parent::getTemplateContent($emailTemplateId);
@@ -324,7 +358,9 @@ class CustomForm extends BaseTagLib {
                     //ini_set('sendmail_from', 'user@example.com');
                     mail($emailAddresses, $subject, $content, 1);
 
-                    $webObject->redirectTo($pageId);
+                    if($pageId) {
+                        $webObject->redirectTo($pageId);
+                    }
                 }
 
                 $this->FormPhase = 0;
@@ -348,7 +384,7 @@ class CustomForm extends BaseTagLib {
                     }
                 }
 
-                $row = parent::db()->fetchAll('select ' . $names . ' from `cf_' . $formId . '` where `id` = ' . $rowId . ';');
+                $row = parent::db()->fetchAll('select ' . $names . ' from `cf_' . $formId . '` where `id` = ' . $rowId . ' and ' . $where . ';');
                 if (count($row) == 1) {
                     $this->ViewDataRow = $row[0];
                 } else {
@@ -401,8 +437,8 @@ class CustomForm extends BaseTagLib {
             $fields = self::parseFieldsFromString($formInfo[0]['fields']);
             //print_r($fields);
             //print_r($this->FormFieldsFound);
-			//echo count($this->FormFieldsFound) == count($fields);
-            if (count($this->FormFieldsFound) == count($fields)) {
+            //echo count($this->FormFieldsFound) == count($fields);
+            if (count($this->FormFieldsFound) + count($this->AdditionalKeys[$formId]) == count($fields)) {
                 $ok = true;
                 for ($i = 0; $i < count($fields); $i++) {
                     //echo $this->FormFieldsFound[$i][0].' != '.$fields[$i][0].' || '.$this->FormFieldsFound[$i][1].' != '.$fields[$i][1].' ===> '.(($this->FormFieldsFound[$i][0] != $fields[$i][0] || $this->FormFieldsFound[$i][1] != $fields[$i][1]) ? 'true' : 'false').'<br />';
@@ -410,6 +446,11 @@ class CustomForm extends BaseTagLib {
                     for ($j = 0; $j < count($this->FormFieldsFound); $j++) {
                         //echo $this->FormFieldsFound[$j][0].' == '.$fields[$i][0].' && '.$this->FormFieldsFound[$j][1].' == '.$fields[$i][1].' ===> '.(($this->FormFieldsFound[$j][0] == $fields[$i][0] && $this->FormFieldsFound[$j][1] == $fields[$i][1]) ? 'true' : 'false').'<br />';
                         if ($this->FormFieldsFound[$j][0] == $fields[$i][0] && $this->FormFieldsFound[$j][1] == $fields[$i][1]) {
+                            $iok = true;
+                            break;
+                        }
+
+                        if (array_key_exists($fields[$i][0], $this->AdditionalKeys[$formId])) {
                             $iok = true;
                             break;
                         }
@@ -435,13 +476,16 @@ class CustomForm extends BaseTagLib {
         $this->GeneratedFormId = self::creatorChooseValue($_POST['cf_gen-id'], 'cf_' . rand());
         $this->ResourcesToAdd = '';
 
+        if (!parent::web()->getIsInsideForm()) {
+            $return .= '<form name="cf_' . $formId . '" method="post" enctype="multipart/form-data" action="' . $_SERVER['REDIRECT_URL'] . '">';
+        }
+
         $return .= ''
-                . '<form name="cf_' . $formId . '" method="post" enctype="multipart/form-data" action="' . $_SERVER['REDIRECT_URL'] . '">'
-                . '<input type="hidden" name="cf_gen-id" value="' . $this->GeneratedFormId . '" />'
-                . '<input type="hidden" name="cf_form-id" value="' . $this->FormId . '" />';
+            . '<input type="hidden" name="cf_gen-id" value="' . $this->GeneratedFormId . '" />'
+            . '<input type="hidden" name="cf_form-id" value="' . $this->FormId . '" />';
+
         if ($rowId != '') {
-            $return .= ''
-                    . '<input type="hidden" name="cf_row-id" value="' . $rowId . '" />';
+            $return .= '<input type="hidden" name="cf_row-id" value="' . $rowId . '" />';
         }
 
         $Parser = new FullTagParser();
@@ -458,7 +502,10 @@ class CustomForm extends BaseTagLib {
             }
         }
         $return .= $fcontent;
-        $return .= '</form>';
+        
+        if (!parent::web()->getIsInsideForm()) {
+            $return .= '</form>';
+        }
 
         return $return;
     }
@@ -1094,6 +1141,8 @@ class CustomForm extends BaseTagLib {
                     . '<select name="creator-step-1-i' . $i . '-type" id="creator-step-1-i' . $i . '-type">'
                     . self::creatorGetDataTypes($i)
                     . '</select>'
+                    . '<input type="checkbox" name="creator-step-1-i' . $i . '-primary" id="creator-step-1-i' . $i . '-primary"' . ($_SESSION['cf']['creator']['field']['i' . $i]['primary'] == 'on' ? ' checked="checked"' : '') . ' />'
+                    . '<label for="creator-step-1-i' . $i . '-primary" >' . $rb->get('cf.creator.step1.primary-label') . '</label>'
                     . '</div>';
         }
         $return .= ''
@@ -1131,9 +1180,11 @@ class CustomForm extends BaseTagLib {
         for ($i = 0; $i < $_SESSION['cf']['creator']['fields']; $i++) {
             $name = $_POST['creator-step-1-i' . $i . '-name'];
             $type = $_POST['creator-step-1-i' . $i . '-type'];
+            $primary = array_key_exists('creator-step-1-i' . $i . '-primary', $_POST) ? 'on' : '';
 
             $_SESSION['cf']['creator']['field']['i' . $i]['name'] = $name;
             $_SESSION['cf']['creator']['field']['i' . $i]['type'] = $type;
+            $_SESSION['cf']['creator']['field']['i' . $i]['primary'] = $primary;
         }
     }
 
@@ -1226,14 +1277,18 @@ class CustomForm extends BaseTagLib {
         // create form
         $name = $_SESSION['cf']['creator']['form-id'];
         $fields = "";
-        $create = 'CREATE TABLE `cf_' . $name . '` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
+        $create = 'CREATE TABLE `cf_' . $name . '` (`id` INT NOT NULL AUTO_INCREMENT';
+        $primary = ', PRIMARY KEY (`id`';
         for ($i = 0; $i < $_SESSION['cf']['creator']['fields']; $i++) {
             $fields .= $_SESSION['cf']['creator']['field']['i' . $i]['name'] . ':' . $_SESSION['cf']['creator']['field']['i' . $i]['type'] . ';';
-
-            $create .= ', `' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '`' . self::creatorTranslateType($_SESSION['cf']['creator']['field']['i' . $i]['type']) . ' NOT NULL';
+            if ($_SESSION['cf']['creator']['field']['i' . $i]['primary'] == 'on') {
+                $primary .= ', `' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '`';
+            }
+            $create .= ', `' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '` ' . self::creatorTranslateType($_SESSION['cf']['creator']['field']['i' . $i]['type']) . ' NOT NULL';
         }
+        $primary .= ')';
         parent::db()->execute('insert into `customform`(`name`, `fields`) values("' . $name . '", "' . $fields . '");');
-        $create .= ');';
+        $create .= $primary . ');';
         parent::db()->execute($create);
 
         // clear session

@@ -1270,7 +1270,7 @@ class Article extends BaseTagLib {
 
         $isClosing = $_POST['article-save-close'] == $rb->get('articles.saveandclose') || $_POST['article-close'] == $rb->get('articles.close');
         $hasCustomForm = $customFormId != '' && $customFormTemplateId != '';
-        if($hasCustomForm) {
+        if ($hasCustomForm) {
             parent::php()->autoRegisterPrefix('cf');
             global $cfObject;
         }
@@ -1313,6 +1313,9 @@ class Article extends BaseTagLib {
             if ($articleContent['language_id'] != '') {
                 $langSql = ' and `language_id` = ' . $articleContent['language_id'];
             }
+
+            $isInsert = false;
+            $isSaved = false;
             $urls = parent::db()->fetchAll('select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "' . $articleContent['url'] . '" and `line_id` = ' . $article['line_id'] . $idSql . $langId . ';');
             if (count($urls) == 0 || (count($urls) == 1 && $urls[0]['article_id'] == $article['id'])) {
                 $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $article['line_id'] . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
@@ -1344,14 +1347,8 @@ class Article extends BaseTagLib {
                                         $dbObject->execute("UPDATE `article` SET `directory_id` = " . $directory['id'] . " WHERE `id` = " . $article['id'] . ";");
                                     }
                                 }
-                                
-                                if(!$isClosing) {
-                                    $actionUrl = $_SERVER['REDIRECT_URL'];
-                                    $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['id']);
-                                    $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $ac['language_id']);
-                                    header('location: ' . $actionUrl);
-                                    return;
-                                }
+                                $isInsert = true;
+                                $isSaved = true;
                             } else {
                                 $ac = $articleContent;
                                 // Ulozeni - NOVA jaz.verze
@@ -1359,14 +1356,8 @@ class Article extends BaseTagLib {
                                 $return .= '<h4 class="success">' . $rb->get('articles.langadded') . '</h4>';
                                 $_POST['article-id'] = $article['id'];
                                 $_POST['language-id'] = $ac['language_id'];
-                                
-                                if(!$isClosing) {
-                                    $actionUrl = $_SERVER['REDIRECT_URL'];
-                                    $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['id']);
-                                    $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $ac['language_id']);
-                                    header('location: ' . $actionUrl);
-                                    return;
-                                }
+                                $isInsert = true;
+                                $isSaved = true;
                             }
                         } else {
                             $ac = $articleContent;
@@ -1374,6 +1365,7 @@ class Article extends BaseTagLib {
                             $dbObject->execute("UPDATE `article_content` SET `name` = \"" . mysql_real_escape_string($ac['name']) . "\", `url` = \"" . mysql_real_escape_string($ac['url']) . "\", `keywords` = \"" . mysql_real_escape_string($ac['keywords']) . "\", `head` = \"" . mysql_real_escape_string($ac['head']) . "\", `content` = \"" . mysql_real_escape_string($ac['content']) . "\", `author` = \"" . mysql_real_escape_string($ac['author']) . "\", `timestamp` = " . $ac['timestamp'] . ", `datetime` = \"" . mysql_real_escape_string($ac['datetime']) . "\", `language_id` = " . $ac['language_id'] . " WHERE `article_id` = " . $ac['article_id'] . " AND `language_id` = " . $ac['language_old_id'] . ";");
                             $_POST['article-id'] = $article['id'];
                             $_POST['language-id'] = $ac['language_id'];
+                            $isSaved = true;
                             $return .= '<h4 class="success">' . $rb->get('articles.updated') . '</h4>';
                         }
 
@@ -1391,16 +1383,38 @@ class Article extends BaseTagLib {
             //parent::db()->setMockMode(false);
         }
 
+        if (array_key_exists('article-id', $_REQUEST) && $_REQUEST['article-id'] != '') {
+            $articleId = $_REQUEST['article-id'];
+            $languageId = $_REQUEST['language-id'];
+        } else if (array_key_exists('article-id', $_POST) && $_POST['article-id'] != '') {
+            $articleId = $_POST['article-id'];
+            $languageId = $_POST['language-id'];
+        }
+
+        $cfContent = '';
+        if ((!$isClosing || $isSaved) && $hasCustomForm) {
+            parent::web()->setIsInsideForm(true);
+            $additionalKeys = array('id' => $articleId, 'language_id' => $languageId);
+            $cfContent .= $cfObject->form($customFormId, $customFormTemplateId, 'db', false, $additionalKeys);
+            parent::web()->setIsInsideForm(false);
+        }
+
         if ($isClosing) {
             $url = $webObject->composeUrl($backPageId);
             header("Location: ".$url);
+        } else if($isInsert) {
+            $actionUrl = $_SERVER['REDIRECT_URL'];
+            $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['id']);
+            $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $ac['language_id']);
+            // header('Location: ' . $actionUrl);
+            // return;
         }
 
         if (array_key_exists('article-id', $_REQUEST) && $_REQUEST['article-id'] != '') {
             $articleId = $_REQUEST['article-id'];
             $languageId = $_REQUEST['language-id'];
 
-            if ($_REQUEST['article-id'] != '' && array_key_exists('language-id', $_REQUEST)) {
+            if (array_key_exists('language-id', $_REQUEST)) {
                 // test na prava pro cteni z prislusne rady!
                 $article = $dbObject->fetchAll('SELECT `article_content`.`article_id`, `article_content`.`language_id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`keywords`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`datetime`, `article`.`line_id`, `article`.`visible` FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` LEFT JOIN `article_line_right` ON `article`.`line_id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') AND `article_content`.`article_id` = ' . $articleId . ' AND `article_content`.`language_id` = ' . $languageId . ' ORDER BY `id`;');
                 if (count($article) != 0) {
@@ -1414,9 +1428,9 @@ class Article extends BaseTagLib {
                     }
                 }
                 $new = false;
-            } elseif (array_key_exists('article-id', $_REQUEST)) {
-                $article['article_id'] = $_REQUEST['article-id'];
-                $articleId = $_REQUEST['article-id'];
+            } elseif ($articleId != '') {
+                $article['article_id'] = $articleId;
+                $articleId = $articleId;
                 $new = true;
             } else {
                 $new = true;
@@ -1501,59 +1515,57 @@ class Article extends BaseTagLib {
         $editAreaHeadRows = parent::system()->getPropertyValue('Article.editAreaHeadRows');
 
         $return .= ''
-                . '<div class="article-mgm-edit">'
-                . '<form name="article-edit" method="post" action="' . $actionUrl . '">'
+        . '<div class="article-mgm-edit">'
+            . '<form name="article-edit" method="post" action="' . $actionUrl . '">'
                 . '<div class="article-prop">'
-                . '<div class="article-name gray-box-float">'
-                . '<label for="article-name" class="w60">' . $rb->get('articles.name') . ':</label> '
-                . '<input type="text" id="article-name" name="article-name" value="' . $article['name'] . '" class="w300" />'
+                    . '<div class="article-name gray-box-float">'
+                        . '<label for="article-name" class="w60">' . $rb->get('articles.name') . ':</label> '
+                        . '<input type="text" id="article-name" name="article-name" value="' . $article['name'] . '" class="w300" />'
+                    . '</div>'
+                    . '<div class="article-line gray-box-float">'
+                        . '<label for="line-id" class="padded">' . $rb->get('articles.lines') . ':</label> '
+                        . $lineSelect
+                    . '</div>'
+                    . '<div class="article-lang gray-box-float">'
+                        . '<label for="language-id" class="padded">' . $rb->get('articles.lang') . ':</label> '
+                        . $langSelect
+                    . '</div>'
+                    . '<div class="article-author gray-box-float">'
+                        . '<label for="article-author" class="padded">' . $rb->get('articles.author') . ':</label> '
+                        . '<input type="text" id="article-author" name="article-author" value="' . $article['author'] . '" class="w200" />'
+                    . '</div>'
+                    . '<div class="clear"></div>'
                 . '</div>'
-                . '<div class="article-line gray-box-float">'
-                . '<label for="line-id" class="padded">' . $rb->get('articles.lines') . ':</label> '
-                . $lineSelect
+                . '<div class="gray-box-float">'
+                    . '<label for="article-url" class="w60" title="' . $rb->get('articles.url-title') . '">' . $rb->get('articles.url') . ':</label> '
+                    . '<input type="text" class="long-input" name="article-url" id="article-url" value="' . $article['url'] . '" />'
                 . '</div>'
-                . '<div class="article-lang gray-box-float">'
-                . '<label for="language-id" class="padded">' . $rb->get('articles.lang') . ':</label> '
-                . $langSelect
-                . '</div>'
-                . '<div class="article-author gray-box-float">'
-                . '<label for="article-author" class="padded">' . $rb->get('articles.author') . ':</label> '
-                . '<input type="text" id="article-author" name="article-author" value="' . $article['author'] . '" class="w200" />'
+                . '<div class="gray-box-float">'
+                    . '<label for="article-visible" class="w80">' . $rb->get('articles.visible') . ':</label> '
+                    . '<select name="article-visible" id="article-visible">'
+                        . '<option' . ($article['visible'] == 0 ? ' selected="selected"' : '') . ' value="0">' . $rb->get('articles.visible.0') . '</option>'
+                        . '<option' . ($article['visible'] == 1 ? ' selected="selected"' : '') . ' value="1">' . $rb->get('articles.visible.1') . '</option>'
+                        . '<option' . ($article['visible'] == 2 ? ' selected="selected"' : '') . ' value="2">' . $rb->get('articles.visible.2') . '</option>'
+                    . '</select>'
                 . '</div>'
                 . '<div class="clear"></div>'
+                . '<div class="gray-box-float">'
+                    . '<label for="article-keywords" class="w60">' . $rb->get('articles.keywords') . ':</label> '
+                    . '<input type="text" class="long-input" name="article-keywords" id="article-keywords" value="' . $article['keywords'] . '" />'
                 . '</div>'
                 . '<div class="gray-box-float">'
-                . '<label for="article-url" class="w60" title="' . $rb->get('articles.url-title') . '">' . $rb->get('articles.url') . ':</label> '
-                . '<input type="text" class="long-input" name="article-url" id="article-url" value="' . $article['url'] . '" />'
-                . '</div>'
-                . '<div class="gray-box-float">'
-                . '<label for="article-visible" class="w80">' . $rb->get('articles.visible') . ':</label> '
-                . '<select name="article-visible" id="article-visible">'
-                . '<option' . ($article['visible'] == 0 ? ' selected="selected"' : '') . ' value="0">' . $rb->get('articles.visible.0') . '</option>'
-                . '<option' . ($article['visible'] == 1 ? ' selected="selected"' : '') . ' value="1">' . $rb->get('articles.visible.1') . '</option>'
-                . '<option' . ($article['visible'] == 2 ? ' selected="selected"' : '') . ' value="2">' . $rb->get('articles.visible.2') . '</option>'
-                . '</select>'
-                . '</div>'
-                . '<div class="clear"></div>'
-                . '<div class="gray-box-float">'
-                . '<label for="article-keywords" class="w60">' . $rb->get('articles.keywords') . ':</label> '
-                . '<input type="text" class="long-input" name="article-keywords" id="article-keywords" value="' . $article['keywords'] . '" />'
-                . '</div>'
-                . '<div class="gray-box-float">'
-                . '<label for="article-datetime" class="w80">' . $rb->get('articles.datetime') . ':</label> '
-                . '<input type="text" class="w110" name="article-datetime" id="article-datetime" value="' . $article['datetime'] . '" />'
+                    . '<label for="article-datetime" class="w80">' . $rb->get('articles.datetime') . ':</label> '
+                    . '<input type="text" class="w110" name="article-datetime" id="article-datetime" value="' . $article['datetime'] . '" />'
                 . '</div>'
                 . '<div class="clear"></div>'
                 . '<div class="gray-box">'
-                . '<label class="w60">' . $rb->get('label.edittitle') . ':</label>'
-                . $labelList
-                . '<span class="padded small-note">' . $rb->get('lines.labelnote') . '</span>'
+                    . '<label class="w60">' . $rb->get('label.edittitle') . ':</label>'
+                    . $labelList
+                    . '<span class="padded small-note">' . $rb->get('lines.labelnote') . '</span>'
                 . '</div>'
                 . '<div class="clear"></div>';
         
-        if ($hasCustomForm) {
-            $return .= $cfObject->form($customFormId, $customFormTemplateId, 'db', $articleId);
-        }
+        $return .= $cfContent;
 
         if ($propertyEditors == 'edit_area') {
             $return .= ''

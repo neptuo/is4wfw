@@ -437,6 +437,7 @@
       Pokud je zadán 'lineId', se tato řada před vybere pro nový článek.
 
       Parametry 'customFormId' a 'customFormTemplateId' umožňují navázat ke článku instanci custom formuláře, který bude vazbou 1:1 přivázaný ke článku.
+      Musí obsahovat sloupce 'id' (výchozí) a 'language_id' (pro navázání na jazykovou verzi).
       Formulář bude vložen za štítky, před hlavičku.
     </comment>
   </tag>
