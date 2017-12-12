@@ -730,23 +730,6 @@ class FileAdmin extends BaseTagLib {
 	
 	
     /* ================== PROPERTIES ================================================== */
-
-	private $currentId = -1;
-	
-	public function setCurrentInquiryId($value) {
-		parent::setSystemProperty('inquiry_currentid', $value);
-		$this->currentId = $value;
-	
-		return $value;
-	}
-	
-	public function getCurrentInquiryId() {
-		if($this->currentId == -1) {
-			$this->currentId = parent::getSystemProperty('inquiry_currentid');
-		}
-		return $this->currentId;
-		
-	}
 }
 
 function CompareFileImport($a, $b)
