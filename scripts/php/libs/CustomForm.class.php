@@ -251,11 +251,7 @@ class CustomForm extends BaseTagLib {
         
         $where = '';
         foreach ($this->AdditionalKeys[$formId] as $name => $value) {
-            if ($where == '') {
-                $where .= '`' . $name . '` = ' . $value;
-            } else {
-                $where .= ' and `' . $name . '` = ' . $value;
-            }
+            $where .= ' and `' . $name . '` = ' . $value;
         }
 
         if (array_key_exists('cf_gen-id', $_POST) && array_key_exists('cf_form-id', $_POST) && $_POST['cf_form-id'] == $formId) {
@@ -325,11 +321,11 @@ class CustomForm extends BaseTagLib {
                     if ($rowId == '') {
                         $sql = 'insert into `cf_' . $this->FormId . '`(' . $names . ') values(' . $values . ');';
                         parent::db()->execute($sql);
-                    } else if(parent::db()->fetchSingle('select count(`id`) as `count` from `cf_' . $this->FormId . '` where `id` = ' . $rowId . ' and ' . $where . ';')['count'] == 0) {
+                    } else if(parent::db()->fetchSingle('select count(`id`) as `count` from `cf_' . $this->FormId . '` where `id` = ' . $rowId . $where . ';')['count'] == 0) {
                         $sql = 'insert into `cf_' . $this->FormId . '`(`id`, ' . $names . ') values(' . $rowId . ', ' . $values . ');';
                         parent::db()->execute($sql);
                     } else {
-                        $sql = 'update `cf_' . $this->FormId . '` set ' . $pairs . ' where `id` = ' . $rowId . ' and ' . $where . ';';
+                        $sql = 'update `cf_' . $this->FormId . '` set ' . $pairs . ' where `id` = ' . $rowId . $where . ';';
                         parent::db()->execute($sql);
                     }
 
@@ -384,7 +380,7 @@ class CustomForm extends BaseTagLib {
                     }
                 }
 
-                $row = parent::db()->fetchAll('select ' . $names . ' from `cf_' . $formId . '` where `id` = ' . $rowId . ' and ' . $where . ';');
+                $row = parent::db()->fetchAll('select ' . $names . ' from `cf_' . $formId . '` where `id` = ' . $rowId .  $where . ';');
                 if (count($row) == 1) {
                     $this->ViewDataRow = $row[0];
                 } else {
