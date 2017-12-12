@@ -836,8 +836,7 @@ class CustomForm extends BaseTagLib {
 
         if ($_POST['cf-delete-row-button'] == $value) {
             $id = $_POST['cf-delete-row-id'];
-            $sql = 'delete from `cf_' . $_POST['cf-delete-form-id'] . '` where `id` = ' . $id . ';';
-            parent::db()->execute($sql);
+            self::delete($_POST['cf-delete-form-id'], $id);
             unset($_POST['cf-delete-row-button']);
 			parent::web()->redirect($_SERVER['REDIRECT_URL']);
         }
@@ -877,6 +876,32 @@ class CustomForm extends BaseTagLib {
     }
 
     /* ===================== HELPERS ======================================== */
+
+    public function delete($formId, $rowId) {
+        $additionalKeys = array();
+        if(is_array($rowId)) {
+            $array = $rowId;
+            $rowId = $array['id'];
+            foreach ($array as $name => $value) {
+                if($name != 'id') {
+                    $additionalKeys[$name] = $value;
+                }
+            }
+        }
+
+		if($rowId == '') {
+            $this->ViewDataRow = array();
+            $rowId = $_POST['cf_row-id'];
+        }
+        
+        $where = '';
+        foreach ($additionalKeys as $name => $value) {
+            $where .= ' and `' . $name . '` = ' . $value;
+        }
+
+        $sql = 'delete from `cf_' . $formId . '` where `id` = ' . $rowId . $where . ';';
+        parent::db()->execute($sql);
+    }
 
     private function isFormIdFree($name) {
         $forms = parent::db()->fetchAll('select `id` from `customform` where `name` = "' . $name . '";');

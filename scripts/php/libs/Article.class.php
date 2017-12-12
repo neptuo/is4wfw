@@ -666,7 +666,7 @@ class Article extends BaseTagLib {
      *  @return   complete article management
      *
      */
-    public function showManagement($lineId = false, $detailPageId = false, $method = false, $useFrames = false, $newArticleButton = false, $labelFilter = false, $pageable = false) {
+    public function showManagement($lineId = false, $detailPageId = false, $method = false, $useFrames = false, $newArticleButton = false, $labelFilter = false, $pageable = false, $customFormId = false) {
         global $dbObject;
         global $loginObject;
         global $webObject;
@@ -696,6 +696,12 @@ class Article extends BaseTagLib {
             } else {
                 return $return;
             }
+        }
+
+        $hasCustomForm = $customFormId != '';
+        if ($hasCustomForm) {
+            parent::php()->autoRegisterPrefix('cf');
+            global $cfObject;
         }
         
         if($_POST['article-edit'] == $rb->get('articles.edit')) {
@@ -770,6 +776,11 @@ class Article extends BaseTagLib {
                 $fa = new FileAdmin();
                 $fa->deleteDirectory($article['directory_id'], true);
             }
+
+            $languages = parent::dao('Language')->getList();
+            foreach ($languages as $language) {
+                $cfObject->delete($customFormId, array('id' =>  $artcId, 'language_id' => $language['id']));
+            }
         } elseif ($_POST['article-delete-lang'] == $rb->get('articles.deletelang')) {
             $artcId = $_POST['article-id'];
             $langId = $_POST['language-id'];
@@ -786,6 +797,8 @@ class Article extends BaseTagLib {
                     $fa->deleteDirectory($article['directory_id'], true);
                 }
             }
+
+            $cfObject->delete($customFormId, array('id' =>  $artcId, 'language_id' => $langId));
         }
 
 		$returnTmp .= ''
@@ -2000,10 +2013,10 @@ class Article extends BaseTagLib {
             $label['id'] = $_POST['label-edit-id'];
             $label['name'] = $_POST['label-edit-name'];
             $label['url'] = $_POST['label-edit-url'];
-            $label['nourl'] = $_POST['label-edit-nourl'];
+            $label['seturl'] = $_POST['label-edit-seturl'];
 
             foreach($label['url'] as $key => $value) {
-                if (strlen($value) == 0 && $label['nourl'][$key] != 'on') {
+                if (strlen($value) == 0 && $label['seturl'][$key] == 'on') {
                     $value = $label['name'][$key];
                 }
                 $label['url'][$key] = strtolower(parent::convertToValidUrl($value));
@@ -2080,8 +2093,8 @@ class Article extends BaseTagLib {
                         . '<div class="gray-box">'
                             . '<label for="label-edit-url-' . $language['id'] . '" class="w60">' . $rb->get('label.url') . '</label>'
                             . '<input type="text" class="w200" name="label-edit-url[' . $language['id'] . ']" id="label-edit-url-' . $language['id'] . '" value="' . $label['url'][$language['id']] . '" />'
-                            . '<input type="checkbox" name="label-edit-nourl[' . $language['id'] . ']" id="label-edit-nourl-' . $language['id'] . '"' . (strlen($label['name'][$language['id']]) > 0 && strlen($label['url'][$language['id']]) == 0 ? ' checked="checked"' : '') . ' />'
-                            . '<label for="label-edit-nourl-' . $language['id'] . '">' . $rb->get('label.nourl') . '</label>'
+                            . '<input type="checkbox" name="label-edit-seturl[' . $language['id'] . ']" id="label-edit-seturl-' . $language['id'] . '"' . (strlen($label['name'][$language['id']]) > 0 && strlen($label['url'][$language['id']]) == 0 ? '' : ' checked="checked"') . ' />'
+                            . '<label for="label-edit-seturl-' . $language['id'] . '">' . $rb->get('label.seturl') . '</label>'
                         . '</div>'
                     . '</div>';
             }
@@ -2095,8 +2108,8 @@ class Article extends BaseTagLib {
                     . '<div class="gray-box">'
                         . '<label for="label-edit-url" class="w60">' . $rb->get('label.url') . '</label>'
                         . '<input type="text" class="w200" name="label-edit-url[null]" id="label-edit-url" value="' . $label['url']['null'] . '" />'
-                        . '<input type="checkbox" name="label-edit-nourl[null]" id="label-edit-nourl"' . (strlen($label['name']['null']) > 0 && strlen($label['url']['null']) == 0 ? ' checked="checked"' : '') . ' />'
-                        . '<label for="label-edit-nourl">' . $rb->get('label.nourl') . '</label>'
+                        . '<input type="checkbox" name="label-edit-seturl[null]" id="label-edit-seturl"' . (strlen($label['name']['null']) > 0 && strlen($label['url']['null']) == 0 ? '' : ' checked="checked"') . ' />'
+                        . '<label for="label-edit-seturl">' . $rb->get('label.seturl') . '</label>'
                     . '</div>'
                     . $languageFormHtml
                     . '<div class="gray-box">'

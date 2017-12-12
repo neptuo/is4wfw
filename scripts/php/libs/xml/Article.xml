@@ -284,11 +284,18 @@
     <attribute>
       <attname>pageable</attname>
       <attreq>implied</attreq>
-	  <attdef>false</attdef>
+	    <attdef>false</attdef>
+    </attribute>
+    <attribute>
+      <attname>customFormId</attname>
+      <attreq>implied</attreq>
     </attribute>
     <comment>
       Správa článků. Argument 'lineId' může být předán přes _REQUEST['line-id'] nebo _SESSION['article-line-id'].
-	  "pageable" umožňuje stránkování (vyžaduje pageId).
+	    "pageable" umožňuje stránkování (vyžaduje pageId).
+
+      Parametr 'customFormId' umožňuje smazat od článku instanci custom formuláře, který je vazbou 1:1 přivázaný ke článku.
+      Musí obsahovat sloupce 'id' (výchozí) a 'language_id' (pro navázání na jazykovou verzi).
     </comment>
   </tag>
   <tag>
