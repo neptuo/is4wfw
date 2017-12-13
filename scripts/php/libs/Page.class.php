@@ -2216,27 +2216,30 @@ class Page extends BaseTagLib {
      *
      */
     public function updateKeywords() {
+        $rb = new ResourceBundle();
+        $rb->loadBundle($this->BundleName, $this->BundleLang);
+
         $return = $msg = '';
 
-        if ($_POST['save-keywords'] == "Save") {
+        if ($_POST['save-keywords'] == $rb->get('keywords.save')) {
             file_put_contents("keywords.txt", $_POST['keywords']);
-            $msg = '<h4 class="success">Keywords saved!</h4>';
+            $msg = '<h4 class="success">' . $rb->get('keywords.saved') . '</h4>';
         }
 
         $keywords = file_get_contents("keywords.txt");
         $returnForm = ''
-                . ((strlen($msg) > 0) ? $msg : '' )
-                . '<form name="update-keywords" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+            . ((strlen($msg) > 0) ? $msg : '' )
+            . '<form name="update-keywords" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                 . '<div class="gray-box">'
-                . '<label for="keywords">Set keywords of whole web app:</label> '
-                . '<input type="text" name="keywords" value="' . $keywords . '" class="wmax" /> '
+                    . '<label for="keywords">' . $rb->get('keywords.note') . '</label> '
+                    . '<input type="text" name="keywords" value="' . $keywords . '" class="wmax" /> '
                 . '</div>'
-                . '<div class="gray-box font-right">'
-                . '<input type="submit" name="save-keywords" value="Save" >'
+                    . '<div class="gray-box">'
+                    . '<input type="submit" name="save-keywords" value="' . $rb->get('keywords.save') . '" >'
                 . '</div>'
-                . '</form>';
+            . '</form>';
 
-        return parent::getFrame("Manage keywords", $returnForm, "", true);
+        return parent::getFrame($rb->get('keywords.title'), $returnForm, "", true);
     }
 
     /**
