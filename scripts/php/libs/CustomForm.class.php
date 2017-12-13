@@ -639,7 +639,7 @@ class CustomForm extends BaseTagLib {
 						$return .= '<input type="file" name="' . $fname . '" id="' . $id . '" value="' . $value . '" class="'.$cssClass.'" /> ';
                         break;
 					case 'reference':
-						$return .= self::fieldGenerateReferenceDropDown($referenceFormId, $referenceCaptionField, $fname, $id, $default, $cssClass);
+						$return .= self::fieldGenerateReferenceDropDown($referenceFormId, $referenceCaptionField, $fname, $id, $value, $cssClass);
                         break;
 					
                 }
@@ -816,7 +816,7 @@ class CustomForm extends BaseTagLib {
 
 	private function fieldGenerateReferenceDropDown($referenceFormId, $referenceCaptionField, $fname, $id, $default, $cssClass) {
 		$result = '';
-		
+        
 		$sql = 'select `id`, `'.$referenceCaptionField.'` from `cf_'.$referenceFormId.'` order by `'.$referenceCaptionField.'`;';
 		$data = parent::db()->fetchAll($sql);
 		
