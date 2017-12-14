@@ -91,7 +91,7 @@ body {
     border-bottom: 1px solid #ddd;
 }
 
-.sub-menu ul li div.active-link a {
+.sub-menu ul li div.active-link a, .sub-menu ul li div.active-parent-link a {
     border-color: black;
 }
 
