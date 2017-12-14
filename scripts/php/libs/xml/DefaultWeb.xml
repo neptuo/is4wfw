@@ -144,6 +144,10 @@
       <attreq>implied</attreq>
     </attribute>
     <attribute>
+      <attname>activeClass</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>id</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -162,8 +166,7 @@
     <comment>
       Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 
       "text" je text v html odkazu, "languageId" je jazyková verze požadované
-      stránky, defaultně aktuální jazyková verze. Zbytek jsou standartní html 
-      atributy.
+      stránky, defaultně aktuální jazyková verze. Zbytek jsou standartní html atributy.
       "type" = link(default) nebo button.
     </comment>
   </tag>
@@ -478,6 +481,13 @@
   	<getfunction>getIsInsideForm</getfunction>
     <comment>
       Vrácí / Nastavuje zda se aktuálně nacházíme uvnitř formuláře (při generování obsahu, například uvnitř šablony a pod).
+    </comment>
+  </property>
+  <property>
+  	<propname>lastPageId</propname>
+  	<getfunction>getLastPageId</getfunction>
+    <comment>
+      Vrácí id aktuální stránky (té poslední pro aktuální request).
     </comment>
   </property>
 </taglib>

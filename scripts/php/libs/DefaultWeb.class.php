@@ -1607,9 +1607,17 @@ class DefaultWeb extends BaseTagLib {
      *  @return html anchor               
      *
      */
-    public function makeAnchor($pageId, $text = false, $languageId = false, $class = "", $id = "", $target = "", $rel = "", $type = '') {
+    public function makeAnchor($pageId, $text = false, $languageId = false, $class = "", $activeClass = '', $id = "", $target = "", $rel = "", $type = '') {
         global $dbObject;
         $languageId = (!$languageId) ? $this->LanguageId : $languageId;
+
+        if(strlen($activeClass) > 0 && $pageId == self::getLastPageId() && $this->LanguageId == $languageId) {
+            if(strlen($class) > 0) {
+                $class .= ' ' . $activeClass;
+            } else {
+                $class = $activeClass;
+            }
+        }
 
         if (is_numeric($pageId)) {
             $sql_return = $dbObject->fetchAll("SELECT `href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = " . $pageId . " AND `info`.`language_id` = " . $languageId . ";");
@@ -2395,6 +2403,10 @@ class DefaultWeb extends BaseTagLib {
     
     public function setIsInsideForm($value) {
         return $this->IsInsideForm = $value;
+    }
+
+    public function getLastPageId() {
+        return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['id'];
     }
 }
 
