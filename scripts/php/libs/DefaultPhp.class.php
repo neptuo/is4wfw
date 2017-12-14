@@ -21,6 +21,8 @@
    */        
   class DefaultPhp extends BaseTagLib {
     
+    public static $ParamsName = 'params';
+  
     /**
      *
      *  List of default registered tag libs.
@@ -465,20 +467,33 @@
           foreach($xml->tag as $tag) {
             if($tag->tagname == $tagName) {
               //print_r($tag->attribute);
+              $isFound = false;
               for($i = 0; $i < count($tag->attribute); $i ++) {
                 $att = $tag->attribute[$i];
                 if(array_key_exists((string)$att->attname, $atts)) {
                   $return[(string)$att->attname] = self::getConvertValue($atts[(string)$att->attname], isset($att->attdef));
                 } elseif(isset($att->attdef)) {
-					eval('$val = '. $att->attdef.';');
-					$return[(string)$att->attname] = self::getConvertValue($val);
-				} else {
+                  eval('$val = '. $att->attdef.';');
+                  $return[(string)$att->attname] = self::getConvertValue($val);
+                } else {
                   $return[(string)$att->attname] = false;
                 }
               }
               break;
             }
           }
+          
+          if(isset($tag->params)) {
+            $params = array();
+            foreach($atts as $usedName => $usedValue) {
+              if(!array_key_exists($usedName, $return)) {
+                $params[$usedName] = $usedValue;
+              }
+            }
+
+            $return[DefaultPhp::$ParamsName] = $params;
+          }
+
           return $return;
         } else {
           $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
@@ -492,19 +507,19 @@
       }
     }
 	
-	protected function getConvertValue($val, $convert) {
-		if(!$convert) {
-			return $val;
-		}
-	
-		if($val === 'true') {
-			return true;
-		}
-		if($val === 'false') {
-			return false;
-		}
-		return $val;
-	}
+    protected function getConvertValue($val, $convert) {
+      if(!$convert) {
+        return $val;
+      }
+    
+      if($val === 'true') {
+        return true;
+      }
+      if($val === 'false') {
+        return false;
+      }
+      return $val;
+    }
     
     /**
      *
@@ -544,6 +559,17 @@
                 }
               }
             }
+          }
+          
+          if(isset($tag->params)) {
+            $params = array();
+            foreach($atts as $usedName => $usedValue) {
+              if(!array_key_exists($usedName, $return)) {
+                $params[$usedName] = $usedValue;
+              }
+            }
+
+            $return[DefaultPhp::$ParamsName] = $params;
           }
           
           return $return;

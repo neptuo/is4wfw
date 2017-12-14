@@ -55,7 +55,7 @@ class CustomForm extends BaseTagLib {
 
     /* ===================== LIST =========================================== */
 
-    public function listRows($formId, $templateId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = false, $noDataMessage = false) {
+    public function listRows($formId, $templateId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = false, $noDataMessage = false, $params = false) {
         global $webObject;
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -72,6 +72,9 @@ class CustomForm extends BaseTagLib {
             $rules = self::listAddToRules($rules, 'id', $rowId, 'number');
         }
 
+        // if(is_array($params)) {
+        //     parent::logVar($params);
+        // }
 
         $isRendered = false;
         if (self::listFindFieldsInTemplate($formId, $templateContent)) {

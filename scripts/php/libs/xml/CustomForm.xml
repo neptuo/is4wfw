@@ -45,6 +45,7 @@
       <attname>noDataMessage</attname>
       <attreq>implied</attreq>
     </attribute>
+    <params />
     <comment>
       Zobrazí seznam dat z formuláře "formId", "templateId" je id šablony, "rowId" je id řádku (pak zobrazuje pouze jeden řádek),
       "sortBy" jméno sloupce podle kterého řadit, "desc" pokud je 'true', pak se řadí desc, jinak asc. "noDataMessage" je zpráva,

@@ -25,14 +25,14 @@ class CustomTagParser {
      *  Regular expression for parsing custom tag.     
      *
      */
-    protected $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)( )+((([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="[^"]*"( )*)*)\/>)';
+    protected $TAG_RE = '(<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)( )+((([a-zA-Z0-9-_]+[:]?[a-zA-Z0-9-_]*)="[^"]*"( )*)*)\/>)';
     /**
      *
      *  Regular expression for parsing attribute.
      *
      */
-    protected $ATT_RE = '(([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="([^"]*)")';
-    protected $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9-]+))';
+    protected $ATT_RE = '(([a-zA-Z0-9-_]+[:]?[a-zA-Z0-9-_]*)="([^"]*)")';
+    protected $PROP_RE = '(([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+))';
     protected $PropertyAttr = '';
     protected $PropertyUse = '';
     /**
@@ -150,8 +150,13 @@ class CustomTagParser {
             if ($func && ($attributes !== false)) {
                 $attstring = "";
                 $i = 0;
-                foreach ($attributes as $att) {
-                    $attstring .= "'" . $att . "'";
+                foreach ($attributes as $key => $att) {
+                    $params = self::tryGetParamsAttribute($key, $att);
+                    if ($params != null) {
+                        $attstring .= $params;
+                    } else {
+                        $attstring .= "'" . $att . "'";
+                    }
                     if ($i < (count($attributes) - 1)) {
                         $attstring .= ", ";
                     }
@@ -171,6 +176,24 @@ class CustomTagParser {
             echo '<h4 class="error">This tag isn\'t registered! [' . $object[0] . ']</h4>';
             return "";
         }
+    }
+
+    protected function tryGetParamsAttribute($key, $att) {
+        if ($key == DefaultPhp::$ParamsName && is_array($att)) {
+            $valstring = "array(";
+            $j = 0;
+            foreach ($att as $k => $v) {
+                $valstring .= '"' . $k . '" => "' . $v . '"';
+                if ($j < (count($att) - 1)) {
+                    $valstring .= ", ";
+                }
+                $j++;
+            }
+            $valstring .= ")";
+            return $valstring;
+        }
+
+        return null;
     }
 
     /**

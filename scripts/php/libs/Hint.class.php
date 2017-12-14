@@ -103,6 +103,13 @@
 					.'</tr>';
 				}
 				
+				if(isset($tag->params)) {
+					$attributes .= ''
+					.'<tr>'
+						.'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
+					.'</tr>';
+				}
+				
 				$return .= ''
 				.'<div class="lib-tag">'
 					.'<div class="lib-tag-head">'
@@ -135,6 +142,13 @@
 					.'<tr>'
 						.'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
 						.'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
+					.'</tr>';
+				}
+
+				if(isset($tag->params)) {
+					$attributes .= ''
+					.'<tr>'
+						.'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
 					.'</tr>';
 				}
 				

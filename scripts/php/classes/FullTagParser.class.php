@@ -69,7 +69,12 @@ class FullTagParser extends CustomTagParser {
                 $attstring = "";
                 $i = 0;
                 foreach ($attributes as $att) {
-                    $attstring .= "'" . $att . "'";
+                    $params = self::tryGetParamsAttribute($key, $att);
+                    if ($params != null) {
+                        $attstring .= $params;
+                    } else {
+                        $attstring .= "'" . $att . "'";
+                    }
                     if ($i < (count($attributes) - 1)) {
                         $attstring .= ", ";
                     }
