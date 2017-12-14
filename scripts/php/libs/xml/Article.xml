@@ -438,6 +438,10 @@
       <attname>customFormTemplateId</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>supportedLanguageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Zobrazí formulář pro editaci článku. 
       Pokud je vyplněný 'backPageId', zobrazí se tlačítka "Uložit a zpět" a "Zpět".
@@ -446,6 +450,8 @@
       Parametry 'customFormId' a 'customFormTemplateId' umožňují navázat ke článku instanci custom formuláře, který bude vazbou 1:1 přivázaný ke článku.
       Musí obsahovat sloupce 'id' (výchozí) a 'language_id' (pro navázání na jazykovou verzi).
       Formulář bude vložen za štítky, před hlavičku.
+
+      Parametr 'supportedLanguageId' umožňuje omezit jazyky, které se budou nabízet.
     </comment>
   </tag>
   <tag>

@@ -1273,7 +1273,7 @@ class Article extends BaseTagLib {
      * 	C tag.
      *
      */
-    public function showEditForm($useFrames = false, $submitPageId = false, $backPageId = false, $lineId = false, $customFormId, $customFormTemplateId) {
+    public function showEditForm($useFrames = false, $submitPageId = false, $backPageId = false, $lineId = false, $customFormId = '', $customFormTemplateId = '', $supportedLanguageId) {
         global $dbObject;
         global $webObject;
         global $loginObject;
@@ -1467,7 +1467,11 @@ class Article extends BaseTagLib {
             }
         }
 
-        $langs = $dbObject->fetchAll("SELECT `id`, `language` FROM `language` ORDER BY `language`;");
+        $langSqlWhere = '';
+        if(strlen($supportedLanguageId) > 0) {
+            $langSqlWhere = ' WHERE `id` in (' . $supportedLanguageId . ')';
+        }
+        $langs = $dbObject->fetchAll("SELECT `id`, `language` FROM `language`" . $langSqlWhere . " ORDER BY `language`;");
 
         $langSelect = '<select id="language-id" name="language-id">';
         foreach ($langs as $lang) {
