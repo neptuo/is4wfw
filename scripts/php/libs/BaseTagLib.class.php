@@ -381,7 +381,10 @@ class BaseTagLib {
     }
     
     protected function logVar($variable) {
-		self::log("<pre>" . var_export($variable, true) . "</pre>");
+        $message = var_export($variable, true);
+        $message = str_replace("<", "&lt;", $message);
+        $message = str_replace(">", "&gt;", $message);
+		self::log("<pre>" . $message . "</pre>");
     }
     
     protected function addUrlParameter($url, $name, $value) {
