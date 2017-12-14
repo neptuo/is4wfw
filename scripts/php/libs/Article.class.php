@@ -1425,8 +1425,8 @@ class Article extends BaseTagLib {
             $actionUrl = $_SERVER['REDIRECT_URL'];
             $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['id']);
             $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $ac['language_id']);
-            // header('Location: ' . $actionUrl);
-            // return;
+            header('Location: ' . $actionUrl);
+            return;
         }
 
         if (array_key_exists('article-id', $_REQUEST) && $_REQUEST['article-id'] != '') {
@@ -2216,13 +2216,15 @@ class Article extends BaseTagLib {
     }
 
     public function setUrl($url) {
-        $article = parent::db()->fetchSingle('select `article_id` from `article_content` where `url` = "' . $url . '";');
-        if ($article != array()) {
-            self::setArticleId($article['article_id']);
-            parent::request()->set('article-url', $url);
-            return $url;
-        } else {
-            return 'false.false';
+        if (strpos($url, '://') === false) {
+            $article = parent::db()->fetchSingle('select `article_id` from `article_content` where `url` = "' . $url . '";');
+            if ($article != array()) {
+                self::setArticleId($article['article_id']);
+                parent::request()->set('article-url', $url);
+                return $url;
+            } else {
+                return 'false.false';
+            }
         }
     }
 
