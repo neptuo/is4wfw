@@ -189,12 +189,14 @@ class Article extends BaseTagLib {
             parent::request()->set('line-url', $lineInfo['url']);
             $articleOldId = self::getArticleId();
             $articleDirectoryOldId = self::getArticleDirectoryId();
+            $lastArticleLanguageIdId = self::getArticleLanguageId();
             foreach ($articles as $article) {
                 self::setArticleId($article['id']);
                 self::setArticleDirectoryId($article['directory_id']);
                 self::setHasHead(strlen($article['head']) > 0);
                 self::setHasContent(strlen($article['content']) > 0);
                 self::setIsExternalUrl(strpos($article['url'], '://') !== false);
+                self::setArticleLanguageId($articleLangId);
                 parent::request()->set('id', $article['id'], 'current-article');
                 parent::request()->set('date', $article['timestamp'], 'current-article');
                 parent::request()->set('time', $article['timestamp'], 'current-article');
@@ -228,6 +230,7 @@ class Article extends BaseTagLib {
 			
             self::setArticleId($articleOldId);
             self::setArticleDirectoryId($articleDirectoryOldId);
+            self::setArticleLanguageId($lastArticleLanguageIdId);
             unset($_SESSION['article-id']);
             unset($_SESSION['current-article']);
         } else {
