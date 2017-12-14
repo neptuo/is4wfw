@@ -62,6 +62,8 @@ class CustomForm extends BaseTagLib {
         $return = "";
         $rules = "";
 
+        $lastFormId = $this->FormId;
+        $lastViewPhase = $this->ViewPhase;
         $this->FormId = $formId;
 
         $templateContent = parent::getTemplateContent($templateId);
@@ -70,6 +72,8 @@ class CustomForm extends BaseTagLib {
             $rules = self::listAddToRules($rules, 'id', $rowId, 'number');
         }
 
+
+        $isRendered = false;
         if (self::listFindFieldsInTemplate($formId, $templateContent)) {
 			$rules = self::listParseFilter($rules, $filter);
 			//print_r($rules);
@@ -107,10 +111,14 @@ class CustomForm extends BaseTagLib {
 
             $data = parent::db()->fetchAll($sql);
             if (count($data) > 0) {
+                $isRendered = true;
+                $lastIndex = parent::request()->get('i', 'custom-form');
+                $lastRowId = self::getRowId();
+                $lastViewDataRow = $this->ViewDataRow;
+
                 $this->ViewPhase = 2;
                 $i = 1;
-				
-				$rowIdValue = self::getRowId();
+
                 foreach ($data as $row) {
                     parent::request()->set('i', $i, 'custom-form');
                     $this->ViewDataRow = $row;
@@ -122,14 +130,19 @@ class CustomForm extends BaseTagLib {
                     $return .= $Parser->getResult();
                     $i++;
                 }
-				self::setRowId($rowIdValue);
+                
+                parent::request()->set('i', $lastIndex, 'custom-form');
+                $this->ViewDataRow = $lastViewDataRow;
+                self::setRowId($lastRowId);
             } else {
                 $return .= $noDataMessage;
             }
         } else {
             $return .= $rb->get('cf.list.error.content');
         }
-		$this->ViewPhase = 0;
+
+        $this->ViewPhase = $lastViewPhase;
+        $this->FormId = $lastFormId;
 
         return $return;
     }
