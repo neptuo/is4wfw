@@ -72,9 +72,9 @@ class CustomForm extends BaseTagLib {
             $rules = self::listAddToRules($rules, 'id', $rowId, 'number');
         }
 
-        // if(is_array($params)) {
-        //     parent::logVar($params);
-        // }
+        foreach($params as $paramName => $paramValue) {
+            $rules = self::listAddToRules($rules, $paramName, $paramValue);
+        }
 
         $isRendered = false;
         if (self::listFindFieldsInTemplate($formId, $templateContent)) {
@@ -193,7 +193,7 @@ class CustomForm extends BaseTagLib {
 
         $Parser = new FullTagParser();
         $Parser->setContent($templateContent);
-		$Parser->setTagsToParse(array('cf:field'));
+		$Parser->setTagsToParse(array('cf:field', 'cf:setFieldAsCustomProperty'));
         $Parser->startParsing();
         $Parser->getResult();
 
@@ -230,8 +230,14 @@ class CustomForm extends BaseTagLib {
         return 'id';
     }
 	
-	public function setFieldAsCustomProperty($fieldName) {
-		self::setCustomProperty($this->ViewDataRow[$fieldName]);
+	public function setFieldAsCustomProperty($fieldName, $type = false) {
+        if ($this->ViewPhase == 1) {
+            if ($type != '') {
+                $this->ViewFieldsFound[] = array($fieldName, $type);
+            }
+        } else {
+            self::setCustomProperty($this->ViewDataRow[$fieldName]);
+        }
 	}
 	
 	public function setupCustomUrl($formId, $fieldName) {

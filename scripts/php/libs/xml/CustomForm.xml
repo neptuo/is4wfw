@@ -50,7 +50,8 @@
       Zobrazí seznam dat z formuláře "formId", "templateId" je id šablony, "rowId" je id řádku (pak zobrazuje pouze jeden řádek),
       "sortBy" jméno sloupce podle kterého řadit, "desc" pokud je 'true', pak se řadí desc, jinak asc. "noDataMessage" je zpráva,
       která se zobrazí pokud neodpovídají žádné řádky.
-	  "filter" je komplexní atribut pro filtrování hodnot podle hodnot ve sloupcích, formát: filter="poradi:1,povoleny:ano".
+	    "filter" je komplexní atribut pro filtrování hodnot podle hodnot ve sloupcích, formát: filter="poradi:1,povoleny:ano", může též obsahovat custom property.
+      Všechny params jsou použity jako filtrační parametry.
     </comment>
   </tag>
   <tag>
@@ -259,8 +260,13 @@
       <attname>fieldName</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>type</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Nastaví custom property na hodnotu fieldu.
+      Aby správně fungovalo i v případě, kdy se daný field nevypisuje, je nutné nastavit i 'type'.
     </comment>
   </tag>
   <tag>
