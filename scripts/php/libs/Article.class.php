@@ -438,11 +438,13 @@ class Article extends BaseTagLib {
 
         $article = $dbObject->fetchAll("SELECT `name`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `article`.`directory_id` FROM `article_content` JOIN `article` ON `article_content`.`article_id` = `article`.`id` WHERE `article_id` = " . $articleId . " AND `language_id` = " . $articleLangId . ";");
         if (count($article) == 1) {
-            $directoryOldId = self::getArticleDirectoryId();
+            $lastDirectoryId = self::getArticleDirectoryId();
+            $lastArticleLanguageId = self::getArticleLanguageId();
             self::setArticleDirectoryId($article[0]['directory_id']);
-            self::setHasHead(strlen($article['head']) > 0);
-            self::setHasContent(strlen($article['content']) > 0);
-            self::setIsExternalUrl(strpos($article['url'], '://') !== false);
+            self::setArticleLanguageId($articleLangId);
+            self::setHasHead(strlen($article[0]['head']) > 0);
+            self::setHasContent(strlen($article[0]['content']) > 0);
+            self::setIsExternalUrl(strpos($article[0]['url'], '://') !== false);
 
             parent::request()->set('id', $articleId, 'current-article');
             parent::request()->set('directoryid', $article[0]['directory_id'], 'current-article');
@@ -461,7 +463,8 @@ class Article extends BaseTagLib {
             $return .= $Parser->getResult();
             $return .= self::nextPrevNavigation($articleId, $lineId, $webObject->getPageId(), $nextLinkText, $prevLinkText);
             
-            self::setArticleDirectoryId($directoryOldId);
+            self::setArticleDirectoryId($lastDirectoryId);
+            self::setArticleLanguageId($lastArticleLanguageId);
         } else {
             $return .= '<div class="no-article">' . $rb->get('articles.notselected') . '</div>';
         }
@@ -2197,6 +2200,15 @@ class Article extends BaseTagLib {
 
     public function getArticleDirectoryId() {
         return parent::request()->get('article-directory-id');
+    }
+    
+    public function setArticleLanguageId($value) {
+        parent::request()->set('article-language-id', $value);
+        return $labelId;
+    }
+
+    public function getArticleLanguageId() {
+        return parent::request()->get('article-language-id');
     }
 
     public function setUrl($url) {
