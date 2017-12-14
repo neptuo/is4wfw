@@ -1959,6 +1959,7 @@ class Article extends BaseTagLib {
             parent::db()->execute('delete from `article_label` where `id` = ' . $labelId . ';');
             parent::db()->execute('delete from `article_line_label` where `label_id` = ' . $labelId . ';');
             parent::db()->execute('delete from `article_attached_label` where `label_id` = ' . $labelId . ';');
+            parent::db()->execute('delete from `article_label_langauge` where `label_id` = ' . $labelId . ';');
             $return .= parent::getSuccess($rb->get('label.deleted'));
         }
 
@@ -2055,7 +2056,7 @@ class Article extends BaseTagLib {
 
                 foreach($label['name'] as $languageId => $name) {
                     if($languageId != 'null') {
-                        if(strlen($label['name'] > 0)) {
+                        if(strlen($name) > 0) {
                             $existing = parent::db()->fetchSingle('select count(`label_id`) as `count` from `article_label_language` where `label_id` = ' . $label['id'] . ' and `language_id` = ' . $languageId . ';');
                             if($existing['count'] > 0) {
                                 parent::db()->execute('update `article_label_language` set `name` = "' . $label['name'][$languageId] . '", `url` = "' . $label['url'][$languageId] . '" where `label_id` = ' . $label['id'] . ' and `language_id` = ' . $languageId . ';');
@@ -2289,16 +2290,18 @@ class Article extends BaseTagLib {
     }
 
     public function setLabelUrl($url) {
+        parent::log('x');
+
         $languageId = parent::web()->getLanguageIdWhenParsing();
         if(!is_null($languageId)) {
-            $label = parent::db()->fetchSingle('select `label_id` as `id` from `article_label_language` where `url` = "' . $url . '" and `language_id` = ' . $languageId . ';');
+            $label = parent::db()->fetchSingle('select `label_id` as `id` from `article_label_language` where `url` = "' . $url . '" and `language_id` = ' . $languageId . ';', true, true);
             if ($label != array()) {
                 self::setLabelId($label['id']);
                 return $url;
             }
         }
 
-        $label = parent::db()->fetchSingle('select `id` from `article_label` where `url` = "' . $url . '" and not exists(select * from `article_label_language` where `label_id` = `label_id` and `language_id` = ' . parent::web()->LanguageId . ');');
+        $label = parent::db()->fetchSingle('select `id` from `article_label` where `url` = "' . $url . '" and not exists(select * from `article_label_language` where `label_id` = `label_id` and `language_id` = ' . parent::web()->LanguageId . ');', true, true);
         if ($label != array()) {
             self::setLabelId($label['id']);
             return $url;
