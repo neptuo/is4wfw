@@ -53,5 +53,6 @@
 	<script build="331">ALTER TABLE `article_line` ADD `parentdirectory_id` INT NULL DEFAULT NULL AFTER `url`;</script>
 	<script build="331">ALTER TABLE `article` ADD `directory_id` INT NULL DEFAULT NULL AFTER `visible`;</script>
     <script build="332">CREATE TABLE `article_label_language` ( `label_id` INT NOT NULL , `language_id` INT NOT NULL , `name` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NULL , `url` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NULL , PRIMARY KEY (`label_id`, `language_id`)) ENGINE = MYISAM;</script>
-    <script build="333">ALTER TABLE `article_label` ADD `order` INT NULL DEFAULT '1' AFTER `url`; UPDATE `article_label` SET `order` = `id`;</script>
+    <script build="333">ALTER TABLE `article_label` ADD `order` INT NULL DEFAULT '1' AFTER `url`;</script>
+    <script build="334">UPDATE `article_label` SET `order` = `id`;</script>
 </autoupdate>
