@@ -1331,7 +1331,7 @@ class CustomForm extends BaseTagLib {
         }
         $primary .= ')';
         parent::db()->execute('insert into `customform`(`name`, `fields`) values("' . $name . '", "' . $fields . '");');
-        $create .= $primary . ');';
+        $create .= $primary . ') CHARACTER SET utf8 COLLATE utf8_czech_ci;';
         parent::db()->execute($create);
 
         // clear session
