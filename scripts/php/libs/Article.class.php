@@ -1958,6 +1958,8 @@ class Article extends BaseTagLib {
         $rb = new ResourceBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
+        $labels = parent::db()->fetchAll('select `id`, `name`, `url`, `order` from `article_label` order by `order`;');
+
         if ($_POST['label-delete'] == $rb->get('label.delete')) {
             $labelId = $_POST['label-id'];
             parent::db()->execute('delete from `article_label` where `id` = ' . $labelId . ';');
@@ -1965,21 +1967,79 @@ class Article extends BaseTagLib {
             parent::db()->execute('delete from `article_attached_label` where `label_id` = ' . $labelId . ';');
             parent::db()->execute('delete from `article_label_language` where `label_id` = ' . $labelId . ';');
             $return .= parent::getSuccess($rb->get('label.deleted'));
+        } else if($_POST['label-move-up'] == $rb->get('label.moveup')) {
+            $labelId = $_POST['label-id'];
+
+            $current = null;
+            $prev = null;
+            foreach ($labels as $label) {
+                if ($label['id'] == $labelId) {
+                    $current = $label;
+                    break;
+                }
+
+                $prev = $label;
+            }
+
+            if ($current != null && $prev != null) {
+                $order = $prev['order'];
+                $prev['order'] = $current['order'];
+                $current['order'] = $order;
+                
+                parent::db()->execute('UPDATE `article_label` SET `order` = '. $prev['order'] .' where `id` = ' . $prev['id'] . ';');
+                parent::db()->execute('UPDATE `article_label` SET `order` = '. $current['order'] .' where `id` = ' . $current['id'] . ';');
+            }
+        } else if($_POST['label-move-down'] == $rb->get('label.movedown')) {
+            $labelId = $_POST['label-id'];
+
+            $current = null;
+            $next = null;
+            $isMatched = false;
+            foreach ($labels as $label) {
+                if($isMatched) {
+                    $next = $label;
+                    break;
+                }
+
+                if($label['id'] == $labelId) {
+                    $current = $label;
+                    $isMatched = true;
+                }
+            }
+
+            if ($current != null && $next != null) {
+                $order = $next['order'];
+                $next['order'] = $current['order'];
+                $current['order'] = $order;
+                
+                parent::db()->execute('UPDATE `article_label` SET `order` = '. $next['order'] .' where `id` = ' . $next['id'] . ';');
+                parent::db()->execute('UPDATE `article_label` SET `order` = '. $current['order'] .' where `id` = ' . $current['id'] . ';');
+            }
         }
 
-        $labels = parent::db()->fetchAll('select `id`, `name`, `url` from `article_label` order by `id`;');
+        $labels = parent::db()->fetchAll('select `id`, `name`, `url` from `article_label` order by `order`;');
         if (count($labels) > 0) {
             foreach ($labels as $key => $label) {
                 $labels[$key]['form'] = ''
+                    . '<form name="label-move-up" method="post" action="' . $actionUrl . '">'
+                        . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
+                        . '<input type="hidden" name="label-move-up" value="' . $rb->get('label.moveup') . '" />'
+                        . '<input type="image" src="~/images/arro_up.png" name="label-move-up" value="' . $rb->get('label.moveup') . '" title="' . $rb->get('label.moveup-title') . '" /> '
+                    . '</form> '
+                    . '<form name="label-move-down" method="post" action="' . $actionUrl . '">'
+                        . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
+                        . '<input type="hidden" name="label-move-down" value="' . $rb->get('label.movedown') . '" />'
+                        . '<input type="image" src="~/images/arro_do.png" name="label-move-down" value="' . $rb->get('label.movedown') . '" title="' . $rb->get('label.movedown-title') . '" /> '
+                    . '</form> '
                     . '<form name="label-edit" method="post" action="' . $actionUrl . '">'
-                    . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
-                    . '<input type="hidden" name="label-edit" value="' . $rb->get('label.edit') . '" />'
-                    . '<input type="image" src="~/images/page_edi.png" name="label-edit" value="' . $rb->get('label.edit') . '" title="' . $rb->get('label.edittitle2') . ', id=' . $label['id'] . '" />'
+                        . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
+                        . '<input type="hidden" name="label-edit" value="' . $rb->get('label.edit') . '" />'
+                        . '<input type="image" src="~/images/page_edi.png" name="label-edit" value="' . $rb->get('label.edit') . '" title="' . $rb->get('label.edittitle2') . ', id=' . $label['id'] . '" />'
                     . '</form> '
                     . '<form name="label-delete" method="post" action="' . $actionUrl . '">'
-                    . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
-                    . '<input type="hidden" name="label-delete" value="' . $rb->get('label.delete') . '" />'
-                    . '<input class="confirm" type="image" src="~/images/page_del.png" name="label-delete" value="' . $rb->get('label.delete') . '" title="' . $rb->get('label.deletetitle') . ', id=' . $label['id'] . '" />'
+                        . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
+                        . '<input type="hidden" name="label-delete" value="' . $rb->get('label.delete') . '" />'
+                        . '<input class="confirm" type="image" src="~/images/page_del.png" name="label-delete" value="' . $rb->get('label.delete') . '" title="' . $rb->get('label.deletetitle') . ', id=' . $label['id'] . '" />'
                     . '</form>';
             }
             $grid = new BaseGrid();
