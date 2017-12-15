@@ -2055,6 +2055,7 @@ class Article extends BaseTagLib {
                 } else {
                     parent::db()->execute('insert into `article_label`(`name`, `url`) values("' . $label['name']['null'] . '", "' . $label['url']['null'] . '");');
                     $label['id'] = $_POST['label-id'] = parent::db()->getLastId();
+                    parent::db()->execute('update `article_label` set `order` = ' . $label['id'] . ' where `id` = ' . $label['id'] . ';');
                     $return .= parent::getSuccess($rb->get('label.updated'));
                 }
 
