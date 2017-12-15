@@ -7,6 +7,7 @@
  */
 require_once("BaseTagLib.class.php");
 require_once("scripts/php/classes/FullTagParser.class.php");
+require_once("scripts/php/classes/Order.class.php");
 require_once("scripts/php/classes/RoleHelper.class.php");
 require_once("scripts/php/classes/ui/BaseGrid.class.php");
 require_once("scripts/php/libs/FileAdmin.class.php");
@@ -1967,70 +1968,16 @@ class Article extends BaseTagLib {
             parent::db()->execute('delete from `article_attached_label` where `label_id` = ' . $labelId . ';');
             parent::db()->execute('delete from `article_label_language` where `label_id` = ' . $labelId . ';');
             $return .= parent::getSuccess($rb->get('label.deleted'));
-        } else if($_POST['label-move-up'] == $rb->get('label.moveup')) {
-            $labelId = $_POST['label-id'];
-
-            $current = null;
-            $prev = null;
-            foreach ($labels as $label) {
-                if ($label['id'] == $labelId) {
-                    $current = $label;
-                    break;
-                }
-
-                $prev = $label;
-            }
-
-            if ($current != null && $prev != null) {
-                $order = $prev['order'];
-                $prev['order'] = $current['order'];
-                $current['order'] = $order;
-                
-                parent::db()->execute('UPDATE `article_label` SET `order` = '. $prev['order'] .' where `id` = ' . $prev['id'] . ';');
-                parent::db()->execute('UPDATE `article_label` SET `order` = '. $current['order'] .' where `id` = ' . $current['id'] . ';');
-            }
-        } else if($_POST['label-move-down'] == $rb->get('label.movedown')) {
-            $labelId = $_POST['label-id'];
-
-            $current = null;
-            $next = null;
-            $isMatched = false;
-            foreach ($labels as $label) {
-                if($isMatched) {
-                    $next = $label;
-                    break;
-                }
-
-                if($label['id'] == $labelId) {
-                    $current = $label;
-                    $isMatched = true;
-                }
-            }
-
-            if ($current != null && $next != null) {
-                $order = $next['order'];
-                $next['order'] = $current['order'];
-                $current['order'] = $order;
-                
-                parent::db()->execute('UPDATE `article_label` SET `order` = '. $next['order'] .' where `id` = ' . $next['id'] . ';');
-                parent::db()->execute('UPDATE `article_label` SET `order` = '. $current['order'] .' where `id` = ' . $current['id'] . ';');
-            }
+        } else {
+            Order::tryUpdate($labels, 'label', 'article_label', 'id', 'order');
         }
 
         $labels = parent::db()->fetchAll('select `id`, `name`, `url` from `article_label` order by `order`;');
         if (count($labels) > 0) {
             foreach ($labels as $key => $label) {
                 $labels[$key]['form'] = ''
-                    . '<form name="label-move-up" method="post" action="' . $actionUrl . '">'
-                        . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
-                        . '<input type="hidden" name="label-move-up" value="' . $rb->get('label.moveup') . '" />'
-                        . '<input type="image" src="~/images/arro_up.png" name="label-move-up" value="' . $rb->get('label.moveup') . '" title="' . $rb->get('label.moveup-title') . '" /> '
-                    . '</form> '
-                    . '<form name="label-move-down" method="post" action="' . $actionUrl . '">'
-                        . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
-                        . '<input type="hidden" name="label-move-down" value="' . $rb->get('label.movedown') . '" />'
-                        . '<input type="image" src="~/images/arro_do.png" name="label-move-down" value="' . $rb->get('label.movedown') . '" title="' . $rb->get('label.movedown-title') . '" /> '
-                    . '</form> '
+                    . Order::upForm($actionUrl, 'label', $label['id'], $rb->get('label.moveup-title'))
+                    . Order::downForm($actionUrl, 'label', $label['id'], $rb->get('label.movedown-title'))
                     . '<form name="label-edit" method="post" action="' . $actionUrl . '">'
                         . '<input type="hidden" name="label-id" value="' . $label['id'] . '" />'
                         . '<input type="hidden" name="label-edit" value="' . $rb->get('label.edit') . '" />'
