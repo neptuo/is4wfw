@@ -555,8 +555,8 @@ class Article extends BaseTagLib {
         if ($sort != 'desc') {
             $sort = 'asc';
         }
-        if ($sortBy != 'id' && $sortBy != 'name' && $sortBy != 'url') {
-            $sortBy = 'id';
+        if ($sortBy != 'id' && $sortBy != 'name' && $sortBy != 'url' && $sortBy != 'order') {
+            $sortBy = 'order';
         }
         if ($limit != '') {
             $limit = 'LIMIT ' . $limit;
