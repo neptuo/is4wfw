@@ -75,6 +75,14 @@ function updateData($db, $tableName, $structure, $data) {
     }
 }
 
+function convertData($data, $sourceCharacterSet, $targetCharacterSet) {
+    foreach ($data as $item) {
+        foreach($item as $key => $value) {
+            $item[$key] = mb_convert_encoding($value, $targetCharacterSet, $sourceCharacterSet);
+        }
+    }
+}
+
 $db = new DataAccess();
 $db->disableCache();
 $db->connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE);
@@ -108,6 +116,7 @@ foreach ($database as $tableName => $structure) {
     }
 
     mylog('Found "' . count($data) . '" items.');
+    convertData($data, $defaultCharacterSet, $targetCharacterSet);
 
     mysql_set_charset($targetCharacterSet);
     updateData($db, $tableName, $structure, $data);
