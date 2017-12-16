@@ -66,7 +66,6 @@ function updateData($db, $tableName, $structure, $data) {
         }
 
         $sql .= ';';
-        mylog("SQL", $sql);
         $db->execute($sql);
         
         if ($db->getErrorCode() != 0) {
