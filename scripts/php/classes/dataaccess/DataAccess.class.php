@@ -1,6 +1,8 @@
 <?php
 
 class DataAccess {
+	public static $CharsetSystemProperty = 'DataAccess.Charset';
+
 	private $isOpened = false;
 	private $connection;
 	
@@ -19,12 +21,20 @@ class DataAccess {
 		$this->connection = mysql_connect($hostname, $user, $passwd);
 		mysql_query("use ".$database);
 		echo mysql_error();
-		//mysql_set_charset("utf8"); 
 		
 		if ($this->connection) {
 			$this->isOpened = true;
 		} else {
 		    $this->isOpened = true;
+		}
+
+		if ($this->isOpened) {
+			self::disableCache();
+			$data = self::fetchSingle('SELECT `value` FROM `system_property` WHERE `key` = "' . DataAccess::$CharsetSystemProperty . '";');
+			self::enableCache();
+			if ($data != array()) {
+				mysql_set_charset($data['value']);
+			}
 		}
 		
 		return $this->isOpened;
@@ -214,9 +224,9 @@ class DataAccess {
 			$this->errorMessage = mysql_error();
 			
 			if(is_object($logObject)) {
-				$logObject->write('Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMesssage.', QUERY = '.$query.'');
+				$logObject->write('Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMessage.', QUERY = '.$query.'');
 			} else {
-				echo 'Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMesssage.', QUERY = '.$query.'';
+				echo 'Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMessage.', QUERY = '.$query.'';
 			}
 		}
 	}
@@ -257,28 +267,28 @@ class DataAccess {
 	}
 	
 	/*
-	* funkce pro získání naposledy vkládaného ID
+	* funkce pro zï¿½skï¿½nï¿½ naposledy vklï¿½danï¿½ho ID
 	*/
 	public function getLastId() {
 		return mysql_insert_id($this->connection);
 	}
   
 	/**
-	 * funkce pro vrácení erroru
+	 * funkce pro vrï¿½cenï¿½ erroru
 	 */
 	public function getErrorMessage(){
 		return $this->errorMessage;
 	}
   
 	/**
-	 * funkce pro vrácení erroru
+	 * funkce pro vrï¿½cenï¿½ erroru
 	 */
 	public function getErrorCode(){
 		return $this->errorCode;
 	}
   
 	/**
-	 * funkce pro získání poctu rádku
+	 * funkce pro zï¿½skï¿½nï¿½ poctu rï¿½dku
 	 */
 	public function getRowsCount(){
 		return $this->rowsCount;
@@ -298,6 +308,10 @@ class DataAccess {
 	
 	public function enableCache() {
 		$this->cacheResults = $this->oldCacheStrategy;
+	}
+
+	public function getCharset() {
+		return mysql_client_encoding($this->connection);
 	}
 }
 

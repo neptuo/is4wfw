@@ -5,3 +5,5 @@ RewriteRule ^(.*).view$ view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
 RewriteRule ^js/(.*).js scripts/js/$1.js
 RewriteRule ^css/(.*).css scripts/css/$1.css
 RewriteRule ^file/(.*).([a-z0-9]*) scripts/files/$1.$2
+
+RewriteRule ^/?upgrade-collation\.php$ - [L,R=404]
