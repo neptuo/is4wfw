@@ -212,7 +212,8 @@ class CustomForm extends BaseTagLib {
                         break;
                     }
                 }
-                if (!$iok) {echo 'xxxxx-'.$ff[0].'-'.$formId;
+                if (!$iok) {
+                    //parent::log('xxxxx-'.$ff[0].'-'.$formId.'<br />');
                     $ok = false;
                     break;
                 }
