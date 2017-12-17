@@ -1332,7 +1332,7 @@ class CustomForm extends BaseTagLib {
         }
         $primary .= ')';
         parent::db()->execute('insert into `customform`(`name`, `fields`) values("' . $name . '", "' . $fields . '");');
-        $create .= $primary . ') CHARACTER SET utf8 COLLATE utf8_czech_ci;';
+        $create .= $primary . ') ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ROW_FORMAT=FIXED;';
         parent::db()->execute($create);
 
         // clear session
