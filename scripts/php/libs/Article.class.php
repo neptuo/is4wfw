@@ -711,7 +711,7 @@ class Article extends BaseTagLib {
             global $cfObject;
         }
         
-        if($_POST['article-edit'] == $rb->get('articles.edit')) {
+        if ($_POST['article-edit'] == $rb->get('articles.edit')) {
             $url = parent::addUrlParameter($actionUrl, 'article-id', $_POST['article-id']);
             $url = parent::addUrlParameter($url, 'language-id', $_POST['language-id']);
             header("Location: ". $url);
@@ -1025,15 +1025,21 @@ class Article extends BaseTagLib {
                 }
             }
         }
+        
+                if ($detailPageId != false) {
+                    $actionUrl = $webObject->composeUrl($detailPageId);
+                }
 
-        if ($detailPageId != false) {
-            $actionUrl = $webObject->composeUrl($detailPageId);
+        if($_POST['article-new'] == $rb->get('articles.newcap')) {
+            $url = parent::addUrlParameter($actionUrl, 'line-id', $lineId);
+            header("Location: ". $url);
+            return;
         }
 
         if (self::canUser($lineId, WEB_R_WRITE)) {
             $return .= ''
 			. '<div class="article-new gray-box">'
-				. '<form name="article-new" method="post" action="' . $actionUrl . '">'
+                . '<form name="article-new" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
                     . '<input type="submit" name="article-new" value="' . $rb->get('articles.newcap') . '" />'
 				. '</form>'
 			. '</div>';
