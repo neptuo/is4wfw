@@ -12,7 +12,7 @@ class FullTagParser extends CustomTagParser {
      */
     //private $FULL_TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)(\b[^>]*)>(((\s*)|(.*))*)</\1>)';
     //protected $FULL_TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)(( *([a-zA-Z0-9]+="[^"]*") *)*)>(((\s*)|(.*))*)</\1>)';
-    protected $FULL_TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)(( *([a-zA-Z0-9:-]+="[^"]*") *)*)>(((\s*)|(.*))*)</\1>)';
+    protected $FULL_TAG_RE = '(<([a-zA-Z0-9_]+:[a-zA-Z0-9_]+)(( *([a-zA-Z0-9:-_]+="[^"]*") *)*)>(((\s*)|(.*))*)</\1>)';
 
     /**
      *
