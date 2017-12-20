@@ -213,7 +213,7 @@ class CustomForm extends BaseTagLib {
                     }
                 }
                 if (!$iok) {
-                    //parent::log('xxxxx-'.$ff[0].'-'.$formId.'<br />');
+                    //parent::log(''.$ff[0].'-'.$formId.'<br />');
                     $ok = false;
                     break;
                 }
@@ -392,6 +392,7 @@ class CustomForm extends BaseTagLib {
             }
         }
 
+        //parent::logVar(self::formValidateAgainstTemplate($formId, $templateContent));
         if ($type == 'db' && self::formValidateAgainstTemplate($formId, $templateContent)) {
             if (is_numeric($rowId)) {
                 $names = "";
@@ -454,13 +455,11 @@ class CustomForm extends BaseTagLib {
         $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');
         if (count($formInfo) == 1) {
             $fields = self::parseFieldsFromString($formInfo[0]['fields']);
-            //print_r($fields);
-            //print_r($this->FormFieldsFound);
-            //echo count($this->FormFieldsFound) == count($fields);
+            // parent::logVar(array('Found' => $this->FormFieldsFound, 'Additional' => $this->AdditionalKeys[$formId], 'Fields' => $fields));
             if (count($this->FormFieldsFound) + count($this->AdditionalKeys[$formId]) == count($fields)) {
                 $ok = true;
                 for ($i = 0; $i < count($fields); $i++) {
-                    //echo $this->FormFieldsFound[$i][0].' != '.$fields[$i][0].' || '.$this->FormFieldsFound[$i][1].' != '.$fields[$i][1].' ===> '.(($this->FormFieldsFound[$i][0] != $fields[$i][0] || $this->FormFieldsFound[$i][1] != $fields[$i][1]) ? 'true' : 'false').'<br />';
+                    // parent::log($this->FormFieldsFound[$i][0].' != '.$fields[$i][0].' || '.$this->FormFieldsFound[$i][1].' != '.$fields[$i][1].' ===> '.(($this->FormFieldsFound[$i][0] != $fields[$i][0] || $this->FormFieldsFound[$i][1] != $fields[$i][1]) ? 'true' : 'false').'<br />');
                     $iok = false;
                     for ($j = 0; $j < count($this->FormFieldsFound); $j++) {
                         //echo $this->FormFieldsFound[$j][0].' == '.$fields[$i][0].' && '.$this->FormFieldsFound[$j][1].' == '.$fields[$i][1].' ===> '.(($this->FormFieldsFound[$j][0] == $fields[$i][0] && $this->FormFieldsFound[$j][1] == $fields[$i][1]) ? 'true' : 'false').'<br />';
@@ -481,9 +480,9 @@ class CustomForm extends BaseTagLib {
                 }
                 return $ok;
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     private function showForm($formId, $templateContent, $rowId) {
