@@ -388,12 +388,14 @@ class BaseTagLib {
     }
     
     protected function addUrlParameter($url, $name, $value) {
-        if(strpos($url, '?') !== false) {
-            $url .= '&' . $name . '=' . $value;
+        $pair = ($value != '') ? $name . '=' . $value : $name;
+        if (strpos($url, '?') == '') {
+            $url .= '?' . $pair;
         } else {
-            $url .= '?' . $name . '=' . $value;
+            if (strpos($url, $name, strpos($url, '?')) == '') {
+                $url .= '&' . $pair;
+            }
         }
-
         return $url;
     }
     

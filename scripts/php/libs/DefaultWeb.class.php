@@ -1137,7 +1137,7 @@ class DefaultWeb extends BaseTagLib {
      *  @return composed url
      *
      */
-    public function composeUrl($pageId, $languageId = false, $absolutePath = false, $forceDefProp = false) {
+    public function composeUrl($pageId, $languageId = false, $absolutePath = false, $forceDefProp = false, $copyParameters = false) {
         $languageId = ($languageId === false) ? $this->LanguageId : $languageId;
         $lastPageId = 0;
         $pageProjectId = 0;
@@ -1163,9 +1163,12 @@ class DefaultWeb extends BaseTagLib {
                     $return[0]['href'] = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $return[0]['href']);
                     if(strpos($return[0]['href'], "http") === 0) {
                         //echo $return[0]['href'];
-                        $tmpPath = $return[0]['href'] . $this->CurrentPath;
+                        $url = $return[0]['href'] . $this->CurrentPath;
                         $this->CurrentPath = "";
-                        return self::addSpecialParams($tmpPath);
+                        if ($copyParameters) {
+                            $url = parent::addUrlQueryString($url);
+                        }
+                        return self::addSpecialParams($url);
                     }
                     
                     if (strlen($return[0]['href']) > 0) {
@@ -1198,12 +1201,20 @@ class DefaultWeb extends BaseTagLib {
 
         if ($pageProjectId == $this->ProjectId) {
             // Dosestav url z dat v urlResolveru
-            return self::addSpecialParams(self::composeUrlProjectPart($tmpPath, $this->UrlResolver->getWebProject(), $absolutePath));
+            $url = self::composeUrlProjectPart($tmpPath, $this->UrlResolver->getWebProject(), $absolutePath);
+            if ($copyParameters) {
+                $url = parent::addUrlQueryString($url);
+            }
+            return self::addSpecialParams($url);
         } else {
             // Najdi project url a dosestav url
             $project = array('alias' => parent::db()->fetchSingle('select `domain_url`, `root_url`, `virtual_url`, `http`, `https` from `web_url` where `project_id` = ' . $pageProjectId . ' and `enabled` = 1 order by `web_url`.`default` desc, `web_url`.`id`;'));
             if($project['alias'] != array()) {
-                return self::addSpecialParams(self::composeUrlProjectPart($tmpPath, $project, true));
+                $url = self::composeUrlProjectPart($tmpPath, $project, true);
+                if ($copyParameters) {
+                    $url = parent::addUrlQueryString($url);
+                }
+                return self::addSpecialParams($url);
             } else {
                 $message = parent::getError('Project doesn\' have url adress!!');
                 trigger_error($message, E_USER_WARNING);
@@ -1231,30 +1242,18 @@ class DefaultWeb extends BaseTagLib {
         return $pageUrl;
     }
 
-    public function addParamToUrl($url, $param, $value) {
-        $pair = ($value != '') ? $param . '=' . $value : $param;
-        if (strpos($url, '?') == '') {
-            $url .= '?' . $pair;
-        } else {
-            if (strpos($url, $param, strpos($url, '?')) == '') {
-                $url .= '&' . $pair;
-            }
-        }
-        return $url;
-    }
-
     private function addSpecialParams($url) {
         if (array_key_exists('mem-stats', $_GET)) {
-            $url = self::addParamToUrl($url, 'mem-stats', '');
+            $url = self::addUrlParameter($url, 'mem-stats', '');
         }
         if (array_key_exists('duration-stats', $_GET)) {
-            $url = self::addParamToUrl($url, 'duration-stats', '');
+            $url = self::addUrlParameter($url, 'duration-stats', '');
         }
         if (array_key_exists('query-stats', $_GET)) {
-            $url = self::addParamToUrl($url, 'query-stats', '');
+            $url = self::addUrlParameter($url, 'query-stats', '');
         }
         if (array_key_exists('auto-login-ignore', $_GET)) {
-            $url = self::addParamToUrl($url, 'auto-login-ignore', '');
+            $url = self::addUrlParameter($url, 'auto-login-ignore', '');
         }
         return $url;
     }
@@ -1463,7 +1462,7 @@ class DefaultWeb extends BaseTagLib {
      *  @return generated menu                    
      *
      */
-    public function getMenu($parentId = false, $inner = false, $classes = false, $rel = false, $template = false, $inn = false) {
+    public function getMenu($parentId = false, $inner = false, $classes = false, $rel = false, $template = false, $copyParameters = false, $inn = false) {
         global $dbObject;
         global $loginObject;
         if ($inn == false) {
@@ -1482,7 +1481,7 @@ class DefaultWeb extends BaseTagLib {
                 if (count($rights) == 0) {
                     continue;
                 }
-                $href = self::composeUrl($lnk['id'], $this->LanguageId, false, true);
+                $href = self::composeUrl($lnk['id'], $this->LanguageId, false, true, $copyParameters);
                 $parent = (in_array($lnk['id'], $this->PagesId)) ? true : false;
                 //$active = (($lnk['id'] == $this->PagesId[count($this->PagesId) - 1]) ? true : false);
 
@@ -1495,7 +1494,7 @@ class DefaultWeb extends BaseTagLib {
 
                 //$class = ($this->ParentId == $lnk['id']) ? " class=\"active-item\"" : "";
                 if ($inner > 1) {
-                    $tmpContent = self::getMenu($lnk['id'], $inner, (($parent || $active) ? 'active-submenu' : ''), false, $inn + 1);
+                    $tmpContent = self::getMenu($lnk['id'], $inner, (($parent || $active) ? 'active-submenu' : ''), false, $copyParameters, $inn + 1);
                 }
 
                 $content .= ''

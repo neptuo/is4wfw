@@ -39,6 +39,10 @@
       <attname>template</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>copyParameters</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vygeneruje menu stránek, kde: "parentId" je id kořenové stránky menu,
       "inner" je hloubka v noření menu, (př.: pro inner="1", zobrazí pouze jednu úroveň menu).
