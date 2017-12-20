@@ -19,9 +19,9 @@
    */  
   class System extends BaseTagLib {
   
-    public function __construct() {
-      parent::setTagLibXml("xml/System.xml");
-    }
+		public function __construct() {
+			parent::setTagLibXml("xml/System.xml");
+		}
 		
 		/**
 		 *
@@ -30,6 +30,8 @@
 		 *
 		 */		 		 		 		 		
 		public function manageProperties($useFrames = false, $showMsg = false) {
+			parent::loadResourceBundle('system');
+
 			global $dbObject;
 			global $loginObject;
 			$return = '';
@@ -37,7 +39,7 @@
 			$userId = $loginObject->getUserId();
 			$typeId = 1;
 			
-			if($_POST['system-properties-save'] == 'Save') {
+			if($_POST['system-properties-save'] == parent::rb()->get('personalproperties.save')) {
 				foreach($_POST['system-property-name'] as $id => $name) {
 					$value = $_POST['system-property-value'][$id];
 					$dbObject->execute('UPDATE `personal_property` SET `name` = "'.$name.'", `value` = "'.$value.'" WHERE `id` = '.$id.';');
@@ -48,7 +50,7 @@
 					$value = $_POST['system-property-value-new'];
 					$dbObject->execute('INSERT INTO `personal_property` (`name`, `value`, `type`, `user_id`) VALUES ("'.$name.'", "'.$value.'", '.$typeId.', '.$userId.');');
 				}
-			} elseif($_POST['system-properties-delete'] == 'Delete selected') {
+			} elseif($_POST['system-properties-delete'] == parent::rb()->get('personalproperties.delete')) {
 				foreach($_POST['system-properties-delete-item'] as $id => $val) {
 					$dbObject->execute('DELETE FROM `personal_property` WHERE `id` = '.$id.' AND `user_id` = '.$userId.';');
 				}
@@ -61,9 +63,9 @@
 				.'<form name="system-properties" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
 					.'<table>'
 						.'<tr>'
-							.'<th class="system-properties-name">Name:</th>'
-							.'<th class="system-properties-value">Value:</th>'
-							.'<th class="system-properties-delete">Delete:</th>';
+							.'<th class="system-properties-name">' . parent::rb()->get('personalproperties.name') . ':</th>'
+							.'<th class="system-properties-value">' . parent::rb()->get('personalproperties.value') . ':</th>'
+							.'<th class="system-properties-delete">' . parent::rb()->get('personalproperties.select') . ':</th>';
 			$i = 0;
 			foreach($properties as $prop) {
 				$return .= ''
@@ -92,8 +94,8 @@
 						.'</tr>'
 					.'</table>'
 					.'<div class="system-properties-submit gray-box">'
-						.'<input type="submit" name="system-properties-save" value="Save" /> '
-						.'<input type="submit" name="system-properties-delete" value="Delete selected" />'
+						.'<input type="submit" name="system-properties-save" value="' . parent::rb()->get('personalproperties.save') . '" /> '
+						.'<input type="submit" name="system-properties-delete" value="' . parent::rb()->get('personalproperties.delete') . '" />'
 					.'</div>'
 				.'</form>'
 			.'</div>';
@@ -101,7 +103,7 @@
 			if($useFrames == "false") {
 				return $return;
 			} else {
-				return parent::getFrame('System properties', $return, "", true);
+				return parent::getFrame(parent::rb()->get('personalproperties.title'), $return, "", true);
 			}
 		}
 		

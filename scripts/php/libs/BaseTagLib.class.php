@@ -337,11 +337,10 @@ class BaseTagLib {
 	
 	public function loadResourceBundle($name) {
 		$this->BundleName = $name;
-	
-		if ($webObject->LanguageName != '') {
+		if ($this->web()->LanguageName != '') {
             $rb = new ResourceBundle();
-            if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                $this->BundleLang = $webObject->LanguageName;
+            if ($rb->testBundleExists($this->BundleName, self::web()->LanguageName)) {
+                $this->BundleLang = self::web()->LanguageName;
             }
         }
 		
