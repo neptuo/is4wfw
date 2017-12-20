@@ -54,6 +54,47 @@
       Všechny params jsou použity jako filtrační parametry.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>list</tagname>
+    <function>listRowsFullTag</function>
+    <attribute>
+      <attname>formId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>rowId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>filter</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>sortBy</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>desc</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>limit</attname>
+      <attreq>implied</attreq>
+      <attdef>-1</attdef>
+    </attribute>
+    <attribute>
+      <attname>noDataMessage</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <params />
+    <comment>
+      Zobrazí seznam dat z formuláře "formId", "templateId" je id šablony, "rowId" je id řádku (pak zobrazuje pouze jeden řádek),
+      "sortBy" jméno sloupce podle kterého řadit, "desc" pokud je 'true', pak se řadí desc, jinak asc. "noDataMessage" je zpráva,
+      která se zobrazí pokud neodpovídají žádné řádky.
+	    "filter" je komplexní atribut pro filtrování hodnot podle hodnot ve sloupcích, formát: filter="poradi:1,povoleny:ano", může též obsahovat custom property.
+      Všechny params jsou použity jako filtrační parametry.
+    </comment>
+  </fulltag>
   <tag>
     <tagname>setupCustomUrl</tagname>
     <function>setupCustomUrl</function>
