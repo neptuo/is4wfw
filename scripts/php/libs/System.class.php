@@ -23,6 +23,57 @@
 			parent::setTagLibXml("xml/System.xml");
 		}
 		
+		public $UserSettingsEditors = array(
+			'tiny' => 'Wysiwyg',
+			'edit_area' => 'Editor kódu',
+			'' => 'Obyčejný'
+		);
+
+		public $UserSettings = array(
+			array(
+				'name' => 'Admin.Language',
+				'type' => 'dropdown',
+				'values' => array('cs' => 'Čeština', 'en' => 'English')
+			),
+			array(
+				'name' => 'Article.editAreaHeadRows',
+				'type' => 'number',
+				'values' => array(1, 100)
+			),
+			array(
+				'name' => 'Article.editors',
+				'type' => 'dropdown',
+				'values' => array(
+					'tiny' => 'Wysiwyg',
+					'edit_area' => 'Editor kódu',
+					'' => 'Obyčejný'
+				)
+			),
+			array(
+				'name' => 'Article.languageId',
+				'type' => 'number'
+			),
+			array(
+				'name' => 'Login.session',
+				'type' => 'number',
+				'values' => array(10,30)
+			),
+			array(
+				'name' => 'Page.editors',
+				'type' => '',
+				'values' => array()
+			),
+			array(
+				'name' => 'WebProject.defaultProjectId',
+				'type' => 'number'
+			),
+			array(
+				'name' => '',
+				'type' => '',
+				'values' => array()
+			)
+		);
+
 		/**
 		 *
 		 *	Manage user's system properties.
@@ -66,6 +117,26 @@
 							.'<th class="system-properties-name">' . parent::rb()->get('personalproperties.name') . ':</th>'
 							.'<th class="system-properties-value">' . parent::rb()->get('personalproperties.value') . ':</th>'
 							.'<th class="system-properties-delete">' . parent::rb()->get('personalproperties.select') . ':</th>';
+
+			// $usedProperty = array();
+			// $i = 0;
+			// foreach($this->UserSettings as $property) {
+			// 	$usedProperty[] = $property['name'];
+			// 	$return .= ''
+			// 			.'<tr class="'.(($i % 2) == 1 ? 'even' : 'idle').'">'
+			// 				.'<td>'
+			// 					.'<input type="text" value="'.$property['name'].'" name="system-property-name" id="system-property-name" />'
+			// 				.'</td>'
+			// 				.'<td>'
+			// 					.'<input type="text" value="" name="system-property-value" id="system-property-value" />'
+			// 				.'</td>'
+			// 				.'<td>'
+			// 					.'<input type="checkbox" name="system-properties-delete-item" />'
+			// 				.'</td>'
+			// 			.'</tr>';
+			// 	$i ++;
+			// }
+			
 			$i = 0;
 			foreach($properties as $prop) {
 				$return .= ''
@@ -80,7 +151,7 @@
 								.'<input type="checkbox" name="system-properties-delete-item['.$prop['id'].']" />'
 							.'</td>'
 						.'</tr>';
-					$i ++;
+				$i ++;
 			}
 			$return .= ''
 						.'<tr class="'.(($i % 2) == 1 ? 'even' : 'idle').'">'
