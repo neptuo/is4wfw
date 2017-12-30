@@ -13,6 +13,10 @@
     <tagname>manageProperties</tagname>
     <function>manageProperties</function>
     <attribute>
+      <attname>userId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>useFrames</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -22,6 +26,7 @@
     </attribute>
     <comment>
       Zobrazí formulář pro nastavení uživatelsky závislých systémových proměnných.
+      Pokud má 'userId' hodnotu '0' nebo 'default', nastavují se výchozí hodnoty, které budou zkopírovány každému novému uživateli.
     </comment>
   </tag>
   <tag>

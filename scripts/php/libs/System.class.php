@@ -74,40 +74,41 @@
 			)
 		);
 
-		/**
-		 *
-		 *	Manage user's system properties.
-		 *	C tag.
-		 *
-		 */		 		 		 		 		
-		public function manageProperties($useFrames = false, $showMsg = false) {
+		public function manageProperties($userId = false, $useFrames = false, $showMsg = false) {
 			parent::loadResourceBundle('system');
 
-			global $dbObject;
-			global $loginObject;
+			$title = '';
+			if ($userId == '' || $userId == 'current') {
+				$userId = parent::login()->getUserId();
+				$title = parent::rb()->get('personalproperties.title');
+			} else if ($userId == '0' || $userId == 'default') {
+				$userId = 0;
+				$title = parent::rb()->get('personalproperties.defaulttitle');
+			} else {
+				$title = parent::rb()->get('personalproperties.title');
+			}
+
 			$return = '';
-			
-			$userId = $loginObject->getUserId();
 			$typeId = 1;
 			
 			if($_POST['system-properties-save'] == parent::rb()->get('personalproperties.save')) {
 				foreach($_POST['system-property-name'] as $id => $name) {
 					$value = $_POST['system-property-value'][$id];
-					$dbObject->execute('UPDATE `personal_property` SET `name` = "'.$name.'", `value` = "'.$value.'" WHERE `id` = '.$id.';');
+					parent::db()->execute('UPDATE `personal_property` SET `name` = "'.$name.'", `value` = "'.$value.'" WHERE `id` = '.$id.';');
 				}
 				
 				if($_POST['system-property-name-new'] != '') {
 					$name = $_POST['system-property-name-new'];
 					$value = $_POST['system-property-value-new'];
-					$dbObject->execute('INSERT INTO `personal_property` (`name`, `value`, `type`, `user_id`) VALUES ("'.$name.'", "'.$value.'", '.$typeId.', '.$userId.');');
+					parent::db()->execute('INSERT INTO `personal_property` (`name`, `value`, `type`, `user_id`) VALUES ("'.$name.'", "'.$value.'", '.$typeId.', '.$userId.');');
 				}
 			} elseif($_POST['system-properties-delete'] == parent::rb()->get('personalproperties.delete')) {
 				foreach($_POST['system-properties-delete-item'] as $id => $val) {
-					$dbObject->execute('DELETE FROM `personal_property` WHERE `id` = '.$id.' AND `user_id` = '.$userId.';');
+					parent::db()->execute('DELETE FROM `personal_property` WHERE `id` = '.$id.' AND `user_id` = '.$userId.';');
 				}
 			}
 			
-			$properties = $dbObject->fetchAll('SELECT `id`, `name`, `value` FROM `personal_property` WHERE `user_id` = '.$userId.' AND `type` = '.$typeId.' ORDER BY `name`;');
+			$properties = parent::db()->fetchAll('SELECT `id`, `name`, `value` FROM `personal_property` WHERE `user_id` = '.$userId.' AND `type` = '.$typeId.' ORDER BY `name`;');
 			
 			$return .= '' 
 			.'<div class="system-properties">'
@@ -117,25 +118,6 @@
 							.'<th class="system-properties-name">' . parent::rb()->get('personalproperties.name') . ':</th>'
 							.'<th class="system-properties-value">' . parent::rb()->get('personalproperties.value') . ':</th>'
 							.'<th class="system-properties-delete">' . parent::rb()->get('personalproperties.select') . ':</th>';
-
-			// $usedProperty = array();
-			// $i = 0;
-			// foreach($this->UserSettings as $property) {
-			// 	$usedProperty[] = $property['name'];
-			// 	$return .= ''
-			// 			.'<tr class="'.(($i % 2) == 1 ? 'even' : 'idle').'">'
-			// 				.'<td>'
-			// 					.'<input type="text" value="'.$property['name'].'" name="system-property-name" id="system-property-name" />'
-			// 				.'</td>'
-			// 				.'<td>'
-			// 					.'<input type="text" value="" name="system-property-value" id="system-property-value" />'
-			// 				.'</td>'
-			// 				.'<td>'
-			// 					.'<input type="checkbox" name="system-properties-delete-item" />'
-			// 				.'</td>'
-			// 			.'</tr>';
-			// 	$i ++;
-			// }
 			
 			$i = 0;
 			foreach($properties as $prop) {
@@ -174,7 +156,7 @@
 			if($useFrames == "false") {
 				return $return;
 			} else {
-				return parent::getFrame(parent::rb()->get('personalproperties.title'), $return, "", true);
+				return parent::getFrame($title, $return, "", true);
 			}
 		}
 		

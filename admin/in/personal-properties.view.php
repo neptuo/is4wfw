@@ -1,3 +1,5 @@
 <v:template src="~/templates/in-template.view">
-	<sys:manageProperties />
+	<web:a pageId="~/in/default-properties.view" text="&laquo; Default properties" />
+
+	<sys:manageProperties userId="current" />
 </v:template>
