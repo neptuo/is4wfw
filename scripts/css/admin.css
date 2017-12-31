@@ -876,6 +876,10 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     color: blue;
 }
 
+.gray-color {
+    color: #cccccc;
+}
+
 .font-right {
     text-align: right;
 }

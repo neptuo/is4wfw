@@ -1449,10 +1449,10 @@ class Page extends BaseTagLib {
             } else {
                 $last = "";
             }
-            $pg_info = $dbObject->fetchAll("SELECT `name`, `language`, `language`.`id` AS `lang_id` FROM `info` LEFT JOIN `language` ON `info`.`language_id` = `language`.`id` WHERE `info`.`page_id` = " . $tmp['id'] . ";");
+            $pg_info = $dbObject->fetchAll("SELECT `name`, `is_visible`, `language`, `language`.`id` AS `lang_id` FROM `info` LEFT JOIN `language` ON `info`.`language_id` = `language`.`id` WHERE `info`.`page_id` = " . $tmp['id'] . ";");
             if (count($pg_info) > 0) {
                 $count++;
-                $innText = '<span class="page-id-col" title="Page Id">(' . $tmp['id'] . ')</span> <span class="page-name" title="Page Name">' . $pg_info[0]['name'] . '</span> : ' . '<span class="page-languages">( ';
+                $innText = '<span class="page-id-col" title="Page Id">(' . $tmp['id'] . ')</span> <span class="page-name' . ($pg_info[0]['is_visible'] == 0 ? ' gray-color' : '') . '" title="Page Name">' . $pg_info[0]['name'] . '</span> : ' . '<span class="page-languages">( ';
                 foreach ($pg_info as $inf) {
                     $parentLang = $dbObject->fetchAll('SELECT `page_id` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` WHERE `language_id` = ' . $inf['lang_id'] . ' AND `page`.`parent_id` = ' . $tmp['id'] . ';');
                     if (count($parentLang) > 0) {
@@ -1464,7 +1464,7 @@ class Page extends BaseTagLib {
                     //echo 'PageId: '.$tmp['id'].', Parent: '.$parent.', ThisParent: '.$thisParent.'<br />';
 
                     $innText .= ''
-                            . '<div class="page-language-version"> { '
+                            . '<div class="page-language-version' . ($pg_info['is_visible'] == 0 ? ' gray-color' : '') . '"> { '
                             . '<span class="page-language">'
                             . '<a target="_blank" href="' . $webObject->composeUrl($tmp['id'], $inf['lang_id']) . '">' . ((strlen($inf['language']) != 0) ? $inf['language'] : "-") . '</a>'
                             . '</span>'
@@ -1506,7 +1506,7 @@ class Page extends BaseTagLib {
                                     . '<input type="hidden" name="delete" value="' . $rb->get('pagelist.action.delete') . '" /> '
                                     . '<input class="confirm" type="image" title="' . $rb->get('pagelist.field.delete2') . ', id(' . $tmp['id'] . ')" src="' . WEB_ROOT . 'images/lang_del.png" name="delete" value="' . $rb->get('pagelist.action.delete') . '" />'
                                     . '</form>' : '')
-                            . '</div> } ';
+                            . ' } </div>';
                 }
                 $innText .= ''
                         . '[ '
