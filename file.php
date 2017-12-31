@@ -20,42 +20,39 @@ if (array_key_exists('fid', $_REQUEST)) {
     $file = $dbObject->fetchAll('SELECT `type`, `content` FROM `page_file` WHERE `id` = ' . $fileId . ';');
     if (count($file) == 1) {
         // Try cached file ...
-        header("Cache-Control: private, max-age=10800, pre-check=10800");
-        header("Pragma: private");
-        header("Expires: " . date(DATE_RFC822, strtotime("+2 day")));
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
+        $currentEtag = sha1($file[0]['content']);
+        $requestEtag = trim($_SERVER['HTTP_IF_NONE_MATCH']);
 
-        $updTime = filemtime($filePath);
-        //echo $updTime.' - '.getenv("HTTP_IF_MODIFIED_SINCE").' ; ';
-        if ($_SERVER["HTTP_IF_MODIFIED_SINCE"] && $updTime <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
-            //header("HTTP/1.1 304 Not Modified");
-            header('Last-Modified: ' . $_SERVER['HTTP_IF_MODIFIED_SINCE'], true, 304);
+        header("Cache-Control: private, max-age=10800, pre-check=10800");
+        header("Etag: " . $currentEtag);
+        if ($currentEtag == $requestEtag) {
+            header("HTTP/1.1 304 Not Modified");
             exit;
         }
 
         $fileType = "text/plain";
         switch ($file[0]['type']) {
-            case WEB_TYPE_CSS: $fileType = "text/css";
+            case WEB_TYPE_CSS: 
+                $fileType = "text/css";
                 break;
-            case WEB_TYPE_JS: $fileType = "application/x-javascript";
+            case WEB_TYPE_JS: 
+                $fileType = "application/x-javascript";
                 break;
         }
 
-        //echo UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php');
-        //echo UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), WEB_ROOT);
         $file[0]['content'] = str_replace("~/", UrlResolver::combinePath(WEB_ROOT, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), WEB_ROOT)), $file[0]['content']);
 
         // Zipovani ...
         /* $acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
-          if(headers_sent()) {
+        if(headers_sent()) {
           $encoding = false;
-          } elseif(strpos($acceptEnc, 'x-gzip') !== false) {
+        } elseif(strpos($acceptEnc, 'x-gzip') !== false) {
           $encoding = 'x-gzip';
-          } elseif(strpos($acceptEnc,'gzip') !== false) {
+        } elseif(strpos($acceptEnc,'gzip') !== false) {
           $encoding = 'gzip';
-          } else {
+        } else {
           $encoding = false;
-          } */
+        } */
 
         $return = $file[0]['content'];
 
@@ -107,7 +104,7 @@ if (array_key_exists('fid', $_REQUEST)) {
         header("Pragma: private");
         header("Expires: " . date(DATE_RFC822, strtotime("+7 day")));
         header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
-        //echo $updTime.' - '.getenv("HTTP_IF_MODIFIED_SINCE").' ; ';
+        // echo $updTime.' - '.getenv("HTTP_IF_MODIFIED_SINCE").' ; ';
         if ($_SERVER["HTTP_IF_MODIFIED_SINCE"] && $updTime <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
             //header("HTTP/1.1 304 Not Modified");
             header('Last-Modified: ' . $_SERVER['HTTP_IF_MODIFIED_SINCE'], true, 304);
@@ -199,17 +196,17 @@ if (array_key_exists('fid', $_REQUEST)) {
     $filePath = $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['path'];
     $updTime = filemtime($filePath);
     // Try cached file ...
-    header("Cache-Control: private, max-age=10800, pre-check=10800");
-    header("Pragma: private");
-    header("Expires: " . date(DATE_RFC822, strtotime("+7 day")));
-    header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
+    // header("Cache-Control: private, max-age=10800, pre-check=10800");
+    // header("Pragma: private");
+    // header("Expires: " . date(DATE_RFC822, strtotime("+7 day")));
+    // header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
 
     //echo $updTime.' - '.getenv("HTTP_IF_MODIFIED_SINCE").' ; ';
-    if ($_SERVER["HTTP_IF_MODIFIED_SINCE"] && $updTime <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
-        //header("HTTP/1.1 304 Not Modified");
-        header('Last-Modified: ' . $_SERVER['HTTP_IF_MODIFIED_SINCE'], true, 304);
-        exit;
-    }
+    // if ($_SERVER["HTTP_IF_MODIFIED_SINCE"] && $updTime <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
+    //     //header("HTTP/1.1 304 Not Modified");
+    //     header('Last-Modified: ' . $_SERVER['HTTP_IF_MODIFIED_SINCE'], true, 304);
+    //     exit;
+    // }
 
     if (file_exists($filePath) && is_readable($filePath)) {
         $fileSize = filesize($filePath);
