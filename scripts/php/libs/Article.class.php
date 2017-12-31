@@ -1055,6 +1055,11 @@ class Article extends BaseTagLib {
             return $return;
         }
     }
+
+    private function getLinesWithWriteRight() {
+        $lines = parent::db()->fetchAll('SELECT distinct `article_line`.`id`, `article_line`.`name`, `article_line`.`url` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') ORDER BY `id`;');
+        return $lines;
+    }
 	
     /**
      *
@@ -1098,7 +1103,7 @@ class Article extends BaseTagLib {
             $actionUrl = $webObject->composeUrl($detailPageId);
         }
 
-        $lines = $dbObject->fetchAll('SELECT distinct `article_line`.`id`, `article_line`.`name`, `article_line`.`url` FROM `article_line` LEFT JOIN `article_line_right` ON `article_line`.`id` = `article_line_right`.`line_id` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') ORDER BY `id`;');
+        $lines = self::getLinesWithWriteRight();
         if (count($lines) > 0) {
             $return .= ''
                     . '<div class="show-lines standart clickable"> '
@@ -2038,6 +2043,7 @@ class Article extends BaseTagLib {
             $label['name'] = $_POST['label-edit-name'];
             $label['url'] = $_POST['label-edit-url'];
             $label['seturl'] = $_POST['label-edit-seturl'];
+            $lineIds = $_POST['label-edit-lines'];
 
             foreach($label['url'] as $key => $value) {
                 if (strlen($value) == 0 && $label['seturl'][$key] == 'on') {
@@ -2071,6 +2077,11 @@ class Article extends BaseTagLib {
                     parent::db()->execute('update `article_label` set `order` = ' . $label['id'] . ' where `id` = ' . $label['id'] . ';');
                     $return .= parent::getSuccess($rb->get('label.updated'));
                 }
+                
+                parent::db()->execute('delete from `article_line_label` where `label_id` = ' . $label['id'] . ';');
+                foreach ($lineIds as $lineId) {
+                    parent::db()->execute('insert into `article_line_label`(`line_id`, `label_id`) values (' . $lineId . ', ' . $label['id'] . ');');
+                }
 
                 foreach($label['name'] as $languageId => $name) {
                     if($languageId != 'null') {
@@ -2090,11 +2101,15 @@ class Article extends BaseTagLib {
         }
 
         if ($_POST['label-edit'] == $rb->get('label.edit') || $_POST['label-new'] == $rb->get('label.new') || $ok == false) {
+            $usedLines = array();
+
             if ($_POST['label-id'] != '') {
                 $labelId = $_POST['label-id'];
                 $label = parent::db()->fetchSingle('select `id`, `name`, `url` from `article_label` where `id` = ' . $labelId . ';');
                 $label['name'] = array('null' => $label['name']);
                 $label['url'] = array('null' => $label['url']);
+
+                $usedLines = parent::db()->fetchAll('select `line_id` from `article_line_label` where `label_id` = ' . $labelId . ';');
             }
 
             $languageFormHtml = '';
@@ -2123,6 +2138,22 @@ class Article extends BaseTagLib {
                         . '</div>'
                     . '</div>';
             }
+            
+            $lines = self::getLinesWithWriteRight();
+            $lineList = '';
+            foreach ($lines as $line) {
+                $used = false;
+                foreach ($usedLines as $ul) {
+                    if ($line['id'] == $ul['line_id']) {
+                        $used = true;
+                        break;
+                    }
+                }
+
+                $lineList .= ''
+                    . '<input type="checkbox" name="label-edit-lines[]" id="label-edit-lines-' . $line['id'] . '" ' . ($used ? ' checked="checked"' : '') . ' value="' . $line['id'] . '" />'
+                    . '<label for="label-edit-lines-' . $line['id'] . '">' . $line['name'] . '</label> ';
+            }
 
             $return .= ''
                 . '<form name="label-edit-form" method="post" action="' . $artionUrl . '">'
@@ -2135,6 +2166,12 @@ class Article extends BaseTagLib {
                         . '<input type="text" class="w200" name="label-edit-url[null]" id="label-edit-url" value="' . $label['url']['null'] . '" />'
                         . '<input type="checkbox" name="label-edit-seturl[null]" id="label-edit-seturl"' . (strlen($label['name']['null']) > 0 && strlen($label['url']['null']) == 0 ? '' : ' checked="checked"') . ' />'
                         . '<label for="label-edit-seturl">' . $rb->get('label.seturl') . '</label>'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<span class="w180">' . $rb->get('label.availablelines') . ':</span>'
+                        . '<div>'
+                            . $lineList
+                        . '</div>'
                     . '</div>'
                     . $languageFormHtml
                     . '<div class="gray-box">'
