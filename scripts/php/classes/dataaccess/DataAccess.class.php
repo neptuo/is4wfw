@@ -18,9 +18,9 @@ class DataAccess {
 	private $inTransaction = false;
   
 	public function connect($hostname, $user, $passwd, $database){
-		$this->connection = mysql_connect($hostname, $user, $passwd);
-		mysql_query("use ".$database);
-		echo mysql_error();
+		$this->connection = mysqli_connect($hostname, $user, $passwd);
+		mysqli_query($this->connection, "use ".$database);
+		echo mysqli_error($this->connection);
 		
 		if ($this->connection) {
 			$this->isOpened = true;
@@ -33,7 +33,7 @@ class DataAccess {
 			$data = self::fetchSingle('SELECT `value` FROM `system_property` WHERE `key` = "' . DataAccess::$CharsetSystemProperty . '";');
 			self::enableCache();
 			if ($data != array()) {
-				mysql_set_charset($data['value']);
+				mysqli_set_charset($this->connection, $data['value']);
 			}
 		}
 		
@@ -45,7 +45,7 @@ class DataAccess {
 			self::commit();
 		}
 		if(self::isOpened()) {
-			mysql_close($this->connection);
+			mysqli_close($this->connection);
 		}
 	}
 	
@@ -106,7 +106,7 @@ class DataAccess {
 			}
 			  
 			if(!$notExecuteQuery && !$this->mockMode) {
-				$result = @mysql_query($query);
+				$result = @mysqli_query($this->connection, $query);
 				
 				self::tryToProcessError($query);
 			}
@@ -155,13 +155,13 @@ class DataAccess {
 				} 
 				
 				$this->queriesPerRequest ++;
-				$result = mysql_query($query);
+				$result = mysqli_query($this->connection, $query);
   				
   				self::tryToProcessError($query);
   				
 				if($this->errorCode == 0) {
-					$this->rowsCount = mysql_num_rows($result);
-					while($row = mysql_fetch_assoc($result)) {
+					$this->rowsCount = mysqli_num_rows($result);
+					while($row = mysqli_fetch_assoc($result)) {
 						$return[] = $row;
 					}
 				}
@@ -219,9 +219,9 @@ class DataAccess {
 	private function tryToProcessError($query) {
     	global $logObject;
 		
-		$this->errorCode = mysql_errno();
+		$this->errorCode = mysqli_errno($this->connection);
 		if($this->errorCode != 0) {
-			$this->errorMessage = mysql_error();
+			$this->errorMessage = mysqli_error($this->connection);
 			
 			if(is_object($logObject)) {
 				$logObject->write('Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMessage.', QUERY = '.$query.'');
@@ -270,7 +270,7 @@ class DataAccess {
 	* funkce pro z�sk�n� naposledy vkl�dan�ho ID
 	*/
 	public function getLastId() {
-		return mysql_insert_id($this->connection);
+		return mysqli_insert_id($this->connection);
 	}
   
 	/**
@@ -311,7 +311,7 @@ class DataAccess {
 	}
 
 	public function getCharset() {
-		return mysql_client_encoding($this->connection);
+		return mysqli_client_encoding($this->connection);
 	}
 }
 
