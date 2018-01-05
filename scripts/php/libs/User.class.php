@@ -26,7 +26,7 @@ class User extends BaseTagLib {
         self::setTagLibXml("xml/User.xml");
 
         if ($webObject->LanguageName != '') {
-            $rb = new ResourceBundle();
+            $rb = new LocalizationBundle();
             if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
                 $this->BundleLang = $webObject->LanguageName;
             }
@@ -37,7 +37,7 @@ class User extends BaseTagLib {
         global $dbObject;
         global $loginObject;
         $return = '';
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($_POST['user-edit-save'] == $rb->get('management.save')) {
@@ -183,12 +183,12 @@ class User extends BaseTagLib {
                         . $groupList
                         . '</td>'
                         . '<td class="user-list-td user-list-edit">'
-                        . '<form name="user-list-edit1" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="user-list-edit1" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<input type="hidden" name="user-list-uid" value="' . $user['this_uid'] . '" />'
                         . '<input type="hidden" name="user-list-edit" value="' . $rb->get('management.edit') . '" />'
                         . '<input type="image" src="~/images/page_edi.png" name="user-list-edit" value="' . $rb->get('management.edit') . '" title="' . $rb->get('management.edit') . ', id(' . $user['this_uid'] . ')" /> '
                         . '</form>'
-                        . '<form name="user-list-edit2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="user-list-edit2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<input type="hidden" name="user-list-uid" value="' . $user['this_uid'] . '" />'
                         . '<input type="hidden" name="user-list-delete" value="' . $rb->get('management.delete') . '" />'
                         . '<input class="confirm" type="image" src="~/images/page_del.png" name="user-list-delete" value="' . $rb->get('management.delete') . '" title="' . $rb->get('management.deletetitle') . ', id(' . $user['this_uid'] . ')" />'
@@ -204,7 +204,7 @@ class User extends BaseTagLib {
             $returnTmp .= ''
                     . '<hr />'
                     . '<div class="gray-box">'
-                    . '<form name="user-new-user" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="user-new-user" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<input type="submit" name="new-user" value="' . $rb->get('management.new') . '" title="' . $rb->get('management.newtitle') . '" />'
                     . '</form>'
                     . '</div>';
@@ -217,7 +217,7 @@ class User extends BaseTagLib {
     private function editForm($user, $groups, $showMain) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') ORDER BY `value`;');
@@ -253,7 +253,7 @@ class User extends BaseTagLib {
 
         $return .= ''
 		. '<div class="user-edit-cover">'
-			. '<form name="user-edit-form" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+			. '<form name="user-edit-form" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="user-edit-prop">'
 					. '<div class="user-edit-login">'
 						. '<label for="user-edit-login">' . $rb->get('reg.username') . ': <span>*</span></label> '
@@ -366,7 +366,7 @@ class User extends BaseTagLib {
 
             $return .= ''
                     . '<div class="add-new-group">'
-                    . '<form name="add-new-group" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="add-new-group" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<div class="gray-box-float">'
                     . '<label for="new-group-name" class="w300">Group name: (<span class="red">at least 2 characters</span>)</label> '
                     . '<input type="text" id="new-group-name" name="new-group-name" value="' . $groupName . '" class="w200" />'
@@ -451,13 +451,13 @@ class User extends BaseTagLib {
                             . '<td class="group-list-name">' . $group['name'] . '</td>'
                             . '<td class="group-list-parent">' . $parentName . '</td>'
                             . '<td class="group-list-action">'
-                            . '<form name="group-perms-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                            . '<form name="group-perms-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                 . '<input type="hidden" name="group-id" value="' . $group['gid'] . '" />'
                                 . '<input type="hidden" name="group-edit" value="Edit group permissions" />'
                                 . '<input type="image" src="~/images/page_edi.png" name="group-edit" value="Edit group permissions" title="Edit group permissions, id(' . $group['gid'] . ')" />'
                             . '</form> '
                             . (((count($dbObject->fetchAll('SELECT `gid` FROM `user_in_group` WHERE `gid` = ' . $group['gid'] . ';')) == 0) && (count($dbObject->fetchAll('SELECT `gid` FROM `group` WHERE `parent_gid` = ' . $group['gid'] . ';')) == 0)) ? ''
-                                    . '<form name="group-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                                    . '<form name="group-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                     . '<input type="hidden" name="group-id" value="' . $group['gid'] . '" />'
                                     . '<input type="hidden" name="delete-group" value="Delete group" />'
                                     . '<input class="confirm" type="image" src="~/images/page_del.png" name="delete-group" value="Delete group" title="Delete group, id(' . $group['gid'] . ')" />'
@@ -502,7 +502,7 @@ class User extends BaseTagLib {
 
     public function editAdminsGroup() {
         return ''
-        . '<form name="group-perms-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+        . '<form name="group-perms-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
             . '<input type="hidden" name="group-id" value="' . 1 . '" />'
             . '<input type="hidden" name="group-edit" value="Edit group permissions" />'
             . '<input type="image" src="~/images/page_edi.png" name="group-edit" value="Edit group permissions" title="Edit group permissions, id(' . $group['gid'] . ')" />'
@@ -510,7 +510,7 @@ class User extends BaseTagLib {
     }
 
     public function editGroupPerms($useFrames = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -548,7 +548,7 @@ class User extends BaseTagLib {
             $perms = parent::db()->fetchAll('select `id`, `name`, `value`, `type` from `group_perms` where `group_id` = ' . $groupId . ' order by `name`, `id`;');
 
             $return .= ''
-                    . '<form name="group-perm-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="group-perm-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<div class="gray-box">'
                     . '<table class="standart">'
                     . '<tr>'
@@ -708,7 +708,7 @@ class User extends BaseTagLib {
 
             $return .= ''
                     . '<div class="user-log-truncate">'
-                    . '<form name="user-log-truncate" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="user-log-truncate" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<input class="confirm" type="submit" name="user-log-truncate" value="Clear user log!" title="Clear user log" />'
                     . '</form>'
                     . '</div>';
@@ -725,7 +725,7 @@ class User extends BaseTagLib {
 
     public function registerUser($groups, $disableUser = false, $pageId = false) {
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $user = array();
         $ok = true;
@@ -794,7 +794,7 @@ class User extends BaseTagLib {
         }
 
         $return .= ''
-                . '<form name="user-register" action="' . $_SERVER['REDIRECT_URL'] . '" method="post">'
+                . '<form name="user-register" action="' . $_SERVER['REQUEST_URI'] . '" method="post">'
                 . $msgHtml
                 . '<div class="gray-box">'
                 . '<label for="user-register-name">' . $rb->get('reg.name') . '</label>'

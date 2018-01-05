@@ -7,7 +7,7 @@
  */
 require_once("BaseTagLib.class.php");
 
-require_once("scripts/php/classes/ResourceBundle.class.php");
+require_once("scripts/php/classes/LocalizationBundle.class.php");
 require_once("scripts/php/classes/dataaccess/Select.class.php");
 require_once("scripts/php/classes/RoleHelper.class.php");
 
@@ -55,7 +55,7 @@ class FileAdmin extends BaseTagLib {
         global $webObject;
 
         parent::setTagLibXml("xml/FileAdmin.xml");
-		parent::loadResourceBundle('fileadmin');
+		parent::loadLocalizationBundle('fileadmin');
 		
 		self::transformFileSystem();
     }

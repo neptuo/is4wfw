@@ -89,7 +89,7 @@ class Js extends BaseTagLib {
                     . '<script type="text/javascript" src="~/tiny-mce/tiny_mce.js?version='.WEB_VERSION.'"></script>'
                     . '<script type="text/javascript" src="~/scripts/js/initTiny.js?version='.WEB_VERSION.'"></script>';
         }
-        if(strpos($_SERVER['REDIRECT_URL'], ".view") == -1) {
+        if(strpos($_SERVER['REQUEST_URI'], ".view") == -1) {
             $return = str_replace("~/", UrlResolver::combinePath(WEB_ROOT, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), WEB_ROOT)), $return);
         } else {
             $return = ViewHelper::resolveUrl($return);

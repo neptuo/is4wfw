@@ -681,7 +681,7 @@ WFW-WP
 					scripts\php\classes\FullTagParser.class.php
 					scripts\php\classes\QueryStorage.class.php
 					scripts\php\classes\RequestStorage.class.php
-					scripts\php\classes\ResourceBundle.class.php
+					scripts\php\classes\LocalizationBundle.class.php
 					scripts\php\classes\SessionStorage.class.php
 					scripts\php\classes\UniversalPermission.class.php
 					scripts\php\classes\ViewHelper.class.php

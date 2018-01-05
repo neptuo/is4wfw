@@ -2171,7 +2171,7 @@ class DefaultWeb extends BaseTagLib {
         // require_once("/scripts/php/classes/ui/BaseForm.class.php");
 
         // $form = new BaseForm();
-        // $form->setFormAttrs('text-form', 'post', $_SERVER['REDIRECT_URL'], 'text-form-class-name');
+        // $form->setFormAttrs('text-form', 'post', $_SERVER['REQUEST_URI'], 'text-form-class-name');
         // $form->addField('text', 'name', 'Name:', 'Your name ...', 'w160', 'w300');
         // $form->addField('textarea', 'content', 'Content:', '', 'w160', 'w300');
         // $form->addDropDown('type', 'Type:', array(array('key' => 0, 'value' => 'Comment'), array('key' => 1, 'value' => 'New topic'), array('key' => 2, 'value' => 'Note')), 2, 'w160', 'w200');

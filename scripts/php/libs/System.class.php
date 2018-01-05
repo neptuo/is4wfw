@@ -7,6 +7,7 @@
    */
   require_once("BaseTagLib.class.php");
   require_once("scripts/php/classes/RoleHelper.class.php");
+  require_once("scripts/php/classes/LocalizationBundle.class.php");
   
   /**
    * 
@@ -75,7 +76,7 @@
 		);
 
 		public function manageProperties($userId = false, $useFrames = false, $showMsg = false) {
-			parent::loadResourceBundle('system');
+			parent::loadLocalizationBundle('system');
 
 			$title = '';
 			if ($userId == '' || $userId == 'current') {
@@ -112,7 +113,7 @@
 			
 			$return .= '' 
 			.'<div class="system-properties">'
-				.'<form name="system-properties" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+				.'<form name="system-properties" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 					.'<table>'
 						.'<tr>'
 							.'<th class="system-properties-name">' . parent::rb()->get('personalproperties.name') . ':</th>'
@@ -194,7 +195,7 @@
 			
 			$return .= '' 
 			.'<div class="system-notes">'
-				.'<form name="system-note" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+				.'<form name="system-note" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 					.'<table>'
 						.'<tr>'
 							.'<th class="system-note-value">Value:</th>'
@@ -386,7 +387,7 @@
 				}
 				
 				$return .= ''
-				.'<form method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+				.'<form method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 					.'<div class="gray-box">'
 						.'<label for="adminmenu-name" class="w160">Name:</label>'
 						.'<input type="text" name="adminmenu-name" id="adminmenu-name" value="'.$data['name'].'" class="w160" />'
@@ -432,12 +433,12 @@
 					.'<td>'.$item['icon'].'</td>'
 					.'<td>'.$item['perm'].'</td>'
 					.'<td>'
-						.'<form method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<form method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 							.'<input type="hidden" name="adminmenu-id" value="'.$item['id'].'" />'
 							.'<input type="hidden" name="adminmenu-edit" value="Edit" />'
 							.'<input type="image" src="~/images/page_edi.png" name="adminmenu-edit" value="Edit" title="Edit admin menu item, id '.$item['id'].'" />'
 						.'</form> '
-						.'<form method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+						.'<form method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 							.'<input type="hidden" name="adminmenu-id" value="'.$item['id'].'" />'
 							.'<input type="hidden" name="adminmenu-delete" value="Delete" />'
 							.'<input type="image" src="~/images/page_del.png" name="adminmenu-delete" value="Delete" title="Delete admin menu item, id '.$item['id'].'" />'
@@ -449,7 +450,7 @@
 			$return .= '</table></div>'
 			.'<hr />'
 			.'<div class="gray-box">'
-				.'<form method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+				.'<form method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 					.'<input type="submit" name="adminmenu-new" value="Create" title="Create admin menu item" />'
 				.'</form>'
 			.'</div>';
@@ -492,12 +493,12 @@
 							.'<td>'.$conn['hostname'].'</td>'
 							.'<td>'.$conn['database'].'</td>'
 							.'<td>'
-								.'<form name="db-connection-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+								.'<form name="db-connection-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 									.'<input type="hidden" name="db-connection-conn-id" value="'.$conn['id'].'" />'
 									.'<input type="hidden" name="db-connection-conn-edit" value="Edit connection" />'
 									.'<input type="image" src="~/images/page_edi.png" name="db-connection-conn-edit" value="Edit connection" title="Edit connection, id '.$conn['id'].'" />'
 								.'</form> '
-								.'<form name="db-connection-delete" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+								.'<form name="db-connection-delete" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 									.'<input type="hidden" name="db-connection-conn-id" value="'.$conn['id'].'" />'
 									.'<input type="hidden" name="db-connection-conn-delete" value="Delete connection" />'
 									.'<input class="confirm" type="image" src="~/images/page_del.png" name="db-connection-conn-delete" value="Delete connection" title="Delete connection, id '.$conn['id'].'" />'
@@ -513,7 +514,7 @@
 				.'</table>'
 				.'<hr />'
 				.'<div class="gray-box">'
-					.'<form name="db-connection-new" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<form name="db-connection-new" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 						.'<span>Create new database connection</span> '
 						.'<input type="hidden" name="db-connection-conn-new" value="Create connection" />'
 						.'<input type="image" src="~/images/page_add.png" name="db-connection-conn-new" value="Create connection" title="Create connection" />'
@@ -590,7 +591,7 @@
 		private function generateEditConnectionForm($id, $name, $hostname, $user, $password, $database) {
 			$return = ''
 			.'<div class="db-connection-edit">'
-				.'<form name="db-connection-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+				.'<form name="db-connection-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 					.parent::getWarning('Passwords are stored and displayed as plain text!')
 					.'<div class="gray-box">'
 						.'<label for="db-connection-name" class="w160">Name:</label>'

@@ -198,7 +198,7 @@ class Login extends BaseTagLib {
             }
 
             $return = '<div class="login-form">' .
-                    '<form name="login" method="post" action="' . $_SERVER['REDIRECT_URL'] . (array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '') . '">' .
+                    '<form name="login" method="post" action="' . $_SERVER['REQUEST_URI'] . (array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '') . '">' .
                     ((strlen($message) > 0) ? '<p class="login-message">' . $message . '</p>' : '') .
                     '<p class="login-head">Login</p>' .
                     '<p class="login-user">' .
@@ -278,7 +278,7 @@ class Login extends BaseTagLib {
             }
 
             $return = '<div class="logout-form">' .
-                    '<form name="logout" method="post" action="' . $_SERVER['REDIRECT_URL'] . (array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '') . '">' .
+                    '<form name="logout" method="post" action="' . $_SERVER['REQUEST_URI'] . (array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '') . '">' .
                     '<p class="logout-submit">' .
                     '<input type="submit" name="logout" value="Log out" />' .
                     '</p>' .

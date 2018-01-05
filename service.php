@@ -2,13 +2,13 @@
 
     print_r($_SERVER);
 
-    if(strpos($_SERVER['REDIRECT_URL'], 'service/') == -1) {
+    if(strpos($_SERVER['REQUEST_URI'], 'service/') == -1) {
         header("HTTP/1.1 404 Not Found");
         exit;
     }
 
     $found = false;
-    $url = split("/", $_SERVER['REDIRECT_URL']);
+    $url = split("/", $_SERVER['REQUEST_URI']);
     //print_r($url);
     $services = new SimpleXMLElement(file_get_contents(SCRIPTS.'/config/services.xml'));
     foreach($services as $service) {

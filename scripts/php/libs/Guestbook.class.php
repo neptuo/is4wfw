@@ -7,7 +7,7 @@
    */
   require_once("BaseTagLib.class.php");
 
-  require_once("scripts/php/classes/ResourceBundle.class.php");
+  require_once("scripts/php/classes/LocalizationBundle.class.php");
   
   /**
    * 
@@ -31,7 +31,7 @@
       parent::setTagLibXml("xml/Guestbook.xml");
       
       if($webObject->LanguageName != '') {
-				$rb = new ResourceBundle();
+				$rb = new LocalizationBundle();
 				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
 					$this->BundleLang = $webObject->LanguageName;
 				}
@@ -53,7 +53,7 @@
       global $webObject;
       global $dbObject;
 			
-			$rb = new ResourceBundle();
+			$rb = new LocalizationBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			
       $return = "";
@@ -252,7 +252,7 @@
       global $webObject;
       global $dbObject;
 			
-			$rb = new ResourceBundle();
+			$rb = new LocalizationBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			
       $return = "";
@@ -285,13 +285,13 @@
       global $webObject;
       global $dbObject;
 			
-			$rb = new ResourceBundle();
+			$rb = new LocalizationBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			
       $rows = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `timestamp` FROM `guestbook` WHERE `guestbook_id` = ".$guestbookId." AND `parent_id` = ".$parentId." ORDER BY `timestamp` DESC;");
       
       if($answerPageId == false) {
-        $answerHref = $_SERVER['REDIRECT_URL'];
+        $answerHref = $_SERVER['REQUEST_URI'];
       } else {
         $answerHref = $webObject->composeUrl($answerPageId);
       }
@@ -307,7 +307,7 @@
           .'<div class="guestbook-head">'
             .(($editable == "true") ? ''
             .'<div class="guestbook-editable">'
-              .'<form name="guestbook-editable" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+              .'<form name="guestbook-editable" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
                 .'<input type="hidden" name="guestbook-editable-gbid" value="'.$guestbookId.'" />'
                 .'<input type="hidden" name="guestbook-editable-id" value="'.$row['id'].'" />'
                 .'<input type="hidden" name="guestbook-editable-delete" value="Delete Entry" />'

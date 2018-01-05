@@ -9,7 +9,7 @@ require_once("BaseTagLib.class.php");
 require_once("scripts/php/classes/ui/BaseGrid.class.php");
 require_once("scripts/php/classes/ui/BaseForm.class.php");
 require_once("scripts/php/classes/FullTagParser.class.php");
-require_once("scripts/php/classes/ResourceBundle.class.php");
+require_once("scripts/php/classes/LocalizationBundle.class.php");
 
 /**
  * 
@@ -36,7 +36,7 @@ class Sport extends BaseTagLib {
         parent::setTagLibXml("xml/Sport.xml");
 
         if ($webObject->LanguageName != '') {
-            $rb = new ResourceBundle();
+            $rb = new LocalizationBundle();
             if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
                 $this->BundleLang = $webObject->LanguageName;
             }
@@ -76,7 +76,7 @@ class Sport extends BaseTagLib {
      */
     public function selectSeason($useFrames = false, $showMsg = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -92,7 +92,7 @@ class Sport extends BaseTagLib {
         if (self::isSetProjectId()) {
             $return .= ''
                     . '<div class="select-season">'
-                    . '<form name="select-season" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="select-season" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<label for="select-season">' . $rb->get('season.selectlab') . ':</label> '
                     . '<select name="select-season" id="select-season">'
                     . '<option value="0">' . $rb->get('season.all') . '</option>'
@@ -124,7 +124,7 @@ class Sport extends BaseTagLib {
      */
     public function selectTable($useFrames = false, $showMsg = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -140,7 +140,7 @@ class Sport extends BaseTagLib {
         if (self::isSetProjectId()) {
             $return .= ''
                     . '<div class="select-table">'
-                    . '<form name="select-table" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="select-table" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<label for="select-table">' . $rb->get('tables.selectlab') . ':</label> '
                     . '<select name="select-table" id="select-table">'
                     . '<option value="0">' . $rb->get('tables.all') . '</option>'
@@ -172,7 +172,7 @@ class Sport extends BaseTagLib {
      */
     public function selectTeam($useFrames = false, $showMsg = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -188,7 +188,7 @@ class Sport extends BaseTagLib {
         if (self::isSetProjectId()) {
             $return .= ''
                     . '<div class="select-team">'
-                    . '<form name="select-team" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="select-team" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<label for="select-team">' . $rb->get('team.selectlab') . ':</label> '
                     . '<select name="select-team" id="select-team">'
                     . '<option value="0">' . $rb->get('team.all') . '</option>'
@@ -219,7 +219,7 @@ class Sport extends BaseTagLib {
      *
      */
     public function selectProject($useFrames = false, $showMsg = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -235,7 +235,7 @@ class Sport extends BaseTagLib {
         if ($projectsOptions != '') {
             $return .= ''
                     . '<div class="gray-box-float">'
-                    . '<form name="select-project" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<label for="select-project">' . $rb->get('project.selectlab') . ':</label> '
                     . '<select name="select-project" id="select-project" class="w160">'
                     . $projectsOptions
@@ -262,14 +262,14 @@ class Sport extends BaseTagLib {
      *
      */
     public function showEditProjects($pageId = false, $useFrames = false, $showMsg = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $retrun = '';
 
         if ($pageId != false) {
             $actionUrl = $webObject->composeUrl($pageId);
         } else {
-            $actionUrl = $_SERVER['REDIRECT_URL'];
+            $actionUrl = $_SERVER['REQUEST_URI'];
         }
 
         if ($_POST['project-delete'] == $rb->get('projects.delete')) {
@@ -343,7 +343,7 @@ class Sport extends BaseTagLib {
     public function showEditProjectForm($useFrames = false, $showMsg = false) {
         global $dbObject;
         $return = '';
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -389,7 +389,7 @@ class Sport extends BaseTagLib {
                     $project = $project[0];
                 }
                 $return .= ''
-                        . '<form name="project-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="project-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<div class="gray-box">'
                         . '<label for="project-name" class="w160">' . $rb->get('projects.name') . '</label>'
                         . '<input class="w200" type="text" name="project-name" id="project-name" value="' . $project['name'] . '" />'
@@ -439,7 +439,7 @@ class Sport extends BaseTagLib {
     public function showEditSeasons($pageId = false, $useFrames = false, $showMsg = false) {
         global $dbObject;
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $retrun = '';
 
@@ -447,7 +447,7 @@ class Sport extends BaseTagLib {
             if ($pageId != false) {
                 $actionUrl = $webObject->composeUrl($pageId);
             } else {
-                $actionUrl = $_SERVER['REDIRECT_URL'];
+                $actionUrl = $_SERVER['REQUEST_URI'];
             }
             if ($_POST['season-delete'] == $rb->get('seasons.delete')) {
                 if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
@@ -522,7 +522,7 @@ class Sport extends BaseTagLib {
     public function showEditSeasonForm($useFrames = false, $showMsg = false) {
         global $dbObject;
         $return = '';
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $season = array();
 
@@ -559,7 +559,7 @@ class Sport extends BaseTagLib {
                 }
                 $return .= ''
                         . '<div class="season-edit-form">'
-                        . '<form name="season-edit-form" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="season-edit-form" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<div class="season-edit-start">'
                         . '<label for="season-edit-start">' . $rb->get('seasons.form.startyear') . ':</label> '
                         . '<input type="text" name="season-edit-start" id="season-edit-start" value="' . $season['start_year'] . '" />'
@@ -600,7 +600,7 @@ class Sport extends BaseTagLib {
     public function showEditTeams($pageId = false, $useFrames = false, $showMsg = false) {
         global $dbObject;
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $retrun = '';
 
@@ -608,7 +608,7 @@ class Sport extends BaseTagLib {
             if ($pageId != false) {
                 $actionUrl = $webObject->composeUrl($pageId);
             } else {
-                $actionUrl = $_SERVER['REDIRECT_URL'];
+                $actionUrl = $_SERVER['REQUEST_URI'];
             }
 
             if ($_POST['team-add-season-submit'] == $rb->get('teams.addseasonsubmit')) {
@@ -747,7 +747,7 @@ class Sport extends BaseTagLib {
      */
     public function showEditTeamForm($useFrames = false, $showMsg = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $team = array();
@@ -856,7 +856,7 @@ class Sport extends BaseTagLib {
 
                 $return .= ''
                         . '<div class="team-edit-form">'
-                        . '<form name="team-edit-form" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="team-edit-form" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<div class="gray-box">'
                         . '<label class="w160" for="team-edit-name">' . $rb->get('teams.name') . ':</label> '
                         . '<input class="w200" type="text" name="team-edit-name" id="team-edit-name" value="' . $team['name'] . '" />'
@@ -901,7 +901,7 @@ class Sport extends BaseTagLib {
 
     public function showCopyTeamTableStatsForm($useFrames = false) {
         $return = '';
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
@@ -964,7 +964,7 @@ class Sport extends BaseTagLib {
             }
 
             $return .= ''
-                    . '<form name="tema-copy-stats" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="tema-copy-stats" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . $errors
                     . '<div class="gray-box">'
                     . '<label for="tcopy-team">' . $rb->get('tcopy.team') . ':</label> '
@@ -1011,10 +1011,10 @@ class Sport extends BaseTagLib {
      */
     public function showEditPlayers($pageId = false, $useFrames = false, $showMsg = false) {
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $retrun = '';
-        $actionUrl = $_SERVER['REDIRECT_URL'];
+        $actionUrl = $_SERVER['REQUEST_URI'];
 
         if (!self::isSetProjectId()) {
             $return .= parent::getError($rb->get('project.notset'));
@@ -1022,7 +1022,7 @@ class Sport extends BaseTagLib {
             if ($pageId != false) {
                 $actionUrl = $webObject->composeUrl($pageId);
             } else {
-                $actionUrl = $_SERVER['REDIRECT_URL'];
+                $actionUrl = $_SERVER['REQUEST_URI'];
             }
 
             if ($_POST['player-delete'] == $rb->get('players.delete')) {
@@ -1102,7 +1102,7 @@ class Sport extends BaseTagLib {
                                 . '<input type="hidden" name="player-edit" value="' . $rb->get('players.edit') . '" />'
                                 . '<input type="image" src="~/images/page_edi.png" name="player-edit" value="' . $rb->get('players.edit') . '" title="' . $rb->get('players.editcap') . '" />'
                                 . '</form> '
-                                . '<form name="player-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                                . '<form name="player-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                 . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
                                 . '<input type="hidden" name="season-id" value="' . $sea['sid'] . '" />'
                                 . '<input type="hidden" name="team-id" value="' . $sea['tid'] . '" />'
@@ -1118,7 +1118,7 @@ class Sport extends BaseTagLib {
                             . '<input type="hidden" name="player-add" value="' . $rb->get('players.add') . '" />'
                             . '<input type="image" src="~/images/page_add.png" name="player-add" value="' . $rb->get('players.add') . '" title="' . $rb->get('players.addcap') . '" />'
                             . '</form> '
-                            . '<form name="player-deletewhole" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                            . '<form name="player-deletewhole" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                             . '<input type="hidden" name="player-id" value="' . $pl['id'] . '" />'
                             . '<input type="hidden" name="player-deletewhole" value="' . $rb->get('players.deletewhole') . '" />'
                             . '<input class="confirm" type="image" src="~/images/page_del.png" name="player-deletewhole" value="' . $rb->get('players.deletewhole') . '" title="' . $rb->get('players.deletewholecap') . ', id (' . $pl['id'] . ')" />'
@@ -1163,7 +1163,7 @@ class Sport extends BaseTagLib {
      */
     public function showEditPlayerForm($useFrames = false, $showMsg = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $ok = true;
         $player = array();
@@ -1254,7 +1254,7 @@ class Sport extends BaseTagLib {
 
             $return .= ''
                     . '<div class="player-edit-form">'
-                    . '<form name="player-edit-form" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="player-edit-form" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<div class="player-edit-name">'
                     . '<label for="player-edit-name">' . $rb->get('players.form.name') . ':</label>'
                     . '<input type="text" name="player-edit-name" id="player-edit-name" value="' . $player['name'] . '" />'
@@ -1331,7 +1331,7 @@ class Sport extends BaseTagLib {
         global $webObject;
         $return = '';
         $player = array();
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($_POST['player-search-submit'] == $rb->get('player.search.submit')) {
@@ -1363,7 +1363,7 @@ class Sport extends BaseTagLib {
         }
 
         $return .= ''
-                . '<form name="player-search" method="post" action="' . $_SEVER['REDIRECT_URL'] . '">'
+                . '<form name="player-search" method="post" action="' . $_SEVER['REQUEST_URI'] . '">'
                 . '<div class="player-search-name gray-box">'
                 . '<label for="player-search-name" class="w100">' . $rb->get('players.form.name') . '</label>'
                 . '<input class="w200" type="text" name="player-search-name" id="player-search-name" value="' . parent::session()->get('name', 'player-search') . '" />'
@@ -1420,7 +1420,7 @@ class Sport extends BaseTagLib {
      *
      */
     public function showEditTables($pageId = false, $useFrames = false, $showMsg = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $retrun = '';
 
@@ -1453,12 +1453,12 @@ class Sport extends BaseTagLib {
                             . '<td>' . $table['id'] . '</td>'
                             . '<td>' . $table['name'] . '</td>'
                             . '<td>'
-                            . '<form name="tables-edit" action="' . $_SERVER['REDIRECT_URL'] . '" method="post">'
+                            . '<form name="tables-edit" action="' . $_SERVER['REQUEST_URI'] . '" method="post">'
                             . '<input type="hidden" name="table-id" value="' . $table['id'] . '" />'
                             . '<input type="hidden" name="table-edit" value="' . $rb->get('tables.edit') . '" />'
                             . '<input type="image" src="~/images/page_edi.png" name="table-edit" value="' . $rb->get('tables.edit') . '" title="' . $rb->get('tables.edittitle') . '" />'
                             . '</form> '
-                            . '<form name="tables-delete" action="' . $_SERVER['REDIRECT_URL'] . '" method="post">'
+                            . '<form name="tables-delete" action="' . $_SERVER['REQUEST_URI'] . '" method="post">'
                             . '<input type="hidden" name="table-id" value="' . $table['id'] . '" />'
                             . '<input type="hidden" name="table-delete" value="' . $rb->get('tables.delete') . '" />'
                             . '<input class="confirm" type="image" src="~/images/page_del.png" name="table-delete" value="' . $rb->get('tables.delete') . '" title="' . $rb->get('tables.deletetitle') . ', id(' . $table['id'] . ')" />'
@@ -1475,7 +1475,7 @@ class Sport extends BaseTagLib {
 
             $return .= ''
                     . '<hr />'
-                    . '<form name="tables-add" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="tables-add" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
 						. '<input type="submit" name="tables-add" value="' . $rb->get('tables.add') . '" /> '
                     . '</form>';
         }
@@ -1488,7 +1488,7 @@ class Sport extends BaseTagLib {
     }
 
     public function showEditTableForm($pageId = false, $useFrames = false, $showMsg = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $retrun = '';
         $table = array();
@@ -1522,7 +1522,7 @@ class Sport extends BaseTagLib {
             }
 
             $return .= ''
-                    . '<form name="table-detaill-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="table-detaill-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<div class="gray-box">'
                     . '<label for="table-detail-name" class="w100">' . $rb->get('tables.name') . ':</label>'
                     . '<input type="text" name="table-detail-name" id="table-detail-name" value="' . $table['name'] . '" />'
@@ -1554,14 +1554,14 @@ class Sport extends BaseTagLib {
     public function showEditMatches($pageId = false, $useFrames = false, $showMsg = false) {
         global $dbObject;
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $retrun = '';
 
         if ($pageId != false) {
             $actionUrl = $webObject->composeUrl($pageId);
         } else {
-            $actionUrl = $_SERVER['REDIRECT_URL'];
+            $actionUrl = $_SERVER['REQUEST_URI'];
         }
 
         if ($_POST['match-delete'] == $rb->get('matches.delete')) {
@@ -1746,7 +1746,7 @@ class Sport extends BaseTagLib {
     public function showEditMatchForm($useFrames = false, $showMsg = false) {
         global $dbObject;
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $match = array();
         $return = '';
@@ -1938,7 +1938,7 @@ class Sport extends BaseTagLib {
 
             $return .= ''
                     . '<div class="match-edit-form">'
-                    . '<form name="match-edit-form" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="match-edit-form" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<table class="match-edit-table">'
                     . '<tr>'
                     . '<th class="match-table-team"> </th>'
@@ -2083,7 +2083,7 @@ class Sport extends BaseTagLib {
      */
     public function showEditStatsForm($useFrames = false, $showMsg = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $ok = true;
         $return = '';
@@ -2321,7 +2321,7 @@ class Sport extends BaseTagLib {
 
             $return .= ''
                     . '<div class="match-edit-form">'
-                    . '<form name="match-edit-form" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="match-edit-form" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<table class="match-edit-table">'
                     . '<tr>'
                     . '<th class="match-table-team"> </th>'
@@ -2404,7 +2404,7 @@ class Sport extends BaseTagLib {
     public function showEditRounds($pageId = false, $useFrames = false, $showMsg = false) {
         global $dbObject;
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $retrun = '';
 
@@ -2423,12 +2423,12 @@ class Sport extends BaseTagLib {
             if (count($data) > 0) {
                 foreach ($data as $key => $d) {
                     $form = ''
-                            . '<form name="rounds-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '"> '
+                            . '<form name="rounds-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '"> '
                             . '<input type="hidden" name="round-id" value="' . $d['id'] . '" /> '
                             . '<input type="hidden" name="round-edit" value="' . $rb->get('rounds.edit') . '" /> '
                             . '<input type="image" src="~/images/page_edi.png" name="round-edit" value="' . $rb->get('rounds.edit') . '" title="' . $rb->get('rounds.editcap') . ', id=' . $d['id'] . '" />'
                             . '</form> '
-                            . '<form name="rounds-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '"> '
+                            . '<form name="rounds-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '"> '
                             . '<input type="hidden" name="round-id" value="' . $d['id'] . '" /> '
                             . '<input type="hidden" name="round-delete" value="' . $rb->get('rounds.delete') . '" /> '
                             . '<input class="confirm" type="image" src="~/images/page_del.png" name="round-delete" value="' . $rb->get('rounds.delete') . '" title="' . $rb->get('rounds.deletecap') . ', id=' . $d['id'] . '" /> '
@@ -2447,11 +2447,11 @@ class Sport extends BaseTagLib {
 
             $return .= ''
                     . '<hr />'
-                    . '<form name="match-new" method="post" action="' . $SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="match-new" method="post" action="' . $SERVER['REQUEST_URI'] . '">'
                     . '<input type="submit" name="round-new" value="' . $rb->get('rounds.new') . '" title="' . $rb->get('rounds.newcap') . '" />'
                     . '</form>';
             //$newForm = new BaseForm();
-            //$newForm->setFormAttrs('round-new', 'post', $_SERVER['REDIRECT_URL'])
+            //$newForm->setFormAttrs('round-new', 'post', $_SERVER['REQUEST_URI'])
             //$newForm->addSubmit('rounds-new');
         } else {
             $return .= parent::getError($rb->get('rounds.seasonprojectnotset'));
@@ -2476,14 +2476,14 @@ class Sport extends BaseTagLib {
     public function showEditRoundForm($useFrames = false, $showMsg = false) {
         global $dbObject;
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $round = array();
         $return = '';
         $ok = true;
 
         $form = new BaseForm();
-        $form->setFormAttrs('edit-round', 'post', $_SERVER['REDIRECT_URL']);
+        $form->setFormAttrs('edit-round', 'post', $_SERVER['REQUEST_URI']);
         $form->addSubmit('round-save', $rb->get('round.save'));
 
         if ($form->isSubmited()) {
@@ -2556,7 +2556,7 @@ class Sport extends BaseTagLib {
     public function showSeasons($templateId, $sorting, $noDataMessage) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -2605,7 +2605,7 @@ class Sport extends BaseTagLib {
      */
     public function showSeason($field, $seasonId = false, $errMsg = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $data = array();
@@ -2662,7 +2662,7 @@ class Sport extends BaseTagLib {
     public function showTable($seasonId = false, $tableId = false, $editable = false, $useFrames = false, $showMsg = false, $thenByFix = false) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -2703,7 +2703,7 @@ class Sport extends BaseTagLib {
             $table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points`, `w_sport_table`.`positionfix` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = ' . $seasonId . ' AND `w_sport_team`.`season` = ' . $seasonId . ' AND `w_sport_table`.`table_id` = ' . $tableId . ' and `w_sport_table`.`project_id` = ' . self::getProjectId() . $orderBy .';');
             if (count($table) > 0) {
                 if ($editable == 'true') {
-                    $return .= '<form name="table-c-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">';
+                    $return .= '<form name="table-c-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">';
                 }
 
                 $return .= ''
@@ -2788,7 +2788,7 @@ class Sport extends BaseTagLib {
      */
     public function showTeams($templateId, $seasonId, $noDataMessage, $teamId = false, $sortBy = false, $sorting = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -2842,7 +2842,7 @@ class Sport extends BaseTagLib {
      */
     public function showTeam($field, $teamId = false, $seasonId = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $data = array();
@@ -2899,7 +2899,7 @@ class Sport extends BaseTagLib {
     public function showMatches($templateId, $noDataMessage, $sorting = false, $matchId = false, $round = false, $teamId = false, $seasonId = false, $onlyPlayed = true) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -2998,7 +2998,7 @@ class Sport extends BaseTagLib {
      */
     public function showMatch($field, $matchId = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $data = array();
@@ -3085,7 +3085,7 @@ class Sport extends BaseTagLib {
     public function showRounds($templateId, $sorting, $noDataMessage, $seasonId = false, $teamId = false, $onlyPlayed = true, $startRoundId = false, $maxRoundId = false, $limit = false) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $teamSql = '';
@@ -3155,7 +3155,7 @@ class Sport extends BaseTagLib {
      *
      */
     public function showRound($field, $roundId = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $data = array();
@@ -3211,7 +3211,7 @@ class Sport extends BaseTagLib {
     public function showPlayers($templateId, $sorting, $sortBy, $playerId = false, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $offset = false, $noDataMessage = false) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -3295,7 +3295,7 @@ class Sport extends BaseTagLib {
      */
     public function showPlayer($field, $playerId = false, $tableId = false, $teamId = false, $seasonId = false, $errMsg = false) {
         global $dbObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -3411,7 +3411,7 @@ class Sport extends BaseTagLib {
     public function showPlayersNG($templateId, $noDataMessage, $seasonId = false, $tableId = false, $matchId = false, $playerId = false, $teamId = false, $includeOnLoan = false, $positions = false, $sortBy = false, $sorting = false) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -3472,7 +3472,7 @@ class Sport extends BaseTagLib {
     }
 
     public function showPlayerNG($field, $playerId = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $data = array();
@@ -3523,7 +3523,7 @@ class Sport extends BaseTagLib {
     public function showPlayersStatsNG($templateId, $type, $noDataMessage, $seasonId = false, $tableId = false, $playerId = false, $matchId = false, $sortBy = false, $sorting = false, $positions = false, $partWhere = false) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $ok = true;
@@ -3623,7 +3623,7 @@ class Sport extends BaseTagLib {
     }
 
     public function showPlayerStatsNG($field) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $data = array();
@@ -3676,7 +3676,7 @@ class Sport extends BaseTagLib {
     // ------------------------------------------------------------------------------------------------------------------- \\
 
     public function getPlayerPosition($pos) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         switch ($pos) {
@@ -3687,7 +3687,7 @@ class Sport extends BaseTagLib {
     }
 
     public function getPlayerPositionShortcut($pos) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         switch ($pos) {

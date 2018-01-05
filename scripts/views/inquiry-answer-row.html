@@ -3,7 +3,7 @@
 	<td>{Binding answer}</td>
 	<td>{Binding count}</td>
 	<td>
-		<form name="inquiry-answer-edit" method="post" action="{Server REDIRECT_URL}">
+		<form name="inquiry-answer-edit" method="post" action="{Server REQUEST_URI}">
 			<input type="hidden" name="inquiry-id" value="{Binding inquiry_id}" />
 			<input type="hidden" name="inquiry-answers" value="{Resource button.answers}" />
 			
@@ -11,7 +11,7 @@
 			<input type="hidden" name="inquiry-answer-edit" value="{Resource button.answeredit}" />
 			<input type="image" src="~/images/page_edi.png" name="inquiry-answer-edit" value="{Resource button.answeredit}" title="{Resource button.answeredithint}" />
 		</form> 
-		<form name="inquiry-answer-delete" method="post" action="{Server REDIRECT_URL}">
+		<form name="inquiry-answer-delete" method="post" action="{Server REQUEST_URI}">
 			<input type="hidden" name="inquiry-id" value="{Binding inquiry_id}" />
 			<input type="hidden" name="inquiry-answers" value="{Resource button.answers}" />
 			

@@ -28,13 +28,13 @@ class WebProject extends BaseTagLib {
         parent::setTagLibXml("xml/WebProject.xml");
 
         if ($webObject->LanguageName != '') {
-            $rb = new ResourceBundle();
+            $rb = new LocalizationBundle();
             if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
                 $this->BundleLang = $webObject->LanguageName;
             }
         }
 
-        require_once("scripts/php/classes/ResourceBundle.class.php");
+        require_once("scripts/php/classes/LocalizationBundle.class.php");
     }
 
     /**
@@ -46,7 +46,7 @@ class WebProject extends BaseTagLib {
     public function selectProject($label = false, $useFrames = false, $showMsg = false) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $projects = array();
@@ -95,7 +95,7 @@ class WebProject extends BaseTagLib {
 		
             $return .= ''
                     . '<div class="select-project">'
-                    . '<form name="select-project" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<label for="select-project">' . $label . '</label> '
                     . '<select id="select-project" name="project-id">';
             $projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `web_project`.`name`;');
@@ -131,7 +131,7 @@ class WebProject extends BaseTagLib {
      *
      */
     public function showProjects($detailPageId = false, $editable = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         global $webObject;
         global $dbObject;
@@ -157,7 +157,7 @@ class WebProject extends BaseTagLib {
             }
         }
 
-        $actionUrl = $_SERVER['REDIRECT_URL'];
+        $actionUrl = $_SERVER['REQUEST_URI'];
         if ($editable == "true" && $detailPageId != false) {
             $actionUrl = $webObject->composeUrl($detailPageId);
         }
@@ -220,7 +220,7 @@ class WebProject extends BaseTagLib {
                                     . '<input type="image" src="~/images/page_edi.png" name="edit" value="' . $rb->get('project.edit') . '" />'
                                     . '</form>'
                                     . ((count($pages) == 0) ? ''
-                                            . '<form name="edit-projects2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '"> '
+                                            . '<form name="edit-projects2" method="post" action="' . $_SERVER['REQUEST_URI'] . '"> '
                                             . '<input type="hidden" name="wp" value="' . $project['id'] . '" />'
                                             . '<input type="hidden" name="delete" value="' . $rb->get('project.delete') . '" />'
                                             . '<input class="confirm" type="image" src="~/images/page_del.png" name="delete" value="' . $rb->get('project.delete') . '" title="' . $rb->get('project.deletetitle') . ', id(' . $project['id'] . ')" />'
@@ -261,7 +261,7 @@ class WebProject extends BaseTagLib {
      *
      */
     public function showEditForm($showNotSelectedError = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         global $webObject;
         global $dbObject;
@@ -602,7 +602,7 @@ class WebProject extends BaseTagLib {
 
             // Vytvorit formular ....
             $return .= ''
-                    . '<form name="project-edit-detail" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="project-edit-detail" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . $warnings
                     . '<div class="floatedl">'
                     . '<div class="gray-box">'

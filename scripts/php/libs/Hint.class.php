@@ -28,13 +28,13 @@
       parent::setTagLibXml("xml/Hint.xml");
       
       if($webObject->LanguageName != '') {
-				$rb = new ResourceBundle();
+				$rb = new LocalizationBundle();
 				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
 					$BundleLang = $webObject->LanguageName;
 				}
 			}
       
-      require_once("scripts/php/classes/ResourceBundle.class.php");
+      require_once("scripts/php/classes/LocalizationBundle.class.php");
     }
     
     /**
@@ -50,7 +50,7 @@
      */	 		 		 		     
     public function showHintForLib($classPath = false, $useFrames = false, $showMsg = false) {
     	global $phpObject;
-    	$rb = new ResourceBundle();
+    	$rb = new LocalizationBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
 		$return = '';
 		
@@ -209,7 +209,7 @@
 		 *
 		 */		 		 		 		 		
 		public function selectClassPath($useFrames = false, $showMsg = false) {
-			$rb = new ResourceBundle();
+			$rb = new LocalizationBundle();
 			$rb->loadBundle($this->BundleName, $this->BundleLang);
 			$return = '';
 			
@@ -226,7 +226,7 @@
 			
 			$return .= ''
 			.'<div class="select-class-path">'
-				.'<form name="select-class-path" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+				.'<form name="select-class-path" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 					.'<label for="select-class-path-select">'.$rb->get('select-class-path.label').':</label> '
 					.'<select id="select-class-path-select" name="select-class-path-select">'
 						.'<option value="php.libs.Article"'.($_SESSION['select-class-path'] == 'php.libs.Article' ? 'selected="selected"' : '').'>php.libs.Article</option>'
@@ -278,7 +278,7 @@
 		
 		
 	public function getPropertyList($useFrames = false) {
-		$rb = new ResourceBundle();
+		$rb = new LocalizationBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
 		
 		$return = ''

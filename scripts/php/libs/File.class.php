@@ -7,7 +7,7 @@
    */
   require_once("BaseTagLib.class.php");
   require_once("FileAdmin.class.php");
-  require_once("scripts/php/classes/ResourceBundle.class.php");
+  require_once("scripts/php/classes/LocalizationBundle.class.php");
   require_once("scripts/php/classes/UrlResolver.class.php");
   
   /**
@@ -45,7 +45,7 @@
 		//$_SESSION['dir-id'] = 0;
 	  
       	if($webObject->LanguageName != '') {
-			$rb = new ResourceBundle();
+			$rb = new LocalizationBundle();
 			if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
 				$this->BundleLang = $webObject->LanguageName;
 			}
@@ -69,7 +69,7 @@
     public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false, $browsable = true, $parentName = false, $nameWithExtension = false, $fileNameHeader = false) {
 		global $dbObject;
 		global $loginObject;
-		$rb = new ResourceBundle();
+		$rb = new LocalizationBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
 		$return = "";
 		$origDirId = $dirId;
@@ -154,7 +154,7 @@
     private function getList($dirId, $editable, $showParent, $showTitleInsteadOfName, $parentName, $nameWithExtension, $fileNameHeader) {
 		global $dbObject;
 		global $loginObject;
-		$rb = new ResourceBundle();
+		$rb = new LocalizationBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
 		$return = "";
         
@@ -177,7 +177,7 @@
           .'<td class="dir-icon"></td>'
           .'<td class="dir-id"></td>'
           .'<td class="dir-name">'
-            .'<form name="dir-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+            .'<form name="dir-form" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
               .'<input type="hidden" name="dir-id" value="'.(($dirId != 0) ? $dir[0]['parent_id'] : $dirId).'" />'
               .'<input type="submit" name="ch-dir" value="'.$parentName.'" />'
             .'</form>'
@@ -198,7 +198,7 @@
           .'<td class="dir-icon dir"></td>'
           .'<td class="dir-id dir"><span>'.$dir['id'].'</span></td>'
           .'<td class="dir-name">'
-            .'<form name="dir-form" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+            .'<form name="dir-form" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
               .'<input type="hidden" name="dir-id" value="'.$dir['id'].'" />'
               .'<input type="submit" name="ch-dir" value="'.$dir['name'].'" />'
             .'</form>'
@@ -211,12 +211,12 @@
           .'<td class="dir-type"></td>'	
           .(($editable != "false") ? ''
           .'<td class="dir-edit">'
-            .'<form name="dir-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+            .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
               .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
               .'<input type="hidden" name="edit-dir" value="'.$rb->get('dir.edit').'" />'
               .'<input type="image" src="~/images/page_edi.png" name="edit-dir" value="'.$rb->get('dir.edit').'" title="'.$rb->get('dir.edithint').'" />'
             .'</form> '
-            .'<form name="dir-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+            .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
               .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
               .'<input type="hidden" name="delete-dir" value="'.$rb->get('dir.delete').'" />'
               .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-dir" value="'.$rb->get('dir.delete').'" title="'.$rb->get('dir.deletehint').', id('.$dir['id'].')" />'
@@ -255,12 +255,12 @@
           .'<td class="file-type">'.FileAdmin::$FileExtensions[$file['type']].'</td>'
           .(($editable != "false") ? ''
           .'<td class="file-edit">'
-            .'<form name="dir-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+            .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
               .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
               .'<input type="hidden" name="edit-file" value="'.$rb->get('file.edit').'" />'
               .'<input type="image" src="~/images/page_edi.png" name="edit-file" value="'.$rb->get('file.edit').'" title="'.$rb->get('file.edithint').'" />'
             .'</form> '
-            .'<form name="dir-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+            .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
               .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
               .'<input type="hidden" name="delete-file" value="'.$rb->get('file.delete').'" />'
               .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="'.$rb->get('file.delete').'" title="'.$rb->get('file.deletehint').', id('.$file['id'].')" />'
@@ -290,7 +290,7 @@
     public function showNewDirectoryForm($dirId = false, $useFrames = false, $useRights = false) {
       global $dbObject;
       global $loginObject;
-		$rb = new ResourceBundle();
+		$rb = new LocalizationBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
       $return = "";
       $dirId = self::setDirId($dirId);
@@ -460,7 +460,7 @@
 	  
 	  
       $return .= ''
-      .'<form name="new-directory" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+      .'<form name="new-directory" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
         .'<input type="hidden" name="directory-parent-id" value="'.$dirId.'" />'
         .'<div class="directory-name">'
   	      .'<label for="directory-name">'.$rb->get('dir.name').':</label> '
@@ -522,7 +522,7 @@
     public function showUploadForm($dirId = false, $useRights = false, $useFrames = false) {
       global $dbObject;
       global $loginObject;
-		$rb = new ResourceBundle();
+		$rb = new LocalizationBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
       $return = "";
       $dirId = self::setDirId($dirId);
@@ -582,7 +582,7 @@
       $groupSelectD .= '</select>';
       
       $return .= ''
-      .'<form name="new-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'" enctype="multipart/form-data">'
+      .'<form name="new-file" method="post" action="'.$_SERVER['REQUEST_URI'].'" enctype="multipart/form-data">'
       	.'<!--<a href="http://www.google.cz/" target="ajaxFileUploadIFrame">Google</a>'
       	.'<iframe id="ajaxFileUploadIFrame" name="ajaxFileUploadIFrame" src=""></iframe>-->'
         .'<input type="hidden" name="dir-id" value="'.$dirId.'" />'
@@ -639,7 +639,7 @@
     private function processFileUpload() {
       global $dbObject;
       global $loginObject;
-		$rb = new ResourceBundle();
+		$rb = new LocalizationBundle();
 		$rb->loadBundle($this->BundleName, $this->BundleLang);
       $fileName = $_POST['file-name'];
       $dirId = $_POST['dir-id'];

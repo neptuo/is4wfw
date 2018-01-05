@@ -42,13 +42,13 @@ class Article extends BaseTagLib {
         parent::setTagLibXml("xml/Article.xml");
 
         if ($webObject->LanguageName != '') {
-            $rb = new ResourceBundle();
+            $rb = new LocalizationBundle();
             if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
                 $this->BundleLang = $webObject->LanguageName;
             }
         }
 		
-		parent::loadResourceBundle('article');
+		parent::loadLocalizationBundle('article');
     }
 	
 	protected function canUser($objectId, $rightType) {
@@ -94,7 +94,7 @@ class Article extends BaseTagLib {
         $return = '';
         $detail = false;
         $link = "";
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($lineId == '') {
@@ -402,7 +402,7 @@ class Article extends BaseTagLib {
         global $loginObject;
         $langId = $webObject->LanguageId;
         $return = '';
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $articleLangId = ($articleLangId != false) ? $articleLangId : $webObject->LanguageId;
@@ -678,8 +678,8 @@ class Article extends BaseTagLib {
         global $loginObject;
         global $webObject;
         $return = '';
-        $actionUrl = $_SERVER['REDIRECT_URL'];
-        $rb = new ResourceBundle();
+        $actionUrl = $_SERVER['REQUEST_URI'];
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($detailPageId != false) {
@@ -830,7 +830,7 @@ class Article extends BaseTagLib {
 		
 			$returnTmp .= ''
 			.'<div class="article-mgm-label-filter gray-box">'
-				.'<form name="article-mgm-label-filter" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+				.'<form name="article-mgm-label-filter" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 					.parent::rb('label.edittitle').': '
 					.$options.' '
 					.'<input type="submit" name="filter-labels" value="'.parent::rb('lines.select').'" />'
@@ -873,26 +873,26 @@ class Article extends BaseTagLib {
 							. '<td rowspan="' . $lnVersions . '" class="article-mgm-td article-mgm-id">'
 								. '<span>' . $article['id'] . '</span>'
 								. '<div class="clear"></div>'
-								. '<form name="article-add-lang1" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+								. '<form name="article-add-lang1" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                     . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
                                     . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
                                     . '<input type="hidden" name="article-add-lang" value="' . $rb->get('articles.addlang') . '" />'
                                     . '<input type="image" src="~/images/lang_add.png" name="article-add-lang" value="' . $rb->get('articles.addlang') . '" title="' . $rb->get('articles.addlangcap') . '" />'
 								. '</form>'
-								. '<form name="article-move-up" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+								. '<form name="article-move-up" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                     . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
                                     . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
                                     . '<input type="hidden" name="article-move-up" value="' . $rb->get('articles.moveup') . '" />'
                                     . '<input type="image" src="~/images/arro_up.png" name="article-move-up" value="' . $rb->get('articles.moveup') . '" title="' . $rb->get('articles.moveupcap') . '" /> '
 								. '</form>'
 								. '<div class="clear"></div>'
-								. '<form name="article-add-lang2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+								. '<form name="article-add-lang2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                     . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
                                     . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
                                     . '<input type="hidden" name="article-delete" value="' . $rb->get('articles.delete') . '" />'
                                     . '<input type="image" src="~/images/page_del.png" class="confirm" name="article-delete" value="' . $rb->get('articles.delete') . '" title="' . $rb->get('articles.deletecap') . ', id(' . $article['id'] . ')" >'
 								. '</form>'
-								. '<form name="article-move-down" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+								. '<form name="article-move-down" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                     . '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
                                     . '<input type="hidden" name="line-id" value="' . $lineId . '" />'
                                     . '<input type="hidden" name="article-move-down" value="' . $rb->get('articles.movedown') . '" />'
@@ -910,14 +910,14 @@ class Article extends BaseTagLib {
 								. '</div>'
                             . '</td>'
                             . '<td class="article-mgm-td article-mgm-edit">'
-								. '<form name="article-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+								. '<form name="article-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
 									. '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
 									. '<input type="hidden" name="language-id" value="' . $info['lang_id'] . '" />'
 									. '<input type="hidden" name="line-id" value="' . $lineId . '" />'
 									. '<input type="hidden" name="article-edit" value="' . $rb->get('articles.edit') . '" />'
 									. '<input type="image" src="~/images/page_edi.png" name="article-edit" value="' . $rb->get('articles.edit') . '" title="' . $rb->get('articles.editcap') . '" /> '
 								. '</form>'
-								. '<form name="article-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+								. '<form name="article-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
 									. '<input type="hidden" name="article-id" value="' . $article['id'] . '" />'
 									. '<input type="hidden" name="language-id" value="' . $info['lang_id'] . '" />'
 									. '<input type="hidden" name="line-id" value="' . $lineId . '" />'
@@ -939,7 +939,7 @@ class Article extends BaseTagLib {
 		
 		if($pageable) {
 			$total = $dbObject->fetchSingle($countSql);
-            $paging = self::getPaging($total['id'], self::getArticlePageSize(), self::getArticlePage(), $_SERVER['REDIRECT_URL'], 0);
+            $paging = self::getPaging($total['id'], self::getArticlePageSize(), self::getArticlePage(), $_SERVER['REQUEST_URI'], 0);
             
             if(strlen($paging) > 0) {
 			    $returnTmp .= '<div class="gray-box">' . $paging . '</div>';
@@ -1008,8 +1008,8 @@ class Article extends BaseTagLib {
         global $loginObject;
         global $webObject;
         $return = '';
-        $actionUrl = $_SERVER['REDIRECT_URL'];
-        $rb = new ResourceBundle();
+        $actionUrl = $_SERVER['REQUEST_URI'];
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($lineId == false) {
@@ -1039,7 +1039,7 @@ class Article extends BaseTagLib {
         if (self::canUser($lineId, WEB_R_WRITE)) {
             $return .= ''
 			. '<div class="article-new gray-box">'
-                . '<form name="article-new" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form name="article-new" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<input type="submit" name="article-new" value="' . $rb->get('articles.newcap') . '" />'
 				. '</form>'
 			. '</div>';
@@ -1078,7 +1078,7 @@ class Article extends BaseTagLib {
         global $loginObject;
         $return = '';
         $actionUrl = '';
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($_POST['article-line-delete'] == $rb->get('lines.delete')) {
@@ -1139,7 +1139,7 @@ class Article extends BaseTagLib {
                                 . '<input type="image" src="~/images/page_edi.png" name="article-line-edit" value="' . $rb->get('lines.edit') . '" title="' . $rb->get('lines.editcap') . '" />'
                                 . '</form> '
                                 . ((count($artcs) == 0) ? ''
-                                        . '<form name="article-line-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                                        . '<form name="article-line-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                         . '<input type="hidden" name="delete-line-id" value="' . $line['id'] . '" />'
                                         . '<input type="hidden" name="article-line-delete" value="' . $rb->get('lines.delete') . '" />'
                                         . '<input class="confirm" type="image" src="~/images/page_del.png" name="article-line-delete" value="' . $rb->get('lines.delete') . '" title="' . $rb->get('lines.deletecap') . ', id(' . $line['id'] . ')" />'
@@ -1184,7 +1184,7 @@ class Article extends BaseTagLib {
         global $dbObject;
         global $loginObject;
         $return = '';
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($_POST['select-article-line'] == $rb->get('lines.select')) {
@@ -1216,7 +1216,7 @@ class Article extends BaseTagLib {
 		
             $return .= ''
                     . '<div class="gray-box">'
-                    . '<form name="article-select-line" method="' . (($method == "get") ? 'get' : 'post') . '" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="article-select-line" method="' . (($method == "get") ? 'get' : 'post') . '" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<label for="select-line" class="padded">' . $rb->get('lines.selectcap') . ': </label>'
                     . '<select id="select-line" name="line-id" class="w200">';
             foreach ($lines as $line) {
@@ -1257,8 +1257,8 @@ class Article extends BaseTagLib {
     public function createLine($detailPageId = false, $useFrames = false) {
         global $webObject;
         $return = '';
-        $actionUrl = $_SERVER['REDIRECT_URL'];
-        $rb = new ResourceBundle();
+        $actionUrl = $_SERVER['REQUEST_URI'];
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($detailPageId != false) {
@@ -1296,7 +1296,7 @@ class Article extends BaseTagLib {
         $article = array();
         $articleContent = array();
         $usedLangs = array();
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $isClosing = $_POST['article-save-close'] == $rb->get('articles.saveandclose') || $_POST['article-close'] == $rb->get('articles.close');
@@ -1434,7 +1434,7 @@ class Article extends BaseTagLib {
             $url = $webObject->composeUrl($backPageId);
             header("Location: ".$url);
         } else if($isInsert) {
-            $actionUrl = $_SERVER['REDIRECT_URL'];
+            $actionUrl = $_SERVER['REQUEST_URI'];
             $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['id']);
             $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $ac['language_id']);
             header('Location: ' . $actionUrl);
@@ -1719,8 +1719,8 @@ class Article extends BaseTagLib {
         global $loginObject;
         $return = '';
         $ok = true;
-        $actionUrl = $_SERVER['REDIRECT_URL'];
-        $rb = new ResourceBundle();
+        $actionUrl = $_SERVER['REQUEST_URI'];
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $lineId = ((array_key_exists('edit-line-id', $_POST)) ? $_POST['edit-line-id'] : 0);
@@ -1966,8 +1966,8 @@ class Article extends BaseTagLib {
      */
     public function showEditLabels($useFrames = false) {
         $return = '';
-        $actionUrl = $_SERVER['REDIRECT_URL'];
-        $rb = new ResourceBundle();
+        $actionUrl = $_SERVER['REQUEST_URI'];
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $labels = parent::db()->fetchAll('select `id`, `name`, `url`, `order` from `article_label` order by `order`;');
@@ -2032,10 +2032,10 @@ class Article extends BaseTagLib {
      */
     public function showEditLabelForm($useFrames = false) {
         $return = '';
-        $actionUrl = $_SERVER['REDIRECT_URL'];
+        $actionUrl = $_SERVER['REQUEST_URI'];
         $label = array();
         $ok = true;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($_POST['label-edit-save'] == $rb->get('label.save')) {

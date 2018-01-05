@@ -6,7 +6,7 @@
  *
  */
 require_once ("BaseTagLib.class.php");
-require_once ("scripts/php/classes/ResourceBundle.class.php");
+require_once ("scripts/php/classes/LocalizationBundle.class.php");
 require_once ("scripts/php/classes/FullTagParser.class.php");
 require_once ("scripts/php/classes/ViewHelper.class.php");
 
@@ -35,7 +35,7 @@ class View extends BaseTagLib {
         parent :: setTagLibXml("xml/View.xml");
 
         if ($webObject->LanguageName != '') {
-            $rb = new ResourceBundle();
+            $rb = new LocalizationBundle();
             if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
                 $this->BundleLang = $webObject->LanguageName;
             }

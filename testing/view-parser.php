@@ -2,7 +2,7 @@
 
 	require_once("scripts/php/includes/settings.inc.php");
 	require_once("scripts/php/classes/ExtensionParser.class.php");
-	require_once("scripts/php/classes/ResourceBundle.class.php");
+	require_once("scripts/php/classes/LocalizationBundle.class.php");
 
 	$content = ''
 	.'<form name="inquiry-edit" method="post" action="{Server REQUEST_URI}">'
@@ -25,7 +25,7 @@
 		.'</div>'
 	.'</form>';
 
-	$rb = new ResourceBundle();
+	$rb = new LocalizationBundle();
 	$rb->loadBundle('inquiry', 'en');
 	
 	$data = array();
@@ -35,7 +35,7 @@
 	
 	// $parser = new ExtensionParser();
 	// $parser->setContent($content);
-	// $parser->setResourceBundle($rb);
+	// $parser->setLocalizationBundle($rb);
 	// $parser->setDataItem($data);
 	// $parser->startParsing();
 	// echo $parser->getResult();

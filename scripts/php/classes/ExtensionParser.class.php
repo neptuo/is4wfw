@@ -1,6 +1,6 @@
 <?php
 
-require_once("scripts/php/classes/ResourceBundle.class.php");
+require_once("scripts/php/classes/LocalizationBundle.class.php");
 
 class ExtensionParser {
 
@@ -11,7 +11,7 @@ class ExtensionParser {
 	protected $ConditionRE = '(\((.*)\) (\s*))';
 	protected $BindingConditionRE = '(([^ ]*) ([^ ]*)( *: *([^ ]*))*)';
 	
-	protected $ResourceBundle;
+	protected $LocalizationBundle;
 	protected $DataItem;
 	protected $I;
 	protected $GlobalI = 1;
@@ -120,7 +120,7 @@ class ExtensionParser {
 		$param = $extension[2];
 		
 		if($name == 'Resource') {
-			return $this->ResourceBundle->get($param);
+			return $this->LocalizationBundle->get($param);
 		} else if($name == 'Server') {
 			return $_SERVER[$param];
 		} else if($name == 'Request') {
@@ -175,8 +175,8 @@ class ExtensionParser {
 	}
 
 	
-	public function setResourceBundle($rb) {
-		$this->ResourceBundle = $rb;
+	public function setLocalizationBundle($rb) {
+		$this->LocalizationBundle = $rb;
 	}
 	
 	public function setDataItem($dataItem) {
@@ -192,7 +192,7 @@ class ExtensionParser {
 	public static function initialize($name, $rb, $data) {
 		$parser = new ExtensionParser();
 		$parser->setContent(ExtensionParser::loadView($name));
-		$parser->setResourceBundle($rb);
+		$parser->setLocalizationBundle($rb);
 		$parser->setDataItem($data);
 		return $parser;
 	}

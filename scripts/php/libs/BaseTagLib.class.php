@@ -331,28 +331,28 @@ class BaseTagLib {
 		}
 	}
 	
-	private $ResourceBundle;
+	private $LocalizationBundle;
 	private $BundleName;
     private $BundleLang = 'cs';
 	
-	public function loadResourceBundle($name) {
+	public function loadLocalizationBundle($name) {
 		$this->BundleName = $name;
 		if ($this->web()->LanguageName != '') {
-            $rb = new ResourceBundle();
+            $rb = new LocalizationBundle();
             if ($rb->testBundleExists($this->BundleName, self::web()->LanguageName)) {
                 $this->BundleLang = self::web()->LanguageName;
             }
         }
 		
-		$this->ResourceBundle = new ResourceBundle();
-		$this->ResourceBundle->loadBundle($this->BundleName, $this->BundleLang);
+		$this->LocalizationBundle = new LocalizationBundle();
+		$this->LocalizationBundle->loadBundle($this->BundleName, $this->BundleLang);
 	}
 	
 	public function rb($key = false) {
 		if($key == false) {
-			return $this->ResourceBundle;
+			return $this->LocalizationBundle;
 		} else {
-			return $this->ResourceBundle->get($key);
+			return $this->LocalizationBundle->get($key);
 		}
 	}
 	
@@ -409,7 +409,7 @@ class BaseTagLib {
     }
 
     public function redirectUrlWithQueryString() {
-        $actionUrl = $_SERVER['REDIRECT_URL'];
+        $actionUrl = $_SERVER['REQUEST_URI'];
         $actionUrl = $this->addUrlQueryString($actionUrl);
         return $actionUrl;
     }

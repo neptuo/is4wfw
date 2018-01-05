@@ -7,7 +7,7 @@
  */
 require_once("BaseTagLib.class.php");
 
-require_once("scripts/php/classes/ResourceBundle.class.php");
+require_once("scripts/php/classes/LocalizationBundle.class.php");
 require_once("scripts/php/classes/ui/Editor.class.php");
 require_once("scripts/php/classes/manager/EmbeddedResourceManager.class.php");
 require_once("scripts/php/classes/manager/WebForwardManager.class.php");
@@ -35,20 +35,20 @@ class Page extends BaseTagLib {
         parent::setTagLibXml("xml/Page.xml");
 
         if ($webObject->LanguageName != '') {
-            $rb = new ResourceBundle();
+            $rb = new LocalizationBundle();
             if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
                 $this->BundleLang = $webObject->LanguageName;
             }
         }
 		
-		parent::loadResourceBundle('page');
+		parent::loadLocalizationBundle('page');
     }
 
     public function showEditPage($paramPageId = false, $paramLangId = false) {
         global $dbObject;
         global $loginObject;
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 		
@@ -559,7 +559,7 @@ class Page extends BaseTagLib {
                     $sql_return[0]['keywords'] = parent::escapeHtmlEntities($sql_return[0]['keywords']);
 
                     $returnTmp .= ''
-                            . '<form name="page-edit-detail" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                            . '<form name="page-edit-detail" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                             . '<div class="edit edit-page-info">'
                             . '<div class="edit edit-prop">'
                             . '<div class="gray-box">'
@@ -839,7 +839,7 @@ class Page extends BaseTagLib {
         global $dbObject;
         global $loginObject;
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -995,7 +995,7 @@ class Page extends BaseTagLib {
 
             $returnMove .= ''
                     . '<div class="move-copy-branch">'
-                    . '<form name="move-copy-branch" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="move-copy-branch" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<label for="select-parent">' . $rb->get('pagelist.field.movecopyparent') . ':</label> '
                     . '<select class="select-webproject" name="select-parent" id="select-parent">'
                     . $strProjects
@@ -1271,7 +1271,7 @@ class Page extends BaseTagLib {
 
             if (count($files) != 0) {
                 $returnTmp .= ''
-                        . '<form name="files-to-remove" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="files-to-remove" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<table class="page-file-list">'
                         . '<tr class="file-tr">'
                         . '<th colspan="4" class="file-head-th">' . $rb->get('pagelist.field.addedfiles') . ':</th>'
@@ -1294,7 +1294,7 @@ class Page extends BaseTagLib {
                             . '</td>'
                             /* .'<td>'
                               .(($editable) ? ''
-                              .'<form name="process-file" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+                              .'<form name="process-file" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
                               .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
                               .'<input type="hidden" name="page-id" value="'.$pageId.'" />'
                               .'<input type="hidden" name="page-lang-id" value="'.$langId.'" />'
@@ -1326,7 +1326,7 @@ class Page extends BaseTagLib {
             $files = $dbObject->fetchAll("SELECT DISTINCT `id`, `name`, `content`, `type` FROM `page_file` LEFT JOIN `page_file_inc` ON `page_file`.`id` = `page_file_inc`.`file_id` WHERE `id` NOT IN (SELECT `file_id` FROM `page_file_inc` WHERE `page_id` = " . $pageId . " AND `language_id` = " . $langId . ") AND `wp` = " . $_SESSION['selected-project'] . " ORDER BY `id`;");
             if (count($files) != 0) {
                 $returnTmp = ''
-                        . '<form name="files-to-add" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="files-to-add" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<table class="page-file-list">'
                         . '<tr class="file-tr">'
                         . '<th colspan="4" class="file-head-th">' . $rb->get('pagelist.field.filestoadd') . '</th>'
@@ -1391,7 +1391,7 @@ class Page extends BaseTagLib {
                     . '<ul>'
                     . '<li>'
                     . $rb->get('page.newpagecaption')
-                    . '<form name="add-page" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="add-page" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<input type="hidden" name="parent-id" value="0" />'
                     . '<input type="hidden" name="add-new-page" value="' . $rb->get('page.action.addpage') . '" />'
                     . '<input type="image" src="~/images/page_add.png" name="add-new-page" value="' . $rb->get('page.action.addpage') . '" />'
@@ -1428,7 +1428,7 @@ class Page extends BaseTagLib {
     private function generatePageList($parentId, $editable, $inn, $projectId) {
         global $dbObject;
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $sql_return = $dbObject->fetchAll("SELECT `page`.`parent_id`, `page`.`id` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `page`.`wp` = " . $projectId . " GROUP BY `page`.`id` ORDER BY `info`.`page_pos`;");
@@ -1469,7 +1469,7 @@ class Page extends BaseTagLib {
                             . '<a target="_blank" href="' . $webObject->composeUrl($tmp['id'], $inf['lang_id']) . '">' . ((strlen($inf['language']) != 0) ? $inf['language'] : "-") . '</a>'
                             . '</span>'
                             . ((self::getGroupPermCached('Page.EditDetail')) ? ''
-                                    . '<form name="page1" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="form-page1">'
+                                    . '<form name="page1" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page1">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
@@ -1477,7 +1477,7 @@ class Page extends BaseTagLib {
                                     . '<input type="image" title="' . $rb->get('pagelist.field.edit') . '" src="' . WEB_ROOT . 'images/page_edi.png" name="page-edit" value="' . $rb->get('page.action.edit') . '" /> '
                                     . '</form>' : '')
                             . ((self::getGroupPermCached('Page.AddNew')) ? ''
-                                    . '<form name="page2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="form-page2">'
+                                    . '<form name="page2" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page2">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
@@ -1485,7 +1485,7 @@ class Page extends BaseTagLib {
                                     . '<input type="image" title="' . $rb->get('page.action.addsubpage') . '" src="' . WEB_ROOT . 'images/page_add.png" name="page-add-sub" value="' . $rb->get('page.action.addsubpage') . '" /> '
                                     . '</form>' : '')
                             . ((self::getGroupPermCached('Page.ManageFiles')) ? ''
-                                    . '<form name="page3" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="form-page3">'
+                                    . '<form name="page3" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page3">'
 										. '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
 										. '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
 										. '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
@@ -1493,13 +1493,13 @@ class Page extends BaseTagLib {
 										. '<input type="image" title="' . $rb->get('pagelist.field.addedfiles') . '" src="' . WEB_ROOT . 'images/file_bws.png" name="added-files" value="' . $rb->get('pagelist.action.addedfiles') . '" /> '
                                     . '</form>' : '')
                             . ((self::getGroupPermCached('Page.ManageProperties')) ? ''
-									. '<form name="page3" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="form-page5">'
+									. '<form name="page3" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page5">'
 										. '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
 										. '<input type="hidden" name="manage-properties" value="' . $rb->get('pagelist.field.manageprops') . '" /> '
 										. '<input type="image" title="' . $rb->get('pagelist.field.manageprops') . '" src="' . WEB_ROOT . 'images/page_pro.png" name="manage-properties" value="' . $rb->get('pagelist.action.manageprops') . '" /> '
                                     . '</form>' : '')
                             . ((self::getGroupPermCached('Page.Delete') && (!$parent || !$thisParent)) ? ''
-                                    . '<form name="page4" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="form-page4">'
+                                    . '<form name="page4" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page4">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
@@ -1511,38 +1511,38 @@ class Page extends BaseTagLib {
                 $innText .= ''
                         . '[ '
                         . ((self::getGroupPermCached('Page.MoveTree')) ? ''
-                                . '<form name="page-move1" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="page-move1">'
+                                . '<form name="page-move1" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move1">'
                                 . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" />'
                                 . '<input type="hidden" name="move-branch" value="' . $rb->get('pagelist.action.move') . '" />'
                                 . '<input type="image" src="' . WEB_ROOT . 'images/page_mov.png" title="' . $rb->get('pagelist.field.move') . '" name="move-branch" value="' . $rb->get('pagelist.action.move') . '" />'
                                 . '</form> ' : '')
                         . ((self::getGroupPermCached('Page.CopyTree')) ? ''
-                                . '<form name="page-move2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="page-move2">'
+                                . '<form name="page-move2" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move2">'
                                 . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" />'
                                 . '<input type="hidden" name="copy-branch" value="' . $rb->get('pagelist.action.copy') . '" />'
                                 . '<input type="image" src="' . WEB_ROOT . 'images/page_cop.png" title="' . $rb->get('pagelist.field.copy') . '" name="copy-branch" value="' . $rb->get('pagelist.action.copy') . '" />'
                                 . '</form> ' : '')
                         . ((self::getGroupPermCached('Page.MoveUpDown')) ? ''
-                                . '<form name="page-move3" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="page-move3">'
+                                . '<form name="page-move3" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move3">'
                                 . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                 . '<input type="hidden" name="move-up" value="' . $rb->get('pagelist.action.up') . '" /> '
                                 . '<input type="image" src="' . WEB_ROOT . 'images/arro_up.png" title="' . $rb->get('pagelist.field.up') . '" name="move-up" value="' . $rb->get('pagelist.action.up') . '" />'
                                 . '</form>' : '')
                         . ((self::getGroupPermCached('Page.MoveUpDown')) ? ''
-                                . '<form name="page-move4" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="page-move4">'
+                                . '<form name="page-move4" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move4">'
                                 . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                 . '<input type="hidden" name="move-down" value="' . $rb->get('pagelist.action.down') . '" /> '
                                 . '<input type="image" src="' . WEB_ROOT . 'images/arro_do.png" title="' . $rb->get('pagelist.field.down') . '" name="move-down" value="' . $rb->get('pagelist.action.down') . '" />'
                                 . '</form>' : '')
                         . '] '
                         . ((self::getGroupPermCached('Page.AddLang')) ? ''
-                                . '<form name="page-add-lang1" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="page-add-lang1">'
+                                . '<form name="page-add-lang1" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-add-lang1">'
                                 . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                 . '<input type="hidden" name="page-add-lang-ver" value="' . $rb->get('page.action.addlang') . '" /> '
                                 . '<input type="image" title="' . $rb->get('pagelist.field.addlang') . '" src="' . WEB_ROOT . 'images/lang_add.png" name="page-add-lang-ver" value="' . $rb->get('page.action.addlang') . '" /> '
                                 . '</form>' : '')
                         . ((self::getGroupPermCached('Page.Delete') && count($dbObject->fetchAll("SELECT `id` FROM `page` WHERE `parent_id` = " . $tmp['id'] . ";")) == 0) ? ''
-                                . '<form name="page-add-lang2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '" class="page-add-lang2">'
+                                . '<form name="page-add-lang2" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-add-lang2">'
                                 . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                 . '<input type="hidden" name="delete" value="' . $rb->get('pagelist.action.delete') . '" /> '
                                 . '<input class="confirm" type="image" title="' . $rb->get('pagelist.field.delete') . ', id(' . $tmp['id'] . ')" src="' . WEB_ROOT . 'images/page_del.png" name="delete" value="' . $rb->get('pagelist.action.delete') . '" />'
@@ -1641,7 +1641,7 @@ class Page extends BaseTagLib {
     public function showEditPageFile() {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
         $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
@@ -1789,7 +1789,7 @@ class Page extends BaseTagLib {
     public function showPageFiles($editable = false) {
         global $dbObject;
         global $loginObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
         $editable = (strtolower($editable) == "true") ? true : false;
@@ -1862,12 +1862,12 @@ class Page extends BaseTagLib {
                         . '</td>'
                         . '<td>'
                         . (($editable) ? ''
-                                . '<form name="process-file1" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                                . '<form name="process-file1" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                 . '<input type="hidden" name="file-id" value="' . $file['id'] . '" />'
                                 . '<input type="hidden" name="edit-file" value="' . $rb->get('tf.edit') . '" />'
                                 . '<input type="image" src="~/images/page_edi.png" name="edit-file" value="' . $rb->get('tf.edit') . '" title="' . $rb->get('tf.edittitle') . ', id=' . $file['id'] . '" /> '
                                 . '</form>'
-                                . '<form name="process-file2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                                . '<form name="process-file2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                 . '<input type="hidden" name="file-id" value="' . $file['id'] . '" />'
                                 . '<input type="hidden" name="delete-file" value="' . $rb->get('tf.delete') . '" />'
                                 . '<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="' . $rb->get('tf.delete') . '" title="' . $rb->get('tf.deletetitle') . ', id(' . $file['id'] . ')" />'
@@ -1887,7 +1887,7 @@ class Page extends BaseTagLib {
             $returnTmp .= ''
                     . '<hr />'
                     . '<div class="gray-box">'
-                    . '<form name="add-file" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="add-file" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<input type="submit" name="add-file" value="' . $rb->get('tf.new') . '" title="' . $rb->get('tf.newtitle') . '" />'
                     . '</form>'
                     . '</div>';
@@ -1902,7 +1902,7 @@ class Page extends BaseTagLib {
      *
      */
     private function getTextFileSearchForm() {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($_POST['text-file-search-submit'] == $rb->get('tf.search')) {
@@ -1913,7 +1913,7 @@ class Page extends BaseTagLib {
         }
 
         $return = ''
-                . '<form name="text-file-search" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form name="text-file-search" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="gray-box">'
                 . '<label class="w80" for="text-file-search-name">' . $rb->get('tf.name') . ':</label>'
                 . '<input class="w300" nametype="text" name="text-file-search-name" id="text-file-search-name" value="' . parent::session()->get('name', 'tf-search') . '" />'
@@ -1961,7 +1961,7 @@ class Page extends BaseTagLib {
      *
      */
     private function getFileUpdateForm($fileId, $fileName, $fileContent, $browsers, $fileTypes) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $htmlBrowsers = '';
         foreach ($browsers as $browser => $value) {
@@ -1973,7 +1973,7 @@ class Page extends BaseTagLib {
         }
 
         $returnTmp = ''
-                . '<form name="edit-file" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form name="edit-file" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="edit-file-name">'
                 . '<div class="text-file-prop">'
                 . '<div class="text-file-name gray-box">'
@@ -2049,7 +2049,7 @@ class Page extends BaseTagLib {
         $returnForm = ''
                 . ((strlen($msg) > 0) ? $msg : '' )
                 . '<div class="clear-url-cache">'
-                . '<form name="clear-url-cache" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form name="clear-url-cache" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<input type="submit" name="clear-url-cache" value="Do \'Clear Url Cache\'" />'
                 . '</form>'
                 . '</div>';
@@ -2175,7 +2175,7 @@ class Page extends BaseTagLib {
         $returnForm = ''
                 . ((strlen($msg) > 0) ? $msg : '' )
                 . '<div id="clear-url-cache" class="clear-url-cache">'
-                . '<form name="clear-url-cache" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form name="clear-url-cache" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="part-of-url">'
                 . '<label for="part-of-url-url-cache">Part of url:</label> '
                 . '<input id="part-of-url-url-cache" type="text" name="part-of-url-url-cache" value="' . $partOfUrl . '" />'
@@ -2216,7 +2216,7 @@ class Page extends BaseTagLib {
      *
      */
     public function updateKeywords() {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return = $msg = '';
@@ -2229,7 +2229,7 @@ class Page extends BaseTagLib {
         $keywords = file_get_contents("keywords.txt");
         $returnForm = ''
             . ((strlen($msg) > 0) ? $msg : '' )
-            . '<form name="update-keywords" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+            . '<form name="update-keywords" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="gray-box">'
                     . '<label for="keywords">' . $rb->get('keywords.note') . '</label> '
                     . '<input type="text" name="keywords" value="' . $keywords . '" class="wmax" /> '
@@ -2262,7 +2262,7 @@ class Page extends BaseTagLib {
         $returnForm = ''
                 . ((strlen($msg) > 0) ? $msg : '' )
                 . '<div id="editors" class="update-robots editors">'
-                . '<form class="update-robots" name="update-robots" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form class="update-robots" name="update-robots" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="gray-box">'
                 . '<label for="robots">Robots.txt:</label> '
                 . '<textarea class="edit-area html" id="robots" name="robots" rows="20">' . $robots . '</textarea>'
@@ -2329,7 +2329,7 @@ class Page extends BaseTagLib {
                     . '<td class="langs-language">' . $lang['language'] . '</td>'
                     . (($editable && (count($dbObject->fetchAll('SELECT `page_id` FROM `info` WHERE `language_id` = ' . $lang['id'] . ';')) == 0)) ? ''
                             . '<td class="langs-delete">'
-                            . '<form name="delete-lang" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                            . '<form name="delete-lang" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                             . '<input type="hidden" name="language-id" value="' . $lang['id'] . '" />'
                             . '<input type="hidden" name="delete-language" value="Delete language" />'
                             . '<input class="confirm" type="image" src="' . WEB_ROOT . 'images/page_del.png" name="delete-language" value="Delete language" title="Delete language, id(' . $lang['id'] . ')" />'
@@ -2344,7 +2344,7 @@ class Page extends BaseTagLib {
             $returnNewForm = ''
                     . ((strlen($msgNew) > 0) ? $msgNew : '' )
                     . '<div class="add-new-language">'
-                    . '<form name="add-new-language" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="add-new-language" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<label for="langauge-name">Type new language name:</label> '
                     . '<input type="text" name="langauge-name" /> '
                     . '<input type="submit" name="add-new-language" value="Add" />'
@@ -2406,7 +2406,7 @@ class Page extends BaseTagLib {
 
         if (parent::getPropertyValue('Templates.showFilter', 'true') == 'true') {
             $return .= ''
-                    . '<form name="template-search" method="post" action"' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="template-search" method="post" action"' . $_SERVER['REQUEST_URI'] . '">'
                     . '<div class="gray-box">'
                     . '<label for="template-search-name" class="w100">Name:</label>'
                     . '<input class="w300" type="text" name="template-search-name" id="template-search-name" value="' . parent::session()->get('name', 'template-search') . '" />'
@@ -2465,7 +2465,7 @@ class Page extends BaseTagLib {
                         . '<input type="hidden" name="template-edit" value="Edit" />'
                         . '<input type="image" src="~/images/page_edi.png" name="template-edit" value="Edit" title="Edit template" />'
                         . '</form> '
-                        . '<form name="template-edit2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="template-edit2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<input type="hidden" name="template-id" value="' . $template['id'] . '" />'
                         . '<input type="hidden" name="template-delete" value="Delete" />'
                         . '<input class="confirm" type="image" src="~/images/page_del.png" name="template-delete" value="Delete" title="Delete template, id(' . $template['id'] . ')" />'
@@ -2516,7 +2516,7 @@ class Page extends BaseTagLib {
         global $loginObject;
         global $dbObject;
         $return = '';
-        $actionUrl = $_SERVER['REDIRECT_URL'];
+        $actionUrl = $_SERVER['REQUEST_URI'];
         if ($submitPageId != false) {
             $actionUrl = $webObject->composeUrl($submitPageId);
         }
@@ -2721,7 +2721,7 @@ class Page extends BaseTagLib {
     }
 
     public function showEmbeddedResources($useFrames = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -2753,12 +2753,12 @@ class Page extends BaseTagLib {
                         . '<td>' . $er->getRid() . '</td>'
                         . '<td>' . $er->getCache() . '</td>'
                         . '<td>'
-                        . '<form name="er-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="er-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<input type="hidden" name="er-id" value="' . $er->getId() . '" />'
                         . '<input type="hidden" name="er-edit" value="' . $rb->get('er.edit') . '" />'
                         . '<input type="image" src="~/images/page_edi.png" name="er-edit" value="' . $rb->get('er.edit') . '" title="' . $rb->get('er.edittitle') . ', id = ' . $er->getId() . '" />'
                         . '</form>'
-                        . '<form name="er-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="er-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<input type="hidden" name="er-id" value="' . $er->getId() . '" />'
                         . '<input type="hidden" name="er-delete" value="' . $rb->get('er.delete') . '" />'
                         . '<input class="confirm" type="image" src="~/images/page_del.png" name="er-delete" value="' . $rb->get('er.delete') . '" title="' . $rb->get('er.deletetitle') . ', id = ' . $er->getId() . '" />'
@@ -2776,7 +2776,7 @@ class Page extends BaseTagLib {
         $return .= ''
                 . '<hr />'
                 . '<div class="gray-box">'
-                . '<form name="er-new" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form name="er-new" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<input type="submit" name="er-new" value="' . $rb->get('er.new') . '" title="' . $rb->get('er.newtitle') . '" />'
                 . '</form>'
                 . '</div>';
@@ -2789,7 +2789,7 @@ class Page extends BaseTagLib {
     }
 
     public function showEditEmbeddedResourceFrom($useFrames = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $er;
@@ -2819,7 +2819,7 @@ class Page extends BaseTagLib {
                 $er = new EmbeddedResource("", "", "", "");
             }
             $return .= ''
-                    . '<form name="er-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                    . '<form name="er-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . $errors
                     . '<div class="gray-box">'
                     . '<label class="w100" for="er-type">' . $rb->get('er.type') . ':</label>'
@@ -2857,7 +2857,7 @@ class Page extends BaseTagLib {
     }
 
     public function showWebForwards($useFrames = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
 
@@ -2895,12 +2895,12 @@ class Page extends BaseTagLib {
                         . '<td>' . $wf->getOrder() . '</td>'
                         . '<td>' . ($wf->getEnabled() ? $rb->get('wf.enabled') : $rb->get('wf.diabled')) . '</td>'
                         . '<td>'
-                            . '<form name="wf-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                            . '<form name="wf-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                 . '<input type="hidden" name="wf-id" value="' . $wf->getId() . '" />'
                                 . '<input type="hidden" name="wf-edit" value="' . $rb->get('wf.edit') . '" />'
                                 . '<input type="image" src="~/images/page_edi.png" name="wf-edit" value="' . $rb->get('wf.edit') . '" title="' . $rb->get('wf.edittitle') . ', id = ' . $wf->getId() . '" />'
                             . '</form> '
-                            . '<form name="wf-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                            . '<form name="wf-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                 . '<input type="hidden" name="wf-id" value="' . $wf->getId() . '" />'
                                 . '<input type="hidden" name="wf-delete" value="' . $rb->get('er.delete') . '" />'
                                 . '<input class="confirm" type="image" src="~/images/page_del.png" name="wf-delete" value="' . $rb->get('wf.delete') . '" title="' . $rb->get('wf.deletetitle') . ', id = ' . $wf->getId() . '" />'
@@ -2918,7 +2918,7 @@ class Page extends BaseTagLib {
         $return .= ''
         . '<hr />'
         . '<div class="gray-box">'
-            . '<form name="wf-new" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+            . '<form name="wf-new" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<input type="submit" name="wf-new" value="' . $rb->get('wf.new') . '" title="' . $rb->get('wf.newtitle') . '" />'
             . '</form>'
         . '</div>';
@@ -2931,7 +2931,7 @@ class Page extends BaseTagLib {
     }
 
     public function showEditWebForwardFrom($useFrames = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = '';
         $wf;
@@ -2962,7 +2962,7 @@ class Page extends BaseTagLib {
                 $wf = new WebForward("", "Forward", "", "", 1, 1, 1, 0);
             }
             $return .= ''
-            . '<form name="wf-edit" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+            . '<form name="wf-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . $errors
                 . '<div class="gray-box">'
                     . '<label class="w100" for="wf-rule">' . $rb->get('wf.rule') . ':</label>'

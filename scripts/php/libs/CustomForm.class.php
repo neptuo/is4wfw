@@ -7,7 +7,7 @@
  */
 require_once("BaseTagLib.class.php");
 
-require_once("scripts/php/classes/ResourceBundle.class.php");
+require_once("scripts/php/classes/LocalizationBundle.class.php");
 require_once("scripts/php/classes/FullTagParser.class.php");
 require_once("scripts/php/libs/FileAdmin.class.php");
 
@@ -46,7 +46,7 @@ class CustomForm extends BaseTagLib {
         parent::setTagLibXml("xml/CustomForm.xml");
 
         if ($webObject->LanguageName != '') {
-            $rb = new ResourceBundle();
+            $rb = new LocalizationBundle();
             if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
                 $this->BundleLang = $webObject->LanguageName;
             }
@@ -61,7 +61,7 @@ class CustomForm extends BaseTagLib {
     }
 
     public function listRowsFullTag($templateContent, $formId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = false, $noDataMessage = false, $params = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
         $rules = "";
@@ -252,7 +252,7 @@ class CustomForm extends BaseTagLib {
 
     public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false) {
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
 
@@ -443,7 +443,7 @@ class CustomForm extends BaseTagLib {
     }
 
     private function formValidateAgainstTemplate($formId, $templateContent) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $this->FormPhase = 1;
@@ -497,7 +497,7 @@ class CustomForm extends BaseTagLib {
         $this->ResourcesToAdd = '';
 
         if (!parent::web()->getIsInsideForm()) {
-            $return .= '<form name="cf_' . $formId . '" method="post" enctype="multipart/form-data" action="' . $_SERVER['REDIRECT_URL'] . '">';
+            $return .= '<form name="cf_' . $formId . '" method="post" enctype="multipart/form-data" action="' . $_SERVER['REQUEST_URI'] . '">';
         }
 
         $return .= ''
@@ -574,7 +574,7 @@ class CustomForm extends BaseTagLib {
     // pro date -> formatovac!!!
     public function field($name, $viewType = false, $type = false, $required = false, $validation = false, $elementId = false, $transformation = false, $default = false, $errorMessage = false, $requiredValue = false, $transient = false, $data = false, $cssClass = false, $dirId = false, $referenceFormId = false, $referenceCaptionField = false) {
         global $webObject;
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
         
@@ -862,7 +862,7 @@ class CustomForm extends BaseTagLib {
             $id = $_POST['cf-delete-row-id'];
             self::delete($_POST['cf-delete-form-id'], $id);
             unset($_POST['cf-delete-row-button']);
-			parent::web()->redirect($_SERVER['REDIRECT_URL']);
+			parent::web()->redirect($_SERVER['REQUEST_URI']);
         }
 
         $id = self::creatorChooseValue($elementId, $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $type));
@@ -877,7 +877,7 @@ class CustomForm extends BaseTagLib {
                     break;
                 case "delete":
                     $return .= ''
-					. '<form name="cf-delete-row" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+					. '<form name="cf-delete-row" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
 						. '<input type="hidden" name="cf-delete-form-id" value="' . $this->FormId . '" />'
 						. '<input type="hidden" name="cf-delete-row-id" value="' . $this->ViewDataRow['id'] . '" />'
 						. '<input type="submit" name="cf-delete-row-button" value="' . $value . '" class="confirm" />'
@@ -950,7 +950,7 @@ class CustomForm extends BaseTagLib {
     /* ===================== LIST =========================================== */
 
     public function formList($userFrames = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
 
@@ -989,7 +989,7 @@ class CustomForm extends BaseTagLib {
                         . '<td>' . $form['name'] . '</td>'
                         . '<td>' . self::listFormatFields($form['fields']) . '</td>'
                         . '<td>'
-                        . '<form name="list-delete" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                        . '<form name="list-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<input type="hidden" name="list-id" value="' . $form['name'] . '" />'
                         . '<input class="confirm" type="image" src="~/images/page_del.png" name="list-delete" value="' . $rb->get('cf.list.delete') . '" title="' . $rb->get('cf.list.delete-title') . ', name=' . $form['name'] . '" />'
                         . '</form>'
@@ -1027,7 +1027,7 @@ class CustomForm extends BaseTagLib {
     /* ===================== CREATOR ======================================== */
 
     public function formCreator($useFrames = false) {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $step = self::creatorSetStep();
         $return = "";
@@ -1066,7 +1066,7 @@ class CustomForm extends BaseTagLib {
     }
 
     private function creatorSetStep() {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         if ($_POST['creator-submit'] == $rb->get('cf.creator.step0.button')) {
@@ -1087,7 +1087,7 @@ class CustomForm extends BaseTagLib {
             if (self::creatorValidate2()) {
                 self::creatorSaveData2();
                 $http = $_SERVER['SERVER_PROTOCOL'];
-                $url = substr($http, 0, stripos($http, '/')) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REDIRECT_URL'];
+                $url = substr($http, 0, stripos($http, '/')) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                 header('Location: ' . $url);
                 exit;
                 return 0;
@@ -1102,11 +1102,11 @@ class CustomForm extends BaseTagLib {
     /*     * ********************* STEP 0 **************************************** */
 
     private function creatorStep0() {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return = ''
-                . '<form name="creator-step-0" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form name="creator-step-0" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="gray-box">'
                 . $rb->get('cf.creator.step0.label')
                 . '</div>'
@@ -1130,7 +1130,7 @@ class CustomForm extends BaseTagLib {
     }
 
     private function creatorValidate0() {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $formId = $_POST['creator-id'];
@@ -1163,11 +1163,11 @@ class CustomForm extends BaseTagLib {
     /*     * ********************* STEP 1 **************************************** */
 
     private function creatorStep1() {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return .= ''
-                . '<form name="creator-step-1" method="post" ation="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form name="creator-step-1" method="post" ation="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="gray-box">'
                 . $rb->get('cf.creator.step1.label')
                 . '</div>'
@@ -1203,7 +1203,7 @@ class CustomForm extends BaseTagLib {
     }
 
     private function creatorValidate1() {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $ok = true;
@@ -1269,11 +1269,11 @@ class CustomForm extends BaseTagLib {
     /*     * ********************* STEP 2 **************************************** */
 
     private function creatorStep2() {
-        $rb = new ResourceBundle();
+        $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return .= ''
-                . '<form name="creator-step-2" method="post" action="' . $_SERVER['REDIRECT_URL'] . '">'
+                . '<form name="creator-step-2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="gray-box">'
                 . $rb->get('cf.creator.step2.label')
                 . '</div>'

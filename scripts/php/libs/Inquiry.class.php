@@ -7,7 +7,7 @@
  */
 require_once("BaseTagLib.class.php");
 
-require_once("scripts/php/classes/ResourceBundle.class.php");
+require_once("scripts/php/classes/LocalizationBundle.class.php");
 
 /**
  * 
@@ -26,7 +26,7 @@ class Inquiry extends BaseTagLib {
         global $webObject;
 
         parent::setTagLibXml("xml/Inquiry.xml");
-		parent::loadResourceBundle('inquiry');
+		parent::loadLocalizationBundle('inquiry');
     }
 	
 	private function resetInquiry($inquiryId) {
@@ -55,7 +55,7 @@ class Inquiry extends BaseTagLib {
 		$return .= ''
 		.'<hr />'
 		.'<div class="gray-box">'
-			.'<form name="inquiry-create" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+			.'<form name="inquiry-create" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 				.'<input type="submit" name="inquiry-create" value="'.parent::rb('button.create').'" />'
 			.'</form>'
 		.'</div>';
@@ -126,7 +126,7 @@ class Inquiry extends BaseTagLib {
 		$return .= ''
 			.'<hr />'
 			.'<div class="gray-box">'
-				.'<form name="inquiry-answer-create" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+				.'<form name="inquiry-answer-create" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 					.'<input type="hidden" name="inquiry-id" value="'.$id.'" />'
 					.'<input type="hidden" name="inquiry-answers" value="'.parent::rb('button.answers').'" />'
 					
@@ -167,7 +167,7 @@ class Inquiry extends BaseTagLib {
 			}
 			
 			$return .= ''
-			.'<form name="inquiry-answer-edit" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+			.'<form name="inquiry-answer-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 				.'<div class="gray-box">'
 					.'<label class="w100" for="inquiry-answer">'.parent::rb('label.answer').'</label>'
 					.'<input type="text" name="inquiry-answer" id="inquiry-answer" value="'.$data['answer'].'" class="w300" />'
@@ -207,7 +207,7 @@ class Inquiry extends BaseTagLib {
 		}
 		
 		$return .= ''
-		.'<form name="inquiry-set-current" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+		.'<form name="inquiry-set-current" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 			.'<div class="gray-box">'
 				.'<label class="w100" for="inquiry-current-id">'.$label.'</label>'
 				.'<select id="inquiry-current-id" name="inquiry-current-id">';
@@ -299,7 +299,7 @@ class Inquiry extends BaseTagLib {
 					.'<div class="inquiry-question">'
 						.$data['question']
 					.'</div>'
-					.'<form name="inquiry-vote" method="post" action="'.$_SERVER['REDIRECT_URL'].'">'
+					.'<form name="inquiry-vote" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
 						.'<div class="inquiry-answers">'
 							.'<input type="hidden" name="inquiry-id" vale="'.$inquiryId.'" />';
 					
