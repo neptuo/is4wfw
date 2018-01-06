@@ -48,7 +48,7 @@ abstract class AbstractDao {
 		$values = $object;
 		for($i = 0; $i < $count; $i++) {
 			if($fields[$i] != $this->getIdField()) {
-				$set = $set . "`" . $fields[$i] . "` = '" . mysql_real_escape_string($values[$fields[$i]]);
+				$set = $set . "`" . $fields[$i] . "` = '" . $this->dataAccess->escape($values[$fields[$i]]);
 				if ($i == $count - 1){
 					$set = $set . "'";
 				} else {
@@ -56,7 +56,7 @@ abstract class AbstractDao {
 				}
 			}
 		}
-		$param = array($this->getDatabase(), $this->getTableName(), $set, $this->getIdField(), mysql_real_escape_string($object[$this->getIdField()]));
+		$param = array($this->getDatabase(), $this->getTableName(), $set, $this->getIdField(), $this->dataAccess->escape($object[$this->getIdField()]));
 		return self::setString($this->updateSQL, $param);
 	}
 	
@@ -66,7 +66,7 @@ abstract class AbstractDao {
 	 * @param id - id mazaného objektu
 	 */
 	protected function deleteSql($id){
-		$param = array($this->getDatabase(), $this->getTableName(), $this->getIdField(), mysql_real_escape_string($id));
+		$param = array($this->getDatabase(), $this->getTableName(), $this->getIdField(), $this->dataAccess->escape($id));
 		return self::setString($this->deleteSQL, $param);		
 	}
 	
@@ -207,16 +207,16 @@ abstract class AbstractDao {
 	 * @param string - string s {}, keteré se mají nahradit
 	 * @param params - pole parametru 
 	 */
-	private static function setString($string, $params){
-		$positoin[0] = 0;
+	private function setString($string, $params){
+		$position[0] = 0;
 		$change = 0;
 		for($i = 0; $i < strlen($string) - 2; $i++){
 			if (substr($string, $i, 1) == '{' && substr($string, $i + 2, 1) == '}'){
 				$change = substr($string, $i + 1, 1);
-				$positoin[$change] = "{".$change."}";
+				$position[$change] = "{".$change."}";
 			}
 		}
-		$return = str_replace($positoin, $params, $string);
+		$return = str_replace($position, $params, $string);
 		return $return;
 	}
 	
@@ -226,7 +226,7 @@ abstract class AbstractDao {
 	 * @param array - pole (názvů sloupcu v DB)
 	 * @param values - pole (hodnot v sloupci v DB)
 	 */
-	private static function arrayToString($array, $values = false){
+	private function arrayToString($array, $values = false){
 		$string = "";
 		$count = count($array);
 		$i = 0;
@@ -239,10 +239,10 @@ abstract class AbstractDao {
 					$string = $string . "`" . $feald . "`";
 				}
 			} else {
-			if ($i != $count){
-					$string = $string . "'" . mysql_real_escape_string($feald) . "', ";
+				if ($i != $count){
+					$string = $string . "'" . $this->dataAccess->escape($feald) . "', ";
 				} else {
-					$string = $string . "'" . mysql_real_escape_string($feald) . "'";
+					$string = $string . "'" . $this->dataAccess->escape($feald) . "'";
 				}
 			}
 		}

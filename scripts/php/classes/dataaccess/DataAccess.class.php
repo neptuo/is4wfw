@@ -313,6 +313,10 @@ class DataAccess {
 	public function getCharset() {
 		return mysqli_client_encoding($this->connection);
 	}
+
+	public function escape($value) {
+		return mysqli_real_escape_string($this->connection, $value);
+	}
 }
 
 ?>

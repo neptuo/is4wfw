@@ -50,7 +50,7 @@ function updateData($db, $tableName, $structure, $data) {
                 $sql .= ', ';
             }
 
-            $sql .= '`' . $column . '` = "' . mysql_real_escape_string($item[$column]) . '"';
+            $sql .= '`' . $column . '` = "' . $db->escape($item[$column]) . '"';
             $isFirst = false;
         }
 

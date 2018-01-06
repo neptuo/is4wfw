@@ -238,6 +238,10 @@
 	public function getDataAccess() {
 		return $this->dataAccess;
 	}
+
+	public function escape($value) {
+		return $this->dataAccess->escape($value);
+	}
     
   }
 
