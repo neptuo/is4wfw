@@ -270,10 +270,6 @@ class DefaultWeb extends BaseTagLib {
                 $found = true;
             } else {
                 // Stranka neexistuje -> Projit Forwardy s 404 nebo All Errors
-
-                echo $this->PageLog;
-                exit;
-
                 self::processForwards(self::findForward(array('404', 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'));
 
                 header("HTTP/1.1 404 Not Found");
