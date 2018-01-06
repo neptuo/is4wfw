@@ -77,7 +77,7 @@ class FileAdmin extends BaseTagLib {
 		if($dirId >= 0) {
 			while($dirId != 0) {
 				parent::db()->getDataAccess()->disableCache();
-				$dirInfo = parent::dao('Directory')->select(Select::factory()->where('id', '=', $dirId)->result(), false, array($itemPath, 'parent_id'));
+				$dirInfo = parent::dao('Directory')->select(parent::select()->where('id', '=', $dirId)->result(), false, array($itemPath, 'parent_id'));
 				parent::db()->getDataAccess()->enableCache();
 				if(count($dirInfo) == 1) {
 					$dirId = $dirInfo[0]['parent_id'];
@@ -421,7 +421,7 @@ class FileAdmin extends BaseTagLib {
 			return parent::rb('file.namelength');
 		}
 		
-		$select = Select::factory()->where('dir_id', '=', $dataItem['dir_id'])->conjunct('name', '=', $dataItem['name'])->conjunct('type', '=', $dataItem['type']);
+		$select = parent::select()->where('dir_id', '=', $dataItem['dir_id'])->conjunct('name', '=', $dataItem['name'])->conjunct('type', '=', $dataItem['type']);
 		if(!$new) {
 			$select = $select->conjunct('id', '!=', $dataItem['id']);
 		}
@@ -597,7 +597,7 @@ class FileAdmin extends BaseTagLib {
 			return parent::rb('file.namelength');
 		}
 		
-		$select = Select::factory()->where('parent_id', '=', $dataItem['parent_id'])->conjunct('name', '=', $dataItem['name']);
+		$select = parent::select()->where('parent_id', '=', $dataItem['parent_id'])->conjunct('name', '=', $dataItem['name']);
 		if(!$new) {
 			$select = $select->conjunct('id', '!=', $dataItem['id']);
 		}

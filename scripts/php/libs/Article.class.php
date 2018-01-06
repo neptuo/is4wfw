@@ -2115,7 +2115,7 @@ class Article extends BaseTagLib {
             $languageFormHtml = '';
             $languages = parent::dao('Language')->getList();
             if($labelId != '') {
-                $rawData = parent::dao('ArticleLabelLanguage')->getList(Select::factory()->where('label_id', '=', $labelId));
+                $rawData = parent::dao('ArticleLabelLanguage')->getList(parent::select()->where('label_id', '=', $labelId));
                 foreach($rawData as $item) {
                     $label['name'][$item['language_id']] = $item['name'];
                     $label['url'][$item['language_id']] = $item['url'];

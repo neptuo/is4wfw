@@ -4,7 +4,12 @@
  * třída pro vytvoření stringu pro select
  */
 class Select{
+	private $dataAccess;
 	private $result;
+
+	public function __contruct($dataAccess) {
+		$this->dataAccess = $dataAccess;
+	}
 	
 	/*
 	 * funkce pro vytvoření klauzule where
@@ -20,12 +25,12 @@ class Select{
 				if(is_array($value) && count($value) > 0) {
 					$value = "'".implode("', '", $value)."'";
 				} else {
-					$value = mysql_real_escape_string($value);
+					$value = $this->dataAccess->escape($value);
 				}
 			
-				$this->result .= " WHERE `" . $column . "` " . $comp . " (".$value.")";
+				$this->result .= " WHERE `" . $column . "` " . $comp . " (" . $value . ")";
 			} else {
-				$this->result .= " WHERE `" . $column . "` " . $comp . " '".mysql_real_escape_string($value)."'";
+				$this->result .= " WHERE `" . $column . "` " . $comp . " '" . $this->dataAccess->escape($value) . "'";
 			}
 		}
 		
@@ -42,7 +47,7 @@ class Select{
 	public function disjunct($column, $comp, $value, $ignore=false){
 		if (!$ignore){
 			if ($this->result != null){
-				$this->result .= " OR `" . $column . "` " . $comp . " " . "'".mysql_real_escape_string($value)."'";
+				$this->result .= " OR `" . $column . "` " . $comp . " " . "'" . $this->dataAccess->escape($value) . "'";
 			}
 		}
 		
@@ -59,7 +64,7 @@ class Select{
 	public function conjunct($column, $comp, $value, $ignore=false){
 		if (!$ignore){
 			if ($this->result != null){
-				$this->result .= " AND " . $column . " " . $comp . " " . "'".mysql_real_escape_string($value)."'";
+				$this->result .= " AND " . $column . " " . $comp . " " . "'" . $this->dataAccess->escape($value) . "'";
 			}
 		}
 		
@@ -124,9 +129,9 @@ class Select{
 	 */
 	public function limit($start, $end = null, $ignore = false){
 		if (!$ignore){
-			$this->result .= " LIMIT " . mysql_real_escape_string($start);
+			$this->result .= " LIMIT " . $this->dataAccess->escape($start);
 			if ($end != null){
-				$this->result .= "," . mysql_real_escape_string($end); 
+				$this->result .= "," . $this->dataAccess->escape($end); 
 			}
 		}
 		
@@ -181,8 +186,8 @@ class Select{
 	}
 	
 	
-	public static function factory() {
-		return new Select();
+	public static function factory($dataAccess) {
+		return new Select($dataAccess);
 	}
 }
 

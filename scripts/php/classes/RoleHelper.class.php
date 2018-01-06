@@ -275,7 +275,7 @@ class RoleHelper {
 		}
 		
 		$return = '';
-		$availableGroups = RoleHelper::$instance->dao('Role')->getList(Select::factory()->where('gid', 'IN', $availableGroups)->orderBy('name'));
+		$availableGroups = RoleHelper::$instance->dao('Role')->getList(Select::factory(RoleHelper::$instance->db()->getDataAccess())->where('gid', 'IN', $availableGroups)->orderBy('name'));
 		
 		switch($type) {
 			case WEB_R_READ: $return .= '<select id="'.$baseName.'r" name="'.$baseName.'r[]"'; break;

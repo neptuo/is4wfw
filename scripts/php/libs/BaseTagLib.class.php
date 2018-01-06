@@ -374,6 +374,10 @@ class BaseTagLib {
 		
 		return $this->daos[$name];
     }
+
+    public function select() {
+        return Select::factory(self::db()->getDataAccess());
+    }
     
     protected function log($message) {
 		$this->web()->PageLog .= $message;

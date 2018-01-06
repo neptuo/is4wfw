@@ -819,7 +819,7 @@
 		if($dirId >= 0) {
 			while($dirId != 0) {
 				parent::db()->getDataAccess()->disableCache();
-				$dirInfo = parent::dao('Directory')->select(Select::factory()->where('id', '=', $dirId)->result(), false, array(FileAdmin::$FileSystemItemPath, 'parent_id'));
+				$dirInfo = parent::dao('Directory')->select(parent::select()->where('id', '=', $dirId)->result(), false, array(FileAdmin::$FileSystemItemPath, 'parent_id'));
 				parent::db()->getDataAccess()->enableCache();
 				if(count($dirInfo) == 1) {
 					$dirId = $dirInfo[0]['parent_id'];

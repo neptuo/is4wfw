@@ -24,11 +24,11 @@ class FileDao extends AbstractDao {
 	
 	
 	public function getFromDirectory($dirId) {
-		return parent::getList(Select::factory()->where('dir_id', '=', $dirId)->orderBy('name'));
+		return parent::getList(Select::factory(self::dataAccess())->where('dir_id', '=', $dirId)->orderBy('name'));
 	}
 	
 	public function getImagesFromDirectory($dirId, $limit = false) {
-		$select = Select::factory()->where('dir_id', '=', $dirId)->conjunctIn('type', array(WEB_TYPE_JPG, WEB_TYPE_PNG, WEB_TYPE_GIF))->orderBy('name');
+		$select = Select::factory(self::dataAccess())->where('dir_id', '=', $dirId)->conjunctIn('type', array(WEB_TYPE_JPG, WEB_TYPE_PNG, WEB_TYPE_GIF))->orderBy('name');
 		if($limit > 0) {
 			$select = $select->limit(0, $limit);
 		}

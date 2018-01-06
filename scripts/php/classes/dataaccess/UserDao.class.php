@@ -24,14 +24,14 @@ class UserDao extends AbstractDao {
 	
 	
 	public function getByLogin($login, $password) {
-		$select = Select::factory()->where('login', '=', $login)->conjunct('password', '=', $password);
+		$select = Select::factory(self::dataAccess())->where('login', '=', $login)->conjunct('password', '=', $password);
 		
 		$sql = self::selectSql($select->result(), true);
 		return $this->dataAccess->fetchSingle($sql);
 	}
 	
 	public function getEnabled() {
-		return parent::getList(Select::factory()->where('enable', '=', 1));
+		return parent::getList(Select::factory(self::dataAccess())->where('enable', '=', 1));
 	}
 }
 

@@ -24,7 +24,7 @@ class DirectoryDao extends AbstractDao {
 	
 	
 	public function getFromDirectory($dirId) {
-		return parent::getList(Select::factory()->where('parent_id', '=', $dirId)->orderBy('name'));
+		return parent::getList(Select::factory(self::dataAccess())->where('parent_id', '=', $dirId)->orderBy('name'));
 	}
 }
 
