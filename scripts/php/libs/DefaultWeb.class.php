@@ -954,7 +954,7 @@ class DefaultWeb extends BaseTagLib {
                 $name .= '-' . $pg;
             }
             $name .= '.cache.html';
-            $path = $_SERVER['DOCUMENT_ROOT'] . WEB_ROOT . $this->CacheDir . '/pages/';
+            $path = WEB_PATH . $this->CacheDir . '/pages/';
             $cacheMTime = filemtime($path . $name);
 
             if (file_exists($path . $name) && is_readable($path . $name) && ($cacheMTime > (time() - $time))) {
@@ -1067,7 +1067,7 @@ class DefaultWeb extends BaseTagLib {
 	
 	private function getPageCachePath() {
 		$webProject = $this->UrlResolver->getWebProject();
-		return $_SERVER['DOCUMENT_ROOT'] . (UrlResolver::combinePath(WEB_ROOT, $webProject['alias']['root_url'])) . $this->CacheDir . '/pages/';;
+		return WEB_PATH . (UrlResolver::combinePath(WEB_ROOT, $webProject['alias']['root_url'])) . $this->CacheDir . '/pages/';;
 	}
 
     private function resolveWebRoot($content) {

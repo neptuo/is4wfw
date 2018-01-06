@@ -95,7 +95,7 @@ if (array_key_exists('fid', $_REQUEST)) {
     $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `url`, `type`, `timestamp` FROM `file` WHERE `id` = " . $fileId . ";");
 
     if (count($file) == 1) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
+        $filePath = WEB_PATH . $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
         //echo $filePath;
         $updTime = filemtime($filePath);
 
@@ -155,6 +155,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             }
         }
 
+        echo 'File: ' . $filePath . '<br />, Exists: ' . file_exists($filePath) . '<br />, Readable: ' . is_readable($filePath) . '<br />';
         if (file_exists($filePath) && is_readable($filePath)) {
             $fileSize = filesize($filePath);
             header('Content-Type: ' . $fileExt);
@@ -174,7 +175,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             }
         } else {
             header("HTTP/1.1 404 Not Found");
-            echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';
+            echo '<h1 class="error">Error 404 (x)</h1><p class="error">Requested file doesn\'t exists.</p>';
             exit;
         }
     } else {
@@ -193,7 +194,7 @@ if (array_key_exists('fid', $_REQUEST)) {
     $dbObject = new Database();
     $flObject = new File();
 
-    $filePath = $_SERVER['DOCUMENT_ROOT'] . $_REQUEST['path'];
+    $filePath = WEB_PATH . $_REQUEST['path'];
     $updTime = filemtime($filePath);
     // Try cached file ...
     // header("Cache-Control: private, max-age=10800, pre-check=10800");

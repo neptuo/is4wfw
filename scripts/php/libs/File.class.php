@@ -100,7 +100,7 @@
 	          $dbObject->execute("DELETE FROM `directory` WHERE `id` = ".$directoryId.";");
 	          $dbObject->execute("DELETE FROM `directory_right` WHERE `id` = ".$directoryId.";");
         	  // take smazat fyzicky adresar!!
-      	    rmdir($_SERVER['DOCUMENT_ROOT'].$path);
+      	    rmdir(WEB_PATH.$path);
     	    } else {
   	        $return .= '<h4 class="error">'.$rb->get('dir.notempty').'</h4>';
 	        }
@@ -118,7 +118,7 @@
     	      $dbObject->execute("DELETE FROM `file` WHERE `id` = ".$fileId.";");
     	      $dbObject->execute("DELETE FROM `file_right` WHERE `id` = ".$fileId.";");
       	    $path = self::getPhysicalPathTo($file[0]['dir_id']);
-        	  $filePath = $_SERVER['DOCUMENT_ROOT'].$path.$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
+        	  $filePath = WEB_PATH . $path . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
           	//echo $filePath;
 	          unlink($filePath);
   	      }
@@ -323,7 +323,7 @@
 					$directoryId = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `directory`;');
     	    	  	$directoryId = $directoryId[0]['id'];
 					$path = self::getPhysicalPathTo($directoryParentId).$directoryName;
-					mkdir($_SERVER['DOCUMENT_ROOT'].$path);
+					mkdir(WEB_PATH . $path);
 				} elseif($_POST['edit-directory'] == $rb->get('dir.edithint')) {
 					$oldName = $dbObject->fetchAll('SELECT `name`, `parent_id` FROM `directory` WHERE `id` = '.$directoryParentId.';');
 					$path1 = substr(self::getPhysicalPathTo($oldName[0]['parent_id']).$oldName[0]['name'].'/', 1);
@@ -672,14 +672,14 @@
 		        if(count($files) == 0) {
         		  if($extType > 0) {
             		$path = self::getPhysicalPathTo($dirId);
-		            $moved = move_uploaded_file($original, $_SERVER['DOCUMENT_ROOT'].$path.$fileName.".".FileAdmin::$FileExtensions[$extType]);
+		            $moved = move_uploaded_file($original, WEB_PATH.$path.$fileName.".".FileAdmin::$FileExtensions[$extType]);
     		        
         		    if($moved) {
         		    	if(array_key_exists('file-id', $_POST)) {
         		    		$files = $dbObject->fetchAll("SELECT `id`, `name`, `type`, `dir_id` FROM `file` WHERE `dir_id` = ".$dirId." AND `id` = ".$fileId.";");
         		    		$oldFile = $files[0];
 							$path = self::getPhysicalPathTo($oldFile['dir_id']);
-							$filePath = $_SERVER['DOCUMENT_ROOT'].$path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
+							$filePath = WEB_PATH.$path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
 				          	//echo $filePath;
 				          	if($fileName != $oldFile['name'] || $extType != $oldFile['type']) {
 								unlink($filePath);
@@ -770,7 +770,7 @@
 				$files = $dbObject->fetchAll("SELECT `id`, `name`, `type`, `dir_id` FROM `file` WHERE `dir_id` = ".$dirId." AND `id` = ".$fileId.";");
 				$oldFile = $files[0];
 				$path = self::getPhysicalPathTo($oldFile['dir_id']);
-				$filePath = $_SERVER['DOCUMENT_ROOT'].$path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
+				$filePath = WEB_PATH.$path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
 				if($fileName != $oldFile['name']) {
 					$i = rename($filePath, str_replace($oldFile['name'], $fileName, $filePath));
 				}
@@ -868,7 +868,7 @@
       $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = ".$fileId.";");
       
       if(count($file) == 1) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
+        $filePath = WEB_PATH.self::getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
         $fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".FileAdmin::$FileExtensions[$file[0]['type']] : "document/".$file[0]['type'];
         
         if(array_key_exists("width", $_GET) && array_key_exists("height", $_GET)) {

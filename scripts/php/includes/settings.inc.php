@@ -10,6 +10,9 @@
    
    define("WEB_ROOT", "/");
    define("FS_ROOT", WEB_ROOT."files/");
+   
+   define("WEB_PATH", $_SERVER['DOCUMENT_ROOT'] . WEB_ROOT);
+   define("FS_PATH", $_SERVER['DOCUMENT_ROOT'] . FS_ROOT);
 
    define("FILE_PAGE_PATH", "/file/");
    define("TEMPLATES_CACHE_DIR", "cache/templates/");

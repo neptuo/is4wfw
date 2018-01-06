@@ -93,7 +93,7 @@ class FileAdmin extends BaseTagLib {
 			echo "<h4 class=\"error\">".$message."</h4>";
 			trigger_error($message, E_USER_ERROR);
 		}
-      
+		
 		if(!$notUserFsRoot) {
 			$path = UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), FS_ROOT.$path);
 		}
@@ -102,7 +102,7 @@ class FileAdmin extends BaseTagLib {
 	
 	public function getPhysicalPathToFile($file) {
 		$path = self::getPhysicalPathTo($file['dir_id']);
-		$filePath = $_SERVER['DOCUMENT_ROOT'].$path.$file[FileAdmin::$FileSystemItemPath].".".self::getFileExtension($file);
+		$filePath = WEB_PATH.$path.$file[FileAdmin::$FileSystemItemPath].".".self::getFileExtension($file);
 		return $filePath;
 	}
 	
@@ -206,7 +206,7 @@ class FileAdmin extends BaseTagLib {
 			}
 			
 			$directory = parent::dao('Directory')->get($directoryId);
-			$path = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($directoryId);
+			$path = WEB_PATH.self::getPhysicalPathTo($directoryId);
 			if(!parent::dao('Directory')->delete($directory)) {
 				//echo $path;
 				rmdir($path);
@@ -248,7 +248,7 @@ class FileAdmin extends BaseTagLib {
 			$deleteRights = RoleHelper::getRights(FileAdmin::$DirectoryRightDesc, $rootId, WEB_R_DELETE);
 		}
 		
-		$path = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($rootId);
+		$path = WEB_PATH.self::getPhysicalPathTo($rootId);
 	
 		if ($handle = opendir($path)) {
 			$newDirs = array();
@@ -473,7 +473,7 @@ class FileAdmin extends BaseTagLib {
 		
 		$zip = new ZipArchive();
 		if ($zip->open($fileTmpName) === TRUE) {
-			$zip->extractTo($_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($dirId));
+			$zip->extractTo(WEB_PATH.self::getPhysicalPathTo($dirId));
 			$zip->close();
 			
 			parent::db()->getDataAccess()->disableCache();
@@ -608,7 +608,7 @@ class FileAdmin extends BaseTagLib {
 		}
 		
 		if(!$new) {
-			$path = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($dir['parent_id']);
+			$path = WEB_PATH.self::getPhysicalPathTo($dir['parent_id']);
 			//rename($path.$dir['name'], $path.$dataItem['name']);
 			
 			if(parent::dao('Directory')->update($dataItem) != 0) {
@@ -622,7 +622,7 @@ class FileAdmin extends BaseTagLib {
 			$_POST['new-directory-id'] = $dataItem['id'];
 			
 			$path = self::getPhysicalPathTo($dataItem['parent_id']).$dataItem[FileAdmin::$FileSystemItemPath];
-			mkdir($_SERVER['DOCUMENT_ROOT'].$path);
+			mkdir(WEB_PATH.$path);
 		}
 		
 		RoleHelper::setRights(FileAdmin::$DirectoryRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $readRights, WEB_R_READ);
@@ -703,7 +703,7 @@ class FileAdmin extends BaseTagLib {
 	
 	protected function transformFileSystemDirs($dirs) {
 		foreach($dirs as $dir) {
-			$path = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($dir['parent_id']);
+			$path = WEB_PATH.self::getPhysicalPathTo($dir['parent_id']);
 			$oldPath = $path.$dir['name'];
 			$newPath = $path.$dir[FileAdmin::$FileSystemItemPath];
 			
@@ -716,7 +716,7 @@ class FileAdmin extends BaseTagLib {
 	
 	protected function transformFileSystemFiles($files) {
 		foreach($files as $file) {
-			$path = $_SERVER['DOCUMENT_ROOT'].self::getPhysicalPathTo($file['dir_id']);
+			$path = WEB_PATH.self::getPhysicalPathTo($file['dir_id']);
 			$oldPath = $path.$file['name'].".".self::getFileExtension($file);
 			$newPath = self::getPhysicalPathToFile($file);
 			
