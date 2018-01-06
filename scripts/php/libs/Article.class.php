@@ -1345,7 +1345,7 @@ class Article extends BaseTagLib {
                 $langSql = ' and `language_id` = ' . $articleContent['language_id'];
             }
 
-            $isInsert = false;
+            $isRedirectRequired = false;
             $isSaved = false;
             $urls = parent::db()->fetchAll('select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "' . $articleContent['url'] . '" and `line_id` = ' . $article['line_id'] . $idSql . $langId . ';');
             if (count($urls) == 0 || (count($urls) == 1 && $urls[0]['article_id'] == $article['id'])) {
@@ -1378,7 +1378,7 @@ class Article extends BaseTagLib {
                                         $dbObject->execute("UPDATE `article` SET `directory_id` = " . $directory['id'] . " WHERE `id` = " . $article['id'] . ";");
                                     }
                                 }
-                                $isInsert = true;
+                                $isRedirectRequired = true;
                                 $isSaved = true;
                             } else {
                                 $ac = $articleContent;
@@ -1387,7 +1387,7 @@ class Article extends BaseTagLib {
                                 $return .= '<h4 class="success">' . $rb->get('articles.langadded') . '</h4>';
                                 $_POST['article-id'] = $article['id'];
                                 $_POST['language-id'] = $ac['language_id'];
-                                $isInsert = true;
+                                $isRedirectRequired = true;
                                 $isSaved = true;
                             }
                         } else {
@@ -1396,6 +1396,7 @@ class Article extends BaseTagLib {
                             $dbObject->execute("UPDATE `article_content` SET `name` = \"" . $dbObject->escape($ac['name']) . "\", `url` = \"" . $dbObject->escape($ac['url']) . "\", `keywords` = \"" . $dbObject->escape($ac['keywords']) . "\", `head` = \"" . $dbObject->escape($ac['head']) . "\", `content` = \"" . $dbObject->escape($ac['content']) . "\", `author` = \"" . $dbObject->escape($ac['author']) . "\", `timestamp` = " . $ac['timestamp'] . ", `datetime` = \"" . $dbObject->escape($ac['datetime']) . "\", `language_id` = " . $ac['language_id'] . " WHERE `article_id` = " . $ac['article_id'] . " AND `language_id` = " . $ac['language_old_id'] . ";");
                             $_POST['article-id'] = $article['id'];
                             $_POST['language-id'] = $ac['language_id'];
+                            $isRedirectRequired = $ac['language_id'] != $ac['language_old_id'];
                             $isSaved = true;
                             $return .= '<h4 class="success">' . $rb->get('articles.updated') . '</h4>';
                         }
@@ -1433,10 +1434,11 @@ class Article extends BaseTagLib {
         if ($isClosing) {
             $url = $webObject->composeUrl($backPageId);
             header("Location: ".$url);
-        } else if($isInsert) {
+        } else if($isRedirectRequired) {
             $actionUrl = $_SERVER['REQUEST_URI'];
             $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['id']);
             $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $ac['language_id']);
+            
             header('Location: ' . $actionUrl);
             return;
         }

@@ -389,14 +389,34 @@ class BaseTagLib {
         $message = str_replace(">", "&gt;", $message);
 		self::log("<pre>" . $message . "</pre>");
     }
-    
-    protected function addUrlParameter($url, $name, $value) {
+
+    protected function addUrlParameter($url, $name, $value = '') {
         $pair = ($value != '') ? $name . '=' . $value : $name;
-        if (strpos($url, '?') == '') {
+    
+        $queryIndex = strpos($url, '?');
+        if ($queryIndex == '') {
             $url .= '?' . $pair;
         } else {
-            if (strpos($url, $name, strpos($url, '?')) == '') {
+            if (strpos($url, $name, $queryIndex) == '') {
                 $url .= '&' . $pair;
+            } else {
+                $query = substr($url, $queryIndex + 1);
+                $query = explode('&', $query);
+                $url = substr($url, 0, $queryIndex);
+                $isFirst = true;
+                foreach ($query as $item) {
+                    $keyvalue = explode('=', $item);
+                    if ($keyvalue[0] == $name) {
+                        $item = $pair;
+                    }
+    
+                    if ($isFirst) {
+                        $url .= '?' . $item;
+                        $isFirst = false;
+                    } else {
+                        $url .= '&' . $item;
+                    }
+                }
             }
         }
         return $url;
