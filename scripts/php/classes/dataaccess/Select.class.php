@@ -7,7 +7,7 @@ class Select{
 	private $dataAccess;
 	private $result;
 
-	public function __contruct($dataAccess) {
+	public function __construct($dataAccess) {
 		$this->dataAccess = $dataAccess;
 	}
 	

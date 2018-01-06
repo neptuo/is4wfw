@@ -155,7 +155,7 @@ abstract class AbstractDao {
 	}
 	
 	public function get($id) {
-		$select = new Select();
+		$select = new Select($this->dataAccess);
 		$idField = $this->getIdField();
 		if(is_array($idField)) {
 			$isFirst = true;
