@@ -117,7 +117,8 @@ if (array_key_exists('fid', $_REQUEST)) {
         if (array_key_exists("width", $_GET) && array_key_exists("height", $_GET)) {
             $width = $_GET['width'];
             $height = $_GET['height'];
-            $thumbPath = 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
+            
+            $thumbPath = WEB_PATH . 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -131,7 +132,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             $ratio = $width / $orWidth;
             $height = round($ratio * $orHeight);
 
-            $thumbPath = 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
+            $thumbPath = WEB_PATH . 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -145,7 +146,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             $ratio = $height / $orHeight;
             $width = round($ratio * $orWidth);
 
-            $thumbPath = 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
+            $thumbPath = WEB_PATH . 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -155,9 +156,9 @@ if (array_key_exists('fid', $_REQUEST)) {
             }
         }
 
-        echo 'File: ' . $filePath . '<br />, Exists: ' . file_exists($filePath) . '<br />, Readable: ' . is_readable($filePath) . '<br />';
         if (file_exists($filePath) && is_readable($filePath)) {
             $fileSize = filesize($filePath);
+
             header('Content-Type: ' . $fileExt);
             header('Accept-Ranges: bytes');
             header('Content-Length: ' . $fileSize);
@@ -175,7 +176,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             }
         } else {
             header("HTTP/1.1 404 Not Found");
-            echo '<h1 class="error">Error 404 (x)</h1><p class="error">Requested file doesn\'t exists.</p>';
+            echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';
             exit;
         }
     } else {
