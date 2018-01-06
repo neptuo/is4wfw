@@ -379,11 +379,11 @@ class BaseTagLib {
         return Select::factory(self::db()->getDataAccess());
     }
     
-    protected function log($message) {
+    public function log($message) {
 		$this->web()->PageLog .= $message;
     }
     
-    protected function logVar($variable) {
+    public function logVar($variable) {
         $message = var_export($variable, true);
         $message = str_replace("<", "&lt;", $message);
         $message = str_replace(">", "&gt;", $message);
