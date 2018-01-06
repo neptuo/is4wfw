@@ -1,1 +1,0 @@
-ALTER TABLE  `w_sport_player` ADD  `on_loan` INT NOT NULL DEFAULT  '0' AFTER  `team`;
