@@ -229,7 +229,7 @@ $db->transaction();
 foreach ($database as $tableName => $structure) {
     mylog('Processing "' . $tableName . '".');
 
-    mysql_set_charset($defaultCharacterSet);
+    $db->setCharset($defaultCharacterSet);
     $data = getData($db, $tableName, $structure);
 
     if ($db->getErrorCode() != 0) {
@@ -241,7 +241,7 @@ foreach ($database as $tableName => $structure) {
     mylog('Found "' . count($data) . '" items.');
     convertData($data, $defaultCharacterSet, $targetCharacterSet);
 
-    mysql_set_charset($targetCharacterSet);
+    $db->setCharset($targetCharacterSet);
     updateData($db, $tableName, $structure, $data);
     
     if ($db->getErrorCode() != 0) {
