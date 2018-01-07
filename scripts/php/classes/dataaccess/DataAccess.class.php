@@ -17,7 +17,7 @@ class DataAccess {
 	
 	private $inTransaction = false;
   
-	public function connect($hostname, $user, $passwd, $database){
+	public function connect($hostname, $user, $passwd, $database, $checkCharset = true){
 		$this->connection = mysqli_connect($hostname, $user, $passwd);
 		mysqli_query($this->connection, "use ".$database);
 		echo mysqli_error($this->connection);
@@ -28,6 +28,14 @@ class DataAccess {
 		    $this->isOpened = true;
 		}
 
+		if ($checkCharset) {
+			self::checkCharset();
+		}
+		
+		return $this->isOpened;
+	}
+
+	private function checkCharset() {
 		if ($this->isOpened) {
 			self::disableCache();
 			$data = self::fetchSingle('SELECT `value` FROM `system_property` WHERE `key` = "' . DataAccess::$CharsetSystemProperty . '";');
@@ -36,8 +44,6 @@ class DataAccess {
 				mysqli_set_charset($this->connection, $data['value']);
 			}
 		}
-		
-		return $this->isOpened;
 	}
 	
 	public function disconnect(){
