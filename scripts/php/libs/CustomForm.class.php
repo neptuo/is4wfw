@@ -251,12 +251,15 @@ class CustomForm extends BaseTagLib {
     /* ===================== FORM =========================================== */
 
     public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false) {
+        $templateContent = parent::getTemplateContent($templateId);
+        return formFullTag($templateContent, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject);
+    }
+
+    public function formFullTag($templateContent, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false) {
         global $webObject;
         $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
-
-        $templateContent = parent::getTemplateContent($templateId);
         
         if(is_array($rowId)) {
             $array = $rowId;
