@@ -211,7 +211,7 @@ CREATE TABLE `directory_right` (
 INSERT INTO `directory_right` (`did`, `gid`, `type`) VALUES
 (0, 1, 101),
 (0, 1, 102),
-(0, 3, 103);
+(0, 1, 103);
 
 -- --------------------------------------------------------
 
