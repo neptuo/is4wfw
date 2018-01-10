@@ -830,6 +830,77 @@ class User extends BaseTagLib {
         return $loginObject->getUserId();
     }
 
+    public function changePassword() {
+        parent::loadLocalizationBundle('user');
+
+        $return = '';
+
+        $login = parent::login();
+        if (!$login->isLogged()) {
+            return parent::getError(parent::rb('changepassword.error.notlogged'));
+        }
+
+        $data = array();
+        if ($_POST['user-changepassword-submit'] == parent::rb('changepassword.submit')) {
+            $data['current'] = $_POST['user-changepassword-current'];
+            $data['new'] = $_POST['user-changepassword-new'];
+            $data['renew'] = $_POST['user-changepassword-renew'];
+
+            $ok = true;
+            if (strlen($data['current']) == 0) {
+                $return .= parent::getError(parent::rb('changepassword.error.currentnotset'));
+                $ok = false;
+            }
+
+            if ($data['new'] != $data['renew']) {
+                $return .= parent::getError(parent::rb('changepassword.error.newnotmatched'));
+                $ok = false;
+            }
+
+            if (strlen($data['new']) < 6) {
+                $return .= parent::getError(parent::rb('changepassword.error.newtooshort'));
+                $ok = false;
+            }
+
+            if ($ok) {
+                $userId = $login->getUserId();
+                $password = sha1($login->getUserLogin() . $data['current']);
+                $sql = 'select count(`uid`) as `count` from `user` where `uid` = ' . $userId . ' and `password` = "' . $password . '";';
+                $exists = parent::db()->fetchSingle($sql);
+                if ($exists['count'] == 0) {
+                    $return = parent::getError(parent::rb('changepassword.error.oldnotmatched'));
+                    $ok = false;
+                }
+            }
+
+            if ($ok) {
+                $password = sha1($login->getUserLogin() . $data['new']);
+                parent::db()->execute('update `user` set `password` = "' . $password . '" where `uid` = ' . $userId . ';');
+                $return = parent::getSuccess(parent::rb('changepassword.success.changed'));
+            }
+        }
+
+        $return .= ''
+        . '<form name="user-changepassword" action="' . $_SERVER['REQUEST_URI'] . '" method="post">'
+            . '<div class="gray-box">'
+                . '<label for="user-changepassword-current" class="w120">' . parent::rb('changepassword.current') . '</label>'
+                . '<input type="password" name="user-changepassword-current" id="user-changepassword-current" value="' . $data['current'] . '" />'
+            . '</div>'
+            . '<div class="gray-box">'
+                . '<label for="user-changepassword-new" class="w120">' . parent::rb('changepassword.new') . '</label>'
+                . '<input type="password" name="user-changepassword-new" id="user-changepassword-new" value="' . $data['new'] . '" />'
+            . '</div>'
+            . '<div class="gray-box">'
+                . '<label for="user-changepassword-renew" class="w120">' . parent::rb('changepassword.renew') . '</label>'
+                . '<input type="password" name="user-changepassword-renew" id="user-changepassword-renew" value="' . $data['renew'] . '" />'
+            . '</div>'
+            . '<div class="gray-box">'
+                . '<input type="submit" name="user-changepassword-submit" value="' . parent::rb('changepassword.submit') . '" />'
+            . '</div>'
+        . '</form>';
+
+        return $return;
+    }
 }
 
 ?>

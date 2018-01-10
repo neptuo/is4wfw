@@ -98,6 +98,13 @@
       "Registrační formulář", groups je čárkou oddělený seznam rolí (první se uloží jako uživatelova hlavní!).
     </comment>
   </tag>
+  <tag>
+    <tagname>changePassword</tagname>
+    <function>changePassword</function>
+    <comment>
+      Formulář pro změnu hesla aktuálního uživatele.
+    </comment>
+  </tag>
   <property>
   	<propname>userId</propname>
   	<setfunction>setUserId</setfunction>
