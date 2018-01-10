@@ -247,7 +247,7 @@ class CustomForm extends BaseTagLib {
             $sql .= ' where ' . $rules;
         }
 
-        $data = parent::db()->fetchSingle($sql, true);
+        $data = parent::db()->fetchSingle($sql);
 
         $return .= $data['count'];
         return $return;
