@@ -248,7 +248,6 @@ class CustomForm extends BaseTagLib {
         }
 
         $data = parent::db()->fetchSingle($sql, true);
-        parent::logVar($data);
 
         $return .= $data['count'];
         return $return;
