@@ -110,7 +110,7 @@ class CustomForm extends BaseTagLib {
 			}
 			
 			if($limit > 0) {
-				$sql .= ' limit '.$limit;
+				$sql .= ' limit ' . parent::db()->escape($limit);
 			}
             $sql .= ';';
 
