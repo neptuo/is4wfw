@@ -2312,6 +2312,10 @@ class DefaultWeb extends BaseTagLib {
         return $this->ChildPageId;
     }
 
+    public function getCurrentPage() {
+        return $this->TempLoadedContent[$this->PagesIdIndex - 1]['id'];
+    }
+
     public function setCurrentPageName($name) {
         return $name;
     }

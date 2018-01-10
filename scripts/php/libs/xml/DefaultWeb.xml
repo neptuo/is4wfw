@@ -424,6 +424,13 @@
     </comment>
   </fulltag>
   <property>
+  	<propname>currentPage</propname>
+  	<getfunction>getCurrentPage</getfunction>
+    <comment>
+      Vrátí ID aktuální stránky. V průběhu renderování
+    </comment>
+  </property>
+  <property>
   	<propname>currentPageName</propname>
   	<setfunction>setCurrentPageName</setfunction>
   	<getfunction>getCurrentPageName</getfunction>
