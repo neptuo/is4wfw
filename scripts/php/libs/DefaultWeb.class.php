@@ -2135,8 +2135,8 @@ class DefaultWeb extends BaseTagLib {
         $parser->setContent($content);
         $parser->startParsing();
         $return = $parser->getResult();
-        $return = parent::getFrame($title, $content, '', $open == 'true' ? true : false);
 
+        $return = parent::getFrame($title, $return, '', $open == 'true' ? true : false);
         return $return;
     }
 
