@@ -232,6 +232,27 @@ class CustomForm extends BaseTagLib {
         }
         return 'id';
     }
+
+    // C-tag.
+    public function countRows($formId, $params = false) {
+        $return = "";
+        $rules = "";
+
+        foreach($params as $paramName => $paramValue) {
+            $rules = self::listAddToRules($rules, $paramName, $paramValue);
+        }
+
+        $sql = 'select count(`id`) as `count` from `cf_' . $formId . '`';
+        if ($rules != '') {
+            $sql .= ' where ' . $rules;
+        }
+
+        $data = parent::db()->fetchSingle($sql, true);
+        parent::logVar($data);
+
+        $return .= $data['count'];
+        return $return;
+    }
 	
 	public function setFieldAsCustomProperty($fieldName, $type = false) {
         if ($this->ViewPhase == 1) {

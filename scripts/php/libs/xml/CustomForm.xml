@@ -96,6 +96,19 @@
     </comment>
   </fulltag>
   <tag>
+    <tagname>count</tagname>
+    <function>countRows</function>
+    <attribute>
+      <attname>formId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <params />
+    <comment>
+      Vypíše sumu dat obsažených ve formuláři "formId".
+      Všechny params jsou použity jako filtrační parametry.
+    </comment>
+  </tag>
+  <tag>
     <tagname>setupCustomUrl</tagname>
     <function>setupCustomUrl</function>
     <attribute>
