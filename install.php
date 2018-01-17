@@ -3,6 +3,8 @@
 $targetDirectoryPath = 'scripts/php/includes';
 $targetFilePath = $targetDirectoryPath . '/database.inc.php';
 
+$url = 'https://api.github.com/repos/maraf/PHP-WebFramework/releases';
+
 if (file_exists($targetFilePath)) {
     header("Location: /"); 
     exit;
@@ -46,7 +48,7 @@ function httpGetJson($url) {
 }
 
 if (!file_exists($targetDirectoryPath)) {
-    $json = httpGetJson('https://api.github.com/repos/maraf/PHP-WebFramework/releases');
+    $json = httpGetJson($url);
     if ($json == null) {
         echo 'Unnable to get releases.';
         exit;
