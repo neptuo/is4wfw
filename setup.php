@@ -19,15 +19,25 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         'password' => $_POST['database-password'],
         'database' => $_POST['database-database'],
     );
+    $filesystem = array(
+        'path' => $_POST['filesystem-path']
+    );
+    $user = array(
+        'username' => $_POST['user-username']
+        'password' => $_POST['user-username']
+    );
 
     $templateFile = fopen($templateFilePath, 'r') or die('Cannot open file:  ' . $templateFilePath);
     $templateFileContent = fread($templateFile, filesize($templateFilePath));
 
     $targetFileContent = $templateFileContent;
-    $targetFileContent = str_replace("{hostname}", $database['hostname'], $targetFileContent);
-    $targetFileContent = str_replace("{username}", $database['username'], $targetFileContent);
-    $targetFileContent = str_replace("{password}", $database['password'], $targetFileContent);
-    $targetFileContent = str_replace("{database}", $database['database'], $targetFileContent);
+    $targetFileContent = str_replace("{database-hostname}", $database['hostname'], $targetFileContent);
+    $targetFileContent = str_replace("{database-username}", $database['username'], $targetFileContent);
+    $targetFileContent = str_replace("{database-password}", $database['password'], $targetFileContent);
+    $targetFileContent = str_replace("{database-database}", $database['database'], $targetFileContent);
+    $targetFileContent = str_replace("{filesystem-path}", $filesystem['path'], $targetFileContent);
+    $targetFileContent = str_replace("{user-username}", $user['username'], $targetFileContent);
+    $targetFileContent = str_replace("{user-username}", $user['password'], $targetFileContent);
 
     $targetFile = fopen($targetFilePath, 'w') or die('Cannot open file:  ' . $targetFilePath);
     fwrite($targetFile, $targetFileContent);
@@ -161,10 +171,6 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                 <div class="gray-box">
                                     <label class="w160" for="user-password">Password:</label>
                                     <input type="password" name="user-password" id="user-password" class="w200" />
-                                </div>
-                                <div class="gray-box">
-                                    <label class="w160" for="user-password2">Password Again:</label>
-                                    <input type="password" name="user-password2" id="user-password2" class="w200" />
                                 </div>
 
                                 <hr />
