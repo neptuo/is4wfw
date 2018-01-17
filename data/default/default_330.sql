@@ -808,7 +808,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`uid`, `group_id`, `name`, `surname`, `login`, `password`, `enable`) VALUES
-(1, 1, 'admin', 'admin', 'admin', 'b49a387e1143eccc5d6cb585d49290c2e2a85145', 1);
+(1, 1, '{user-name}', '{user-surname}', '{user-login}', '{user-password}', 1);
 
 -- --------------------------------------------------------
 

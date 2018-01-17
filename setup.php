@@ -9,6 +9,8 @@ if (file_exists($targetFilePath)) {
     exit;
 }
 
+require_once("scripts/php/libs/User.class.php");
+
 $importFiles = scandir('data/default', SCANDIR_SORT_DESCENDING);
 $importFilePath = 'data/default/' . $importFiles[0];
 
@@ -23,9 +25,17 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         'path' => $_POST['filesystem-path']
     );
     $user = array(
-        'username' => $_POST['user-username']
-        'password' => $_POST['user-username']
+        'name' => $_POST['user-name'],
+        'surname' => $_POST['user-surname'],
+        'login' => $_POST['user-login'],
+        'password' => User::hashPassword($_POST['user-name'], $_POST['user-password'])
     );
+
+    print_r($database);
+    print_r($filesystem);
+    print_r($user);
+    print_r($_POST['user-password']);
+    exit;
 
     $templateFile = fopen($templateFilePath, 'r') or die('Cannot open file:  ' . $templateFilePath);
     $templateFileContent = fread($templateFile, filesize($templateFilePath));
@@ -36,8 +46,6 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     $targetFileContent = str_replace("{database-password}", $database['password'], $targetFileContent);
     $targetFileContent = str_replace("{database-database}", $database['database'], $targetFileContent);
     $targetFileContent = str_replace("{filesystem-path}", $filesystem['path'], $targetFileContent);
-    $targetFileContent = str_replace("{user-username}", $user['username'], $targetFileContent);
-    $targetFileContent = str_replace("{user-username}", $user['password'], $targetFileContent);
 
     $targetFile = fopen($targetFilePath, 'w') or die('Cannot open file:  ' . $targetFilePath);
     fwrite($targetFile, $targetFileContent);
@@ -63,17 +71,23 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
             continue;
 
         // Add this line to the current segment
-        $templine .= $line;
+        $batch .= $line;
         
         // If it has a semicolon at the end, it's the end of the query
         if (substr(trim($line), -1, 1) == ';') {
+
+            $batch = str_replace("{user-name}", $user['name'], $batch);
+            $batch = str_replace("{user-surname}", $user['surname'], $batch);
+            $batch = str_replace("{user-login}", $user['login'], $batch);
+            $batch = str_replace("{user-password}", $user['password'], $batch);
+
             // Perform the query
-            if ($db->execute($templine)) {
-                print('Error performing query \'<strong>' . $templine . '\': ' . mysql_error() . '<br /><br />');
+            if ($db->execute($batch)) {
+                print("Error performing query '<strong>" . $batch . ": " . mysql_error() . "<br /><br />");
             }
 
             // Reset temp variable to empty
-            $templine = '';
+            $batch = '';
         }
     }
 
@@ -131,46 +145,54 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                 <h2>Database</h2>
                                 <div class="clear"></div>
                                 <div class="gray-box">
-                                    <label class="w160" for="database-import">Import:</label>
-                                    <input type="text" name="database-hostname" id="database-hostname" value="<?php echo basename($importFilePath, ".sql") ?>" class="w200" disabled="disabled" />
+                                    <label class="w110" for="import-source">Import:</label>
+                                    <input type="text" name="import-source" id="import-source" value="<?php echo basename($importFilePath, ".sql") ?>" class="w200" disabled="disabled" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w160" for="database-hostname">Hostname:</label>
-                                    <input type="text" name="database-hostname" id="database-hostname" value="127.0.0.1" class="w200" />
+                                    <label class="w110" for="database-hostname">Hostname:</label>
+                                    <input type="text" name="database-hostname" id="database-hostname" value="127.0.0.1" class="w200" required="required" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w160" for="database-username">Username:</label>
-                                    <input type="text" name="database-username" id="database-username" class="w200" />
+                                    <label class="w110" for="database-username">Username:</label>
+                                    <input type="text" name="database-username" id="database-username" class="w200" required="required" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w160" for="database-password">Password:</label>
+                                    <label class="w110" for="database-password">Password:</label>
                                     <input type="password" name="database-password" id="database-password" class="w200" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w160" for="database-database">Database:</label>
-                                    <input type="text" name="database-database" id="database-database" class="w200" />
+                                    <label class="w110" for="database-database">Database:</label>
+                                    <input type="text" name="database-database" id="database-database" class="w200" required="required" />
                                 </div>
 
                                 <h2>FileSystem</h2>
                                 <div class="clear"></div>
                                 <div class="gray-box">
-                                    <label class="w160" for="filesystem-database">Script Document:</label>
+                                    <label class="w110" for="filesystem-database">Script Document:</label>
                                     <input type="text" name="filesystem-database" id="filesystem-database" value="<?php echo $_SERVER['DOCUMENT_ROOT'] ?>" class="w300" disabled="disabled" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w160" for="filesystem-path">Additional Path:</label>
+                                    <label class="w110" for="filesystem-path">Additional Path:</label>
                                     <input type="text" name="filesystem-path" id="filesystem-path" class="w200" />
                                 </div>
 
                                 <h2>User</h2>
                                 <div class="clear"></div>
                                 <div class="gray-box">
-                                    <label class="w160" for="user-username">Username:</label>
-                                    <input type="text" name="user-username" id="user-username" value="admin" class="w200" />
+                                    <label class="w110" for="user-name">Name:</label>
+                                    <input type="text" name="user-name" id="user-name" value="admin" class="w200" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w160" for="user-password">Password:</label>
-                                    <input type="password" name="user-password" id="user-password" class="w200" />
+                                    <label class="w110" for="user-surname">Name:</label>
+                                    <input type="text" name="user-surname" id="user-surname" value="admin" class="w200" />
+                                </div>
+                                <div class="gray-box">
+                                    <label class="w110" for="user-login">Login:</label>
+                                    <input type="text" name="user-login" id="user-login" value="admin" class="w200" required="required" />
+                                </div>
+                                <div class="gray-box">
+                                    <label class="w110" for="user-password">Password:</label>
+                                    <input type="password" name="user-password" id="user-password" class="w200" required="required" minlength="6" />
                                 </div>
 
                                 <hr />
