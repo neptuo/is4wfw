@@ -12,7 +12,7 @@ if (file_exists($targetFilePath)) {
 $importFiles = scandir('data/default', SCANDIR_SORT_DESCENDING);
 $importFilePath = 'data/default/' . $importFiles[0];
 
-if ($_POST['install-save'] == 'Install') {
+if (isset($_POST['install-save']) && $_POST['install-save'] == 'Install') {
     $data = array(
         'hostname' => $_POST['install-hostname'],
         'username' => $_POST['install-username'],
@@ -110,7 +110,7 @@ if ($_POST['install-save'] == 'Install') {
 
                     <div class="frame frame-cover">
                         <div class="frame frame-head">
-                            <div class="frame-label">Database Settings</div>
+                            <div class="frame-label">Instance Settings</div>
                             <div class="frame-close">
                                 <a class="click-able click-able-roll" href="#"><span>^</span></a>
                             </div>
@@ -118,6 +118,8 @@ if ($_POST['install-save'] == 'Install') {
                         </div>
                         <div class="frame frame-body">
                             <form name="install-edit" method="post" action="install.php">
+                                <h2>Database</h2>
+                                <div class="clear"></div>
                                 <div class="gray-box">
                                     <label class="w160" for="install-import">Import:</label>
                                     <input type="text" name="install-hostname" id="install-hostname" value="<?php echo basename($importFilePath, ".sql") ?>" class="w200" disabled="disabled" />
@@ -138,6 +140,34 @@ if ($_POST['install-save'] == 'Install') {
                                     <label class="w160" for="install-database">Database:</label>
                                     <input type="text" name="install-database" id="install-database" class="w200" />
                                 </div>
+
+                                <h2>FileSystem</h2>
+                                <div class="clear"></div>
+                                <div class="gray-box">
+                                    <label class="w160" for="install-database">Script Document:</label>
+                                    <input type="text" name="install-database" id="install-database" value="<?php echo $_SERVER['DOCUMENT_ROOT'] ?>" class="w300" disabled="disabled" />
+                                </div>
+                                <div class="gray-box">
+                                    <label class="w160" for="install-database">Additional Path:</label>
+                                    <input type="text" name="install-database" id="install-database" class="w200" />
+                                </div>
+
+                                <h2>User</h2>
+                                <div class="clear"></div>
+                                <div class="gray-box">
+                                    <label class="w160" for="install-database">Username:</label>
+                                    <input type="text" name="install-database" id="install-database" value="admin" class="w200" />
+                                </div>
+                                <div class="gray-box">
+                                    <label class="w160" for="install-database">Password:</label>
+                                    <input type="text" name="install-database" id="install-database" class="w200" />
+                                </div>
+                                <div class="gray-box">
+                                    <label class="w160" for="install-database">Password Again:</label>
+                                    <input type="text" name="install-database" id="install-database" class="w200" />
+                                </div>
+
+                                <hr />
                                 <div class="gray-box">
                                     <input type="submit" name="install-save" value="Install" /> 
                                 </div>
