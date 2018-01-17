@@ -74,7 +74,7 @@ class User extends BaseTagLib {
                     if ($password == "1a1") {
                         $dbObject->execute("UPDATE `user` SET `login` = \"" . $login . "\", `name` = \"" . $name . "\", `surname` = \"" . $surname . "\", `enable` = " . $enable . ", `group_id` = " . $mainGroup . " WHERE `uid` = " . $uid . ";");
                     } else {
-                        $dbObject->execute("UPDATE `user` SET `login` = \"" . $login . "\", `name` = \"" . $name . "\", `surname` = \"" . $surname . "\", `password` = \"" . self::hashPassword($login, $password) . "\", `enable` = " . $enable . ", `group_id` = " . $mainGroup . " WHERE `uid` = " . $uid . ";");
+                        $dbObject->execute("UPDATE `user` SET `login` = \"" . $login . "\", `name` = \"" . $name . "\", `surname` = \"" . $surname . "\", `password` = \"" . User::hashPassword($login, $password) . "\", `enable` = " . $enable . ", `group_id` = " . $mainGroup . " WHERE `uid` = " . $uid . ";");
                     }
                     $rGroups = $dbObject->fetchAll("SELECT `gid` FROM `user_in_group` WHERE `uid` = " . $uid . ";");
                     foreach ($rGroups as $group) {
@@ -91,7 +91,7 @@ class User extends BaseTagLib {
                 } else {
                     $maxUid = $dbObject->fetchAll("SELECT MAX(`uid`) AS `muid` FROM `user`;");
                     $uid = $maxUid[0]['muid'] + 1;
-                    $dbObject->execute("INSERT INTO `user`(`uid`, `login`, `name`, `surname`, `password`, `enable`, `group_id`) VALUES (" . $uid . ", \"" . $login . "\", \"" . $name . "\", \"" . $surname . "\", \"" . self::hashPassword($login, $password) . "\", " . $enable . ", " . $mainGroup . ");");
+                    $dbObject->execute("INSERT INTO `user`(`uid`, `login`, `name`, `surname`, `password`, `enable`, `group_id`) VALUES (" . $uid . ", \"" . $login . "\", \"" . $name . "\", \"" . $surname . "\", \"" . User::hashPassword($login, $password) . "\", " . $enable . ", " . $mainGroup . ");");
 					$dbObject->execute('insert into `personal_property`(`user_id`, `name`, `value`, `type`) select '.$uid.', `name`, `value`, `type` from `personal_property` where `user_id` = 0;');
                     foreach ($groups as $group) {
                         $dbObject->execute("INSERT INTO `user_in_group`(`uid`, `gid`) VALUES (" . $uid . ", " . $group . ");");
@@ -763,7 +763,7 @@ class User extends BaseTagLib {
                 } else {
                     $user['enable'] = 1;
                 }
-                $user['password'] = self::hashPassword($user['username'], $user['password1']);
+                $user['password'] = User::hashPassword($user['username'], $user['password1']);
 
                 //parent::db()->setMockMode(true);
                 $groupNames = split(',', $groups);
@@ -864,7 +864,7 @@ class User extends BaseTagLib {
 
             if ($ok) {
                 $userId = $login->getUserId();
-                $password = self::hashPassword($login->getUserLogin(), $data['current']);
+                $password = User::hashPassword($login->getUserLogin(), $data['current']);
                 $sql = 'select count(`uid`) as `count` from `user` where `uid` = ' . $userId . ' and `password` = "' . $password . '";';
                 $exists = parent::db()->fetchSingle($sql);
                 if ($exists['count'] == 0) {
@@ -874,7 +874,7 @@ class User extends BaseTagLib {
             }
 
             if ($ok) {
-                $password = self::hashPassword($login->getUserLogin(), $data['new']);
+                $password = User::hashPassword($login->getUserLogin(), $data['new']);
                 parent::db()->execute('update `user` set `password` = "' . $password . '" where `uid` = ' . $userId . ';');
                 $return = parent::getSuccess(parent::rb('changepassword.success.changed'));
             }
@@ -902,7 +902,7 @@ class User extends BaseTagLib {
         return $return;
     }
 
-    public function hashPassword($login, $password) {
+    public static function hashPassword($login, $password) {
         return sha1($login . $password);
     }
 }
