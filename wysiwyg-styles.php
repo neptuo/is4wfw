@@ -1,7 +1,7 @@
 <?php
 
+	require_once("scripts/php/includes/instance.inc.php");
 	require_once("scripts/php/includes/settings.inc.php");
-	require_once("scripts/php/includes/database.inc.php");
 	require_once("scripts/php/classes/RequestStorage.class.php");
 	require_once("scripts/php/classes/SessionStorage.class.php");
 	require_once("scripts/php/classes/QueryStorage.class.php");

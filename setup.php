@@ -1,8 +1,8 @@
 <?php
 
 $targetDirectoryPath = 'scripts/php/includes';
-$targetFilePath = $targetDirectoryPath . '/database.inc.php';
-$templateFilePath = $targetDirectoryPath . '/database.template.php';
+$targetFilePath = $targetDirectoryPath . '/instance.inc.php';
+$templateFilePath = $targetDirectoryPath . '/instance.template.php';
 
 if (file_exists($targetFilePath)) {
     header("Location: /"); 
@@ -172,8 +172,8 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                     <input type="text" name="filesystem-database" id="filesystem-database" value="<?php echo $_SERVER['DOCUMENT_ROOT'] ?>" class="w300" disabled="disabled" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w110" for="filesystem-path">Additional Path:</label>
-                                    <input type="text" name="filesystem-path" id="filesystem-path" class="w200" />
+                                    <label class="w110" for="filesystem-path" title="Must start with '/'">Additional Path:</label>
+                                    <input type="text" name="filesystem-path" id="filesystem-path" class="w200" required="/" />
                                 </div>
 
                                 <h2>User</h2>

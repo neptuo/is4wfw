@@ -1,7 +1,7 @@
 <?php
 
+	require_once("scripts/php/includes/instance.inc.php");
 	require_once("scripts/php/includes/settings.inc.php");
-	require_once("scripts/php/includes/database.inc.php");
 	require_once("scripts/php/includes/version.inc.php");
 	require_once("scripts/php/includes/extensions.inc.php");
 	require_once("scripts/php/libs/DefaultPhp.class.php");

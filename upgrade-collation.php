@@ -2,8 +2,8 @@
 
 // This file is by default restricted by .htaccess!
 
+require_once("scripts/php/includes/instance.inc.php");
 require_once("scripts/php/classes/dataaccess/DataAccess.class.php");
-require_once("scripts/php/includes/database.inc.php");
 
 function mylog($message, $data = null) {
     echo $message . '<br />';

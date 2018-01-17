@@ -8,7 +8,6 @@
    define("PHP_SCRIPTS", "scripts/php/");
    define("SCRIPTS", "scripts/");
    
-   define("WEB_ROOT", "/");
    define("FS_ROOT", WEB_ROOT."files/");
    
    define("WEB_PATH", $_SERVER['DOCUMENT_ROOT'] . WEB_ROOT);
@@ -28,6 +27,5 @@
    
    define("VIEW_ROOT", 'admin');
 
-   define("IS_STOPPED", false);
 
 ?>
