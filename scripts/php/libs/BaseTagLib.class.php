@@ -437,6 +437,11 @@ class BaseTagLib {
         $actionUrl = $this->addUrlQueryString($actionUrl);
         return $actionUrl;
     }
+
+    protected function removeQueryString($url) {
+        $queryIndex = strpos($url, '?');
+        return substr($url, 0, $queryIndex);
+    }
 }
 
 ?>
