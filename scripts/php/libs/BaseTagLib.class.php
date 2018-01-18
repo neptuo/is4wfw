@@ -419,6 +419,36 @@ class BaseTagLib {
                 }
             }
         }
+
+        return $url;
+    }
+
+    protected function removeUrlParameter($url, $name) {
+        $queryIndex = strpos($url, '?');
+        if ($queryIndex == '') {
+            return $url;
+        }
+
+        if (strpos($url, $name, $queryIndex) == '') {
+            return $url;
+        }
+
+        $query = substr($url, $queryIndex + 1);
+        $query = explode('&', $query);
+        $url = substr($url, 0, $queryIndex);
+        $isFirst = true;
+        foreach ($query as $item) {
+            $keyvalue = explode('=', $item);
+            if ($keyvalue[0] != $name) {
+                if ($isFirst) {
+                    $url .= '?' . $item;
+                    $isFirst = false;
+                } else {
+                    $url .= '&' . $item;
+                }
+            }
+        }
+
         return $url;
     }
     

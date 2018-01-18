@@ -265,9 +265,9 @@ class Article extends BaseTagLib {
 		$url = parent::web()->composeUrl($pageId, $pageLangId);
 		for($i = 0; $i < $pages; $i ++) {
 			if($i != 0) {
-				$return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . self::addUrlParameter($url, 'article-page', $i + 1) . '">['.($i + 1).']</a> ';
+				$return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . parent::addUrlParameter($url, 'article-page', $i + 1) . '">['.($i + 1).']</a> ';
 			} else {
-				$return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="'.$url.'">['.($i + 1).']</a> ';
+				$return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . parent::removeUrlParameter($url, 'article-page') . '">['.($i + 1).']</a> ';
 			}
 		}
 		
