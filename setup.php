@@ -28,7 +28,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         'name' => $_POST['user-name'],
         'surname' => $_POST['user-surname'],
         'login' => $_POST['user-login'],
-        'password' => User::hashPassword($_POST['user-name'], $_POST['user-password'])
+        'password' => User::hashPassword($_POST['user-login'], $_POST['user-password'])
     );
 
     $templateFile = fopen($templateFilePath, 'r') or die('Cannot open file:  ' . $templateFilePath);
@@ -86,6 +86,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     }
 
     $dbObject = $db;
+    require_once("scripts/php/includes/version.inc.php");
     require_once("scripts/php/includes/autoupdate.inc.php");
 
     $db->commit();
@@ -93,6 +94,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     
     if (file_exists($targetFilePath)) {
         unlink($templateFilePath);
+        unlink("setup.php");
 
         header("Location: /login.view"); 
         exit;
@@ -179,7 +181,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                     <input type="text" name="user-name" id="user-name" value="admin" class="w200" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w110" for="user-surname">Name:</label>
+                                    <label class="w110" for="user-surname">Surname:</label>
                                     <input type="text" name="user-surname" id="user-surname" value="admin" class="w200" />
                                 </div>
                                 <div class="gray-box">
