@@ -31,12 +31,6 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         'password' => User::hashPassword($_POST['user-name'], $_POST['user-password'])
     );
 
-    print_r($database);
-    print_r($filesystem);
-    print_r($user);
-    print_r($_POST['user-password']);
-    exit;
-
     $templateFile = fopen($templateFilePath, 'r') or die('Cannot open file:  ' . $templateFilePath);
     $templateFileContent = fread($templateFile, filesize($templateFilePath));
 
@@ -98,6 +92,8 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     $db->disconnect();
     
     if (file_exists($targetFilePath)) {
+        unlink($templateFilePath);
+
         header("Location: /login.view"); 
         exit;
     }
