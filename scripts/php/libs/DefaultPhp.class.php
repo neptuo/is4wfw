@@ -479,19 +479,19 @@
                   $return[(string)$att->attname] = false;
                 }
               }
+          
+              if(isset($tag->params)) {
+                $params = array();
+                foreach($atts as $usedName => $usedValue) {
+                  if(!array_key_exists($usedName, $return)) {
+                    $params[$usedName] = $usedValue;
+                  }
+                }
+    
+                $return[DefaultPhp::$ParamsName] = $params;
+              }
               break;
             }
-          }
-          
-          if(isset($tag->params)) {
-            $params = array();
-            foreach($atts as $usedName => $usedValue) {
-              if(!array_key_exists($usedName, $return)) {
-                $params[$usedName] = $usedValue;
-              }
-            }
-
-            $return[DefaultPhp::$ParamsName] = $params;
           }
 
           return $return;
@@ -558,18 +558,18 @@
                   $return[(string)$att->attname] = false;
                 }
               }
-            }
-          }
           
-          if(isset($tag->params)) {
-            $params = array();
-            foreach($atts as $usedName => $usedValue) {
-              if(!array_key_exists($usedName, $return)) {
-                $params[$usedName] = $usedValue;
+              if(isset($tag->params)) {
+                $params = array();
+                foreach($atts as $usedName => $usedValue) {
+                  if(!array_key_exists($usedName, $return)) {
+                    $params[$usedName] = $usedValue;
+                  }
+                }
+    
+                $return[DefaultPhp::$ParamsName] = $params;
               }
             }
-
-            $return[DefaultPhp::$ParamsName] = $params;
           }
           
           return $return;
