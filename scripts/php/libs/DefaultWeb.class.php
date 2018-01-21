@@ -1604,7 +1604,7 @@ class DefaultWeb extends BaseTagLib {
      *  @return html anchor               
      *
      */
-    public function makeAnchor($pageId, $text = false, $languageId = false, $class = "", $activeClass = '', $id = "", $target = "", $rel = "", $type = '') {
+    public function makeAnchor($pageId, $text = false, $languageId = false, $class = "", $activeClass = '', $id = "", $target = "", $rel = "", $type = '', $params = array()) {
         global $dbObject;
         $languageId = (!$languageId) ? $this->LanguageId : $languageId;
 
@@ -1619,8 +1619,18 @@ class DefaultWeb extends BaseTagLib {
         if (is_numeric($pageId)) {
             $sql_return = $dbObject->fetchAll("SELECT `href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = " . $pageId . " AND `info`.`language_id` = " . $languageId . ";");
         }
+
         if (count($sql_return) == 1 || !is_numeric($pageId)) {
             $url = self::composeUrl($pageId, $languageId);
+
+            foreach ($params as $key => $value) {
+                if (strpos($key, 'param-') === 0) {
+                    $key = substr($key, 6);
+                }
+
+                $url = parent::addUrlParameter($url, $key, $value);
+            }
+
             $return = $type == 'button' ? '<button' : '<a href="' . $url . '"';
             if ($class) {
                 $return .= " class=\"" . $class . "\"";
@@ -1639,12 +1649,22 @@ class DefaultWeb extends BaseTagLib {
             } else {
                 $return .= ">";
             }
+
             return $return;
         } else {
             $error = "Sorry. Requested page [" . $pageId . "] doesn't exists in this languageId [" . $languageId . "]!";
             trigger_error($error, E_USER_WARNING);
             return "<h4 class=\"error\">" . $error . "</h4>";
         }
+    }
+
+    public function makeAnchorFullTag($template, $pageId, $languageId = false, $class = "", $activeClass = '', $id = "", $target = "", $rel = "", $type = '', $params = false) {
+        $parser = new FullTagParser();
+        $parser->setContent($template);
+        $parser->startParsing();
+        $text = $parser->getResult();
+
+        return self::makeAnchor($pageId, $text, $languageId, $class, $activeClass, $id, $target, $rel, $type, $params);
     }
 
     /**

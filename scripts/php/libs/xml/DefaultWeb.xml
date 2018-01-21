@@ -167,13 +167,59 @@
       <attname>type</attname>
       <attreq>implied</attreq>
     </attribute>
+    <params />
     <comment>
       Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 
       "text" je text v html odkazu, "languageId" je jazyková verze požadované
       stránky, defaultně aktuální jazyková verze. Zbytek jsou standartní html atributy.
       "type" = link(default) nebo button.
+      Params jsou použity jako URL parametry.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>a</tagname>
+    <function>makeAnchorFullTag</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>languageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>class</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>activeClass</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>id</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>target</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>rel</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>type</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <params />
+    <comment>
+      Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 
+      "languageId" je jazyková verze požadované
+      stránky, defaultně aktuální jazyková verze. Zbytek jsou standartní html atributy.
+      "type" = link(default) nebo button.
+      Params jsou použity jako URL parametry.
+    </comment>
+  </fulltag>
   <tag>
     <tagname>composeTextFileUrl</tagname>
     <function>composeTextFileUrl</function>
