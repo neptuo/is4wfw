@@ -12,7 +12,7 @@ class FullTagParser extends CustomTagParser {
      */
     //private $FULL_TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)(\b[^>]*)>(((\s*)|(.*))*)</\1>)';
     //protected $FULL_TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)(( *([a-zA-Z0-9]+="[^"]*") *)*)>(((\s*)|(.*))*)</\1>)';
-    protected $FULL_TAG_RE = '(<([a-zA-Z0-9_]+:[a-zA-Z0-9_]+)(( *([a-zA-Z0-9:-_]+="[^"]*") *)*)>(((\s*)|(.*))*)</\1>)';
+    protected $FULL_TAG_RE = '(<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)(( *([a-zA-Z0-9:\-_]+="[^"]*") *)*)>(((\s*)|(.*))*)</\1>)';
 
     /**
      *
@@ -68,8 +68,8 @@ class FullTagParser extends CustomTagParser {
             if ($func && ($attributes !== false)) {
                 $attstring = "";
                 $i = 0;
-                foreach ($attributes as $att) {
-                    $params = self::tryGetParamsAttribute($key, $att);
+                foreach ($attributes as $key => $att) {
+                    $params = parent::tryGetParamsAttribute($key, $att);
                     if ($params != null) {
                         $attstring .= $params;
                     } else {
@@ -80,6 +80,7 @@ class FullTagParser extends CustomTagParser {
                     }
                     $i++;
                 }
+                
                 //echo '$return =  $'.$object[0].'Object->'.$func.'('.$attstring.');';
                 eval('$return =  ${$object[0]."Object"}->{$func}(' . $attstring . ');');
                 return $return;
