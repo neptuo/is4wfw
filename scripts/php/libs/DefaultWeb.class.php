@@ -1025,6 +1025,8 @@ class DefaultWeb extends BaseTagLib {
                     . '</rssmm:head>'
                     . '<rssmm:content>' . $this->PageContent . '</rssmm:content>'
                     . '</rssmm:response>';
+        } else if (strtolower($_REQUEST['__TEMPLATE']) == 'none') {
+            $return = $this->PageContent;
         } else {
             $return = ''
                     . '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
