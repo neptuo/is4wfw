@@ -981,8 +981,18 @@ function initClickableGrid() {
 	for(var i = 0, s = rows.size(); i < s; i++) {
 		$(rows[i]).click(function(e) {
 			var el = e.target ? e.target : e.srcElement;
-			$(el).parent('tr').find('input[type=image]')[0].click();
-			//$(this).find('input').click();
+
+			$buttons = $(el).parent('tr').find('input[type=image]');
+			$button = $buttons.filter('[src$=edi.png]');
+			if ($button.length == 0) {
+				$button = $buttons[0];
+			} else {
+				$button = $button[0];
+			}
+			
+			if ($button != null) {
+				$button.click();
+			}
 		});
 	}
 }
