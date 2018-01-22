@@ -49,7 +49,7 @@ class Image extends BaseTagLib {
 	}
 	
 	//C-tag
-	public function directoryList($content, $id, $limit = false, $noDataMessage = false, $noDataImageId = false) {
+	public function directoryList($content, $id, $pageIndex = false, $limit = false, $noDataMessage = false, $noDataImageId = false) {
 		$parser = new FullTagParser();
 		
 		$images = parent::dao('File')->getImagesFromDirectory($id, $limit);

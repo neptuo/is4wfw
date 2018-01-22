@@ -16,6 +16,10 @@
       <attreq>required</attreq>
     </attribute>
     <attribute>
+      <attname>pageIndex</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
       <attname>limit</attname>
       <attreq>implied</attreq>
     </attribute>
@@ -30,6 +34,7 @@
     <comment>
       Zobrazí seznam obrázků ze složky "id" dle šablony ze svého těla.
       Pokud je vyplněný 'noDataImageId', bude se chovat jako kdyby složka obsahovala jeden soubor, práve s tím id.
+      Atribut 'limit' definuje počet záznamů, které se mají vrátit. Pokud je vyplněný, je pak možné použít 'pageIndex' pro zobrazení daného indexu stránky.
     </comment>
   </fulltag>
   <fulltag>

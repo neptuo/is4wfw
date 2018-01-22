@@ -27,10 +27,15 @@ class FileDao extends AbstractDao {
 		return parent::getList(Select::factory(self::dataAccess())->where('dir_id', '=', $dirId)->orderBy('name'));
 	}
 	
-	public function getImagesFromDirectory($dirId, $limit = false) {
+	public function getImagesFromDirectory($dirId, $pageIndex = false, $limit = false) {
 		$select = Select::factory(self::dataAccess())->where('dir_id', '=', $dirId)->conjunctIn('type', array(WEB_TYPE_JPG, WEB_TYPE_PNG, WEB_TYPE_GIF))->orderBy('name');
-		if($limit > 0) {
-			$select = $select->limit(0, $limit);
+		if ($limit > 0) {
+			$start = 0;
+			if ($pageIndex > 0) {
+				$start = $pageIndex * $limit;
+			}
+
+			$select = $select->limit($start, $limit);
 		}
 
 		return parent::getList($select);
