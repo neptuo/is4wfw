@@ -193,6 +193,7 @@ class Article extends BaseTagLib {
             $lastArticleLanguageIdId = self::getArticleLanguageId();
             foreach ($articles as $article) {
                 self::setArticleId($article['id']);
+                self::setIsActiveArticle($article['id'] == $articleOldId);
                 self::setArticleDirectoryId($article['directory_id']);
                 self::setHasHead(strlen($article['head']) > 0);
                 self::setHasContent(strlen($article['content']) > 0);
@@ -497,8 +498,10 @@ class Article extends BaseTagLib {
 			//echo $articleId.'>'.$prevId.'--'.$nextId;
 			
 			self::setArticleId($prevId);
+            self::setIsActiveArticle($prevId == $oldId);
 			$prevUrl = parent::web()->composeUrl($pageId);
 			self::setArticleId($nextId);
+            self::setIsActiveArticle($nextId == $oldId);
 			$nextUrl = parent::web()->composeUrl($pageId);
 			
 			$result .= ''
@@ -2252,6 +2255,15 @@ class Article extends BaseTagLib {
     public function getArticleId() {
 		//echo 'get ID: '.parent::request()->get('article-id').'<br />';
         return parent::request()->get('article-id');
+    }
+    
+    public function setIsActiveArticle($value) {
+        parent::request()->set('article-is-active', $value);
+        return $labelId;
+    }
+
+    public function getIsActiveArticle() {
+        return parent::request()->get('article-is-active');
     }
     
     public function setArticleDirectoryId($directoryId) {

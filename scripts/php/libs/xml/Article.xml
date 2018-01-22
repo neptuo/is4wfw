@@ -576,6 +576,14 @@
     </comment>
   </property>
   <property>
+  	<propname>isActive</propname>
+  	<setfunction>setIsActiveArticle</setfunction>
+  	<getfunction>getIsActiveArticle</getfunction>
+    <comment>
+      Vrací / Nastavuje zda aktuální článek je shodný si aktuální a:id pro daný request.
+    </comment>
+  </property>
+  <property>
   	<propname>directoryId</propname>
   	<setfunction>setArticleDirectoryId</setfunction>
   	<getfunction>getArticleDirectoryId</getfunction>
