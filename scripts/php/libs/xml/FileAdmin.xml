@@ -69,14 +69,5 @@
       Zobrazí formulář pro editaci složky
     </comment>
   </tag>
-  
-  <property>
-  	<propname>currentId</propname>
-  	<setfunction>setCurrentInquiryId</setfunction>
-  	<getfunction>getCurrentInquiryId</getfunction>
-    <comment>
-      Vratí hodnotu vybrané ankety
-    </comment>
-  </property>
 </taglib>
 
