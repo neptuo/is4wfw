@@ -55,6 +55,10 @@
     function __destruct() {
     	//unset($_SESSION['dir-id']);
     }
+	
+    protected function canUserFile($objectId, $rightType) {
+      return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(FileAdmin::$FileRightDesc, $objectId, $rightType));
+    }
     
     /**
      *
@@ -1290,6 +1294,61 @@
       
       return $return;
     }
+
+    public function getFilesFromDirectory($template, $id, $type = null, $pageIndex = false, $limit = false, $noDataMessage = false) {
+      $parser = new FullTagParser();
+    
+      if ($type != null) {
+        $type = explode(",", $type);
+        if (count($type) == 0) {
+          $type = null;
+        }
+      }
+
+      $return = '';
+      
+      $files = parent::dao('File')->getFromDirectory($id, $type, $pageIndex, $limit);
+      if (count($files) == 0) {
+        $return .= $noDataMessage;
+      } else {
+        foreach($files as $file) {
+          if ($this->canUserFile($file['id'], WEB_R_READ)) {
+            $this->setFileId($file['id']);
+            $this->setFileUrl($file['url']);
+            parent::request()->set('name', $file['name'], 'f:directoryFiles');
+            parent::request()->set('dir_id', $file['dir_id'], 'f:directoryFiles');
+            parent::request()->set('title', $file['title'], 'f:directoryFiles');
+            parent::request()->set('type', $file['type'], 'f:directoryFiles');
+      
+            $parser->setContent($template);
+            $parser->startParsing();
+            $return .= $parser->getResult();
+          }
+        }
+      }
+
+      return $return;
+    }
+
+    //C-Tag
+    public function fileName() {
+      return parent::request()->get('name', 'f:directoryFiles');
+    }
+  
+    //C-Tag
+    public function fileTitle() {
+      return parent::request()->get('title', 'f:directoryFiles');
+    }
+  
+    //C-Tag
+    public function fileType() {
+      return parent::request()->get('type', 'f:directoryFiles');
+    }
+  
+    //C-Tag
+    public function fileUrl() {
+      return "~/file.php?rid=" . $this->getFileId();
+    }
     
     // ----------- PROPERTIES --------------------------- //
     
@@ -1305,6 +1364,15 @@
 		public function getFileId() {
 			return $_SESSION['file']['current_id'];
 		}
+	
+    public function setFileUrl($value) {
+      parent::request()->set('file-url', $value);
+      return $value;
+    }
+  
+    public function getFileUrl() {
+      return parent::request()->get('file-url');
+    }
     
     public function setDirectoryId($dirId) {
     	if(is_numeric($dirId)) {

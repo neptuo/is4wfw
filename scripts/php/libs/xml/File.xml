@@ -246,12 +246,78 @@
       v proměnné CurrentId (pokud je volán přes dynamický překlad adres).
     </comment>
   </tag>
+  <fulltag>
+    <tagname>directoryFiles</tagname>
+    <function>getFilesFromDirectory</function>
+    <attribute>
+      <attname>id</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>type</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageIndex</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>limit</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>noDataMessage</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Do šablony ze svého těla vykreslí obsah složky. 
+      Atribut 'id' definuje složky, ze které se má čerpat.
+      Atribut 'type' může obsahovat seznam čárkou oddělených koncovek souborů.
+      Atribut 'limit' definuje počet záznamů, které se mají vrátit. Pokud je vyplněný, je pak možné použít 'pageIndex' pro zobrazení daného indexu stránky.
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>url</tagname>
+    <function>fileUrl</function>
+    <comment>
+      Vrací URL pro stažení souboru uvnitř f:directoryFiles.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>name</tagname>
+    <function>fileName</function>
+    <comment>
+      Vrací název souboru uvnitř f:directoryFiles.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>title</tagname>
+    <function>fileTitle</function>
+    <comment>
+      Vrací titulek souboru uvnitř f:directoryFiles.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>type</tagname>
+    <function>fileType</function>
+    <comment>
+      Vrací číselný typ souboru uvnitř f:directoryFiles.
+    </comment>
+  </tag>
   <property>
   	<propname>fileId</propname>
   	<setfunction>setFileId</setfunction>
   	<getfunction>getFileId</getfunction>
     <comment>
       Vlastnost aktuálního souboru.
+    </comment>
+  </property>
+  <property>
+  	<propname>fileUrl</propname>
+  	<setfunction>setFileUrl</setfunction>
+  	<getfunction>getFileUrl</getfunction>
+    <comment>
+      Vrací nebo nastavuje URL aktuálního souboru.
     </comment>
   </property>
   <property>

@@ -64,28 +64,28 @@
       <attreq>implied</attreq>
     </attribute>
     <comment>
-      Vrací URL pro obrázek uvnitř ga:images.
+      Vrací URL pro obrázek uvnitř img:directory.
     </comment>
   </tag>
   <tag>
     <tagname>name</tagname>
     <function>imageName</function>
     <comment>
-      Vrací název obrázku uvnitř ga:images.
+      Vrací název obrázku uvnitř img:directory.
     </comment>
   </tag>
   <tag>
     <tagname>title</tagname>
     <function>imageTitle</function>
     <comment>
-      Vrací titulek obrázku uvnitř ga:images.
+      Vrací titulek obrázku uvnitř img:directory.
     </comment>
   </tag>
   <tag>
     <tagname>type</tagname>
     <function>imageType</function>
     <comment>
-      Vrací číselný typ obrázku uvnitř ga:images.
+      Vrací číselný typ obrázku uvnitř img:directory.
     </comment>
   </tag>
   
