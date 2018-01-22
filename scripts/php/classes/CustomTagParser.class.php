@@ -132,12 +132,14 @@ class CustomTagParser {
                 if (!$ok) {
                     return '';
                 }
+                unset($attributes[$key]);
             } elseif ($key == 'security:requirePerm') {
                 global $loginObject;
                 $perm = $loginObject->getGroupPerm($att, $loginObject->getMainGroupId(), false, 'false');
                 if ($perm['value'] != 'true') {
                     return '';
                 }
+                unset($attributes[$key]);
             }
         }
 
