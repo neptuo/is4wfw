@@ -789,7 +789,9 @@ class Article extends BaseTagLib {
 
             $languages = parent::dao('Language')->getList();
             foreach ($languages as $language) {
-                $cfObject->delete($customFormId, array('id' =>  $artcId, 'language_id' => $language['id']));
+                if ($hasCustomForm) {
+                    $cfObject->delete($customFormId, array('id' =>  $artcId, 'language_id' => $language['id']));
+                }
             }
         } elseif ($_POST['article-delete-lang'] == $rb->get('articles.deletelang')) {
             $artcId = $_POST['article-id'];
@@ -808,7 +810,9 @@ class Article extends BaseTagLib {
                 }
             }
 
-            $cfObject->delete($customFormId, array('id' =>  $artcId, 'language_id' => $langId));
+            if ($hasCustomForm) {
+                $cfObject->delete($customFormId, array('id' =>  $artcId, 'language_id' => $langId));
+            }
         }
 
 		$returnTmp .= ''
