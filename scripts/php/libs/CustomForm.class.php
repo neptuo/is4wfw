@@ -272,7 +272,7 @@ class CustomForm extends BaseTagLib {
 
     public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false) {
         $templateContent = parent::getTemplateContent($templateId);
-        return formFullTag($templateContent, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject);
+        return self::formFullTag($templateContent, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject);
     }
 
     public function formFullTag($templateContent, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false) {
