@@ -23,6 +23,16 @@ class Variable extends BaseTagLib {
 
         parent::setTagLibXml("xml/Variable.xml");
     }
+	
+	public function declare($name, $value, $scope) {
+		if ($scope == 'request') {
+			parent::request()->set($name, $value, 'variable');
+		} else if ($scope == 'session') {
+			parent::session()->set($name, $value, 'variable');
+		}
+
+		return '';
+	}
 }
 
 ?>
