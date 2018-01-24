@@ -1440,13 +1440,18 @@ class Article extends BaseTagLib {
 
         if ($isClosing) {
             $url = $webObject->composeUrl($backPageId);
+            $url = parent::addUrlQueryString($url);
+            $url = parent::removeUrlParameter($url, 'article-id');
+            $url = parent::removeUrlParameter($url, 'language-id');
+
             header("Location: ".$url);
         } else if($isRedirectRequired) {
-            $actionUrl = $_SERVER['REQUEST_URI'];
-            $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['id']);
-            $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $ac['language_id']);
+            $url = $_SERVER['REQUEST_URI'];
+            $url = parent::addUrlParameter($url, 'article-id', $article['id']);
+            $url = parent::addUrlParameter($url, 'language-id', $ac['language_id']);
+            $url = parent::removeUrlParameter($url, 'line-id');
             
-            header('Location: ' . $actionUrl);
+            header('Location: ' . $url);
             return;
         }
 
