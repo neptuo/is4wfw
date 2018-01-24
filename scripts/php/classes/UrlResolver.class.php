@@ -250,18 +250,24 @@ class UrlResolver extends BaseTagLib {
         $this->Attributes = array();
 
         global $phpObject;
-        if ($phpObject->isRegistered($object[0]) && $phpObject->isProperty($object[0], $object[1])) {
-            global ${$object[0] . "Object"};
-            $func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
-            eval('$return =  ${$object[0]."Object"}->{$func}("' . $this->PropertyAttr . '");');
-            return $return;
+        if ($phpObject->isRegistered($object[0])) {
+            if ($phpObject->isProperty($object[0], $object[1])) {
+                global ${$object[0] . "Object"};
+                $func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
+                eval('$return =  ${$object[0]."Object"}->{$func}("' . $this->PropertyAttr . '");');
+                return $return;
+            } else if($phpObject->isAnyProperty($object[0])) {
+                global ${$object[0] . "Object"};
+                $func = 'getProperty';
+                eval('$return =  ${$object[0]."Object"}->{$func}("' . $object[1] . '", "' . $this->PropertyAttr . '");');
+                return $return;
+            }
+        }
+        
+        if(is_array($cprop)) {
+            return $cprop[0];
         } else {
-            //echo "<h4 class=\"error\">This tag isn't registered! [".$object[0]."]</h4>";
-			if(is_array($cprop)) {
-				return $cprop[0];
-			} else {
-				return $cprop;
-			}
+            return $cprop;
         }
     }
 

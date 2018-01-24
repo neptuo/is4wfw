@@ -212,19 +212,34 @@ class CustomTagParser {
         $this->Attributes = array();
 
         global $phpObject;
-        if ($phpObject->isRegistered($object[0]) && $phpObject->isProperty($object[0], $object[1])) {
-            global ${$object[0] . "Object"};
-            $func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
-            //eval('$return =  ${$object[0]."Object"}->{$func}("'.$this->PropertyAttr.'");');
+        if ($phpObject->isRegistered($object[0])) {
+            if ($phpObject->isProperty($object[0], $object[1])) {
+                global ${$object[0] . "Object"};
+                $func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
+                //eval('$return =  ${$object[0]."Object"}->{$func}("'.$this->PropertyAttr.'");');
 
-            if ($this->UseCaching) {
-                self::addSingletonGlobalObject('$' . $object[0] . 'Object');
-                $return = '\'.$' . $object[0] . 'Object->' . $func . '("' . $this->PropertyAttr . '").\'';
-            } else {
-                eval('$return =  ${$object[0]."Object"}->{$func}("' . $this->PropertyAttr . '");');
+                if ($this->UseCaching) {
+                    self::addSingletonGlobalObject('$' . $object[0] . 'Object');
+                    $return = '\'.$' . $object[0] . 'Object->' . $func . '("' . $this->PropertyAttr . '").\'';
+                } else {
+                    eval('$return =  ${$object[0]."Object"}->{$func}("' . $this->PropertyAttr . '");');
+                }
+                return $return;
+            } else if($phpObject->isAnyProperty($object[0])) {
+                global ${$object[0] . "Object"};
+                $func = 'getProperty';
+
+                if ($this->UseCaching) {
+                    self::addSingletonGlobalObject('$' . $object[0] . 'Object');
+                    $return = '\'.$' . $object[0] . 'Object->' . $func . '("' . $object[1] . '", "' . $this->PropertyAttr . '").\'';
+                } else {
+                    eval('$return =  ${$object[0]."Object"}->{$func}("' . $object[1] . '", "' . $this->PropertyAttr . '");');
+                }
+                return $return;
             }
-            return $return;
-        } elseif($object[0] == 'query' && strlen($object[1]) > 0){
+        }
+
+        if($object[0] == 'query' && strlen($object[1]) > 0){
             return $_GET[$object[1]];
         } elseif($object[0] == 'post' && strlen($object[1]) > 0){
             return $_POST[$object[1]];

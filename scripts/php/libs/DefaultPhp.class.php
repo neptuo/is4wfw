@@ -413,6 +413,33 @@
             
             return true;
         }
+
+        // Vrací true, pokud daná knihovna umožňuje <anyProperty />.
+        public function isAnyProperty($tagPrefix) {
+            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            }
+            
+            if (isset($xmlPath)) {
+                if(is_file(SCRIPTS.$xmlPath)) {
+                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+                    return isset($xml->anyProperty);
+                } else {
+                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
+                    trigger_error($str , E_USER_WARNING);
+                    //echo "<h4 class=\"error\">".$str."</h4>";
+                    return false;
+                }
+            } else {
+                return false;
+            }
+            
+            return true;
+        }
         
         /**
          *
