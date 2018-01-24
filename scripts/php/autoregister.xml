@@ -14,4 +14,5 @@
 	<reg prefix="u" class="php.libs.User" />
 	<reg prefix="wp" class="php.libs.WebProject" />
 	<reg prefix="js" class="php.libs.Js" />
+	<reg prefix="var" class="php.libs.Variable" />
 </autoregister>
