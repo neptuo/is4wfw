@@ -469,6 +469,18 @@
       Pomocí "isInverted" je možné podmínku otočit.
     </comment>
   </fulltag>
+  <tag>
+    <tagname>doctype</tagname>
+    <function>setDoctype</function>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Nastaví doctype, který se pro stránku použije.
+      Platné hodnoty pro atribut 'type' jsou 'html5' a 'xhtml' (výchozí).
+    </comment>
+  </tag>
   <property>
   	<propname>currentPage</propname>
   	<getfunction>getCurrentPage</getfunction>

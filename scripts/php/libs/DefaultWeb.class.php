@@ -171,6 +171,8 @@ class DefaultWeb extends BaseTagLib {
      */
     private $keywords = '';
 
+    private $Doctype = 'xhtml';
+
     /**
      *
      *  Initializes object.
@@ -1011,38 +1013,47 @@ class DefaultWeb extends BaseTagLib {
 
         if (strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
             $return = ''
-                    . '<rssmm:response>'
-                    . ((strlen($this->PageLog) != 0) ? ''
-                            . '<rssmm:log>'
-                            . $this->PageLog
-                            . '</rssmm:log>' :
-                            '')
-                    . '<rssmm:head>'
+            . '<rssmm:response>'
+                . ((strlen($this->PageLog) != 0) ? '<rssmm:log>' . $this->PageLog . '</rssmm:log>' : '')
+                . '<rssmm:head>'
                     . '<rssmm:title>' . $this->PageTitle . '</rssmm:title>'
                     . '<rssmm:keywords>' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm</rssmm:keywords>'
                     . '<rssmm:styles>' . $this->PageStyles . '</rssmm:styles>'
                     . '<rssmm:scripts>' . $this->PageScripts . '</rssmm:scripts>'
-                    . '</rssmm:head>'
-                    . '<rssmm:content>' . $this->PageContent . '</rssmm:content>'
-                    . '</rssmm:response>';
+                . '</rssmm:head>'
+                . '<rssmm:content>' . $this->PageContent . '</rssmm:content>'
+            . '</rssmm:response>';
         } else if (strtolower($_REQUEST['__TEMPLATE']) == 'none') {
             $return = $this->PageContent;
         } else {
+            $doctype = ''
+            . '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
+            . '<html xmlns="http://www.w3.org/1999/xhtml">';
+
+            $isLang = strlen($lang) > 0;
+
+            if ($this->Doctype == 'html5') {
+                $doctype = ''
+                . '<!DOCTYPE html>'
+                . '<html' . ($isLang ? ' lang="' . $lang . '"' : '') . '>';
+            }
+
             $return = ''
-                    . '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
-                    . '<html xmlns="http://www.w3.org/1999/xhtml">'
-                    . '<head>'
+            . $doctype
+                . '<head>'
                     . '<meta http-equiv="content-type" content="text/html; charset=utf-8" />'
                     . '<meta name="description" content="' . $this->PageTitle . '" />'
-                    . '<meta name="keywords" content="' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm" />'
-                    . '<meta http-equiv="Content-language" content="' . $lang . '" />'
+                    . '<meta name="keywords" content="' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo" />'
+                    . ($isLang ? '<meta http-equiv="Content-language" content="' . $lang . '" />' : '')
                     . '<meta name="robots" content="all, index, follow" />'
                     . '<meta name="author" content="Marek Fišera" />'
                     . '<title>' . $this->PageTitle . '</title>'
                     . $this->PageHead . $this->PageStyles . $this->PageScripts
-                    . '</head>'
-                    . '<body>' . $this->PageContent . $diacont . '</body>'
-                    . '</html>';
+                . '</head>'
+                . '<body>' 
+                    . $this->PageContent . $diacont 
+                . '</body>'
+            . '</html>';
         }
         $return = self::resolveWebRoot($return);
 
@@ -2321,6 +2332,12 @@ class DefaultWeb extends BaseTagLib {
         }
 
         return $return;
+    }
+
+    public function setDoctype($doctype) {
+        if ($doctype == 'html5' || $doctype == 'xhtml') {
+            $this->Doctype = $doctype;
+        }
     }
 
     /* ================== PROPERTIES ================================================== */
