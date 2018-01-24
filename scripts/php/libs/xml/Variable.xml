@@ -8,5 +8,27 @@
   <comment>
     Knihovna pro správu proměnných systému.
   </comment>
+  <tag>
+    <tagname>declare</tagname>
+    <function>setValue</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>scope</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Nastaví hodnotu proměnné s názvem 'name'.
+      Atribut 'value' nese hodnotu proměnné.
+      Atribut 'scope' může nabývat hodnot 'request', 'session' a 'persistent'.
+    </comment>
+  </tag>
+  <anyProperty />
 </taglib>
 

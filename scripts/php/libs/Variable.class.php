@@ -13,7 +13,7 @@ require_once("scripts/php/classes/LocalizationBundle.class.php");
  *  Class Variable. 
  *      
  *  @author     maraf
- *  @timestamp  2017-11-26
+ *  @timestamp  2018-01-24
  * 
  */
 class Variable extends BaseTagLib {
@@ -24,11 +24,23 @@ class Variable extends BaseTagLib {
         parent::setTagLibXml("xml/Variable.xml");
     }
 	
-	public function declare($name, $value, $scope) {
+	public function setValue($name, $value, $scope) {
 		if ($scope == 'request') {
 			parent::request()->set($name, $value, 'variable');
 		} else if ($scope == 'session') {
 			parent::session()->set($name, $value, 'variable');
+		}
+
+		return '';
+	}
+
+	public function getProperty($name) {
+		if (parent::request()->exists($name, 'variable')) {
+			return parent::request()->get($name, 'variable');
+		}
+
+		if (parent::session()->exists($name, 'variable')) {
+			return parent::session()->get($name, 'variable');
 		}
 
 		return '';
