@@ -3,6 +3,6 @@
 	<php:using prefix="hint" class="php.libs.Hint">
 		<hint:propertyList />
 
-		<hint:autoRegister />
+		<hint:autoRegistered />
 	</php:using>
 </v:template>

@@ -313,7 +313,7 @@
         }
     }
 
-    public function getAutoRegister($useFrames = false) {
+    public function getAutoRegistered($useFrames = false) {
         $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 		

@@ -55,8 +55,8 @@
     </comment>
   </tag>
   <tag>
-    <tagname>autoRegister</tagname>
-    <function>getAutoRegister</function>
+    <tagname>autoRegistered</tagname>
+    <function>getAutoRegistered</function>
     <attribute>
       <attname>useFrames</attname>
       <attreq>implied</attreq>
