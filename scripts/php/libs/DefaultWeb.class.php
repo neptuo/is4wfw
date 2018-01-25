@@ -1623,6 +1623,27 @@ class DefaultWeb extends BaseTagLib {
         return '<div class="crumb-menu">' . $return . '</div>';
     }
 
+    public function getPageUrl($pageId, $languageId = false, $isAbsolute = false, $params = array()) {
+        $languageId = (!$languageId) ? $this->LanguageId : $languageId;
+        $isAbsolute = (!$isAbsolute) ? false : true;
+
+        if (is_numeric($pageId)) {
+            $url = self::composeUrl($pageId, $languageId, $isAbsolute);
+
+            foreach ($params as $key => $value) {
+                if (strpos($key, 'param-') === 0) {
+                    $key = substr($key, 6);
+                }
+
+                $url = parent::addUrlParameter($url, $key, $value);
+            }
+
+            return $url;
+        }
+
+        return $pageId;
+    }
+
     /**
      *
      *  Creates anchor.
@@ -1641,7 +1662,7 @@ class DefaultWeb extends BaseTagLib {
         global $dbObject;
         $languageId = (!$languageId) ? $this->LanguageId : $languageId;
 
-        if(strlen($activeClass) > 0 && $pageId == self::getLastPageId() && $this->LanguageId == $languageId) {
+        if (strlen($activeClass) > 0 && $pageId == self::getLastPageId() && $this->LanguageId == $languageId) {
             if(strlen($class) > 0) {
                 $class .= ' ' . $activeClass;
             } else {

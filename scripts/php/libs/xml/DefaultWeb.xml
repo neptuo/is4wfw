@@ -129,6 +129,30 @@
     </comment>
   </tag>
   <tag>
+    <tagname>url</tagname>
+    <function>getPageUrl</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>languageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>isAbsolute</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <params />
+    <comment>
+      Vytvoří URL pro stránku.
+      Atribut 'pageId' je ID stránky, na kterou má vést adresa.
+      Atribut 'languageId' je ID jazyku, na který povede adresa.
+      Atribut 'isAbsolute' říká, zda se má vygenerovat absolutní cesta, včetně domény.
+      Params jsou použity jako URL parametry, pokud navíc mají prefix 'param-', ten je z názvu odebrán. Je tak možné nastavovat i parametry, které se jmenují jako jiné atributy.
+    </comment>
+  </tag>
+  <tag>
     <tagname>a</tagname>
     <function>makeAnchor</function>
     <attribute>
