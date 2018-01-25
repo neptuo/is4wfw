@@ -15,4 +15,5 @@
 	<reg prefix="wp" class="php.libs.WebProject" />
 	<reg prefix="js" class="php.libs.Js" />
 	<reg prefix="var" class="php.libs.Variable" />
+	<reg prefix="template" class="php.libs.Template" />
 </autoregister>
