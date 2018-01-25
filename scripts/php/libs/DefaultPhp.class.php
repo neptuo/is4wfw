@@ -85,6 +85,16 @@
             set_error_handler("Error::errorHandler");
         }
     
+        private $XmlStorage = array();
+
+        private function getXml($path) {
+            if (!array_key_exists($path, $this->XmlStorage)) {
+                $this->XmlStorage[$path] = new SimpleXMLElement(file_get_contents($path));
+            }
+
+            return $this->XmlStorage[$path];
+        }
+
         /**
          *
          *    Registrate tag library.
@@ -242,7 +252,7 @@
          *
          */                                     
         public function isRegistered($tagPrefix) {
-            if(array_key_exists($tagPrefix, $this->_REGISTERED) || array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED) || array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 return true;
             } else {
                 return self::autoRegisterPrefix($tagPrefix);
@@ -250,20 +260,16 @@
         }
         
         public function autoRegisterPrefix($prefix) {
-                if($this->_AUTOXML == null) {
-                    $this->_AUTOXML = new SimpleXMLElement(file_get_contents(PHP_SCRIPTS.'autoregister.xml'));
+            $xml = self::getXml(PHP_SCRIPTS . 'autoregister.xml');
+            foreach ($xml->reg as $reg) {
+                $attrs = $reg->attributes();
+                if ($attrs['prefix'] == $prefix) {
+                    self::register($prefix, (string)$attrs['class']);
+                    return true;
                 }
-                
-                $xml = $this->_AUTOXML;
-                foreach($xml->reg as $reg) {
-                        $attrs = $reg->attributes();
-                        if($attrs['prefix'] == $prefix) {
-                                self::register($prefix, (string)$attrs['class']);
-                                return true;
-                        }
-                }
-                
-                return false;
+            }
+            
+            return false;
         }
         
         /**
@@ -277,24 +283,24 @@
          *
          */                                     
         public function isTag($tagPrefix, $tagName, $atts) {
-            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
-            if(isset($xmlPath)) {
-                if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+            if (isset($xmlPath)) {
+                if (is_file(SCRIPTS.$xmlPath)) {
+                    $xml = self::getXml(SCRIPTS . $xmlPath);
                     
-                    foreach($xml->tag as $tag) {
-                        if($tag->tagname == $tagName) {
-                            for($i = 0; $i < count($tag->attribute); $i ++) {
+                    foreach ($xml->tag as $tag) {
+                        if ($tag->tagname == $tagName) {
+                            for ($i = 0; $i < count($tag->attribute); $i ++) {
                                 $att = $tag->attribute[$i];
                                 $req = true;
-                                if(!array_key_exists((string)$att->attname, $atts) && strtolower($att->attreq) == "required") {
+                                if (!array_key_exists((string)$att->attname, $atts) && strtolower($att->attreq) == "required") {
                                     $str = "Missing required attribute! [".$att->attname."]";
                                     trigger_error($str , E_USER_WARNING);
                                     echo "<h4 class=\"error\">".$str."</h4>";
@@ -340,7 +346,7 @@
             
             if(isset($xmlPath)) {
                 if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+                    $xml = self::getXml(SCRIPTS.$xmlPath);
                     
                     foreach($xml->fulltag as $tag) {
                         if($tag->tagname == $tagName) {
@@ -382,23 +388,24 @@
          *
          */                                     
         public function isProperty($tagPrefix, $propName) {
-            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
-            if(isset($xmlPath)) {
-                if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+            if (isset($xmlPath)) {
+                if (is_file(SCRIPTS.$xmlPath)) {
+                    $xml = self::getXml(SCRIPTS . $xmlPath);
                     
-                    foreach($xml->property as $prop) {
-                        if($prop->propname == $propName) {
-                                 return true;
+                    foreach ($xml->property as $prop) {
+                        if ($prop->propname == $propName) {
+                            return true;
                         }
                     }
+
                     return false;
                 } else {
                     $str = "Xml library definition doesn't exists! [".$xmlPath."]";
@@ -406,7 +413,6 @@
                     //echo "<h4 class=\"error\">".$str."</h4>";
                     return false;
                 }
-                
             } else {
                 return false;
             }
@@ -416,17 +422,17 @@
 
         // Vrací true, pokud daná knihovna umožňuje <anyProperty />.
         public function isAnyProperty($tagPrefix) {
-            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
             if (isset($xmlPath)) {
-                if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+                if (is_file(SCRIPTS.$xmlPath)) {
+                    $xml = self::getXml(SCRIPTS . $xmlPath);
                     return isset($xml->anyProperty);
                 } else {
                     $str = "Xml library definition doesn't exists! [".$xmlPath."]";
@@ -456,22 +462,22 @@
         private function isCountOfInstances($className, $classDir) {
             $count = 0;
 
-            if(array_key_exists($classDir.".".$className, $this->_CLASSES)) {
+            if (array_key_exists($classDir.".".$className, $this->_CLASSES)) {
                 $count = $this->_CLASSES[$classDir.".".$className];
             }
             
             //echo ' '.$className.'<br />';
             $tmp = new $className();
             $xmlPath = str_replace(".", "/", $classDir)."/".$tmp->getTagLibXml();
-            if(is_file(SCRIPTS.$xmlPath)) {
-                $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+            if (is_file(SCRIPTS.$xmlPath)) {
+                $xml = self::getXml(SCRIPTS.$xmlPath);
 
-                if((string)$xml->count == "*") {
-                        return true;
-                } else if((int)$xml->count > $count) {
-                        return true;
+                if ((string)$xml->count == "*") {
+                    return true;
+                } else if ((int)$xml->count > $count) {
+                    return true;
                 } else {
-                        return false;
+                    return false;
                 }
             } else {
                 $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
@@ -493,27 +499,27 @@
          */                                                
         public function sortAttributes($tagPrefix, $tagName, $atts) {
             $return = array();
-            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
-            if(isset($xmlPath)) {
-                if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+            if (isset($xmlPath)) {
+                if (is_file(SCRIPTS.$xmlPath)) {
+                    $xml = self::getXml(SCRIPTS . $xmlPath);
                     
-                    foreach($xml->tag as $tag) {
-                        if($tag->tagname == $tagName) {
+                    foreach ($xml->tag as $tag) {
+                        if ($tag->tagname == $tagName) {
                             //print_r($tag->attribute);
                             $isFound = false;
-                            for($i = 0; $i < count($tag->attribute); $i ++) {
+                            for ($i = 0; $i < count($tag->attribute); $i ++) {
                                 $att = $tag->attribute[$i];
-                                if(array_key_exists((string)$att->attname, $atts)) {
+                                if (array_key_exists((string)$att->attname, $atts)) {
                                     $return[(string)$att->attname] = self::getConvertValue($atts[(string)$att->attname], isset($att->attdef));
-                                } elseif(isset($att->attdef)) {
+                                } elseif (isset($att->attdef)) {
                                     eval('$val = '. $att->attdef.';');
                                     $return[(string)$att->attname] = self::getConvertValue($val);
                                 } else {
@@ -521,10 +527,10 @@
                                 }
                             }
                     
-                            if(isset($tag->params)) {
+                            if (isset($tag->params)) {
                                 $params = array();
-                                foreach($atts as $usedName => $usedValue) {
-                                    if(!array_key_exists($usedName, $return)) {
+                                foreach ($atts as $usedName => $usedValue) {
+                                    if (!array_key_exists($usedName, $return)) {
                                         $params[$usedName] = $usedValue;
                                     }
                                 }
@@ -574,36 +580,36 @@
          */                                                
         public function sortFullAttributes($tagPrefix, $tagName, $atts, $content) {
             $return = array();
-            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
             $return['content'] = $content;
             
-            if(isset($xmlPath)) {
-                if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+            if (isset($xmlPath)) {
+                if (is_file(SCRIPTS.$xmlPath)) {
+                    $xml = self::getXml(SCRIPTS . $xmlPath);
                     
-                    foreach($xml->fulltag as $tag) {
-                        if($tag->tagname == $tagName) {
+                    foreach ($xml->fulltag as $tag) {
+                        if ($tag->tagname == $tagName) {
                             //print_r($tag->attribute);
-                            for($i = 0; $i < count($tag->attribute); $i ++) {
+                            for ($i = 0; $i < count($tag->attribute); $i ++) {
                                 $att = $tag->attribute[$i];
-                                if(array_key_exists((string)$att->attname, $atts)) {
+                                if (array_key_exists((string)$att->attname, $atts)) {
                                     $return[(string)$att->attname] = $atts[(string)$att->attname];
                                 } else {
                                     $return[(string)$att->attname] = false;
                                 }
                             }
                     
-                            if(isset($tag->params)) {
+                            if (isset($tag->params)) {
                                 $params = array();
-                                foreach($atts as $usedName => $usedValue) {
-                                    if(!array_key_exists($usedName, $return)) {
+                                foreach ($atts as $usedName => $usedValue) {
+                                    if (!array_key_exists($usedName, $return)) {
                                         $params[$usedName] = $usedValue;
                                     }
                                 }
@@ -634,20 +640,20 @@
          *
          */                                     
         public function getFuncToTag($tagPrefix, $tagName) {
-            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
-            if(isset($xmlPath)) {
-                if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+            if (isset($xmlPath)) {
+                if (is_file(SCRIPTS.$xmlPath)) {
+                    $xml = self::getXml(SCRIPTS . $xmlPath);
                     
-                    foreach($xml->tag as $tag) {
-                        if($tag->tagname == $tagName) {
+                    foreach ($xml->tag as $tag) {
+                        if ($tag->tagname == $tagName) {
                             return (string)$tag->function;
                         }
                     }
@@ -679,20 +685,20 @@
          *
          */                                     
         public function getFuncToFullTag($tagPrefix, $tagName) {
-            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
-            if(isset($xmlPath)) {
-                if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+            if (isset($xmlPath)) {
+                if (is_file(SCRIPTS.$xmlPath)) {
+                    $xml = self::getXml(SCRIPTS . $xmlPath);
                     
-                    foreach($xml->fulltag as $tag) {
-                        if($tag->tagname == $tagName) {
+                    foreach ($xml->fulltag as $tag) {
+                        if ($tag->tagname == $tagName) {
                             return (string)$tag->function;
                         }
                     }
@@ -724,28 +730,28 @@
          *
          */                                     
         public function getFuncToProperty($tagPrefix, $propName, $use) {
-            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
-            if(isset($xmlPath)) {
-                if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = new SimpleXMLElement(file_get_contents(SCRIPTS.$xmlPath));
+            if (isset($xmlPath)) {
+                if (is_file(SCRIPTS.$xmlPath)) {
+                    $xml = self::getXml(SCRIPTS . $xmlPath);
                     
-                    foreach($xml->property as $prop) {
-                        if($prop->propname == $propName) {
-                            if(strtolower($use) == 'set') {
+                    foreach ($xml->property as $prop) {
+                        if ($prop->propname == $propName) {
+                            if (strtolower($use) == 'set') {
                                 return (string)$prop->setfunction;
-                            } elseif(strtolower($use) == 'get') {
+                            } elseif (strtolower($use) == 'get') {
                                     return (string)$prop->getfunction;
                             } else {
                                 //$str = "Bad use!";
-                                    //trigger_error($str , E_USER_WARNING);
-                                    //echo "<h4 class=\"error\">".$str."</h4>";
+                                //trigger_error($str , E_USER_WARNING);
+                                //echo "<h4 class=\"error\">".$str."</h4>";
                                 return false;                        
                             }
                         }
