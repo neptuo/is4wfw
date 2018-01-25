@@ -288,7 +288,7 @@ class CustomTagParser {
         }
     }
 	
-	public function parseProperty($value) {		
+	public function parseProperty($value) {
 		$this->PropertyAttr = '';
 		$this->PropertyUse = 'get';
 		return preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $value);

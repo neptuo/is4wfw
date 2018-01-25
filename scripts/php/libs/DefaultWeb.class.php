@@ -1155,13 +1155,17 @@ class DefaultWeb extends BaseTagLib {
         }
 		
 		$currentValues = array();
-		$props = parent::dao('PageProperty')->getPage($pageId);
-		foreach($props as $prop) {
-			$currentValue = self::getProperty($prop['name']);
-			if(!$currentValue || $forceDefProp) {
-				self::setProperty($prop['name'], $prop['value']);
-				$currentValues[$prop['name']] = $currentValue;
-			}
+        $props = parent::dao('PageProperty')->getPage($pageId);
+        if (count($props) > 0) {
+            $parser = new CustomTagParser();
+            foreach ($props as $prop) {
+                $currentValue = self::getProperty($prop['name']);
+                if (!$currentValue || $forceDefProp) {
+                    $prop['value'] = $parser->parseProperty($prop['value']);
+                    self::setProperty($prop['name'], $prop['value']);
+                    $currentValues[$prop['name']] = $currentValue;
+                }
+            }
 		}
 		
         while ($pageId != 0) {
@@ -1195,7 +1199,7 @@ class DefaultWeb extends BaseTagLib {
             }
         }
 		
-		foreach($currentValues as $key => $item) {
+		foreach ($currentValues as $key => $item) {
 			self::setProperty($key, $item);
 		}
 
@@ -1218,7 +1222,7 @@ class DefaultWeb extends BaseTagLib {
         } else {
             // Najdi project url a dosestav url
             $project = array('alias' => parent::db()->fetchSingle('select `domain_url`, `root_url`, `virtual_url`, `http`, `https` from `web_url` where `project_id` = ' . $pageProjectId . ' and `enabled` = 1 order by `web_url`.`default` desc, `web_url`.`id`;'));
-            if($project['alias'] != array()) {
+            if ($project['alias'] != array()) {
                 $url = self::composeUrlProjectPart($tmpPath, $project, true);
                 if ($copyParameters) {
                     $url = parent::addUrlQueryString($url);
