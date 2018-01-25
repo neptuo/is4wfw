@@ -54,6 +54,17 @@
       Zobrazí seznam vlastnotí uživatelského rozhraní
     </comment>
   </tag>
+  <tag>
+    <tagname>autoRegister</tagname>
+    <function>getAutoRegister</function>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Zobrazí seznam automaticky vytvářených knihoven a jejich mapování na prefixy.
+    </comment>
+  </tag>
   <property>
   	<propname>classPath</propname>
   	<setfunction>setPropClassPath</setfunction>
