@@ -486,7 +486,7 @@
     </attribute>
     <attribute>
       <attname>isInverted</attname>
-      <attreq>optional</attreq>
+      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí svůj obsah pokud je atribut "condition" hodnoty true (bool nebo string).
