@@ -19,8 +19,6 @@ require_once("scripts/php/classes/LocalizationBundle.class.php");
 class Variable extends BaseTagLib {
 
     public function __construct() {
-        global $webObject;
-
         parent::setTagLibXml("xml/Variable.xml");
     }
 	
