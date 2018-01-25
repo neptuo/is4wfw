@@ -481,6 +481,23 @@
       Platné hodnoty pro atribut 'type' jsou 'html5' a 'xhtml' (výchozí).
     </comment>
   </tag>
+  <tag>
+    <tagname>flush</tagname>
+    <function>setFlushOptions</function>
+    <attribute>
+      <attname>template</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>contentType</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Nastaví vlastnosti výstupu.
+      Atribut 'template' nahrazuje globální parametr requestu '__TEMPLATE' pro definici výstupní šablony - 'none', 'xml' nebo 'null'.
+      Atribut 'contentType' definuje typ odpovědi - 'text/html', 'text/json', ...
+    </comment>
+  </tag>
   <property>
   	<propname>currentPage</propname>
   	<getfunction>getCurrentPage</getfunction>

@@ -1017,6 +1017,13 @@ class DefaultWeb extends BaseTagLib {
         }
 
         $areHeadersSent = headers_sent();
+        if (!$areHeadersSent) {
+            header('Content-Type: ' . $this->ContentType . '; charset=utf-8');
+
+            if ($isLang) {
+                header('Content-language: ' . $lang);
+            }
+        }
 
         if ($this->Template == 'xml') {
             $return = ''
@@ -1033,14 +1040,6 @@ class DefaultWeb extends BaseTagLib {
         } else if ($this->Template == 'none') {
             $return = $this->PageContent;
         } else {
-            if (!$areHeadersSent) {
-                header('Content-Type: text/html; charset=utf-8');
-
-                if ($isLang) {
-                    header('Content-language: ' . $lang);
-                }
-            }
-
             $doctype = ''
             . '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
             . '<html xmlns="http://www.w3.org/1999/xhtml">';
@@ -1135,11 +1134,11 @@ class DefaultWeb extends BaseTagLib {
         $return = $content;
 
         if ($this->ZipOutput && $encoding) {
+            $return = gzcompress($return, 9);
+            $size = strlen($return);
+
             header('Content-Encoding: ' . $encoding);
             print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
-            $size = strlen($return);
-            $return = gzcompress($return, 9);
-            $return = substr($return, 0, $size);
             print($return);
             exit();
         } else {
@@ -2360,6 +2359,20 @@ class DefaultWeb extends BaseTagLib {
     public function setDoctype($doctype) {
         if ($doctype == 'html5' || $doctype == 'xhtml') {
             $this->Doctype = $doctype;
+        }
+    }
+
+    public function setFlushOptions($template = false, $contentType = false) {
+        if ($template == 'null') {
+            $this->Template = null;
+        } else if ($template == 'xml') {
+            $this->Template = 'xml';
+        } else if ($template == 'none') {
+            $this->Template = 'none';
+        }
+
+        if ($contentType != false && $contentType != '') {
+            $this->ContentType = $contentType;
         }
     }
 
