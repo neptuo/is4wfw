@@ -116,7 +116,7 @@ abstract class AbstractDao {
 
 	protected function countSql($select = null) {
 		$params = array($this->getDatabase(), $this->getTableName(), $this->getTableAlias());
-		$return = self::setString($this->$countSQL, $params); 
+		$return = self::setString($this->countSQL, $params); 
 		
 		if ($select == null){
 			return $return . ";";

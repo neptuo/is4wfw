@@ -23,9 +23,9 @@ class ApplicationVariableDao extends AbstractDao {
 	}
 
 	public function getValue($name) {
-		$select = new Select($this->dataAccess);
+		$select = parent::createSelect();
 		$idField = $this->getIdField();
-		$select->where($this->getIdField(), '=', $id);
+		$select->where($this->getIdField(), '=', $name);
 		$sql = self::selectSql($select->result(), true, array('value'));
 		$data = $this->dataAccess->fetchSingle($sql);
 		return $data['value'];
