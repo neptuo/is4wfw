@@ -29,6 +29,10 @@ class Variable extends BaseTagLib {
 			parent::request()->set($name, $value, 'variable');
 		} else if ($scope == 'session') {
 			parent::session()->set($name, $value, 'variable');
+		} else if($scope == 'application') {
+			parent::dao('ApplicationVariable')->setValue($name, $value);
+		} else {
+			trigger_error("Invalid scope value '" . $scope . "'.");
 		}
 
 		return '';
@@ -43,7 +47,8 @@ class Variable extends BaseTagLib {
 			return parent::session()->get($name, 'variable');
 		}
 
-		return '';
+		$application = parent::dao('ApplicationVariable')->getValue($name);
+		return $application;
 	}
 }
 

@@ -26,7 +26,7 @@
     <comment>
       Nastaví hodnotu proměnné s názvem 'name'.
       Atribut 'value' nese hodnotu proměnné.
-      Atribut 'scope' může nabývat hodnot 'request', 'session' a 'persistent'.
+      Atribut 'scope' může nabývat hodnot 'request', 'session' a 'application'.
     </comment>
   </tag>
   <anyProperty />
