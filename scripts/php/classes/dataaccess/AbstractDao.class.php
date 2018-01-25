@@ -13,6 +13,7 @@ abstract class AbstractDao {
 	protected $deleteSQL = "DELETE FROM `{0}`.`{1}` WHERE `{1}`.`{2}` = '{3}';";
 	protected $updateSQL = "UPDATE `{0}`.`{1}` SET  {2} WHERE  `{1}`.`{3}` = {4};"; //UPDATE  `destinace`.`comment` SET  `text` =  '�iljhgftrgh',`userCommentId` =  '2' WHERE  `comment`.`commentId` =2;
 	protected $selectSQL = "SELECT {0} FROM `{1}`.`{2}` as `{3}` ";
+	protected $countSQL = "SELECT COUNT(*) as `count` FROM `{0}`.`{1}` as `{2}` ";
 	
 	abstract public static function getTableName();
 	abstract public static function getTableAlias();
@@ -108,10 +109,17 @@ abstract class AbstractDao {
 			return $return . $select . ";";
 		}
 	}
-	
-	
-	
-	
+
+	protected function countSql($select = null) {
+		$params = array($this->getDatabase(), $this->getTableName(), $this->getTableAlias());
+		$return = self::setString($this->$countSQL, $params); 
+		
+		if ($select == null){
+			return $return . ";";
+		} else {
+			return $return . $select . ";";
+		}
+	}
 	
 	public function insert($data) {
 		$sql = self::insertSql($data);
@@ -178,6 +186,16 @@ abstract class AbstractDao {
 	public function getList($selectObject = null, $distinct = false) {
 		$sql = self::selectSql($selectObject != null ? $selectObject->result() : null, $distinct);
 		return $this->dataAccess->fetchAll($sql);
+	}
+
+	public function count($selectObject = null) {
+		$sql = self::countSql($selectObject != null ? $selectObject->result() : null);
+		$data = $this->dataAccess->fetchSingle($sql);
+		return $data['count'];
+	}
+
+	public function exists($selectObject = null) {
+		return self::count($selectObject) > 0;
 	}
 	
 	public function setDataAccess($dataAccess) {
