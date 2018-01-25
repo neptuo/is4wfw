@@ -172,6 +172,8 @@ class DefaultWeb extends BaseTagLib {
     private $keywords = '';
 
     private $Doctype = 'xhtml';
+    private $ContentType = 'text/html';
+    private $Template = null;
 
     /**
      *
@@ -193,6 +195,8 @@ class DefaultWeb extends BaseTagLib {
         $queryStorage = new QueryStorage();
 
         $this->Diagnostics = new Diagnostics();
+
+        $this->Template = strtolower($_REQUEST['__TEMPLATE']);
 
         //print_r(UniversalPermission::getPermissions(1, 1));
         //UniversalPermission::setPermissions('pes', 1, array(array('group' => 'admins', 'type' => WEB_R_READ), array('group' => 'web-admins', 'type' => WEB_R_WRITE)));
@@ -985,6 +989,7 @@ class DefaultWeb extends BaseTagLib {
 
         $lang = parent::db()->fetchAll("SELECT `language` FROM `language` WHERE `id` = " . $this->LanguageId . ";");
         $lang = $lang[0]['language'];
+        $isLang = strlen($lang) > 0;
 
         $keywords = file_get_contents("keywords.txt");
 
@@ -1011,26 +1016,34 @@ class DefaultWeb extends BaseTagLib {
 			. '</div>';
         }
 
-        if (strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
+        $areHeadersSent = headers_sent();
+
+        if ($this->Template == 'xml') {
             $return = ''
             . '<rssmm:response>'
                 . ((strlen($this->PageLog) != 0) ? '<rssmm:log>' . $this->PageLog . '</rssmm:log>' : '')
                 . '<rssmm:head>'
                     . '<rssmm:title>' . $this->PageTitle . '</rssmm:title>'
-                    . '<rssmm:keywords>' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm</rssmm:keywords>'
+                    . '<rssmm:keywords>' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo</rssmm:keywords>'
                     . '<rssmm:styles>' . $this->PageStyles . '</rssmm:styles>'
                     . '<rssmm:scripts>' . $this->PageScripts . '</rssmm:scripts>'
                 . '</rssmm:head>'
                 . '<rssmm:content>' . $this->PageContent . '</rssmm:content>'
             . '</rssmm:response>';
-        } else if (strtolower($_REQUEST['__TEMPLATE']) == 'none') {
+        } else if ($this->Template == 'none') {
             $return = $this->PageContent;
         } else {
+            if (!$areHeadersSent) {
+                header('Content-Type: text/html; charset=utf-8');
+
+                if ($isLang) {
+                    header('Content-language: ' . $lang);
+                }
+            }
+
             $doctype = ''
             . '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
             . '<html xmlns="http://www.w3.org/1999/xhtml">';
-
-            $isLang = strlen($lang) > 0;
 
             if ($this->Doctype == 'html5') {
                 $doctype = ''
@@ -1041,10 +1054,10 @@ class DefaultWeb extends BaseTagLib {
             $return = ''
             . $doctype
                 . '<head>'
-                    . '<meta http-equiv="content-type" content="text/html; charset=utf-8" />'
+                    . (($areHeadersSent) ? '<meta http-equiv="content-type" content="text/html; charset=utf-8" />' : '')
                     . '<meta name="description" content="' . $this->PageTitle . '" />'
                     . '<meta name="keywords" content="' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo" />'
-                    . ($isLang ? '<meta http-equiv="Content-language" content="' . $lang . '" />' : '')
+                    . (($areHeadersSent && $isLang) ? '<meta http-equiv="Content-language" content="' . $lang . '" />' : '')
                     . '<meta name="robots" content="all, index, follow" />'
                     . '<meta name="author" content="Marek Fišera" />'
                     . '<title>' . $this->PageTitle . '</title>'
