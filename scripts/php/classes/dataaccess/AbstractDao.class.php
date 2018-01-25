@@ -23,6 +23,10 @@ abstract class AbstractDao {
 	protected function getDatabase() {
 		return WEB_DB_DATABASE;
 	}
+
+	protected function createSelect() {
+		return new Select($this->dataAccess);
+	}
 	
 	/*
 	 * funkce vytváří string pro insert do DB
@@ -163,7 +167,7 @@ abstract class AbstractDao {
 	}
 	
 	public function get($id) {
-		$select = new Select($this->dataAccess);
+		$select = self::createSelect();
 		$idField = $this->getIdField();
 		if(is_array($idField)) {
 			$isFirst = true;
