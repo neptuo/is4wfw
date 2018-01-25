@@ -11,7 +11,7 @@ abstract class AbstractDao {
 	
 	protected $insertSQL = "INSERT INTO `{0}`.`{1}` ({2}) VALUES ({3});"; //INSERT INTO `destinace`.`information` (`infoLanguage`, `destinationId`, `name`, `type`, `description`, `email`, `www`, `phone`, `userId`) VALUES ('en', '7', 'Prvni', 'pokus', 'jkangiroa jaklg jril', NULL, NULL, NULL, '1'); 
 	protected $deleteSQL = "DELETE FROM `{0}`.`{1}` WHERE `{1}`.`{2}` = '{3}';";
-	protected $updateSQL = "UPDATE `{0}`.`{1}` SET  {2} WHERE  `{1}`.`{3}` = {4};"; //UPDATE  `destinace`.`comment` SET  `text` =  '�iljhgftrgh',`userCommentId` =  '2' WHERE  `comment`.`commentId` =2;
+	protected $updateSQL = "UPDATE `{0}`.`{1}` SET  {2} WHERE  `{1}`.`{3}` = '{4}';"; //UPDATE  `destinace`.`comment` SET  `text` =  '�iljhgftrgh',`userCommentId` =  '2' WHERE  `comment`.`commentId` =2;
 	protected $selectSQL = "SELECT {0} FROM `{1}`.`{2}` as `{3}` ";
 	protected $countSQL = "SELECT COUNT(*) as `count` FROM `{0}`.`{1}` as `{2}` ";
 	
