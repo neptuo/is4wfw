@@ -65,7 +65,7 @@
       <attreq>required</attreq>
     </attribute>
     <comment>
-      Přidá hlavičku.
+      Přidá javascript/styl.
     </comment>
   </tag>
   <tag>
