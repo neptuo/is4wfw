@@ -10,7 +10,7 @@
   </comment>
   <tag>
     <tagname>include</tagname>
-    <function>include</function>
+    <function>includeById</function>
     <attribute>
       <attname>id</attname>
       <attreq>required</attreq>

@@ -18,7 +18,7 @@ class Template extends BaseTagLib {
         parent::setTagLibXml("xml/Template.xml");
     }
 	
-	public function include($id, $params) {
+	public function includeById($id, $params) {
 		$oldParams = parent::request()->get('params', 'template:include');
 		parent::request()->set('params', $params, 'template:include');
 		
