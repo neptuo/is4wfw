@@ -1,4 +1,4 @@
-# PHP-WebFramework (phpwfw) (is4wfw)
+# (PHP-) WebFramework (phpwfw) (is4wfw)
 
 Application Framework, Content Management System.
 
