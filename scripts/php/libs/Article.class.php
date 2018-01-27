@@ -2307,11 +2307,12 @@ class Article extends BaseTagLib {
     }
 
     public function getUrl() {
-		// $url = parent::request()->get('article-url');
-		// if(!parent::request()->exists('article-url')) {
-			$article = parent::db()->fetchSingle('select `url` from `article_content` where `article_id` = ' . self::getArticleId() . ';');
-			$url = $article['url'];
-		// }
+        if (!self::getArticleId()) {
+            return 'false.false';
+        }
+
+        $article = parent::db()->fetchSingle('select `url` from `article_content` where `article_id` = ' . self::getArticleId() . ';');
+        $url = $article['url'];
         return $url;
     }
 
