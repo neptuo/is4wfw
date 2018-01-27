@@ -264,7 +264,7 @@ class UrlResolver extends BaseTagLib {
             }
         }
         
-        if(is_array($cprop)) {
+        if (is_array($cprop)) {
             return $cprop[0];
         } else {
             return $cprop;

@@ -244,18 +244,18 @@ class DefaultWeb extends BaseTagLib {
             $this->UrlResolver->selectProjectById($item['project_id'], $item['domain_url'], $item['root_url'], $item['virtual_url']);
             $this->UrlResolver->selectLanguage($item['language_id']);
 			
-			if($item['cachetime'] != -1) {
+			if ($item['cachetime'] != -1) {
 				// Pouzijeme cache
 				$this->CacheFile = sha1($this->FullUrl).'.cache.html';
 				$cacheUsed = false;
-				if($item['cachetime'] == 0 || $item['cachetime'] + $item['lastcache'] >= time()) {
-					if(file_exists(self::getPageCachePath() . $this->CacheFile)) {
+				if ($item['cachetime'] == 0 || $item['cachetime'] + $item['lastcache'] >= time()) {
+					if (file_exists(self::getPageCachePath() . $this->CacheFile)) {
 						$cacheUsed = true;
 						self::tryToComprimeContent(file_get_contents(self::getPageCachePath() . $this->CacheFile));
 					}
 				} 
 
-				if(!$cacheUsed) {
+				if (!$cacheUsed) {
 					$this->IsCached = true;
 					$this->CacheInfo = $item;
 					$this->UrlCache->updateLastCache($fullUrl);
@@ -263,8 +263,7 @@ class DefaultWeb extends BaseTagLib {
 			}
 
             self::loadPageData();
-            self::parseSingleUrlParts($domainUrl, $rootUrl, $virtualUrl);
-            $found = true;
+            $found = self::parseSingleUrlParts($domainUrl, $rootUrl, $virtualUrl);
         } else {
 			//echo $domainUrl.', '.$rootUrl.', '.$virtualUrl.'<br />';
             if ($this->UrlResolver->resolveUrl($domainUrl, $rootUrl, $virtualUrl)) {
@@ -274,13 +273,6 @@ class DefaultWeb extends BaseTagLib {
                 // Ulozit do urlcache
                 $this->UrlCache->write($fullUrl, $this->UrlResolver->getWebProject(), self::pagesIdAsString('-'), $this->UrlResolver->getLanguage(), self::findCachetime());
                 $found = true;
-            } else {
-                // Stranka neexistuje -> Projit Forwardy s 404 nebo All Errors
-                self::processForwards(self::findForward(array('404', 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'));
-
-                header("HTTP/1.1 404 Not Found");
-                echo file_get_contents("error404.html");
-                exit;
             }
         }
 
@@ -288,6 +280,13 @@ class DefaultWeb extends BaseTagLib {
             self::doOldSetup();
             $this->PageContent = self::getContent();
             self::flush();
+        } else {
+            // Stranka neexistuje -> Projit Forwardy s 404 nebo All Errors
+            self::processForwards(self::findForward(array('404', 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'));
+
+            header("HTTP/1.1 404 Not Found");
+            echo file_get_contents("error404.html");
+            exit;
         }
     }
 
@@ -380,14 +379,19 @@ class DefaultWeb extends BaseTagLib {
         self::parseAllPagesTagLib('tag_lib_start');
         foreach ($prjVirs as $key => $prj) {
             $vir = $reqVirs[$key];
-            //parent::log('URL: '.$vir.' : '.$prj.'<br />');
-            $this->UrlResolver->parseSingleUrlPart($prj, $vir);
+            $output = $this->UrlResolver->parseSingleUrlPart($prj, $vir);
+            if ($output != $vir) {
+                // parent::log('URL: NotFound -> '.$vir.' : '.$prj.'<br />');
+                return false;
+            }
         }
         self::parseAllPagesTagLib('tag_lib_end');
 		
 		foreach($this->TempLoadedContent as $page) {
 			
-		}
+        }
+        
+        return true;
     }
 
     private function prepareVirtualPathAsArray($webProject, $lang) {
@@ -1008,7 +1012,7 @@ class DefaultWeb extends BaseTagLib {
 				. '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
 			. '</div>';
         }
-        if(strlen($this->PageLog) != 0) {
+        if (strlen($this->PageLog) != 0) {
             $diacont .= ''
 			. '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
 				. '<div style="color: red; font-weight: bold;">Page Log:</div>'
@@ -1448,9 +1452,9 @@ class DefaultWeb extends BaseTagLib {
             switch ($file['type']) {
                 //case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="'.WEB_ROOT.'css/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'" type="text/css" />'; break;
                 //case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="'.WEB_ROOT.'js/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'"></script>'; break;
-                case WEB_TYPE_CSS: $this->PageStyles .= ( (strtolower($_REQUEST['__TEMPLATE']) == 'xml') ? '<rssmm:link-ref>~/file.php?fid=' . $file['id'] . '</rssmm:link-ref>' : '<link rel="stylesheet" href="~/file.php?fid=' . $file['id'] . '" type="text/css" />');
+                case WEB_TYPE_CSS: $this->PageStyles .= ( ($this->Template == 'xml') ? '<rssmm:link-ref>~/file.php?fid=' . $file['id'] . '</rssmm:link-ref>' : '<link rel="stylesheet" href="~/file.php?fid=' . $file['id'] . '" type="text/css" />');
                     break;
-                case WEB_TYPE_JS: $this->PageScripts .= ( (strtolower($_REQUEST['__TEMPLATE']) == 'xml') ? '<rssmm:script-ref>~/file.php?fid=' . $file['id'] . '</rssmm:script-ref>' : '<script type="text/javascript" src="~/file.php?fid=' . $file['id'] . '"></script>');
+                case WEB_TYPE_JS: $this->PageScripts .= ( ($this->Template == 'xml') ? '<rssmm:script-ref>~/file.php?fid=' . $file['id'] . '</rssmm:script-ref>' : '<script type="text/javascript" src="~/file.php?fid=' . $file['id'] . '"></script>');
                     break;
             }
         }
