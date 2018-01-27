@@ -143,7 +143,7 @@
       <attname>isAbsolute</attname>
       <attreq>implied</attreq>
     </attribute>
-    <params />
+    <anyAttribute />
     <comment>
       Vytvoří URL pro stránku.
       Atribut 'pageId' je ID stránky, na kterou má vést adresa.
@@ -191,7 +191,7 @@
       <attname>type</attname>
       <attreq>implied</attreq>
     </attribute>
-    <params />
+    <anyAttribute />
     <comment>
       Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 
       "text" je text v html odkazu, "languageId" je jazyková verze požadované
@@ -235,7 +235,7 @@
       <attname>type</attname>
       <attreq>implied</attreq>
     </attribute>
-    <params />
+    <anyAttribute />
     <comment>
       Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 
       "languageId" je jazyková verze požadované

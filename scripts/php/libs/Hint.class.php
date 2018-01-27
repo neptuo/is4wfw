@@ -102,7 +102,7 @@
                     .'</tr>';
                 }
                 
-                if (isset($tag->params)) {
+                if (isset($tag->anyAttribute)) {
                     $attributes .= ''
                     .'<tr>'
                         .'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
@@ -143,7 +143,7 @@
                     .'</tr>';
                 }
 
-                if(isset($tag->params)) {
+                if(isset($tag->anyAttribute)) {
                     $attributes .= ''
                     .'<tr>'
                         .'<td colspan="2">'.$rb->get('lib.attparams').'</td>'

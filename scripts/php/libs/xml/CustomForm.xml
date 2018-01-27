@@ -45,7 +45,7 @@
       <attname>noDataMessage</attname>
       <attreq>implied</attreq>
     </attribute>
-    <params />
+    <anyAttribute />
     <comment>
       Zobrazí seznam dat z formuláře "formId", "templateId" je id šablony, "rowId" je id řádku (pak zobrazuje pouze jeden řádek),
       "sortBy" jméno sloupce podle kterého řadit, "desc" pokud je 'true', pak se řadí desc, jinak asc. "noDataMessage" je zpráva,
@@ -86,7 +86,7 @@
       <attname>noDataMessage</attname>
       <attreq>implied</attreq>
     </attribute>
-    <params />
+    <anyAttribute />
     <comment>
       Zobrazí seznam dat z formuláře "formId", "templateId" je id šablony, "rowId" je id řádku (pak zobrazuje pouze jeden řádek),
       "sortBy" jméno sloupce podle kterého řadit, "desc" pokud je 'true', pak se řadí desc, jinak asc. "noDataMessage" je zpráva,
@@ -102,7 +102,7 @@
       <attname>formId</attname>
       <attreq>required</attreq>
     </attribute>
-    <params />
+    <anyAttribute />
     <comment>
       Vypíše sumu dat obsažených ve formuláři "formId".
       Všechny params jsou použity jako filtrační parametry.

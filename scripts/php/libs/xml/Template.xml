@@ -15,7 +15,7 @@
       <attname>id</attname>
       <attreq>required</attreq>
     </attribute>
-    <params />
+    <anyAttribute />
     <comment>
       Vloží obsah šablony.
       Všechny další atributy jsou parametry šablony.

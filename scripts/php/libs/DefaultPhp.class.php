@@ -527,7 +527,7 @@
                                 }
                             }
                     
-                            if (isset($tag->params)) {
+                            if (isset($tag->anyAttribute)) {
                                 $params = array();
                                 foreach ($atts as $usedName => $usedValue) {
                                     if (!array_key_exists($usedName, $return)) {
@@ -606,7 +606,7 @@
                                 }
                             }
                     
-                            if (isset($tag->params)) {
+                            if (isset($tag->anyAttribute)) {
                                 $params = array();
                                 foreach ($atts as $usedName => $usedValue) {
                                     if (!array_key_exists($usedName, $return)) {
