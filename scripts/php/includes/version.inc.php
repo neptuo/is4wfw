@@ -5,7 +5,7 @@
  * 	Build version
  *
  */
-define("BUILD_VERSION", 336);
+define("BUILD_VERSION", 337);
 
 /**
  *
