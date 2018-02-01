@@ -577,7 +577,6 @@ class Article extends BaseTagLib {
         if (count($labels) > 0) {
             $templateContent = parent::getTemplateContent($templateId);
             $i = 1;
-            $labelOldId = self::getLabelId();
             foreach ($labels as $label) {
                 $item = array('id' => $label['id'], 'name' => $label['name'], 'url' => $label['url']);
                 if($label['all_name'] != '') {
@@ -597,7 +596,6 @@ class Article extends BaseTagLib {
                 $return .= $parser->getResult();
                 $i++;
             }
-            self::setLabelId($labelOldId);
         } else {
             if ($noDataMessage != '') {
                 $return .= parent::getWarning($noDataMessage);
@@ -717,13 +715,11 @@ class Article extends BaseTagLib {
         if ($_POST['article-edit'] == $rb->get('articles.edit')) {
             $url = parent::addUrlParameter($actionUrl, 'article-id', $_POST['article-id']);
             $url = parent::addUrlParameter($url, 'language-id', $_POST['language-id']);
-            header("Location: ". $url);
-            return;
+            parent::web()->redirectTo($url);
         } elseif($_POST['article-add-lang'] == $rb->get('articles.addlang')) {
             $url = parent::addUrlParameter($actionUrl, 'article-id', $_POST['article-id']);
             $url = parent::addUrlParameter($url, 'line-id', $_POST['line-id']);
-            header("Location: ". $url);
-            return;
+            parent::web()->redirectTo($url);
         }
 
         if ($_POST['article-move-up'] == $rb->get('articles.moveup')) {
@@ -1039,7 +1035,7 @@ class Article extends BaseTagLib {
 
         if($_POST['article-new'] == $rb->get('articles.newcap')) {
             $url = parent::addUrlParameter($actionUrl, 'line-id', $lineId);
-            header("Location: ". $url);
+            parent::web()->redirectTo($url);
             return;
         }
 
@@ -1444,14 +1440,14 @@ class Article extends BaseTagLib {
             $url = parent::removeUrlParameter($url, 'article-id');
             $url = parent::removeUrlParameter($url, 'language-id');
 
-            header("Location: ".$url);
+            parent::web()->redirectTo($url);
         } else if($isRedirectRequired) {
             $url = $_SERVER['REQUEST_URI'];
             $url = parent::addUrlParameter($url, 'article-id', $article['id']);
             $url = parent::addUrlParameter($url, 'language-id', $ac['language_id']);
             $url = parent::removeUrlParameter($url, 'line-id');
             
-            header('Location: ' . $url);
+            parent::web()->redirectTo($url);
             return;
         }
 

@@ -1890,6 +1890,7 @@ class DefaultWeb extends BaseTagLib {
 
         if ($redirect && $href != '#') {
             header("Location: " . $href);
+            echo '<script type="text/javascript">window.location.href = "' . $href . '";</script>';
             echo '<a href="' . $href . '">redirect to ...</a>';
             exit;
         }
