@@ -1173,7 +1173,8 @@ class DefaultWeb extends BaseTagLib {
 		$currentValues = array();
         $props = parent::dao('PageProperty')->getPage($pageId);
         if (count($props) > 0) {
-            $parser = new CustomTagParser();
+            $parser = new FullTagParser();
+            $parser->setUseCaching(false);
             foreach ($props as $prop) {
                 $currentValue = self::getProperty($prop['name']);
                 if (!$currentValue || $forceDefProp) {
