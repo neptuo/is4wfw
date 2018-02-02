@@ -198,11 +198,7 @@
         }
         
         if($counterItem[0]['timestamp'] < $lastTime) {
-          $url = $webObject->composeUrl($pageId);
-          header("Location: ".$url);
-          $a = $webObject->makeAnchor($pageId, "Redirect");
-          echo $a;
-          exit;
+          $webObject->redirectTo($pageId);
         }
       }
     }
@@ -231,11 +227,7 @@
         }
         
         if($counterItem[0]['timestamp'] > $lastTime) {
-          $url = $webObject->composeUrl($pageId);
-          header("Location: ".$url);
-          $a = $webObject->makeAnchor($pageId, "Redirect");
-          echo $a;
-          exit;
+          $webObject->redirectTo($pageId);
         }
       }
     }

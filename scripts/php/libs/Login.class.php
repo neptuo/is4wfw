@@ -181,14 +181,7 @@ class Login extends BaseTagLib {
                         $_SESSION[$group . '_session_id'] = $return[0]['session_id'];
                         $this->LoggedIn = true;
 
-                        $link = $webObject->composeUrl($pageId);
-                        //if(array_key_exists('auto-login-ignore', $_REQUEST)) {
-                        //	$link .= '?auto-login-ignore';
-                        //}
-                        header("Location: " . $link);
-                        $a = $webObject->makeAnchor($pageId, "Redirect");
-                        echo $a;
-                        exit;
+                        $webObject->redirectTo($pageId);
                     } else {
                         $message = "Login process failed! Please, try it again.";
                     }
@@ -217,17 +210,7 @@ class Login extends BaseTagLib {
 
             return $return;
         } else {
-            global $webObject;
-
-            $link = $webObject->composeUrl($pageId);
-            //if(array_key_exists('auto-login-ignore', $_REQUEST)) {
-            //	$link .= '?auto-login-ignore';
-            //}
-            header("Location: " . $link);
-
-            $a = $webObject->makeAnchor($pageId, "Redirect");
-            echo $a;
-            exit;
+            parent::web()->redirectTo($pageId);
         }
     }
 
@@ -262,15 +245,7 @@ class Login extends BaseTagLib {
                 unset($_SESSION[$group . '_session_id']);
                 //session_destroy();
 
-                $link = $webObject->composeUrl($pageId);
-                //if(array_key_exists('auto-login-ignore', $_REQUEST)) {
-                //	$link .= '?auto-login-ignore';
-                //}
-                header("Location: " . $link);
-
-                $a = $webObject->makeAnchor($pageId, "Redirect");
-                echo $a;
-                exit;
+                parent::web()->redirectTo($pageId);
             } else {
                 global $dbObject;
                 $this->Logtime = time();
@@ -287,17 +262,7 @@ class Login extends BaseTagLib {
 
             return $return;
         } else {
-            global $webObject;
-
-            $link = $webObject->composeUrl($pageId);
-            //if(array_key_exists('auto-login-ignore', $_REQUEST)) {
-            //	$link .= '?auto-login-ignore';
-            //}
-            header("Location: " . $link);
-
-            $a = $webObject->makeAnchor($pageId, "Redirect");
-            echo $a;
-            exit;
+            parent::web()->redirectTo($pageId);
         }
     }
 
@@ -326,12 +291,7 @@ class Login extends BaseTagLib {
      */
     public function redirectWhenLogged($pageId) {
         if (self::isLogged()) {
-            global $webObject;
-
-            $link = $webObject->composeUrl($pageId);
-            $link = $link;
-            header("Location: " . $link);
-            exit;
+            parent::web()->redirectTo($pageId);
         }
     }
 
@@ -346,12 +306,7 @@ class Login extends BaseTagLib {
      */
     public function redirectWhenNotLogged($pageId) {
         if (!self::isLogged()) {
-            global $webObject;
-
-            $link = $webObject->composeUrl($pageId);
-            $link = $link;
-            header("Location: " . $link);
-            exit;
+            parent::web()->redirectTo($pageId);
         }
     }
 

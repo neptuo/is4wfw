@@ -554,7 +554,7 @@ class DefaultWeb extends BaseTagLib {
                         $this->ProjectUrl = $this->ServerName . $prj_add_url;
                         break;
                     } elseif ($dbProject[$i][$otherProtocol] == 1) {
-                        header('Location: ' . $otherProtocol . '://' . $domainUrl . '/' . $this->Path);
+                        parent::redirectToUrl($otherProtocol . '://' . $domainUrl . '/' . $this->Path);
                     } else {
                         $ok = false;
                     }
@@ -614,9 +614,7 @@ class DefaultWeb extends BaseTagLib {
                             $this->ProjectUrl = $this->ServerName . $prj_add_url;
                             break;
                         } elseif ($dbProject[$i][$otherProtocol] == 1) {
-                            header('Location: ' . $otherProtocol . '://' . $domainUrl . '/' . $this->Path);
-                            //echo '<a href="'.$otherProtocol.'://'.$domainUrl.'/'.$this->Path.'">Redirect to ...</a>';
-                            //exit;
+                            parent::redirectToUrl($otherProtocol . '://' . $domainUrl . '/' . $this->Path);
                         } else {
                             $ok = false;
                         }
@@ -1817,12 +1815,12 @@ class DefaultWeb extends BaseTagLib {
     public function redirect($path = false) {
         if ($path) {
             // zkontrolovat odkaz, doplnit http ...
-            header("Location: " . $path);
+            parent::redirectToUrl($path);
             exit;
         } else {
             if (array_key_exists("path", $_REQUEST)) {
                 // zkontrolovat odkaz, doplnit http ...
-                header("Location: " . $_REQUEST['path']);
+                parent::redirectToUrl($_REQUEST['path']);
                 exit;
             } else {
                 $error = "Missing argument path for redirect!";
@@ -1840,7 +1838,7 @@ class DefaultWeb extends BaseTagLib {
      * 	@param		pageId		page id to redirect
      * 	@parem		langId		language id of page
      * 	@param		browser		browser name
-     * 	@param		ip				client ip addresses separed by comma
+     * 	@param		ip		    client ip addresses separed by comma
      * 	@return		none
      *
      */
@@ -1890,10 +1888,7 @@ class DefaultWeb extends BaseTagLib {
         }
 
         if ($redirect && $href != '#') {
-            header("Location: " . $href);
-            echo '<script type="text/javascript">window.location.href = "' . $href . '";</script>';
-            echo '<a href="' . $href . '">redirect to ...</a>';
-            exit;
+            parent::redirectToUrl($href);
         }
     }
 
@@ -2023,7 +2018,7 @@ class DefaultWeb extends BaseTagLib {
         }
 
         if ($ok) {
-            header('Location: ' . $href);
+            parent::redirectToUrl($href);
             exit;
         }
     }

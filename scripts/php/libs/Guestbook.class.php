@@ -85,11 +85,7 @@
 				}
         
         if($pageId != "") {
-          $link = $webObject->composeUrl($pageId);
-          
-          header("Location: ".$link);
-          echo '<a href="'.$link.'">Redirect</a>';
-          exit;
+          $webObject->redirectTo($pageId);
         }
       }
       

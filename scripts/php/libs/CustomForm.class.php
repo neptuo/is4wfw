@@ -1114,8 +1114,7 @@ class CustomForm extends BaseTagLib {
                 self::creatorSaveData2();
                 $http = $_SERVER['SERVER_PROTOCOL'];
                 $url = substr($http, 0, stripos($http, '/')) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-                header('Location: ' . $url);
-                exit;
+                base::redirectToUrl($url);
                 return 0;
             } else {
                 return 2;

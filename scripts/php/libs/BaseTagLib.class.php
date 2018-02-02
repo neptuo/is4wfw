@@ -472,6 +472,15 @@ class BaseTagLib {
         $queryIndex = strpos($url, '?');
         return substr($url, 0, $queryIndex);
     }
+
+    public function RedirectToUrl($url) {
+        if ($url != '#') {
+            header("Location: " . $url, true, 302);
+            echo '<script type="text/javascript">window.location.href = "' . $url . '";</script>';
+            echo '<a href="' . $url . '">Redirect to ' . $url . '</a>';
+            exit;
+        }
+    }
 }
 
 ?>
