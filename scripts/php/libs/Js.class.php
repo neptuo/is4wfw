@@ -142,6 +142,25 @@ class Js extends BaseTagLib {
         return $return;
     }
 
+    public function tinyMce($ids) {
+        $return = ''
+        . '<script type="text/javascript" src="~/js/jquery/jquery.js?version='.WEB_VERSION.'"></script>'
+        . '<script type="text/javascript" src="~/tiny-mce/tiny_mce.js?version='.WEB_VERSION.'"></script>'
+        . '<script type="text/javascript" src="~/scripts/js/initTiny.js?version='.WEB_VERSION.'"></script>';
+
+        $ids = parent::php()->str_tr($ids, ',');
+        if (count($ids) > 0) {
+            $return .= '<script type="text/javascript"> $(function() { ';
+
+            foreach ($ids as $id) {
+                $return .= 'initTiny("' . $id . '"); tinyMCE.execCommand("mceAddControl", true, "' . $id . '"); ';
+            }
+
+            $return .= ' });</script>';
+        }
+
+        return $return;
+    }
 }
 
 ?>

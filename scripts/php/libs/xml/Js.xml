@@ -62,5 +62,18 @@
 			!!! Nezpracovává formuláře !!!
     </comment>
   </tag>
+  <tag>
+    <tagname>tinyMce</tagname>
+    <function>tinyMce</function>
+    <attribute>
+      <attname>ids</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <comment>
+      Vloží do stránky skripty pro tiny-mce.
+      Vkládá do stránky i jQuery.
+      Pokud je vyplněný atribut "ids", zaregistruje i inicializační skripty.
+    </comment>
+  </tag>
 </taglib>
 
