@@ -1319,7 +1319,8 @@ class DefaultWeb extends BaseTagLib {
                 $this->PropertyAttr = '';
                 $this->PropertyUse = 'get';
                 $att[1] = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $att[1]);
-                $attributes[$att[0]] = str_replace("\"", "", $att[1]);
+                //$attributes[$att[0]] = str_replace("\"", "", $att[1]);
+                $attributes[$att[0]] = str_replace("\"", "\\\"", substr($att[1], 1, strlen($att[1]) - 2));
             }
         }
 		

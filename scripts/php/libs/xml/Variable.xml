@@ -11,6 +11,7 @@
   <tag>
     <tagname>declare</tagname>
     <function>setValue</function>
+    <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
       <attreq>required</attreq>

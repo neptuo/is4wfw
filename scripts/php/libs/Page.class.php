@@ -3019,6 +3019,44 @@ class Page extends BaseTagLib {
         return $return;
     }
 
+    public function savePage($template, $pageId, $languageId, $params) {
+        $return = "";
+        if (count($params) == 0) {
+            return $return;
+        }
+
+        $db = parent::db();
+        $whereSql = 'where `page_id` = ' . $db->escape($pageId) . ' and `language_id` = ' . $db->escape($languageId) . '';
+        $exists = $db->fetchSingle('select count(*) as `count` from `info` ' . $whereSql . ';');
+        if ($exists['count'] == 0) {
+            return $return;
+        }
+
+        $updateContentSql = '';
+        if (array_key_exists('content', $params)) {
+            if (strlen($updateContentSql) > 0) {
+                $updateContentSql .= ', ';
+            }
+
+            $content = $params['content'];
+            $content = str_replace('&amp;web:page', '&web:page', $content);
+            $content = str_replace('&#126', '~', $content);
+            $content = str_replace('"', '\"', $content);
+
+            $updateContentSql .= '`content` = "' . $content . '"';
+        }
+
+        $sql = 'update `content` set ' . $updateContentSql . ' ' . $whereSql . ';';
+        $db->execute($sql);
+        if ($db->getDataAccess()->getErrorCode() == 0) {
+            $parser = new FullTagParser();
+            $parser->setContent($template);
+            $parser->startParsing();
+            $return = $parser->getResult();
+        }
+
+        return $return;
+    }
 }
 
 ?>

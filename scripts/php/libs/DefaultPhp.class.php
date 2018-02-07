@@ -588,7 +588,7 @@
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
-            $return['content'] = $content;
+            $return['full:content'] = $content;
             
             if (isset($xmlPath)) {
                 if (is_file(SCRIPTS.$xmlPath)) {

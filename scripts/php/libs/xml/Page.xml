@@ -188,5 +188,25 @@
       Zobrazí editaci "WebForward"
     </comment>
   </tag>
+  <fulltag>
+    <tagname>savePage</tagname>
+    <function>savePage</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>languageId</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Uloží parametry do definice stránky.
+      Atribut "pageId" říká, která stránka se má uložit.
+      Atribut "lagnaugeId"  říká, která její jazyková verze se má uložit.
+      Všechny ostatní atributy ("content") jsou použity jako property, které se mají uložit.
+    </comment>
+  </fulltag>
 </taglib>
 
