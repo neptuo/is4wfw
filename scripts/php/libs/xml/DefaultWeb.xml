@@ -485,11 +485,18 @@
       <attreq>required</attreq>
     </attribute>
     <attribute>
+      <attname>is</attname>
+      <attreq>implied</attreq>
+      <attdef>'$default:true'</attdef>
+    </attribute>
+    <attribute>
       <attname>isInverted</attname>
       <attreq>implied</attreq>
+      <attdef>false</attdef>
     </attribute>
     <comment>
       Zobrazí svůj obsah pokud je atribut "condition" hodnoty true (bool nebo string).
+      Atribut "is" nastavuje hodnotu, proti které se má atribut "when" porovnávat.
       Pomocí "isInverted" je možné podmínku otočit.
     </comment>
   </fulltag>

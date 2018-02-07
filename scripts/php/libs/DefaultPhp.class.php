@@ -600,7 +600,10 @@
                             for ($i = 0; $i < count($tag->attribute); $i ++) {
                                 $att = $tag->attribute[$i];
                                 if (array_key_exists((string)$att->attname, $atts)) {
-                                    $return[(string)$att->attname] = $atts[(string)$att->attname];
+                                    $return[(string)$att->attname] = self::getConvertValue($atts[(string)$att->attname], isset($att->attdef));
+                                } elseif (isset($att->attdef)) {
+                                    eval('$val = '. $att->attdef.';');
+                                    $return[(string)$att->attname] = self::getConvertValue($val);
                                 } else {
                                     $return[(string)$att->attname] = false;
                                 }

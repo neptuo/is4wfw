@@ -2360,15 +2360,25 @@ class DefaultWeb extends BaseTagLib {
 		return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['id'];
     }
     
-    public function showWhenConditionIsSatified($content, $when, $isInverted) {
+    public function showWhenConditionIsSatified($content, $when, $is, $isInverted) {
         $return = "";
 
-        $condition = $when === true || $when == "true" || ($when != 'false' && (strlen($when) != 0));
-        if($isInverted == 'true') {
+        if ($is == '$default:true') {
+            $is = true;
+        }
+
+        $condition = false;
+        if ($is === true) {
+            $condition = $when === true || $when == "true" || ($when != 'false' && (strlen($when) != 0));
+        } else {
+            $condition = $when == $is;
+        }
+
+        if ($isInverted == true) {
             $condition = !$condition;
         }
 
-        if($condition) {
+        if ($condition) {
             $parser = new FullTagParser();
             $parser->setContent($content);
             $parser->startParsing();
