@@ -365,24 +365,27 @@ class User extends BaseTagLib {
             $groupsForParent .= '</select>';
 
             $return .= ''
-                    . '<div class="add-new-group">'
-                    . '<form name="add-new-group" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                    . '<div class="gray-box-float">'
-                    . '<label for="new-group-name" class="w300">Group name: (<span class="red">at least 2 characters</span>)</label> '
-                    . '<input type="text" id="new-group-name" name="new-group-name" value="' . $groupName . '" class="w200" />'
+            . '<div class="add-new-group">'
+                . '<form name="add-new-group" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                    . '<div class="gray-box">'
+                        . '<label for="new-group-name" class="w300">Group name: (<span class="red">at least 2 characters</span>)</label> '
+                        . '<input type="text" id="new-group-name" name="new-group-name" value="' . $groupName . '" class="w200" />'
                     . '</div>'
                     . '<div class="clear"></div>'
-                    . '<div class="gray-box-float">'
-                    . '<label for="new-group-parent" class="w300">Select parent group:</label> '
-                    . $groupsForParent
+                    . '<div class="gray-box">'
+                        . '<label for="new-group-parent" class="w300">Select parent group:</label> '
+                        . $groupsForParent
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . 'After creating a role, role cache must be refreshed.'
                     . '</div>'
                     . '<div class="clear"></div>'
                     . '<hr />'
                     . '<div class="gray-box">'
-                    . '<input type="submit" name="new-group-submit" value="Save" />'
+                        . '<input type="submit" name="new-group-submit" value="Save" />'
                     . '</div>'
-                    . '</form>'
-                    . '</div>';
+                . '</form>'
+            . '</div>';
         } else {
             $return .= '<h4 class="error">Permission Denied!</h4>';
         }
@@ -468,22 +471,21 @@ class User extends BaseTagLib {
                 }
 
                 $return .= ''
-                        . '<div class="group-list">'
-                        . '<table class="standart">'
+                . '<div class="group-list">'
+                    . '<table class="standart">'
                         . '<tr>'
-                        . '<th>Gid:</th>'
-                        . '<th>Name:</th>'
-                        . '<th>Parent name:</th>'
-                        . '<th>Action:</th>'
+                            . '<th>Gid:</th>'
+                            . '<th>Name:</th>'
+                            . '<th>Parent name:</th>'
+                            . '<th></th>'
                         . '</tr>'
                         . $groupsList
-                        . '</table>'
-                        . '</form>'
-                        . '</div>'
-						.'<hr />'
-						.'<div class="gray-box">'
-							.parent::system()->manageRoleCache(true)
-						.'</div>';
+                    . '</table>'
+                . '</div>'
+                .'<hr />'
+                .'<div class="gray-box">'
+                    . parent::system()->manageRoleCache(true)
+                .'</div>';
             } else {
                 $return .= '<h4 class="warning">No groups to edit!</h4>';
             }
