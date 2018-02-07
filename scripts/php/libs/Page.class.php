@@ -3052,10 +3052,73 @@ class Page extends BaseTagLib {
             $parser = new FullTagParser();
             $parser->setContent($template);
             $parser->startParsing();
-            $return = $parser->getResult();
+            $return .= $parser->getResult();
         }
 
         return $return;
+    }
+
+    public function getPageList($template, $webProjectId, $pageId = false, $languageId = false) {
+        $return = "";
+
+        $sql = 'select * from `page` p join `info` i on p.`id` = i.`page_id` join `content` c on p.`id` = c.`page_id`';
+        $whereSql = '';
+
+        if (is_numeric($webProjectId)) {
+            if (strlen($whereSql) == 0) {
+                $whereSql .= ' where ';
+            } else {
+                $whereSql .= ' and ';
+            }
+
+            $whereSql .= 'p.`wp` = ' . $webProjectId;
+        }
+
+        if (is_numeric($pageId)) {
+            if (strlen($whereSql) == 0) {
+                $whereSql .= ' where ';
+            } else {
+                $whereSql .= ' and ';
+            }
+
+            $whereSql .= 'p.`id` = ' . $pageId;
+        }
+
+        if (is_numeric($languageId)) {
+            if (strlen($whereSql) == 0) {
+                $whereSql .= ' where ';
+            } else {
+                $whereSql .= ' and ';
+            }
+
+            $whereSql .= 'i.`language_id` = ' . $languageId;
+        }
+
+        $parser = new FullTagParser();
+        $parser->setContent($template);
+
+        $sql .= $whereSql . ';';
+        $data = parent::db()->fetchAll($sql);
+        $oldItem = parent::request()->get('item', 'p:pageList');
+
+        foreach ($data as $item) {
+            parent::request()->set('item', $item, 'p:pageList');
+            
+            $parser->startParsing();
+            $return .= $parser->getResult();
+        }
+
+        parent::request()->set('item', $oldItem, 'p:pageList');
+        return $return;
+    }
+
+    public function getPageValue($type) {
+        $item = parent::request()->get('item', 'p:pageList');
+        if (is_array($item) && array_key_exists($type, $item)) {
+            return htmlentities($item[$type]);
+        }
+
+        return null;
     }
 }
 

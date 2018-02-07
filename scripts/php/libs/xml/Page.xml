@@ -208,5 +208,37 @@
       Všechny ostatní atributy ("content") jsou použity jako property, které se mají uložit.
     </comment>
   </fulltag>
+  <fulltag>
+    <tagname>pageList</tagname>
+    <function>getPageList</function>
+    <attribute>
+      <attname>webProjectId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>languageId</attname>
+      <attreq>implied</attreq>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vrácí seznam stránek.
+      Uvnitř těla, které je šablonou pro jednu stránku, je možné používat "p:page".
+      Atribut "pageId" říká, která stránka se má uložit.
+      Atribut "lagnaugeId"  říká, která její jazyková verze se má uložit.
+      Všechny ostatní atributy ("content") jsou použity jako property, které se mají uložit.
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>page</tagname>
+    <function>getPageValue</function>
+    <attribute>
+      <attname>type</attname>
+      <attreq>required</attreq>
+    </attribute>
+  </tag>
 </taglib>
 
