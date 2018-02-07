@@ -89,6 +89,8 @@ class CustomTagParser {
      *
      */
     protected function parsectag($ctag) {
+        global $phpObject;
+
         $object = explode(":", $ctag[1]);
         $attributes = array();
         $this->Attributes = array();
@@ -115,7 +117,8 @@ class CustomTagParser {
                 $this->PropertyAttr = '';
                 $this->PropertyUse = 'get';
                 $att[1] = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $att[1]);
-                $attributes[$att[0]] = str_replace("\"", "", $att[1]);
+                //$attributes[$att[0]] = str_replace("\"", "", $att[1]);
+                $attributes[$att[0]] = str_replace("\"", "\\\"", substr($att[1], 1, strlen($att[1]) - 2));
             }
         }
 
@@ -143,7 +146,6 @@ class CustomTagParser {
             }
         }
 
-        global $phpObject;
         if ($phpObject->isRegistered($object[0]) && $phpObject->isTag($object[0], $object[1], $attributes)) {
             $attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
 

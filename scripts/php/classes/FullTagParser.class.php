@@ -20,6 +20,8 @@ class FullTagParser extends CustomTagParser {
      *
      */
     private function parsefulltag($ctag) {
+        global $phpObject;
+
         //print_r($ctag);
         $object = explode(":", $ctag[1]);
         $attributes = array();
@@ -33,7 +35,8 @@ class FullTagParser extends CustomTagParser {
                 $this->PropertyAttr = '';
                 $this->PropertyUse = 'get';
                 $att[1] = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $att[1]);
-                $attributes[$att[0]] = str_replace("\"", "", $att[1]);
+                //$attributes[$att[0]] = str_replace("\"", "", $att[1]);
+                $attributes[$att[0]] = str_replace("\"", "\\\"", substr($att[1], 1, strlen($att[1]) - 2));
             }
         }
 
@@ -61,10 +64,9 @@ class FullTagParser extends CustomTagParser {
             }
         }
 
-        global $phpObject;
         if ($phpObject->isRegistered($object[0]) && $phpObject->isFullTag($object[0], $object[1], $attributes)) {
             $attributes = $phpObject->sortFullAttributes($object[0], $object[1], $attributes, $ctag[5]);
-
+            
             global ${$object[0] . "Object"};
             $func = $phpObject->getFuncToFullTag($object[0], $object[1]);
             if ($func && ($attributes !== false)) {
@@ -82,7 +84,7 @@ class FullTagParser extends CustomTagParser {
                     }
                     $i++;
                 }
-                
+
                 //echo '$return =  $'.$object[0].'Object->'.$func.'('.$attstring.');';
                 eval('$return =  ${$object[0]."Object"}->{$func}(' . $attstring . ');');
                 return $return;
