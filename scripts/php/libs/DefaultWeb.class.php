@@ -1759,6 +1759,10 @@ class DefaultWeb extends BaseTagLib {
         }
     }
 
+    public static $TemplateRightDesc = array(
+		'template_right', 'tid', 'gid', 'type'
+	);
+
     /**
      *
      *  Include content of template.
@@ -1790,14 +1794,16 @@ class DefaultWeb extends BaseTagLib {
         }
 
         if (($whenLogged == true && $loginObject->isLogged() == true) || ($whenNotLogged == true && $loginObject->isLogged() == false) || ($whenLogged == false && $whenNotLogged == false && $browser == false) || $incForBrowser) {
-            $template = $dbObject->fetchAll('SELECT `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = ' . $templateId . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '));');
-            if (count($template) == 1) {
-                require_once("scripts/php/classes/FullTagParser.class.php");
-                $Parser = new FullTagParser();
-                $Parser->setContent($template[0]['content']);
-                $Parser->startParsing();
-                $return = $Parser->getResult();
-                return $return;
+            if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(DefaultWeb::$TemplateRightDesc, $templateId, WEB_R_READ))) {
+                $template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = ' . $dbObject->escape($templateId) . ';');
+                if (count($template) == 1) {
+                    require_once("scripts/php/classes/FullTagParser.class.php");
+                    $Parser = new FullTagParser();
+                    $Parser->setContent($template[0]['content']);
+                    $Parser->startParsing();
+                    $return = $Parser->getResult();
+                    return $return;
+                }
             } else {
                 trigger_error('Permission denied when reading template id = ' . $templateId . '!', E_USER_WARNING);
             }
