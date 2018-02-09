@@ -69,10 +69,15 @@
       <attname>ids</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>language</attname>
+      <attreq>implied</attreq>
+    </attribute>
     <comment>
       Vloží do stránky skripty pro tiny-mce.
       Vkládá do stránky i jQuery.
       Pokud je vyplněný atribut "ids", zaregistruje i inicializační skripty.
+      Atribut "language" umožňuje nastavit jazyk pro editor, podporované hodnoty jsou "en" a "cs".
     </comment>
   </tag>
 </taglib>
