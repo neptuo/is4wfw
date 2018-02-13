@@ -66,19 +66,31 @@
         if (is_file($xmlPath)) {
             $xml = new SimpleXMLElement(file_get_contents($xmlPath));
             
-            $links = '<div class="gray-box"><div>'.$rb->get('lib.tags').':';
-            foreach($xml->tag as $tag) {
-                $links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+            if (count($xml->tag) > 0) {
+                $links = '<div class="gray-box"><div>'.$rb->get('lib.tags').':';
+                foreach($xml->tag as $tag) {
+                    $links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+                }
+                $links .= '</div>';
             }
-            $links .= '</div><div>'.$rb->get('lib.fulltags').':';
-            foreach($xml->fulltag as $tag) {
-                $links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+            
+            if (count($xml->fulltag) > 0) {
+                $links .= '<div>'.$rb->get('lib.fulltags').':';
+                foreach($xml->fulltag as $tag) {
+                    $links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+                }
+                $links .= '</div>';
             }
-            $links .= '</div><div>'.$rb->get('lib.properties').':';
-            foreach($xml->property as $prop) {
-                $links .= '<a href="#'.$prop->propname.'">'.$prop->propname.'</a> ';
+
+            if (count($xml->property) > 0) {
+                $links .= '<div>'.$rb->get('lib.properties').':';
+                foreach($xml->property as $prop) {
+                    $links .= '<a href="#'.$prop->propname.'">'.$prop->propname.'</a> ';
+                }
+                $links .= '</div>';
             }
-            $links .= '</div></div>';
+
+            $links .= '</div>';
         
             $return .= ''
             .'<div class="hint-lib">'
@@ -87,102 +99,113 @@
                     .'<strong class="version">'.$rb->get('lib.version').': '.$xml->version.', '.$rb->get('lib.count-of-instances').': '.$xml->count.'</strong>'
                 .'</div>'
                 .'<div class="clear"></div>'
-                .$links
+                .$links;
+
+            if (count($xml->tag) > 0) {
+                $return .= ''
                 .'<div class="tag-h2">'
                     .'<h2>'.$rb->get('lib.tags').':</h2>'
                 .'</div>';
             
-            foreach ($xml->tag as $tag) {
-                $attributes = '';
-                for($i = 0; $i < count($tag->attribute); $i ++) {
-                    $attributes .= ''
-                    .'<tr>'
-                        .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
-                        .'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
-                    .'</tr>';
-                }
-                
-                if (isset($tag->anyAttribute)) {
-                    $attributes .= ''
-                    .'<tr>'
-                        .'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
-                    .'</tr>';
-                }
-                
-                $return .= ''
-                .'<div class="lib-tag">'
-                    .'<div class="lib-tag-head">'
-                        .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3><p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
-                        .'<div class="clear"></div>'
-                    .'</div>'
-                    .'<div class="lib-tag-attrs">'
-                        .((strlen($attributes) > 0) ? ''
-                            .'<table>'
-                                .'<tr>'
-                                    .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
-                                .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
-                                .'</tr>'
-                                .$attributes
-                            .'</table>'
-                        : '<p>'.$rb->get('lib.noattrs').'</p>')
-                    .'</div>'
-                .'</div>';
-            }
-            $return .= ''    
-					.'<div class="tag-h2">'
-				.'<h2>'.$rb->get('lib.fulltags').':</h2>'
-			.'</div>';
+                foreach ($xml->tag as $tag) {
+                    $attributes = '';
+                    for($i = 0; $i < count($tag->attribute); $i ++) {
+                        $attributes .= ''
+                        .'<tr>'
+                            .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
+                            .'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
+                        .'</tr>';
+                    }
                     
-            foreach ($xml->fulltag as $tag) {
-                $attributes = '';
-                for($i = 0; $i < count($tag->attribute); $i ++) {
-                    $attributes .= ''
-                    .'<tr>'
-                        .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
-                        .'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
-                    .'</tr>';
+                    if (isset($tag->anyAttribute)) {
+                        $attributes .= ''
+                        .'<tr>'
+                            .'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
+                        .'</tr>';
+                    }
+                    
+                    $return .= ''
+                    .'<div class="lib-tag">'
+                        .'<div class="lib-tag-head">'
+                            .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3><p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                            .'<div class="clear"></div>'
+                        .'</div>'
+                        .'<div class="lib-tag-attrs">'
+                            .((strlen($attributes) > 0) ? ''
+                                .'<table>'
+                                    .'<tr>'
+                                        .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
+                                    .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+                                    .'</tr>'
+                                    .$attributes
+                                .'</table>'
+                            : '<p>'.$rb->get('lib.noattrs').'</p>')
+                        .'</div>'
+                    .'</div>';
                 }
+            }
 
-                if(isset($tag->anyAttribute)) {
-                    $attributes .= ''
-                    .'<tr>'
-                        .'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
-                    .'</tr>';
-                }
-                
-                $return .= ''
-                .'<div class="lib-tag">'
-                    .'<div class="lib-tag-head">'
-                        .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3><p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
-                        .'<div class="clear"></div>'
-                    .'</div>'
-                    .'<div class="lib-tag-attrs">'
-                        .((strlen($attributes) > 0) ? ''
-                            .'<table>'
-                                .'<tr>'
-                                    .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
-                                .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
-                                .'</tr>'
-                                .$attributes
-                            .'</table>'
-                        : '<p>'.$rb->get('lib.noattrs').'</p>')
-                    .'</div>'
+            if (count($xml->fulltag) > 0) {
+                $return .= ''    
+                .'<div class="tag-h2">'
+                    .'<h2>'.$rb->get('lib.fulltags').':</h2>'
                 .'</div>';
+                        
+                foreach ($xml->fulltag as $tag) {
+                    $attributes = '';
+                    for($i = 0; $i < count($tag->attribute); $i ++) {
+                        $attributes .= ''
+                        .'<tr>'
+                            .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
+                            .'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
+                        .'</tr>';
+                    }
+
+                    if(isset($tag->anyAttribute)) {
+                        $attributes .= ''
+                        .'<tr>'
+                            .'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
+                        .'</tr>';
+                    }
+                    
+                    $return .= ''
+                    .'<div class="lib-tag">'
+                        .'<div class="lib-tag-head">'
+                            .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3><p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                            .'<div class="clear"></div>'
+                        .'</div>'
+                        .'<div class="lib-tag-attrs">'
+                            .((strlen($attributes) > 0) ? ''
+                                .'<table>'
+                                    .'<tr>'
+                                        .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
+                                    .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+                                    .'</tr>'
+                                    .$attributes
+                                .'</table>'
+                            : '<p>'.$rb->get('lib.noattrs').'</p>')
+                        .'</div>'
+                    .'</div>';
+                }
             }
-            $return .= ''    
-					.'<div class="tag-h2">'
-				.'<h2>'.$rb->get('lib.properties').':</h2>'
-			.'</div>';
+
+            if (count($xml->property) > 0) {
+                $return .= ''    
+                .'<div class="tag-h2">'
+                    .'<h2>'.$rb->get('lib.properties').':</h2>'
+                .'</div>';
             
-            foreach($xml->property as $prop) {
-                $return .= ''
-                .'<div class="lib-tag">'
-                    .'<div class="lib-tag-head">'
-                        .'<h3 id="'.$prop->propname.'">'.$prop->propname.'</h3><p>' . str_replace(PHP_EOL, '<br />', trim($prop->comment)) . '</p>'
-                        .'<div class="clear"></div>'
-                    .'</div>'
-              .'</div>';
+                foreach($xml->property as $prop) {
+                    $return .= ''
+                    .'<div class="lib-tag">'
+                        .'<div class="lib-tag-head">'
+                            .'<h3 id="'.$prop->propname.'">'.$prop->propname.'</h3><p>' . str_replace(PHP_EOL, '<br />', trim($prop->comment)) . '</p>'
+                            .'<div class="clear"></div>'
+                        .'</div>'
+                .'</div>';
+                }
             }
+
             $return .= '</div>';
             
         } else {
@@ -192,7 +215,6 @@
             }
         }
             
-    
 		if ($useFrames == "false") {
 			return $return;
 		} else {
