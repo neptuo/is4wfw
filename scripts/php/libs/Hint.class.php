@@ -114,6 +114,7 @@
                         .'<tr>'
                             .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
                             .'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
+                            .'<td class="att-req">'.$tag->attribute[$i]->attcomment.'</td>'
                         .'</tr>';
                     }
                     
@@ -137,7 +138,8 @@
                                 .'<table>'
                                     .'<tr>'
                                         .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
-                                    .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+                                        .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+                                        .'<th class="att-req">'.$rb->get('lib.attcomment').'</th>'
                                     .'</tr>'
                                     .$attributes
                                 .'</table>'
@@ -160,6 +162,7 @@
                         .'<tr>'
                             .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
                             .'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
+                            .'<td class="att-req">'.$tag->attribute[$i]->attcomment.'</td>'
                         .'</tr>';
                     }
 
@@ -184,6 +187,7 @@
                                     .'<tr>'
                                         .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
                                         .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+                                        .'<th class="att-req">'.$rb->get('lib.attcomment').'</th>'
                                     .'</tr>'
                                     .$attributes
                                 .'</table>'
@@ -193,7 +197,7 @@
                 }
             }
 
-            if (count($xml->property) > 0) {
+            if (count($xml->property) > 0 || isset($xml->anyProperty)) {
                 $return .= ''    
                 .'<div class="tag-h2">'
                     .'<h2>'.$rb->get('lib.properties').':</h2>'
@@ -203,10 +207,18 @@
                     $return .= ''
                     .'<div class="lib-tag">'
                         .'<div class="lib-tag-head">'
-                            .'<h3 id="'.$prop->propname.'">'.$prop->propname.'</h3><p>' . str_replace(PHP_EOL, '<br />', trim($prop->comment)) . '</p>'
+                            .'<h3 id="'.$prop->propname.'">'.$prop->propname.'</h3>'
+                            .'<p>' . str_replace(PHP_EOL, '<br />', trim($prop->comment)) . '</p>'
                             .'<div class="clear"></div>'
                         .'</div>'
-                .'</div>';
+                    .'</div>';
+                }
+
+                if (isset($xml->anyProperty)) {
+                    $return .= ''
+                    . '<div class="lib-tag">'
+                        . '<h3>' . $rb->get('lib.anyproperties') . '</h3>'
+                    . '</div>';
                 }
             }
 

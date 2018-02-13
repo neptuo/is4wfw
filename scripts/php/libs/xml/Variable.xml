@@ -15,19 +15,20 @@
     <attribute>
       <attname>name</attname>
       <attreq>required</attreq>
+      <attcomment>Název proměnné, která se má nastavit.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
       <attreq>required</attreq>
+      <attcomment>Nová hodnota proměnné.</attcomment>
     </attribute>
     <attribute>
       <attname>scope</attname>
       <attreq>required</attreq>
+      <attcomment>Může nabývat hodnot 'request', 'session' a 'application'.</attcomment>
     </attribute>
     <comment>
       Nastaví hodnotu proměnné s názvem 'name'.
-      Atribut 'value' nese hodnotu proměnné.
-      Atribut 'scope' může nabývat hodnot 'request', 'session' a 'application'.
     </comment>
   </tag>
   <anyProperty />
