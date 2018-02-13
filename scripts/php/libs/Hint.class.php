@@ -277,6 +277,7 @@
 					.'<option value="php.libs.System"'.($_SESSION['select-class-path'] == 'php.libs.System' ? 'selected="selected"' : '').'>php.libs.System</option>'
 					.'<option value="php.libs.Template"'.($_SESSION['select-class-path'] == 'php.libs.Template' ? 'selected="selected"' : '').'>php.libs.Template</option>'
 					.'<option value="php.libs.User"'.($_SESSION['select-class-path'] == 'php.libs.User' ? 'selected="selected"' : '').'>php.libs.User</option>'
+					.'<option value="php.libs.Variable"'.($_SESSION['select-class-path'] == 'php.libs.Variable' ? 'selected="selected"' : '').'>php.libs.Variable</option>'
 					.'<option value="php.libs.View"'.($_SESSION['select-class-path'] == 'php.libs.View' ? 'selected="selected"' : '').'>php.libs.View</option>'
 					.'<option value="php.libs.WebProject"'.($_SESSION['select-class-path'] == 'php.libs.WebProject' ? 'selected="selected"' : '').'>php.libs.WebProject</option>'
 				.'</select> '
