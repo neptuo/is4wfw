@@ -155,8 +155,8 @@ class Js extends BaseTagLib {
         $namesAsArray = $phpObject->str_tr($names, ',');
         foreach ($namesAsArray as $name) {
             $path = $type == "js" ? "js/" . trim($name) . ".js" : "css/" . trim($name) . ".css";
-            if (file_exists()) {
-                $path = "scripts/" . $path;
+            $path = "scripts/" . $path;
+            if (file_exists($path)) {
                 $virtualPath = '~/' . $path;
                 if ($as == 'inline') {
                     $return .= ($type == "js") ? '<script type="text/javascript">' . "\n" . file_get_contents($path) . "\n" . '</script>' : '<style type="text/css">' . "\n" . file_get_contents($path) . "\n" . '</style>';
