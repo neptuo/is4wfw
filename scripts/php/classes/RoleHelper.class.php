@@ -245,6 +245,18 @@ class RoleHelper {
 	private static function getCurrentEditUserSql($roles) {
 		return 'select min(`value`) as `value` from `group` where `gid` in ('.implode(',', $roles).');';
 	}
+
+	public static function existsSql($tableDesc, $joinExpression, $type) {
+		return self::existsSql2($tableDesc[0], $tableDesc[1], $tableDesc[2], $tableDesc[3], $joinExpression, $type);
+	}
+
+	public static function existsSql2($table, $objectColumn, $groupColumn, $typeColumn, $joinExpression, $type) {
+		if (RoleHelper::$instance == null) {
+			RoleHelper::$instance = new RoleCacheHelper();
+		}
+		
+		return 'exists(select * from `' . $table . '` r where r.`' . $objectColumn . '` = ' . $joinExpression . ' and r.`' . $typeColumn . '` = ' . $type . ' and r.`' . $groupColumn . '` in (' . RoleHelper::$instance->login()->getGroupsIdsAsString() . '))';
+	}
 	
 	/* ================== HTML ======================================================== */
 	

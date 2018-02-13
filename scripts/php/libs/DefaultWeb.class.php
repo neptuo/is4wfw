@@ -1761,7 +1761,7 @@ class DefaultWeb extends BaseTagLib {
 
     public static $TemplateRightDesc = array(
 		'template_right', 'tid', 'gid', 'type'
-	);
+    );
 
     /**
      *

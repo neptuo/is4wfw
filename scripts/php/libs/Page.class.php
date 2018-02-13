@@ -3032,6 +3032,10 @@ class Page extends BaseTagLib {
             return $return;
         }
 
+        if (!RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(Page::$PageRightDesc, $pageId, WEB_R_WRITE))) {
+            return $return;
+        }
+
         $updateContentSql = '';
         if (array_key_exists('content', $params)) {
             if (strlen($updateContentSql) > 0) {
@@ -3062,7 +3066,7 @@ class Page extends BaseTagLib {
         $return = "";
 
         $sql = 'select * from `page` p join `info` i on p.`id` = i.`page_id` join `content` c on p.`id` = c.`page_id`';
-        $whereSql = '';
+        $whereSql = ' where ' . RoleHelper::existsSql(Page::$PageRightDesc, 'p.`id`', WEB_R_READ);
 
         if (is_numeric($webProjectId)) {
             if (strlen($whereSql) == 0) {
