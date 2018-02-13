@@ -127,7 +127,9 @@
                     $return .= ''
                     .'<div class="lib-tag">'
                         .'<div class="lib-tag-head">'
-                            .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3><p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                            .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3>'
+                            .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                            . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                             .'<div class="clear"></div>'
                         .'</div>'
                         .'<div class="lib-tag-attrs">'
@@ -171,7 +173,9 @@
                     $return .= ''
                     .'<div class="lib-tag">'
                         .'<div class="lib-tag-head">'
-                            .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3><p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                            .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3>'
+                            .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                            . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                             .'<div class="clear"></div>'
                         .'</div>'
                         .'<div class="lib-tag-attrs">'
@@ -179,7 +183,7 @@
                                 .'<table>'
                                     .'<tr>'
                                         .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
-                                    .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+                                        .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
                                     .'</tr>'
                                     .$attributes
                                 .'</table>'
