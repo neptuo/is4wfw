@@ -486,18 +486,8 @@
                 return false;
             }
         }
-        
-        /**
-         *
-         *    Sort attributes to right sequence.
-         *    
-         *    @param    tagPrefix library object name
-         *    @param    tagName name of required tag
-         *    @param    atts    passed tag attributes
-         *    @return sorted attributes
-         *
-         */                                                
-        public function sortAttributes($tagPrefix, $tagName, $atts) {
+
+        private function sortAttributesInternal($tagListName, $tagPrefix, $tagName, $atts) {
             $return = array();
             if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
@@ -510,11 +500,8 @@
             if (isset($xmlPath)) {
                 if (is_file(SCRIPTS.$xmlPath)) {
                     $xml = self::getXml(SCRIPTS . $xmlPath);
-                    
-                    foreach ($xml->tag as $tag) {
+                    foreach ($xml->{$tagListName} as $tag) {
                         if ($tag->tagname == $tagName) {
-                            //print_r($tag->attribute);
-                            $isFound = false;
                             for ($i = 0; $i < count($tag->attribute); $i ++) {
                                 $att = $tag->attribute[$i];
                                 if (array_key_exists((string)$att->attname, $atts)) {
@@ -541,6 +528,7 @@
                         }
                     }
 
+                    parent::logVar($return);
                     return $return;
                 } else {
                     $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
@@ -552,6 +540,20 @@
             } else {
                 return false;
             }
+        }
+        
+        /**
+         *
+         *    Sort attributes to right sequence.
+         *    
+         *    @param    tagPrefix library object name
+         *    @param    tagName name of required tag
+         *    @param    atts    passed tag attributes
+         *    @return sorted attributes
+         *
+         */                                                
+        public function sortAttributes($tagPrefix, $tagName, $atts) {
+            return self::sortAttributesInternal("tag", $tagPrefix, $tagName, $atts);
         }
         
         protected function getConvertValue($val, $convert) {
@@ -579,60 +581,8 @@
          *
          */                                                
         public function sortFullAttributes($tagPrefix, $tagName, $atts, $content) {
-            $return = array();
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            $return['full:content'] = $content;
-            
-            if (isset($xmlPath)) {
-                if (is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS . $xmlPath);
-                    
-                    foreach ($xml->fulltag as $tag) {
-                        if ($tag->tagname == $tagName) {
-                            //print_r($tag->attribute);
-                            for ($i = 0; $i < count($tag->attribute); $i ++) {
-                                $att = $tag->attribute[$i];
-                                if (array_key_exists((string)$att->attname, $atts)) {
-                                    $return[(string)$att->attname] = self::getConvertValue($atts[(string)$att->attname], isset($att->attdef));
-                                } elseif (isset($att->attdef)) {
-                                    eval('$val = '. $att->attdef.';');
-                                    $return[(string)$att->attname] = self::getConvertValue($val);
-                                } else {
-                                    $return[(string)$att->attname] = false;
-                                }
-                            }
-                    
-                            if (isset($tag->anyAttribute)) {
-                                $params = array();
-                                foreach ($atts as $usedName => $usedValue) {
-                                    if (!array_key_exists($usedName, $return)) {
-                                        $params[$usedName] = $usedValue;
-                                    }
-                                }
-        
-                                $return[DefaultPhp::$ParamsName] = $params;
-                            }
-                        }
-                    }
-                    
-                    return $return;
-                } else {
-                    $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
-                }
-                
-            } else {
-                return false;
-            }
+            $return = array_merge(array('full:content' => $content), self::sortAttributesInternal("fulltag", $tagPrefix, $tagName, $atts));
+            return $return;
         }
         
         /**
