@@ -161,7 +161,7 @@ class Js extends BaseTagLib {
                 if ($as == 'inline') {
                     $return .= ($type == "js") ? '<script type="text/javascript">' . "\n" . file_get_contents($path) . "\n" . '</script>' : '<style type="text/css">' . "\n" . file_get_contents($path) . "\n" . '</style>';
                 } else {
-                    $return .= ($type == "js") ? self::formatScript($path) : self::formatStyle($path);
+                    $return .= ($type == "js") ? self::formatScript($virtualPath) : self::formatStyle($virtualPath);
                 }
             }
         }
