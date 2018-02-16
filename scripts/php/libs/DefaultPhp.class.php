@@ -103,50 +103,50 @@
          *
          */                                                
         public function register($tagPrefix, $classPath) {
-                $classJPath = $classPath;
-                //echo $tagPrefix.', '.$classPath.'<br />';
-                //$tagPrefix = $attlist['tagPrefix'];
-                //$classPath = $attlist['classPath'];
+            $classJPath = $classPath;
+            //echo $tagPrefix.', '.$classPath.'<br />';
+            //$tagPrefix = $attlist['tagPrefix'];
+            //$classPath = $attlist['classPath'];
 
-                // KONTROLOVAT POCET INSTANCI PODLE <count> V XML!!!
-                if (!array_key_exists($tagPrefix, $this->_REGISTERED) && !array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                        if (self::checkIfClassExists($tagPrefix, $classPath)) {
-                                $classArray = self::str_tr($classPath, '.');
-                                $classDir = "";
-                                for ($i = 0; $i < count($classArray) - 1; $i ++) {
-                                        $classDir .= $classArray[$i];
-                                        if($i < (count($classArray) - 2)) {
-                                                $classDir .= ".";
-                                        }
-                                }
-                                $className = $classArray[count($classArray) - 1];
-                                $classPath = self::parseClassPath($classPath);
-                                require_once(SCRIPTS.$classPath.".class.php");
-                                
-                                if (self::isCountOfInstances($className, $classDir)) {
-                                        $GLOBALS[$tagPrefix."Object"] = new $className;
-                                        if(array_key_exists($classJPath, $this->_CLASSES)) {
-                                                $this->_CLASSES[$classJPath] ++;
-                                        } else {
-                                                $this->_CLASSES[$classJPath] = 1;
-                                        }
-                                        $this->_REGISTERED[$tagPrefix] = $classDir;
-                                } else {
-                                        $str = "Too much instances of tag lib! [".$classJPath."]";
-                                        trigger_error($str , E_USER_WARNING);
-                                        echo "<h4 class=\"error\">".$str."</h4>";
-                                }
-                        } else {
-                                $str = "This class doesn't existecho '-'.$return.'-';! [".$classJPath."]";
-                                trigger_error($str , E_USER_WARNING);
-                                echo "<h4 class=\"error\">".$str."</h4>";
+            // KONTROLOVAT POCET INSTANCI PODLE <count> V XML!!!
+            if (!array_key_exists($tagPrefix, $this->_REGISTERED) && !array_key_exists($tagPrefix, $this->_DEFAULT)) {
+                if (self::checkIfClassExists($tagPrefix, $classPath)) {
+                    $classArray = self::str_tr($classPath, '.');
+                    $classDir = "";
+                    for ($i = 0; $i < count($classArray) - 1; $i ++) {
+                        $classDir .= $classArray[$i];
+                        if($i < (count($classArray) - 2)) {
+                            $classDir .= ".";
                         }
-                } else {
-                        $str = "This tag prefix also used! [".$tagPrefix."]";
+                    }
+                    $className = $classArray[count($classArray) - 1];
+                    $classPath = self::parseClassPath($classPath);
+                    require_once(SCRIPTS.$classPath.".class.php");
+                    
+                    if (self::isCountOfInstances($className, $classDir)) {
+                        $GLOBALS[$tagPrefix."Object"] = new $className;
+                        if(array_key_exists($classJPath, $this->_CLASSES)) {
+                            $this->_CLASSES[$classJPath] ++;
+                        } else {
+                            $this->_CLASSES[$classJPath] = 1;
+                        }
+                        $this->_REGISTERED[$tagPrefix] = $classDir;
+                    } else {
+                        $str = "Too much instances of tag lib! [".$classJPath."]";
                         trigger_error($str , E_USER_WARNING);
                         echo "<h4 class=\"error\">".$str."</h4>";
+                    }
+                } else {
+                    $str = "This class doesn't existecho '-'.$return.'-';! [".$classJPath."]";
+                    trigger_error($str , E_USER_WARNING);
+                    echo "<h4 class=\"error\">".$str."</h4>";
                 }
-                return "";
+            } else {
+                $str = "This tag prefix also used! [".$tagPrefix."]";
+                trigger_error($str , E_USER_WARNING);
+                echo "<h4 class=\"error\">".$str."</h4>";
+            }
+            return "";
         }
     
         /**
