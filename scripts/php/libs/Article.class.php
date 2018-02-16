@@ -1532,6 +1532,8 @@ class Article extends BaseTagLib {
 
         if ($submitPageId != false) {
             $actionUrl = $webObject->composeUrl($submitPageId);
+            $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['article_id']);
+            $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $article['language_id']);
         }
 
         $labelList = '';
