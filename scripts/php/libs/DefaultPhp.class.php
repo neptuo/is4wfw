@@ -528,7 +528,6 @@
                         }
                     }
 
-                    parent::logVar($return);
                     return $return;
                 } else {
                     $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
