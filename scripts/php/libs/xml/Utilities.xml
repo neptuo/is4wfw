@@ -8,5 +8,45 @@
   <comment>
     Knihovna obshaující různé pomocné metody.
   </comment>
+  <tag>
+    <tagname>concat</tagname>
+    <function>concatValues</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>output</attname>
+      <attreq>required</attreq>
+      <attcomment>Název property z této knihovny, do níž bude uložen výstup.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value1</attname>
+      <attreq>required</attreq>
+      <attcomment>První hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value2</attname>
+      <attreq>required</attreq>
+      <attcomment>Druhá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value3</attname>
+      <attreq>implied</attreq>
+      <attcomment>Třetí hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value4</attname>
+      <attreq>implied</attreq>
+      <attcomment>Čtvrtá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value5</attname>
+      <attreq>implied</attreq>
+      <attcomment>Pátá hodnota.</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Spojí hodnoty všech atributů 'value1-5' do jednoho řetězce a tuto hodnotu nastaví do proměnné 'output' v této knihovně.
+    </comment>
+  </tag>
+  <anyProperty />
 </taglib>
 

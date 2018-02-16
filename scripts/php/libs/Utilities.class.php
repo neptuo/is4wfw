@@ -10,7 +10,7 @@ require_once("scripts/php/classes/LocalizationBundle.class.php");
 
 /**
  * 
- *  Class Variable. 
+ *  Class Utilities. 
  *      
  *  @author     maraf
  *  @timestamp  2018-02-16
@@ -18,8 +18,19 @@ require_once("scripts/php/classes/LocalizationBundle.class.php");
  */
 class Utilities extends BaseTagLib {
 
+    private $OutputValues = array();
+
     public function __construct() {
         parent::setTagLibXml("xml/Utilities.xml");
+    }
+
+    public function concatValues($output, $value1, $value2, $value3 = false, $value4 = false, $value5 = false) {
+        $this->OutputValues[$output] = $value1 . $value2 . $value3 . $value4 . $value5;
+        return "";
+    }
+
+    public function getProperty($name) {
+        return $this->OutputValues[$name];
     }
 }
 
