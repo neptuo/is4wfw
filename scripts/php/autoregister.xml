@@ -16,4 +16,5 @@
 	<reg prefix="js" class="php.libs.Js" />
 	<reg prefix="var" class="php.libs.Variable" />
 	<reg prefix="template" class="php.libs.Template" />
+	<reg prefix="utils" class="php.libs.Utilities" />
 </autoregister>
