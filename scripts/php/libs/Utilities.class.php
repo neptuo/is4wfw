@@ -6,7 +6,6 @@
  *
  */
 require_once("BaseTagLib.class.php");
-require_once("scripts/php/classes/LocalizationBundle.class.php");
 
 /**
  * 
