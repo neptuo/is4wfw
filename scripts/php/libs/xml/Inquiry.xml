@@ -56,6 +56,7 @@
   <tag>
     <tagname>setCurrentId</tagname>
     <function>setCurrentId</function>
+    <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
     <attribute>
       <attname>label</attname>
       <attreq>implied</attreq>
@@ -89,6 +90,7 @@
   	<propname>currentId</propname>
   	<setfunction>setCurrentInquiryId</setfunction>
   	<getfunction>getCurrentInquiryId</getfunction>
+    <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
     <comment>
       Vratí hodnotu vybrané ankety
     </comment>
@@ -97,6 +99,7 @@
   	<propname>currentId2</propname>
   	<setfunction>setCurrentInquiryId2</setfunction>
   	<getfunction>getCurrentInquiryId2</getfunction>
+    <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
     <comment>
       Vratí hodnotu vybrané ankety 2
     </comment>

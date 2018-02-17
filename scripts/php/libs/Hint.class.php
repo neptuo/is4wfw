@@ -95,7 +95,7 @@
                 $links .= '<div>'.$rb->get('lib.properties').':';
                 foreach($xml->property as $prop) {
                     $obsolete = null;
-                    if (isset($tag->obsolete)) {
+                    if (isset($prop->obsolete)) {
                         $obsolete = (string)$prop->obsolete;
                     }
                     $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#property-'.$prop->propname.'">'.$prop->propname.'</a> ';
@@ -230,8 +230,8 @@
             
                 foreach($xml->property as $prop) {
                     $obsolete = null;
-                    if (isset($tag->obsolete)) {
-                        $obsolete = (string)$tag->obsolete;
+                    if (isset($prop->obsolete)) {
+                        $obsolete = (string)$prop->obsolete;
                     }
                     
                     $return .= ''
