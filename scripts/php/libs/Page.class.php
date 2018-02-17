@@ -2965,7 +2965,7 @@ class Page extends BaseTagLib {
             . '<form name="wf-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . $errors
                 . '<div class="gray-box">'
-                    . '<label class="w100" for="wf-rule">' . $rb->get('wf.rule') . ':</label>'
+                    . '<label class="w100" for="wf-rule" title="' . $rb->get('wf.rulecap') . '">' . $rb->get('wf.rule') . ':</label>'
                     . '<input class="w400" type="text" name="wf-rule" id="wf-rule" value="' . $wf->getRule() . '" />'
                 . '</div>'
                 . '<div class="gray-box">'

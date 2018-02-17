@@ -459,7 +459,9 @@ class DefaultWeb extends BaseTagLib {
     private function processForwards($forwards, $fullUrl) {
         foreach($forwards as $forward) {
             $rule = '/'.  str_replace('/', '\/', $forward->getRule()).'/';
-            if(preg_match($rule, $fullUrl) > 0) {
+            $match = preg_match($rule, $fullUrl);
+            // self::log(array('rule' => $rule, 'url' => $fullUrl, 'match' => $match));
+            if ($match > 0) {
                 // Presmerovat
                 if($forward->getType() == 'Substitute' && !$this->IsSubstituting) {
                     self::substituteRequestFor($forward->getPageId(), $forward->getLangId());
