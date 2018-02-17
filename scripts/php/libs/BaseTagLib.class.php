@@ -189,6 +189,18 @@ class BaseTagLib {
         return $templateContent;
     }
 
+    public function autolib($prefix) {
+        if (!self::php()->isRegistered($prefix)) {
+            if (!self::php()->autoRegisterPrefix($prefix)) {
+                return null;
+            }
+        }
+        
+        $name = $prefix . 'Object';
+        global ${$name};
+        return ${$name};
+    }
+
     public function php() {
         global $phpObject;
         return $phpObject;

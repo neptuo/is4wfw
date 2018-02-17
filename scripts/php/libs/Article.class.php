@@ -1650,13 +1650,11 @@ class Article extends BaseTagLib {
                     . '</div>'
                     . '<div class="clear"></div>'
                     . '</div>'
-                    . '</div>' : '')
-                    . '<script type="text/javascript">'
-                    . 'initTiny("article-head");'
-                    . 'initTiny("article-content");'
-                    . 'tinyMCE.execCommand("mceAddControl", true, "article-content");'
-                    . 'tinyMCE.execCommand("mceAddControl", true, "article-head"); '
-                    . '</script>';
+                    . '</div>' : '');
+
+            $js = parent::autolib('js');
+            $return .= $js->tinyMce("article-head");
+            $return .= $js->tinyMce("article-content");
         } else {
             $return .= ''
 					. ((self::getGroupPermCached('Article.Head')) ? ''
