@@ -363,7 +363,7 @@ class Article extends BaseTagLib {
      *  @return   	article id in template
      *
      */
-    public function showDetail($template = false, $templateId = false, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = false, $nextLinkText = '', $prevLinkText = '') {
+    public function showDetail($template = false, $templateId = false, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = 0, $nextLinkText = '', $prevLinkText = '') {
         global $dbObject;
         global $loginObject;
 
@@ -397,7 +397,7 @@ class Article extends BaseTagLib {
     }
 
     // C-tag
-    public function showDetailFullTag($templateContent, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = false, $nextLinkText = '', $prevLinkText = '') {
+    public function showDetailFullTag($templateContent, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = 0, $nextLinkText = '', $prevLinkText = '') {
         global $webObject;
         global $dbObject;
         global $loginObject;
@@ -419,7 +419,7 @@ class Article extends BaseTagLib {
                 $articleId = $this->CurrentId;
             } elseif (self::getUrl() != '') {
                 $url = self::getUrl();
-                $sql = 'select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "' . $url . '"' . ($lineId != '' && is_numeric($lineId) ? ' and `line_id` = ' . $lineId : '') . ';';
+                $sql = 'select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "' . $url . '"' . ($lineId != 0 && is_numeric($lineId) ? ' and `line_id` = ' . $lineId : '') . ';';
                 $arid = parent::db()->fetchAll($sql);
                 if (count($arid) == 1) {
                     $articleId = $arid[0]['article_id'];

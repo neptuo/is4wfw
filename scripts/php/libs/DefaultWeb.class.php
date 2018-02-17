@@ -1177,7 +1177,7 @@ class DefaultWeb extends BaseTagLib {
             foreach ($props as $prop) {
                 $currentValue = self::getProperty($prop['name']);
                 if (!$currentValue || $forceDefProp) {
-                    $prop['value'] = $parser->parseProperty($prop['value']);
+                    $prop['value'] = $parser->parsePropertyExactly($prop['value']);
                     self::setProperty($prop['name'], $prop['value']);
                     $currentValues[$prop['name']] = $currentValue;
                 }
@@ -2370,10 +2370,6 @@ class DefaultWeb extends BaseTagLib {
     
     public function showWhenConditionIsSatified($content, $when, $is, $isInverted) {
         $return = "";
-
-        if ($is == '$default:true') {
-            $is = true;
-        }
 
         $condition = false;
         if ($is === true) {

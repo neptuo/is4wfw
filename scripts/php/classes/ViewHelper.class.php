@@ -12,7 +12,7 @@ class ViewHelper {
         if (file_exists($path)) {
             return file_get_contents($path);
         } else {
-            throw new Exception('View doesn\'t exist!');
+            throw new Exception('View "' . $path . '" doesn\'t exist!');
         }
     }
 

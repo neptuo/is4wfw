@@ -1773,7 +1773,7 @@ class Page extends BaseTagLib {
 				return parent::getFrame(parent::rb('title.manageprops'), $return.parent::view('page-manageprops', $dataModel), true);
 			} else {
 				return $return.parent::view('page-manageprops', $dataModel);
-			}	
+			}
 		}
 	}
 	

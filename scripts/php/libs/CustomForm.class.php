@@ -55,12 +55,12 @@ class CustomForm extends BaseTagLib {
 
     /* ===================== LIST =========================================== */
 
-    public function listRows($formId, $templateId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = false, $noDataMessage = false, $params = false) {
+    public function listRows($formId, $templateId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = -1, $noDataMessage = false, $params = false) {
         $templateContent = parent::getTemplateContent($templateId);
         return self::listRowsFullTag($templateContent, $formId, $rowId, $filter, $sortBy, $desc, $limit, $noDataMessage, $params);
     }
 
-    public function listRowsFullTag($templateContent, $formId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = false, $noDataMessage = false, $params = false) {
+    public function listRowsFullTag($templateContent, $formId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = -1, $noDataMessage = false, $params = false) {
         $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
@@ -166,7 +166,7 @@ class CustomForm extends BaseTagLib {
     private function listAddToRules($rules, $key, $value, $type = null) {
 		$Parser = new FullTagParser();
 		$Parser->setUseCaching(false);
-		$value = $Parser->parseProperty($value);
+		$value = $Parser->parsePropertyExactly($value);
 	
 		if($type == null) {
 			if(is_numeric($value)) {

@@ -287,15 +287,16 @@ class BaseTagLib {
                     return $perm;
                 }
             }
+
             if ($inherited) {
                 $group = self::db()->fetchSingle('select `parent_gid` from `group` where `gid` = ' . $groupId . ';');
                 if ($group != array()) {
                     return self::getGroupPerm($name, $group['parent_gid'], true, $default);
                 }
             }
-        } else {
-            return array('value' => $default);
         }
+
+        return array('value' => $default);
     }
 
     public function str_tr($s, $d, $c = 1000000) {
@@ -392,14 +393,14 @@ class BaseTagLib {
     }
     
     public function log($message) {
-		$this->web()->PageLog .= $message;
+		self::logVar($message);
     }
     
     public function logVar($variable) {
         $message = var_export($variable, true);
         $message = str_replace("<", "&lt;", $message);
         $message = str_replace(">", "&gt;", $message);
-		self::log("<pre>" . $message . "</pre>");
+		$this->web()->PageLog .= "<pre>" . $message . "</pre>";
     }
 
     protected function addUrlParameter($url, $name, $value = '') {

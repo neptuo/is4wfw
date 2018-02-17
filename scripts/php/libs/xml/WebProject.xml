@@ -16,7 +16,7 @@
     <attribute>
       <attname>label</attname>
       <attreq>implied</attreq>
-	  <attdef>false</attdef>
+	    <attdef>false</attdef>
     </attribute>
     <attribute>
       <attname>useFrames</attname>

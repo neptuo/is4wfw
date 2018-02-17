@@ -22,6 +22,7 @@
     class DefaultPhp extends BaseTagLib {
         
         public static $ParamsName = 'params';
+        public static $FullTagTemplateName = 'full:content';
     
         /**
          *
@@ -107,7 +108,6 @@
             //echo $tagPrefix.', '.$classPath.'<br />';
             //$tagPrefix = $attlist['tagPrefix'];
             //$classPath = $attlist['classPath'];
-
             // KONTROLOVAT POCET INSTANCI PODLE <count> V XML!!!
             if (!array_key_exists($tagPrefix, $this->_REGISTERED) && !array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 if (self::checkIfClassExists($tagPrefix, $classPath)) {
@@ -119,8 +119,10 @@
                             $classDir .= ".";
                         }
                     }
+
                     $className = $classArray[count($classArray) - 1];
                     $classPath = self::parseClassPath($classPath);
+
                     require_once(SCRIPTS.$classPath.".class.php");
                     
                     if (self::isCountOfInstances($className, $classDir)) {
@@ -132,20 +134,15 @@
                         }
                         $this->_REGISTERED[$tagPrefix] = $classDir;
                     } else {
-                        $str = "Too much instances of tag lib! [".$classJPath."]";
-                        trigger_error($str , E_USER_WARNING);
-                        echo "<h4 class=\"error\">".$str."</h4>";
+                        return '<h4 class="error">Too much instances of tag lib! [' . $classJPath . ']</h4>';
                     }
                 } else {
-                    $str = "This class doesn't existecho '-'.$return.'-';! [".$classJPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
+                    return '<h4 class="error">This class does not exist "' . $classPath . '".</h4>';
                 }
             } else {
-                $str = "This tag prefix also used! [".$tagPrefix."]";
-                trigger_error($str , E_USER_WARNING);
-                echo "<h4 class=\"error\">".$str."</h4>";
+                return '<h4 class="error">This tag prefix already used! [' . $tagPrefix . ']</h4>';
             }
+            
             return "";
         }
     
@@ -491,10 +488,10 @@
             $return = array();
             if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix]) . "/" . ${$tagPrefix."Object"}->getTagLibXml();
             } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix]) ."/" . ${$tagPrefix."Object"}->getTagLibXml();
             }
             
             if (isset($xmlPath)) {
@@ -505,12 +502,20 @@
                             for ($i = 0; $i < count($tag->attribute); $i ++) {
                                 $att = $tag->attribute[$i];
                                 if (array_key_exists((string)$att->attname, $atts)) {
-                                    $return[(string)$att->attname] = self::getConvertValue($atts[(string)$att->attname], isset($att->attdef));
+                                    $hasDefault = isset($att->attdef);
+                                    $attribute = $atts[(string)$att->attname];
+                                    $attributeValue = self::getConvertValue($attribute['value'], $hasDefault);
+                                    $attributeValueType = 'raw';
+                                    if (($hasDefault && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
+                                        $attributeValueType = 'eval';
+                                    }
+
+                                    $return[(string)$att->attname] = array('value' => $attributeValue['value'], 'type' => $attributeValueType);
                                 } elseif (isset($att->attdef)) {
-                                    eval('$val = '. $att->attdef.';');
-                                    $return[(string)$att->attname] = self::getConvertValue($val);
+                                    $attributeValue = eval('return '. $att->attdef.';');
+                                    $return[(string)$att->attname] = array('value' => $attributeValue, 'type' => 'eval');
                                 } else {
-                                    $return[(string)$att->attname] = false;
+                                    $return[(string)$att->attname] = array('value' => false, 'type' => 'raw');
                                 }
                             }
                     
@@ -522,7 +527,7 @@
                                     }
                                 }
         
-                                $return[DefaultPhp::$ParamsName] = $params;
+                                $return[DefaultPhp::$ParamsName] = array('value' => $params, 'type' => 'eval');
                             }
                             break;
                         }
@@ -551,22 +556,22 @@
          *    @return sorted attributes
          *
          */                                                
-        public function sortAttributes($tagPrefix, $tagName, $atts) {
-            return self::sortAttributesInternal("tag", $tagPrefix, $tagName, $atts);
+        public function sortAttributes($tagPrefix, $tagName, $attributes) {
+            return self::sortAttributesInternal("tag", $tagPrefix, $tagName, $attributes);
         }
         
         protected function getConvertValue($val, $convert) {
-            if(!$convert) {
-                return $val;
+            if ($convert) {
+                if ($val === 'true') {
+                    return array('value' => true, 'type' => 'eval');
+                }
+                
+                if ($val === 'false') {
+                    return array('value' => false, 'type' => 'eval');
+                }
             }
-        
-            if($val === 'true') {
-                return true;
-            }
-            if($val === 'false') {
-                return false;
-            }
-            return $val;
+            
+            return array('value' => $val, 'type' => 'raw');
         }
         
         /**
@@ -579,8 +584,8 @@
          *    @return sorted attributes
          *
          */                                                
-        public function sortFullAttributes($tagPrefix, $tagName, $atts, $content) {
-            $return = array_merge(array('full:content' => $content), self::sortAttributesInternal("fulltag", $tagPrefix, $tagName, $atts));
+        public function sortFullAttributes($tagPrefix, $tagName, $attributes, $content) {
+            $return = array_merge(array(DefaultPhp::$FullTagTemplateName => array('value' => $content, 'type' => 'raw')), self::sortAttributesInternal("fulltag", $tagPrefix, $tagName, $attributes));
             return $return;
         }
         
