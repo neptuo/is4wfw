@@ -81,14 +81,16 @@ class Menu extends BaseTagLib {
                 $active = false;
             }
 
+            $url = $webObject->addSpecialParams($url);
+
             $return .= ''
-                    . '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . '">'
-                    . '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
+            . '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . '">'
+                . '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
                     . '<a href="' . $url . '"' . ((isset($attrs['rel'])) ? ' rel="' . $attrs['rel'] . '"' : '') . '>'
-                    . '<span>' . $name . '</span>'
+                        . '<span>' . $name . '</span>'
                     . '</a>'
-                    . '</div>'
-                    . '</li>';
+                . '</div>'
+            . '</li>';
         }
 
         $return .= '</ul></div>';

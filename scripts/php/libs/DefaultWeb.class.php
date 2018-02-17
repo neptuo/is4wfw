@@ -1165,7 +1165,8 @@ class DefaultWeb extends BaseTagLib {
         $lastPageId = 0;
         $pageProjectId = 0;
         if (!is_numeric($pageId)) {
-            return ViewHelper::resolveUrl($pageId);
+            $url = ViewHelper::resolveUrl($pageId);
+            return self::addSpecialParams($url);
         }
 		
 		$currentValues = array();
@@ -1270,7 +1271,7 @@ class DefaultWeb extends BaseTagLib {
         return $pageUrl;
     }
 
-    private function addSpecialParams($url) {
+    public function addSpecialParams($url) {
         if (array_key_exists('mem-stats', $_GET)) {
             $url = self::addUrlParameter($url, 'mem-stats', '');
         }
@@ -1344,7 +1345,7 @@ class DefaultWeb extends BaseTagLib {
                 return $return;
             }
         } else {
-            echo parent::getError('This tag isn\'t registered! [' . $object[0] . '] ['.$object[1].']');
+            echo parent::getError('This tag is not registered! [' . $object[0] . '] ['.$object[1].']');
             return "";
         }
     }
