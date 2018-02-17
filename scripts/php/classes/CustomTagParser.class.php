@@ -338,9 +338,15 @@ class CustomTagParser {
     }
 	
 	public function parsePropertyExactly($value) {
-		$this->PropertyAttr = '';
-		$this->PropertyUse = 'get';
+        $this->PropertyAttr = '';
+        $this->PropertyUse = 'get';
+        
         $result = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $value);
+        self::checkPregError();
+
+        if ($result == NULL) {
+            return $value;
+        }
         
         $result = eval("return ". $result . ";");
         return $result;

@@ -168,8 +168,8 @@ class CustomForm extends BaseTagLib {
 		$Parser->setUseCaching(false);
 		$value = $Parser->parsePropertyExactly($value);
 	
-		if($type == null) {
-			if(is_numeric($value)) {
+		if ($type == null) {
+			if (is_numeric($value)) {
 				$type = 'number';
 			} else {
 				$type = 'string';
@@ -180,11 +180,13 @@ class CustomForm extends BaseTagLib {
             case 'string': $value = '"' . $value . '"';
             case 'number': $value = $value;
         }
+
         if (strlen($rules) == 0) {
             $rules .= '`' . $key . '` = ' . $value;
         } else {
             $rules .= ' and `' . $key . '` = ' . $value;
         }
+
         return $rules;
     }
 
