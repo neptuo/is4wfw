@@ -69,7 +69,7 @@
             if (count($xml->tag) > 0) {
                 $links = '<div class="gray-box"><div>'.$rb->get('lib.tags').':';
                 foreach($xml->tag as $tag) {
-                    $links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+                    $links .= '<a href="#tag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
                 }
                 $links .= '</div>';
             }
@@ -77,7 +77,7 @@
             if (count($xml->fulltag) > 0) {
                 $links .= '<div>'.$rb->get('lib.fulltags').':';
                 foreach($xml->fulltag as $tag) {
-                    $links .= '<a href="#'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+                    $links .= '<a href="#fulltag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
                 }
                 $links .= '</div>';
             }
@@ -85,7 +85,7 @@
             if (count($xml->property) > 0) {
                 $links .= '<div>'.$rb->get('lib.properties').':';
                 foreach($xml->property as $prop) {
-                    $links .= '<a href="#'.$prop->propname.'">'.$prop->propname.'</a> ';
+                    $links .= '<a href="#property-'.$prop->propname.'">'.$prop->propname.'</a> ';
                 }
                 $links .= '</div>';
             }
@@ -128,7 +128,7 @@
                     $return .= ''
                     .'<div class="lib-tag">'
                         .'<div class="lib-tag-head">'
-                            .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3>'
+                            .'<h3 id="tag-'.$tag->tagname.'">'.$tag->tagname.'</h3>'
                             .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
                             . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                             .'<div class="clear"></div>'
@@ -176,7 +176,7 @@
                     $return .= ''
                     .'<div class="lib-tag">'
                         .'<div class="lib-tag-head">'
-                            .'<h3 id="'.$tag->tagname.'">'.$tag->tagname.'</h3>'
+                            .'<h3 id="fulltag-'.$tag->tagname.'">'.$tag->tagname.'</h3>'
                             .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
                             . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                             .'<div class="clear"></div>'
@@ -207,7 +207,7 @@
                     $return .= ''
                     .'<div class="lib-tag">'
                         .'<div class="lib-tag-head">'
-                            .'<h3 id="'.$prop->propname.'">'.$prop->propname.'</h3>'
+                            .'<h3 id="property-'.$prop->propname.'">'.$prop->propname.'</h3>'
                             .'<p>' . str_replace(PHP_EOL, '<br />', trim($prop->comment)) . '</p>'
                             .'<div class="clear"></div>'
                         .'</div>'
