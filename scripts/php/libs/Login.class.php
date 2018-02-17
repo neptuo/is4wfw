@@ -190,23 +190,24 @@ class Login extends BaseTagLib {
                 }
             }
 
-            $return = '<div class="login-form">' .
-                    '<form name="login" method="post" action="' . $_SERVER['REQUEST_URI'] . (array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '') . '">' .
-                    ((strlen($message) > 0) ? '<p class="login-message">' . $message . '</p>' : '') .
-                    '<p class="login-head">Login</p>' .
-                    '<p class="login-user">' .
-                    '<label for="username">Username:</label> ' .
-                    '<input id="username" type="text" name="username" value="' . $username . '" />' .
-                    '</p>' .
-                    '<p class="login-passwd">' .
-                    '<label for="password">Password:</label> ' .
-                    '<input id="password" type="password" name="password" value="" />' .
-                    '</p>' .
-                    '<p class="login-submit">' .
-                    '<input type="submit" name="login" value="Log in" />' .
-                    '</p>' .
-                    '</form>' .
-                    '</div>';
+            $return = ''
+            .'<div class="login-form">'
+                . '<form name="login" method="post" action="' . $_SERVER['REQUEST_URI'] . (array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '') . '">'
+                    . ((strlen($message) > 0) ? '<p class="login-message">' . $message . '</p>' : '')
+                    . '<p class="login-head">Login</p>' 
+                    . '<p class="login-user">' 
+                        . '<label for="username">Username:</label> ' 
+                        . '<input id="username" type="text" name="username" value="' . $username . '" />' 
+                    . '</p>' 
+                    . '<p class="login-passwd">' 
+                        . '<label for="password">Password:</label> ' 
+                        . '<input id="password" type="password" name="password" value="" />' 
+                    . '</p>' 
+                    . '<p class="login-submit">' 
+                        . '<input type="submit" name="login" value="Log in" />' 
+                    . '</p>' 
+                . '</form>' 
+            . '</div>';
 
             return $return;
         } else {
