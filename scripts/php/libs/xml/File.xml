@@ -114,6 +114,7 @@
   <tag>
     <tagname>gallery</tagname>
     <function>galleryFromDirectory</function>
+    <obsolete>Spíš používat novou implementaci v knihovně 'php.libs.Image'.</obsolete>
     <attribute>
       <attname>method</attname>
       <attreq>implied</attreq>

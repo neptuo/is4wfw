@@ -66,10 +66,15 @@
         if (is_file($xmlPath)) {
             $xml = new SimpleXMLElement(file_get_contents($xmlPath));
             
+            $links = '<div class="gray-box">';
             if (count($xml->tag) > 0) {
-                $links = '<div class="gray-box"><div>'.$rb->get('lib.tags').':';
+                $links .= '<div>'.$rb->get('lib.tags').':';
                 foreach($xml->tag as $tag) {
-                    $links .= '<a href="#tag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+                    $obsolete = null;
+                    if (isset($tag->obsolete)) {
+                        $obsolete = (string)$tag->obsolete;
+                    }
+                    $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#tag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
                 }
                 $links .= '</div>';
             }
@@ -77,7 +82,11 @@
             if (count($xml->fulltag) > 0) {
                 $links .= '<div>'.$rb->get('lib.fulltags').':';
                 foreach($xml->fulltag as $tag) {
-                    $links .= '<a href="#fulltag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+                    $obsolete = null;
+                    if (isset($tag->obsolete)) {
+                        $obsolete = (string)$tag->obsolete;
+                    }
+                    $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#fulltag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
                 }
                 $links .= '</div>';
             }
@@ -85,7 +94,11 @@
             if (count($xml->property) > 0) {
                 $links .= '<div>'.$rb->get('lib.properties').':';
                 foreach($xml->property as $prop) {
-                    $links .= '<a href="#property-'.$prop->propname.'">'.$prop->propname.'</a> ';
+                    $obsolete = null;
+                    if (isset($tag->obsolete)) {
+                        $obsolete = (string)$prop->obsolete;
+                    }
+                    $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#property-'.$prop->propname.'">'.$prop->propname.'</a> ';
                 }
                 $links .= '</div>';
             }
@@ -109,7 +122,7 @@
             
                 foreach ($xml->tag as $tag) {
                     $attributes = '';
-                    for($i = 0; $i < count($tag->attribute); $i ++) {
+                    for ($i = 0; $i < count($tag->attribute); $i ++) {
                         $attributes .= ''
                         .'<tr>'
                             .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
@@ -125,10 +138,16 @@
                         .'</tr>';
                     }
                     
+                    $obsolete = null;
+                    if (isset($tag->obsolete)) {
+                        $obsolete = (string)$tag->obsolete;
+                    }
+                    
                     $return .= ''
                     .'<div class="lib-tag">'
                         .'<div class="lib-tag-head">'
                             .'<h3 id="tag-'.$tag->tagname.'">'.$tag->tagname.'</h3>'
+                            . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
                             .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
                             . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                             .'<div class="clear"></div>'
@@ -157,7 +176,7 @@
                         
                 foreach ($xml->fulltag as $tag) {
                     $attributes = '';
-                    for($i = 0; $i < count($tag->attribute); $i ++) {
+                    for ($i = 0; $i < count($tag->attribute); $i ++) {
                         $attributes .= ''
                         .'<tr>'
                             .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
@@ -166,17 +185,23 @@
                         .'</tr>';
                     }
 
-                    if(isset($tag->anyAttribute)) {
+                    if (isset($tag->anyAttribute)) {
                         $attributes .= ''
                         .'<tr>'
                             .'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
                         .'</tr>';
                     }
                     
+                    $obsolete = null;
+                    if (isset($tag->obsolete)) {
+                        $obsolete = (string)$tag->obsolete;
+                    }
+                    
                     $return .= ''
                     .'<div class="lib-tag">'
                         .'<div class="lib-tag-head">'
                             .'<h3 id="fulltag-'.$tag->tagname.'">'.$tag->tagname.'</h3>'
+                            . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
                             .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
                             . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                             .'<div class="clear"></div>'
@@ -204,10 +229,16 @@
                 .'</div>';
             
                 foreach($xml->property as $prop) {
+                    $obsolete = null;
+                    if (isset($tag->obsolete)) {
+                        $obsolete = (string)$tag->obsolete;
+                    }
+                    
                     $return .= ''
                     .'<div class="lib-tag">'
                         .'<div class="lib-tag-head">'
                             .'<h3 id="property-'.$prop->propname.'">'.$prop->propname.'</h3>'
+                            . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
                             .'<p>' . str_replace(PHP_EOL, '<br />', trim($prop->comment)) . '</p>'
                             .'<div class="clear"></div>'
                         .'</div>'

@@ -880,6 +880,10 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     color: #cccccc;
 }
 
+.obsolete {
+    text-decoration: line-through;
+}
+
 .font-right {
     text-align: right;
 }
