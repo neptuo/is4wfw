@@ -1321,9 +1321,22 @@ class DefaultWeb extends BaseTagLib {
             if (strlen($att[0]) > 0) {
                 $this->PropertyAttr = '';
                 $this->PropertyUse = 'get';
-                $att[1] = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $att[1]);
-                //$attributes[$att[0]] = str_replace("\"", "", $att[1]);
-                $attributes[$att[0]] = str_replace("\"", "\\\"", substr($att[1], 1, strlen($att[1]) - 2));
+                
+                $valueType = 'raw';
+                if (strlen($att[1]) > 1) {
+                    $att[1] = substr($att[1], 1, strlen($att[1]) - 2);
+                    $evaluated = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $att[1]);
+
+                    if ($att[1] != $evaluated) {
+                        $att[1] = $evaluated;
+                        $valueType = 'eval';
+                    }
+                } else {
+                    $att[1] = '';
+                }
+
+                $att[1] = str_replace("\"", "\\\"", $att[1]);
+                $attributes[$att[0]] = array('value' => $att[1], 'type' => $valueType);
             }
         }
 		
@@ -1337,12 +1350,13 @@ class DefaultWeb extends BaseTagLib {
                 $attstring = "";
                 $i = 0;
                 foreach ($attributes as $att) {
-                    $attstring .= "'" . $att . "'";
+                    $attstring .= "'" . $att['value'] . "'";
                     if ($i < (count($attributes) - 1)) {
                         $attstring .= ", ";
                     }
                     $i++;
                 }
+
                 eval('$return =  ${$object[0]."Object"}->{$func}(' . $attstring . ');');
                 return $return;
             }
@@ -2446,7 +2460,7 @@ class DefaultWeb extends BaseTagLib {
 		$page = $this->TempLoadedContent[$this->PagesIdIndex - 1];
 		if (strlen($page['title']) > 0) {
 			$this->PropertyAttr = '';
-			$this->PropertyUse = 'get';
+            $this->PropertyUse = 'get';
 			return preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['title']);
 		}
     }
