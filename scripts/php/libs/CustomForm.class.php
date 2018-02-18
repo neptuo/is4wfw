@@ -272,18 +272,18 @@ class CustomForm extends BaseTagLib {
 	
     /* ===================== FORM =========================================== */
 
-    public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false) {
+    public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailIsHtml = false) {
         $templateContent = parent::getTemplateContent($templateId);
-        return self::formFullTag($templateContent, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject);
+        return self::formFullTag($templateContent, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject, $emailSender, $emailSenderFieldName, $emailIsHtml);
     }
 
-    public function formFullTag($templateContent, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false) {
+    public function formFullTag($templateContent, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailIsHtml = false) {
         global $webObject;
         $rb = new LocalizationBundle();
         $rb->loadBundle($this->BundleName, $this->BundleLang);
         $return = "";
         
-        if(is_array($rowId)) {
+        if (is_array($rowId)) {
             $array = $rowId;
             $rowId = $array['id'];
             $this->AdditionalKeys[$formId] = array();
@@ -382,7 +382,7 @@ class CustomForm extends BaseTagLib {
                         }
                     }
 
-                    if($pageId) {
+                    if ($pageId) {
                         $webObject->redirectTo($pageId);
                     }
                 } elseif ($type == 'email') {
@@ -401,21 +401,35 @@ class CustomForm extends BaseTagLib {
 
                     $subject = ($emailSubject == '') ? 'Email from CustomForms' : $emailSubject;
 
-                    //echo $content;
-                    // Nastaveni SMTP??
-                    //ini_set("SMTP", "smtp.google.com");
-                    //ini_set('sendmail_from', 'user@example.com');
-                    mail($emailAddresses, $subject, $content, 1);
+                    $headers = array();
+                    $headers[] = 'MIME-Version: 1.0';
 
-                    if($pageId) {
-                        $webObject->redirectTo($pageId);
+                    if ($emailIsHtml) {
+                        $headers[] = 'Content-type: text/html; charset=utf8';
+                    }
+
+                    if ($emailSenderFieldName && preg_match($this->EmailRegex, $this->ViewDataRow[$emailSenderFieldName]['value'])) {
+                        $emailSender = $this->ViewDataRow[$emailSenderFieldName]['value'];
+                    }
+
+                    if (preg_match($this->EmailRegex, $emailSender)) {
+                        $headers[] = 'From: ' . $emailSender;
+                    }
+
+                    $result = mail($emailAddresses, $subject, $content, implode(PHP_EOL, $headers));
+                    if ($result) {
+                        if($pageId) {
+                            $webObject->redirectTo($pageId);
+                        }
+
+                        $this->FormPhase = 0;
+                        $this->FormId = "";
+                        $this->GeneratedFormId = "";
+                        $this->ValidationError = false;
+                    } else {
+                        $this->ValidationError = true;
                     }
                 }
-
-                $this->FormPhase = 0;
-                $this->FormId = "";
-                $this->GeneratedFormId = "";
-                $this->ValidationError = false;
             } else {
                 // Show errors
                 //echo 'error';
@@ -758,7 +772,7 @@ class CustomForm extends BaseTagLib {
             if ($transformation != '') {
                 $return .= self::fieldTransformations($name, $this->ViewDataRow[$name], $transformation);
             } else {
-				if($type == 'reference') {
+				if ($type == 'reference') {
 					$sql = 'select `'.$referenceCaptionField.'` from `cf_'.$referenceFormId.'` where `id` = '.$this->ViewDataRow[$name].';';
 					$data = parent::db()->fetchSingle($sql);
 					$return .= $data[$referenceCaptionField];
