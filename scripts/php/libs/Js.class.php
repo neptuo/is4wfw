@@ -193,6 +193,13 @@ class Js extends BaseTagLib {
 
         return $return;
     }
+
+    public function ajax($selector) {
+        $return = self::formatScript('~/js/ajax.js');
+        $return .= '<script type="text/javascript">' . '$(function() { var ajax = new Ajax("' . $selector . '"); ajax.Initialize($(document.body)); });' . '</script>';
+
+        return $return;
+    }
 }
 
 ?>

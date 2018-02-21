@@ -494,6 +494,16 @@ class BaseTagLib {
             exit;
         }
     }
+
+    private $requestHeaders = null;
+
+    public function requestHeaders() {
+        if ($this->requestHeaders == null) {
+            $this->requestHeaders = getallheaders();
+        }
+
+        return $this->requestHeaders;
+    }
 }
 
 ?>

@@ -163,7 +163,7 @@ class DefaultWeb extends BaseTagLib {
     private $UrlCache;
     private $FullUrl;
 	private $IsSubstituting = false;
-	
+    
     /**
      *
      * 	Keywords.
@@ -174,6 +174,8 @@ class DefaultWeb extends BaseTagLib {
     private $Doctype = 'xhtml';
     private $ContentType = 'text/html';
     private $Template = null;
+    private $StartPageId = null;
+    private $ParentPageId = null;
 
     /**
      *
@@ -196,11 +198,23 @@ class DefaultWeb extends BaseTagLib {
 
         $this->Diagnostics = new Diagnostics();
 
-        $this->Template = strtolower($_REQUEST['__TEMPLATE']);
-
-        //print_r(UniversalPermission::getPermissions(1, 1));
-        //UniversalPermission::setPermissions('pes', 1, array(array('group' => 'admins', 'type' => WEB_R_READ), array('group' => 'web-admins', 'type' => WEB_R_WRITE)));
-        //echo UniversalPermission::showPermissionsFormPart('pes', 1, array('admins'), WEB_R_READ);
+        if (array_key_exists('__TEMPLATE', $_REQUEST)) {
+            $this->Template = strtolower($_REQUEST['__TEMPLATE']);
+        } else {
+            $headers = self::requestHeaders();
+            if(array_key_exists('X-Template', $headers)) {
+                $this->Template = strtolower($headers['X-Template']);
+            }
+        }
+        
+        if (array_key_exists('__START_ID', $_REQUEST)) {
+            $this->StartPageId = strtolower($_REQUEST['__START_ID']);
+        } else {
+            $headers = self::requestHeaders();
+            if (array_key_exists('X-ParentPageId', $headers)) {
+                $this->ParentPageId = strtolower($headers['X-ParentPageId']);
+            }
+        }
     }
 
     public function isZipOutput() {
@@ -428,9 +442,9 @@ class DefaultWeb extends BaseTagLib {
 
         $this->PagesId = $this->UrlResolver->getPagesId();
 
-        if (array_key_exists('__START_ID', $_REQUEST) && in_array($_REQUEST['__START_ID'], $this->PagesId)) {
+        if ($this->StartPageId != null && in_array($this->StartPageId, $this->PagesId)) {
             for ($i = 0; $i < count($this->PagesId); $i++) {
-                if ($this->PagesId[$i] == $_REQUEST['__START_ID']) {
+                if ($this->PagesId[$i] == $this->StartPageId) {
                     $this->PagesIdIndex = $i;
                     break;
                 }
@@ -716,9 +730,19 @@ class DefaultWeb extends BaseTagLib {
             }
         }
 
-        if (array_key_exists('__START_ID', $_REQUEST) && in_array($_REQUEST['__START_ID'], $this->PagesId)) {
+        if ($this->StartPageId != null && in_array($this->StartPageId, $this->PagesId)) {
             for ($i = 0; $i < count($this->PagesId); $i++) {
-                if ($this->PagesId[$i] == $_REQUEST['__START_ID']) {
+                if ($this->PagesId[$i] == $this->StartPageId) {
+                    $this->PagesIdIndex = $i;
+                    break;
+                }
+            }
+        } else if($this->ParentPageId != null && in_array($this->ParentPageId, $this->PagesId)) {
+            $isNext = false;
+            for ($i = 0; $i < count($this->PagesId); $i++) {
+                if ($this->PagesId[$i] == $this->ParentPageId) {
+                    $isNext = true;
+                } else if($isNext) {
                     $this->PagesIdIndex = $i;
                     break;
                 }

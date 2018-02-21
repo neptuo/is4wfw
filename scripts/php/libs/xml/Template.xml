@@ -14,10 +14,13 @@
     <attribute>
       <attname>id</attname>
       <attreq>required</attreq>
+      <atttype>number</atttype>
+      <attcomment>ID šablony, která se má vložit.</attcomment>
     </attribute>
     <anyAttribute />
     <comment>
       Vloží obsah šablony.
+      Uživatel musí mít právo READ k dané šabloně.
       Všechny další atributy jsou parametry šablony.
     </comment>
   </tag>

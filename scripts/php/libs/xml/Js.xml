@@ -68,16 +68,28 @@
     <attribute>
       <attname>ids</attname>
       <attreq>implied</attreq>
+      <attcomment>Pokud je vyplněný, zaregistruje i inicializační skripty pro převedení těchto textareí na wysiwyg editory.</attcomment>
     </attribute>
     <attribute>
       <attname>language</attname>
       <attreq>implied</attreq>
+      <attcomment>Umožňuje nastavit jazyk pro editor, podporované hodnoty jsou "en" a "cs".</attcomment>
     </attribute>
     <comment>
       Vloží do stránky skripty pro tiny-mce.
       Vkládá do stránky i jQuery.
-      Pokud je vyplněný atribut "ids", zaregistruje i inicializační skripty.
-      Atribut "language" umožňuje nastavit jazyk pro editor, podporované hodnoty jsou "en" a "cs".
+    </comment>
+  </tag>
+  <tag>
+    <tagname>ajax</tagname>
+    <function>ajax</function>
+    <attribute>
+      <attname>selector</attname>
+      <attreq>implied</attreq>
+      <attcomment>jQuery kompatibilní selector k elementu, jehož obsah se má nahrazovat.</attcomment>
+    </attribute>
+    <comment>
+      Převede web do ajaxového formátu.
     </comment>
   </tag>
 </taglib>
