@@ -194,9 +194,13 @@ class Js extends BaseTagLib {
         return $return;
     }
 
-    public function ajax($selector) {
+    public function ajax($selector, $parentPageId = false) {
+        if (!is_numeric($parentPageId)) {
+            $parentPageId = 'null';
+        }
+
         $return = self::formatScript('~/js/ajax.js');
-        $return .= '<script type="text/javascript">' . '$(function() { var ajax = new Ajax("' . $selector . '"); ajax.Initialize($(document.body)); });' . '</script>';
+        $return .= '<script type="text/javascript">' . '$(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ajax.Initialize($(document.body)); });' . '</script>';
 
         return $return;
     }

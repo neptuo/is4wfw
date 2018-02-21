@@ -85,8 +85,13 @@
     <function>ajax</function>
     <attribute>
       <attname>selector</attname>
-      <attreq>implied</attreq>
+      <attreq>required</attreq>
       <attcomment>jQuery kompatibilní selector k elementu, jehož obsah se má nahrazovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>parentPageId</attname>
+      <attreq>implied</attreq>
+      <attcomment>Pokud je vyplněný, jedná se o ID stránky, která má být jako první vynechaná z výstupu (typicky ID šablony webu - 'Template').</attcomment>
     </attribute>
     <comment>
       Převede web do ajaxového formátu.

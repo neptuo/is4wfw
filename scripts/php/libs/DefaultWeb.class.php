@@ -211,8 +211,8 @@ class DefaultWeb extends BaseTagLib {
             $this->StartPageId = strtolower($_REQUEST['__START_ID']);
         } else {
             $headers = self::requestHeaders();
-            if (array_key_exists('X-ParentPageId', $headers)) {
-                $this->ParentPageId = strtolower($headers['X-ParentPageId']);
+            if (array_key_exists('X-Parent-Page-Id', $headers)) {
+                $this->ParentPageId = strtolower($headers['X-Parent-Page-Id']);
             }
         }
     }
@@ -445,6 +445,16 @@ class DefaultWeb extends BaseTagLib {
         if ($this->StartPageId != null && in_array($this->StartPageId, $this->PagesId)) {
             for ($i = 0; $i < count($this->PagesId); $i++) {
                 if ($this->PagesId[$i] == $this->StartPageId) {
+                    $this->PagesIdIndex = $i;
+                    break;
+                }
+            }
+        } else if($this->ParentPageId != null && in_array($this->ParentPageId, $this->PagesId)) {
+            $isNext = false;
+            for ($i = 0; $i < count($this->PagesId); $i++) {
+                if ($this->PagesId[$i] == $this->ParentPageId) {
+                    $isNext = true;
+                } else if($isNext) {
                     $this->PagesIdIndex = $i;
                     break;
                 }
@@ -1064,6 +1074,7 @@ class DefaultWeb extends BaseTagLib {
                     . '<rssmm:scripts>' . $this->PageScripts . '</rssmm:scripts>'
                 . '</rssmm:head>'
                 . '<rssmm:content>' . $this->PageContent . '</rssmm:content>'
+                . '<rssmm:log>' . $diacont . '</rssmm:log>'
             . '</rssmm:response>';
         } else if ($this->Template == 'none') {
             $return = $this->PageContent;

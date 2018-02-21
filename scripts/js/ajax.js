@@ -29,13 +29,15 @@ Ajax.prototype._OnLinkClick = function(e) {
 };
 
 Ajax.prototype.Load = function(url) {
+    var parentPageId = this.ParentPageId;
+
     $.ajax({
         url: url,
         type: 'GET',
         beforeSend: function (xhr) {
             xhr.setRequestHeader('X-Template', 'xml');
-            if (this.ParentPageId != null) {
-                xhr.setRequestHeader('X-ParentPageId', this.ParentPageId);
+            if (parentPageId != null) {
+                xhr.setRequestHeader('X-Parent-Page-Id', parentPageId);
             }
         },
         success: this._OnLoadCompleted.bind(this),
@@ -83,9 +85,14 @@ Ajax.prototype._OnLoadCompleted = function(responseText) {
 
         var oldContent = $(this.Selector);
         var newContent = $(html).find(this.Selector);
+        if (newContent.length == 1) {
+            oldContent.replaceWith(newContent);
+            this.Initialize(newContent);
+        } else {
+            oldContent.html(html)
+            this.Initialize(oldContent); 
+        }
         
-        oldContent.replaceWith(newContent);
-        this.Initialize(newContent); 
     }
 };
 
