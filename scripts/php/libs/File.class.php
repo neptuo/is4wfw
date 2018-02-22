@@ -965,45 +965,68 @@
      *
      */                             
     public function createThumb($originalPath, $thumbPath, $width, $height, $type) {
-      list($orWidth, $orHeight, $orType) = getimagesize($originalPath);
-      
-      switch($type) {
-        case WEB_TYPE_GIF: 
-          $source = @ imagecreatefromgif($originalPath);
-	        if(!$source) {
-	          $message = 'Cannot process GIF files. Please use JPEG or PNG.';
-	          echo "<h4 class=\"error\">".$message."<h4>";
-	          trigger_error($message, E_USER_ERROR);
-	        }
-          break;
-              
-        case WEB_TYPE_JPG: $source = imagecreatefromjpeg($originalPath); break;
-        case WEB_TYPE_PNG: $source = imagecreatefrompng($originalPath); break;
-      }
+        list($orWidth, $orHeight, $orType) = getimagesize($originalPath);
+
+        switch ($type) {
+            case WEB_TYPE_GIF: 
+                $source = @ imagecreatefromgif($originalPath);
+                if (!$source) {
+                    $message = 'Cannot process GIF files. Please use JPEG or PNG.';
+                    echo "<h4 class=\"error\">".$message."<h4>";
+                    trigger_error($message, E_USER_ERROR);
+                }
+                break;
+                
+            case WEB_TYPE_JPG: 
+                $source = imagecreatefromjpeg($originalPath); 
+                break;
+                
+            case WEB_TYPE_PNG: 
+                $source = imagecreatefrompng($originalPath); 
+                break;
+
+            default:
+                return false;
+        }
+        
+        $thumb = imagecreatetruecolor($width, $height);
+
+        $isTransparent = $type == WEB_TYPE_GIF || $type == WEB_TYPE_PNG;
+        if ($isTransparent) {
+            imagealphablending($thumb, false);
+            imagesavealpha($thumb, true);
+
+            $transparentColor = imagecolorallocatealpha($thumb, 255, 255, 255, 127);
+            imagefilledrectangle($thumb, 0, 0, $width, $height, $transparentColor);
+        }
           
-      $thumb = imagecreatetruecolor($width, $height);
-      imagecopyresampled($thumb, $source, 0, 0, 0, 0, $width, $height, $orWidth, $orHeight);
+        imagecopyresampled($thumb, $source, 0, 0, 0, 0, $width, $height, $orWidth, $orHeight);
           
-      switch($type) {
-        case WEB_TYPE_GIF:
-	        if(function_exists('imagegif')) {
-	          $success = imagegif($thumb, $thumbPath);
-		      } else {
-	          $success = imagejpeg($thumb, $thumbPath, 50);
-		      }
-	        break;
-	            
-	      case WEB_TYPE_JPG:
-	        $success = imagejpeg($thumb, $thumbPath, 100);
-	        break;
-      	case WEB_TYPE_PNG:
-	        $success = imagepng($thumb, $thumbPath);
-	    }
+        switch($type) {
+            case WEB_TYPE_GIF:
+                if (function_exists('imagegif')) {
+                    $success = imagegif($thumb, $thumbPath);
+                } else {
+                    $success = imagejpeg($thumb, $thumbPath, 50);
+                }
+                break;
+                    
+            case WEB_TYPE_JPG:
+                $success = imagejpeg($thumb, $thumbPath, 100);
+                break;
+
+            case WEB_TYPE_PNG:
+                $success = imagepng($thumb, $thumbPath);
+                break;
+
+            default:
+                return false;
+        }
 	        
 	    imagedestroy($source);
-      imagedestroy($thumb);
+        imagedestroy($thumb);
         
-      return true;
+        return true;
     }
     
     /**
