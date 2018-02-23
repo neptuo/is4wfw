@@ -35,8 +35,14 @@ class Js extends BaseTagLib {
         if (in_array($path, $this->includedScripts)) {
             return null;
         }
-        
+
         $this->includedScripts[] = $path;
+
+        $minPath = str_replace(".js", ".min.js", $path);
+        if (file_exists(str_replace("~/", SCRIPTS, $minPath))) {
+            $path = $minPath;
+        }
+        
         return '<script type="text/javascript" src="' . $path . '?version=' . WEB_VERSION . '"></script>';
     }
 
@@ -88,7 +94,7 @@ class Js extends BaseTagLib {
                 . self::formatScript('~/js/formFieldEffect.js')
                 . self::formatScript('~/js/init.js')
                 . self::formatScript('~/tiny-mce/tinymce.min.js')
-                . self::formatScript('~/scripts/js/initTiny.js');
+                . self::formatScript('~/js/initTiny.js');
         } else {
             $return .= ''
                 . self::formatStyle('~/css/cms_nowindows.css')
@@ -112,7 +118,7 @@ class Js extends BaseTagLib {
                 . self::formatScript('~/js/formFieldEffect.js')
                 . self::formatScript('~/js/init_nowindows.js')
                 . self::formatScript('~/tiny-mce/tinymce.min.js')
-                . self::formatScript('~/scripts/js/initTiny.js');
+                . self::formatScript('~/js/initTiny.js');
         }
         if (strpos($_SERVER['REQUEST_URI'], ".view") == -1) {
             $return = str_replace("~/", UrlResolver::combinePath(WEB_ROOT, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), WEB_ROOT)), $return);
@@ -134,7 +140,7 @@ class Js extends BaseTagLib {
         $return .= self::formatScript('~/js/rxmlhttp.js');
         $return .= self::formatScript('~/js/links.js');
 
-        $content = file_get_contents("scripts/js/web/ajaxWebInit.js");
+        $content = file_get_contents("js/web/ajaxWebInit.js");
         $content = str_replace("{web-content}", $webContentRootElId, $content);
         $content = str_replace("{root-page}", $rootPageId, $content);
         $content = str_replace("{ajax-message}", $ajaxMessage, $content);
@@ -155,8 +161,8 @@ class Js extends BaseTagLib {
         $namesAsArray = $phpObject->str_tr($names, ',');
         foreach ($namesAsArray as $name) {
             $path = $type == "js" ? "js/" . trim($name) . ".js" : "css/" . trim($name) . ".css";
-            $path = "scripts/" . $path;
-            if (file_exists($path)) {
+            $filePath = "scripts/" . $path;
+            if (file_exists($filePath)) {
                 $virtualPath = '~/' . $path;
                 if ($as == 'inline') {
                     $return .= ($type == "js") ? '<script type="text/javascript">' . "\n" . file_get_contents($path) . "\n" . '</script>' : '<style type="text/css">' . "\n" . file_get_contents($path) . "\n" . '</style>';
@@ -173,7 +179,7 @@ class Js extends BaseTagLib {
         $return = ''
         . self::formatScript('~/js/jquery/jquery.js')
         . self::formatScript('~/tiny-mce/tinymce.min.js')
-        . self::formatScript('~/scripts/js/initTiny.js');
+        . self::formatScript('~/js/initTiny.js');
 
         $ids = parent::php()->str_tr($ids, ',');
         if (count($ids) > 0) {
