@@ -76,6 +76,20 @@ Ajax.prototype._OnLoadCompleted = function(responseText) {
                 }
             }
         }
+        
+        var scripts = this._FindElement(head, "rssmm:scripts");
+        if (scripts != null) {
+            scripts = scripts.getElementsByTagName("rssmm:script-ref");
+            for (var i = 0, count = scripts.length; i < count; i++) {
+                var linkUrl = scripts[i].innerHTML;
+                if (document.querySelector("script[src='" + linkUrl + "']") == null) {
+                    var link = document.createElement("script");
+                    link.src = linkUrl;
+                    link.type = "text/javascript";
+                    document.head.appendChild(link);
+                }
+            }
+        }
     }
 
     var content = this._FindElement(response, "rssmm:content");
