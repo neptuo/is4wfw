@@ -333,6 +333,9 @@ class CustomForm extends BaseTagLib {
                             case 'number':
                                 $value['value'] = $value['value'];
                                 break;
+                            case 'bool':
+                                $value['value'] = self::getBoolValue($value['value']) ? '1' : '0';
+                                break;
 							case 'file':
 								if($rowId != '' && $value['value'] == array()) {
 									$editedValue = false;
@@ -399,7 +402,7 @@ class CustomForm extends BaseTagLib {
 
                     $this->EmailPhase = 0;
 
-                    $subject = ($emailSubject == '') ? 'Email from CustomForms' : $emailSubject;
+                    $subject = ($emailSubject == '') ? $rb->get('cf.form.email.subject') : $emailSubject;
 
                     $headers = array();
                     $headers[] = 'MIME-Version: 1.0';
@@ -669,6 +672,13 @@ class CustomForm extends BaseTagLib {
                             // parse validation on client side
                         }
                         break;
+                    case 'bool':
+                        $return .= ''
+                            . '<input type="checkbox" name="' . $fname . '" id="' . $id . '" ' . ($value ? 'checked="checked" ' : '') . 'class="'.$cssClass.'" /> ';
+                        if ($validation != '') {
+                            // parse validation on client side
+                        }
+                        break;
                     case 'date':
                         if (is_numeric($value)) {
                             $value = date('d.m.Y', $value);
@@ -733,7 +743,7 @@ class CustomForm extends BaseTagLib {
 			}
 			
             if ($viewType == 'edit' || $viewType == '') {
-                if (($type != 'file' && $required == 'true' && $value == '') 
+                if (($type != 'file' && $type != 'bool' && $required == 'true' && $value == '') 
 			      || ($type == 'file' && $required == 'true' && (!$fileOk || !self::fieldDirExists($dirId)))
 				  || ($type == 'date' && strtotime($value) == '') 
 				  || !self::fieldCustomValidation($value, $type, $validation) 
@@ -797,11 +807,17 @@ class CustomForm extends BaseTagLib {
             $val = $this->ViewDataRow[$name];
             if ($type == 'date') {
                 $val = date('d.m.Y', $this->ViewDataRow[$name]);
+            } else if($type == 'bool') {
+                $val = self::getBoolValue($this->ViewDataRow[$name]);
             }
             return $val;
         } else {
             return $default;
         }
+    }
+
+    private function getBoolValue($value) {
+        return $value == 'true' || $value == 'on' || $value;
     }
 
     private function fieldCustomValidation($value, $type, $validation) {
@@ -1147,25 +1163,25 @@ class CustomForm extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return = ''
-                . '<form name="creator-step-0" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                . '<div class="gray-box">'
+        . '<form name="creator-step-0" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+            . '<div class="gray-box">'
                 . $rb->get('cf.creator.step0.label')
-                . '</div>'
-                . '<div class="gray-box">'
+            . '</div>'
+            . '<div class="gray-box">'
                 . '<label for="creator-id" class="w160">' . $rb->get('cf.creator.step0.id-label') . ':</label>'
                 . '<input type="text" name="creator-id" id="creator-id" value="' . self::creatorChooseValue($_SESSION['cf']['creator']['form-id'], $_POST['creator-id']) . '" class="w200" />'
-                . '</div>'
-                . '<div class="gray-box">'
+            . '</div>'
+            . '<div class="gray-box">'
                 . '<label for="creator-fields" class="w160">' . $rb->get('cf.creator.step0.fields-label') . ':</label>'
                 . '<select name="creator-fields" id="creator-fields" class="w100">'
-                . self::creatorGetOptionsForFields()
+                    . self::creatorGetOptionsForFields()
                 . '</select>'
-                . '</div>'
-                . '<div class="gray-box">'
+            . '</div>'
+            . '<div class="gray-box">'
                 . '<input type="submit" name="creator-submit" value="' . $rb->get('cf.creator.step0.button') . '" /> '
                 . '<input type="submit" name="creator-clear" value="' . $rb->get('cf.creator.clear') . '" />'
-                . '</div>'
-                . '</form>';
+            . '</div>'
+        . '</form>';
 
         return $return;
     }
@@ -1208,37 +1224,39 @@ class CustomForm extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return .= ''
-                . '<form name="creator-step-1" method="post" ation="' . $_SERVER['REQUEST_URI'] . '">'
-                . '<div class="gray-box">'
+        . '<form name="creator-step-1" method="post" ation="' . $_SERVER['REQUEST_URI'] . '">'
+            . '<div class="gray-box">'
                 . $rb->get('cf.creator.step1.label')
-                . '</div>'
-                . '<div class="gray-box">'
+            . '</div>'
+            . '<div class="gray-box">'
                 . '<label for="creator-id" class="w160">' . $rb->get('cf.creator.step0.id-label') . ':</label> <strong id="creator-id">' . $_SESSION['cf']['creator']['form-id'] . '</strong>'
                 . '<br />'
                 . '<label for="creator-fields" class="w160">' . $rb->get('cf.creator.step0.fields-label') . ':</label> <strong id="creator-fields">' . $_SESSION['cf']['creator']['fields'] . '</strong>'
-                . '</div>';
-        for ($i = 0; $i < $_SESSION['cf']['creator']['fields']; $i++) {
+            . '</div>';
+        
+                for ($i = 0; $i < $_SESSION['cf']['creator']['fields']; $i++) {
             $return .= ''
-                    . '<div class="gray-box">'
-                    . '<label for="creator-step-1-i' . $i . '-name" class="w160">' . $rb->get('cf.creator.step1.name-label') . ':</label>'
-                    . '<input type="text" name="creator-step-1-i' . $i . '-name" id="creator-step-1-i' . $i . '-name" value="' . self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['name'], $_POST['creator-step-1-i' . $i . '-name']) . '" class="w200" />'
-                    . '<br />'
-                    . '<label for="creator-step-1-i' . $i . '-type" class="w160">' . $rb->get('cf.creator.step1.type-label') . ':</label>'
-                    . '<select name="creator-step-1-i' . $i . '-type" id="creator-step-1-i' . $i . '-type">'
+            . '<div class="gray-box">'
+                . '<label for="creator-step-1-i' . $i . '-name" class="w160">' . $rb->get('cf.creator.step1.name-label') . ':</label>'
+                . '<input type="text" name="creator-step-1-i' . $i . '-name" id="creator-step-1-i' . $i . '-name" value="' . self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['name'], $_POST['creator-step-1-i' . $i . '-name']) . '" class="w200" />'
+                . '<br />'
+                . '<label for="creator-step-1-i' . $i . '-type" class="w160">' . $rb->get('cf.creator.step1.type-label') . ':</label>'
+                . '<select name="creator-step-1-i' . $i . '-type" id="creator-step-1-i' . $i . '-type">'
                     . self::creatorGetDataTypes($i)
-                    . '</select>'
-                    . '<input type="checkbox" name="creator-step-1-i' . $i . '-primary" id="creator-step-1-i' . $i . '-primary"' . ($_SESSION['cf']['creator']['field']['i' . $i]['primary'] == 'on' ? ' checked="checked"' : '') . ' />'
-                    . '<label for="creator-step-1-i' . $i . '-primary" >' . $rb->get('cf.creator.step1.primary-label') . '</label>'
-                    . '</div>';
+                . '</select>'
+                . '<input type="checkbox" name="creator-step-1-i' . $i . '-primary" id="creator-step-1-i' . $i . '-primary"' . ($_SESSION['cf']['creator']['field']['i' . $i]['primary'] == 'on' ? ' checked="checked"' : '') . ' />'
+                . '<label for="creator-step-1-i' . $i . '-primary" >' . $rb->get('cf.creator.step1.primary-label') . '</label>'
+            . '</div>';
         }
+        
         $return .= ''
-                . '<div class="gray-box">'
+            . '<div class="gray-box">'
                 . '<input type="submit" name="creator-submit" value="' . $rb->get('cf.creator.step1.button') . '" /> '
                 . '<input type="hidden" name="creator-step" value="1" />'
                 . '<input type="submit" name="creator-back" value="' . $rb->get('cf.creator.back') . '" /> '
                 . '<input type="submit" name="creator-clear" value="' . $rb->get('cf.creator.clear') . '" /> '
-                . '</div>'
-                . '</form>';
+            . '</div>'
+        . '</form>';
 
         return $return;
     }
@@ -1281,6 +1299,7 @@ class CustomForm extends BaseTagLib {
                 . '<option' . ('dropdown' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>dropdown</option>'
                 . '<option' . ('longstring' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>longstring</option>'
                 . '<option' . ('date' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>date</option>'
+                . '<option' . ('bool' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>bool</option>'
                 . '<option' . ('file' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>file</option>'
                 . '<option' . ('reference' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>reference</option>';
 
@@ -1294,6 +1313,7 @@ class CustomForm extends BaseTagLib {
             case "dropdown": return "TINYTEXT";
             case "longstring": return "TEXT";
             case "date": return "INT";
+            case "bool": return "BIT";
 			case "file": return "INT";
 			case "reference": return "INT";
         }
@@ -1314,43 +1334,45 @@ class CustomForm extends BaseTagLib {
         $rb->loadBundle($this->BundleName, $this->BundleLang);
 
         $return .= ''
-                . '<form name="creator-step-2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                . '<div class="gray-box">'
+        . '<form name="creator-step-2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+            . '<div class="gray-box">'
                 . $rb->get('cf.creator.step2.label')
-                . '</div>'
-                . '<div class="gray-box">'
+            . '</div>'
+            . '<div class="gray-box">'
                 . '<label for="creator-id" class="w160">' . $rb->get('cf.creator.step0.id-label') . ':</label> '
                 . '<strong id="creator-id">' . $_SESSION['cf']['creator']['form-id'] . '</strong>'
                 . '<br />'
                 . '<label for="creator-fields" class="w160">' . $rb->get('cf.creator.step0.fields-label') . ':</label> '
                 . '<strong id="creator-fields">' . $_SESSION['cf']['creator']['fields'] . '</strong>'
-                . '</div>';
+            . '</div>';
+
         for ($i = 0; $i < $_SESSION['cf']['creator']['fields']; $i++) {
             $return .= ''
-                    . '<div class="gray-box">'
-                    . '<label for="creator-step-1-i' . $i . '-name" class="w160">' . $rb->get('cf.creator.step1.name-label') . ':</label> '
-                    . '<strong id="creator-step-1-i' . $i . '-name">' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '</strong>'
-                    . '<br />'
-                    . '<label for="creator-step-1-i' . $i . '-type" class="w160">' . $rb->get('cf.creator.step1.type-label') . ':</label> '
-                    . '<strong id="creator-step-1-i' . $i . '-type">' . $_SESSION['cf']['creator']['field']['i' . $i]['type'] . '</strong>'
-                    . '</div>';
+            . '<div class="gray-box">'
+                . '<label for="creator-step-1-i' . $i . '-name" class="w160">' . $rb->get('cf.creator.step1.name-label') . ':</label> '
+                . '<strong id="creator-step-1-i' . $i . '-name">' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '</strong>'
+                . '<br />'
+                . '<label for="creator-step-1-i' . $i . '-type" class="w160">' . $rb->get('cf.creator.step1.type-label') . ':</label> '
+                . '<strong id="creator-step-1-i' . $i . '-type">' . $_SESSION['cf']['creator']['field']['i' . $i]['type'] . '</strong>'
+            . '</div>';
         }
+
         $return .=''
-                . '<div class="gray-box">'
+            . '<div class="gray-box">'
                 . '<label for="creator-overview">' . $rb->get('cr.creator.step2.formoverview1-label') . '</label>'
                 . '<textarea id="creator-overview" rows="1">' . self::creatorFormOverview1() . '</textarea>'
-                . '</div>'
-                . '<div class="gray-box">'
+            . '</div>'
+            . '<div class="gray-box">'
                 . '<label for="creator-overview">' . $rb->get('cr.creator.step2.formoverview2-label') . '</label>'
                 . '<textarea id="creator-overview" rows="15">' . self::creatorFormOverview2() . '</textarea>'
-                . '</div>'
-                . '<div class="gray-box">'
+            . '</div>'
+            . '<div class="gray-box">'
                 . '<input type="submit" name="creator-submit" value="' . $rb->get('cf.creator.step2.button') . '" /> '
                 . '<input type="hidden" name="creator-step" value="2" />'
                 . '<input type="submit" name="creator-back" value="' . $rb->get('cf.creator.back') . '" /> '
                 . '<input type="submit" name="creator-clear" value="' . $rb->get('cf.creator.clear') . '" /> '
-                . '</div>'
-                . '</form>';
+            . '</div>'
+        . '</form>';
 
         return $return;
     }
@@ -1397,22 +1419,22 @@ class CustomForm extends BaseTagLib {
             $id = $_SESSION['cf']['creator']['form-id'] . '-' . $_SESSION['cf']['creator']['field']['i' . $i]['name'];
 			$type = strtolower($_SESSION['cf']['creator']['field']['i' . $i]['type']);
             $return .= ''
-                    . '<p>
+                    . '<div class="gray-box">
 '
                     . '    <label for="' . $id . '">' . ucfirst($_SESSION['cf']['creator']['field']['i' . $i]['name']) . ':</label>
 '
-                    . '    <cf:field name="' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '" type="' . $type . '" elementId="' . $id . '" required="true" '.($type == 'file' ? ' dirId="DIRECTORY_ID"' : '').($type == 'reference' ? ' referenceFormId="TARGET_FORM_ID" referenceCaptionField="CAPTION_FIELD"' : '').' />
+                    . '    <cf:field name="' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '" type="' . $type . '" elementId="' . $id . '" required="true"'.($type == 'file' ? ' dirId="DIRECTORY_ID"' : '').($type == 'reference' ? ' referenceFormId="TARGET_FORM_ID" referenceCaptionField="CAPTION_FIELD"' : '').' />
 '
-                    . '</p>
+                    . '</div>
 ';
         }
 
         $return .= ''
-                . '<p>
+                . '<div class="gray-box">
 '
                 . '    <cf:button type="submit" value="Save" />
 '
-                . '</p>
+                . '</div>
 ';
 
         $return = str_replace('<', '&lt;', $return);
