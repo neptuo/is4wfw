@@ -13,7 +13,7 @@ Ajax = function(selector, parentPageId) {
 Ajax.prototype = Object.create(Ajax.prototype);
 
 Ajax.prototype.Initialize = function(root) {
-    root.find("a").click(this._OnLinkClick.bind(this));
+    root.find("a").not("[target=_blank]").not("[data-ajax=false]").click(this._OnLinkClick.bind(this));
 };
 
 Ajax.prototype._StopEvent = function(e) {
