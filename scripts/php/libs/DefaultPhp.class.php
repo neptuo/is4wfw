@@ -294,27 +294,17 @@
                     
                     foreach ($xml->tag as $tag) {
                         if ($tag->tagname == $tagName) {
-                            for ($i = 0; $i < count($tag->attribute); $i ++) {
-                                $att = $tag->attribute[$i];
-                                $req = true;
-                                if (!array_key_exists((string)$att->attname, $atts) && strtolower($att->attreq) == "required") {
-                                    $str = "Missing required attribute! [".$att->attname."]";
-                                    trigger_error($str , E_USER_WARNING);
-                                    echo "<h4 class=\"error\">".$str."</h4>";
-                                    return false;
-                                }
-                            }
+                            return true;
                         }
                     }
                     
-                    return true;
+                    return false;
                 } else {
                     $str = "Xml library definition doesn't exists! [".$xmlPath."]";
                     trigger_error($str , E_USER_WARNING);
                     echo "<h4 class=\"error\">".$str."</h4>";
                     return false;
                 }
-                
             } else {
                 return false;
             }
@@ -333,41 +323,31 @@
          *
          */                                     
         public function isFullTag($tagPrefix, $tagName, $atts) {
-            if(array_key_exists($tagPrefix, $this->_REGISTERED)) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if(array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
             }
             
-            if(isset($xmlPath)) {
-                if(is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS.$xmlPath);
+            if (isset($xmlPath)) {
+                if (is_file(SCRIPTS.$xmlPath)) {
+                    $xml = self::getXml(SCRIPTS . $xmlPath);
                     
-                    foreach($xml->fulltag as $tag) {
-                        if($tag->tagname == $tagName) {
-                            for($i = 0; $i < count($tag->attribute); $i ++) {
-                                $att = $tag->attribute[$i];
-                                $req = true;
-                                if(!array_key_exists((string)$att->attname, $atts) && strtolower($att->attreq) == "required") {
-                                    $str = "Missing required attribute! [".$att->attname."]";
-                                    trigger_error($str , E_USER_WARNING);
-                                    echo "<h4 class=\"error\">".$str."</h4>";
-                                    return false;
-                                }
-                            }
+                    foreach ($xml->fulltag as $tag) {
+                        if ($tag->tagname == $tagName) {
+                            return true;
                         }
                     }
                     
-                    return true;
+                    return false;
                 } else {
                     $str = "Xml library definition doesn't exists! [".$xmlPath."]";
                     trigger_error($str , E_USER_WARNING);
                     echo "<h4 class=\"error\">".$str."</h4>";
                     return false;
                 }
-                
             } else {
                 return false;
             }
@@ -501,19 +481,29 @@
                         if ($tag->tagname == $tagName) {
                             for ($i = 0; $i < count($tag->attribute); $i ++) {
                                 $att = $tag->attribute[$i];
+                                $hasDefault = isset($att->attdef);
                                 if (array_key_exists((string)$att->attname, $atts)) {
-                                    $hasDefault = isset($att->attdef);
                                     $attribute = $atts[(string)$att->attname];
-                                    $attributeValue = self::getConvertValue($attribute['value'], $hasDefault);
-                                    $attributeValueType = 'raw';
-                                    if (($hasDefault && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
-                                        $attributeValueType = 'eval';
-                                    }
+                                    $attributeValue = self::getConvertValue($attribute['value'], $att);
+                                    if ($attributeValue != null) {
+                                        $attributeValueType = 'raw';
+                                        if (($hasDefault && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
+                                            $attributeValueType = 'eval';
+                                        }
 
-                                    $return[(string)$att->attname] = array('value' => $attributeValue['value'], 'type' => $attributeValueType);
-                                } elseif (isset($att->attdef)) {
+                                        $return[(string)$att->attname] = array('value' => $attributeValue['value'], 'type' => $attributeValueType);
+                                        continue;
+                                    }
+                                }
+
+                                if ($hasDefault) {
                                     $attributeValue = eval('return '. $att->attdef.';');
                                     $return[(string)$att->attname] = array('value' => $attributeValue, 'type' => 'eval');
+                                } else if (strtolower($att->attreq) == "required") {
+                                    $str = "Missing required attribute! [".$att->attname."]";
+                                    trigger_error($str , E_USER_WARNING);
+                                    echo parent::getError($str);
+                                    return false;
                                 } else {
                                     $return[(string)$att->attname] = array('value' => false, 'type' => 'raw');
                                 }
@@ -535,7 +525,7 @@
 
                     return $return;
                 } else {
-                    $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
+                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
                     trigger_error($str , E_USER_WARNING);
                     echo "<h4 class=\"error\">".$str."</h4>";
                     return false;
@@ -560,7 +550,30 @@
             return self::sortAttributesInternal("tag", $tagPrefix, $tagName, $attributes);
         }
         
-        protected function getConvertValue($val, $convert) {
+        protected function getConvertValue($val, $att) {
+            $convert = isset($att->attdef);
+            
+            if (isset($att->atttype)) {
+                switch ($att->atttype) {
+                    case 'string':
+                        return array('value' => $val, 'type' => 'raw');
+                    case 'number':
+                        if (is_numeric($val)) {
+                            return array('value' => $val, 'type' => 'eval');
+                        } else {
+                            return null;
+                        }
+                    case 'bool':
+                        if ($val === 'true' || $val === '1') {
+                            return array('value' => true, 'type' => 'eval');
+                        } else if ($val === 'false' || $val === '0') {
+                            return array('value' => false, 'type' => 'eval');
+                        } else {
+                            return null;
+                        }
+                }
+            }
+
             if ($convert) {
                 if ($val === 'true') {
                     return array('value' => true, 'type' => 'eval');
