@@ -200,13 +200,25 @@ class Js extends BaseTagLib {
         return $return;
     }
 
-    public function ajax($selector, $parentPageId = false) {
+    public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false) {
         if (!is_numeric($parentPageId)) {
             $parentPageId = 'null';
         }
 
+        $init = '';
+        if ($onLoading) {
+            $init .= 'ajax.AddEventListener("loading", ' . $onLoading . '); ';
+        }
+        if ($onCompleted) {
+            $init .= 'ajax.AddEventListener("completed", ' . $onCompleted . '); ';
+        }
+        if ($onFailed) {
+            $init .= 'ajax.AddEventListener("failed", ' . $onFailed . '); ';
+        }
+        $init .= 'ajax.Initialize($(document.body)); ';
+
         $return = self::formatScript('~/js/ajax.js');
-        $return .= '<script type="text/javascript">' . '$(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ajax.Initialize($(document.body)); });' . '</script>';
+        $return .= '<script type="text/javascript">' . '$(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ' . $init . '});' . '</script>';
 
         return $return;
     }

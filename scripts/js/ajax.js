@@ -1,5 +1,8 @@
 Ajax = function(selector, parentPageId) {
     this.Selector = selector;
+    this.LoadingHandlers = [];
+    this.CompletedHandlers = [];
+    this.FailedHandlers = [];
 
     if (typeof(parentPageId) != 'undefined') {
         this.ParentPageId = parentPageId;
@@ -12,6 +15,18 @@ Ajax = function(selector, parentPageId) {
 
 Ajax.prototype = Object.create(Ajax.prototype);
 
+Ajax.prototype.AddEventListener = function(eventName, handler) {
+    if (eventName == 'loading') {
+        this.LoadingHandlers.push(handler);
+    } else if(eventName == 'completed') {
+        this.CompletedHandlers.push(handler);
+    } else if(eventName == 'failed') {
+        this.FailedHandlers.push(handler);
+    } else {
+        throw new Error('Not supported event name "' + eventName + '".');
+    }
+};
+
 Ajax.prototype.Initialize = function(root) {
     root.find("a").not("[target=_blank]").not("[data-ajax=false]").click(this._OnLinkClick.bind(this));
 };
@@ -19,6 +34,28 @@ Ajax.prototype.Initialize = function(root) {
 Ajax.prototype._StopEvent = function(e) {
     e.preventDefault();
 };
+
+Ajax.prototype._RaiseEvent = function(eventName) {
+    var handlers = null;
+    if (eventName == 'loading') {
+        handlers = this.LoadingHandlers;
+    } else if(eventName == 'completed') {
+        handlers = this.CompletedHandlers;
+    } else if(eventName == 'failed') {
+        handlers = this.FailedHandlers;
+    } else {
+        throw new Error('Not supported event name "' + eventName + '".');
+    }
+
+    if (handlers != null) {
+        for (var i = 0, j = handlers.length; i < j; i++) {
+            var handler = handlers[i];
+            if (typeof(handler) == 'function') {
+                handler(this);
+            }
+        }
+    }
+}
 
 Ajax.prototype._OnLinkClick = function(e) {
     var url = e.currentTarget.href;
@@ -30,7 +67,8 @@ Ajax.prototype._OnLinkClick = function(e) {
 
 Ajax.prototype.Load = function(url) {
     var parentPageId = this.ParentPageId;
-
+    
+    this._RaiseEvent('loading');
     $.ajax({
         url: url,
         type: 'GET',
@@ -52,6 +90,15 @@ Ajax.prototype._UpdateHistory = function(url) {
 };
 
 Ajax.prototype._OnLoadCompleted = function(responseText) {
+    if (typeof(responseText) == "object") {
+        if (responseText.status == 200) {
+            responseText = responseText.responseText;
+        } else {
+            this._RaiseEvent('failed');
+            return;
+        }
+    }
+
     var response = document.createElement("document");
     response.innerHTML = responseText;
 
@@ -105,9 +152,10 @@ Ajax.prototype._OnLoadCompleted = function(responseText) {
         } else {
             oldContent.html(html)
             this.Initialize(oldContent); 
-        }
-        
+        }   
     }
+
+    this._RaiseEvent('completed');
 };
 
 Ajax.prototype._FindElement = function(container, name) {

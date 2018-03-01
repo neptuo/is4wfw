@@ -93,6 +93,21 @@
       <attreq>implied</attreq>
       <attcomment>Pokud je vyplněný, jedná se o ID stránky, která má být jako první vynechaná z výstupu (typicky ID šablony webu - 'Template').</attcomment>
     </attribute>
+    <attribute>
+      <attname>onLoading</attname>
+      <attreq>implied</attreq>
+      <attcomment>Název javascriptové funkce, která se má spustit ve chvíli, kdy se spustí načítání obsahu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>onCompleted</attname>
+      <attreq>implied</attreq>
+      <attcomment>Název javascriptové funkce, která se má spustit ve chvíli, kdy se úspěšně dokončí načítání obsahu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>onFailed</attname>
+      <attreq>implied</attreq>
+      <attcomment>Název javascriptové funkce, která se má spustit ve chvíli, kdy načítání obsahu skončilo chybou.</attcomment>
+    </attribute>
     <comment>
       Převede web do ajaxového formátu.
       Všechny linky s target="_blank" nebo data-ajax="false" jsou ignorovány.
