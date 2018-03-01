@@ -3,6 +3,7 @@
 require_once('System.class.php');
 require_once('FileAdmin.class.php');
 require_once("scripts/php/classes/ExtensionParser.class.php");
+require_once("scripts/php/classes/manager/SystemProperty.class.php");
 
 /**
  *
@@ -324,24 +325,14 @@ class BaseTagLib {
         }
     }
 	
-	public function getSystemProperty($name, $cache = true) {
-		if(!$cache) {
-			self::db()->disableCache();
-		}
-		$val = self::db()->fetchSingle('select `value` from `system_property` where `key` = "'.$name.'";');
-		if(!$cache) {
-			self::db()->enableCache();
-		}
-		
-		return $val['value'];
+	public function getSystemProperty($name) {
+        $property = new SystemProperty();
+        return $property->getValue($name);
 	}
 	
 	public function setSystemProperty($name, $value) {
-		if(self::db()->fetchSingle('select `value` from `system_property` where `key` = "'.$name.'";') == array()) {
-			self::db()->execute('insert into `system_property`(`value`, `key`) values("'.$value.'", "'.$name.'");');
-		} else {
-			self::db()->execute('update `system_property` set `value` = "'.$value.'" where `key` = "'.$name.'";');
-		}
+        $property = new SystemProperty();
+        $property->setValue($name, $value);
 	}
 	
 	private $LocalizationBundle;

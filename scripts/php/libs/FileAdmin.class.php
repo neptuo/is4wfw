@@ -686,7 +686,7 @@ class FileAdmin extends BaseTagLib {
 	}
 	
 	protected function transformFileSystem() {
-		$transformed = parent::getSystemProperty('FileAdmin.fileSystemTransformed', false);
+		$transformed = parent::getSystemProperty('FileAdmin.fileSystemTransformed');
 		if(!$transformed) {
 			self::transformSubFileSystem(0);
 			parent::setSystemProperty('FileAdmin.fileSystemTransformed', 1);

@@ -15,6 +15,7 @@
 
    define("FILE_PAGE_PATH", "/file/");
    define("TEMPLATES_CACHE_DIR", "cache/templates/");
+   define("SYSTEM_PROPERTY_CACHE_DIR", "cache/systemproperty/");
 
    define("WEB_R_READ", 101);
    define("WEB_R_WRITE", 102);
