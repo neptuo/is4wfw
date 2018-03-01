@@ -746,6 +746,7 @@ class CustomForm extends BaseTagLib {
                 if (($type != 'file' && $type != 'bool' && $required == 'true' && $value == '') 
 			      || ($type == 'file' && $required == 'true' && (!$fileOk || !self::fieldDirExists($dirId)))
 				  || ($type == 'date' && strtotime($value) == '') 
+				  || ($type == 'number' && !is_numeric($value)) 
 				  || !self::fieldCustomValidation($value, $type, $validation) 
 				  || ($requiredValue != '' && parent::session()->get($fname.'-req', 'cf') != $value)
 				) {
