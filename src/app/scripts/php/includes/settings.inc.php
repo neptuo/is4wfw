@@ -1,30 +1,29 @@
 <?php
 
-  /**
-   *
-   *  Web config.
-   *
-   */
-   define("PHP_SCRIPTS", "scripts/php/");
-   define("SCRIPTS", "scripts/");
-   
-   define("FS_ROOT", WEB_ROOT."files/");
-   
-   define("WEB_PATH", $_SERVER['DOCUMENT_ROOT'] . WEB_DOCUMENT_ROOT . WEB_ROOT);
-   define("FS_PATH", $_SERVER['DOCUMENT_ROOT'] . WEB_DOCUMENT_ROOT . FS_ROOT);
+    // Paths and urls.
+    define("APP_PATH", INSTANCE_PATH . "app/");
+    define("APP_ADMIN_PATH", APP_PATH . "admin/");
+    define("APP_SCRIPTS_PATH", APP_PATH . "scripts/");
+    define("APP_SCRIPTS_PHP_PATH", APP_SCRIPTS_PATH . "php/");
+    
+    define("CACHE_PATH", INSTANCE_PATH . "cache/");
+    define("CACHE_IMAGES_PATH", CACHE_PATH . "images/");
+    define("CACHE_PAGES_PATH", CACHE_PATH . "pages/");
+    define("CACHE_TEMPLATES_PATH", CACHE_PATH . "templates/");
+    define("CACHE_SYSTEMPROPERTY_PATH", CACHE_PATH . "systemproperty/");
 
-   define("FILE_PAGE_PATH", "/file/");
-   define("TEMPLATES_CACHE_DIR", "cache/templates/");
-   define("SYSTEM_PROPERTY_CACHE_DIR", "cache/systemproperty/");
+    define("USER_PATH", INSTANCE_PATH . "user/");
+    define("USER_FILESYSTEM_PATH", USER_PATH . "filesystem/");
+    define("USER_FILESYSTEM_URL", INSTANCE_URL . "files/");
+    define("USER_PUBLIC_PATH", USER_PATH . "public/");
+    define("USER_PUBLIC_URL", INSTANCE_URL . "public/");
 
-   define("WEB_R_READ", 101);
-   define("WEB_R_WRITE", 102);
-   define("WEB_R_DELETE", 103);
-   define("WEB_R_ADDCHILD", 104);
-
-   define("WEB_GROUP", "web");
-   
-   define("VIEW_ROOT", 'admin');
+    // Permissions and security.
+    define("WEB_R_READ", 101);
+    define("WEB_R_WRITE", 102);
+    define("WEB_R_DELETE", 103);
+    define("WEB_R_ADDCHILD", 104);
+    define("WEB_GROUP", "web");
 
 
 ?>
