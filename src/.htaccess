@@ -1,24 +1,24 @@
 RewriteEngine on
 
-#RewriteRule ^app/(.*) - [L,R=404]
-RewriteRule ^cache/(.*) - [L,R=404]
-RewriteRule ^logs/(.*) - [L,R=404]
-#RewriteRule ^user/(.*) - [L,R=404]
+RewriteRule ^setup.php$ app/setup.php [END]
+RewriteRule ^service/.*$ app/service.php [END]
+RewriteRule ^([a-zA-Z0-9/_-]*)$ app/index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING} [END]
+RewriteRule ^(.*)\.view$ app/view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING} [END]
+RewriteRule ^file\.php$ app/file.php [END]
 
-RewriteRule ^setup.php$ app/setup.php
-RewriteRule ^service/.*$ app/service.php
-RewriteRule ^([a-zA-Z0-9/_-]*)$ app/index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
-RewriteRule ^(.*)\.view$ app/view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
-RewriteRule ^file\.php$ app/file.php
+RewriteRule ^js/(.*)\.js$ app/scripts/js/$1.js [END]
+RewriteRule ^css/(.*)\.css$ app/scripts/css/$1.css [END]
+RewriteRule ^files/([0-9/]*)\.([a-zA-Z0-9]*)$ user/filesystem/$1.$2 [END]
 
-RewriteRule ^js/(.*)\.js$ app/scripts/js/$1.js
-RewriteRule ^css/(.*)\.css$ app/scripts/css/$1.css
-RewriteRule ^files/([0-9/]*)\.([a-zA-Z0-9]*)$ user/filesystem/$1.$2
+RewriteRule ^edit_area/(.*) app/edit_area/$1 [END]
+RewriteRule ^images/(.*) app/images/$1 [END]
+RewriteRule ^tiny-mce/(.*) app/tiny-mce/$1 [END]
 
-RewriteRule ^edit_area/(.*) app/edit_area/$1
-RewriteRule ^images/(.*) app/images/$1
-RewriteRule ^tiny-mce/(.*) app/tiny-mce/$1
-
-RewriteRule ^robots\.txt$ user/robots.txt
+RewriteRule ^robots\.txt$ user/robots.txt [END]
 
 RewriteRule ^/?upgrade-collation\.php$ - [L,R=404]
+
+RewriteRule ^app/(.*) - [L,R=404]
+RewriteRule ^cache/(.*) - [L,R=404]
+RewriteRule ^logs/(.*) - [L,R=404]
+RewriteRule ^user/(.*) - [L,R=404]
