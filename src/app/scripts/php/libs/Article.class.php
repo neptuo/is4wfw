@@ -313,21 +313,21 @@
                 }
 
                 $items .= ''
-                        . '<item>'
-                        . '<title>' . $article['name'] . '</title>'
-                        . '<link>' . $flink . '</link>'
-                        . '<description>' . $article['head'] . '</description>'
-                        . '<pubDate>' . date("d.m.Y H:i", $article['timestamp']) . '</pubDate>'
-                        . '<guid></guid>'
-                        . '</item>';
+                . '<item>'
+                    . '<title>' . $article['name'] . '</title>'
+                    . '<link>' . $flink . '</link>'
+                    . '<description>' . $article['head'] . '</description>'
+                    . '<pubDate>' . date("d.m.Y H:i", $article['timestamp']) . '</pubDate>'
+                    . '<guid></guid>'
+                . '</item>';
             }
 
             if (count($lineName) == 1) {
                 $return .= ''
-                        . '<rss version="2.0">'
-                        . '<channel>'
+                . '<rss version="2.0">'
+                    . '<channel>'
                         . '<title>' . $webObject->getPageTitle() . '</title>'
-                        . '<link>http://' . $webObject->getHttpHost() . WEB_ROOT . '</link>'
+                        . '<link>http://' . $webObject->getHttpHost() . INSTANCE_URL . '</link>'
                         . '<description>' . $lineName[0]['name'] . '</description>'
                         . '<language>' . $langName[0]['language'] . '</language>'
                         . '<pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>'
@@ -337,8 +337,8 @@
                         . '<managingEditor>editor@example.com</managingEditor>'
                         . '<webMaster>webmaster@papayateam.cz</webMaster>'
                         . $items
-                        . '</channel>'
-                        . '</rss>';
+                    . '</channel>'
+                . '</rss>';
 
                 echo $return;
                 exit;

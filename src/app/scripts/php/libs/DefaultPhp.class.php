@@ -1,6 +1,11 @@
 <?php
 
     require_once("BaseTagLib.class.php");
+    require_once("Error.class.php");
+    require_once("Log.class.php");
+    require_once("Database.class.php");
+    require_once("Login.class.php");
+    require_once("System.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
 
     /**
@@ -67,15 +72,10 @@
             parent::setTagLibXml("xml/DefaultPhp.xml");
             
             // Init defalt objects (php, error, log)
-            require_once(PHP_SCRIPTS."libs/Error.class.php");
             $GLOBALS['errorObject'] = new Error();
-            require_once(PHP_SCRIPTS."libs/Log.class.php");
             $GLOBALS['logObject'] = new Log();
-            require_once(PHP_SCRIPTS."libs/Database.class.php");
             $GLOBALS['dbObject'] = new Database();
-            require_once(PHP_SCRIPTS."libs/Login.class.php");
             $GLOBALS['loginObject'] = new Login();
-            require_once(PHP_SCRIPTS."libs/System.class.php");
             $GLOBALS['sysObject'] = new System();
             
             set_error_handler("Error::errorHandler");
@@ -252,7 +252,7 @@
         }
         
         public function autoRegisterPrefix($prefix) {
-            $xml = self::getXml(PHP_SCRIPTS . 'autoregister.xml');
+            $xml = self::getXml(APP_SCRIPTS_PHP_PATH . 'autoregister.xml');
             foreach ($xml->reg as $reg) {
                 $attrs = $reg->attributes();
                 if ($attrs['prefix'] == $prefix) {

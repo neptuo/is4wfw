@@ -313,7 +313,7 @@ class CustomTagParser {
     public function startParsing() {
         if ($this->UseCaching) {
             $hashName = sha1($this->Content);
-            $fileName = TEMPLATES_CACHE_DIR . $hashName . '.cache.php';
+            $fileName = CACHE_TEMPLATES_PATH . $hashName . '.cache.php';
 
             if (!file_exists($fileName)) {
                 $this->Result = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $this->Content);

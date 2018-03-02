@@ -299,7 +299,7 @@
                         .'<input type="hidden" name="guestbook-editable-gbid" value="'.$guestbookId.'" />'
                         .'<input type="hidden" name="guestbook-editable-id" value="'.$row['id'].'" />'
                         .'<input type="hidden" name="guestbook-editable-delete" value="Delete Entry" />'
-                        .'<input title="Delete Entry" class="confirm" type="image" src="'.WEB_ROOT.'images/page_del.png" name="guestbook-editable-delete" value="Delete Entry" />'
+                        .'<input title="Delete Entry" class="confirm" type="image" src="~/images/page_del.png" name="guestbook-editable-delete" value="Delete Entry" />'
                         .'</form>'
                     .'</div>' 
                     : '')
@@ -308,7 +308,7 @@
                         .'<form name="guestbook-answer" method="post" action="'.$answerHref.'">'
                         .'<input type="hidden" name="guestbook-parent-id" value="'.$row['id'].'" />'
                         .'<input type="hidden" name="guestbook-editable-add-answer" value="Add Answer" />'
-                        .'<input title="'.$rb->get('gb.label.addanswer').'" type="image" src="'.WEB_ROOT.'images/page_add.png" name="guestbook-editable-add-answer" value="'.$rb->get('gb.label.addanswer').'" />'
+                        .'<input title="'.$rb->get('gb.label.addanswer').'" type="image" src="~/images/page_add.png" name="guestbook-editable-add-answer" value="'.$rb->get('gb.label.addanswer').'" />'
                         .'</form>'
                     .'</div>'  
                     : '')

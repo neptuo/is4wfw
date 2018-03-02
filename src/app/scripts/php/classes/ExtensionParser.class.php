@@ -185,7 +185,7 @@ class ExtensionParser {
 	
 	
 	public static function loadView($name) {
-		$content = file_get_contents(SCRIPTS.'views/'.$name.'.html');
+		$content = file_get_contents(APP_SCRIPTS_PATH . 'views/'.$name.'.html');
 		return $content;
 	}
 	

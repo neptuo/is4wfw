@@ -34,12 +34,6 @@
         private $IsCached = true;
         /**
          *
-         *  Dir name for storing caches.
-         *
-         */
-        private $CacheDir = "cache";
-        /**
-         *
          * 	Path to cached file.
          *
          */
@@ -258,9 +252,9 @@
                     $this->CacheFile = sha1($this->FullUrl).'.cache.html';
                     $cacheUsed = false;
                     if ($item['cachetime'] == 0 || $item['cachetime'] + $item['lastcache'] >= time()) {
-                        if (file_exists(self::getPageCachePath() . $this->CacheFile)) {
+                        if (file_exists(CACHE_PAGES_PATH . $this->CacheFile)) {
                             $cacheUsed = true;
-                            self::tryToComprimeContent(file_get_contents(self::getPageCachePath() . $this->CacheFile));
+                            self::tryToComprimeContent(file_get_contents(CACHE_PAGES_PATH . $this->CacheFile));
                         }
                     } 
 
@@ -989,12 +983,12 @@
                     $name .= '-' . $pg;
                 }
                 $name .= '.cache.html';
-                $path = WEB_PATH . $this->CacheDir . '/pages/';
-                $cacheMTime = filemtime($path . $name);
+                $path = CACHE_PAGES_PATH . $name;
+                $cacheMTime = filemtime($path);
 
-                if (file_exists($path . $name) && is_readable($path . $name) && ($cacheMTime > (time() - $time))) {
+                if (file_exists($path) && is_readable($path) && ($cacheMTime > (time() - $time))) {
                     //echo $cacheMTime;
-                    echo file_get_contents($path . $name);
+                    echo file_get_contents($path);
                     exit;
                 } else {
                     $this->CacheFile = $name;
@@ -1104,7 +1098,7 @@
             $return = self::resolveWebRoot($return);
 
             if ($this->IsCached) {
-                file_put_contents(self::getPageCachePath() . $this->CacheFile, $return);
+                file_put_contents(CACHE_PAGES_PATH . $this->CacheFile, $return);
             }
 
             // Rewrite anchors
@@ -1120,11 +1114,6 @@
             self::tryToComprimeContent($return);
         }
         
-        private function getPageCachePath() {
-            $webProject = $this->UrlResolver->getWebProject();
-            return WEB_PATH . (UrlResolver::combinePath(WEB_ROOT, $webProject['alias']['root_url'])) . $this->CacheDir . '/pages/';;
-        }
-
         private function resolveWebRoot($content) {
             $webProject = $this->UrlResolver->getWebProject();
             $rootUrl = UrlResolver::combinePath(WEB_ROOT, $webProject['alias']['root_url']);

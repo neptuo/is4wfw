@@ -15,7 +15,7 @@ class SystemProperty extends BaseTagLib {
     }
 
     public function getValue($name) {
-        $path = SYSTEM_PROPERTY_CACHE_DIR . $name . '.txt';
+        $path = CACHE_SYSTEMPROPERTY_PATH . $name . '.txt';
         if (file_exists($path)) {
             return file_get_contents($path);
         }
@@ -33,7 +33,7 @@ class SystemProperty extends BaseTagLib {
             $db->execute('update `system_property` set `value` = "' . $db->escape($value) . '" where `key` = "' . $db->escape($name) . '";');
         }
         
-        $path = SYSTEM_PROPERTY_CACHE_DIR . $name . '.txt';
+        $path = CACHE_SYSTEMPROPERTY_PATH . $name . '.txt';
         file_set_contents($path, $value);
     }
 }

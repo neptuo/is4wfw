@@ -49,7 +49,7 @@
             $return = '';
             
             $cpArray = $phpObject->str_tr($classPath, '.');
-            $xmlPath = SCRIPTS;
+            $xmlPath = APP_SCRIPTS_PATH;
             for ($i = 0; $i < count($cpArray); $i ++) {
                 if($i < count($cpArray) - 1) {
                     $xmlPath .= $cpArray[$i].'/';
@@ -390,7 +390,7 @@
                 'class' => $rb->get('autoregister.class')
             ));
             
-            $xml = new SimpleXMLElement(file_get_contents(PHP_SCRIPTS . 'autoregister.xml'));
+            $xml = new SimpleXMLElement(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'));
             foreach ($xml->reg as $reg) {
                 $attrs = $reg->attributes();
                 $grid->addRow(array(

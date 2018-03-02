@@ -96,11 +96,11 @@
                 $subf = $dbObject->fetchAll("SELECT count(`id`) AS `count` FROM `file` WHERE `dir_id` = ".$directoryId.";");
             
                 if($subd[0]['count'] == 0 && $subf[0]['count'] == 0) {
-                $path = self::getPhysicalPathTo($directoryId);
-                $dbObject->execute("DELETE FROM `directory` WHERE `id` = ".$directoryId.";");
-                $dbObject->execute("DELETE FROM `directory_right` WHERE `id` = ".$directoryId.";");
-                // take smazat fyzicky adresar!!
-                rmdir(WEB_PATH.$path);
+                    $path = self::getPhysicalPathTo($directoryId);
+                    $dbObject->execute("DELETE FROM `directory` WHERE `id` = ".$directoryId.";");
+                    $dbObject->execute("DELETE FROM `directory_right` WHERE `id` = ".$directoryId.";");
+                    // take smazat fyzicky adresar!!
+                    rmdir(WEB_PATH.$path);
                 } else {
                 $return .= '<h4 class="error">'.$rb->get('dir.notempty').'</h4>';
                 }
@@ -815,31 +815,32 @@
         *
         */                   
         public function getPhysicalPathTo($dirId, $notUserFsRoot = false) {
-        $path = "";
-        if($dirId >= 0) {
-            while($dirId != 0) {
-            parent::db()->getDataAccess()->disableCache();
-            $dirInfo = parent::dao('Directory')->select(parent::select()->where('id', '=', $dirId)->result(), false, array(FileAdmin::$FileSystemItemPath, 'parent_id'));
-            parent::db()->getDataAccess()->enableCache();
-            if(count($dirInfo) == 1) {
-                $dirId = $dirInfo[0]['parent_id'];
-                $path = $dirInfo[0][FileAdmin::$FileSystemItemPath].'/'.$path;
+            $path = "";
+            if($dirId >= 0) {
+                while($dirId != 0) {
+                parent::db()->getDataAccess()->disableCache();
+                $dirInfo = parent::dao('Directory')->select(parent::select()->where('id', '=', $dirId)->result(), false, array(FileAdmin::$FileSystemItemPath, 'parent_id'));
+                parent::db()->getDataAccess()->enableCache();
+                if(count($dirInfo) == 1) {
+                    $dirId = $dirInfo[0]['parent_id'];
+                    $path = $dirInfo[0][FileAdmin::$FileSystemItemPath].'/'.$path;
+                } else {
+                    $message = "Directory doesn't exists!";
+                    echo "<h4 class=\"error\">".$message."</h4>";
+                    trigger_error($message, E_USER_ERROR);
+                }
+                }
             } else {
                 $message = "Directory doesn't exists!";
                 echo "<h4 class=\"error\">".$message."</h4>";
                 trigger_error($message, E_USER_ERROR);
             }
+                
+            if(!$notUserFsRoot) {
+                $path = UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), FS_ROOT . $path);
             }
-        } else {
-            $message = "Directory doesn't exists!";
-            echo "<h4 class=\"error\">".$message."</h4>";
-            trigger_error($message, E_USER_ERROR);
-        }
-            
-        if(!$notUserFsRoot) {
-            $path = UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), FS_ROOT.$path);
-        }
-        return $path;
+
+            return $path;
         }
         
         /**

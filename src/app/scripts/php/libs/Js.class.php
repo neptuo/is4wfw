@@ -30,7 +30,7 @@
             $this->includedScripts[] = $path;
 
             $minPath = str_replace(".js", ".min.js", $path);
-            if (file_exists(str_replace("~/", SCRIPTS, $minPath))) {
+            if (file_exists(str_replace("~/", APP_SCRIPTS_PATH, $minPath))) {
                 $path = $minPath;
             }
             
@@ -112,7 +112,7 @@
                     . self::formatScript('~/js/initTiny.js');
             }
             if (strpos($_SERVER['REQUEST_URI'], ".view") == -1) {
-                $return = str_replace("~/", UrlResolver::combinePath(WEB_ROOT, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), WEB_ROOT)), $return);
+                $return = str_replace("~/", UrlResolver::combinePath(INSTANCE_URL, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), INSTANCE_URL)), $return);
             } else {
                 $return = ViewHelper::resolveUrl($return);
             }

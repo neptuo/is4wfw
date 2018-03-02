@@ -48,7 +48,7 @@
 		}
 		
 		$fileType = "text/css";
-		$return = str_replace("~/", UrlResolver::combinePath(WEB_ROOT, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), WEB_ROOT)), $return);
+		$return = str_replace("~/", UrlResolver::combinePath(INSTANCE_URL, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), INSTANCE_URL)), $return);
 		header('Content-Type: '.$fileType);
 		header('Content-Length: '.strlen($return));
 		header('Content-Transfer-Encoding: binary');

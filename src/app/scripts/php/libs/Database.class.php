@@ -156,8 +156,8 @@
 				$data = self::fetchAll($query);
 			
 				if ($template) {
-					if (is_file(PHP_SCRIPTS . $template)) {
-						$cont = file_get_contents(PHP_SCRIPTS . $template);
+					if (is_file(APP_SCRIPTS_PHP_PATH . $template)) {
+						$cont = file_get_contents(APP_SCRIPTS_PHP_PATH . $template);
 				
 						$return = "";
 						foreach ($data as $tr) {

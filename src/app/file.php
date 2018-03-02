@@ -43,7 +43,7 @@ if (array_key_exists('fid', $_REQUEST)) {
                 break;
         }
 
-        $file[0]['content'] = str_replace("~/", UrlResolver::combinePath(WEB_ROOT, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), WEB_ROOT)), $file[0]['content']);
+        $file[0]['content'] = str_replace("~/", UrlResolver::combinePath(INSTANCE_URL, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), INSTANCE_URL)), $file[0]['content']);
 
         // Zipovani ...
         /* $acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
@@ -90,7 +90,7 @@ if (array_key_exists('fid', $_REQUEST)) {
     $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `url`, `type`, `timestamp` FROM `file` WHERE `id` = " . $fileId . ";");
 
     if (count($file) == 1) {
-        $filePath = WEB_PATH . $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
+        $filePath = INSTANCE_PATH . $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
         //echo $filePath;
         $updTime = filemtime($filePath);
 
@@ -113,7 +113,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             $width = $_GET['width'];
             $height = $_GET['height'];
             
-            $thumbPath = WEB_PATH . 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
+            $thumbPath = CACHE_IMAGES_PATH . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -127,7 +127,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             $ratio = $width / $orWidth;
             $height = round($ratio * $orHeight);
 
-            $thumbPath = WEB_PATH . 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
+            $thumbPath = CACHE_IMAGES_PATH . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -141,7 +141,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             $ratio = $height / $orHeight;
             $width = round($ratio * $orWidth);
 
-            $thumbPath = WEB_PATH . 'cache/images/' . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
+            $thumbPath = CACHE_IMAGES_PATH . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -183,7 +183,7 @@ if (array_key_exists('fid', $_REQUEST)) {
     $dbObject = new Database();
     $flObject = new File();
 
-    $filePath = WEB_PATH . $_REQUEST['path'];
+    $filePath = INSTANCE_PATH . $_REQUEST['path'];
     $updTime = filemtime($filePath);
     // Try cached file ...
     // header("Cache-Control: private, max-age=10800, pre-check=10800");

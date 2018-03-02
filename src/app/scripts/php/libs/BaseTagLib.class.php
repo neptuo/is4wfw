@@ -369,7 +369,7 @@
         
         public function dao($name) {
             if(!array_key_exists($name, $this->daos)) {
-                require_once(PHP_SCRIPTS.'classes/dataaccess/'.$name.'Dao.class.php');
+                require_once(APP_SCRIPTS_PHP_PATH . 'classes/dataaccess/' . $name . 'Dao.class.php');
                 $classname = $name.'Dao';
                 $dao = new $classname;
                 $dao->setDataAccess(self::db()->getDataAccess());
