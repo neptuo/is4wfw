@@ -12,6 +12,8 @@
     define("CACHE_TEMPLATES_PATH", CACHE_PATH . "templates/");
     define("CACHE_SYSTEMPROPERTY_PATH", CACHE_PATH . "systemproperty/");
 
+    define("LOGS_PATH", INSTANCE_PATH . "logs/");
+
     define("USER_PATH", INSTANCE_PATH . "user/");
     define("USER_FILESYSTEM_PATH", USER_PATH . "filesystem/");
     define("USER_FILESYSTEM_URL", INSTANCE_URL . "files/");

@@ -45,7 +45,7 @@
          */
         public function write($msg) {
             global $webObject;
-            $this->LogFile = "logs/" . ($webObject != null ? $webObject->getProjectId() : "_") . '-' . date("Y-m-d") . ".log";
+            $this->LogFile = LOGS_PATH . ($webObject != null ? $webObject->getProjectId() : "_") . '-' . date("Y-m-d") . ".log";
             if ($this->IsOpen == false) {
                 if (is_file($this->LogFile)) {
                     $this->File = fopen($this->LogFile, "a");
