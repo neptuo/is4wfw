@@ -1,7 +1,6 @@
 <?php
 
-$targetDirectoryPath = 'scripts/php/includes';
-$targetFilePath = $targetDirectoryPath . '/instance.inc.php';
+$targetDirectoryPath = 'app/scripts/php/includes';
 
 $url = 'https://api.github.com/repos/maraf/PHP-WebFramework/releases';
 
