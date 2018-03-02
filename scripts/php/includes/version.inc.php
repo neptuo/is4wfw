@@ -1,24 +1,9 @@
 <?php
 
-/**
- *
- * 	Build version
- *
- */
 define("BUILD_VERSION", 337);
+define("PREVIEW_VERSION", "");
 
-/**
- *
- * 	Web framework version.
- *
- */
-define("WEB_VERSION", "1.9.27." . BUILD_VERSION);
-
-/**
- *
- * 	Cms framework version.
- *
- */
+define("WEB_VERSION", BUILD_VERSION . PREVIEW_VERSION);
 define("CMS_VERSION", "5.06");
 
 ?>
