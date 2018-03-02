@@ -1,9 +1,14 @@
 RewriteEngine on
-RewriteRule ^service/.*$ service.php
-RewriteRule ^([a-zA-Z0-9/_-]*)$ index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
-RewriteRule ^(.*).view$ view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
-RewriteRule ^js/(.*).js scripts/js/$1.js
-RewriteRule ^css/(.*).css scripts/css/$1.css
-RewriteRule ^file/(.*).([a-z0-9]*) scripts/files/$1.$2
+RewriteRule ^service/.*$ app/service.php
+RewriteRule ^([a-zA-Z0-9/_-]*)$ app/index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
+RewriteRule ^(.*).view$ app/view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
+RewriteRule ^js/(.*).js app/scripts/js/$1.js
+RewriteRule ^css/(.*).css app/scripts/css/$1.css
+RewriteRule ^file/(.*).([a-z0-9]*) app/scripts/files/$1.$2
+
+RewriteRule ^app/(.*) - [L,R=404]
+RewriteRule ^cache/(.*) - [L,R=404]
+RewriteRule ^logs/(.*) - [L,R=404]
+RewriteRule ^user/(.*) - [L,R=404]
 
 RewriteRule ^/?upgrade-collation\.php$ - [L,R=404]
