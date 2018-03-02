@@ -91,6 +91,22 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         $db->commit();
         $db->disconnect();
     }
+
+    function ensureDirectory($path) {
+        if (!file_exists($path)) {
+            mkdir($path);
+        }
+    }
+
+    ensureDirectory(CACHE_PATH);
+    ensureDirectory(CACHE_IMAGES_PATH);
+    ensureDirectory(CACHE_PAGES_PATH);
+    ensureDirectory(CACHE_TEMPLATES_PATH);
+    ensureDirectory(CACHE_SYSTEMPROPERTY_PATH);
+    ensureDirectory(LOGS_PATH);
+    ensureDirectory(USER_PATH);
+    ensureDirectory(USER_FILESYSTEM_PATH);
+    ensureDirectory(USER_PUBLIC_PATH);
     
     if (file_exists($targetFilePath)) {
         header("Location: /login.view"); 
