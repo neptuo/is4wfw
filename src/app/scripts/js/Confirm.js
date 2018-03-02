@@ -41,10 +41,10 @@ function initConfirm(event) {
 				var elm = ((event.srcElement) ? event.srcElement : event.target);
 				var title = 'this';
 				if(elm && elm.title && elm.title.length != 0) {
-					title = '\n\n\t"' + elm.title + '"\n\n';
+					title = elm.title;
 				}
 				//stopEvent(event); 
-				if(!confirm("Do you really want to do " + title + "?")) {
+				if(!confirm(title + "?")) {
 					stopEvent(event);
 					return false;
 				} else {
