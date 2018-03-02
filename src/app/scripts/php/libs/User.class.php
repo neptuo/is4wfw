@@ -899,6 +899,7 @@
             return $return;
         }
 
+        // Duplicated in setup.php
         public static function hashPassword($login, $password) {
             return sha1($login . $password);
         }

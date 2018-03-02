@@ -8,8 +8,6 @@ if (file_exists($targetFilePath)) {
     exit;
 }
 
-require_once(APP_SCRIPTS_PHP_PATH . "libs/User.class.php");
-
 $importFiles = scandir('data/default', SCANDIR_SORT_DESCENDING);
 $importFilePath = 'data/default/' . $importFiles[0];
 
@@ -27,7 +25,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         'name' => $_POST['user-name'],
         'surname' => $_POST['user-surname'],
         'login' => $_POST['user-login'],
-        'password' => User::hashPassword($_POST['user-login'], $_POST['user-password'])
+        'password' => sha1($_POST['user-login'] . $_POST['user-password']) // Duplicated in User.class.php
     );
 
     $templateFile = fopen($templateFilePath, 'r') or die('Cannot open file:  ' . $templateFilePath);
@@ -47,6 +45,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     fclose($targetFile);
 
     require_once($targetFilePath);
+    require_once("scripts/php/includes/settings.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/DataAccess.class.php");
 
     $importFile = fopen($importFilePath, 'r') or die('Cannot open file:  ' . $importFilePath);
@@ -56,45 +55,44 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     $db->connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE, false);
     $db->setCharset('utf8');
     
-    $db->transaction();
+    if (count($db->fetchAll("SHOW TABLES LIKE 'system_property';")) == 0) {
+        $db->transaction();
 
-    while (($line = fgets($importFile)) !== false) {
-        // Skip it if it's a comment
-        if (substr($line, 0, 2) == '--' || $line == '')
-            continue;
+        while (($line = fgets($importFile)) !== false) {
+            // Skip it if it's a comment
+            if (substr($line, 0, 2) == '--' || $line == '')
+                continue;
 
-        // Add this line to the current segment
-        $batch .= $line;
-        
-        // If it has a semicolon at the end, it's the end of the query
-        if (substr(trim($line), -1, 1) == ';') {
+            // Add this line to the current segment
+            $batch .= $line;
+            
+            // If it has a semicolon at the end, it's the end of the query
+            if (substr(trim($line), -1, 1) == ';') {
 
-            $batch = str_replace("{user-name}", $user['name'], $batch);
-            $batch = str_replace("{user-surname}", $user['surname'], $batch);
-            $batch = str_replace("{user-login}", $user['login'], $batch);
-            $batch = str_replace("{user-password}", $user['password'], $batch);
+                $batch = str_replace("{user-name}", $user['name'], $batch);
+                $batch = str_replace("{user-surname}", $user['surname'], $batch);
+                $batch = str_replace("{user-login}", $user['login'], $batch);
+                $batch = str_replace("{user-password}", $user['password'], $batch);
 
-            // Perform the query
-            if ($db->execute($batch)) {
-                print("Error performing query '<strong>" . $batch . ": " . mysql_error() . "<br /><br />");
+                // Perform the query
+                if ($db->execute($batch)) {
+                    print("Error performing query '<strong>" . $batch . ": " . mysql_error() . "<br /><br />");
+                }
+
+                // Reset temp variable to empty
+                $batch = '';
             }
-
-            // Reset temp variable to empty
-            $batch = '';
         }
+
+        $dbObject = $db;
+        require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
+        require_once(APP_SCRIPTS_PHP_PATH . "includes/autoupdate.inc.php");
+
+        $db->commit();
+        $db->disconnect();
     }
-
-    $dbObject = $db;
-    require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "includes/autoupdate.inc.php");
-
-    $db->commit();
-    $db->disconnect();
     
     if (file_exists($targetFilePath)) {
-        unlink($templateFilePath);
-        unlink("setup.php");
-
         header("Location: /login.view"); 
         exit;
     }
@@ -105,10 +103,10 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
 <html>
     <head>
         <title>Setup is4wfw</title>
-        <link rel="stylesheet" href="scripts/css/admin.css" />
-        <link rel="stylesheet" href="scripts/css/admin_common.css" />
-        <link rel="stylesheet" href="scripts/css/admin_design.css" />
-        <link rel="stylesheet" href="scripts/css/admin_features.css" />
+        <link rel="stylesheet" href="css/admin.css" />
+        <link rel="stylesheet" href="css/admin_common.css" />
+        <link rel="stylesheet" href="css/admin_design.css" />
+        <link rel="stylesheet" href="css/admin_features.css" />
     </head>
     <body>
         <div class="all">
