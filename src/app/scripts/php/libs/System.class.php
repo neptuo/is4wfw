@@ -408,41 +408,47 @@
 				.'<hr />';
 			}
 			
-			$return .= ''
-			.'<div class="system-adminmenu">'
-				.'<table class="standart clickable">'
-					.'<tr>'
-						.'<th>Name</th>'
-						.'<th>Page id (url)</th>'
-						.'<th>Icon</th>'
-						.'<th>Permission</th>'
-						.'<th></th>'
-					.'</tr>';
 			$data = $dbObject->fetchAll('select `id`, `name`, `page_id`, `icon`, `perm` from `system_adminmenu` order by `id`');
-			$i = 1;
-			foreach($data as $item) {
+			if(count($data) > 0) {
 				$return .= ''
-				.'<tr class="'.((($i % 2) == 0) ? 'even' : 'idle').'">'
-					.'<td>'.$item['name'].'</td>'
-					.'<td>'.$item['page_id'].'</td>'
-					.'<td>'.$item['icon'].'</td>'
-					.'<td>'.$item['perm'].'</td>'
-					.'<td>'
-						.'<form method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-							.'<input type="hidden" name="adminmenu-id" value="'.$item['id'].'" />'
-							.'<input type="hidden" name="adminmenu-edit" value="Edit" />'
-							.'<input type="image" src="~/images/page_edi.png" name="adminmenu-edit" value="Edit" title="Edit admin menu item, id '.$item['id'].'" />'
-						.'</form> '
-						.'<form method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-							.'<input type="hidden" name="adminmenu-id" value="'.$item['id'].'" />'
-							.'<input type="hidden" name="adminmenu-delete" value="Delete" />'
-							.'<input type="image" src="~/images/page_del.png" name="adminmenu-delete" value="Delete" title="Delete admin menu item, id '.$item['id'].'" />'
-						.'</form>'
-					.'</td>'
-				.'</tr>';
-				$i++;
+				.'<div class="system-adminmenu">'
+					.'<table class="standart clickable">'
+						.'<tr>'
+							.'<th>Name</th>'
+							.'<th>Page id (url)</th>'
+							.'<th>Icon</th>'
+							.'<th>Permission</th>'
+							.'<th></th>'
+						.'</tr>';
+				$i = 1;
+				foreach($data as $item) {
+					$return .= ''
+					.'<tr class="'.((($i % 2) == 0) ? 'even' : 'idle').'">'
+						.'<td>'.$item['name'].'</td>'
+						.'<td>'.$item['page_id'].'</td>'
+						.'<td>'.$item['icon'].'</td>'
+						.'<td>'.$item['perm'].'</td>'
+						.'<td>'
+							.'<form method="post" action="'.$_SERVER['REQUEST_URI'].'">'
+								.'<input type="hidden" name="adminmenu-id" value="'.$item['id'].'" />'
+								.'<input type="hidden" name="adminmenu-edit" value="Edit" />'
+								.'<input type="image" src="~/images/page_edi.png" name="adminmenu-edit" value="Edit" title="Edit admin menu item, id '.$item['id'].'" />'
+							.'</form> '
+							.'<form method="post" action="'.$_SERVER['REQUEST_URI'].'">'
+								.'<input type="hidden" name="adminmenu-id" value="'.$item['id'].'" />'
+								.'<input type="hidden" name="adminmenu-delete" value="Delete" />'
+								.'<input type="image" src="~/images/page_del.png" class="confirm" name="adminmenu-delete" value="Delete" title="Delete admin menu item, id '.$item['id'].'" />'
+							.'</form>'
+						.'</td>'
+					.'</tr>';
+					$i++;
+				}
+				$return .= '</table></div>';
+			} else {
+				$return .= parent::getWarning("No admin menu items.");
 			}
-			$return .= '</table></div>'
+
+			$return .= ''
 			.'<hr />'
 			.'<div class="gray-box">'
 				.'<form method="post" action="'.$_SERVER['REQUEST_URI'].'">'
@@ -455,6 +461,11 @@
 			} else {
 				return parent::getFrame('Admin menu', $return, "", true);
 			}
+		}
+
+		public function hasAdminMenu() {
+			$data = parent::db()->fetchSingle('select count(`id`) as `count` from `system_adminmenu`;');
+			return $data['count'] > 0;
 		}
 		
 		public function listConnections($useFrames = false, $showMsg = false) {

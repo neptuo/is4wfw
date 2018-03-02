@@ -57,15 +57,17 @@
 					</span>
                     <m:xmlMenu file="~/templates/menus/settings.xml" />
                 </v:panel>
-                <v:panel class="cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
-                    <span class="menu-root">
-						<a href="~/in/personal-notes.view">
-							<web:static value="Custom" lang="en" />
-							<web:static value="Další" lang="cs" />
-						</a>
-					</span>
-                    <sys:adminMenu url="~/in/admin-menu.view" />
-                </v:panel>
+                <web:condition when="sys:hasAdminMenu">
+                    <v:panel class="cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
+                        <span class="menu-root">
+                            <web:a pageId="~/in/personal-notes.view">
+                                <web:static value="Custom" lang="en" />
+                                <web:static value="Další" lang="cs" />
+                            </web:a>
+                        </span>
+                        <sys:adminMenu url="~/in/admin-menu.view" />
+                    </v:panel>
+                </web:condition>
             </div>
         </div>
         <div class="dock-bar">
