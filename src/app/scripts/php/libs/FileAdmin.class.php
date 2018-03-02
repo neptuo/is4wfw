@@ -136,7 +136,7 @@
 		}
 		
 		public function getFileDirectUrl($file) {
-			return self::getPhysicalPathTo($file['dir_id'], false).$file[FileAdmin::$FileSystemItemPath].".".self::$FileExtensions[$file['type']];
+			return self::getPhysicalUrlTo($file['dir_id'], false).$file[FileAdmin::$FileSystemItemPath].".".self::$FileExtensions[$file['type']];
 		}
 		
 		/* ================== ADMIN ======================================================= */

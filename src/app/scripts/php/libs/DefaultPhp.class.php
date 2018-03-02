@@ -118,7 +118,7 @@
                     $className = $classArray[count($classArray) - 1];
                     $classPath = self::parseClassPath($classPath);
 
-                    require_once(SCRIPTS.$classPath.".class.php");
+                    require_once(APP_SCRIPTS_PATH . $classPath . ".class.php");
                     
                     if (self::isCountOfInstances($className, $classDir)) {
                         $GLOBALS[$tagPrefix."Object"] = new $className;
@@ -178,7 +178,7 @@
          *
          */                                     
         private function checkIfClassExists($tagPrefix, $classPath) {
-            $path = SCRIPTS.self::parseClassPath($classPath).".class.php";
+            $path = APP_SCRIPTS_PATH . self::parseClassPath($classPath).".class.php";
             if(is_file($path)) {
                 //$cont = file_get_contents($path);
                 //if(eregi("class *"))
@@ -284,8 +284,8 @@
             }
             
             if (isset($xmlPath)) {
-                if (is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS . $xmlPath);
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
                     
                     foreach ($xml->tag as $tag) {
                         if ($tag->tagname == $tagName) {
@@ -327,8 +327,8 @@
             }
             
             if (isset($xmlPath)) {
-                if (is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS . $xmlPath);
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
                     
                     foreach ($xml->fulltag as $tag) {
                         if ($tag->tagname == $tagName) {
@@ -369,8 +369,8 @@
             }
             
             if (isset($xmlPath)) {
-                if (is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS . $xmlPath);
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
                     
                     foreach ($xml->property as $prop) {
                         if ($prop->propname == $propName) {
@@ -403,8 +403,8 @@
             }
             
             if (isset($xmlPath)) {
-                if (is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS . $xmlPath);
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
                     return isset($xml->anyProperty);
                 } else {
                     $str = "Xml library definition doesn't exists! [".$xmlPath."]";
@@ -441,8 +441,8 @@
             //echo ' '.$className.'<br />';
             $tmp = new $className();
             $xmlPath = str_replace(".", "/", $classDir)."/".$tmp->getTagLibXml();
-            if (is_file(SCRIPTS.$xmlPath)) {
-                $xml = self::getXml(SCRIPTS.$xmlPath);
+            if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
 
                 if ((string)$xml->count == "*") {
                     return true;
@@ -470,8 +470,8 @@
             }
             
             if (isset($xmlPath)) {
-                if (is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS . $xmlPath);
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
                     foreach ($xml->{$tagListName} as $tag) {
                         if ($tag->tagname == $tagName) {
                             for ($i = 0; $i < count($tag->attribute); $i ++) {
@@ -614,8 +614,8 @@
             }
             
             if (isset($xmlPath)) {
-                if (is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS . $xmlPath);
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
                     
                     foreach ($xml->tag as $tag) {
                         if ($tag->tagname == $tagName) {
@@ -659,8 +659,8 @@
             }
             
             if (isset($xmlPath)) {
-                if (is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS . $xmlPath);
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
                     
                     foreach ($xml->fulltag as $tag) {
                         if ($tag->tagname == $tagName) {
@@ -704,8 +704,8 @@
             }
             
             if (isset($xmlPath)) {
-                if (is_file(SCRIPTS.$xmlPath)) {
-                    $xml = self::getXml(SCRIPTS . $xmlPath);
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
                     
                     foreach ($xml->property as $prop) {
                         if ($prop->propname == $propName) {

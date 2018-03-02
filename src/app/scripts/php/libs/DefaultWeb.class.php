@@ -1116,7 +1116,7 @@
         
         private function resolveWebRoot($content) {
             $webProject = $this->UrlResolver->getWebProject();
-            $rootUrl = UrlResolver::combinePath(WEB_ROOT, $webProject['alias']['root_url']);
+            $rootUrl = UrlResolver::combinePath(INSTANCE_URL, $webProject['alias']['root_url']);
             $rootUrl = UrlResolver::combinePath($rootUrl, '/');
             $content = str_replace("~/", $rootUrl, $content);
             return $content;
@@ -1245,7 +1245,7 @@
                 if (strlen($return[0]['language']) == 0) {
                     $this->CurrentPath = substr($this->CurrentPath, 1, strlen($this->CurrentPath));
                 }
-                $tmpPath = WEB_ROOT . $return[0]['language'] . $this->CurrentPath;
+                $tmpPath = INSTANCE_URL . $return[0]['language'] . $this->CurrentPath;
                 $this->CurrentPath = "";
             }
 
@@ -1486,8 +1486,8 @@
             $files = $dbObject->fetchAll("SELECT `page_file`.`id`, `page_file`.`name`, `page_file`.`type` FROM `page_file_inc` LEFT JOIN `page_file` ON `page_file_inc`.`file_id` = `page_file`.`id` WHERE `page_file_inc`.`page_id` = " . $this->ParentId . " AND `page_file_inc`.`language_id` = " . $this->LanguageId . " AND (`for_all` = 1 OR `" . $browser . "` = 1);");
             foreach ($files as $file) {
                 switch ($file['type']) {
-                    //case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="'.WEB_ROOT.'css/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'" type="text/css" />'; break;
-                    //case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="'.WEB_ROOT.'js/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'"></script>'; break;
+                    //case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="~/css/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'" type="text/css" />'; break;
+                    //case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="~/js/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'"></script>'; break;
                     case WEB_TYPE_CSS: $this->PageStyles .= ( ($this->Template == 'xml') ? '<rssmm:link-ref>~/file.php?fid=' . $file['id'] . '</rssmm:link-ref>' : '<link rel="stylesheet" href="~/file.php?fid=' . $file['id'] . '" type="text/css" />');
                         break;
                     case WEB_TYPE_JS: $this->PageScripts .= ( ($this->Template == 'xml') ? '<rssmm:script-ref>~/file.php?fid=' . $file['id'] . '</rssmm:script-ref>' : '<script type="text/javascript" src="~/file.php?fid=' . $file['id'] . '"></script>');
@@ -1605,7 +1605,7 @@
                 if (count($return) > 0) {
                     $ret = "<div class=\"languages\">";
                     foreach ($return as $lang) {
-                        $ret .= '<a class="lang-' . $lang['language'] . (($this->LanguageId == $lang['id']) ? ' active-language' : '') . '" href="' . WEB_ROOT . $lang['language'] . '">' . $lang['language'] . '</a> ';
+                        $ret .= '<a class="lang-' . $lang['language'] . (($this->LanguageId == $lang['id']) ? ' active-language' : '') . '" href="~/' . $lang['language'] . '">' . $lang['language'] . '</a> ';
                     }
                     $ret .= "</div>";
                     return $ret;
@@ -1617,7 +1617,7 @@
                 $return = $dbObject->fetchAll("SELECT `id`, `language` FROM `language` WHERE `language` != \"\";");
                 foreach ($return as $ln) {
                     $names[$ln['id']] = $ln['language'];
-                    $langs[$ln['id']] = WEB_ROOT . $ln['language'];
+                    $langs[$ln['id']] = '~/' . $ln['language'];
                 }
 
                 $pageId = $this->PagesId[count($this->PagesId) - 1];
@@ -1649,8 +1649,8 @@
             $return = '';
             $path = '';
             $root = $dbObject->fetchAll("SELECT `language` FROM `language` WHERE `id` = " . $this->LanguageId . ";");
-            $return .= '<a href="' . WEB_ROOT . $root[0]['language'] . '">' . strtoupper($root[0]['language']) . '</a> ';
-            $path = WEB_ROOT . $root[0]['language'];
+            $return .= '<a href="~/' .  $root[0]['language'] . '">' . strtoupper($root[0]['language']) . '</a> ';
+            $path = '~/' . $root[0]['language'];
 
             foreach ($this->PagesId as $pg) {
                 $page = $dbObject->fetchAll("SELECT `name`, `href` FROM `info` WHERE `page_id` = " . $pg . " AND `language_id` = " . $this->LanguageId . " AND `href` != \"\";");
@@ -1970,7 +1970,7 @@
                     case "js": $fileType = "text/javascript";
                         break;
                 }
-                $file[0]['content'] = str_replace("~/", WEB_ROOT, $file[0]['content']);
+                $file[0]['content'] = str_replace("~/", INSTANCE_URL, $file[0]['content']);
 
                 header('Content-Type: ' . $fileType);
                 header('Content-Length: ' . strlen($file[0]['content']));

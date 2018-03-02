@@ -1293,7 +1293,7 @@
                                 .'<input type="hidden" name="page-id" value="'.$pageId.'" />'
                                 .'<input type="hidden" name="page-lang-id" value="'.$langId.'" />'
                                 .'<input type="hidden" name="remove-file" value="Remove" />'
-                                .'<input type="image" src="'.WEB_ROOT.'images/page_del.png" name="remove-file" value="Remove" title="Remove file" />'
+                                .'<input type="image" src="~/images/page_del.png" name="remove-file" value="Remove" title="Remove file" />'
                                 .'</form>'
                                 : '')
                                 .'</td>' */
@@ -1468,7 +1468,7 @@
                                         . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
                                         . '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
                                         . '<input type="hidden" name="page-edit" value="' . $rb->get('page.action.edit') . '" /> '
-                                        . '<input type="image" title="' . $rb->get('pagelist.field.edit') . '" src="' . WEB_ROOT . 'images/page_edi.png" name="page-edit" value="' . $rb->get('page.action.edit') . '" /> '
+                                        . '<input type="image" title="' . $rb->get('pagelist.field.edit') . '" src="~/images/page_edi.png" name="page-edit" value="' . $rb->get('page.action.edit') . '" /> '
                                         . '</form>' : '')
                                 . ((self::getGroupPermCached('Page.AddNew')) ? ''
                                         . '<form name="page2" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page2">'
@@ -1476,7 +1476,7 @@
                                         . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
                                         . '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
                                         . '<input type="hidden" name="page-add-sub" value="' . $rb->get('page.action.addsubpage') . '" /> '
-                                        . '<input type="image" title="' . $rb->get('page.action.addsubpage') . '" src="' . WEB_ROOT . 'images/page_add.png" name="page-add-sub" value="' . $rb->get('page.action.addsubpage') . '" /> '
+                                        . '<input type="image" title="' . $rb->get('page.action.addsubpage') . '" src="~/images/page_add.png" name="page-add-sub" value="' . $rb->get('page.action.addsubpage') . '" /> '
                                         . '</form>' : '')
                                 . ((self::getGroupPermCached('Page.ManageFiles')) ? ''
                                         . '<form name="page3" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page3">'
@@ -1484,13 +1484,13 @@
                                             . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
                                             . '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
                                             . '<input type="hidden" name="added-files" value="' . $rb->get('pagelist.field.addedfiles') . '" /> '
-                                            . '<input type="image" title="' . $rb->get('pagelist.field.addedfiles') . '" src="' . WEB_ROOT . 'images/file_bws.png" name="added-files" value="' . $rb->get('pagelist.action.addedfiles') . '" /> '
+                                            . '<input type="image" title="' . $rb->get('pagelist.field.addedfiles') . '" src="~/images/file_bws.png" name="added-files" value="' . $rb->get('pagelist.action.addedfiles') . '" /> '
                                         . '</form>' : '')
                                 . ((self::getGroupPermCached('Page.ManageProperties')) ? ''
                                         . '<form name="page3" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page5">'
                                             . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                             . '<input type="hidden" name="manage-properties" value="' . $rb->get('pagelist.field.manageprops') . '" /> '
-                                            . '<input type="image" title="' . $rb->get('pagelist.field.manageprops') . '" src="' . WEB_ROOT . 'images/page_pro.png" name="manage-properties" value="' . $rb->get('pagelist.action.manageprops') . '" /> '
+                                            . '<input type="image" title="' . $rb->get('pagelist.field.manageprops') . '" src="~/images/page_pro.png" name="manage-properties" value="' . $rb->get('pagelist.action.manageprops') . '" /> '
                                         . '</form>' : '')
                                 . ((self::getGroupPermCached('Page.Delete') && (!$parent || !$thisParent)) ? ''
                                         . '<form name="page4" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page4">'
@@ -1498,7 +1498,7 @@
                                         . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
                                         . '<input type="hidden" name="page-lang-id" value="' . $inf['lang_id'] . '" /> '
                                         . '<input type="hidden" name="delete" value="' . $rb->get('pagelist.action.delete') . '" /> '
-                                        . '<input class="confirm" type="image" title="' . $rb->get('pagelist.field.delete2') . ', id(' . $tmp['id'] . ')" src="' . WEB_ROOT . 'images/lang_del.png" name="delete" value="' . $rb->get('pagelist.action.delete') . '" />'
+                                        . '<input class="confirm" type="image" title="' . $rb->get('pagelist.field.delete2') . ', id(' . $tmp['id'] . ')" src="~/images/lang_del.png" name="delete" value="' . $rb->get('pagelist.action.delete') . '" />'
                                         . '</form>' : '')
                                 . ' } </div>';
                     }
@@ -1508,38 +1508,38 @@
                                     . '<form name="page-move1" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move1">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" />'
                                     . '<input type="hidden" name="move-branch" value="' . $rb->get('pagelist.action.move') . '" />'
-                                    . '<input type="image" src="' . WEB_ROOT . 'images/page_mov.png" title="' . $rb->get('pagelist.field.move') . '" name="move-branch" value="' . $rb->get('pagelist.action.move') . '" />'
+                                    . '<input type="image" src="~/images/page_mov.png" title="' . $rb->get('pagelist.field.move') . '" name="move-branch" value="' . $rb->get('pagelist.action.move') . '" />'
                                     . '</form> ' : '')
                             . ((self::getGroupPermCached('Page.CopyTree')) ? ''
                                     . '<form name="page-move2" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move2">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" />'
                                     . '<input type="hidden" name="copy-branch" value="' . $rb->get('pagelist.action.copy') . '" />'
-                                    . '<input type="image" src="' . WEB_ROOT . 'images/page_cop.png" title="' . $rb->get('pagelist.field.copy') . '" name="copy-branch" value="' . $rb->get('pagelist.action.copy') . '" />'
+                                    . '<input type="image" src="~/images/page_cop.png" title="' . $rb->get('pagelist.field.copy') . '" name="copy-branch" value="' . $rb->get('pagelist.action.copy') . '" />'
                                     . '</form> ' : '')
                             . ((self::getGroupPermCached('Page.MoveUpDown')) ? ''
                                     . '<form name="page-move3" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move3">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="move-up" value="' . $rb->get('pagelist.action.up') . '" /> '
-                                    . '<input type="image" src="' . WEB_ROOT . 'images/arro_up.png" title="' . $rb->get('pagelist.field.up') . '" name="move-up" value="' . $rb->get('pagelist.action.up') . '" />'
+                                    . '<input type="image" src="~/images/arro_up.png" title="' . $rb->get('pagelist.field.up') . '" name="move-up" value="' . $rb->get('pagelist.action.up') . '" />'
                                     . '</form>' : '')
                             . ((self::getGroupPermCached('Page.MoveUpDown')) ? ''
                                     . '<form name="page-move4" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move4">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="move-down" value="' . $rb->get('pagelist.action.down') . '" /> '
-                                    . '<input type="image" src="' . WEB_ROOT . 'images/arro_do.png" title="' . $rb->get('pagelist.field.down') . '" name="move-down" value="' . $rb->get('pagelist.action.down') . '" />'
+                                    . '<input type="image" src="~/images/arro_do.png" title="' . $rb->get('pagelist.field.down') . '" name="move-down" value="' . $rb->get('pagelist.action.down') . '" />'
                                     . '</form>' : '')
                             . '] '
                             . ((self::getGroupPermCached('Page.AddLang')) ? ''
                                     . '<form name="page-add-lang1" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-add-lang1">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="page-add-lang-ver" value="' . $rb->get('page.action.addlang') . '" /> '
-                                    . '<input type="image" title="' . $rb->get('pagelist.field.addlang') . '" src="' . WEB_ROOT . 'images/lang_add.png" name="page-add-lang-ver" value="' . $rb->get('page.action.addlang') . '" /> '
+                                    . '<input type="image" title="' . $rb->get('pagelist.field.addlang') . '" src="~/images/lang_add.png" name="page-add-lang-ver" value="' . $rb->get('page.action.addlang') . '" /> '
                                     . '</form>' : '')
                             . ((self::getGroupPermCached('Page.Delete') && count($dbObject->fetchAll("SELECT `id` FROM `page` WHERE `parent_id` = " . $tmp['id'] . ";")) == 0) ? ''
                                     . '<form name="page-add-lang2" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-add-lang2">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="delete" value="' . $rb->get('pagelist.action.delete') . '" /> '
-                                    . '<input class="confirm" type="image" title="' . $rb->get('pagelist.field.delete') . ', id(' . $tmp['id'] . ')" src="' . WEB_ROOT . 'images/page_del.png" name="delete" value="' . $rb->get('pagelist.action.delete') . '" />'
+                                    . '<input class="confirm" type="image" title="' . $rb->get('pagelist.field.delete') . ', id(' . $tmp['id'] . ')" src="~/images/page_del.png" name="delete" value="' . $rb->get('pagelist.action.delete') . '" />'
                                     . '</form>' : '')
                             . ' )</span>';
                     $return .= ''
@@ -2326,7 +2326,7 @@
                                 . '<form name="delete-lang" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                 . '<input type="hidden" name="language-id" value="' . $lang['id'] . '" />'
                                 . '<input type="hidden" name="delete-language" value="Delete language" />'
-                                . '<input class="confirm" type="image" src="' . WEB_ROOT . 'images/page_del.png" name="delete-language" value="Delete language" title="Delete language, id(' . $lang['id'] . ')" />'
+                                . '<input class="confirm" type="image" src="~/images/page_del.png" name="delete-language" value="Delete language" title="Delete language, id(' . $lang['id'] . ')" />'
                                 . '</form>'
                                 . '</td>' : '<td></td>' )
                         . '</tr>';
