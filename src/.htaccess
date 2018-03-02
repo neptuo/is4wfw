@@ -9,7 +9,7 @@ RewriteRule ^file\.php$ app/file.php [END]
 RewriteRule ^js/(.*)\.js$ app/scripts/js/$1.js [END]
 RewriteRule ^css/(.*)\.css$ app/scripts/css/$1.css [END]
 RewriteRule ^files/([0-9/]*)\.([a-zA-Z0-9]*)$ user/filesystem/$1.$2 [END]
-RewriteRule ^public/(.*)\.(.*)$ user/filesystem/$1.$2 [END]
+RewriteRule ^public/(.*)\.(.*)$ user/public/$1.$2 [END]
 
 RewriteRule ^edit_area/(.*) app/edit_area/$1 [END]
 RewriteRule ^images/(.*) app/images/$1 [END]
