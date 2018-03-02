@@ -4,7 +4,7 @@ RewriteRule ^([a-zA-Z0-9/_-]*)$ app/index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
 RewriteRule ^(.*).view$ app/view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING}
 RewriteRule ^js/(.*).js app/scripts/js/$1.js
 RewriteRule ^css/(.*).css app/scripts/css/$1.css
-RewriteRule ^file/(.*).([a-z0-9]*) app/scripts/files/$1.$2
+RewriteRule ^files/(.*).([a-z0-9]*) app/scripts/files/$1.$2
 
 RewriteRule ^app/(.*) - [L,R=404]
 RewriteRule ^cache/(.*) - [L,R=404]
