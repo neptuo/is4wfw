@@ -154,7 +154,7 @@ class DataAccess {
 				$return = array();
 				$result = array();
 				$hashQuery = sha1($query);
-				if($this->cacheResults == 'REQUEST') {
+				if($this->cacheResults == 'REQUEST' && $requestStorage != null) {
 					if($requestStorage->exists($hashQuery, 'database-cache')) {
 						$return = $requestStorage->get($hashQuery, 'database-cache');
 						return $return;
@@ -189,7 +189,7 @@ class DataAccess {
 					}
 				}
 				
-				if($this->cacheResults == 'REQUEST') {
+				if($this->cacheResults == 'REQUEST' && $requestStorage != null) {
 					$requestStorage->set($hashQuery, $return, 'database-cache');
 				}
 				return $return;
