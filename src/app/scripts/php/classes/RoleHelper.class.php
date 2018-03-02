@@ -1,6 +1,6 @@
 <?php
 
-require_once('scripts/php/libs/BaseTagLib.class.php');
+require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
 
 class RoleCacheHelper extends BaseTagLib {
 	

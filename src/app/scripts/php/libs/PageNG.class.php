@@ -1,35 +1,28 @@
 <?php
 
-  /**
-   *
-   *  Require base tag lib class.
-   *
-   */
-  require_once("BaseTagLib.class.php");
+	require_once("BaseTagLib.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");  
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
 
-  require_once("scripts/php/classes/LocalizationBundle.class.php");  
-  require_once("scripts/php/classes/FullTagParser.class.php");
-  
-  /**
-   * 
-   *  Class updating web pages. Next Generation    
-   *      
-   *  @author     Marek SMM
-   *  @timestamp  2009-10-28
-   * 
-   */  
-  class PageNG extends BaseTagLib {
-  
-  	private $BundleName = 'pageng';
-  	
-  	private $BundleLang = 'cs';
-  
-    public function __construct() {
-    	global $webObject;
-    	
-      parent::setTagLibXml("xml/PageNG.xml");
-      
-      if($webObject->LanguageName != '') {
+	/**
+	 * 
+	 *  Class updating web pages. Next Generation    
+	 *      
+	 *  @author     Marek SMM
+	 *  @timestamp  2009-10-28
+	 * 
+	 */  
+	class PageNG extends BaseTagLib {
+
+		private $BundleName = 'pageng';
+		private $BundleLang = 'cs';
+
+		public function __construct() {
+			global $webObject;
+			
+			parent::setTagLibXml("xml/PageNG.xml");
+			
+			if($webObject->LanguageName != '') {
 				$rb = new LocalizationBundle();
 				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
 					$BundleLang = $webObject->LanguageName;
@@ -40,9 +33,9 @@
 				unset($_SESSION['pageng']);
 				unset($_GET['clear']);
 			}
-    }
-    
-    public function selectLanguage($useFrames = false, $showMsg = false) {
+		}
+
+		public function selectLanguage($useFrames = false, $showMsg = false) {
 			global $dbObject;
 			global $webObject;
 			$rb = new LocalizationBundle();
@@ -76,7 +69,7 @@
 				return parent::getFrame($rb->get('selectlang.title'), $return, "", true);
 			}
 		}
-		
+			
 		public function setLanguage($langId) {
 			$_SESSION['pageng']['language'] = $langId;
 			return $langId;
@@ -108,15 +101,15 @@
 			$value = str_replace("&", "&amp;", $value);
 			$value = str_replace(">", "&gt;", $value);
 			$value = str_replace("<", "&lt;", $value);
-      $value = str_replace('~', '&#126', $value);
-      
+			$value = str_replace('~', '&#126', $value);
+		
 			return $value;
 		}
 		
 		public function contentCorrectionsPost($value) {
 			$value = str_replace('&#126', '~', $value);
 			$value = str_replace('&amp;web:page', '&web:page', $value);
-      
+		
 			return $value;
 		}
 		
@@ -150,9 +143,9 @@
 				foreach($pages as $page) {
 					self::setPageId($page['page_id']);
 					$Parser->startParsing();
-		  		$return .= $Parser->getResult();
-		  	}
-		  	if($unset) {
+				$return .= $Parser->getResult();
+			}
+			if($unset) {
 					unset($_SESSION['pageng']['pageid']);
 				} else {
 					$_SESSION['pageng']['pageid'] = $oldvalue;
@@ -234,22 +227,22 @@
 			$Parser = new FullTagParser();
 			$Parser->setContent($templateContent);
 			$Parser->startParsing();
-  		$return .= $Parser->getResult();
-  		
-  		$return = ''
-  		.'<div class="search-filter">'
-  			.'<form name="search-filter" action="" method="post">'
-	  			.'<div class="search-filter-fields">'
-		  			.$return
-	  			.'</div>'
-	  			.'<div class="search-filter-submit">'
-  					.'<input type="submit" name="search-filter-submit" value="'.$rb->get('searchfilter.submit').'" /> '
-  					.'<input type="submit" name="search-filter-clear" value="'.$rb->get('searchfilter.clear').'" />'
-	  			.'</div>'
-  			.'</form>'
-  		.'</div>';
-  		
-  		unset($_SESSION['pageng']['search-filter']);
+			$return .= $Parser->getResult();
+			
+			$return = ''
+			.'<div class="search-filter">'
+				.'<form name="search-filter" action="" method="post">'
+					.'<div class="search-filter-fields">'
+						.$return
+					.'</div>'
+					.'<div class="search-filter-submit">'
+						.'<input type="submit" name="search-filter-submit" value="'.$rb->get('searchfilter.submit').'" /> '
+						.'<input type="submit" name="search-filter-clear" value="'.$rb->get('searchfilter.clear').'" />'
+					.'</div>'
+				.'</form>'
+			.'</div>';
+			
+			unset($_SESSION['pageng']['search-filter']);
 			
 			if($useFrames == "false") {
 				return $return;
@@ -548,8 +541,8 @@
 					.'<select name="pageng-page-field-cachetime" id="pageng-page-field-cachetime">'
 						.'<option value="-1"'.(($value == -1) ? 'selected="selected"' : '').'>'.$rb->get('pagefield.cachetime.dontuse').'</option>'
 						.'<option value="60"'.(($value == 60) ? 'selected="selected"' : '').'>'.$rb->get('pagefield.cachetime.oneminute').'</option>'
-            .'<option value="3600"'.(($value == 3600) ? 'selected="selected"' : '').'>'.$rb->get('pagefield.cachetime.onehour').'</option>'
-            .'<option value="86400"'.(($value == 86400) ? 'selected="selected"' : '').'>'.$rb->get('pagefield.cachetime.oneday').'</option>'
+						.'<option value="3600"'.(($value == 3600) ? 'selected="selected"' : '').'>'.$rb->get('pagefield.cachetime.onehour').'</option>'
+						.'<option value="86400"'.(($value == 86400) ? 'selected="selected"' : '').'>'.$rb->get('pagefield.cachetime.oneday').'</option>'
 						.'<option value="0"'.(($value == 0) ? 'selected="selected"' : '').'>'.$rb->get('pagefield.cachetime.unlimited').'</option>'
 					.'</select>'
 				.'</div>';
@@ -918,26 +911,26 @@
 			}
 			
 			if($pageId == false) {
-  	    $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$_SESSION['selected-project']." AND `type` = ".WEB_R_READ.";");
+		$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$_SESSION['selected-project']." AND `type` = ".WEB_R_READ.";");
 			} else {
-    	  $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$pageId." AND `type` = ".WEB_R_READ.";");
+			$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$pageId." AND `type` = ".WEB_R_READ.";");
 			}
 			
-      $groups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
+		$groups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
 			$show = true;
 			if(strtolower($type) == 'edit') {
 				$groupSelect = '<select id="pageng-page-field-rightread" name="pageng-page-field-rightread[]" multiple="multiple" size="5">';
-        foreach($groups as $group) {
-          $selectedR = false;
-          foreach($groupsR as $gp) {
-            if($gp['gid'] == $group['gid']) {
-              $selectedR = true;
-              $show = true;
-            }
-          }
-          $groupSelect .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-        }
-        $groupSelect .= '</select>';
+		foreach($groups as $group) {
+			$selectedR = false;
+			foreach($groupsR as $gp) {
+			if($gp['gid'] == $group['gid']) {
+				$selectedR = true;
+				$show = true;
+			}
+			}
+			$groupSelect .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+		}
+		$groupSelect .= '</select>';
 				
 				$return = ''
 				.'<div class="page-field-rightread">'
@@ -950,23 +943,23 @@
 				return $return;
 			} elseif(strtolower($type) == 'value') {
 				$groupSelect = '';
-        foreach($groupsR as $group) {
-          $show = true;
-          $name = '';
-          foreach($groups as $gp) {
-            if($gp['gid'] == $group['gid']) {
-            	$name = $gp['name'];
-              $show = true;
-            }
-          }
-          if($groupSelect == '') {
+		foreach($groupsR as $group) {
+			$show = true;
+			$name = '';
+			foreach($groups as $gp) {
+			if($gp['gid'] == $group['gid']) {
+				$name = $gp['name'];
+				$show = true;
+			}
+			}
+			if($groupSelect == '') {
 						$groupSelect = $name;
 					} else {
 						$groupSelect .= ', '.$name;
 					}
-        }
-        
-        if($verbous == "true") {
+		}
+		
+		if($verbous == "true") {
 					return (($show) ? $groupSelect : '');
 				} else {
 					if($show) {
@@ -994,26 +987,26 @@
 			}
 			
 			if($pageId == false) {
-  	    $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$_SESSION['selected-project']." AND `type` = ".WEB_R_WRITE.";");
+		$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$_SESSION['selected-project']." AND `type` = ".WEB_R_WRITE.";");
 			} else {
-    	  $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$pageId." AND `type` = ".WEB_R_WRITE.";");
+			$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$pageId." AND `type` = ".WEB_R_WRITE.";");
 			}
 			
-      $groups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
+		$groups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
 			$show = true;
 			if(strtolower($type) == 'edit') {
 				$groupSelect = '<select id="pageng-page-field-rightwrite" name="pageng-page-field-rightwrite[]" multiple="multiple" size="5">';
-        foreach($groups as $group) {
-          $selectedR = false;
-          foreach($groupsR as $gp) {
-            if($gp['gid'] == $group['gid']) {
-              $selectedR = true;
-              $show = true;
-            }
-          }
-          $groupSelect .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-        }
-        $groupSelect .= '</select>';
+		foreach($groups as $group) {
+			$selectedR = false;
+			foreach($groupsR as $gp) {
+			if($gp['gid'] == $group['gid']) {
+				$selectedR = true;
+				$show = true;
+			}
+			}
+			$groupSelect .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+		}
+		$groupSelect .= '</select>';
 				
 				$return = ''
 				.'<div class="page-field-rightwrite">'
@@ -1026,21 +1019,21 @@
 				return $return;
 			} elseif(strtolower($type) == 'value') {
 				$groupSelect = '';
-        foreach($groupsR as $group) {
-          $show = true;
-          $name = '';
-          foreach($groups as $gp) {
-            if($gp['gid'] == $group['gid']) {
-            	$name = $gp['name'];
-              $show = true;
-            }
-          }
-          if($groupSelect == '') {
+		foreach($groupsR as $group) {
+			$show = true;
+			$name = '';
+			foreach($groups as $gp) {
+			if($gp['gid'] == $group['gid']) {
+				$name = $gp['name'];
+				$show = true;
+			}
+			}
+			if($groupSelect == '') {
 						$groupSelect = $name;
 					} else {
 						$groupSelect .= ', '.$name;
 					}
-        }
+		}
 				
 				if($verbous == "true") {
 					return (($show) ? $groupSelect : '');
@@ -1070,26 +1063,26 @@
 			}
 			
 			if($pageId == false) {
-  	    $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$_SESSION['selected-project']." AND `type` = ".WEB_R_DELETE.";");
+		$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `web_project_right` WHERE `wp` = ".$_SESSION['selected-project']." AND `type` = ".WEB_R_DELETE.";");
 			} else {
-    	  $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$pageId." AND `type` = ".WEB_R_DELETE.";");
+			$groupsR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `pid` = ".$pageId." AND `type` = ".WEB_R_DELETE.";");
 			}
 			
-      $groups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
+		$groups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
 			$show = false;
 			if(strtolower($type) == 'edit') {
 				$groupSelect = '<select id="pageng-page-field-rightdelete" name="pageng-page-field-rightdelete[]" multiple="multiple" size="5">';
-        foreach($groups as $group) {
-          $selectedR = false;
-          foreach($groupsR as $gp) {
-            if($gp['gid'] == $group['gid']) {
-              $selectedR = true;
-              $show = true;
-            }
-          }
-          $groupSelect .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-        }
-        $groupSelect .= '</select>';
+		foreach($groups as $group) {
+			$selectedR = false;
+			foreach($groupsR as $gp) {
+			if($gp['gid'] == $group['gid']) {
+				$selectedR = true;
+				$show = true;
+			}
+			}
+			$groupSelect .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+		}
+		$groupSelect .= '</select>';
 				
 				$return = ''
 				.'<div class="page-field-rightdelete">'
@@ -1102,23 +1095,23 @@
 				return $return;
 			} elseif(strtolower($type) == 'value') {
 				$groupSelect = '';
-        foreach($groupsR as $group) {
-          $show = true;
-          $name = '';
-          foreach($groups as $gp) {
-            if($gp['gid'] == $group['gid']) {
-            	$name = $gp['name'];
-              $show = true;
-            }
-          }
-          if($groupSelect == '') {
+		foreach($groupsR as $group) {
+			$show = true;
+			$name = '';
+			foreach($groups as $gp) {
+			if($gp['gid'] == $group['gid']) {
+				$name = $gp['name'];
+				$show = true;
+			}
+			}
+			if($groupSelect == '') {
 						$groupSelect = $name;
 					} else {
 						$groupSelect .= ', '.$name;
 					}
-        }
-        
-        if($verbous == "true") {
+		}
+		
+		if($verbous == "true") {
 					return (($show) ? $groupSelect : '');
 				} else {
 					if($show) {
@@ -1219,6 +1212,6 @@
 			return $return;
 		}
 		
-  }
+	}
 
 ?>

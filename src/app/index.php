@@ -1,31 +1,31 @@
 <?php
 
-if (!file_exists("scripts/php/includes/instance.inc.php")) {
-    header("Location: /setup.php");
-    exit;
-}
+    if (!file_exists("../user/instance.inc.php")) {
+        header("Location: /setup.php");
+        exit;
+    }
 
-require_once("scripts/php/includes/instance.inc.php");
-require_once("scripts/php/includes/settings.inc.php");
+    require_once("../user/instance.inc.php");
+    require_once("scripts/php/includes/settings.inc.php");
 
-if (IS_STOPPED) {
-    echo file_get_contents("updating.html");
-    exit;
-}
+    if (IS_STOPPED) {
+        echo file_get_contents("updating.html");
+        exit;
+    }
 
-require_once("scripts/php/includes/version.inc.php");
-require_once("scripts/php/includes/extensions.inc.php");
-require_once("scripts/php/libs/DefaultPhp.class.php");
-require_once("scripts/php/libs/DefaultWeb.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultPhp.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultWeb.class.php");
 
-session_start();
+    session_start();
 
-$phpObject = new DefaultPhp();
-$webObject = new DefaultWeb();
+    $phpObject = new DefaultPhp();
+    $webObject = new DefaultWeb();
 
-require_once("scripts/php/includes/postinit.inc.php");
-require_once("scripts/php/includes/autoupdate.inc.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "includes/postinit.inc.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "includes/autoupdate.inc.php");
 
-$webObject->processRequestNG();
+    $webObject->processRequestNG();
 
 ?>

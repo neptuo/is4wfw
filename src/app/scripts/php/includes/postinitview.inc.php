@@ -10,7 +10,7 @@
 	$login = new Login();
 	$login->initLogin('web-admins');
 	
-	if($login->isLogged()) {
+	if ($login->isLogged()) {
 		$prop = $dbObject->fetchSingle('select `value` from `personal_property` where `name` = "Admin.Language" and `user_id` = '.$login->getUserId().';');
 		if($prop != array()) {
 			$webObject->LanguageName = $prop['value'];

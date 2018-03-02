@@ -1,12 +1,7 @@
 <?php
 
-/**
- *
- *  Require base tag lib class.
- *
- */
-require_once("scripts/php/libs/BaseTagLib.class.php");
-require_once("scripts/php/classes/model/EmbeddedResource.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/model/EmbeddedResource.class.php");
 
 class EmbeddedResourceManager extends BaseTagLib {
 

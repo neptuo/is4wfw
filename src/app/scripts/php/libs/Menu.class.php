@@ -1,104 +1,99 @@
 <?php
 
-/**
- *
- *  Require base tag lib class.
- *
- */
-require_once("BaseTagLib.class.php");
-require_once("scripts/php/classes/LocalizationBundle.class.php");
-require_once("scripts/php/classes/FullTagParser.class.php");
-require_once("scripts/php/classes/ViewHelper.class.php");
+    require_once("BaseTagLib.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewHelper.class.php");
 
-/**
- * 
- *  Class View.	     
- *      
- *  @author     Marek SMM
- *  @timestamp  2011-08-22
- * 
- */
-class Menu extends BaseTagLib {
+    /**
+     * 
+     *  Class View.	     
+     *      
+     *  @author     Marek SMM
+     *  @timestamp  2011-08-22
+     * 
+     */
+    class Menu extends BaseTagLib {
 
-    private $BundleName = 'view';
-    private $BundleLang = 'cs';
+        private $BundleName = 'view';
+        private $BundleLang = 'cs';
 
-    public function __construct() {
+        public function __construct() {
 
-        parent::setTagLibXml("xml/Menu.xml");
+            parent::setTagLibXml("xml/Menu.xml");
 
-        if ($webObject->LanguageName != '') {
-            $rb = new LocalizationBundle();
-            if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                $this->BundleLang = $webObject->LanguageName;
+            if ($webObject->LanguageName != '') {
+                $rb = new LocalizationBundle();
+                if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
+                    $this->BundleLang = $webObject->LanguageName;
+                }
             }
         }
-    }
 
-    /* ======================= TAGS ========================================= */
+        /* ======================= TAGS ========================================= */
 
-    public function showXmlMenu($path) {
-		global $webObject;
-        $return = '';
+        public function showXmlMenu($path) {
+            global $webObject;
+            $return = '';
 
-        $xml = new SimpleXMLElement(file_get_contents(ViewHelper::resolveViewRoot($path)));
-        $i = 0;
+            $xml = new SimpleXMLElement(file_get_contents(ViewHelper::resolveViewRoot($path)));
+            $i = 0;
 
-        $return .= '<div class="menu"><ul class="ul-1">';
+            $return .= '<div class="menu"><ul class="ul-1">';
 
-        foreach ($xml->item as $item) {
-            $i++;
-            $attrs = $item->attributes();
-            if (isset($attrs['requireGroup'])) {
-                global $loginObject;
-                $ok = false;
-                foreach ($loginObject->getGroups() as $group) {
-                    if ($group['name'] == $attrs['requireGroup']) {
-                        $ok = true;
-                        break;
+            foreach ($xml->item as $item) {
+                $i++;
+                $attrs = $item->attributes();
+                if (isset($attrs['requireGroup'])) {
+                    global $loginObject;
+                    $ok = false;
+                    foreach ($loginObject->getGroups() as $group) {
+                        if ($group['name'] == $attrs['requireGroup']) {
+                            $ok = true;
+                            break;
+                        }
+                    }
+                    if (!$ok) {
+                        continue;
                     }
                 }
-                if (!$ok) {
-                    continue;
+                if (isset($attrs['requirePerm'])) {
+                    global $loginObject;
+                    $perm = $loginObject->getGroupPerm($attrs['requirePerm'], $loginObject->getMainGroupId(), false, 'false');
+                    if($perm['value'] != 'true') {
+                        continue;
+                    }
                 }
-            }
-            if (isset($attrs['requirePerm'])) {
-                global $loginObject;
-                $perm = $loginObject->getGroupPerm($attrs['requirePerm'], $loginObject->getMainGroupId(), false, 'false');
-                if($perm['value'] != 'true') {
-                    continue;
+
+                $name = $attrs['name'];
+                if(isset($attrs['name-' . $webObject->LanguageName])) {
+                    $name = $attrs['name-' . $webObject->LanguageName];
                 }
+                $url = ViewHelper::resolveUrl($attrs['url']);
+                if ($url == '/' . $_REQUEST['WEB_PAGE_PATH']) {
+                    $active = true;
+                } else {
+                    $active = false;
+                }
+
+                $url = $webObject->addSpecialParams($url);
+
+                $return .= ''
+                . '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . '">'
+                    . '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
+                        . '<a href="' . $url . '"' . ((isset($attrs['rel'])) ? ' rel="' . $attrs['rel'] . '"' : '') . '>'
+                            . '<span>' . $name . '</span>'
+                        . '</a>'
+                    . '</div>'
+                . '</li>';
             }
 
-            $name = $attrs['name'];
-			if(isset($attrs['name-' . $webObject->LanguageName])) {
-				$name = $attrs['name-' . $webObject->LanguageName];
-			}
-            $url = ViewHelper::resolveUrl($attrs['url']);
-            if ($url == '/' . $_REQUEST['WEB_PAGE_PATH']) {
-                $active = true;
-            } else {
-                $active = false;
-            }
+            $return .= '</ul></div>';
 
-            $url = $webObject->addSpecialParams($url);
-
-            $return .= ''
-            . '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . '">'
-                . '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
-                    . '<a href="' . $url . '"' . ((isset($attrs['rel'])) ? ' rel="' . $attrs['rel'] . '"' : '') . '>'
-                        . '<span>' . $name . '</span>'
-                    . '</a>'
-                . '</div>'
-            . '</li>';
+            return $return;
         }
 
-        $return .= '</ul></div>';
-
-        return $return;
+        /* ============================= FUNCTIONS =========================================== */
     }
-
-    /* ============================= FUNCTIONS =========================================== */
-}
 
 ?>

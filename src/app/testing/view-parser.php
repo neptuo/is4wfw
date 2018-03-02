@@ -1,8 +1,10 @@
 <?php
 
-	require_once("scripts/php/includes/settings.inc.php");
-	require_once("scripts/php/classes/ExtensionParser.class.php");
-	require_once("scripts/php/classes/LocalizationBundle.class.php");
+	require_once("../../user/instance.inc.php");
+	require_once("../scripts/php/includes/settings.inc.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "includes/settings.inc.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/ExtensionParser.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
 
 	$content = ''
 	.'<form name="inquiry-edit" method="post" action="{Server REQUEST_URI}">'

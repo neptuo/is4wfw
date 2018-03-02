@@ -1,12 +1,15 @@
 <?php
 
-require_once("scripts/php/includes/instance.inc.php");
+require_once("../user/instance.inc.php");
 require_once("scripts/php/includes/settings.inc.php");
-require_once("scripts/php/includes/version.inc.php");
-require_once("scripts/php/includes/extensions.inc.php");
-require_once("scripts/php/libs/Database.class.php");
-require_once("scripts/php/classes/UrlResolver.class.php");
-require_once("scripts/php/classes/manager/EmbeddedResourceManager.class.php");
+
+require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
+require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
+require_once(APP_SCRIPTS_PHP_PATH . "libs/Database.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "libs/File.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "libs/FileAdmin.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/UrlResolver.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/EmbeddedResourceManager.class.php");
 
 error_reporting(0);
 session_start();
@@ -81,14 +84,6 @@ if (array_key_exists('fid', $_REQUEST)) {
     }
 } elseif (array_key_exists('rid', $_REQUEST)) {
     $fileId = $_REQUEST['rid'];
-
-    require_once("scripts/php/includes/instance.inc.php");
-    require_once("scripts/php/includes/settings.inc.php");
-    require_once("scripts/php/includes/version.inc.php");
-    require_once("scripts/php/includes/extensions.inc.php");
-    require_once("scripts/php/libs/Database.class.php");
-    require_once("scripts/php/libs/File.class.php");
-	require_once("scripts/php/libs/FileAdmin.class.php");
     $dbObject = new Database();
     $dbObject->setCacheResults('NONE');
     $flObject = new File();
@@ -185,13 +180,6 @@ if (array_key_exists('fid', $_REQUEST)) {
         exit;
     }
 } elseif (array_key_exists('path', $_REQUEST)) {
-    require_once("scripts/php/includes/instance.inc.php");
-    require_once("scripts/php/includes/settings.inc.php");
-    require_once("scripts/php/includes/version.inc.php");
-    require_once("scripts/php/includes/extensions.inc.php");
-    require_once("scripts/php/libs/Database.class.php");
-    require_once("scripts/php/libs/File.class.php");
-	require_once("scripts/php/libs/FileAdmin.class.php");
     $dbObject = new Database();
     $flObject = new File();
 
@@ -279,4 +267,5 @@ if (array_key_exists('fid', $_REQUEST)) {
     echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';
     exit;
 }
+
 ?>

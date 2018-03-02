@@ -1,15 +1,14 @@
 <?php
 
-$targetDirectoryPath = 'scripts/php/includes';
-$targetFilePath = $targetDirectoryPath . '/instance.inc.php';
-$templateFilePath = $targetDirectoryPath . '/instance.template.php';
+$targetFilePath = '../user/instance.inc.php';
+$templateFilePath = 'scripts/php/includes/instance.template.php';
 
 if (file_exists($targetFilePath)) {
     header("Location: /"); 
     exit;
 }
 
-require_once("scripts/php/libs/User.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "libs/User.class.php");
 
 $importFiles = scandir('data/default', SCANDIR_SORT_DESCENDING);
 $importFilePath = 'data/default/' . $importFiles[0];
@@ -48,7 +47,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     fclose($targetFile);
 
     require_once($targetFilePath);
-    require_once("scripts/php/classes/dataaccess/DataAccess.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/DataAccess.class.php");
 
     $importFile = fopen($importFilePath, 'r') or die('Cannot open file:  ' . $importFilePath);
 
@@ -86,8 +85,8 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     }
 
     $dbObject = $db;
-    require_once("scripts/php/includes/version.inc.php");
-    require_once("scripts/php/includes/autoupdate.inc.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "includes/autoupdate.inc.php");
 
     $db->commit();
     $db->disconnect();

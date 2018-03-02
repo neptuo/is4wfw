@@ -1,7 +1,7 @@
 <?php
 
-require_once("scripts/php/classes/CustomTagParser.class.php");
-require_once("scripts/php/classes/LocalizationBundle.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/CustomTagParser.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
 
 class FullTagParser extends CustomTagParser {
 

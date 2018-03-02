@@ -1,6 +1,6 @@
 <?php
 
-require_once("scripts/php/classes/LocalizationBundle.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
 
 class ExtensionParser {
 

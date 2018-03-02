@@ -1,25 +1,20 @@
 <?php
 
-  /**
-   *
-   *  Require base tag lib class.
-   *
-   */
-  require_once("BaseTagLib.class.php");
-  require_once("scripts/php/classes/RoleHelper.class.php");
-  require_once("scripts/php/classes/LocalizationBundle.class.php");
+	require_once("BaseTagLib.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/RoleHelper.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
   
-  /**
-   * 
-   *  Class System.
-   *  Management of web framework.	     
-   *      
-   *  @author     Marek SMM
-   *  @timestamp  2011-08-30
-   * 
-   */  
-  class System extends BaseTagLib {
-  
+	/**
+	 * 
+	 *  Class System.
+	 *  Management of web framework.	     
+	 *      
+	 *  @author     Marek SMM
+	 *  @timestamp  2011-08-30
+	 * 
+	 */  
+	class System extends BaseTagLib {
+
 		public function __construct() {
 			parent::setTagLibXml("xml/System.xml");
 		}
@@ -164,9 +159,9 @@
 		/**
 		 *
 		 *	Manage user's system notes.
-		 *	C tag.
-		 *
-		 */		 		 		 		 		
+			*	C tag.
+			*
+			*/		 		 		 		 		
 		public function manageNotes($useFrames = false, $showMsg = false) {
 			global $dbObject;
 			global $loginObject;
@@ -257,9 +252,9 @@
 		/**
 		 *
 		 *	Print user's system notes
-		 *	C tag.
-		 *
-		 */		 		 		 		 		
+			*	C tag.
+			*
+			*/		 		 		 		 		
 		public function printNotes($useFrames = false, $showMsg = false) {
 			global $dbObject;
 			global $loginObject;
@@ -319,8 +314,8 @@
 			$data = $dbObject->fetchAll('select `id`, `name`, `icon`, `perm` from `system_adminmenu` order by `id`');
 		
 			$content .= '<div class="menu menu-' . $inn . ((strlen($classes) > 0) ? ' ' . $classes : '') . '"><ul class="ul-' . $inn . '">';
-            $i = 1;
-            foreach ($data as $lnk) {
+			$i = 1;
+			foreach ($data as $lnk) {
 				if ($lnk['perm'] != '') {
 					global $loginObject;
 					$perm = $loginObject->getGroupPerm($lnk['perm'], $loginObject->getMainGroupId(), false, 'false');
@@ -329,24 +324,24 @@
 					}
 				}
 			
-                $active = false;
+				$active = false;
 				$href = $url . '?adminId=' . $lnk['id'];
-                if ($href == '/' . $_REQUEST['WEB_PAGE_PATH']) {
-                    $active = true;
-                }
+				if ($href == '/' . $_REQUEST['WEB_PAGE_PATH']) {
+					$active = true;
+				}
 
-                $content .= ''
-                        . '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . ' ' . '">'
-                        . '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
-                        . '<a href="' . $href . '"' . (($rel != false) ? ' rel="' . $rel . '"' : '') . ' style="background-image: url(\''.$lnk['icon'].'\') !important;">'
-                        . '<span>' . $lnk['name'] . '</span>'
-                        . '</a>'
-                        . '</div>'
-                        . '</li>';
-                $i++;
-            }
-            $inner--;
-            $content .= "</ul></div>";
+				$content .= ''
+						. '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . ' ' . '">'
+						. '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
+						. '<a href="' . $href . '"' . (($rel != false) ? ' rel="' . $rel . '"' : '') . ' style="background-image: url(\''.$lnk['icon'].'\') !important;">'
+						. '<span>' . $lnk['name'] . '</span>'
+						. '</a>'
+						. '</div>'
+						. '</li>';
+				$i++;
+			}
+			$inner--;
+			$content .= "</ul></div>";
 			
 			return $content;
 		}
@@ -640,26 +635,26 @@
 			return $return;
 		}
 		
-	public function manageRoleCache($buttonOnly = false, $useFrames = true) {
-		$return = '';
-		
-		if($_POST['rolecache-refresh'] == 'Refresh role cache') {
-			RoleHelper::refreshCache();
-			$return .= parent::getSuccess('Refreshed ...');
+		public function manageRoleCache($buttonOnly = false, $useFrames = true) {
+			$return = '';
+			
+			if($_POST['rolecache-refresh'] == 'Refresh role cache') {
+				RoleHelper::refreshCache();
+				$return .= parent::getSuccess('Refreshed ...');
+			}
+			
+			if($buttonOnly) {
+				return $return.parent::view('system-rolecache-button', array());
+			}
+			
+			$dataModel = array('items' => parent::dao('RoleCache')->getList());
+			
+			if($useFrames) {
+				return parent::getFrame('Role cache', $return.parent::view('system-rolecache', $dataModel), "", true);
+			} else {
+				return $return.parent::view('system-rolecache', $dataModel);
+			}
 		}
-		
-		if($buttonOnly) {
-			return $return.parent::view('system-rolecache-button', array());
-		}
-		
-		$dataModel = array('items' => parent::dao('RoleCache')->getList());
-		
-		if($useFrames) {
-			return parent::getFrame('Role cache', $return.parent::view('system-rolecache', $dataModel), "", true);
-		} else {
-			return $return.parent::view('system-rolecache', $dataModel);
-		}
-	}
 		
 		/* ---------- PROPERTIES ---------------------- */
 		
@@ -681,11 +676,11 @@
 		/**
 		 *
 		 *	Return system property value.
-		 *	
-		 *	@param			name				system property name
-		 *	@return			system property value		 		 		 
-		 *
-		 */		 		 		 		
+			*	
+			*	@param			name				system property name
+			*	@return			system property value		 		 		 
+			*
+			*/		 		 		 		
 		public function getPropertyValue($name) {
 			global $dbObject;
 			global $loginObject;

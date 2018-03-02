@@ -1,5 +1,7 @@
 <?php
 
+require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
+
 class DataAccess {
 	public static $CharsetSystemProperty = 'DataAccess.Charset';
 
@@ -37,11 +39,10 @@ class DataAccess {
 
 	private function checkCharset() {
 		if ($this->isOpened) {
-			self::disableCache();
-			$data = self::fetchSingle('SELECT `value` FROM `system_property` WHERE `key` = "' . DataAccess::$CharsetSystemProperty . '";');
-			self::enableCache();
-			if ($data != array()) {
-				mysqli_set_charset($this->connection, $data['value']);
+			$property = new SystemProperty($this);
+			$charset = $property->getValue(DataAccess::$CharsetSystemProperty);
+			if ($charset != null && strlen($charset) > 0) {
+				mysqli_set_charset($this->connection, $charset);
 			}
 		}
 	}

@@ -1,17 +1,7 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- *  Require base tag lib class.
- *
- */
-require_once("scripts/php/libs/BaseTagLib.class.php");
-require_once("scripts/php/classes/model/WebForward.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/model/WebForward.class.php");
 
 /**
  * Description of WebForwardManager

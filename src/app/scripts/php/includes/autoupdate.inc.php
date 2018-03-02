@@ -1,6 +1,6 @@
 <?php
 
-	require_once("scripts/php/classes/manager/SystemProperty.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
 
 	//$dbObject->setMockMode(true);
 

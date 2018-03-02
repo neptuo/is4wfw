@@ -1,8 +1,18 @@
 <?php
 
-require_once("scripts/php/libs/BaseTagLib.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
 
 class SystemProperty extends BaseTagLib {
+
+    private $db;
+
+    function __construct($db = null) {
+        if ($db == null) {
+            $db = parent::db()->getDataAccess();
+        }
+
+        $this->db = $db;
+    }
 
     public function getValue($name) {
         $path = SYSTEM_PROPERTY_CACHE_DIR . $name . '.txt';
@@ -10,17 +20,17 @@ class SystemProperty extends BaseTagLib {
             return file_get_contents($path);
         }
 
-        $entity = parent::db()->fetchSingle('select `value` from `system_property` where `key` = "' . parent::db()->escape($name) . '";');
+        $entity = $db->fetchSingle('select `value` from `system_property` where `key` = "' . $db->escape($name) . '";');
         $value = $entity['value'];
         file_put_contents($path, $value);
         return $value;
     }
 
     public function setValue($name, $value) {
-        if (parent::db()->fetchSingle('select `value` from `system_property` where `key` = "' . parent::db()->escape($name) . '";') == array()) {
-            parent::db()->execute('insert into `system_property`(`value`, `key`) values("' . parent::db()->escape($value) . '", "' . parent::db()->escape($name) . '");');
+        if ($db->fetchSingle('select `value` from `system_property` where `key` = "' . $db->escape($name) . '";') == array()) {
+            $db->execute('insert into `system_property`(`value`, `key`) values("' . $db->escape($value) . '", "' . $db->escape($name) . '");');
 		} else {
-            parent::db()->execute('update `system_property` set `value` = "' . parent::db()->escape($value) . '" where `key` = "' . parent::db()->escape($name) . '";');
+            $db->execute('update `system_property` set `value` = "' . $db->escape($value) . '" where `key` = "' . $db->escape($name) . '";');
         }
         
         $path = SYSTEM_PROPERTY_CACHE_DIR . $name . '.txt';

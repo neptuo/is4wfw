@@ -1,12 +1,12 @@
 <?php
 
-	require_once("scripts/php/includes/instance.inc.php");
+	require_once("../user/instance.inc.php");
 	require_once("scripts/php/includes/settings.inc.php");
-	require_once("scripts/php/includes/version.inc.php");
-	require_once("scripts/php/includes/extensions.inc.php");
-  	require_once("scripts/php/libs/Database.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
+  	require_once(APP_SCRIPTS_PHP_PATH . "libs/Database.class.php");
+	  
 	$dbObject = new Database();
-	
 
 	if(array_key_exists('user-login', $_REQUEST)) {
 		$userId = $dbObject->fetchAll('SELECT `uid` FROM `user` WHERE `login` = "'.$_REQUEST['user-login'].'";');
