@@ -20,17 +20,17 @@ class SystemProperty extends BaseTagLib {
             return file_get_contents($path);
         }
 
-        $entity = $db->fetchSingle('select `value` from `system_property` where `key` = "' . $db->escape($name) . '";');
+        $entity = $this->db->fetchSingle('select `value` from `system_property` where `key` = "' . $this->db->escape($name) . '";');
         $value = $entity['value'];
         file_put_contents($path, $value);
         return $value;
     }
 
     public function setValue($name, $value) {
-        if ($db->fetchSingle('select `value` from `system_property` where `key` = "' . $db->escape($name) . '";') == array()) {
-            $db->execute('insert into `system_property`(`value`, `key`) values("' . $db->escape($value) . '", "' . $db->escape($name) . '");');
+        if ($this->db->fetchSingle('select `value` from `system_property` where `key` = "' . $this->db->escape($name) . '";') == array()) {
+            $this->db->execute('insert into `system_property`(`value`, `key`) values("' . $this->db->escape($value) . '", "' . $this->db->escape($name) . '");');
 		} else {
-            $db->execute('update `system_property` set `value` = "' . $db->escape($value) . '" where `key` = "' . $db->escape($name) . '";');
+            $this->db->execute('update `system_property` set `value` = "' . $this->db->escape($value) . '" where `key` = "' . $this->db->escape($name) . '";');
         }
         
         $path = CACHE_SYSTEMPROPERTY_PATH . $name . '.txt';
