@@ -61,42 +61,63 @@
 		protected function canUserFile($objectId, $rightType) {
 			return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(FileAdmin::$FileRightDesc, $objectId, $rightType));
 		}
+        
+        /**
+        *
+        *  Generates physical path to dir in fs (/hosting/www/user/filesystem/1/2).
+        *  
+        *  @param    dirId   dir id
+        *  @return   physical path to dir in fs
+        *
+        */                   
+        public function getPhysicalPathTo($dirId, $itemPath = '') {
+            return USER_FILESYSTEM_PATH . self::getDirectoryPathIndernal($dirId, $itemPath);
+        }
+
+        /**
+        *
+        *  Generates URL to dir in fs (/files/1/2).
+        *  
+        *  @param    dirId   dir id
+        *  @return   physical path to dir in fs
+        *
+        */    
+        public function getPhysicalUrlTo($dirId, $itemPath = '') {
+            return USER_FILESYSTEM_URL . self::getDirectoryPathIndernal($dirId, $itemPath);
+        }
 		
-		public function getPhysicalPathTo($dirId, $notUserFsRoot = false, $itemPath = '') {
+		private function getDirectoryPathIndernal($dirId, $itemPath = '') {
 			$path = "";
-			if($itemPath == '') {
+			if ($itemPath == '') {
 				$itemPath = FileAdmin::$FileSystemItemPath;
 			}
 			
-			if($dirId >= 0) {
-				while($dirId != 0) {
+			if ($dirId >= 0) {
+				while ($dirId != 0) {
 					parent::db()->getDataAccess()->disableCache();
 					$dirInfo = parent::dao('Directory')->select(parent::select()->where('id', '=', $dirId)->result(), false, array($itemPath, 'parent_id'));
 					parent::db()->getDataAccess()->enableCache();
-					if(count($dirInfo) == 1) {
+					if (count($dirInfo) == 1) {
 						$dirId = $dirInfo[0]['parent_id'];
-						$path = $dirInfo[0][$itemPath].'/'.$path;
+						$path = $dirInfo[0][$itemPath] . '/' . $path;
 					} else {
 						$message = "Directory doesn't exists!";
-						echo "<h4 class=\"error\">".$message."</h4>";
+						echo parent::getError($message);
 						trigger_error($message, E_USER_ERROR);
 					}
 				}
 			} else {
 				$message = "Directory doesn't exists!";
-				echo "<h4 class=\"error\">".$message."</h4>";
+				echo parent::getError($message);
 				trigger_error($message, E_USER_ERROR);
 			}
 			
-			if(!$notUserFsRoot) {
-				$path = UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), FS_ROOT.$path);
-			}
 			return $path;
 		}
 		
 		public function getPhysicalPathToFile($file) {
 			$path = self::getPhysicalPathTo($file['dir_id']);
-			$filePath = WEB_PATH.$path.$file[FileAdmin::$FileSystemItemPath].".".self::getFileExtension($file);
+			$filePath = $path.$file[FileAdmin::$FileSystemItemPath].".".self::getFileExtension($file);
 			return $filePath;
 		}
 		
@@ -200,7 +221,7 @@
 				}
 				
 				$directory = parent::dao('Directory')->get($directoryId);
-				$path = WEB_PATH.self::getPhysicalPathTo($directoryId);
+				$path = self::getPhysicalPathTo($directoryId);
 				if(!parent::dao('Directory')->delete($directory)) {
 					//echo $path;
 					rmdir($path);
@@ -242,7 +263,7 @@
 				$deleteRights = RoleHelper::getRights(FileAdmin::$DirectoryRightDesc, $rootId, WEB_R_DELETE);
 			}
 			
-			$path = WEB_PATH.self::getPhysicalPathTo($rootId);
+			$path = self::getPhysicalPathTo($rootId);
 		
 			if ($handle = opendir($path)) {
 				$newDirs = array();
@@ -366,7 +387,7 @@
 			$dataModel = array('files' => $files, 'dirs' => $dirs, 'parent' => $parentDir);
 			
 			if($useFrames) {
-				return parent::getFrame(parent::rb('title.browser').' :: /'.self::getPhysicalPathTo($dirId, true, 'name'), $return.parent::view('fileadmin-list', $dataModel), true);
+				return parent::getFrame(parent::rb('title.browser').' :: /'.self::getPhysicalUrlTo($dirId, 'name'), $return.parent::view('fileadmin-list', $dataModel), true);
 			} else {
 				return $return.parent::view('fileadmin-list', $dataModel);
 			}
@@ -467,7 +488,7 @@
 			
 			$zip = new ZipArchive();
 			if ($zip->open($fileTmpName) === TRUE) {
-				$zip->extractTo(WEB_PATH.self::getPhysicalPathTo($dirId));
+				$zip->extractTo(self::getPhysicalPathTo($dirId));
 				$zip->close();
 				
 				parent::db()->getDataAccess()->disableCache();
@@ -602,7 +623,7 @@
 			}
 			
 			if(!$new) {
-				$path = WEB_PATH.self::getPhysicalPathTo($dir['parent_id']);
+				$path = self::getPhysicalPathTo($dir['parent_id']);
 				//rename($path.$dir['name'], $path.$dataItem['name']);
 				
 				if(parent::dao('Directory')->update($dataItem) != 0) {
@@ -616,7 +637,7 @@
 				$_POST['new-directory-id'] = $dataItem['id'];
 				
 				$path = self::getPhysicalPathTo($dataItem['parent_id']).$dataItem[FileAdmin::$FileSystemItemPath];
-				mkdir(WEB_PATH.$path);
+				mkdir($path);
 			}
 			
 			RoleHelper::setRights(FileAdmin::$DirectoryRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $readRights, WEB_R_READ);
@@ -697,7 +718,7 @@
 		
 		protected function transformFileSystemDirs($dirs) {
 			foreach($dirs as $dir) {
-				$path = WEB_PATH.self::getPhysicalPathTo($dir['parent_id']);
+				$path = self::getPhysicalPathTo($dir['parent_id']);
 				$oldPath = $path.$dir['name'];
 				$newPath = $path.$dir[FileAdmin::$FileSystemItemPath];
 				
@@ -710,7 +731,7 @@
 		
 		protected function transformFileSystemFiles($files) {
 			foreach($files as $file) {
-				$path = WEB_PATH.self::getPhysicalPathTo($file['dir_id']);
+				$path = self::getPhysicalPathTo($file['dir_id']);
 				$oldPath = $path.$file['name'].".".self::getFileExtension($file);
 				$newPath = self::getPhysicalPathToFile($file);
 				

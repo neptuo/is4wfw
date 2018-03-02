@@ -67,79 +67,78 @@
          *
          */                   
         public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false, $browsable = true, $parentName = false, $nameWithExtension = false, $fileNameHeader = false) {
-        global $dbObject;
-        global $loginObject;
-        $rb = new LocalizationBundle();
-        $rb->loadBundle($this->BundleName, $this->BundleLang);
-        $return = "";
-        $origDirId = $dirId;
+            global $dbObject;
+            global $loginObject;
+            $rb = new LocalizationBundle();
+            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $return = "";
+            $origDirId = $dirId;
 
-        if(!$parentName) {
-            $parentName = '..';
-        }
-        
-        if(!$fileNameHeader) {
-            $fileNameHeader = $rb->get('file.name').':';
-        }
-
-        if($browsable) {
-            $dirId = self::setDirId($dirId);
-        }
+            if(!$parentName) {
+                $parentName = '..';
+            }
             
+            if(!$fileNameHeader) {
+                $fileNameHeader = $rb->get('file.name').':';
+            }
+
+            if($browsable) {
+                $dirId = self::setDirId($dirId);
+            }
+                
             if($_POST['delete-dir'] == $rb->get('dir.delete')) {
-            $directoryId = $_POST['directory-id'];
-            
-            //test na prava mazani z adresare
-            $permission = $dbObject->fetchAll('SELECT `value` FROM `directory_right` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$directoryId.' AND `directory_right`.`type` = '.WEB_R_DELETE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
-            if(count($permission) > 0 && $editable != "false") {
-                $subd = $dbObject->fetchAll("SELECT count(`id`) AS `count` FROM `directory` WHERE `parent_id` = ".$directoryId.";");
-                $subf = $dbObject->fetchAll("SELECT count(`id`) AS `count` FROM `file` WHERE `dir_id` = ".$directoryId.";");
-            
-                if($subd[0]['count'] == 0 && $subf[0]['count'] == 0) {
-                    $path = self::getPhysicalPathTo($directoryId);
-                    $dbObject->execute("DELETE FROM `directory` WHERE `id` = ".$directoryId.";");
-                    $dbObject->execute("DELETE FROM `directory_right` WHERE `id` = ".$directoryId.";");
-                    // take smazat fyzicky adresar!!
-                    rmdir(WEB_PATH.$path);
+                $directoryId = $_POST['directory-id'];
+                
+                //test na prava mazani z adresare
+                $permission = $dbObject->fetchAll('SELECT `value` FROM `directory_right` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$directoryId.' AND `directory_right`.`type` = '.WEB_R_DELETE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+                if(count($permission) > 0 && $editable != "false") {
+                    $subd = $dbObject->fetchAll("SELECT count(`id`) AS `count` FROM `directory` WHERE `parent_id` = ".$directoryId.";");
+                    $subf = $dbObject->fetchAll("SELECT count(`id`) AS `count` FROM `file` WHERE `dir_id` = ".$directoryId.";");
+                
+                    if($subd[0]['count'] == 0 && $subf[0]['count'] == 0) {
+                        $path = self::getPhysicalPathTo($directoryId);
+                        $dbObject->execute("DELETE FROM `directory` WHERE `id` = ".$directoryId.";");
+                        $dbObject->execute("DELETE FROM `directory_right` WHERE `id` = ".$directoryId.";");
+                        rmdir($path);
+                    } else {
+                        $return .= '<h4 class="error">'.$rb->get('dir.notempty').'</h4>';
+                    }
                 } else {
-                $return .= '<h4 class="error">'.$rb->get('dir.notempty').'</h4>';
+                    $return .= '<h4 class="error">'.$rb->get('permissiondenied').'</h4>';
                 }
-            } else {
-                $return .= '<h4 class="error">'.$rb->get('permissiondenied').'</h4>';
-            }
             } elseif($_POST['delete-file'] == $rb->get('file.delete')) {
-            $fileId = $_POST['file-id'];
-            
-            //test na prava mazani z adresare
-            $permission = $dbObject->fetchAll('SELECT `value` FROM `file_right` LEFT JOIN `group` ON `file_right`.`gid` = `group`.`gid` WHERE `file_right`.`fid` = '.$fileId.' AND `file_right`.`type` = '.WEB_R_DELETE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
-            if(count($permission) > 0) {
-                $file = $dbObject->fetchAll("SELECT `name`, `dir_id`, `type` FROM `file` WHERE `id` = ".$fileId.";");
-                if(count($file) == 1) {
-                $dbObject->execute("DELETE FROM `file` WHERE `id` = ".$fileId.";");
-                $dbObject->execute("DELETE FROM `file_right` WHERE `id` = ".$fileId.";");
-                $path = self::getPhysicalPathTo($file[0]['dir_id']);
-                $filePath = WEB_PATH . $path . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
-                //echo $filePath;
-                unlink($filePath);
+                $fileId = $_POST['file-id'];
+                
+                //test na prava mazani z adresare
+                $permission = $dbObject->fetchAll('SELECT `value` FROM `file_right` LEFT JOIN `group` ON `file_right`.`gid` = `group`.`gid` WHERE `file_right`.`fid` = '.$fileId.' AND `file_right`.`type` = '.WEB_R_DELETE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+                if(count($permission) > 0) {
+                    $file = $dbObject->fetchAll("SELECT `name`, `dir_id`, `type` FROM `file` WHERE `id` = ".$fileId.";");
+                    if(count($file) == 1) {
+                        $dbObject->execute("DELETE FROM `file` WHERE `id` = ".$fileId.";");
+                        $dbObject->execute("DELETE FROM `file_right` WHERE `id` = ".$fileId.";");
+                        $path = self::getPhysicalPathTo($file[0]['dir_id']);
+                        $filePath = $path . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
+                        //echo $filePath;
+                        unlink($filePath);
+                    }
+                } else {
+                    $return .= '<h4 class="error">Permission Denied!</h4>';
                 }
+            }
+                
+            if($showParent == "false") {
+                $showParent = false;
+            } else if($showParent == "root") {
+                $showParent = $origDirId != $dirId;
             } else {
-                $return .= '<h4 class="error">Permission Denied!</h4>';
+                $showParent = true;
             }
-            }
-            
-        if($showParent == "false") {
-            $showParent = false;
-        } else if($showParent == "root") {
-            $showParent = $origDirId != $dirId;
-        } else {
-            $showParent = true;
-        }
         
-        if($useFrames != 'false') {
-            return parent::getFrame($rb->get('dir.filelist')." :: /".self::getPhysicalPathTo($dirId, true), $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true"), "", true, $parentName, $nameWithExtension, $fileNameHeader);
-        } else {
-            return $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true", $parentName, $nameWithExtension, $fileNameHeader);
-        }
+            if($useFrames != 'false') {
+                return parent::getFrame($rb->get('dir.filelist')." :: /" . self::getPhysicalUrlTo($dirId), $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true"), "", true, $parentName, $nameWithExtension, $fileNameHeader);
+            } else {
+                return $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true", $parentName, $nameWithExtension, $fileNameHeader);
+            }
         }
         
         /**
@@ -152,123 +151,123 @@
         *
         */                        
         private function getList($dirId, $editable, $showParent, $showTitleInsteadOfName, $parentName, $nameWithExtension, $fileNameHeader) {
-        global $dbObject;
-        global $loginObject;
-        $rb = new LocalizationBundle();
-        $rb->loadBundle($this->BundleName, $this->BundleLang);
-        $return = "";
-            
-            $dirs = $dbObject->fetchAll('SELECT distinct `directory`.`id`, `directory`.`name`, .`directory`.`timestamp` FROM `directory` LEFT JOIN `directory_right` ON `directory`.`id` = `directory_right`.`did` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `parent_id` = '.$dirId.' AND `directory_right`.`type` = '.WEB_R_READ.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `name`;');
-            $dir = $dbObject->fetchAll("SELECT `parent_id` FROM `directory` WHERE `id` = ".$dirId.";");
-            
-            $return .= '' 
-            .'<table class="dir-list">'
-            .'<tr class="dir-header-row">'
-                .'<th class="th-icon"></th>'
-                .'<th class="th-id"><span>'.$rb->get('file.id').':</span></th>'
-                .'<th class="th-name">'.$fileNameHeader.'</th>'
-                .'<th class="th-dir-physical-path">'.$rb->get('file.directlink').':</th>'
-                .'<th class="th-timestamp">'.$rb->get('file.timestamp').'</th>'
-                .'<th class="th-type">'.$rb->get('file.type').'</th>'
-                .(($editable != "false") ? '<th class="th-edit">'.$rb->get('file.action').'</th>' : '' )
-            .'</tr>'
-        .($showParent ? ''
-            .'<tr class="dir-parent-row">'
-                .'<td class="dir-icon"></td>'
-                .'<td class="dir-id"></td>'
-                .'<td class="dir-name">'
-                .'<form name="dir-form" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-                    .'<input type="hidden" name="dir-id" value="'.(($dirId != 0) ? $dir[0]['parent_id'] : $dirId).'" />'
-                    .'<input type="submit" name="ch-dir" value="'.$parentName.'" />'
-                .'</form>'
-                .'</td>'
-                .'<td class="dir-physical-path"></td>'
-                .'<td class="dir-timestamp"></td>'
-                .'<td class="dir-type"></td>'
-                .(($editable != "false") ? '<td class="dir-edit"></td>' : '' )
-            .'</tr>'
-        : '');
-            
+            global $dbObject;
+            global $loginObject;
+            $rb = new LocalizationBundle();
+            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $return = "";
+                
+                $dirs = $dbObject->fetchAll('SELECT distinct `directory`.`id`, `directory`.`name`, .`directory`.`timestamp` FROM `directory` LEFT JOIN `directory_right` ON `directory`.`id` = `directory_right`.`did` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `parent_id` = '.$dirId.' AND `directory_right`.`type` = '.WEB_R_READ.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `name`;');
+                $dir = $dbObject->fetchAll("SELECT `parent_id` FROM `directory` WHERE `id` = ".$dirId.";");
+                
+                $return .= '' 
+                .'<table class="dir-list">'
+                .'<tr class="dir-header-row">'
+                    .'<th class="th-icon"></th>'
+                    .'<th class="th-id"><span>'.$rb->get('file.id').':</span></th>'
+                    .'<th class="th-name">'.$fileNameHeader.'</th>'
+                    .'<th class="th-dir-physical-path">'.$rb->get('file.directlink').':</th>'
+                    .'<th class="th-timestamp">'.$rb->get('file.timestamp').'</th>'
+                    .'<th class="th-type">'.$rb->get('file.type').'</th>'
+                    .(($editable != "false") ? '<th class="th-edit">'.$rb->get('file.action').'</th>' : '' )
+                .'</tr>'
+            .($showParent ? ''
+                .'<tr class="dir-parent-row">'
+                    .'<td class="dir-icon"></td>'
+                    .'<td class="dir-id"></td>'
+                    .'<td class="dir-name">'
+                    .'<form name="dir-form" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
+                        .'<input type="hidden" name="dir-id" value="'.(($dirId != 0) ? $dir[0]['parent_id'] : $dirId).'" />'
+                        .'<input type="submit" name="ch-dir" value="'.$parentName.'" />'
+                    .'</form>'
+                    .'</td>'
+                    .'<td class="dir-physical-path"></td>'
+                    .'<td class="dir-timestamp"></td>'
+                    .'<td class="dir-type"></td>'
+                    .(($editable != "false") ? '<td class="dir-edit"></td>' : '' )
+                .'</tr>'
+            : '');
+                
             $n = 0;
             // sudy   even
             // lichy  idle
             foreach($dirs as $dir) {
-            $return .= ''
-            .'<tr class="'.((($n % 2) == 0) ? 'even' : 'idle').'">'
-                .'<td class="dir-icon dir"></td>'
-                .'<td class="dir-id dir"><span>'.$dir['id'].'</span></td>'
-                .'<td class="dir-name">'
-                .'<form name="dir-form" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-                    .'<input type="hidden" name="dir-id" value="'.$dir['id'].'" />'
-                    .'<input type="submit" name="ch-dir" value="'.$dir['name'].'" />'
-                .'</form>'
+                $return .= ''
+                .'<tr class="'.((($n % 2) == 0) ? 'even' : 'idle').'">'
+                    .'<td class="dir-icon dir"></td>'
+                    .'<td class="dir-id dir"><span>'.$dir['id'].'</span></td>'
+                    .'<td class="dir-name">'
+                    .'<form name="dir-form" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
+                        .'<input type="hidden" name="dir-id" value="'.$dir['id'].'" />'
+                        .'<input type="submit" name="ch-dir" value="'.$dir['name'].'" />'
+                    .'</form>'
+                    .'</td>'
+                    .'<td class="dir-physical-path"></td>'
+                    .'<td class="dir-timestamp">'
+                .'<span class="dir-timestamp-date">'.date('d.m.Y', $dir['timestamp']).'</span> '
+                .'<span class="dir-timestamp-time">'.date('H:i:s', $dir['timestamp']).'</span> '
                 .'</td>'
-                .'<td class="dir-physical-path"></td>'
-                .'<td class="dir-timestamp">'
-            .'<span class="dir-timestamp-date">'.date('d.m.Y', $dir['timestamp']).'</span> '
-            .'<span class="dir-timestamp-time">'.date('H:i:s', $dir['timestamp']).'</span> '
-            .'</td>'
-                .'<td class="dir-type"></td>'	
-                .(($editable != "false") ? ''
-                .'<td class="dir-edit">'
-                .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-                    .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
-                    .'<input type="hidden" name="edit-dir" value="'.$rb->get('dir.edit').'" />'
-                    .'<input type="image" src="~/images/page_edi.png" name="edit-dir" value="'.$rb->get('dir.edit').'" title="'.$rb->get('dir.edithint').'" />'
-                .'</form> '
-                .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-                    .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
-                    .'<input type="hidden" name="delete-dir" value="'.$rb->get('dir.delete').'" />'
-                    .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-dir" value="'.$rb->get('dir.delete').'" title="'.$rb->get('dir.deletehint').', id('.$dir['id'].')" />'
-                .'</form>'
-                .'</td>'
-                : '' )
-            .'</tr>';
-            $n ++;
+                    .'<td class="dir-type"></td>'	
+                    .(($editable != "false") ? ''
+                    .'<td class="dir-edit">'
+                    .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
+                        .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
+                        .'<input type="hidden" name="edit-dir" value="'.$rb->get('dir.edit').'" />'
+                        .'<input type="image" src="~/images/page_edi.png" name="edit-dir" value="'.$rb->get('dir.edit').'" title="'.$rb->get('dir.edithint').'" />'
+                    .'</form> '
+                    .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
+                        .'<input type="hidden" name="directory-id" value="'.$dir['id'].'" />'
+                        .'<input type="hidden" name="delete-dir" value="'.$rb->get('dir.delete').'" />'
+                        .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-dir" value="'.$rb->get('dir.delete').'" title="'.$rb->get('dir.deletehint').', id('.$dir['id'].')" />'
+                    .'</form>'
+                    .'</td>'
+                    : '' )
+                .'</tr>';
+                $n ++;
             }
             
             //$files = $dbObject->fetchAll("SELECT `id`, `name`, `title`, `timestamp`, `type` FROM `file` WHERE `dir_id` = ".$dirId." ORDER BY `name`;");
             $files = $dbObject->fetchAll('SELECT distinct `file`.`id`, `file`.`name`, `file`.`title`, `file`.`timestamp`, `file`.`type` FROM `file` LEFT JOIN `file_right` ON `file`.`id` = `file_right`.`fid` LEFT JOIN `group` ON `file_right`.`gid` = `group`.`gid` WHERE `dir_id` = '.$dirId.' AND `file_right`.`type` = '.WEB_R_READ.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `name`;');
         
             foreach($files as $file) {
-            $return .= ''
-            .'<tr class="'.((($n % 2) == 0) ? 'even' : 'idle').'">'
-                .'<td class="file-icon '.FileAdmin::$FileExtensions[$file['type']].'"></td>'
-                .'<td class="file-id"><span>'.$file['id'].'</span></td>'
-                .'<td class="file-name">'
-                .'<a target="_blank" title="'.$file['title'].'" href="~/file.php?rid='.$file['id'].'">'
-            .($showTitleInsteadOfName && strlen($file['title']) != 0 ? ''
-            .$file['title']
-            : ''
-            .$file['name']
-            )
-            .($nameWithExtension ? '.'.FileAdmin::$FileExtensions[$file['type']] : '')
-            .'</a>'
+                $return .= ''
+                .'<tr class="'.((($n % 2) == 0) ? 'even' : 'idle').'">'
+                    .'<td class="file-icon '.FileAdmin::$FileExtensions[$file['type']].'"></td>'
+                    .'<td class="file-id"><span>'.$file['id'].'</span></td>'
+                    .'<td class="file-name">'
+                    .'<a target="_blank" title="'.$file['title'].'" href="~/file.php?rid='.$file['id'].'">'
+                .($showTitleInsteadOfName && strlen($file['title']) != 0 ? ''
+                .$file['title']
+                : ''
+                .$file['name']
+                )
+                .($nameWithExtension ? '.'.FileAdmin::$FileExtensions[$file['type']] : '')
+                .'</a>'
+                    .'</td>'
+                    .'<td class="dir-physical-path">'
+                        .'<a href="'.self::getPhysicalUrlTo($dirId).$file['name'].".".FileAdmin::$FileExtensions[$file['type']].'" target="_blank">open</a>'
+                    .'</td>'
+                    .'<td class="file-timestamp">'
+                .'<span class="file-timestamp-date">'.date('d.m.Y', $file['timestamp']).'</span> '
+                .'<span class="file-timestamp-time">'.date('H:i:s', $file['timestamp']).'</span> '
                 .'</td>'
-                .'<td class="dir-physical-path">'
-                .'<a href="'.self::getPhysicalPathTo($dirId, false).$file['name'].".".FileAdmin::$FileExtensions[$file['type']].'" target="_blank">open</a>'
-                .'</td>'
-                .'<td class="file-timestamp">'
-            .'<span class="file-timestamp-date">'.date('d.m.Y', $file['timestamp']).'</span> '
-            .'<span class="file-timestamp-time">'.date('H:i:s', $file['timestamp']).'</span> '
-            .'</td>'
-                .'<td class="file-type">'.FileAdmin::$FileExtensions[$file['type']].'</td>'
-                .(($editable != "false") ? ''
-                .'<td class="file-edit">'
-                .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-                    .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
-                    .'<input type="hidden" name="edit-file" value="'.$rb->get('file.edit').'" />'
-                    .'<input type="image" src="~/images/page_edi.png" name="edit-file" value="'.$rb->get('file.edit').'" title="'.$rb->get('file.edithint').'" />'
-                .'</form> '
-                .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-                    .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
-                    .'<input type="hidden" name="delete-file" value="'.$rb->get('file.delete').'" />'
-                    .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="'.$rb->get('file.delete').'" title="'.$rb->get('file.deletehint').', id('.$file['id'].')" />'
-                .'</form>'
-                .'</td>'
-                : '' )
-            .'</tr>';
-            $n ++;
+                    .'<td class="file-type">'.FileAdmin::$FileExtensions[$file['type']].'</td>'
+                    .(($editable != "false") ? ''
+                    .'<td class="file-edit">'
+                    .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
+                        .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
+                        .'<input type="hidden" name="edit-file" value="'.$rb->get('file.edit').'" />'
+                        .'<input type="image" src="~/images/page_edi.png" name="edit-file" value="'.$rb->get('file.edit').'" title="'.$rb->get('file.edithint').'" />'
+                    .'</form> '
+                    .'<form name="dir-edit" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
+                        .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
+                        .'<input type="hidden" name="delete-file" value="'.$rb->get('file.delete').'" />'
+                        .'<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="'.$rb->get('file.delete').'" title="'.$rb->get('file.deletehint').', id('.$file['id'].')" />'
+                    .'</form>'
+                    .'</td>'
+                    : '' )
+                .'</tr>';
+                $n ++;
             }
             
             $return .= ''
@@ -290,126 +289,129 @@
         public function showNewDirectoryForm($dirId = false, $useFrames = false, $useRights = false) {
             global $dbObject;
             global $loginObject;
-        $rb = new LocalizationBundle();
-        $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = new LocalizationBundle();
+            $rb->loadBundle($this->BundleName, $this->BundleLang);
             $return = "";
             $dirId = self::setDirId($dirId);
             
             if($_POST['new-directory'] == $rb->get('dir.new') || $_POST['edit-directory'] == $rb->get('dir.edithint')) {
-            $directoryParentId = $_POST['directory-parent-id'];
-            $directoryName = $_POST['directory-name'];
-            $directoryUrl = $_POST['directory-url'];
-        if($directoryUrl == "") {
-            $directoryUrl = strtolower(parent::convertToUrlValid($directoryName));
-        }
-            $read = $_POST['directory-right-edit-groups-r'];
-            $write = $_POST['directory-right-edit-groups-w'];
-            $delete = $_POST['directory-right-edit-groups-d'];
-            
-            //test na prava zapisu do adresare
-            $permission = $dbObject->fetchAll('SELECT `value` FROM `directory_right` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$directoryParentId.' AND `directory_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
-            if(count($permission) > 0) {
-                if(strlen($directoryName) > 0) {
-                if($_POST['new-directory'] == $rb->get('dir.new')) {
-                    $sib = $dbObject->fetchAll('SELECT count(`id`) AS `count` FROM `directory` WHERE `name` = "'.$directoryName.'" AND `parent_id` = '.$directoryParentId.';');
-                } elseif($_POST['edit-directory'] == "Edit directory") {
-                    $par = $dbObject->fetchAll('SELECT `name`, `parent_id` FROM `directory` WHERE `id` = '.$directoryParentId.';'); 
-                    $sib = $dbObject->fetchAll('SELECT count(`id`) AS `count` FROM `directory` WHERE `name` = "'.$directoryName.'" AND `parent_id` = '.$par[0]['parent_id'].';');
+                $directoryParentId = $_POST['directory-parent-id'];
+                $directoryName = $_POST['directory-name'];
+                $directoryUrl = $_POST['directory-url'];
+                if($directoryUrl == "") {
+                    $directoryUrl = strtolower(parent::convertToUrlValid($directoryName));
                 }
-                
-            if(($_POST['new-directory'] == $rb->get('dir.new') && $sib[0]['count'] == 0) || ($_POST['edit-directory'] == $rb->get('dir.edithint') && (($par[0]['name'] == $directoryName && $sib[0]['count'] == 1) || ($par[0]['name'] != $directoryName && $sib[0]['count'] == 0)))) {
-            if($_POST['new-directory'] == $rb->get('dir.new')) {
-                    $dbObject->execute("INSERT INTO `directory`(`parent_id`, `name`, `url`, `timestamp`) VALUES(".$directoryParentId.", \"".$directoryName."\", \"".$directoryUrl."\", ".time().");");
-                $directoryId = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `directory`;');
-                    $directoryId = $directoryId[0]['id'];
-                $path = self::getPhysicalPathTo($directoryParentId).$directoryName;
-                mkdir(WEB_PATH . $path);
-            } elseif($_POST['edit-directory'] == $rb->get('dir.edithint')) {
-                $oldName = $dbObject->fetchAll('SELECT `name`, `parent_id` FROM `directory` WHERE `id` = '.$directoryParentId.';');
-                $path1 = substr(self::getPhysicalPathTo($oldName[0]['parent_id']).$oldName[0]['name'].'/', 1);
-                $path2 = substr(self::getPhysicalPathTo($oldName[0]['parent_id']).$directoryName.'/', 1);
-                rename($path1, $path2);
-                $dbObject->execute('UPDATE `directory` SET `name` = "'.$directoryName.'", `url` = "'.$directoryUrl.'", `timestamp` = "'.time().'" WHERE `id` = '.$directoryParentId.';');
-                $directoryId = $directoryParentId;
-            } else {
-                return;
-            }
+                $read = $_POST['directory-right-edit-groups-r'];
+                $write = $_POST['directory-right-edit-groups-w'];
+                $delete = $_POST['directory-right-edit-groups-d'];
                     
-            if(count($read) != 0) {
-                $dbR = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `directory_right`.`did` = ".$directoryId." AND `type` = ".WEB_R_READ.";");
-                foreach($dbR as $right) {
-                if(!in_array($right, $read)) {
-                    $dbObject->execute("DELETE FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_READ.";");
-                }
-                    }
-                foreach($read as $right) {
-                $row = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_READ." AND `gid` = ".$right.";");
-                if(count($row) == 0) {
-                    $dbObject->execute("INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES (".$directoryId.", ".$right.", ".WEB_R_READ.");");
-                }
-                }
+                //test na prava zapisu do adresare
+                $permission = $dbObject->fetchAll('SELECT `value` FROM `directory_right` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$directoryParentId.' AND `directory_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
+                if(count($permission) > 0) {
+                    if(strlen($directoryName) > 0) {
+                        if($_POST['new-directory'] == $rb->get('dir.new')) {
+                            $sib = $dbObject->fetchAll('SELECT count(`id`) AS `count` FROM `directory` WHERE `name` = "'.$directoryName.'" AND `parent_id` = '.$directoryParentId.';');
+                        } elseif($_POST['edit-directory'] == "Edit directory") {
+                            $par = $dbObject->fetchAll('SELECT `name`, `parent_id` FROM `directory` WHERE `id` = '.$directoryParentId.';'); 
+                            $sib = $dbObject->fetchAll('SELECT count(`id`) AS `count` FROM `directory` WHERE `name` = "'.$directoryName.'" AND `parent_id` = '.$par[0]['parent_id'].';');
+                        }
+                        
+                    if(($_POST['new-directory'] == $rb->get('dir.new') && $sib[0]['count'] == 0) || ($_POST['edit-directory'] == $rb->get('dir.edithint') && (($par[0]['name'] == $directoryName && $sib[0]['count'] == 1) || ($par[0]['name'] != $directoryName && $sib[0]['count'] == 0)))) {
+                        if($_POST['new-directory'] == $rb->get('dir.new')) {
+                                $dbObject->execute("INSERT INTO `directory`(`parent_id`, `name`, `url`, `timestamp`) VALUES(".$directoryParentId.", \"".$directoryName."\", \"".$directoryUrl."\", ".time().");");
+                            $directoryId = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `directory`;');
+                                $directoryId = $directoryId[0]['id'];
+                            $path = self::getPhysicalPathTo($directoryParentId).$directoryName;
+                            mkdir($path);
+                        } elseif($_POST['edit-directory'] == $rb->get('dir.edithint')) {
+                            $oldName = $dbObject->fetchAll('SELECT `name`, `parent_id` FROM `directory` WHERE `id` = '.$directoryParentId.';');
+                            $path1 = substr(self::getPhysicalPathTo($oldName[0]['parent_id']).$oldName[0]['name'].'/', 1);
+                            $path2 = substr(self::getPhysicalPathTo($oldName[0]['parent_id']).$directoryName.'/', 1);
+                            rename($path1, $path2);
+                            $dbObject->execute('UPDATE `directory` SET `name` = "'.$directoryName.'", `url` = "'.$directoryUrl.'", `timestamp` = "'.time().'" WHERE `id` = '.$directoryParentId.';');
+                            $directoryId = $directoryParentId;
+                        } else {
+                            return;
+                        }
+                        
+                        if(count($read) != 0) {
+                            $dbR = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `directory_right`.`did` = ".$directoryId." AND `type` = ".WEB_R_READ.";");
+                            foreach($dbR as $right) {
+                                if(!in_array($right, $read)) {
+                                    $dbObject->execute("DELETE FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_READ.";");
+                                }
+                            }
+                            foreach($read as $right) {
+                                $row = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_READ." AND `gid` = ".$right.";");
+                                if(count($row) == 0) {
+                                    $dbObject->execute("INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES (".$directoryId.", ".$right.", ".WEB_R_READ.");");
+                                }
+                            }
+                        } else {
+                            $rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryParentId.' AND `type` = '.WEB_R_READ.';');
+                            foreach($rights as $right) {
+                                $dbObject->execute('INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES ('.$directoryId.', '.$right['gid'].', '.WEB_R_READ.');');
+                            }
+                        }
+
+                        if(count($write) != 0) {
+                            $dbR = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `directory_right`.`did` = ".$directoryId." AND `type` = ".WEB_R_WRITE.";");
+                            foreach($dbR as $right) {
+                                if(!in_array($right, $write)) {
+                                    $dbObject->execute("DELETE FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_WRITE.";");
+                                }
+                            }
+                            foreach($write as $right) {
+                                $row = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_WRITE." AND `gid` = ".$right.";");
+                                if(count($row) == 0) {
+                                    $dbObject->execute("INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES (".$directoryId.", ".$right.", ".WEB_R_WRITE.");");
+                                }
+                            }
+                        } else {
+                            $rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryParentId.' AND `type` = '.WEB_R_WRITE.';');
+                            foreach($rights as $right) {
+                                $dbObject->execute('INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES ('.$directoryId.', '.$right['gid'].', '.WEB_R_WRITE.');');
+                            }
+                        }
+
+                        if(count($delete) != 0) {
+                            $dbR = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `directory_right`.`did` = '.$directoryId.' AND `type` = '.WEB_R_DELETE.';');
+                            foreach($dbR as $right) {
+                                if(!in_array($right, $delete)) {
+                                    $dbObject->execute("DELETE FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_DELETE.";");
+                                }
+                            }
+
+                            foreach($delete as $right) {
+                                $row = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryId.' AND `type` = '.WEB_R_DELETE.' AND `gid` = '.$right.';');
+                                if(count($row) == 0) {
+                                    $dbObject->execute("INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES (".$directoryId.", ".$right.", ".WEB_R_DELETE.");");
+                                }
+                            }
+                        } else {
+                            $rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryParentId.' AND `type` = '.WEB_R_DELETE.';');
+                            foreach($rights as $right) {
+                                $dbObject->execute('INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES ('.$directoryId.', '.$right['gid'].', '.WEB_R_DELETE.');');
+                            }
+                        }
                     } else {
-                    $rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryParentId.' AND `type` = '.WEB_R_READ.';');
-                    foreach($rights as $right) {
-                        $dbObject->execute('INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES ('.$directoryId.', '.$right['gid'].', '.WEB_R_READ.');');
-                    }
-                    }
-                    if(count($write) != 0) {
-                    $dbR = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `directory_right`.`did` = ".$directoryId." AND `type` = ".WEB_R_WRITE.";");
-                    foreach($dbR as $right) {
-                        if(!in_array($right, $write)) {
-                        $dbObject->execute("DELETE FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_WRITE.";");
-                        }
-                    }
-                    foreach($write as $right) {
-                        $row = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_WRITE." AND `gid` = ".$right.";");
-                        if(count($row) == 0) {
-                        $dbObject->execute("INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES (".$directoryId.", ".$right.", ".WEB_R_WRITE.");");
+                        $message = '<h4 class="error">'.$rb->get('dir.notuniquename').'</h4>';
+                        $return .= $message;//parent::getFrame("Error Message", $message, "", true);
+                        if($_POST['edit-directory'] == $rb->get('dir.edithint')) {
+                            $_POST['edit-dir'] = $rb->get('dir.edit');
+                            $_POST['directory-id'] = $directoryParentId;
                         }
                     }
                     } else {
-                    $rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryParentId.' AND `type` = '.WEB_R_WRITE.';');
-                    foreach($rights as $right) {
-                        $dbObject->execute('INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES ('.$directoryId.', '.$right['gid'].', '.WEB_R_WRITE.');');
-                    }
-                    }
-                    if(count($delete) != 0) {
-                    $dbR = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `directory_right`.`did` = '.$directoryId.' AND `type` = '.WEB_R_DELETE.';');
-                    foreach($dbR as $right) {
-                        if(!in_array($right, $delete)) {
-                        $dbObject->execute("DELETE FROM `directory_right` WHERE `did` = ".$directoryId." AND `type` = ".WEB_R_DELETE.";");
-                        }
-                    } 	
-                    foreach($delete as $right) {
-                        $row = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryId.' AND `type` = '.WEB_R_DELETE.' AND `gid` = '.$right.';');
-                        if(count($row) == 0) {
-                        $dbObject->execute("INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES (".$directoryId.", ".$right.", ".WEB_R_DELETE.");");
-                        }
-                    }
-                    } else {
-                    $rights = $dbObject->fetchAll('SELECT `gid` FROM `directory_right` WHERE `did` = '.$directoryParentId.' AND `type` = '.WEB_R_DELETE.';');
-                    foreach($rights as $right) {
-                        $dbObject->execute('INSERT INTO `directory_right`(`did`, `gid`, `type`) VALUES ('.$directoryId.', '.$right['gid'].', '.WEB_R_DELETE.');');
-                    }
+                        $return .= '<h4 class="error">'.$rb->get('dir.namelength').'</h4>';
                     }
                 } else {
-                    $message = '<h4 class="error">'.$rb->get('dir.notuniquename').'</h4>';
-                    $return .= $message;//parent::getFrame("Error Message", $message, "", true);
-                    if($_POST['edit-directory'] == $rb->get('dir.edithint')) {
-                $_POST['edit-dir'] = $rb->get('dir.edit');
-                $_POST['directory-id'] = $directoryParentId;
-            }
-            }
-                } else {
-                $return .= '<h4 class="error">'.$rb->get('dir.namelength').'</h4>';
+                    $return .= '<h4 class="error">'.$rb->get('permissiondenied').'</h4>';
                 }
-            } else {
-                $return .= '<h4 class="error">'.$rb->get('permissiondenied').'</h4>';
-            }
             }
             
-            $dirName = '';
-            if($_POST['edit-dir'] == $rb->get('dir.edit')) {
+        $dirName = '';
+        if($_POST['edit-dir'] == $rb->get('dir.edit')) {
             $direcId = $_POST['directory-id'];
             $permission = $dbObject->fetchAll('SELECT `directory`.`name`, `directory`.`url`, `group`.`value` FROM `directory` LEFT JOIN `directory_right` ON `directory`.`id` = `directory_right`.`did` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `directory_right`.`did` = '.$direcId.' AND `directory_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value` DESC;');
             if(count($permission) > 0) {
@@ -417,94 +419,94 @@
                 $dirName = $permission[0]['name'];
                 $dirUrl = $permission[0]['url'];
             }
-            }
+        }
             
             // Ziskat prava ....
-            $show = array('read' => true, 'write' => true, 'delete' => false);
-            $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_READ.";");
-            $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_WRITE.";");
-            $groupsD = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_DELETE.";");
-            $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
-            $groupSelectR = '<select id="directory-right-edit-groups-r" name="directory-right-edit-groups-r[]" multiple="multiple" size="5">';
-            $groupSelectW = '<select id="directory-right-edit-groups-w" name="directory-right-edit-groups-w[]" multiple="multiple" size="5">';
-            $groupSelectD = '<select id="directory-right-edit-groups-d" name="directory-right-edit-groups-d[]" multiple="multiple" size="5">';
-            foreach($allGroups as $group) {
-            $selectedR = false;
-            $selectedW = false;
-            $selectedD = false;
-            foreach($groupsR as $gp) {
-                if($gp['gid'] == $group['gid']) {
-                $selectedR = true;
-                $show['read'] = true;
-                }
+        $show = array('read' => true, 'write' => true, 'delete' => false);
+        $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_READ.";");
+        $groupsW = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_WRITE.";");
+        $groupsD = $dbObject->fetchAll("SELECT `gid` FROM `directory_right` WHERE `did` = ".$dirId." AND `type` = ".WEB_R_DELETE.";");
+        $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `value`;');
+        $groupSelectR = '<select id="directory-right-edit-groups-r" name="directory-right-edit-groups-r[]" multiple="multiple" size="5">';
+        $groupSelectW = '<select id="directory-right-edit-groups-w" name="directory-right-edit-groups-w[]" multiple="multiple" size="5">';
+        $groupSelectD = '<select id="directory-right-edit-groups-d" name="directory-right-edit-groups-d[]" multiple="multiple" size="5">';
+        foreach($allGroups as $group) {
+        $selectedR = false;
+        $selectedW = false;
+        $selectedD = false;
+        foreach($groupsR as $gp) {
+            if($gp['gid'] == $group['gid']) {
+            $selectedR = true;
+            $show['read'] = true;
             }
-            foreach($groupsW as $gp) {
-                if($gp['gid'] == $group['gid']) {
-                $selectedW = true;
-                $show['write'] = true;
-                }
+        }
+        foreach($groupsW as $gp) {
+            if($gp['gid'] == $group['gid']) {
+            $selectedW = true;
+            $show['write'] = true;
             }
-            foreach($groupsD as $gp) {
-                if($gp['gid'] == $group['gid']) {
-                $selectedD = true;
-                $show['delete'] = true;
-                }
+        }
+        foreach($groupsD as $gp) {
+            if($gp['gid'] == $group['gid']) {
+            $selectedD = true;
+            $show['delete'] = true;
             }
-            $groupSelectR .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-            $groupSelectW .= '<option'.(($selectedW) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-            $groupSelectD .= '<option'.(($selectedD) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
-            }
-            $groupSelectR .= '</select>';
-            $groupSelectW .= '</select>';
-            $groupSelectD .= '</select>';
+        }
+        $groupSelectR .= '<option'.(($selectedR) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+        $groupSelectW .= '<option'.(($selectedW) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+        $groupSelectD .= '<option'.(($selectedD) ? ' selected="selected"' : '').' value="'.$group['gid'].'">'.$group['name'].'</option>';
+        }
+        $groupSelectR .= '</select>';
+        $groupSelectW .= '</select>';
+        $groupSelectD .= '</select>';
         
         
             $return .= ''
             .'<form name="new-directory" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-            .'<input type="hidden" name="directory-parent-id" value="'.$dirId.'" />'
-            .'<div class="directory-name">'
-                .'<label for="directory-name">'.$rb->get('dir.name').':</label> '
-                .'<input type="text" id="directory-name" name="directory-name" value="'.$dirName.'" />'
-            .'</div>'
-            .'<div class="directory-name">'
-                .'<label for="directory-name">'.$rb->get('dir.url').':</label> '
-                .'<input type="text" id="directory-url" name="directory-url" value="'.$dirUrl.'" />'
-            .'</div>'
-        .(($useRights != "false") ? ''
-            .'<div class="directory-rights">'
-                .'<div class="directory-right-r">'
-                .'<label for="directory-right-edit-groups-r">'.$rb->get('perm.read').':</label>'
-                .$groupSelectR
+                .'<input type="hidden" name="directory-parent-id" value="'.$dirId.'" />'
+                .'<div class="directory-name">'
+                    .'<label for="directory-name">'.$rb->get('dir.name').':</label> '
+                    .'<input type="text" id="directory-name" name="directory-name" value="'.$dirName.'" />'
                 .'</div>'
-                .'<div class="directory-right-w">'
-                .'<label for="directory-right-edit-groups-w">'.$rb->get('perm.write').':</label>'
-                .$groupSelectW
+                .'<div class="directory-name">'
+                    .'<label for="directory-name">'.$rb->get('dir.url').':</label> '
+                    .'<input type="text" id="directory-url" name="directory-url" value="'.$dirUrl.'" />'
                 .'</div>'
-                .(($_POST['edit-dir'] == 'Edit' && count($permission) > 0 && !$show['delete']) ? ''
+            .(($useRights != "false") ? ''
+                .'<div class="directory-rights">'
+                    .'<div class="directory-right-r">'
+                    .'<label for="directory-right-edit-groups-r">'.$rb->get('perm.read').':</label>'
+                    .$groupSelectR
+                    .'</div>'
+                    .'<div class="directory-right-w">'
+                    .'<label for="directory-right-edit-groups-w">'.$rb->get('perm.write').':</label>'
+                    .$groupSelectW
+                    .'</div>'
+                    .(($_POST['edit-dir'] == 'Edit' && count($permission) > 0 && !$show['delete']) ? ''
+                    : ''
+                    .'<div class="directory-right-d">'
+                    .'<label for="directory-right-edit-groups-d">'.$rb->get('perm.delete').':</label>'
+                    .$groupSelectD
+                    .'</div>'
+                    )
+                    .'<div class="clear"></div>'
+                .'</div>'
+            : '')
+                .(($_POST['edit-dir'] == $rb->get('dir.edit') && count($permission) > 0) ? ''
+                .'<div class="directory-submit">'
+                    .'<input type="submit" name="edit-directory" value="'.$rb->get('dir.edithint').'" /> '
+                    .'<input type="submit" name="back-directory" value="'.$rb->get('dir.back').'" />'
+                .'</div>'
                 : ''
-                .'<div class="directory-right-d">'
-                .'<label for="directory-right-edit-groups-d">'.$rb->get('perm.delete').':</label>'
-                .$groupSelectD
-                .'</div>'
-                )
-                .'<div class="clear"></div>'
-            .'</div>'
-        : '')
-            .(($_POST['edit-dir'] == $rb->get('dir.edit') && count($permission) > 0) ? ''
-            .'<div class="directory-submit">'
-                .'<input type="submit" name="edit-directory" value="'.$rb->get('dir.edithint').'" /> '
-                .'<input type="submit" name="back-directory" value="'.$rb->get('dir.back').'" />'
-            .'</div>'
-            : ''
-            .'<div class="directory-submit">'
-                .'<input type="submit" name="new-directory" value="'.$rb->get('dir.new').'" />'
-            .'</div>')
-            .'</form>';
-            
+                .'<div class="directory-submit">'
+                    .'<input type="submit" name="new-directory" value="'.$rb->get('dir.new').'" />'
+                .'</div>')
+                .'</form>';
+                
             if($useFrames != 'false') {
-            return parent::getFrame((($_POST['edit-dir'] == $rb->get('dir.edit')) ? $rb->get('dir.edithint') : $rb->get('dir.new')), $return, "", true);
+                return parent::getFrame((($_POST['edit-dir'] == $rb->get('dir.edit')) ? $rb->get('dir.edithint') : $rb->get('dir.new')), $return, "", true);
             } else {
-            return $return;
+                return $return;
             }
         }
         
@@ -672,24 +674,24 @@
                 if(count($files) == 0) {
                     if($extType > 0) {
                     $path = self::getPhysicalPathTo($dirId);
-                    $moved = move_uploaded_file($original, WEB_PATH.$path.$fileName.".".FileAdmin::$FileExtensions[$extType]);
+                    $moved = move_uploaded_file($original, $path.$fileName.".".FileAdmin::$FileExtensions[$extType]);
                     
                     if($moved) {
                         if(array_key_exists('file-id', $_POST)) {
                         $files = $dbObject->fetchAll("SELECT `id`, `name`, `type`, `dir_id` FROM `file` WHERE `dir_id` = ".$dirId." AND `id` = ".$fileId.";");
                         $oldFile = $files[0];
-                    $path = self::getPhysicalPathTo($oldFile['dir_id']);
-                    $filePath = WEB_PATH.$path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
+                        $path = self::getPhysicalPathTo($oldFile['dir_id']);
+                        $filePath = $path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
                         //echo $filePath;
                         if($fileName != $oldFile['name'] || $extType != $oldFile['type']) {
-                    unlink($filePath);
-                    }
-                    $dbObject->execute('UPDATE `file` SET `name` = "'.$fileName.'", `title` = "'.$fileTitle.'", `timestamp` = '.time().' WHERE `id` = '.$fileId.';');
+                            unlink($filePath);
+                        }
+                        $dbObject->execute('UPDATE `file` SET `name` = "'.$fileName.'", `title` = "'.$fileTitle.'", `timestamp` = '.time().' WHERE `id` = '.$fileId.';');
                         } else {
-                    $dbObject->execute("INSERT INTO `file`(`dir_id`, `name`, `title`, `type`, `timestamp`) VALUES (".$dirId.", \"".$fileName."\", \"".$fileTitle."\", ".$extType.", ".time().");");
-                    $fileId = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `file`;');
-                    $fileId = $fileId[0]['id'];
-                }
+                            $dbObject->execute("INSERT INTO `file`(`dir_id`, `name`, `title`, `type`, `timestamp`) VALUES (".$dirId.", \"".$fileName."\", \"".$fileTitle."\", ".$extType.", ".time().");");
+                            $fileId = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `file`;');
+                            $fileId = $fileId[0]['id'];
+                        }
                         
                         
                 if(count($read) != 0) {
@@ -770,7 +772,7 @@
             $files = $dbObject->fetchAll("SELECT `id`, `name`, `type`, `dir_id` FROM `file` WHERE `dir_id` = ".$dirId." AND `id` = ".$fileId.";");
             $oldFile = $files[0];
             $path = self::getPhysicalPathTo($oldFile['dir_id']);
-            $filePath = WEB_PATH.$path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
+            $filePath = $path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
             if($fileName != $oldFile['name']) {
                 $i = rename($filePath, str_replace($oldFile['name'], $fileName, $filePath));
             }
@@ -808,36 +810,48 @@
         
         /**
         *
-        *  Generates physical path to dir in fs.
+        *  Generates physical path to dir in fs (/hosting/www/user/filesystem/1/2).
         *  
         *  @param    dirId   dir id
         *  @return   physical path to dir in fs
         *
         */                   
-        public function getPhysicalPathTo($dirId, $notUserFsRoot = false) {
+        public function getPhysicalPathTo($dirId) {
+            return USER_FILESYSTEM_PATH . self::getDirectoryPathIndernal($dirId);
+        }
+
+        /**
+        *
+        *  Generates URL to dir in fs (/files/1/2).
+        *  
+        *  @param    dirId   dir id
+        *  @return   physical path to dir in fs
+        *
+        */    
+        public function getPhysicalUrlTo($dirId) {
+            return USER_FILESYSTEM_URL . self::getDirectoryPathIndernal($dirId);
+        }
+
+        private function getDirectoryPathIndernal($dirId) {
             $path = "";
-            if($dirId >= 0) {
-                while($dirId != 0) {
-                parent::db()->getDataAccess()->disableCache();
-                $dirInfo = parent::dao('Directory')->select(parent::select()->where('id', '=', $dirId)->result(), false, array(FileAdmin::$FileSystemItemPath, 'parent_id'));
-                parent::db()->getDataAccess()->enableCache();
-                if(count($dirInfo) == 1) {
-                    $dirId = $dirInfo[0]['parent_id'];
-                    $path = $dirInfo[0][FileAdmin::$FileSystemItemPath].'/'.$path;
-                } else {
-                    $message = "Directory doesn't exists!";
-                    echo "<h4 class=\"error\">".$message."</h4>";
-                    trigger_error($message, E_USER_ERROR);
-                }
+            if ($dirId >= 0) {
+                while ($dirId != 0) {
+                    parent::db()->getDataAccess()->disableCache();
+                    $dirInfo = parent::dao('Directory')->select(parent::select()->where('id', '=', $dirId)->result(), false, array(FileAdmin::$FileSystemItemPath, 'parent_id'));
+                    parent::db()->getDataAccess()->enableCache();
+                    if (count($dirInfo) == 1) {
+                        $dirId = $dirInfo[0]['parent_id'];
+                        $path = $dirInfo[0][FileAdmin::$FileSystemItemPath].'/'.$path;
+                    } else {
+                        $message = "Directory doesn't exists!";
+						echo parent::getError($message);
+                        trigger_error($message, E_USER_ERROR);
+                    }
                 }
             } else {
                 $message = "Directory doesn't exists!";
-                echo "<h4 class=\"error\">".$message."</h4>";
+				echo parent::getError($message);
                 trigger_error($message, E_USER_ERROR);
-            }
-                
-            if(!$notUserFsRoot) {
-                $path = UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), FS_ROOT . $path);
             }
 
             return $path;
@@ -869,7 +883,7 @@
             $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = ".$fileId.";");
             
             if(count($file) == 1) {
-            $filePath = WEB_PATH.self::getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
+            $filePath = self::getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
             $fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".FileAdmin::$FileExtensions[$file[0]['type']] : "document/".$file[0]['type'];
             
             if(array_key_exists("width", $_GET) && array_key_exists("height", $_GET)) {
@@ -1166,13 +1180,13 @@
             foreach($images as $image) {
             if($lightbox == "true" || $lightbox == "added") {
                 $link = ''
-                .'<a class="gallery-link" title="'.$image['title'].'" href="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$lsize : self::getPhysicalPathTo($dirId, false).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
-                .'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalPathTo($dirId, false).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
+                .'<a class="gallery-link" title="'.$image['title'].'" href="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$lsize : self::getPhysicalUrlTo($dirId).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
+                    .'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalUrlTo($dirId).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
                 .'</a>';
             } else {
                 $link = ''
                 .(($pageId != false) ? '<a class="gallery-link" title="'.$image['title'].'" href="'.$webObject->composeUrl($pageId, $langId).(($method == "dynamic") ? '/'.$image['id'].'-'.$image['name'] : '?file-id='.$image['id']).'">' : '')
-                .'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalPathTo($dirId, false).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
+                    .'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalUrlTo($dirId).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
                 .(($pageId != false) ? '</a>' : '');
             }
             

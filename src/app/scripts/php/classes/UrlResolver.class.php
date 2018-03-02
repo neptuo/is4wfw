@@ -326,8 +326,10 @@
         }
 
         public static function parseScriptRoot($url, $scriptName = 'index.php') {
+            // Rewrites: /a/x/server.php => a/x/
             $url = substr($url, 1, strpos($url, '/' . $scriptName));
             if (strlen($url) > 0) {
+                // Rewrites: a/x/ => a/x
                 return substr($url, 0, strlen($url) - 1);
             }
             return $url;

@@ -90,7 +90,7 @@ if (array_key_exists('fid', $_REQUEST)) {
     $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `url`, `type`, `timestamp` FROM `file` WHERE `id` = " . $fileId . ";");
 
     if (count($file) == 1) {
-        $filePath = INSTANCE_PATH . $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
+        $filePath = $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
         //echo $filePath;
         $updTime = filemtime($filePath);
 
@@ -160,7 +160,7 @@ if (array_key_exists('fid', $_REQUEST)) {
             header('Content-Disposition: inline; filename=' . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']]);
             header('Content-Transfer-Encoding: binary');
             header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
-            $file = @ fopen($filePath, 'rb');
+            $file = @fopen($filePath, 'rb');
             if ($file) {
                 fpassthru($file);
                 exit;
