@@ -43,7 +43,7 @@ if (array_key_exists('fid', $_REQUEST)) {
                 break;
         }
 
-        $file[0]['content'] = str_replace("~/", UrlResolver::combinePath(INSTANCE_URL, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), INSTANCE_URL)), $file[0]['content']);
+        $file[0]['content'] = str_replace("~/", INSTANCE_URL, $file[0]['content']);
 
         // Zipovani ...
         /* $acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];

@@ -224,9 +224,10 @@
 
             $found = false;
             $domainUrl = $_SERVER['HTTP_HOST'];
-            $rootUrl = UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME']);
+            $rootUrl = INSTANCE_URL;
             $virtualUrl = $_REQUEST['WEB_PAGE_PATH'];
             $fullUrl = UrlResolver::combinePath($domainUrl, UrlResolver::combinePath($rootUrl, $virtualUrl));
+
             $item = $this->UrlCache->read($fullUrl);
             
             if ($_SERVER['HTTPS'] == "on") {
@@ -239,7 +240,6 @@
             
             // Projit Forwardy s Always
             self::processForwards(self::findForward(array('Always')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'));
-            
 
             if ($item != array()) {
                 // Stranka jiz je v urlcache

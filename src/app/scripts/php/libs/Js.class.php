@@ -112,7 +112,7 @@
                     . self::formatScript('~/js/initTiny.js');
             }
             if (strpos($_SERVER['REQUEST_URI'], ".view") == -1) {
-                $return = str_replace("~/", UrlResolver::combinePath(INSTANCE_URL, UrlResolver::combinePath(UrlResolver::parseScriptRoot($_SERVER['SCRIPT_NAME'], 'file.php'), INSTANCE_URL)), $return);
+                $return = str_replace("~/", INSTANCE_URL, $return);
             } else {
                 $return = ViewHelper::resolveUrl($return);
             }
