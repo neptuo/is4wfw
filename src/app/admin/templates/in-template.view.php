@@ -31,27 +31,29 @@
             </div>
             <div id="cms-menus">
                 <v:panel class="cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
-                    <span class="menu-root"><a href="~/in/hint.view"></a></span>
+                    <span class="menu-root">
+                        <web:a pageId="~/in/hint.view" text=" " />
+                    </span>
                 </v:panel>
                 <v:panel class="cms-menu" security:requirePerm="CMS.Web">
-                    <span class="menu-root"><a href="~/in/index.view">Web</a></span>
+                    <span class="menu-root"><web:a pageId="~/in/index.view" text="Web" /></span>
                     <m:xmlMenu file="~/templates/menus/web.xml" />
                 </v:panel>
                 <v:panel class="cms-menu cms-menu-2" security:requirePerm="CMS.Floorball">
                     <span class="menu-root">
-						<a href="~/in/floorball/seasons.view">
+                        <web:a pageId="~/in/floorball/seasons.view">
 							<web:static value="Floorball" lang="en" />
 							<web:static value="Florbal" lang="cs" />
-						</a>
+                        </web:a>
 					</span>
                     <m:xmlMenu file="~/templates/menus/floorball.xml" />
                 </v:panel>
                 <v:panel class="cms-menu cms-menu-4" security:requirePerm="CMS.Settings">
                     <span class="menu-root">
-						<a href="~/in/personal-notes.view">
+                        <web:a pageId="~/in/personal-notes.view">
 							<web:static value="Settings" lang="en" />
 							<web:static value="Nastavení" lang="cs" />
-						</a>
+						</web:a>
 					</span>
                     <m:xmlMenu file="~/templates/menus/settings.xml" />
                 </v:panel>
