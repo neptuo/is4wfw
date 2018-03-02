@@ -273,30 +273,18 @@ class DataAccess {
 		return $this->queriesPerRequest;
 	}
 	
-	/*
-	* funkce pro z�sk�n� naposledy vkl�dan�ho ID
-	*/
 	public function getLastId() {
 		return mysqli_insert_id($this->connection);
 	}
   
-	/**
-	 * funkce pro vr�cen� erroru
-	 */
 	public function getErrorMessage(){
 		return $this->errorMessage;
 	}
   
-	/**
-	 * funkce pro vr�cen� erroru
-	 */
 	public function getErrorCode(){
 		return $this->errorCode;
 	}
   
-	/**
-	 * funkce pro z�sk�n� poctu r�dku
-	 */
 	public function getRowsCount(){
 		return $this->rowsCount;
 	}
@@ -318,7 +306,7 @@ class DataAccess {
 	}
 
 	public function getCharset() {
-		return mysqli_client_encoding($this->connection);
+		return mysqli_character_set_name($this->connection);
 	}
 	
 	public function setCharset($value) {
