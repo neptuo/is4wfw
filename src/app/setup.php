@@ -8,6 +8,16 @@ if (file_exists($targetFilePath)) {
     exit;
 }
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+function ensureDirectory($path) {
+    if (!file_exists($path)) {
+        mkdir($path);
+    }
+}
+
 $importFiles = scandir('data/default', SCANDIR_SORT_DESCENDING);
 $importFilePath = 'data/default/' . $importFiles[0];
 
@@ -37,6 +47,8 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     $targetFileContent = str_replace("{database-password}", $database['password'], $targetFileContent);
     $targetFileContent = str_replace("{database-database}", $database['database'], $targetFileContent);
     $targetFileContent = str_replace("{filesystem-path}", $filesystem['path'], $targetFileContent);
+    
+    ensureDirectory("../user");
 
     $targetFile = fopen($targetFilePath, 'w') or die('Cannot open file:  ' . $targetFilePath);
     fwrite($targetFile, $targetFileContent);
@@ -46,18 +58,19 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
 
     require_once($targetFilePath);
     require_once("scripts/php/includes/settings.inc.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/DataAccess.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "libs/Database.class.php");
 
     $importFile = fopen($importFilePath, 'r') or die('Cannot open file:  ' . $importFilePath);
 
-    $db = new DataAccess();
+    $db = new Database(false);
     $db->disableCache();
-    $db->connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE, false);
-    $db->setCharset('utf8');
+    $db->getDataAccess()->connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE, false);
+    $db->getDataAccess()->setCharset('utf8');
     
     if (count($db->fetchAll("SHOW TABLES LIKE 'system_property';")) == 0) {
-        $db->transaction();
+        $db->getDataAccess()->transaction();
 
+        $batch = '';
         while (($line = fgets($importFile)) !== false) {
             // Skip it if it's a comment
             if (substr($line, 0, 2) == '--' || $line == '')
@@ -88,14 +101,8 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
         require_once(APP_SCRIPTS_PHP_PATH . "includes/autoupdate.inc.php");
 
-        $db->commit();
-        $db->disconnect();
-    }
-
-    function ensureDirectory($path) {
-        if (!file_exists($path)) {
-            mkdir($path);
-        }
+        $db->getDataAccess()->commit();
+        $db->close();
     }
 
     ensureDirectory(CACHE_PATH);
@@ -104,7 +111,6 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     ensureDirectory(CACHE_TEMPLATES_PATH);
     ensureDirectory(CACHE_SYSTEMPROPERTY_PATH);
     ensureDirectory(LOGS_PATH);
-    ensureDirectory(USER_PATH);
     ensureDirectory(USER_FILESYSTEM_PATH);
     ensureDirectory(USER_PUBLIC_PATH);
     

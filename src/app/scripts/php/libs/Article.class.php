@@ -985,7 +985,7 @@
         }
         
         private function getArticlePageSize() {
-            return parent::getPropertyValue('Article.pageSize', Article::$ArticlePageSize);
+            return parent::getUserProperty('Article.pageSize', Article::$ArticlePageSize);
         }
 
         /**
@@ -1478,8 +1478,8 @@
                 $article = array_merge($article, $articleContent);
                 if (!array_key_exists('visible', $article)) {
                     $article['visible'] = 2;
-                    $article['author'] = parent::getPropertyValue('Article.author', '');
-                    $article['language_id'] = parent::getPropertyValue('Article.languageId', '1');
+                    $article['author'] = parent::getUserProperty('Article.author', '');
+                    $article['language_id'] = parent::getUserProperty('Article.languageId', '1');
                     $article['datetime'] = date("j.n.Y", time());
                 }
             }

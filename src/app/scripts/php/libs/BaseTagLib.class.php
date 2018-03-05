@@ -264,7 +264,7 @@
             return self::convertToUrlValid($value);
         }
 
-        protected function getPropertyValue($name, $default = -1) {
+        protected function getUserProperty($name, $default = -1) {
             $value = self::system()->getPropertyValue($name);
             if ($value == -1) {
                 return $default;
@@ -326,12 +326,12 @@
         }
         
         public function getSystemProperty($name) {
-            $property = new SystemProperty();
+            $property = new SystemProperty(self::db()->getDataAccess());
             return $property->getValue($name);
         }
         
         public function setSystemProperty($name, $value) {
-            $property = new SystemProperty();
+            $property = new SystemProperty(self::db()->getDataAccess());
             $property->setValue($name, $value);
         }
         

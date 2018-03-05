@@ -5,7 +5,7 @@
 	//$dbObject->setMockMode(true);
 
 	$propertyName = "db_version";
-	$property = new SystemProperty();
+	$property = new SystemProperty($dbObject->getDataAccess());
 
 	// Nacti verzi system a verzi db
 	$SystemVersion = BUILD_VERSION;

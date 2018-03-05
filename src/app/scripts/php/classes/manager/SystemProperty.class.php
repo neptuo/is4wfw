@@ -6,9 +6,9 @@ class SystemProperty extends BaseTagLib {
 
     private $db;
 
-    function __construct($db = null) {
+    function __construct($db) {
         if ($db == null) {
-            $db = parent::db()->getDataAccess();
+            throw new Exception("Missing required parameter DataAccess.");
         }
 
         $this->db = $db;
@@ -22,7 +22,10 @@ class SystemProperty extends BaseTagLib {
 
         $entity = $this->db->fetchSingle('select `value` from `system_property` where `key` = "' . $this->db->escape($name) . '";');
         $value = $entity['value'];
-        file_put_contents($path, $value);
+        if (self::canCreateFile($path)) {
+            file_put_contents($path, $value);
+        }
+
         return $value;
     }
 
@@ -34,7 +37,13 @@ class SystemProperty extends BaseTagLib {
         }
         
         $path = CACHE_SYSTEMPROPERTY_PATH . $name . '.txt';
-        file_set_contents($path, $value);
+        if (self::canCreateFile($path)) {
+            file_put_contents($path, $value);
+        }
+    }
+
+    private function canCreateFile($path) {
+        return file_exists(dirname($path));
     }
 }
 

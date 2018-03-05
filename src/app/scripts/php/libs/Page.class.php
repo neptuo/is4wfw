@@ -1819,7 +1819,7 @@
                 $dbObject->execute("DELETE FROM `page_file` WHERE `id` = " . $fileId . ";");
             }
 
-            if (parent::getPropertyValue('TextFiles.showFilter', 'true') == 'true') {
+            if (parent::getUserProperty('TextFiles.showFilter', 'true') == 'true') {
                 $searchForm = self::getTextFileSearchForm() . '<hr />';
             }
 
@@ -2398,7 +2398,7 @@
                 parent::session()->delete('content', 'template-search');
             }
 
-            if (parent::getPropertyValue('Templates.showFilter', 'true') == 'true') {
+            if (parent::getUserProperty('Templates.showFilter', 'true') == 'true') {
                 $return .= ''
                         . '<form name="template-search" method="post" action"' . $_SERVER['REQUEST_URI'] . '">'
                         . '<div class="gray-box">'
