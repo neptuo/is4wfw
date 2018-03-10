@@ -44,11 +44,11 @@
             foreach ($xml->item as $item) {
                 $i++;
                 $attrs = $item->attributes();
-                if (isset($attrs['requireGroup'])) {
+                if (isset($attrs['security:requireGroup'])) {
                     global $loginObject;
                     $ok = false;
                     foreach ($loginObject->getGroups() as $group) {
-                        if ($group['name'] == $attrs['requireGroup']) {
+                        if ($group['name'] == $attrs['security:requireGroup']) {
                             $ok = true;
                             break;
                         }
@@ -57,9 +57,10 @@
                         continue;
                     }
                 }
-                if (isset($attrs['requirePerm'])) {
+
+                if (isset($attrs['security:requirePerm'])) {
                     global $loginObject;
-                    $perm = $loginObject->getGroupPerm($attrs['requirePerm'], $loginObject->getMainGroupId(), false, 'false');
+                    $perm = $loginObject->getGroupPerm($attrs['security:requirePerm'], $loginObject->getMainGroupId(), false, 'false');
                     if($perm['value'] != 'true') {
                         continue;
                     }
