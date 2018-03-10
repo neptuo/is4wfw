@@ -67,26 +67,37 @@
         *  Generates physical path to dir in fs (/hosting/www/user/filesystem/1/2).
         *  
         *  @param    dirId   dir id
+		*  @param    itemPath   Name of field to use to combine path.
         *  @return   physical path to dir in fs
         *
         */                   
         public function getPhysicalPathTo($dirId, $itemPath = '') {
-            return USER_FILESYSTEM_PATH . self::getDirectoryPathIndernal($dirId, $itemPath);
+            return USER_FILESYSTEM_PATH . self::getDirectoryPath($dirId, $itemPath);
         }
 
         /**
         *
         *  Generates URL to dir in fs (/files/1/2).
         *  
-        *  @param    dirId   dir id
+		*  @param    dirId   dir id
+		*  @param    itemPath   Name of field to use to combine path.
         *  @return   physical path to dir in fs
         *
-        */    
+        */
         public function getPhysicalUrlTo($dirId, $itemPath = '') {
-            return USER_FILESYSTEM_URL . self::getDirectoryPathIndernal($dirId, $itemPath);
+            return USER_FILESYSTEM_URL . self::getDirectoryPath($dirId, $itemPath);
         }
 		
-		private function getDirectoryPathIndernal($dirId, $itemPath = '') {
+        /**
+        *
+        *  Generates only directory path combine from parents.
+        *  
+		*  @param    dirId   dir id
+		*  @param    itemPath   Name of field to use to combine path.
+        *  @return   physical path to dir in fs
+        *
+        */
+		private function getDirectoryPath($dirId, $itemPath = '') {
 			$path = "";
 			if ($itemPath == '') {
 				$itemPath = FileAdmin::$FileSystemItemPath;
@@ -101,18 +112,20 @@
 						$dirId = $dirInfo[0]['parent_id'];
 						$path = $dirInfo[0][$itemPath] . '/' . $path;
 					} else {
-						$message = "Directory doesn't exists!";
-						echo parent::getError($message);
-						trigger_error($message, E_USER_ERROR);
+						ThrowMissingDirectory();
 					}
 				}
 			} else {
-				$message = "Directory doesn't exists!";
-				echo parent::getError($message);
-				trigger_error($message, E_USER_ERROR);
+				ThrowMissingDirectory();
 			}
 			
 			return $path;
+		}
+
+		private function ThrowMissingDirectory() {
+			$message = "Directory doesn't exists!";
+			echo parent::getError($message);
+			trigger_error($message, E_USER_ERROR);
 		}
 		
 		public function getPhysicalPathToFile($file) {
@@ -387,7 +400,7 @@
 			$dataModel = array('files' => $files, 'dirs' => $dirs, 'parent' => $parentDir);
 			
 			if($useFrames) {
-				return parent::getFrame(parent::rb('title.browser').' :: /'.self::getPhysicalUrlTo($dirId, 'name'), $return.parent::view('fileadmin-list', $dataModel), true);
+				return parent::getFrame(parent::rb('title.browser').' :: '.self::getDirectoryPath($dirId, 'name'), $return . parent::view('fileadmin-list', $dataModel), true);
 			} else {
 				return $return.parent::view('fileadmin-list', $dataModel);
 			}
