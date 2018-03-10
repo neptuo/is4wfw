@@ -11,5 +11,6 @@
     <item name="Database connections" url="~/in/database-connections.view" security:requirePerm="CMS.Settings.DatabaseConnections" />
     <item name="Personal properties" name-cs="Uživatelské nastavení" url="~/in/personal-properties.view" security:requirePerm="CMS.Settings.PersonalProperties" />
     <item name="Personal notes" name-cs="Uživatelské poznámky" url="~/in/personal-notes.view" security:requirePerm="CMS.Settings.PersonalNotes" />
+    <item name="Available updates" name-cs="Aktualizace" url="~/in/update.view" security:requirePerm="CMS.Settings.Update" />
     <item name="Admin menu" url="~/in/edit-admin-menu.view" security:requirePerm="CMS.Settings.AdminMenu" />
 </menu>

@@ -3,6 +3,8 @@
 	require_once("BaseTagLib.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/RoleHelper.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/GitHubReleaseManager.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/BaseGrid.class.php");
   
 	/**
 	 * 
@@ -18,7 +20,7 @@
 		public function __construct() {
 			parent::setTagLibXml("xml/System.xml");
 		}
-		
+
 		public $UserSettingsEditors = array(
 			'tiny' => 'Wysiwyg',
 			'edit_area' => 'Editor kódu',
@@ -651,7 +653,7 @@
 			
 			if($_POST['rolecache-refresh'] == 'Refresh role cache') {
 				RoleHelper::refreshCache();
-				$return .= parent::getSuccess('Refreshed ...');
+				$return .= parent::getSuccess('Refreshed');
 			}
 			
 			if($buttonOnly) {
@@ -666,6 +668,120 @@
 				return $return.parent::view('system-rolecache', $dataModel);
 			}
 		}
+
+		public function versionList() {
+			$return = '';
+
+			$api = new GitHubReleaseManager();
+			$result = $api->getList();
+			if ($result['result']) {
+				$current = Version::parse(WEB_VERSION);
+				$data = $result['data'];
+
+				$newerMajors = self::getNewerMajorReleases($data, $current);
+				$newestPatch = self::findNewestPatchRelease($data, $current);
+
+				$majorHtml = '';
+				$patchHtml = '';
+
+				if (count($newerMajors) == 0) {
+					$majorHtml .= self::getSuccess('You are running latest major version.');
+				} else {
+					$grid = new BaseGrid();
+					$grid->setHeader(
+						array(
+							'version' => 'Version', 
+							'published_at' => 'Published at', 
+							'download_size' => 'Size', 
+							'form' => ''
+						)
+					);
+
+					foreach ($newerMajors as $release) {
+						$release['version'] = Version::toString($release['version']);
+						$release['form'] = ''
+						. '<form method="post">'
+							. '<input type="hidden" name="update-type" value="maor" />'
+							. '<input type="hidden" name="update-version" value="' . $release['version'] . '" />'
+							. '<input type="image" name="update" value="update" class="confirm" title="' . 'Update application to version ' . $release['version'] . '" src="~/images/icons/arrow_right.png" />'
+						. '</form>';
+						$grid->addRow($release);
+					}
+
+					$majorHtml .= $grid->render();
+				}
+
+				if ($newestPatch == null) {
+					$patchHtml .= self::getSuccess('You are running latest patch for your major version.');
+				} else {
+					$newestPatch['version'] = Version::toString($newestPatch['version']);
+					$newestPatch['form'] = ''
+					. '<form method="post">'
+						. '<input type="hidden" name="update-type" value="patch" />'
+						. '<input type="hidden" name="update-version" value="' . $newestPatch['version'] . '" />'
+						. '<input type="image" name="update" value="update" class="confirm" title="' . 'Update application to version ' . $newestPatch['version'] . '" src="~/images/icons/arrow_right.png" />'
+					. '</form>';
+
+					$grid = new BaseGrid();
+					$grid->setHeader(
+						array(
+							'version' => 'Version', 
+							'published_at' => 'Published at', 
+							'download_size' => 'Size', 
+							'form' => ''
+						)
+					);
+					$grid->addRow($newestPatch);
+					$patchHtml .= $grid->render();
+				}
+
+				$return .= ''
+				. '<div class="grid-2">'
+					. '<div class="gray-box">'
+						. '<strong>' . 'Major Update' . '</strong>'
+					. '</div>'
+					. '<div class="gray-box">'
+						. $majorHtml
+					. '</div>'
+				. '</div>'
+				. '<div class="grid-2">'
+					. '<div class="gray-box">'
+						. '<strong>' . 'Patch Update' . '</strong>'
+					. '</div>'
+					. '<div class="gray-box">'
+						. $patchHtml
+					. '</div>'
+				. '</div>'
+				. '<div class="clear"></div>';
+			} else {
+				$return .= self::getError($result['log']);
+			}
+
+			return $return;
+		}
+
+		private function getNewerMajorReleases($data, $current) {
+			$result = array();
+			foreach ($data as $release) {
+				// TODO: Implement filter.
+				$result[] = $release;
+			}
+
+			return $result;
+		}
+
+		private function findNewestPatchRelease($data, $current) {
+			$result = null;
+			foreach ($data as $release) {
+				if ($release['version']['major'] == $curent['major'] && $release['version']['patch'] > $curent['patch']) {
+					if ($result == null || $release['version']['patch'] > $result['version']['patch']) {
+						$result = $release;
+					}
+				}
+			}
+
+			return $result;
+		}
 		
 		/* ---------- PROPERTIES ---------------------- */
 		
@@ -675,7 +791,7 @@
 		
 		public function getCmsWindowsStyle() {
 			$val = self::getPropertyValue("System.cms.windowsstyle");
-			if($val == "true") {
+			if ($val == "true") {
 				return true;
 			} else {
 				return false;

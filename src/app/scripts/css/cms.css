@@ -509,7 +509,6 @@ table.gray-box tr td {
     padding-left: 105px;
 }
 
-
 .edit-prop .edit-in-title input, .edit-prop .edit-menu input, .edit-prop .edit-visible input, .edit-prop .edit-clear-cache input, .edit-prop .edit-language select, .project-edit-http, .project-edit-https, .edit-cache-time select {
     display: block;
 }
@@ -1810,6 +1809,14 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .cms-menu-4 li.menu-item.li-10 a {
     background: url('/images/page_edi.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-11 a {
+    background: url('/images/icons/brick.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-12 a {
+    background: url('/images/icons/building.png') no-repeat 4px center;
 }
 
 
