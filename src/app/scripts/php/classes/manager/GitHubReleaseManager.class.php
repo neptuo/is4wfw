@@ -52,6 +52,16 @@ class GitHubReleaseManager extends BaseTagLib {
         return $result;
     }
 
+    public function download($url, $filename) {
+        if (!file_exists($filename)) {
+            $content = self::httpGet($url, true);
+            file_put_contents($filename, $content);
+            return true;
+        }
+
+        return false;
+    }
+
     private function httpGet($url, $binary = false) {
         if (function_exists('curl_version')) {
             $curl = curl_init();

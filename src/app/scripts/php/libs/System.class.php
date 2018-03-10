@@ -4,7 +4,9 @@
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/RoleHelper.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/GitHubReleaseManager.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/RecursiveZipArchive.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/BaseGrid.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/Formatter.class.php");
   
 	/**
 	 * 
@@ -669,14 +671,38 @@
 			}
 		}
 
+		private function getUpdateFormHtml($version) {
+			return ''
+			. '<form method="post">'
+				. '<input type="hidden" name="update-version" value="' . $version . '" />'
+				. '<input type="image" name="update" value="update" class="confirm" title="' . 'Update application to version ' . $version . '" src="~/images/icons/arrow_right.png" />'
+			. '</form>';
+		}
+
+		private function mapReleaseToGrid($release) {
+			$release['version'] = Version::toString($release['version']);
+			$release['download_size'] = Formatter::toByteString($release['download_size']);
+			$release['published_at'] = str_replace("T", " ", str_replace("Z", "", $release['published_at']));
+			$release['form'] = self::getUpdateFormHtml($release['version']);
+			return $release;
+		}
+
 		public function versionList() {
 			$return = '';
 
 			$api = new GitHubReleaseManager();
 			$result = $api->getList();
+			
 			if ($result['result']) {
 				$current = Version::parse(WEB_VERSION);
 				$data = $result['data'];
+
+				if ($_POST['update'] == 'update') {
+					$updated = self::updateToVersion($_POST['update-version'], $data);
+					if (!$updated['result']) {
+						$return .= self::getError($updated['log']);
+					}
+				}
 
 				$newerMajors = self::getNewerMajorReleases($data, $current);
 				$newestPatch = self::findNewestPatchRelease($data, $current);
@@ -688,6 +714,7 @@
 					$majorHtml .= self::getSuccess('You are running latest major version.');
 				} else {
 					$grid = new BaseGrid();
+					$grid->addClass('clickable');
 					$grid->setHeader(
 						array(
 							'version' => 'Version', 
@@ -698,13 +725,7 @@
 					);
 
 					foreach ($newerMajors as $release) {
-						$release['version'] = Version::toString($release['version']);
-						$release['form'] = ''
-						. '<form method="post">'
-							. '<input type="hidden" name="update-type" value="maor" />'
-							. '<input type="hidden" name="update-version" value="' . $release['version'] . '" />'
-							. '<input type="image" name="update" value="update" class="confirm" title="' . 'Update application to version ' . $release['version'] . '" src="~/images/icons/arrow_right.png" />'
-						. '</form>';
+						$release = self::mapReleaseToGrid($release);
 						$grid->addRow($release);
 					}
 
@@ -714,15 +735,8 @@
 				if ($newestPatch == null) {
 					$patchHtml .= self::getSuccess('You are running latest patch for your major version.');
 				} else {
-					$newestPatch['version'] = Version::toString($newestPatch['version']);
-					$newestPatch['form'] = ''
-					. '<form method="post">'
-						. '<input type="hidden" name="update-type" value="patch" />'
-						. '<input type="hidden" name="update-version" value="' . $newestPatch['version'] . '" />'
-						. '<input type="image" name="update" value="update" class="confirm" title="' . 'Update application to version ' . $newestPatch['version'] . '" src="~/images/icons/arrow_right.png" />'
-					. '</form>';
-
 					$grid = new BaseGrid();
+					$grid->addClass('clickable');
 					$grid->setHeader(
 						array(
 							'version' => 'Version', 
@@ -731,6 +745,8 @@
 							'form' => ''
 						)
 					);
+						
+					$newestPatch = self::mapReleaseToGrid($newestPatch);
 					$grid->addRow($newestPatch);
 					$patchHtml .= $grid->render();
 				}
@@ -758,6 +774,83 @@
 			}
 
 			return $return;
+		}
+
+		public function updateToVersion($target, $releases) {
+			$result = array('result' => false, 'log' => '');
+
+			foreach ($releases as $release) {
+				$releaseVersion = Version::parse($release['version']);
+				if ($target['major'] == $releaseVersion['major'] && $target['patch'] == $releaseVersion['patch']) {
+					$api = new GitHubReleaseManager();
+
+					$current = Version::parse(WEB_VERSION);
+					$target = Version::parse($target);
+					
+					$type = null;
+					if ($target['major'] == $current['major'] && $target['patch'] > $current['patch']) {
+						$type = 'patch';
+					} else if($target['major'] > $current['major']) {
+						$type = 'major';
+					}
+
+					if ($type == null) {
+						$result['log'] .= "Wrong version '" . Version::toString($target) . "'.";
+						return $result;
+					}
+
+					$downloadUrl = $release['download_url'];
+
+					$targetPath = INSTANCE_PATH;
+					$currentFileName = $targetPath . self::getUpdateFileName($current);
+					$targetFileName = $targetPath . self::getUpdateFileName($target);
+					
+					if ($type == 'major') {
+						$zip = new RecursiveZipArchive();
+						if ($zip->open($currentFileName, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+							$zip->addDir(APP_PATH, basename(APP_PATH));
+							$zip->close();
+						} else {
+							$result['log'] .= 'Unnable to create backup zip.';
+							return $result;
+						}
+					}
+
+					$api->download($downloadUrl, $targetFileName);
+					if (!file_exists($targetFileName)) {
+						$result['log'] .= 'Unnable to download zip archive with update.';
+						return $result;
+					}
+
+					if ($type == 'major') {
+						self::removeDirectory(APP_PATH);
+					}
+					
+					$zip = new ZipArchive();
+					if (self::zipExtract($targetFileName, $targetPath)) {
+						unlink($targetFileName);
+						if ($type == 'major') {
+							unlink($currentFileName);
+						}
+						
+						$result['result'] = true;
+						return $result;
+					} else {
+						unlink($targetFileName);
+						if ($type == 'major') {
+							self::removeDirectory(APP_PATH);
+							self::zipExtract($currentFileName, $targetPath);
+						}
+
+						$result['log'] .= 'Unnable to extract zip archive with update.';
+						return $result;
+					}
+				}
+			}
+		}
+
+		private function getUpdateFileName($version) {
+			return 'phpwfw-' . Version::toString($version) . '.zip';
 		}
 
 		private function getNewerMajorReleases($data, $current) {

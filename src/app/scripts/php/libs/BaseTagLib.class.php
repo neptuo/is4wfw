@@ -495,6 +495,32 @@
 
             return $this->requestHeaders;
         }
+
+        public function removeDirectory($dir) {
+            $files = array_diff(scandir($dir), array('.','..'));
+            foreach ($files as $file) {
+                $itemPath = $dir . "/" . $file;
+                if (is_dir($itemPath)) {
+                    self::removeDirectory($itemPath);
+                } else {
+                    unlink($itemPath); 
+                }
+            } 
+
+            return rmdir($dir); 
+        }
+
+        public function zipExtract($zipFileName, $targetPath) {
+            $zip = new ZipArchive();
+            if ($zip->open($zipFileName) === TRUE) {
+                $zip->extractTo($targetPath);
+                $zip->close();
+
+                return true;
+            }
+
+            return false;
+        }
     }
 
 ?>
