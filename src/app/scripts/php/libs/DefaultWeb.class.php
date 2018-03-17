@@ -287,8 +287,13 @@
                 // Stranka neexistuje -> Projit Forwardy s 404 nebo All Errors
                 self::processForwards(self::findForward(array('404', 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'));
 
+                $path = USER_PATH . 'error404.html';
+                if (!file_exists($path)) {
+                    $path = APP_PATH . 'error404.html';
+                }
+                
                 header("HTTP/1.1 404 Not Found");
-                echo file_get_contents("error404.html");
+                echo file_get_contents($path);
                 exit;
             }
         }
@@ -476,7 +481,7 @@
                 // self::log(array('rule' => $rule, 'url' => $fullUrl, 'match' => $match));
                 if ($match > 0) {
                     // Presmerovat
-                    if($forward->getType() == 'Substitute' && !$this->IsSubstituting) {
+                    if ($forward->getType() == 'Substitute' && !$this->IsSubstituting) {
                         self::substituteRequestFor($forward->getPageId(), $forward->getLangId());
                     } elseif($forward->getType() == 'Forward') {
                         self::redirectTo($forward->getPageId(), $forward->getLangId());
