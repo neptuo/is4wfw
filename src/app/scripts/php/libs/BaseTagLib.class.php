@@ -477,6 +477,14 @@
             return substr($url, 0, $queryIndex);
         }
 
+        public function redirectToSelf() {
+            self::redirectToUrl($_SERVER['REQUEST_URI']);
+        }
+
+        public function redirectToUrl($url) {
+            self::RedirectToUrl($url);
+        }
+
         public function RedirectToUrl($url) {
             if ($url != '#') {
                 header("Location: " . $url, true, 302);

@@ -699,7 +699,9 @@
 
 				if ($_POST['update'] == 'update') {
 					$updated = self::updateToVersion($_POST['update-version'], $data);
-					if (!$updated['result']) {
+					if ($updated['result']) {
+						self::redirectToSelf();
+					} else {
 						$return .= self::getError($updated['log']);
 					}
 				}
