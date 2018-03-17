@@ -8,8 +8,8 @@
 	require_once("../user/instance.inc.php");
 	require_once("scripts/php/includes/settings.inc.php");
 
-	if (IS_STOPPED) {
-		echo file_get_contents("updating.html");
+	if (IS_ADMIN_STOPPED) {
+		echo file_get_contents("stopped.html");
 		exit;
 	}
 

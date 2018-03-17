@@ -13,6 +13,9 @@ define("INSTANCE_URL", "/");
 
 // Other instance config.
 define("WEB_USE_URLCACHE", true);
-define("IS_STOPPED", false);
+
+// Stopped instance.
+define("IS_ADMIN_STOPPED", false);
+define("IS_WEB_STOPPED", false);
 
 ?>
