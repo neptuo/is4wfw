@@ -856,8 +856,9 @@
 		private function getNewerMajorReleases($data, $current) {
 			$result = array();
 			foreach ($data as $release) {
-				// TODO: Implement filter.
-				$result[] = $release;
+				if ($release['version']['patch'] == '0' && $release['version']['major'] > $current['major']) {
+					$result[] = $release;
+				}
 			}
 
 			return $result;

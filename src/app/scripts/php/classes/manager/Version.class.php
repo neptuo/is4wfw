@@ -12,7 +12,7 @@ class Version {
         $version = explode('.', $version);
         $major = intval($version[0]);
         if (count($version) > 1) {
-            $path = $version[1];
+            $path = intval($version[1]);
         } else {
             $path = 0;
         }
