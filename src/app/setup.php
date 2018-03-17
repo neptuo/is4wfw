@@ -113,6 +113,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     ensureDirectory(LOGS_PATH);
     ensureDirectory(USER_FILESYSTEM_PATH);
     ensureDirectory(USER_PUBLIC_PATH);
+    file_put_contents(USER_PATH . 'README.txt', 'Instance notes...');
     
     if (file_exists($targetFilePath)) {
         header("Location: /login.view"); 
