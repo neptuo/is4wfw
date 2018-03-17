@@ -9,6 +9,7 @@ RewriteRule ^service/.*$ app/service.php [END]
 RewriteRule ^([a-zA-Z0-9/_-]*)$ app/index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING} [END]
 RewriteRule ^(.*)\.view$ app/view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING} [END]
 RewriteRule ^file\.php$ app/file.php [END]
+RewriteRule ^migrate.php$ app/migrate.php [END]
 
 # Static assets
 RewriteRule ^js/(.*)\.js$ app/scripts/js/$1.js [END]
