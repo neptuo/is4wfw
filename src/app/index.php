@@ -24,7 +24,6 @@
     $webObject = new DefaultWeb();
 
     require_once(APP_SCRIPTS_PHP_PATH . "includes/postinit.inc.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "includes/autoupdate.inc.php");
 
     $webObject->processRequestNG();
 
