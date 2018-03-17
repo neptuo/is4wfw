@@ -113,7 +113,11 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     ensureDirectory(LOGS_PATH);
     ensureDirectory(USER_FILESYSTEM_PATH);
     ensureDirectory(USER_PUBLIC_PATH);
-    file_put_contents(USER_PATH . 'README.txt', 'Instance notes...');
+
+    $readmePath = USER_PATH . 'readme.txt';
+    if (!file_exists($readmePath)) {
+        file_put_contents($readmePath, '');
+    }
     
     if (file_exists($targetFilePath)) {
         header("Location: /login.view"); 
@@ -196,6 +200,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
 
                                 <h2>User</h2>
                                 <div class="clear"></div>
+                                <h4 class="warning">Will ignore if database structure already exists.</h4>
                                 <div class="gray-box">
                                     <label class="w110" for="user-name">Name:</label>
                                     <input type="text" name="user-name" id="user-name" value="admin" class="w200" />
