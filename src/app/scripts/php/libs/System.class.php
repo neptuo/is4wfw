@@ -867,7 +867,7 @@
 		private function findNewestPatchRelease($data, $current) {
 			$result = null;
 			foreach ($data as $release) {
-				if ($release['version']['major'] == $curent['major'] && $release['version']['patch'] > $curent['patch']) {
+				if ($release['version']['major'] == $current['major'] && $release['version']['patch'] > $current['patch']) {
 					if ($result == null || $release['version']['patch'] > $result['version']['patch']) {
 						$result = $release;
 					}
