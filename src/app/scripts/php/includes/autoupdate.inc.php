@@ -8,38 +8,42 @@
 	$property = new SystemProperty($dbObject->getDataAccess());
 
 	// Nacti verzi system a verzi db
-	$SystemVersion = BUILD_VERSION;
-	$DatabaseVersion = $property->getValue($propertyName);
+	$databaseVersion = $property->getValue($propertyName);
+	$newVersion = $databaseVersion;
 
 	// Podpora pouze pro zvysovani verze
-	if ($SystemVersion > $DatabaseVersion) {
-		$xml = new SimpleXMLElement(file_get_contents('data/autoupdate.xml'));
-		foreach ($xml->script as $script) {
-			$attrs = $script->attributes();
-			if ($attrs['build'] >= $DatabaseVersion) {
-				$ok = false;
-				$sql = '';
-				if ($attrs['resource'] != '') {
-					// Nacti z souboru
-					//echo 'Resource: "'.$attrs['resource'].'"<br />';
-					if (file_exists($attrs['resource'])) {
-						$ok = true;
-						$sql = file_get_contents($attrs['resource']);
-					}
-				} else {
-					// Pouzij obsah elementu
-					//echo 'Script: "'.$script.'"<br />';
+	$xml = new SimpleXMLElement(file_get_contents('data/autoupdate.xml'));
+	foreach ($xml->script as $script) {
+		$attrs = $script->attributes();
+		if ($attrs['build'] > $databaseVersion) {
+			$ok = false;
+			$sql = '';
+			if ($attrs['resource'] != '') {
+				// Nacti z souboru
+				//echo 'Resource: "'.$attrs['resource'].'"<br />';
+				if (file_exists($attrs['resource'])) {
 					$ok = true;
-					$sql = trim($script);
+					$sql = file_get_contents($attrs['resource']);
 				}
+			} else {
+				// Pouzij obsah elementu
+				//echo 'Script: "'.$script.'"<br />';
+				$ok = true;
+				$sql = trim($script);
+			}
+			
+			if ($ok) {
+				$dbObject->execute($sql);
 				
-				if ($ok) {
-					$dbObject->execute($sql);
+				if ($attrs['build'] > $newVersion) {
+					$newVersion = $attrs['build'];
 				}
 			}
 		}
+	}
 
-		$property->setValue($propertyName, $SystemVersion);
+	if ($databaseVersion != $newVersion) {
+		$property->setValue($propertyName, $newVersion);
 	}
 	
 	//$dbObject->setMockMode(false);
