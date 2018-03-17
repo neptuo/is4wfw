@@ -29,6 +29,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         'database' => $_POST['database-database'],
     );
     $filesystem = array(
+        'root' => '$_SERVER["DOCUMENT_ROOT"]',
         'path' => $_POST['filesystem-path']
     );
     $user = array(
@@ -38,6 +39,11 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         'password' => sha1($_POST['user-login'] . $_POST['user-password']) // Duplicated in User.class.php
     );
 
+    if ($_POST['filesystem-path-override'] == 'on') {
+        $filesystem['root'] = '"' . $filesystem['path'] . '"';
+        $filesystem['path'] = '';
+    }
+
     $templateFile = fopen($templateFilePath, 'r') or die('Cannot open file:  ' . $templateFilePath);
     $templateFileContent = fread($templateFile, filesize($templateFilePath));
 
@@ -46,6 +52,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     $targetFileContent = str_replace("{database-username}", $database['username'], $targetFileContent);
     $targetFileContent = str_replace("{database-password}", $database['password'], $targetFileContent);
     $targetFileContent = str_replace("{database-database}", $database['database'], $targetFileContent);
+    $targetFileContent = str_replace('$_SERVER["DOCUMENT_ROOT"]', $filesystem['root'], $targetFileContent);
     $targetFileContent = str_replace("{filesystem-path}", $filesystem['path'], $targetFileContent);
     
     ensureDirectory("../user");
@@ -190,12 +197,16 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                 <h2>FileSystem</h2>
                                 <div class="clear"></div>
                                 <div class="gray-box">
-                                    <label class="w110" for="filesystem-database">Script Document:</label>
+                                    <label class="w110" for="filesystem-database">Document Root:</label>
                                     <input type="text" name="filesystem-database" id="filesystem-database" value="<?php echo $_SERVER['DOCUMENT_ROOT'] ?>" class="w300" disabled="disabled" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w110" for="filesystem-path" title="Must start with '/'">Additional Path:</label>
+                                    <label class="w110" for="filesystem-path" title="Start it with '/' only when Document Root doesn't end with slash.">Additional Path:</label>
                                     <input type="text" name="filesystem-path" id="filesystem-path" class="w200" required="/" />
+                                    <label title="Ignore Document Root and use only this path.">
+                                        <input type="checkbox" name="filesystem-path-override" />
+                                        Override Document Root
+                                    </label>
                                 </div>
 
                                 <h2>User</h2>
@@ -211,11 +222,11 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="user-login">Login:</label>
-                                    <input type="text" name="user-login" id="user-login" value="admin" class="w200" required="required" />
+                                    <input type="text" name="user-login" id="user-login" value="admin" class="w200" />
                                 </div>
                                 <div class="gray-box">
-                                    <label class="w110" for="user-password">Password:</label>
-                                    <input type="password" name="user-password" id="user-password" class="w200" required="required" minlength="6" />
+                                    <label class="w110" for="user-password" title="When creating user, minimal password length is 6 characters.">Password:</label>
+                                    <input type="password" name="user-password" id="user-password" class="w200" />
                                 </div>
 
                                 <hr />

@@ -7,7 +7,7 @@ define("WEB_DB_PASSWORD", "{database-password}");
 define("WEB_DB_DATABASE", "{database-database}");
 
 // Instance paths and urls.
-define("DOCUMENT_ROOT", $_SERVER['DOCUMENT_ROOT']);
+define("DOCUMENT_ROOT", $_SERVER["DOCUMENT_ROOT"]);
 define("INSTANCE_PATH", DOCUMENT_ROOT . "{filesystem-path}" . "/");
 define("INSTANCE_URL", "/");
 
