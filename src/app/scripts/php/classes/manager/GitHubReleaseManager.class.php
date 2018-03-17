@@ -82,8 +82,8 @@ class GitHubReleaseManager extends BaseTagLib {
             $content = file_get_contents($url);
             return $content;
         } else {
-            mylog('You have neither cUrl installed nor allow_url_fopen activated. Please setup one of those!');
-            exit;
+            // 'You have neither cUrl installed nor allow_url_fopen activated. Please setup one of those!';
+            return null;
         }
     
         return null;
