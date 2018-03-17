@@ -1,6 +1,6 @@
 RewriteEngine on
 
-# Uncomment to catch all request and pass them to stopped.html
+# !! - Uncomment to catch all requests and pass them to stopped.html
 # RewriteRule ^(.*)$ app/stopped.html [END]
 
 # Application rules
@@ -23,7 +23,7 @@ RewriteRule ^tiny-mce/(.*) app/tiny-mce/$1 [END]
 
 RewriteRule ^robots\.txt$ user/robots.txt [END]
 
-# Comment to enable access to encoding upgrade
+# !! - Comment to enable access to encoding upgrade
 RewriteRule ^/?upgrade-collation\.php$ - [L,R=404,END]
 RewriteRule ^upgrade-collation.php$ app/upgrade-collation.php [END]
 
