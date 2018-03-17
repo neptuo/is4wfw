@@ -482,10 +482,6 @@
         }
 
         public function redirectToUrl($url) {
-            self::RedirectToUrl($url);
-        }
-
-        public function RedirectToUrl($url) {
             if ($url != '#') {
                 header("Location: " . $url, true, 302);
                 echo '<script type="text/javascript">window.location.href = "' . $url . '";</script>';
