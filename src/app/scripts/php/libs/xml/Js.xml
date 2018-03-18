@@ -108,6 +108,11 @@
       <attreq>implied</attreq>
       <attcomment>Název javascriptové funkce, která se má spustit ve chvíli, kdy načítání obsahu skončilo chybou.</attcomment>
     </attribute>
+    <attribute>
+      <attname>varName</attname>
+      <attreq>implied</attreq>
+      <attcomment>Název javascriptové proměnné uvnitř window, do které se má předat instance třídy Ajax.</attcomment>
+    </attribute>
     <comment>
       Převede web do ajaxového formátu.
       Všechny linky s target="_blank" nebo data-ajax="false" jsou ignorovány.

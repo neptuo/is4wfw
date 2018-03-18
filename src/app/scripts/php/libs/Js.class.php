@@ -191,7 +191,7 @@
             return $return;
         }
 
-        public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false) {
+        public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false) {
             if (!is_numeric($parentPageId)) {
                 $parentPageId = 'null';
             }
@@ -206,10 +206,15 @@
             if ($onFailed) {
                 $init .= 'ajax.AddEventListener("failed", ' . $onFailed . '); ';
             }
+            if ($varName) {
+                $init .= 'window["' . $varName . '"] = ajax; ';
+            }
             $init .= 'ajax.Initialize($(document.body)); ';
 
-            $return = self::formatScript('~/js/ajax.js');
-            $return .= '<script type="text/javascript">' . '$(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ' . $init . '});' . '</script>';
+            $return = ''
+                . self::formatScript('~/js/jquery/jquery.js')
+                . self::formatScript('~/js/ajax.js')
+                . '<script type="text/javascript">' . '$(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ' . $init . '});' . '</script>';
 
             return $return;
         }
