@@ -356,14 +356,21 @@
     <tagname>version</tagname>
     <function>getVersion</function>
     <comment>
-      Zobrazí web framework version.
+      Zobrazí verzi aplikace.
     </comment>
   </tag>
   <tag>
     <tagname>cmsVersion</tagname>
     <function>getCmsVersion</function>
     <comment>
-      Zobrazí cms framework version.
+      Zobrazí verzi CMS.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>dbVersion</tagname>
+    <function>getDatabaseVersion</function>
+    <comment>
+      Zobrazí verzi databáze.
     </comment>
   </tag>
   <tag>

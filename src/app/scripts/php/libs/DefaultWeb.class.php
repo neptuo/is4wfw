@@ -2176,6 +2176,10 @@
             return CMS_VERSION;
         }
 
+        public function getDatabaseVersion() {
+            return self::getSystemProperty("db_version");
+        }
+
         /**
          *
          * 	Return last update of last page in requested url.

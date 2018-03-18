@@ -15,6 +15,12 @@
             <login:info />
             <wp:selectProject showMsg="false" useFrames="false" />
             <div class="web-version">
+                <div class="label">DB version</div>
+                <div class="value">
+                    <web:dbVersion />
+                </div>
+            </div>
+            <div class="web-version">
                 <div class="label">CMS version</div>
                 <div class="value">
                     <web:cmsVersion />
