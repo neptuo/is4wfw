@@ -3039,7 +3039,9 @@
                 $content = $params['content'];
                 $content = str_replace('&amp;web:page', '&web:page', $content);
                 $content = str_replace('&#126', '~', $content);
-                $content = str_replace('"', '\"', $content);
+                // Already escaped probably because of binding from custom property.
+                // $content = str_replace('"', '\"', $content);
+                // $content = $db->escape($content);
 
                 $updateContentSql .= '`content` = "' . $content . '"';
             }
