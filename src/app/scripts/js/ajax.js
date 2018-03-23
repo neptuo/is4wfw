@@ -29,7 +29,7 @@ Ajax.prototype.AddEventListener = function(eventName, handler) {
 
 Ajax.prototype.Initialize = function(root) {
     root.find("a").not("[target=_blank]").not("[data-ajax=false]").click(this._OnLinkClick.bind(this));
-    root.find("form").not("[target=_blank]").not("[data-ajax=false]").click(this._OnFormSubmit.bind(this));
+    root.find("form").not("[target=_blank]").not("[data-ajax=false]").submit(this._OnFormSubmit.bind(this));
 };
 
 Ajax.prototype._StopEvent = function(e) {
@@ -71,35 +71,41 @@ Ajax.prototype._OnFormSubmit = function(e) {
     var url = form.action;
     var method = form.method;
     
+    this._RaiseEvent('loading');
+
     var data = new FormData(form);
     var request = new XMLHttpRequest();
     request.addEventListener("readystatechange", this._OnFormReadyStateChanged.bind(this));
     request.open(method, url);
+    this._ObserveRequest(request);
     request.send(data);
-
+    
     this._StopEvent(e);
 };
 
 Ajax.prototype._OnFormReadyStateChanged = function(e) {
-    
+    var request = e.currentTarget;
+    if (request.readyState == 4){
+        this._OnLoadCompleted(request);
+    }
 };
 
 Ajax.prototype.Load = function(url) {
-    var parentPageId = this.ParentPageId;
-    
     this._RaiseEvent('loading');
     $.ajax({
         url: url,
         type: 'GET',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-Template', 'xml');
-            if (parentPageId != null) {
-                xhr.setRequestHeader('X-Parent-Page-Id', parentPageId);
-            }
-        },
+        beforeSend: this._ObserveRequest.bind(this),
         success: this._OnLoadCompleted.bind(this),
         error: this._OnLoadCompleted.bind(this)
     });
+};
+
+Ajax.prototype._ObserveRequest = function(request) {
+    request.setRequestHeader('X-Template', 'xml');
+    if (this.ParentPageId != null) {
+        request.setRequestHeader('X-Parent-Page-Id', this.ParentPageId);
+    }
 };
 
 Ajax.prototype._UpdateHistory = function(url) {
