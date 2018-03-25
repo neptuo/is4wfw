@@ -679,11 +679,25 @@
 			. '</form>';
 		}
 
-		private function mapReleaseToGrid($release) {
+		private function mapReleaseToGrid($release, $type) {
 			$release['version'] = Version::toString($release['version']);
-			$release['download_size'] = Formatter::toByteString($release['download_size']);
 			$release['published_at'] = str_replace("T", " ", str_replace("Z", "", $release['published_at']));
 			$release['form'] = self::getUpdateFormHtml($release['version']);
+
+			if ($type == 'patch') {
+				if (array_key_exists('patch', $release['download'])) {
+					$release['download_size'] = $release['download']['patch']['size'];
+					$release['type'] = 'Patch';
+				} else {
+					$release['download_size'] = $release['download']['full']['size'];
+					$release['type'] = 'Full';
+				}
+			} else {
+				$release['download_size'] = $release['download']['full']['size'];
+				$release['type'] = 'Full';
+			}
+
+			$release['download_size'] = Formatter::toByteString($release['download_size']);
 			return $release;
 		}
 
@@ -702,12 +716,12 @@
 					if ($updated['result']) {
 						self::redirectToSelf();
 					} else {
-						$return .= self::getError($updated['log']);
+						$return .= self::getError('Error occured during update: ' . $updated['log']);
 					}
 				}
 
 				$newerMajors = self::getNewerMajorReleases($data, $current);
-				$newestPatch = self::findNewestPatchRelease($data, $current);
+				$newerPatches = self::getNewerPatchReleases($data, $current);
 
 				$majorHtml = '';
 				$patchHtml = '';
@@ -722,19 +736,20 @@
 							'version' => 'Version', 
 							'published_at' => 'Published at', 
 							'download_size' => 'Size', 
+							'type' => 'Type', 
 							'form' => ''
 						)
 					);
 
 					foreach ($newerMajors as $release) {
-						$release = self::mapReleaseToGrid($release);
+						$release = self::mapReleaseToGrid($release, 'major');
 						$grid->addRow($release);
 					}
 
 					$majorHtml .= $grid->render();
 				}
 
-				if ($newestPatch == null) {
+				if (count($newerPatches) == 0) {
 					$patchHtml .= self::getSuccess('You are running latest patch for your major version.');
 				} else {
 					$grid = new BaseGrid();
@@ -744,12 +759,16 @@
 							'version' => 'Version', 
 							'published_at' => 'Published at', 
 							'download_size' => 'Size', 
+							'type' => 'Update Type', 
 							'form' => ''
 						)
 					);
+
+					foreach ($newerPatches as $release) {
+						$release = self::mapReleaseToGrid($release, 'patch');
+						$grid->addRow($release);
+					}
 						
-					$newestPatch = self::mapReleaseToGrid($newestPatch);
-					$grid->addRow($newestPatch);
 					$patchHtml .= $grid->render();
 				}
 
@@ -781,19 +800,26 @@
 		public function updateToVersion($target, $releases) {
 			$result = array('result' => false, 'log' => '');
 
+			$target = Version::parse($target);
 			foreach ($releases as $release) {
-				$releaseVersion = Version::parse($release['version']);
-				if ($target['major'] == $releaseVersion['major'] && $target['patch'] == $releaseVersion['patch']) {
+				if ($target['major'] == $release['version']['major'] && $target['patch'] == $release['version']['patch']) {
 					$api = new GitHubReleaseManager();
 
 					$current = Version::parse(WEB_VERSION);
-					$target = Version::parse($target);
 					
 					$type = null;
+					$downloadUrl = null;
 					if ($target['major'] == $current['major'] && $target['patch'] > $current['patch']) {
-						$type = 'patch';
-					} else if($target['major'] > $current['major']) {
-						$type = 'major';
+						if (array_key_exists('patch', $release['download'])) {
+							$type = 'patch';
+							$downloadUrl = $release['download']['patch']['url'];
+						} else {
+							$type = 'full';
+							$downloadUrl = $release['download']['full']['url'];
+						}
+					} else if ($target['major'] > $current['major']) {
+						$type = 'full';
+						$downloadUrl = $release['download']['full']['url'];
 					}
 
 					if ($type == null) {
@@ -801,13 +827,11 @@
 						return $result;
 					}
 
-					$downloadUrl = $release['download_url'];
-
 					$targetPath = INSTANCE_PATH;
 					$currentFileName = $targetPath . self::getUpdateFileName($current);
 					$targetFileName = $targetPath . self::getUpdateFileName($target);
 					
-					if ($type == 'major') {
+					if ($type == 'full') {
 						$zip = new RecursiveZipArchive();
 						if ($zip->open($currentFileName, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
 							$zip->addDir(APP_PATH, basename(APP_PATH));
@@ -824,14 +848,14 @@
 						return $result;
 					}
 
-					if ($type == 'major') {
+					if ($type == 'full') {
 						self::removeDirectory(APP_PATH);
 					}
 					
 					$zip = new ZipArchive();
 					if (self::zipExtract($targetFileName, $targetPath)) {
 						unlink($targetFileName);
-						if ($type == 'major') {
+						if ($type == 'full') {
 							unlink($currentFileName);
 						}
 						
@@ -839,7 +863,7 @@
 						return $result;
 					} else {
 						unlink($targetFileName);
-						if ($type == 'major') {
+						if ($type == 'full') {
 							self::removeDirectory(APP_PATH);
 							self::zipExtract($currentFileName, $targetPath);
 						}
@@ -849,6 +873,9 @@
 					}
 				}
 			}
+
+			$result['log'] .= 'Unnable to find release for version ' . Version::toString($target) . '.';
+			return $result;
 		}
 
 		private function getUpdateFileName($version) {
@@ -858,21 +885,34 @@
 		private function getNewerMajorReleases($data, $current) {
 			$result = array();
 			foreach ($data as $release) {
-				if ($release['version']['patch'] == '0' && $release['version']['major'] > $current['major']) {
-					$result[] = $release;
+				if ($release['version']['major'] > $current['major']) {
+					$isUsed = false;
+
+					foreach ($result as $i => $existing) {
+						if ($existing['version']['major'] == $release['version']['major']) {
+							if ($existing['version']['patch'] < $release['version']['patch']) {
+								$result[$i] = $release;
+							}
+
+							$isUsed = true;
+							break;
+						}
+					}
+
+					if (!$isUsed) {
+						$result[] = $release;
+					}
 				}
 			}
 
 			return $result;
 		}
 
-		private function findNewestPatchRelease($data, $current) {
-			$result = null;
+		private function getNewerPatchReleases($data, $current) {
+			$result = array();
 			foreach ($data as $release) {
 				if ($release['version']['major'] == $current['major'] && $release['version']['patch'] > $current['patch']) {
-					if ($result == null || $release['version']['patch'] > $result['version']['patch']) {
-						$result = $release;
-					}
+					$result[] = $release;
 				}
 			}
 

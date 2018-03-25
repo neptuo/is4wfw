@@ -26,25 +26,49 @@ class GitHubReleaseManager extends BaseTagLib {
         }
 
         foreach ($json as $release) {
-            if (!$release->draft) {
+            if ($release->draft) {
+                continue;
+            }
                 
-                $url = null;
-                $size = null;
-                foreach ($release->assets as $asset) {
-                    if ($asset->content_type == "application/x-zip-compressed") {
-                        $url = $asset->browser_download_url;
-                        $size = $asset->size;
+            $fullUrl = null;
+            $fullSize = null;
+            $patchUrl = null;
+            $patchSize = null;
+            foreach ($release->assets as $asset) {
+                if ($asset->content_type == "application/x-zip-compressed") {
+                    $assetName = $asset->name;
+                    if (strpos($assetName, '-patch') > 0) {
+                        $patchUrl = $asset->browser_download_url;
+                        $patchSize = $asset->size;
+                    } else {
+                        $fullUrl = $asset->browser_download_url;
+                        $fullSize = $asset->size;
                     }
                 }
+            }
 
-                if ($url != null && $size != null) {
-                    $result['data'][] = array(
-                        'version' => Version::parse($release->tag_name),
-                        'published_at' => $release->published_at,
-                        'download_url' => $url,
-                        'download_size' => $size
+            if ($fullUrl != null || $patchUrl != null) {
+                $release = array(
+                    'version' => Version::parse($release->tag_name),
+                    'published_at' => $release->published_at,
+                    'download' => array()
+                );
+
+                if ($fullUrl != null) {
+                    $release['download']['full'] = array(
+                        'url' => $fullUrl,
+                        'size' => $fullSize
                     );
                 }
+
+                if ($patchUrl != null) {
+                    $release['download']['patch'] = array(
+                        'url' => $patchUrl,
+                        'size' => $patchSize
+                    );
+                }
+                
+                $result['data'][] = $release;
             }
         }
 
@@ -89,7 +113,7 @@ class GitHubReleaseManager extends BaseTagLib {
         return null;
     }
 
-    function httpGetJson($url) {
+    private function httpGetJson($url) {
         $content = self::httpGet($url);
         if ($content != null && strlen($content) != 0) {
             $json = json_decode($content);
