@@ -125,7 +125,8 @@ class CustomTagParser {
                     $att[1] = '';
                 }
 
-                $att[1] = str_replace("\"", "\\\"", $att[1]);
+                // #61 - Any input double quotes will be escaped
+                // $att[1] = str_replace("\"", "\\\"", $att[1]);
                 $attributes[$att[0]] = array('value' => $att[1], 'type' => $valueType);
             }
         }
