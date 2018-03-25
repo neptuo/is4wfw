@@ -286,11 +286,11 @@ class CustomTagParser {
         }
 
         if ($object[0] == 'query' && strlen($object[1]) > 0){
-            return "'" . addslashes($_GET[$object[1]]) . "'";
+            return "'" . addcslashes($_GET[$object[1]], "'") . "'";
         } elseif($object[0] == 'post' && strlen($object[1]) > 0){
-            return "'" . addslashes($_POST[$object[1]]) . "'";
+            return "'" . addcslashes($_POST[$object[1]], "'") . "'";
         } else {
-            return "'" . addslashes($cprop[0]) . "'";
+            return "'" . addcslashes($cprop[0], "'") . "'";
         }
     }
 
