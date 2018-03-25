@@ -27,7 +27,7 @@
 			
 			//$return .= parent::getWarning('Coming soon ...');
 			
-			$logFiles = self::fileList('logs', array('log'), false);
+			$logFiles = self::fileList(LOGS_PATH, array('log'), false);
 			$data = array();
 			
 			$projects = parent::db()->fetchAll('select `id`, `name` from `web_project` order by `id`;');
@@ -82,10 +82,10 @@
 		public function showLog($useFrames = false, $showMsg = false) {
 			$return = '';
 			
-			if($_POST['show-log'] == 'Show log') {
+			if ($_POST['show-log'] == 'Show log') {
 				$fileName = $_POST['log-name'];
-				if(file_exists('logs/'.$fileName)) {
-					$content = file_get_contents('logs/'.$fileName);
+				if (file_exists(LOGS_PATH . $fileName)) {
+					$content = file_get_contents(LOGS_PATH . $fileName);
 					$return .= ''
 					.'<div id="editors" class="gray-box">'
 						.'<textarea id="robots" name="robots" rows="20">'.$content.'</textarea>'
