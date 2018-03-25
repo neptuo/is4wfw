@@ -92,7 +92,7 @@ if ($targetRelease == null) {
 mylog("Selected release '" . $targetRelease->tag_name . "' published at '" . $targetRelease->published_at . "' by '" . $targetRelease->author->login . "'.");
 
 foreach ($targetRelease->assets as $asset) {
-    if ($asset->content_type == "application/x-zip-compressed") {
+    if ($asset->content_type == "application/x-zip-compressed" && strpos($asset->name, '-patch') === false) {
         mylog("Selected asset '" . $asset->name . "' of size '" . $asset->size . "B'.");
 
         $filename = $asset->name;
