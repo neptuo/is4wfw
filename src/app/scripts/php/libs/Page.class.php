@@ -3043,7 +3043,7 @@
                 // $content = str_replace('"', '\"', $content);
                 // $content = $db->escape($content);
 
-                $updateContentSql .= '`content` = "' . $content . '"';
+                $updateContentSql .= '`content` = "' . $db->escape($content) . '"';
             }
 
             $sql = 'update `content` set ' . $updateContentSql . ' ' . $whereSql . ';';
