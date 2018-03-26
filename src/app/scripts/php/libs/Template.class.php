@@ -15,7 +15,7 @@
 	class Template extends BaseTagLib {
 
 		public function __construct() {
-			parent::setTagLibXml("xml/Template.xml");
+			parent::setTagLibXml("Template.xml");
 		}
 		
 		public function includeById($id, $params) {

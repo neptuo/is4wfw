@@ -19,7 +19,7 @@
   class Hotproject extends BaseTagLib {
   
     public function __construct() {
-      parent::setTagLibXml("xml/Hotproject.xml");
+      parent::setTagLibXml("Hotproject.xml");
     }
     
     /**

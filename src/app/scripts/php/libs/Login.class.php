@@ -95,7 +95,7 @@
          *
          */
         public function __construct() {
-            self::setTagLibXml("xml/Login.xml");
+            self::setTagLibXml("Login.xml");
 
             //self::initLogin();
         }

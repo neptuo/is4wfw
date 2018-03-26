@@ -21,7 +21,7 @@
         public function __construct() {
             global $webObject;
 
-            parent::setTagLibXml("xml/Hint.xml");
+            parent::setTagLibXml("Hint.xml");
         
             if ($webObject->LanguageName != '') {
                 $rb = new LocalizationBundle();
@@ -52,9 +52,9 @@
             $xmlPath = APP_SCRIPTS_PATH;
             for ($i = 0; $i < count($cpArray); $i ++) {
                 if($i < count($cpArray) - 1) {
-                    $xmlPath .= $cpArray[$i].'/';
+                    $xmlPath .= $cpArray[$i] . '/';
                 } else {
-                    $xmlPath .= 'xml/'.$cpArray[$i].'.xml';
+                    $xmlPath .= $cpArray[$i] . '.xml';
                 }
             }
                 

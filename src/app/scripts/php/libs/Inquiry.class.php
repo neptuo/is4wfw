@@ -19,7 +19,7 @@
 		public function __construct() {
 			global $webObject;
 
-			parent::setTagLibXml("xml/Inquiry.xml");
+			parent::setTagLibXml("Inquiry.xml");
 			parent::loadLocalizationBundle('inquiry');
 		}
 		

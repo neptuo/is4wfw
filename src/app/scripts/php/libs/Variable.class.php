@@ -13,7 +13,7 @@
 	class Variable extends BaseTagLib {
 
 		public function __construct() {
-			parent::setTagLibXml("xml/Variable.xml");
+			parent::setTagLibXml("Variable.xml");
 		}
 		
 		public function setValue($name, $value, $scope) {

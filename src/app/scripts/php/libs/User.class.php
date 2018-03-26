@@ -18,7 +18,7 @@
 
         public function __construct() {
             global $webObject;
-            self::setTagLibXml("xml/User.xml");
+            self::setTagLibXml("User.xml");
 
             if ($webObject->LanguageName != '') {
                 $rb = new LocalizationBundle();

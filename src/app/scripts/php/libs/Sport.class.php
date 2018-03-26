@@ -28,7 +28,7 @@
         public function __construct() {
             global $webObject;
 
-            parent::setTagLibXml("xml/Sport.xml");
+            parent::setTagLibXml("Sport.xml");
 
             if ($webObject->LanguageName != '') {
                 $rb = new LocalizationBundle();

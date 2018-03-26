@@ -37,7 +37,7 @@
         public function __construct() {
         global $webObject;
         
-        parent::setTagLibXml("xml/File.xml");
+        parent::setTagLibXml("File.xml");
         //$_SESSION['dir-id'] = 0;
         
             if($webObject->LanguageName != '') {

@@ -19,7 +19,7 @@
         private $includedStyles = array();
 
         public function __construct() {
-            parent::setTagLibXml("xml/Js.xml");
+            parent::setTagLibXml("Js.xml");
         }
 
         public function formatScript($path) {

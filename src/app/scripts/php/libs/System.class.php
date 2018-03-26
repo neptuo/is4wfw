@@ -20,7 +20,7 @@
 	class System extends BaseTagLib {
 
 		public function __construct() {
-			parent::setTagLibXml("xml/System.xml");
+			parent::setTagLibXml("System.xml");
 		}
 
 		public $UserSettingsEditors = array(

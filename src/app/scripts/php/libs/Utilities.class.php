@@ -15,7 +15,7 @@
         private $OutputValues = array();
 
         public function __construct() {
-            parent::setTagLibXml("xml/Utilities.xml");
+            parent::setTagLibXml("Utilities.xml");
         }
 
         public function concatValues($output, $value1, $value2, $value3 = false, $value4 = false, $value5 = false) {

@@ -18,7 +18,7 @@
 		public function __construct() {
 			global $webObject;
 
-			parent::setTagLibXml("xml/Image.xml");
+			parent::setTagLibXml("Image.xml");
 		}
 		
 		protected function canUserFile($objectId, $rightType) {

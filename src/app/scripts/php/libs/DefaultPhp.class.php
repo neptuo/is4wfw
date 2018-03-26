@@ -69,7 +69,7 @@
          *
          */                                                
         public function __construct() {
-            parent::setTagLibXml("xml/DefaultPhp.xml");
+            parent::setTagLibXml("DefaultPhp.xml");
             
             // Init defalt objects (php, error, log)
             $GLOBALS['errorObject'] = new Error();

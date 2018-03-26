@@ -26,7 +26,7 @@
          *
          */
         public function __construct() {
-            parent::setTagLibXml("xml/Log.xml");
+            parent::setTagLibXml("Log.xml");
         }
 
         public function __destruct() {

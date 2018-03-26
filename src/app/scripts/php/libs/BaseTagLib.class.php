@@ -44,7 +44,7 @@
          *
          */
         public function getTagLibXml() {
-            return $this->TagLIbXml;
+            return $this->TagLibXml;
         }
 
         /**
@@ -55,7 +55,7 @@
          *
          */
         protected function setTagLibXml($xml) {
-            $this->TagLIbXml = $xml;
+            $this->TagLibXml = $xml;
         }
 
         /**

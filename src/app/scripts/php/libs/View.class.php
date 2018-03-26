@@ -27,7 +27,7 @@
 
         public function __construct() {
             global $webObject;
-            parent :: setTagLibXml("xml/View.xml");
+            parent :: setTagLibXml("View.xml");
 
             if ($webObject->LanguageName != '') {
                 $rb = new LocalizationBundle();

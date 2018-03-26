@@ -20,7 +20,7 @@
 
         public function __construct() {
 
-            parent::setTagLibXml("xml/Menu.xml");
+            parent::setTagLibXml("Menu.xml");
 
             if ($webObject->LanguageName != '') {
                 $rb = new LocalizationBundle();

@@ -172,7 +172,7 @@
          *
          */
         public function __construct() {
-            self::setTagLibXml("xml/DefaultWeb.xml");
+            self::setTagLibXml("DefaultWeb.xml");
 
             $this->PageTitle = $_SERVER['HTTP_HOST'];
             $this->ServerName = $_SERVER['SERVER_NAME'];

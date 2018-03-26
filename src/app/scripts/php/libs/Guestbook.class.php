@@ -20,7 +20,7 @@
         public function __construct() {
             global $webObject;
         
-            parent::setTagLibXml("xml/Guestbook.xml");
+            parent::setTagLibXml("Guestbook.xml");
             
             if($webObject->LanguageName != '') {
                 $rb = new LocalizationBundle();

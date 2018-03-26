@@ -37,7 +37,7 @@
         public function __construct() {
             global $webObject;
 
-            parent::setTagLibXml("xml/CustomForm.xml");
+            parent::setTagLibXml("CustomForm.xml");
 
             if ($webObject->LanguageName != '') {
                 $rb = new LocalizationBundle();

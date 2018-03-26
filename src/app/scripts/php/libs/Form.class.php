@@ -25,7 +25,7 @@
      *
      */                   
     public function __construct() {
-      self::setTagLibXml("xml/Form.xml");
+      self::setTagLibXml("Form.xml");
     }
     
     public function orderForm1() {

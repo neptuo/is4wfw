@@ -15,7 +15,7 @@
     class Counter extends BaseTagLib {                      
 
         public function __construct() {
-            parent::setTagLibXml("xml/Counter.xml");
+            parent::setTagLibXml("Counter.xml");
         }
 
         /**
