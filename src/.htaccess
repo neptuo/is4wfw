@@ -10,6 +10,9 @@ RewriteRule ^([a-zA-Z0-9/_-]*)$ app/index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING} [
 RewriteRule ^(.*)\.view$ app/view.php?WEB_PAGE_PATH=$1&%{QUERY_STRING} [END]
 RewriteRule ^file\.php$ app/file.php [END]
 RewriteRule ^migrate.php$ app/migrate.php [END]
+RewriteRule ^url-composer.php$ app/url-composer.php [END]
+RewriteRule ^window-property.php$ app/window-property.php [END]
+RewriteRule ^wysiwyg-styles.php$ app/wysiwyg-styles.php [END]
 
 # Static assets
 RewriteRule ^js/(.*)\.js$ app/scripts/js/$1.js [END]
