@@ -95,24 +95,42 @@ foreach ($targetRelease->assets as $asset) {
     if ($asset->content_type == "application/x-zip-compressed" && strpos($asset->name, '-patch') === false) {
         mylog("Selected asset '" . $asset->name . "' of size '" . $asset->size . "B'.");
 
-        $filename = $asset->name;
+        // $filename = $asset->name;
+        $filename = '/home/www/udvoukoz.cz/subdomains/test' . '/' . $filename;
 
-        mylog("Downloading asset from '" . $asset->browser_download_url . "'.");
-
+        
         if (!file_exists($filename)) {
+            mylog("Downloading asset from '" . $asset->browser_download_url . "'.");
+
             $content = httpGet($asset->browser_download_url, true);
-            file_put_contents($filename, $content);
+            $fileSaveResult = file_put_contents($filename, $content);
+            if ($fileSaveResult === false) {
+                mylog("Unnable to save file '" . $filename . "'.");
+                exit;
+            }
+
+            mylog("File downloaded to '" . $filename . "', result / bytes: '" . $fileSaveResult . "'.");
+        } else {
+            mylog("Local file exists.");
         }
         
         $zip = new ZipArchive();
-        if ($zip->open($filename) === TRUE) {
+        $zipOpenResult = $zip->open($filename);
+        if ($zipOpenResult === TRUE) {
             $zip->extractTo('.');
             $zip->close();
+            mylog("ZIP file extracted.");
+        } else {
+            mylog("ERROR extracting the ZIP, error code: '" . $zipOpenResult . "'.");
         }
 
         unlink("install.php");
         unlink($filename);
-        header("Location: " . $targetUrl); 
+        
+        if (file_exists($targetDirectoryPath)) {
+            header("Location: " . $targetUrl); 
+        }
+
         break;
     } else {
         mylog("Skipping asset '" . $asset->name . "' of type '" . $asset->content_type . "'.");
