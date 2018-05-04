@@ -2456,6 +2456,10 @@
             }
         }
 
+        public function getFavicon($url, $contentType) {
+            return '<link rel="icon" type="' . $contentType . '" href="' . $url . '" />';
+        }
+
         /* ================== PROPERTIES ================================================== */
 
         public function setChildPage($pageId) {

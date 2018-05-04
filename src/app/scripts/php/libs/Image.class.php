@@ -113,6 +113,17 @@
 		public function imageType() {
 			return parent::request()->get('type', 'g:image');
 		}
+
+        public function getFavicon($fileId) {
+			if ($this->canUserFile($fileId, WEB_R_READ)) {
+				$image = parent::dao('File')->get($fileId);
+				$url = "~/file.php?rid=" . $fileId;
+				$contentType = FileAdmin::$FileMimeTypes[$image['type']];
+				return self::web()->getFavicon($url, $contentType);
+			}
+
+			return '';
+        }
 		
 		public function setFileId($value) {
 			parent::request()->set('file-id', $value);

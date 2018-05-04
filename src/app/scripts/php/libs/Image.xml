@@ -88,6 +88,19 @@
       Vrací číselný typ obrázku uvnitř img:directory.
     </comment>
   </tag>
+  <tag>
+    <tagname>favicon</tagname>
+    <function>getFavicon</function>
+    <attribute>
+      <attname>fileId</attname>
+      <attreq>required</attreq>
+      <atttype>number</atttype>
+      <attcomment>ID obrázku.</attcomment>
+    </attribute>
+    <comment>
+      Vloží stránky link tag pro definici favicony.
+    </comment>
+  </tag>
   
   <property>
   	<propname>fileId</propname>

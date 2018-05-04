@@ -536,6 +536,26 @@
       Atribut 'contentType' definuje typ odpovědi - 'text/html', 'text/json', ...
     </comment>
   </tag>
+  <tag>
+    <tagname>favicon</tagname>
+    <function>getFavicon</function>
+    <attribute>
+      <attname>url</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Cesta k obrázku.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>contentType</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Content-type pro daný obrázek.</attcomment>
+    </attribute>
+    <comment>
+      Vloží stránky link tag pro definici favicony.
+      V případě použití favicony z filesystému, je vhodnější použít img:favicon.
+    </comment>
+  </tag>
   <property>
   	<propname>currentPage</propname>
   	<getfunction>getCurrentPage</getfunction>
