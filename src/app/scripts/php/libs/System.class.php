@@ -683,6 +683,7 @@
 			$release['version'] = Version::toString($release['version']);
 			$release['published_at'] = str_replace("T", " ", str_replace("Z", "", $release['published_at']));
 			$release['form'] = self::getUpdateFormHtml($release['version']);
+			$release['version'] = '<a href="' . $release['html_url'] . '" target="_blank">' . $release['version'] . '</a>';
 
 			if ($type == 'patch') {
 				if (array_key_exists('patch', $release['download'])) {
@@ -706,7 +707,7 @@
 
 			$api = new GitHubReleaseManager();
 			$result = $api->getList();
-			
+
 			if ($result['result']) {
 				$current = Version::parse(WEB_VERSION);
 				$data = $result['data'];
@@ -759,7 +760,7 @@
 							'version' => 'Version', 
 							'published_at' => 'Published at', 
 							'download_size' => 'Size', 
-							'type' => 'Update Type', 
+							'type' => 'Type', 
 							'form' => ''
 						)
 					);

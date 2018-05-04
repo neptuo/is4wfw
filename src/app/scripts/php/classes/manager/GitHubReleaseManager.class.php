@@ -51,6 +51,7 @@ class GitHubReleaseManager extends BaseTagLib {
                 $release = array(
                     'version' => Version::parse($release->tag_name),
                     'published_at' => $release->published_at,
+                    'html_url' => $release->html_url,
                     'download' => array()
                 );
 
