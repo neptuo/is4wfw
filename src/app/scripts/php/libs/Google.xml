@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Google library</name>
+  <classname>Google</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro Google API.
+  </comment>
+  <tag>
+    <tagname>analytics</tagname>
+    <function>analytics</function>
+    <attribute>
+      <attname>id</attname>
+      <attreq>required</attreq>
+      <attcomment>Kód z Google Analytics (UA-...-..).</attcomment>
+    </attribute>
+    <comment>
+      Vloží script tag pro sledování statistik návštěvnosti.
+    </comment>
+  </tag>
+  <anyProperty />
+</taglib>
+

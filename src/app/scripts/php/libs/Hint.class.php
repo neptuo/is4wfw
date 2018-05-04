@@ -129,7 +129,7 @@
                         if (isset($tag->anyAttribute)) {
                             $attributes .= ''
                             .'<tr>'
-                                .'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
+                                .'<td colspan="3">'.$rb->get('lib.attparams').'</td>'
                             .'</tr>';
                         }
                         
@@ -183,7 +183,7 @@
                         if (isset($tag->anyAttribute)) {
                             $attributes .= ''
                             .'<tr>'
-                                .'<td colspan="2">'.$rb->get('lib.attparams').'</td>'
+                                .'<td colspan="3">'.$rb->get('lib.attparams').'</td>'
                             .'</tr>';
                         }
                         
@@ -300,6 +300,7 @@
                         .'<option value="php.libs.File"'.($_SESSION['select-class-path'] == 'php.libs.File' ? 'selected="selected"' : '').'>php.libs.File</option>'
                         .'<option value="php.libs.FileAdmin"'.($_SESSION['select-class-path'] == 'php.libs.FileAdmin' ? 'selected="selected"' : '').'>php.libs.FileAdmin</option>'
                         .'<option value="php.libs.Form"'.($_SESSION['select-class-path'] == 'php.libs.Form' ? 'selected="selected"' : '').'>php.libs.Form</option>'
+                        .'<option value="php.libs.Google"'.($_SESSION['select-class-path'] == 'php.libs.Google' ? 'selected="selected"' : '').'>php.libs.Google</option>'
                         .'<option value="php.libs.Guestbook"'.($_SESSION['select-class-path'] == 'php.libs.Guestbook' ? 'selected="selected"' : '').'>php.libs.Guestbook</option>'
                         .'<option value="php.libs.Hint"'.($_SESSION['select-class-path'] == 'php.libs.Hint' ? 'selected="selected"' : '').'>php.libs.Hint</option>'
                         .'<option value="php.libs.hp.Hotproject"'.($_SESSION['select-class-path'] == 'php.libs.hp.Hotproject' ? 'selected="selected"' : '').'>php.libs.hp.Hotproject</option>'
