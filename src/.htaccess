@@ -36,3 +36,7 @@ RewriteRule ^app/(.*) - [L,R=404]
 RewriteRule ^cache/(.*) - [L,R=404]
 RewriteRule ^logs/(.*) - [L,R=404]
 RewriteRule ^user/(.*) - [L,R=404]
+
+# Errors
+# ErrorDocument 404 /app/index.php?WEB_PAGE_PATH=%{REQUEST_URI}&%{QUERY_STRING}
+# ErrorDocument 404 /server.php?WEB_PAGE_PATH=%{REQUEST_URI}
