@@ -12,6 +12,7 @@ function initTiny(taId, language) {
 		toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor | link image | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat code',
 		image_advtab: true,
 		suffix: '.min',
+		convert_urls: false,
 		content_css: [
 			"/wysiwyg-styles.php"
 		]
