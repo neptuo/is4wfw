@@ -86,7 +86,7 @@ Ajax.prototype._OnFormSubmit = function(e) {
 Ajax.prototype._OnFormReadyStateChanged = function(e) {
     var request = e.currentTarget;
     if (request.readyState == 4){
-        this._OnLoadCompleted(request);
+        this._OnLoadCompleted(request, "success");
     }
 };
 
@@ -96,8 +96,7 @@ Ajax.prototype.Load = function(url) {
         url: url,
         type: 'GET',
         beforeSend: this._ObserveRequest.bind(this),
-        success: this._OnLoadCompleted.bind(this),
-        error: this._OnLoadCompleted.bind(this)
+        complete: this._OnLoadCompleted.bind(this)
     });
 };
 
@@ -108,21 +107,28 @@ Ajax.prototype._ObserveRequest = function(request) {
     }
 };
 
-Ajax.prototype._UpdateHistory = function(url) {
+Ajax.prototype._UpdateHistory = function(url, replace) {
     if (window.history) {
-        window.history.pushState(url, document.title, url);
+        if (replace === true) {
+            window.history.replaceState(url, document.title, url);
+        } else {
+            window.history.pushState(url, document.title, url);
+        }
     }
 };
 
-Ajax.prototype._OnLoadCompleted = function(responseText) {
-    if (typeof(responseText) == "object") {
-        if (responseText.status == 200) {
-            responseText = responseText.responseText;
-        } else {
-            this._RaiseEvent('failed');
-            return;
-        }
+Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
+    if (statusText == "error" || statusText == "timeout" || statusText == "abort" || statusText == "parsererror") {
+        this._RaiseEvent('failed');
+        return;
     }
+
+    var url = xhr.responseURL;
+    if (url != window.location.href) {
+        this._UpdateHistory(url, true);
+    }
+
+    var responseText = xhr.responseText;
 
     var response = document.createElement("document");
     response.innerHTML = responseText;
