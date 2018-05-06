@@ -95,10 +95,7 @@ foreach ($targetRelease->assets as $asset) {
     if ($asset->content_type == "application/x-zip-compressed" && strpos($asset->name, '-patch') === false) {
         mylog("Selected asset '" . $asset->name . "' of size '" . $asset->size . "B'.");
 
-        // $filename = $asset->name;
-        $filename = '/home/www/udvoukoz.cz/subdomains/test' . '/' . $filename;
-
-        
+        $filename = $asset->name;
         if (!file_exists($filename)) {
             mylog("Downloading asset from '" . $asset->browser_download_url . "'.");
 
