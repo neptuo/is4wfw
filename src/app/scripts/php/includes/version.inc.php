@@ -1,7 +1,7 @@
 <?php
 
 define("BUILD_VERSION", 338);
-define("PATCH_VERSION", 2); // .1
+define("PATCH_VERSION", 3); // .1
 define("PREVIEW_VERSION", ""); // -beta1
 
 define("WEB_VERSION", 'v' . BUILD_VERSION . '.' . PATCH_VERSION . PREVIEW_VERSION);
