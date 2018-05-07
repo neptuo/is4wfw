@@ -736,11 +736,10 @@
                                         . '<div class="clear"></div>'
                                     . '</div>'
                                 . '</div>'
-                            . '</div>'
-                            . '<script type="text/javascript">'
-                            . 'initTiny("page-content");'
-                            . 'tinyMCE.execCommand("mceAddControl", true, "page-content");'
-                            . '</script>';
+                            . '</div>';
+
+                            $js = parent::autolib('js');
+                            $return .= $js->tinyMce("page-content", self::web()->LanguageName);
                         } else {
                             $returnTmp .= ''
                             . ((self::getGroupPermCached('Page.TagLibs')) ? ''
