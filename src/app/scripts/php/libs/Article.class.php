@@ -1648,8 +1648,8 @@
                         . '</div>' : '');
 
                 $js = parent::autolib('js');
-                $return .= $js->tinyMce("article-head");
-                $return .= $js->tinyMce("article-content");
+                $return .= $js->tinyMce("article-head", self::web()->LanguageName);
+                $return .= $js->tinyMce("article-content", self::web()->LanguageName);
             } else {
                 $return .= ''
                         . ((self::getGroupPermCached('Article.Head')) ? ''
