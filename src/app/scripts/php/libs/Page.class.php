@@ -1261,7 +1261,7 @@
                 $langId = $_POST['page-lang-id'];
                 $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
 
-                $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` LEFT JOIN `page_file_inc` ON `page_file`.`id` = `page_file_inc`.`file_id` WHERE `page_file_inc`.`page_id` = " . $pageId . " AND `page_file_inc`.`language_id` = " . $langId . ";");
+                $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` LEFT JOIN `page_file_inc` ON `page_file`.`id` = `page_file_inc`.`file_id` WHERE `page_file_inc`.`page_id` = " . $pageId . " AND `page_file_inc`.`language_id` = " . $langId . " ORDER BY `page_file_inc`.`order`;");
 
                 if (count($files) != 0) {
                     $returnTmp .= ''
