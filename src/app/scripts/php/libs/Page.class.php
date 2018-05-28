@@ -2,6 +2,7 @@
 
     require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Order.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/Editor.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/EmbeddedResourceManager.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/WebForwardManager.class.php");
@@ -1264,52 +1265,49 @@
 
                 if (count($files) != 0) {
                     $returnTmp .= ''
-                            . '<form name="files-to-remove" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                            . '<table class="page-file-list">'
+                    . '<form name="files-to-remove" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                        . '<table class="page-file-list">'
                             . '<tr class="file-tr">'
-                            . '<th colspan="4" class="file-head-th">' . $rb->get('pagelist.field.addedfiles') . ':</th>'
+                                . '<th colspan="5" class="file-head-th">' . $rb->get('pagelist.field.addedfiles') . ':</th>'
                             . '</tr>';
+
                     $i = 1;
                     foreach ($files as $file) {
-                        $returnTmp .= '<tr class="file-tr ' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
-                                . '<td class="file-name">'
+                        $returnTmp .= ''
+                        . '<tr class="file-tr ' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
+                            . '<td>'
+                                . ($i > 1 ? Order::upForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], 'Move Up') : '')
+                                . ($i < count($files) ? Order::downForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], 'Move Down') : '')
+                            . '</td>'
+                            . '<td class="file-name">'
                                 . '<label for="remove-text-files-files-' . $file['id'] . '">' . $file['name'] . '</label>'
-                                . '</td>'
-                                . '<td class="file-content">'
+                            . '</td>'
+                            . '<td class="file-content">'
                                 . '<label for="remove-text-files-files-' . $file['id'] . '">'
-                                . '<div class="file-content-in"><div class="foo">' . substr($file['content'], 0, 130) . '</div></div>'
+                                    . '<div class="file-content-in"><div class="foo">' . substr($file['content'], 0, 130) . '</div></div>'
                                 . '</label>'
-                                . '</td>'
-                                . '<td class="file-type">'
+                            . '</td>'
+                            . '<td class="file-type">'
                                 . '<label for="remove-text-files-files-' . $file['id'] . '">'
-                                . $filesEx[$file['type']]
+                                    . $filesEx[$file['type']]
                                 . '</label>'
-                                . '</td>'
-                                /* .'<td>'
-                                .(($editable) ? ''
-                                .'<form name="process-file" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
-                                .'<input type="hidden" name="file-id" value="'.$file['id'].'" />'
-                                .'<input type="hidden" name="page-id" value="'.$pageId.'" />'
-                                .'<input type="hidden" name="page-lang-id" value="'.$langId.'" />'
-                                .'<input type="hidden" name="remove-file" value="Remove" />'
-                                .'<input type="image" src="~/images/page_del.png" name="remove-file" value="Remove" title="Remove file" />'
-                                .'</form>'
-                                : '')
-                                .'</td>' */
-                                . '<td>'
+                            . '</td>'
+                            . '<td>'
                                 . '<input id="remove-text-files-files-' . $file['id'] . '" type="checkbox" name="files[' . $file['id'] . ']" />'
-                                . '</td>'
-                                . '</tr>';
+                            . '</td>'
+                        . '</tr>';
                         $i++;
                     }
-                    $returnTmp .= '</table>'
-                            . '<div class="add-rem-text-files-submit">'
+
+                    $returnTmp .= ''
+                        . '</table>'
+                        . '<div class="add-rem-text-files-submit">'
                             . '<input type="hidden" name="page-id" value="' . $pageId . '" />'
                             . '<input type="hidden" name="page-lang-id" value="' . $langId . '" />'
                             . '<input type="submit" name="remove-files" value="' . $rb->get('pagelist.action.removeselected') . '" />'
-                            . '</div>'
-                            . '</form><div class="break"></div>';
-                    //$return1 = parent::getFrame('Added files', $returnTmp, '');
+                        . '</div>'
+                    . '</form>' 
+                    . '<div class="break"></div>';
                     $return1 = $returnTmp;
                 } else {
                     $return1 = '<h4 class="warning">' . $rb->get('pagelist.warning.nofilesadded') . '</h4>';
