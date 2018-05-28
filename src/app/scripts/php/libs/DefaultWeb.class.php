@@ -1716,7 +1716,11 @@
             }
 
             if (is_numeric($pageId)) {
-                $sql_return = $dbObject->fetchAll("SELECT `href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = " . $pageId . " AND `info`.`language_id` = " . $languageId . ";");
+                $sql_return = $dbObject->fetchAll("SELECT `href`, `is_visible` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = " . $pageId . " AND `info`.`language_id` = " . $languageId . ";");
+            }
+
+            if (count($sql_return) == 1 && $sql_return[0]['is_visible'] == 0) {
+                return "";
             }
 
             if (count($sql_return) == 1 || !is_numeric($pageId)) {
