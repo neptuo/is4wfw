@@ -1249,10 +1249,22 @@
                 foreach ($files as $file => $val) {
                     if ($val = "on") {
                         $dbObject->execute("INSERT INTO `page_file_inc`(`file_id`, `page_id`, `language_id`) VALUES (" . $file . ", " . $pageId . ", " . $langId . ");");
+                        $count = parent::db()->fetchSingle('SELECT count(*) AS `count` FROM `page_file_inc`;');
+                        parent::db()->execute('UPDATE `page_file_inc` SET `order` = ' . $count['count'] . ' WHERE `file_id` = ' . $file . ' AND `page_id` = ' . $pageId . ' AND `language_id` = ' . $langId . ';');
                     }
                 }
                 //$return .= parent::getFrame("Success Message", '<h4 class="success">Files successfully inserted!</h4>', "", true);
                 //$returnTmp = '<h4 class="success">'.$rb->get('pagelist.success.added').'</h4>';
+                $_POST['added-files'] = $rb->get('pagelist.action.addedfiles');
+            }
+
+            if (Order::isPost('text-file')) {
+                $pageId = $_POST['page-id'];
+                $langId = $_POST['page-lang-id'];
+                $files = $dbObject->fetchAll("SELECT `file_id`, `page_id`, `language_id`, `order`, `name`, `content`, `type` FROM `page_file` LEFT JOIN `page_file_inc` ON `page_file`.`id` = `page_file_inc`.`file_id` WHERE `page_file_inc`.`page_id` = " . $pageId . " AND `page_file_inc`.`language_id` = " . $langId . " ORDER BY `page_file_inc`.`order`;");
+                if (Order::tryUpdate($files, 'text-file', 'page_file_inc', array('file_id', 'page_id', 'language_id'), 'order')) {
+                    // TODO: Add success message.
+                }
                 $_POST['added-files'] = $rb->get('pagelist.action.addedfiles');
             }
 
@@ -1271,13 +1283,14 @@
                                 . '<th colspan="5" class="file-head-th">' . $rb->get('pagelist.field.addedfiles') . ':</th>'
                             . '</tr>';
 
+                    $additional = array('page-id' => $pageId, 'page-lang-id' => $langId);
                     $i = 1;
                     foreach ($files as $file) {
                         $returnTmp .= ''
                         . '<tr class="file-tr ' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
                             . '<td>'
-                                . ($i > 1 ? Order::upForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], 'Move Up') : '')
-                                . ($i < count($files) ? Order::downForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], 'Move Down') : '')
+                                . Order::upForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], 'Move Up', $additional)
+                                . Order::downForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], 'Move Down', $additional)
                             . '</td>'
                             . '<td class="file-name">'
                                 . '<label for="remove-text-files-files-' . $file['id'] . '">' . $file['name'] . '</label>'
