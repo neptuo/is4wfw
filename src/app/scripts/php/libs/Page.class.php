@@ -1287,8 +1287,8 @@
                         $returnTmp .= ''
                         . '<tr class="file-tr ' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
                             . '<td>'
-                                . Order::upForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], 'Move Up', $additional)
-                                . Order::downForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], 'Move Down', $additional)
+                                . Order::upForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], $rb->get('pagelist.action.addedfiles.moveup'), $additional)
+                                . Order::downForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], $rb->get('pagelist.action.addedfiles.movedown'), $additional)
                             . '</td>'
                             . '<td class="file-name">'
                                 . '<label for="remove-text-files-files-' . $file['id'] . '">' . $file['name'] . '</label>'
