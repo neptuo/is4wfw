@@ -1248,9 +1248,7 @@
 
                 foreach ($files as $file => $val) {
                     if ($val = "on") {
-                        $dbObject->execute("INSERT INTO `page_file_inc`(`file_id`, `page_id`, `language_id`) VALUES (" . $file . ", " . $pageId . ", " . $langId . ");");
-                        $count = parent::db()->fetchSingle('SELECT count(*) AS `count` FROM `page_file_inc`;');
-                        parent::db()->execute('UPDATE `page_file_inc` SET `order` = ' . $count['count'] . ' WHERE `file_id` = ' . $file . ' AND `page_id` = ' . $pageId . ' AND `language_id` = ' . $langId . ';');
+                        $dbObject->execute("INSERT INTO `page_file_inc`(`file_id`, `page_id`, `language_id`, `order`) VALUES (" . $file . ", " . $pageId . ", " . $langId . ", " . $file . ");");
                     }
                 }
                 //$return .= parent::getFrame("Success Message", '<h4 class="success">Files successfully inserted!</h4>', "", true);

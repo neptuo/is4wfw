@@ -58,5 +58,5 @@
     <script build="337">CREATE TABLE `application_variable` ( `name` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `value` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NULL , PRIMARY KEY (`name`)) ENGINE = MYISAM;</script>
     <script build="337">INSERT INTO `group_perms` (`group_id`, `name`, `value`, `type`) VALUES (1, 'CMS.Settings.Update', 'true', 'bool');</script>
     <script build="338">ALTER TABLE `page_file_inc` ADD `order` INT NOT NULL DEFAULT '0' AFTER `language_id`;</script>
-    <script build="338">SET @order := 0; UPDATE `page_file_inc` SET `order` = @order := @order+1;</script>
+    <script build="338">UPDATE `page_file_inc` SET `order` = `file_id`</script>
 </autoupdate>
