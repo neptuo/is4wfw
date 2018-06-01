@@ -549,6 +549,10 @@
             $convert = isset($att->attdef);
             
             if (isset($att->atttype)) {
+                if (self::startsWith($val, 'template_') && self::endsWith($val, '()')) {
+                    return array('value' => $val, 'type' => 'eval');
+                }
+
                 switch ($att->atttype) {
                     case 'string':
                         return array('value' => $val, 'type' => 'raw');
