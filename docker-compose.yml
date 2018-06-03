@@ -14,3 +14,22 @@ services:
     volumes:
       - ./src:/src
       - ./docker/php.conf:/usr/local/etc/php-fpm.d/zz-log.conf
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8081:80"
+    links:
+        - mysql:db
+        
+  mysql:
+    image: mysql:5.7.22
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=phpwfw
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_USER=phpwfw
+      - MYSQL_PASSWORD=1234
+    volumes:
+      - "./temp/mysql:/var/lib/mysql"
