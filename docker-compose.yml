@@ -1,6 +1,7 @@
 version: '2'
 
 services:
+      
   web:
     image: nginx:latest
     ports:
@@ -8,6 +9,8 @@ services:
     volumes:
       - ./src:/src
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - phpmyadmin
 
   php:
     image: php:5.6.36-fpm
