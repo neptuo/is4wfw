@@ -11,6 +11,7 @@ services:
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
     links:
       - phpmyadmin
+      - php
 
   php:
     image: php:5.6.36-apache
@@ -24,8 +25,8 @@ services:
         && docker-php-ext-install mysqli \
         && apache2-foreground'
     volumes:
-      - ./src:/src
       - ./src:/var/www/html
+      - ./test:/var/www/html/test
       - ./docker/php.conf:/usr/local/etc/php-fpm.d/zz-log.conf
     links:
         - mysql:db
