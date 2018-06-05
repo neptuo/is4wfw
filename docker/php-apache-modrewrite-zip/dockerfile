@@ -1,0 +1,8 @@
+FROM php:5.6.36-apache
+
+RUN sh -c 'apt-get update \
+    && apt-get install -y zlib1g-dev \
+    && docker-php-ext-install zip \
+    && a2enmod rewrite \
+    && docker-php-ext-install mysqli'
+
