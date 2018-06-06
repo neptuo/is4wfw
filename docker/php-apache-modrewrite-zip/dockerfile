@@ -6,3 +6,18 @@ RUN sh -c 'apt-get update \
     && a2enmod rewrite \
     && docker-php-ext-install mysqli'
 
+RUN curl -fsSL 'https://xdebug.org/files/xdebug-2.5.5.tgz' -o xdebug.tar.gz \
+    && mkdir -p xdebug \
+    && tar -xf xdebug.tar.gz -C xdebug --strip-components=1 \
+    && rm xdebug.tar.gz \
+    && ( \
+    cd xdebug \
+    && phpize \
+    && ./configure --enable-xdebug \
+    && make -j$(nproc) \
+    && make install \
+    ) \
+    && rm -r xdebug \
+    && docker-php-ext-enable xdebug
+
+COPY ./docker/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
