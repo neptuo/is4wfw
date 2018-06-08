@@ -22,8 +22,12 @@ services:
     expose:
       - "9000"
     volumes:
-      - ./src:/var/www/html
-      - ./test:/var/www/html/test
+      - ./src/.htaccess:/var/www/html/.htaccess:ro
+      - ./src/app:/var/www/html/app:ro
+      - ./temp/instance/cache:/var/www/html/cache
+      - ./temp/instance/logs:/var/www/html/logs
+      - ./temp/instance/user:/var/www/html/user
+      - ./test:/var/www/html/test:ro
       - ./docker/php.conf:/usr/local/etc/php-fpm.d/zz-log.conf
     links:
         - mysql:db
