@@ -21,6 +21,32 @@ function ensureDirectory($path) {
 $importFiles = scandir('data/default', SCANDIR_SORT_DESCENDING);
 $importFilePath = 'data/default/' . $importFiles[0];
 
+$isDevelopment = $_ENV['IS4WFW_DEVELOPMENT'] == 'true';
+
+if (count($_POST) == 0) {
+    $_POST['database-hostname'] = '127.0.0.1';
+    $_POST['database-username'] = '';
+    $_POST['database-password'] = '';
+    $_POST['database-database'] = '';
+    $_POST['filesystem-path'] = '';
+    $_POST['user-name'] = 'admin';
+    $_POST['user-surname'] = 'admin';
+    $_POST['user-login'] = 'admin';
+    $_POST['user-password'] = '';
+
+    if ($isDevelopment) {
+        $_POST['database-hostname'] = 'db';
+        $_POST['database-username'] = 'phpwfw';
+        $_POST['database-password'] = '1234';
+        $_POST['database-database'] = 'phpwfw';
+        $_POST['filesystem-path'] = '/';
+        $_POST['user-name'] = 'admin';
+        $_POST['user-surname'] = 'admin';
+        $_POST['user-login'] = 'admin';
+        $_POST['user-password'] = '123456';
+    }
+}
+
 if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     $database = array(
         'hostname' => $_POST['database-hostname'],
@@ -39,7 +65,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         'password' => sha1($_POST['user-login'] . $_POST['user-password']) // Duplicated in User.class.php
     );
 
-    if ($_POST['filesystem-path-override'] == 'on') {
+    if (array_key_exists('filesystem-path-override', $_POST) && $_POST['filesystem-path-override'] == 'on') {
         $filesystem['root'] = '"' . $filesystem['path'] . '"';
         $filesystem['path'] = '';
     }
@@ -179,19 +205,19 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="database-hostname">Hostname:</label>
-                                    <input type="text" name="database-hostname" id="database-hostname" value="127.0.0.1" class="w200" required="required" />
+                                    <input type="text" name="database-hostname" id="database-hostname" value="<?php echo $_POST['database-hostname'] ?>" class="w200" required="required" />
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="database-username">Username:</label>
-                                    <input type="text" name="database-username" id="database-username" class="w200" required="required" />
+                                    <input type="text" name="database-username" id="database-username" value="<?php echo $_POST['database-username'] ?>" class="w200" required="required" />
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="database-password">Password:</label>
-                                    <input type="password" name="database-password" id="database-password" class="w200" />
+                                    <input type="password" name="database-password" id="database-password" value="<?php echo $_POST['database-password'] ?>" class="w200" />
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="database-database">Database:</label>
-                                    <input type="text" name="database-database" id="database-database" class="w200" required="required" />
+                                    <input type="text" name="database-database" id="database-database" value="<?php echo $_POST['database-database'] ?>" class="w200" required="required" />
                                 </div>
 
                                 <h2>FileSystem</h2>
@@ -202,7 +228,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="filesystem-path" title="Start it with '/' only when Document Root doesn't end with slash.">Additional Path:</label>
-                                    <input type="text" name="filesystem-path" id="filesystem-path" class="w200" required="/" />
+                                    <input type="text" name="filesystem-path" id="filesystem-path" value="<?php echo $_POST['filesystem-path'] ?>" class="w200" required="/" />
                                     <label title="Ignore Document Root and use only this path.">
                                         <input type="checkbox" name="filesystem-path-override" />
                                         Override Document Root
@@ -211,22 +237,22 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
 
                                 <h2>User</h2>
                                 <div class="clear"></div>
-                                <h4 class="warning">Will ignore if database structure already exists.</h4>
+                                <h4 class="warning">Will be ignored if database structure already exists.</h4>
                                 <div class="gray-box">
                                     <label class="w110" for="user-name">Name:</label>
-                                    <input type="text" name="user-name" id="user-name" value="admin" class="w200" />
+                                    <input type="text" name="user-name" id="user-name" value="<?php echo $_POST['user-name'] ?>" class="w200" />
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="user-surname">Surname:</label>
-                                    <input type="text" name="user-surname" id="user-surname" value="admin" class="w200" />
+                                    <input type="text" name="user-surname" id="user-surname" value="<?php echo $_POST['user-surname'] ?>" class="w200" />
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="user-login">Login:</label>
-                                    <input type="text" name="user-login" id="user-login" value="admin" class="w200" />
+                                    <input type="text" name="user-login" id="user-login" value="<?php echo $_POST['user-login'] ?>" class="w200" />
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="user-password" title="When creating user, minimal password length is 6 characters.">Password:</label>
-                                    <input type="password" name="user-password" id="user-password" class="w200" />
+                                    <input type="password" name="user-password" id="user-password" value="<?php echo $_POST['user-password'] ?>" class="w200" />
                                 </div>
 
                                 <hr />
