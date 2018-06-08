@@ -39,7 +39,7 @@ if (count($_POST) == 0) {
         $_POST['database-username'] = 'phpwfw';
         $_POST['database-password'] = '1234';
         $_POST['database-database'] = 'phpwfw';
-        $_POST['filesystem-path'] = '/';
+        $_POST['filesystem-path'] = '';
         $_POST['user-name'] = 'admin';
         $_POST['user-surname'] = 'admin';
         $_POST['user-login'] = 'admin';
@@ -228,7 +228,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                 </div>
                                 <div class="gray-box">
                                     <label class="w110" for="filesystem-path" title="Start it with '/' only when Document Root doesn't end with slash.">Additional Path:</label>
-                                    <input type="text" name="filesystem-path" id="filesystem-path" value="<?php echo $_POST['filesystem-path'] ?>" class="w200" required="/" />
+                                    <input type="text" name="filesystem-path" id="filesystem-path" value="<?php echo $_POST['filesystem-path'] ?>" class="w200" />
                                     <label title="Ignore Document Root and use only this path.">
                                         <input type="checkbox" name="filesystem-path-override" />
                                         Override Document Root
