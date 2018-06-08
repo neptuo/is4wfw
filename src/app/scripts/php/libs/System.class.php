@@ -773,7 +773,14 @@
 					$patchHtml .= $grid->render();
 				}
 
+				$note = '';
+
+				if (IS_DEVELOPMENT_MODE) {
+					$note .= self::getWarning('In development mode, app folder is read-only and you can\'t update the application');
+				}
+
 				$return .= ''
+				. $note
 				. '<div class="grid-2">'
 					. '<div class="gray-box">'
 						. '<strong>' . 'Major Update' . '</strong>'
