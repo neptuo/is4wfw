@@ -20,4 +20,6 @@ RUN curl -fsSL 'https://xdebug.org/files/xdebug-2.5.5.tgz' -o xdebug.tar.gz \
     && rm -r xdebug \
     && docker-php-ext-enable xdebug
 
+ENV IS4WFW_DEVELOPMENT=true
+
 COPY ./docker/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
