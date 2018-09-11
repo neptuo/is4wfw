@@ -1745,6 +1745,7 @@
             $rb->loadBundle($this->BundleName, $this->BundleLang);
             $match = array();
             $return = '';
+            $isValidationError = false;
 
             if ($_POST['match-edit-save'] == $rb->get('matches.save')) {
                 if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
@@ -1904,7 +1905,7 @@
                             parent::db()->execute(parent::query()->get('updateTableIdInStatsByMid', array('tableId' => $match['in_table'], 'mid' => $match['id']), 'sport'));
                         }
                     } else {
-                        $_POST['match-new'] = $rb->get('matches.new');
+                        $isValidationError = true;
                     }
                     //parent::db()->setMockMode(false);
                     parent::db()->enableCache();
@@ -1913,7 +1914,7 @@
                 }
             }
 
-            if ($_POST['match-edit'] == $rb->get('matches.edit') || $_POST['match-new'] == $rb->get('matches.new')) {
+            if ($_POST['match-edit'] == $rb->get('matches.edit') || $_POST['match-new'] == $rb->get('matches.new') || $isValidationError) {
                 if ($_POST['match-edit'] == $rb->get('matches.edit')) {
                     $matchId = $_POST['match-id'];
                     $match = parent::db()->fetchSingle(parent::query()->get('selectMatchByIdProjectId', array('id' => $matchId, 'projectId' => self::getProjectId()), 'sport'));
@@ -1926,7 +1927,7 @@
                         $match['a_shoots'] = '';
                         $match['a_penalty'] = '';
                     }
-                } else {
+                } else if ($_POST['match-new'] == $rb->get('matches.new')) {
                     $match['in_table'] = self::getTableId();
                     $match['notplayed'] = 1;
                 }
