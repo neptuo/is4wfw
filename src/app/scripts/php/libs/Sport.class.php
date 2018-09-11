@@ -2891,7 +2891,7 @@
          * 	@param		seasonId				season id
          *
          */
-        public function showMatches($templateId, $noDataMessage, $sorting = false, $matchId = false, $round = false, $teamId = false, $seasonId = false, $onlyPlayed = true) {
+        public function showMatches($templateId, $noDataMessage, $sorting = false, $matchId = false, $round = false, $teamId = false, $seasonId = false, $onlyPlayed = true, $state = null) {
             global $dbObject;
             global $loginObject;
             $rb = new LocalizationBundle();
@@ -2902,21 +2902,6 @@
                 return parent::getWarning($noDataMessage);
             }
 
-            if ($onlyPlayed == 'false') {
-                $onlyPlayed = false;
-            } else {
-                $onlyPlayed = true;
-            }
-
-            /* if($round == '') {
-            $round = self::getRoundId();
-            }
-            if($teamId == '') {
-            $teamId = self::getTeamId();
-            }
-            if($seasonId == '') {
-            $seasonId = self::getSeasonId();
-            } */
             if (strtolower($sorting) == 'desc') {
                 $sorting = 'DESC';
             } else {
@@ -2940,8 +2925,17 @@
             if ($matchId != '') {
                 $where .= ' and `id` = ' . $matchId;
             }
-            if ($onlyPlayed == true) {
-                $where .= ' and `notplayed` = 0';
+            if ($state == '') {
+                if ($onlyPlayed == true) {
+                    $state = 'played';
+                } else {
+                    $state = 'all';
+                }
+            }
+
+            $stateSql = self::mapStateToPlayedSqlWhere($state);
+            if ($stateSql == null) {
+                return parent::getError('Not valid "state" attribute in s:matches.');
             }
 
             $sql = 'select `id`, `h_team`, `a_team`, `season`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `place`, `refs`, `refs2`, `date`, `time`, `stuff`, `stuff2`, `main_stuff` from `w_sport_match`' . ($where != '' ? ' where ' . $where : '') . ' order by `round` ' . $sorting . ', `id` ' . $sorting . ';';
@@ -2980,6 +2974,24 @@
             }
 
             return $return;
+        }
+
+        private function mapStateToPlayedSqlWhere($state, $prefix = null) {
+            $prefix = $prefix != null ? '`' . $prefix . '`.' : '';
+
+            switch ($state) {
+                case 'all':
+                    return '';
+
+                case 'played':
+                    return ' and ' . $prefix . '`notplayed` = 0';
+                
+                case 'notplayed':
+                    return ' and ' . $prefix . '`notplayed` = 1';
+
+                default:
+                    return null;
+            }
         }
 
         /**
@@ -3077,7 +3089,7 @@
          * 	@param		seasonId				season id
          *
          */
-        public function showRounds($templateId, $sorting, $noDataMessage, $seasonId = false, $teamId = false, $onlyPlayed = true, $startRoundId = false, $maxRoundId = false, $limit = false) {
+        public function showRounds($templateId, $sorting, $noDataMessage, $seasonId = false, $teamId = false, $onlyPlayed = true, $state = '', $startRoundId = false, $maxRoundId = false, $limit = false) {
             global $dbObject;
             global $loginObject;
             $rb = new LocalizationBundle();
@@ -3088,11 +3100,6 @@
 
             if ($seasonId == '') {
                 $seasonId = self::getSeasonId();
-            }
-            if ($onlyPlayed == 'false') {
-                $onlyPlayed = false;
-            } else {
-                $onlyPlayed = true;
             }
             if ($teamId != '') {
                 $teamSql = ' and (`w_sport_match`.`h_team` = ' . $teamId . ' or `w_sport_match`.`a_team` = ' . $teamId . ')';
@@ -3105,10 +3112,23 @@
                 $sorting = 'DESC';
             }
 
+            if ($state == '') {
+                if ($onlyPlayed == true) {
+                    $state = 'played';
+                } else {
+                    $state = 'all';
+                }
+            }
+
+            $stateSql = self::mapStateToPlayedSqlWhere($state, 'w_sport_match');
+            if ($stateSql === null) {
+                return parent::getError('Not valid "state" attribute in s:matches.');
+            }
+
             if ($seasonId != '-1') {
-                if ($onlyPlayed) {
+                if ($state != 'all') {
                     // join pres zapasy pro zobrazeni jen kol s odehranymi zapasy ...
-                    $rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `w_sport_round`.`name`, `w_sport_round`.`number` from `w_sport_match` left join `w_sport_round` on `w_sport_match`.`round` = `w_sport_round`.`id` where `w_sport_round`.`project_id` = ' . self::getProjectId() . ' and `w_sport_round`.`season_id` = ' . $seasonId . $teamSql . ' and `w_sport_match`.`notplayed` = 0 and `w_sport_round`.`visible` = 1'.($startRoundId != "" ? ' and `w_sport_round`.`id` >= '.$startRoundId : '').($maxRoundId != "" ? ' and `w_sport_round`.`id` <= '.$maxRoundId : '').' order by `w_sport_round`.`number` ' . $sorting . ($limit != "" ? ' limit ' . $limit : "") . ';');
+                    $rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `w_sport_round`.`name`, `w_sport_round`.`number` from `w_sport_match` left join `w_sport_round` on `w_sport_match`.`round` = `w_sport_round`.`id` where `w_sport_round`.`project_id` = ' . self::getProjectId() . ' and `w_sport_round`.`season_id` = ' . $seasonId . $teamSql . $stateSql . ' and `w_sport_round`.`visible` = 1'.($startRoundId != "" ? ' and `w_sport_round`.`id` >= '.$startRoundId : '').($maxRoundId != "" ? ' and `w_sport_round`.`id` <= '.$maxRoundId : '').' order by `w_sport_round`.`number` ' . $sorting . ($limit != "" ? ' limit ' . $limit : "") . ';');
                 } else {
                     $rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `name`, `number` from `w_sport_round`' . $joinSql . ' where `w_sport_round`.`project_id` = ' . self::getProjectId() . ' and `season_id` = ' . $seasonId . $teamSql . ' and `visible` = 1'.($startRoundId != "" ? ' and `w_sport_round`.`id` >= '.$startRoundId : '').($maxRoundId != "" ? ' and `w_sport_round`.`id` <= '.$maxRoundId : '').' order by `number` ' . $sorting . ($limit != "" ? ' limit ' . $limit : "") . ';');
                 }

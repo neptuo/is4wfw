@@ -490,6 +490,15 @@
     <attribute>
       <attname>onlyPlayed</attname>
       <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>true</attdef>
+      <attcomment>OBSOLETE: Použijte "state". Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>state</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</attcomment>
     </attribute>
     <comment>
       Výpis zápasů, sorting má hodnotu DESC nebo ASC.
@@ -544,6 +553,15 @@
     <attribute>
       <attname>onlyPlayed</attname>
       <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>true</attdef>
+      <attcomment>OBSOLETE: Použijte "state". Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>state</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</attcomment>
     </attribute>
     <attribute>
       <attname>startId</attname>
