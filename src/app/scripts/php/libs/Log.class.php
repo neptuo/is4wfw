@@ -45,12 +45,12 @@
          */
         public function write($msg) {
             global $webObject;
-            $this->LogFile = LOGS_PATH . ($webObject != null ? $webObject->getProjectId() : "_") . '-' . date("Y-m-d") . ".log";
+            Log::$LogFile = LOGS_PATH . ($webObject != null ? $webObject->getProjectId() : "_") . '-' . date("Y-m-d") . ".log";
             if ($this->IsOpen == false) {
-                if (is_file($this->LogFile)) {
-                    $this->File = fopen($this->LogFile, "a");
+                if (is_file(Log::$LogFile)) {
+                    $this->File = fopen(Log::$LogFile, "a");
                 } else {
-                    $this->File = fopen($this->LogFile, "w");
+                    $this->File = fopen(Log::$LogFile, "w");
                 }
                 $this->IsOpen = true;
             }
