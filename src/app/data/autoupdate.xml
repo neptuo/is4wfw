@@ -59,4 +59,5 @@
     <script build="337">INSERT INTO `group_perms` (`group_id`, `name`, `value`, `type`) VALUES (1, 'CMS.Settings.Update', 'true', 'bool');</script>
     <script build="338">ALTER TABLE `page_file_inc` ADD `order` INT NOT NULL DEFAULT '0' AFTER `language_id`;</script>
     <script build="338">UPDATE `page_file_inc` SET `order` = `file_id`;</script>
+    <script build="339">ALTER TABLE `w_sport_tables` ADD `points_win` TINYINT NOT NULL DEFAULT '3' AFTER `name`, ADD `points_win_extratime` TINYINT NOT NULL DEFAULT '2' AFTER `points_win`, ADD `points_draw` TINYINT NOT NULL DEFAULT '1' AFTER `points_win_extratime`, ADD `points_loose_extratime` TINYINT NOT NULL DEFAULT '1' AFTER `points_draw`, ADD `points_loose` TINYINT NOT NULL DEFAULT '0' AFTER `points_loose_extratime`;</script>
 </autoupdate>

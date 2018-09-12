@@ -1487,21 +1487,33 @@
             $rb->loadBundle($this->BundleName, $this->BundleLang);
             $retrun = '';
             $table = array();
+            $dao = parent::dao('SportTable');
+            $isValidationFailed = false;
 
             if ($_POST['table-submit'] == $rb->get('table.submit')) {
-                $tableId = $_POST['table-id'];
-                $name = trim($_POST['table-detail-name']);
+                $table['id'] = $_POST['table-id'];
+                $table['name'] = trim($_POST['table-detail-name']);
+                $table['points_win'] = trim($_POST['table-detail-points-win']);
+                $table['points_win_extratime'] = trim($_POST['table-detail-points-winextratime']);
+                $table['points_draw'] = trim($_POST['table-detail-points-draw']);
+                $table['points_loose_extratime'] = trim($_POST['table-detail-points-looseextratime']);
+                $table['points_loose'] = trim($_POST['table-detail-points-loose']);
+                $table['project_id'] = self::getProjectId();
 
                 if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
-                    $tables = parent::db()->fetchAll('select `id` from `w_sport_table` where `name` = "' . $name . '" and `project_id` = ' . self::getProjectId() . ';');
-                    if ($name == '' || count($tables) > 0) {
+                    $tables = array();
+                    if ($table['id'] != '') {
+                        $tables = parent::db()->fetchAll('select `id` from `w_sport_table` where `name` = "' . $table['name'] . '" and `project_id` = ' . self::getProjectId() . ' and `table_id` != ' . parent::db()->escape($table['id']) . ';');
+                    }
+                    if ($table['name'] == '' || ($table['id'] != '' && count($tables) > 0)) {
                         $return .= parent::getError($rb->get('table.error.namemustbeunique'));
+                        $isValidationFailed = true;
                     } else {
-                        $tables = parent::db()->fetchAll('select `id` from `w_sport_tables` where `id` = ' . $tableId . ';');
+                        $tables = parent::db()->fetchAll('select `id` from `w_sport_tables` where `id` = ' . $table['id'] . ';');
                         if (count($tables) == 1) {
-                            parent::db()->execute('update `w_sport_tables` set `name` = "' . $name . '" where `id` = ' . $tableId . ';');
+                            $dao->update($table);
                         } else {
-                            parent::db()->execute('insert into `w_sport_tables`(`name`, `project_id`) values ("' . $name . '", ' . self::getProjectId() . ');');
+                            $dao->insert($table);
                         }
                     }
                 } else {
@@ -1509,11 +1521,11 @@
                 }
             }
 
-            if ($_POST['table-edit'] == $rb->get('tables.edit') || $_POST['tables-add'] == $rb->get('tables.add')) {
+            if ($_POST['table-edit'] == $rb->get('tables.edit') || $_POST['tables-add'] == $rb->get('tables.add') || $isValidationFailed) {
                 $tableId = $_POST['table-id'];
-                $curTable = parent::db()->fetchAll('select `id`, `name` from `w_sport_tables` where `id` = ' . $tableId . ';');
-                if (count($curTable) == 1) {
-                    $table = $curTable[0];
+                $curTable = $dao->get($tableId);
+                if ($curTable != array()) {
+                    $table = $curTable;
                 }
 
                 $return .= ''
@@ -1521,6 +1533,27 @@
                     . '<div class="gray-box">'
                         . '<label for="table-detail-name" class="w100">' . $rb->get('tables.name') . ':</label>'
                         . '<input type="text" name="table-detail-name" id="table-detail-name" value="' . $table['name'] . '" />'
+                    . '</div>'
+                    . '<strong>' . $rb->get('tables.points') . '</strong>'
+                    . '<div class="gray-box">'
+                        . '<label for="table-detail-points-win" class="w160">' . $rb->get('tables.points.win') . ':</label>'
+                        . '<input type="text" name="table-detail-points-win" id="table-detail-points-win" class="w30" value="' . $table['points_win'] . '" />'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<label for="table-detail-points-winextratime" class="w160">' . $rb->get('tables.points.winextratime') . ':</label>'
+                        . '<input type="text" name="table-detail-points-winextratime" id="table-detail-points-winextratime" class="w30" value="' . $table['points_win_extratime'] . '" />'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<label for="table-detail-points-draw" class="w160">' . $rb->get('tables.points.draw') . ':</label>'
+                        . '<input type="text" name="table-detail-points-draw" id="table-detail-points-draw" class="w30" value="' . $table['points_draw'] . '" />'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<label for="table-detail-points-looseextratime" class="w160">' . $rb->get('tables.points.looseextratime') . ':</label>'
+                        . '<input type="text" name="table-detail-points-looseextratime" id="table-detail-points-looseextratime" class="w30" value="' . $table['points_loose_extratime'] . '" />'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<label for="table-detail-points-loose" class="w160">' . $rb->get('tables.points.loose') . ':</label>'
+                        . '<input type="text" name="table-detail-points-loose" id="table-detail-points-loose" class="w30" value="' . $table['points_loose'] . '" />'
                     . '</div>'
                     . '<div class="gray-box">'
                         . '<input type="hidden" name="table-id" value="' . $table['id'] . '" />'

@@ -84,9 +84,9 @@ abstract class AbstractDao {
 	protected function selectSql($select = null, $distinct = false, $fields = null) {
 		if ($fields == null || count($fields) == 0){
 			if ($distinct == true){
-				$params = array( "DISTINCT *", $this->getDatabase(), $this->getTableName());
+				$params = array("DISTINCT *", $this->getDatabase(), $this->getTableName(), $this->getTableAlias());
 			} else {
-				$params = array( '`'.$this->getTableAlias().'`.*', $this->getDatabase(), $this->getTableName(), $this->getTableAlias());
+				$params = array('`'.$this->getTableAlias().'`.*', $this->getDatabase(), $this->getTableName(), $this->getTableAlias());
 			}
 			$return = self::setString($this->selectSQL, $params);	
 		} else {
@@ -102,7 +102,7 @@ abstract class AbstractDao {
 					$fieldsString .= '`'.$this->getTableAlias().'`.`' . $fields[$i] . '`, ';
 				}
 				
-				$params = array( $fieldsString, $this->getDatabase(), $this->getTableName(), $this->getTableAlias());
+				$params = array($fieldsString, $this->getDatabase(), $this->getTableName(), $this->getTableAlias());
 				$return = self::setString($this->selectSQL, $params); 
 			}
 		}		 
@@ -168,6 +168,7 @@ abstract class AbstractDao {
 	
 	public function get($id) {
 		$select = self::createSelect();
+		$select->tableAlias($this->getTableAlias());
 		$idField = $this->getIdField();
 		if(is_array($idField)) {
 			$isFirst = true;

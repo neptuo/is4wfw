@@ -6,9 +6,16 @@
 class Select{
 	private $dataAccess;
 	private $result;
+	private $tableAlias;
+	private $alias;
 
 	public function __construct($dataAccess) {
 		$this->dataAccess = $dataAccess;
+	}
+
+	public function tableAlias($tableAlias) {
+		$this->tableAlias = $tableAlias;
+		$this->alias = $this->tableAlias != '' ? '`' . $this->tableAlias . '`' : '';
 	}
 	
 	/*
@@ -21,6 +28,7 @@ class Select{
 	 */
 	public function where($column, $comp, $value, $ignore=false){
 		if (!$ignore){
+
 			if ($comp == "IN" || $comp == "NOT IN"){
 				if(is_array($value) && count($value) > 0) {
 					$value = "'".implode("', '", $value)."'";
@@ -28,9 +36,9 @@ class Select{
 					$value = $this->dataAccess->escape($value);
 				}
 			
-				$this->result .= " WHERE `" . $column . "` " . $comp . " (" . $value . ")";
+				$this->result .= " WHERE " . $this->alias . ".`" . $column . "` " . $comp . " (" . $value . ")";
 			} else {
-				$this->result .= " WHERE `" . $column . "` " . $comp . " '" . $this->dataAccess->escape($value) . "'";
+				$this->result .= " WHERE " . $this->alias . ".`" . $column . "` " . $comp . " '" . $this->dataAccess->escape($value) . "'";
 			}
 		}
 		
@@ -47,7 +55,7 @@ class Select{
 	public function disjunct($column, $comp, $value, $ignore=false){
 		if (!$ignore){
 			if ($this->result != null){
-				$this->result .= " OR `" . $column . "` " . $comp . " " . "'" . $this->dataAccess->escape($value) . "'";
+				$this->result .= " OR " . $this->alias . ".`" . $column . "` " . $comp . " " . "'" . $this->dataAccess->escape($value) . "'";
 			}
 		}
 		
@@ -64,7 +72,7 @@ class Select{
 	public function conjunct($column, $comp, $value, $ignore=false){
 		if (!$ignore){
 			if ($this->result != null){
-				$this->result .= " AND " . $column . " " . $comp . " " . "'" . $this->dataAccess->escape($value) . "'";
+				$this->result .= " AND " . $this->alias . ".`" . $column . "` " . $comp . " " . "'" . $this->dataAccess->escape($value) . "'";
 			}
 		}
 		
@@ -85,7 +93,7 @@ class Select{
 				}
 
 				$value = implode("','", $values);
-				$this->result .= " AND " . $column . " IN ('" .$value."')";
+				$this->result .= " AND " . $this->alias . ".`" . $column . "` IN ('" .$value."')";
 			}
 		}
 		
@@ -105,9 +113,9 @@ class Select{
 				$end = count($column);
 				for ($i = 0; $i < $end; $i++){
 					if ($i == $end - 1){
-						$this->result .= $column[$i];
+						$this->result .= $this->alias . ".`" . $column[$i] . "`";
 					} else {
-						$this->result .= $column[$i] . ", ";
+						$this->result .= $this->alias . ".`" . $column[$i] . "`, ";
 					}
 				}
 			} else {
