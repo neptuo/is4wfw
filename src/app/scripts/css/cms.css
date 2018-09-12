@@ -1433,17 +1433,24 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .hint-lib table td {
     padding: 2px 10px;
+    vertical-align: top;
     border-bottom: 1px solid #cccccc;
 }
 
 .hint-lib table th {
     padding: 0 10px;
     text-align: left;
+    vertical-align: top;
 }
 
 .hint-lib table th {
     text-align: left;
+    background: #ccc;
     border-bottom: 1px solid black;
+}
+
+.hint-lib .att-name {
+    min-width: 100px;
 }
 
 .system-properties table, .system-notes table {

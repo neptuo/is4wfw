@@ -118,11 +118,28 @@
                     foreach ($xml->tag as $tag) {
                         $attributes = '';
                         for ($i = 0; $i < count($tag->attribute); $i ++) {
+                            $attributeName = $tag->attribute[$i]->attname;
+                            $cssClass = null;
+                            $obsolete = null;
+                            if (isset($tag->attribute[$i]->obsolete)) {
+                                $obsolete = (string)$tag->attribute[$i]->obsolete;
+                                $cssClass = ' obsolete';
+                            }
+                            $required = null;
+                            if ($tag->attribute[$i]->attreq == 'required') {
+                                $required = $rb->get('lib.attreq.yes');
+                                $attributeName = '<strong>' . $attributeName . '</strong>';
+                            } else if ($tag->attribute[$i]->attreq == 'implied') {
+                                $required = $rb->get('lib.attreq.no');
+                            }
+
                             $attributes .= ''
                             .'<tr>'
-                                .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
-                                .'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
-                                .'<td class="att-req">'.$tag->attribute[$i]->attcomment.'</td>'
+                                .'<td class="att-name' . $cssClass . '">' . $attributeName . '</td>'
+                                .'<td class="att-req' . $cssClass . '">' . $required . '</td>'
+                                .'<td class="att-type' . $cssClass . '">' . $tag->attribute[$i]->atttype . '</td>'
+                                .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->attdef . '</td>'
+                                .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->attcomment . '</td>'
                             .'</tr>';
                         }
                         
@@ -153,7 +170,9 @@
                                         .'<tr>'
                                             .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
                                             .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
-                                            .'<th class="att-req">'.$rb->get('lib.attcomment').'</th>'
+                                            .'<th class="att-type">'.$rb->get('lib.atttype').'</th>'
+                                            .'<th class="att-def">'.$rb->get('lib.attdef').'</th>'
+                                            .'<th class="att-comment">'.$rb->get('lib.attcomment').'</th>'
                                         .'</tr>'
                                         .$attributes
                                     .'</table>'
@@ -172,11 +191,28 @@
                     foreach ($xml->fulltag as $tag) {
                         $attributes = '';
                         for ($i = 0; $i < count($tag->attribute); $i ++) {
+                            $attributeName = $tag->attribute[$i]->attname;
+                            $cssClass = null;
+                            $obsolete = null;
+                            if (isset($tag->attribute[$i]->obsolete)) {
+                                $obsolete = (string)$tag->attribute[$i]->obsolete;
+                                $cssClass = ' obsolete';
+                            }
+                            $required = null;
+                            if ($tag->attribute[$i]->attreq == 'required') {
+                                $required = $rb->get('lib.attreq.yes');
+                                $attributeName = '<strong>' . $attributeName . '</strong>';
+                            } else if ($tag->attribute[$i]->attreq == 'implied') {
+                                $required = $rb->get('lib.attreq.no');
+                            }
+
                             $attributes .= ''
                             .'<tr>'
-                                .'<td class="att-name">'.$tag->attribute[$i]->attname.'</td>'
-                                .'<td class="att-req">'.$tag->attribute[$i]->attreq.'</td>'
-                                .'<td class="att-req">'.$tag->attribute[$i]->attcomment.'</td>'
+                                .'<td class="att-name' . $cssClass . '">' . $attributeName . '</td>'
+                                .'<td class="att-req' . $cssClass . '">' . $required . '</td>'
+                                .'<td class="att-type' . $cssClass . '">' . $tag->attribute[$i]->atttype . '</td>'
+                                .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->attdef . '</td>'
+                                .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->attcomment . '</td>'
                             .'</tr>';
                         }
 
@@ -207,7 +243,9 @@
                                         .'<tr>'
                                             .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
                                             .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
-                                            .'<th class="att-req">'.$rb->get('lib.attcomment').'</th>'
+                                            .'<th class="att-type">'.$rb->get('lib.atttype').'</th>'
+                                            .'<th class="att-def">'.$rb->get('lib.attdef').'</th>'
+                                            .'<th class="att-comment">'.$rb->get('lib.attcomment').'</th>'
                                         .'</tr>'
                                         .$attributes
                                     .'</table>'
