@@ -1726,6 +1726,8 @@
         }
 
         private function removeMatchFromTable($match) {
+            $table = parent::dao('SportTable')->get($match['in_table']);
+
             $team1 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
             $team2 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
             if ($team1 != array() && $team2 != array()) {
@@ -1734,26 +1736,28 @@
                 if ($match['h_score'] > $match['a_score']) {
                     $team1['wins']--;
                     $team2['loses']--;
-                    $team1['points'] -= 3;
+                    $team1['points'] -= $table['points_win'];
+                    $team2['points'] -= $table['points_loose'];
                 } elseif ($match['a_score'] > $match['h_score']) {
                     $team2['wins']--;
                     $team1['loses']--;
-                    $team2['points'] -= 3;
+                    $team2['points'] -= $table['points_win'];
+                    $team1['points'] -= $table['points_loose'];
                 } elseif ($match['h_score'] == $match['a_score'] && $match['h_extratime'] == 1) {
                     $team1['draws']--;
                     $team2['draws']--;
-                    $team1['points'] -= 2;
-                    $team2['points']--;
+                    $team1['points'] -= $table['points_win_extratime'];
+                    $team2['points'] -= $table['points_loose_extratime'];
                 } elseif ($match['h_score'] == $match['a_score'] && $match['a_extratime'] == 1) {
                     $team1['draws']--;
                     $team2['draws']--;
-                    $team2['points'] -= 2;
-                    $team1['points']--;
+                    $team2['points'] -= $table['points_win_extratime'];
+                    $team1['points'] -= $table['points_loose_extratime'];
                 } else {
                     $team1['draws']--;
                     $team2['draws']--;
-                    $team1['points']--;
-                    $team2['points']--;
+                    $team1['points'] -= $table['points_draw'];
+                    $team2['points'] -= $table['points_draw'];
                 }
                 $team1['s_score'] -= $match['h_score'];
                 $team1['r_score'] -= $match['a_score'];
@@ -1769,6 +1773,8 @@
         }
 
         private function addMatchToTable($match) {
+            $table = parent::dao('SportTable')->get($match['in_table']);
+
             $team1 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
             $team2 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
             $team1['matches']++;
@@ -1776,26 +1782,28 @@
             if ($match['h_score'] > $match['a_score']) {
                 $team1['wins']++;
                 $team2['loses']++;
-                $team1['points'] += 3;
+                $team1['points'] += $table['points_win'];
+                $team2['points'] += $table['points_loose'];
             } elseif ($match['a_score'] > $match['h_score']) {
                 $team2['wins']++;
                 $team1['loses']++;
-                $team2['points'] += 3;
+                $team2['points'] += $table['points_win'];
+                $team1['points'] += $table['points_loose'];
             } elseif ($match['h_score'] == $match['a_score'] && $match['h_extratime'] == 1) {
                 $team1['draws']++;
                 $team2['draws']++;
-                $team1['points'] += 2;
-                $team2['points']++;
+                $team1['points'] += $table['points_win_extratime'];
+                $team2['points'] += $table['points_loose_extratime'];
             } elseif ($match['h_score'] == $match['a_score'] && $match['a_extratime'] == 1) {
                 $team1['draws']++;
                 $team2['draws']++;
-                $team2['points'] += 2;
-                $team1['points']++;
+                $team2['points'] += $table['points_win_extratime'];
+                $team1['points'] += $table['points_loose_extratime'];
             } else {
                 $team1['draws']++;
                 $team2['draws']++;
-                $team1['points']++;
-                $team2['points']++;
+                $team1['points'] += $table['points_draw'];
+                $team2['points'] += $table['points_draw'];
             }
             $team1['s_score'] += $match['h_score'];
             $team1['r_score'] += $match['a_score'];
@@ -2704,7 +2712,7 @@
                 }
                 $orderBy .= '(CAST(`w_sport_table`.`s_score` AS SIGNED) - CAST(`w_sport_table`.`r_score` AS SIGNED)) DESC, `w_sport_table`.`s_score` DESC, `w_sport_table`.`wins` DESC';
                 
-                $table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points`, `w_sport_table`.`positionfix` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = ' . $seasonId . ' AND `w_sport_team`.`season` = ' . $seasonId . ' AND `w_sport_table`.`table_id` = ' . $tableId . ' and `w_sport_table`.`project_id` = ' . self::getProjectId() . $orderBy .';', true, true);
+                $table = $dbObject->fetchAll('SELECT `w_sport_team`.`id`, `w_sport_team`.`name`, `w_sport_table`.`matches`, `w_sport_table`.`wins`, `w_sport_table`.`draws`, `w_sport_table`.`loses`, `w_sport_table`.`s_score`, `w_sport_table`.`r_score`, `w_sport_table`.`points`, `w_sport_table`.`positionfix` FROM `w_sport_table` LEFT JOIN `w_sport_team` ON `w_sport_table`.`team` = `w_sport_team`.`id` WHERE `w_sport_table`.`season` = ' . $seasonId . ' AND `w_sport_team`.`season` = ' . $seasonId . ' AND `w_sport_table`.`table_id` = ' . $tableId . ' and `w_sport_table`.`project_id` = ' . self::getProjectId() . $orderBy .';');
                 if (count($table) > 0) {
                     if ($editable == 'true') {
                         $return .= '<form name="table-c-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">';
