@@ -1565,47 +1565,10 @@
                     $match['season'] = self::getSeasonId();
                     $tmpma = $dbObject->fetchAll(parent::query()->get('selectMatchByIdSeasonId', array('id' => $match['id'], 'seasonId' => $match['season']), 'sport'));
                     if (count($tmpma) != 0) {
-                        if ($tmpma[0]['in_table'] == 1 && $tmpma[0]['notplayed'] != 1) {
-                            $team1 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = ' . $tmpma[0]['h_team'] . ' AND `season` = ' . $match['season'] . ';');
-                            $team2 = $dbObject->fetchAll('SELECT `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points` FROM `w_sport_table` WHERE `team` = ' . $tmpma[0]['a_team'] . ' AND `season` = ' . $match['season'] . ';');
-                            if (count($team1) > 0 && count($team2) > 0) {
-                                $team1 = $team1[0];
-                                $team2 = $team2[0];
-                                $team1['matches']--;
-                                $team2['matches']--;
-                                if ($tmpma[0]['h_score'] > $tmpma[0]['a_score']) {
-                                    $team1['wins']--;
-                                    $team2['loses']--;
-                                    $team1['points'] -= 3;
-                                } elseif ($tmpma[0]['a_score'] > $tmpma[0]['h_score']) {
-                                    $team2['wins']--;
-                                    $team1['loses']--;
-                                    $team2['points'] -= 3;
-                                } elseif ($tmpma[0]['h_score'] == $tmpma[0]['a_score'] && $tmpma[0]['h_extratime'] == 1) {
-                                    $team1['draws']--;
-                                    $team2['draws']--;
-                                    $team1['points'] -= 2;
-                                    $team2['points']--;
-                                } elseif ($tmpma[0]['h_score'] == $tmpma[0]['a_score'] && $tmpma[0]['a_extratime'] == 1) {
-                                    $team1['draws']--;
-                                    $team2['draws']--;
-                                    $team2['points'] -= 2;
-                                    $team1['points']--;
-                                } else {
-                                    $team1['draws']--;
-                                    $team2['draws']--;
-                                    $team1['points']--;
-                                    $team2['points']--;
-                                }
-                                $team1['s_score'] -= $tmpma[0]['h_score'];
-                                $team1['r_score'] -= $tmpma[0]['a_score'];
-                                $team2['s_score'] -= $tmpma[0]['a_score'];
-                                $team2['r_score'] -= $tmpma[0]['h_score'];
-
-                                $dbObject->execute('UPDATE `w_sport_table` SET `matches` = ' . $team1['matches'] . ', `wins` = ' . $team1['wins'] . ', `draws` = ' . $team1['draws'] . ', `loses` = ' . $team1['loses'] . ', `s_score` = ' . $team1['s_score'] . ', `r_score` = ' . $team1['r_score'] . ', `points` = ' . $team1['points'] . ' WHERE `team` = ' . $tmpma[0]['h_team'] . ' AND `season` = ' . $match['season'] . ';');
-                                $dbObject->execute('UPDATE `w_sport_table` SET `matches` = ' . $team2['matches'] . ', `wins` = ' . $team2['wins'] . ', `draws` = ' . $team2['draws'] . ', `loses` = ' . $team2['loses'] . ', `s_score` = ' . $team2['s_score'] . ', `r_score` = ' . $team2['r_score'] . ', `points` = ' . $team2['points'] . ' WHERE `team` = ' . $tmpma[0]['a_team'] . ' AND `season` = ' . $match['season'] . ';');
-                            } else {
-                                $return .= '<h4 class="error">' . $rb->get('match.warning.teamsnotintable') . '</h4>';
+                        $tmpma[0]['season'] = $match['season'];
+                        if ($tmpma[0]['in_table'] != 0 && $tmpma[0]['notplayed'] != 1) {
+                            if (!self::removeMatchFromTable($tmpma[0])) {
+                                $return .= self::getError($rb->get('match.warning.teamsnotintable'));
                             }
                         }
                         $dbObject->execute('DELETE FROM `w_sport_match` WHERE `id` = ' . $match['id'] . ' AND `season` = ' . $match['season'] . ';');
@@ -1729,6 +1692,87 @@
             }
         }
 
+        private function removeMatchFromTable($match) {
+            $team1 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+            $team2 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+            if ($team1 != array() && $team2 != array()) {
+                $team1['matches']--;
+                $team2['matches']--;
+                if ($match['h_score'] > $match['a_score']) {
+                    $team1['wins']--;
+                    $team2['loses']--;
+                    $team1['points'] -= 3;
+                } elseif ($match['a_score'] > $match['h_score']) {
+                    $team2['wins']--;
+                    $team1['loses']--;
+                    $team2['points'] -= 3;
+                } elseif ($match['h_score'] == $match['a_score'] && $match['h_extratime'] == 1) {
+                    $team1['draws']--;
+                    $team2['draws']--;
+                    $team1['points'] -= 2;
+                    $team2['points']--;
+                } elseif ($match['h_score'] == $match['a_score'] && $match['a_extratime'] == 1) {
+                    $team1['draws']--;
+                    $team2['draws']--;
+                    $team2['points'] -= 2;
+                    $team1['points']--;
+                } else {
+                    $team1['draws']--;
+                    $team2['draws']--;
+                    $team1['points']--;
+                    $team2['points']--;
+                }
+                $team1['s_score'] -= $match['h_score'];
+                $team1['r_score'] -= $match['a_score'];
+                $team2['s_score'] -= $match['a_score'];
+                $team2['r_score'] -= $match['h_score'];
+
+                parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team1['matches'], 'wins' => $team1['wins'], 'draws' => $team1['draws'], 'loses' => $team1['loses'], 'sScore' => $team1['s_score'], 'rScore' => $team1['r_score'], 'points' => $team1['points'], 'teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $team1['table_id']), 'sport'));
+                parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team2['matches'], 'wins' => $team2['wins'], 'draws' => $team2['draws'], 'loses' => $team2['loses'], 'sScore' => $team2['s_score'], 'rScore' => $team2['r_score'], 'points' => $team2['points'], 'teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $team2['table_id']), 'sport'));
+                return true;
+            }
+
+            return false;
+        }
+
+        private function addMatchToTable($match) {
+            $team1 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+            $team2 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+            $team1['matches']++;
+            $team2['matches']++;
+            if ($match['h_score'] > $match['a_score']) {
+                $team1['wins']++;
+                $team2['loses']++;
+                $team1['points'] += 3;
+            } elseif ($match['a_score'] > $match['h_score']) {
+                $team2['wins']++;
+                $team1['loses']++;
+                $team2['points'] += 3;
+            } elseif ($match['h_score'] == $match['a_score'] && $match['h_extratime'] == 1) {
+                $team1['draws']++;
+                $team2['draws']++;
+                $team1['points'] += 2;
+                $team2['points']++;
+            } elseif ($match['h_score'] == $match['a_score'] && $match['a_extratime'] == 1) {
+                $team1['draws']++;
+                $team2['draws']++;
+                $team2['points'] += 2;
+                $team1['points']++;
+            } else {
+                $team1['draws']++;
+                $team2['draws']++;
+                $team1['points']++;
+                $team2['points']++;
+            }
+            $team1['s_score'] += $match['h_score'];
+            $team1['r_score'] += $match['a_score'];
+            $team2['s_score'] += $match['a_score'];
+            $team2['r_score'] += $match['h_score'];
+
+            parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team1['matches'], 'wins' => $team1['wins'], 'draws' => $team1['draws'], 'loses' => $team1['loses'], 'sScore' => $team1['s_score'], 'rScore' => $team1['r_score'], 'points' => $team1['points'], 'teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+            parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team2['matches'], 'wins' => $team2['wins'], 'draws' => $team2['draws'], 'loses' => $team2['loses'], 'sScore' => $team2['s_score'], 'rScore' => $team2['r_score'], 'points' => $team2['points'], 'teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+        }
+
         /**
          *
          * 	Edit match.
@@ -1822,43 +1866,8 @@
                         $tmpma = parent::db()->fetchSingle(parent::query()->get('selectMatchByIdSeasonId', array('id' => $match['id'], 'seasonId' => $match['season']), 'sport'));
                         if ($tmpma != array()) {
                             if ($tmpma['in_table'] != 0 && $tmpma['notplayed'] != 1) {
-                                $team1 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $tmpma['h_team'], 'seasonId' => $match['season'], 'tableId' => $tmpma['in_table']), 'sport'));
-                                $team2 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $tmpma['a_team'], 'seasonId' => $match['season'], 'tableId' => $tmpma['in_table']), 'sport'));
-                                if ($team1 != array() && $team2 != array()) {
-                                    $team1['matches']--;
-                                    $team2['matches']--;
-                                    if ($tmpma['h_score'] > $tmpma['a_score']) {
-                                        $team1['wins']--;
-                                        $team2['loses']--;
-                                        $team1['points'] -= 3;
-                                    } elseif ($tmpma['a_score'] > $tmpma['h_score']) {
-                                        $team2['wins']--;
-                                        $team1['loses']--;
-                                        $team2['points'] -= 3;
-                                    } elseif ($tmpma['h_score'] == $tmpma['a_score'] && $tmpma['h_extratime'] == 1) {
-                                        $team1['draws']--;
-                                        $team2['draws']--;
-                                        $team1['points'] -= 2;
-                                        $team2['points']--;
-                                    } elseif ($tmpma['h_score'] == $tmpma['a_score'] && $tmpma['a_extratime'] == 1) {
-                                        $team1['draws']--;
-                                        $team2['draws']--;
-                                        $team2['points'] -= 2;
-                                        $team1['points']--;
-                                    } else {
-                                        $team1['draws']--;
-                                        $team2['draws']--;
-                                        $team1['points']--;
-                                        $team2['points']--;
-                                    }
-                                    $team1['s_score'] -= $tmpma['h_score'];
-                                    $team1['r_score'] -= $tmpma['a_score'];
-                                    $team2['s_score'] -= $tmpma['a_score'];
-                                    $team2['r_score'] -= $tmpma['h_score'];
-
-                                    parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team1['matches'], 'wins' => $team1['wins'], 'draws' => $team1['draws'], 'loses' => $team1['loses'], 'sScore' => $team1['s_score'], 'rScore' => $team1['r_score'], 'points' => $team1['points'], 'teamId' => $tmpma['h_team'], 'seasonId' => $match['season'], 'tableId' => $team1['table_id']), 'sport'));
-                                    parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team2['matches'], 'wins' => $team2['wins'], 'draws' => $team2['draws'], 'loses' => $team2['loses'], 'sScore' => $team2['s_score'], 'rScore' => $team2['r_score'], 'points' => $team2['points'], 'teamId' => $tmpma['a_team'], 'seasonId' => $match['season'], 'tableId' => $team2['table_id']), 'sport'));
-                                } else {
+                                $tmpma['season'] = $match['season'];
+                                if (!self::removeMatchFromTable($tmpma)) {
                                     $return .= parent::getError($rb->get('match.error.teamsnotintable'));
                                 }
                             }
@@ -1867,41 +1876,7 @@
                             parent::db()->execute(parent::query()->get('insertMatch', array('hTeamId' => $match['h_team'], 'aTeamId' => $match['a_team'], 'hScore' => $match['h_score'], 'aScore' => $match['a_score'], 'hShoots' => $match['h_shoots'], 'aShoots' => $match['a_shoots'], 'hPenalty' => $match['h_penalty'], 'aPenalty' => $match['a_penalty'], 'hExtratime' => $match['h_extratime'], 'aExtratime' => $match['a_extratime'], 'comment' => $match['comment'], 'round' => $match['round'], 'tableId' => $match['in_table'], 'seasonId' => $match['season'], 'projectId' => self::getProjectId(), 'date' => $match['date'], 'time' => $match['time'], 'refs1' => $match['refs1'], 'refs2' => $match['refs2'], 'place' => $match['place'], 'mainStuff' => $match['main_stuff'], 'stuff1' => $match['stuff1'], 'stuff2' => $match['stuff2'], 'notplayed' => $match['notplayed']), 'sport'));
                         }
                         if ($match['in_table'] != 0 && $match['notplayed'] != 1) {
-                            $team1 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
-                            $team2 = parent::db()->fetchSingle(parent::query()->get('selectTeamFromTableByTeamIdSeasonIdTableId', array('teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
-                            $team1['matches']++;
-                            $team2['matches']++;
-                            if ($match['h_score'] > $match['a_score']) {
-                                $team1['wins']++;
-                                $team2['loses']++;
-                                $team1['points'] += 3;
-                            } elseif ($match['a_score'] > $match['h_score']) {
-                                $team2['wins']++;
-                                $team1['loses']++;
-                                $team2['points'] += 3;
-                            } elseif ($match['h_score'] == $match['a_score'] && $match['h_extratime'] == 1) {
-                                $team1['draws']++;
-                                $team2['draws']++;
-                                $team1['points'] += 2;
-                                $team2['points']++;
-                            } elseif ($match['h_score'] == $match['a_score'] && $match['a_extratime'] == 1) {
-                                $team1['draws']++;
-                                $team2['draws']++;
-                                $team2['points'] += 2;
-                                $team1['points']++;
-                            } else {
-                                $team1['draws']++;
-                                $team2['draws']++;
-                                $team1['points']++;
-                                $team2['points']++;
-                            }
-                            $team1['s_score'] += $match['h_score'];
-                            $team1['r_score'] += $match['a_score'];
-                            $team2['s_score'] += $match['a_score'];
-                            $team2['r_score'] += $match['h_score'];
-
-                            parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team1['matches'], 'wins' => $team1['wins'], 'draws' => $team1['draws'], 'loses' => $team1['loses'], 'sScore' => $team1['s_score'], 'rScore' => $team1['r_score'], 'points' => $team1['points'], 'teamId' => $match['h_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
-                            parent::db()->execute(parent::query()->get('updateTableByIdTeamIdSeasonId', array('matches' => $team2['matches'], 'wins' => $team2['wins'], 'draws' => $team2['draws'], 'loses' => $team2['loses'], 'sScore' => $team2['s_score'], 'rScore' => $team2['r_score'], 'points' => $team2['points'], 'teamId' => $match['a_team'], 'seasonId' => $match['season'], 'tableId' => $match['in_table']), 'sport'));
+                            self::addMatchToTable($match);
                             parent::db()->execute(parent::query()->get('updateTableIdInStatsByMid', array('tableId' => $match['in_table'], 'mid' => $match['id']), 'sport'));
                         }
                     } else {
