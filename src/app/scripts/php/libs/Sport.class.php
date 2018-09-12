@@ -1517,16 +1517,16 @@
                 }
 
                 $return .= ''
-                        . '<form name="table-detaill-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                        . '<div class="gray-box">'
+                . '<form name="table-detaill-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                    . '<div class="gray-box">'
                         . '<label for="table-detail-name" class="w100">' . $rb->get('tables.name') . ':</label>'
                         . '<input type="text" name="table-detail-name" id="table-detail-name" value="' . $table['name'] . '" />'
-                        . '</div>'
-                        . '<div class="gray-box">'
+                    . '</div>'
+                    . '<div class="gray-box">'
                         . '<input type="hidden" name="table-id" value="' . $table['id'] . '" />'
                         . '<input type="submit" name="table-submit" value="' . $rb->get('table.submit') . '" />'
-                        . '</div>'
-                        . '</form>';
+                    . '</div>'
+                . '</form>';
 
                 if ($useFrames == "false") {
                     return $return;
