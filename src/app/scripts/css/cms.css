@@ -18,6 +18,10 @@ label[title]::after {
     margin-left: 3px;
 }
 
+label[title^=Obsolete] {
+    color: #888;
+}
+
 input, select, textarea {
     border: 2px solid #cccccc;
     background: white;
