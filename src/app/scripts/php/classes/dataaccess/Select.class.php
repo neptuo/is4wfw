@@ -16,6 +16,8 @@ class Select{
 	public function tableAlias($tableAlias) {
 		$this->tableAlias = $tableAlias;
 		$this->alias = $this->tableAlias != '' ? '`' . $this->tableAlias . '`' : '';
+		
+		return $this;
 	}
 	
 	/*
