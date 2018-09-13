@@ -2951,7 +2951,7 @@
             }
 
             $stateSql = self::mapStateToPlayedSqlWhere($state);
-            if ($stateSql == null) {
+            if ($stateSql === null) {
                 return parent::getError('Not valid "state" attribute in s:matches.');
             }
 
