@@ -675,7 +675,8 @@
 			return ''
 			. '<form method="post">'
 				. '<input type="hidden" name="update-version" value="' . $version . '" />'
-				. '<input type="image" name="update" value="update" class="confirm" title="' . 'Update application to version ' . $version . '" src="~/images/icons/arrow_right.png" />'
+				. '<input type="hidden" name="update" value="update" />'
+				. '<input type="image" class="confirm" title="' . 'Update application to version ' . $version . '" src="~/images/icons/arrow_right.png" />'
 			. '</form>';
 		}
 
