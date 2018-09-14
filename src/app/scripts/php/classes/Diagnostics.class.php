@@ -42,7 +42,7 @@
 			return ''
 			.'<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
 				.'<div style="color: red; font-weight: bold;">Script duration:</div>'
-				.'<div>'.self::getDuration().'s</div>'
+				.'<div>' . round(self::getDuration(), 2) . 's</div>'
 			.'</div>';
 		}
 	}
