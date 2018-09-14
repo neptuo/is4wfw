@@ -9,8 +9,11 @@ class Select{
 	private $tableAlias;
 	private $alias;
 
+	private static $TableAliasTemplate = '{tableAlias}';
+
 	public function __construct($dataAccess) {
 		$this->dataAccess = $dataAccess;
+		self::tableAlias(Select::$TableAliasTemplate);
 	}
 
 	public function tableAlias($tableAlias) {
@@ -184,7 +187,10 @@ class Select{
 	 * funkce vrátí vytvořený string	 * 
 	 */
 	public function result(){
-		return $this->result;
+		$result = $this->result;
+		$result = str_replace(Select::$TableAliasTemplate, $this->tableAlias, $result);
+
+		return $result;
 	}
 	/*
 	 * funkce smaže nastavený string

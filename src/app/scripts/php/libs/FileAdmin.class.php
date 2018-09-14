@@ -106,7 +106,7 @@
 			if ($dirId >= 0) {
 				while ($dirId != 0) {
 					parent::db()->getDataAccess()->disableCache();
-					$dirInfo = parent::dao('Directory')->select(parent::select()->where('id', '=', $dirId)->result(), false, array($itemPath, 'parent_id'));
+					$dirInfo = parent::dao('Directory')->select(parent::select()->where('id', '=', $dirId), false, array($itemPath, 'parent_id'));
 					parent::db()->getDataAccess()->enableCache();
 					if (count($dirInfo) == 1) {
 						$dirId = $dirInfo[0]['parent_id'];
@@ -454,7 +454,7 @@
 				$select = $select->conjunct('id', '!=', $dataItem['id']);
 			}
 			
-			$existing = parent::dao('File')->select($select->result());
+			$existing = parent::dao('File')->select($select);
 			if(count($existing) > 0) {
 				return parent::rb('file.notuniquename').' "'.$dataItem['name'].'.'.self::getFileExtension($dataItem).'"';
 			}
@@ -630,7 +630,7 @@
 				$select = $select->conjunct('id', '!=', $dataItem['id']);
 			}
 			
-			$existing = parent::dao('Directory')->select($select->result());
+			$existing = parent::dao('Directory')->select($select);
 			if(count($existing) > 0) {
 				return parent::rb('dir.notuniquename').' "'.$dataItem['name'].'"';
 			}

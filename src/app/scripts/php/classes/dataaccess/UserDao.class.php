@@ -24,7 +24,7 @@ class UserDao extends AbstractDao {
 	
 	
 	public function getByLogin($login, $password) {
-		$select = Select::factory(self::dataAccess())->where('login', '=', $login)->conjunct('password', '=', $password);
+		$select = Select::factory(self::dataAccess())->tableAlias($this->getTableAlias())->where('login', '=', $login)->conjunct('password', '=', $password);
 		
 		$sql = self::selectSql($select->result(), true);
 		return $this->dataAccess->fetchSingle($sql);

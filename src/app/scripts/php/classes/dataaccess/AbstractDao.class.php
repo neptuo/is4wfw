@@ -114,6 +114,10 @@ abstract class AbstractDao {
 		}
 	}
 
+	protected function selectObjectToResult($selectObject) {
+		return $selectObject != null ? $selectObject->tableAlias($this->getTableAlias())->result() : null;
+	}
+
 	protected function countSql($select = null) {
 		$params = array($this->getDatabase(), $this->getTableName(), $this->getTableAlias());
 		$return = self::setString($this->countSQL, $params); 
@@ -156,13 +160,13 @@ abstract class AbstractDao {
 		return $this->dataAccess->getErrorCode();
 	}
 	
-	public function select($select = null, $distinct = false, $fields = null) {
-		$sql = self::selectSql($select, $distinct, $fields);
+	public function select($selectObject = null, $distinct = false, $fields = null) {
+		$sql = self::selectSql(self::selectObjectToResult($selectObject), $distinct, $fields);
 		return $this->dataAccess->fetchAll($sql);
 	}
 	
-	public function selectSingle($select = null, $distinct = false, $fields = null) {
-		$sql = self::selectSql($select, $distinct, $fields);
+	public function selectSingle($selectObject = null, $distinct = false, $fields = null) {
+		$sql = self::selectSql(self::selectObjectToResult($selectObject), $distinct, $fields);
 		return $this->dataAccess->fetchSingle($sql);
 	}
 	
@@ -189,12 +193,12 @@ abstract class AbstractDao {
 	}
 	
 	public function getList($selectObject = null, $distinct = false) {
-		$sql = self::selectSql($selectObject != null ? $selectObject->result() : null, $distinct);
+		$sql = self::selectSql(self::selectObjectToResult($selectObject), $distinct);
 		return $this->dataAccess->fetchAll($sql);
 	}
 
 	public function count($selectObject = null) {
-		$sql = self::countSql($selectObject != null ? $selectObject->result() : null);
+		$sql = self::countSql(self::selectObjectToResult($selectObject));
 		$data = $this->dataAccess->fetchSingle($sql);
 		return $data['count'];
 	}
