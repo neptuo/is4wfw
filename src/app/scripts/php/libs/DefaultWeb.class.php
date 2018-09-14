@@ -28,10 +28,10 @@
 
         /**
          *
-         *  Handle caching on/off.
+         *  Handle page output caching on/off.
          *     
          */
-        private $IsCached = true;
+        private $IsCached = false;
         /**
          *
          * 	Path to cached file.
@@ -1006,6 +1006,8 @@
             }
         }
 
+        
+
         /**
          *
          *  Flushes page content to output.
@@ -1032,35 +1034,37 @@
 
             // Diagnostics
             $diacont = "";
-            if (array_key_exists('mem-stats', $_GET)) {
-                $diacont = $this->Diagnostics->printMemoryStats();
-            }
-            if (array_key_exists('duration-stats', $_GET)) {
-                $diacont .= $this->Diagnostics->printDuration();
-            }
-            if (array_key_exists('query-stats', $_GET)) {
-                $diacont .= ''
-                . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                    . '<div style="color: red; font-weight: bold;">Database queries:</div>'
-                    . '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
-                . '</div>';
-            }
-            if (array_key_exists('query-list', $_GET)) {
-                foreach (parent::db()->getDataAccess()->getQueries() as $key => $query) {
+            if (!$this->IsCached) {
+                if (array_key_exists('mem-stats', $_GET)) {
+                    $diacont = $this->Diagnostics->printMemoryStats();
+                }
+                if (array_key_exists('duration-stats', $_GET)) {
+                    $diacont .= $this->Diagnostics->printDuration();
+                }
+                if (array_key_exists('query-stats', $_GET)) {
                     $diacont .= ''
                     . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                        . '<div style="color: red; font-weight: bold;">Query ' . $key . ':</div>'
-                        . '<div><code>' . $query . '</code></div>'
+                        . '<div style="color: red; font-weight: bold;">Database queries:</div>'
+                        . '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
                     . '</div>';
                 }
+                if (array_key_exists('query-list', $_GET)) {
+                    foreach (parent::db()->getDataAccess()->getQueries() as $key => $query) {
+                        $diacont .= ''
+                        . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
+                            . '<div style="color: red; font-weight: bold;">Query ' . $key . ':</div>'
+                            . '<div><code>' . $query . '</code></div>'
+                        . '</div>';
+                    }
 
-            }
-            if (strlen($this->PageLog) != 0) {
-                $diacont .= ''
-                . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                    . '<div style="color: red; font-weight: bold;">Page Log:</div>'
-                    . '<div>' . $this->PageLog . '</div>'
-                . '</div>';
+                }
+                if (strlen($this->PageLog) != 0) {
+                    $diacont .= ''
+                    . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
+                        . '<div style="color: red; font-weight: bold;">Page Log:</div>'
+                        . '<div>' . $this->PageLog . '</div>'
+                    . '</div>';
+                }
             }
 
             $areHeadersSent = headers_sent();
@@ -1099,9 +1103,9 @@
                 }
 
                 $return = ''
-                . $doctype
+                    . $doctype
                     . '<head>'
-                        . (($areHeadersSent) ? '<meta http-equiv="content-type" content="text/html; charset=utf-8" />' : '')
+                        . (($areHeadersSent || $this->IsCached) ? '<meta http-equiv="content-type" content="' . $this->ContentType . '; charset=utf-8" />' : '')
                         . '<meta name="description" content="' . $this->PageTitle . '" />'
                         . '<meta name="keywords" content="' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo" />'
                         . (($areHeadersSent && $isLang) ? '<meta http-equiv="Content-language" content="' . $lang . '" />' : '')
