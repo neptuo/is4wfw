@@ -54,6 +54,7 @@ function init(event) {
 	initConfirm(event);
 	//initDataTables(event);
 	
+	initAutoSubmitForm();
 	initWebprojectSelectButton(event);
 	//initAjaxMenu(event).loadDefault();
 	//initAjaxLinks(event);
@@ -706,6 +707,57 @@ function initClearCache(event) {
 		submit.appendChild(document.createTextNode(' '));
 		submit.appendChild(unselectAll);
 		initClearCacheDone = true;
+	}
+}
+
+function initAutoSubmitForm() {
+	var forms = document.getElementsByTagName('form');
+	for (var i = 0; i < forms.length; i ++) {
+		var form = forms[i];
+
+		if (form.className.indexOf('auto-submit') >= 0) {
+			var inputs = form.getElementsByTagName('input');
+			var buttons = form.getElementsByTagName('button');
+			var textAreas = form.getElementsByTagName('textarea');
+			var selects = form.getElementsByTagName('select');
+			var submit = null
+
+			for (let j = 0; j < inputs.length; j++) {
+				const element = inputs[j];
+
+				if (element.type == 'submit') {
+					submit = element;
+				}
+			}
+
+			if (submit == null) {
+				continue;
+			}
+
+			var handler = submit.click.bind(submit);
+
+			for (let j = 0; j < inputs.length; j++) {
+				const element = inputs[j];
+				if (element.type != 'submit' && element.type != 'button') {
+					element.addEventListener('change', handler, false);
+				} else {
+
+					element.style.display = 'none';
+				}
+			}
+			for (let j = 0; j < buttons.length; j++) {
+				const element = buttons[j];
+				element.style.display = 'none';
+			}
+			for (let j = 0; j < textAreas.length; j++) {
+				const element = textAreas[j];
+				element.addEventListener('change', handler, false);
+			}
+			for (let j = 0; j < selects.length; j++) {
+				const element = selects[j];
+				element.addEventListener('change', handler, false);
+			}
+		}
 	}
 }
 
