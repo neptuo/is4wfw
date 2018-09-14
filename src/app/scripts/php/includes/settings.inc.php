@@ -27,6 +27,6 @@
     define("WEB_R_ADDCHILD", 104);
     define("WEB_GROUP", "web");
 
-    define("IS_DEVELOPMENT_MODE", $_ENV['IS4WFW_DEVELOPMENT'] == 'true');
+    define("IS_DEVELOPMENT_MODE", array_key_exists('IS4WFW_DEVELOPMENT', $_ENV) && $_ENV['IS4WFW_DEVELOPMENT'] == 'true');
 
 ?>

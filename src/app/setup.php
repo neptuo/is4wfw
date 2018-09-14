@@ -21,7 +21,7 @@ function ensureDirectory($path) {
 $importFiles = scandir('data/default', SCANDIR_SORT_DESCENDING);
 $importFilePath = 'data/default/' . $importFiles[0];
 
-$isDevelopment = $_ENV['IS4WFW_DEVELOPMENT'] == 'true';
+$isDevelopment = array_key_exists('IS4WFW_DEVELOPMENT', $_ENV) && $_ENV['IS4WFW_DEVELOPMENT'] == 'true';
 
 if (count($_POST) == 0) {
     $_POST['database-hostname'] = '127.0.0.1';
