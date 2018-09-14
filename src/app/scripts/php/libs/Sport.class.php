@@ -86,16 +86,16 @@
 
             if (self::isSetProjectId()) {
                 $return .= ''
-                        . '<div class="select-season">'
-                        . '<form name="select-season" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                . '<div class="select-season">'
+                    . '<form name="select-season" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="auto-submit">'
                         . '<label for="select-season">' . $rb->get('season.selectlab') . ':</label> '
                         . '<select name="select-season" id="select-season">'
                         . '<option value="0">' . $rb->get('season.all') . '</option>'
-                        . self::getSeasonsOptions(0, 0, self::getSeasonId())
+                            . self::getSeasonsOptions(0, 0, self::getSeasonId())
                         . '</select> '
                         . '<input type="submit" name="select-season-submit" value="' . $rb->get('season.select') . '" />'
-                        . '</form>'
-                        . '</div>';
+                    . '</form>'
+                . '</div>';
             } else {
                 if ($showMsg != 'false') {
                     $return .= parent::getError($rb->get('project.notset'));
@@ -134,16 +134,16 @@
 
             if (self::isSetProjectId()) {
                 $return .= ''
-                        . '<div class="select-table">'
-                        . '<form name="select-table" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                . '<div class="select-table">'
+                    . '<form name="select-table" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="auto-submit">'
                         . '<label for="select-table">' . $rb->get('tables.selectlab') . ':</label> '
                         . '<select name="select-table" id="select-table">'
                         . '<option value="0">' . $rb->get('tables.all') . '</option>'
-                        . self::getTablesOptions(self::getTableId())
+                            . self::getTablesOptions(self::getTableId())
                         . '</select> '
                         . '<input type="submit" name="select-table-submit" value="' . $rb->get('tables.select') . '" />'
-                        . '</form>'
-                        . '</div>';
+                    . '</form>'
+                . '</div>';
             } else {
                 if ($showMsg != 'false') {
                     $return .= parent::getError($rb->get('project.notset'));
@@ -182,16 +182,16 @@
 
             if (self::isSetProjectId()) {
                 $return .= ''
-                        . '<div class="select-team">'
-                        . '<form name="select-team" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                . '<div class="select-team">'
+                    . '<form name="select-team" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="auto-submit">'
                         . '<label for="select-team">' . $rb->get('team.selectlab') . ':</label> '
                         . '<select name="select-team" id="select-team">'
                         . '<option value="0">' . $rb->get('team.all') . '</option>'
-                        . self::getTeamsOptions(self::getTeamId())
+                            . self::getTeamsOptions(self::getTeamId())
                         . '</select> '
                         . '<input type="submit" name="select-team-submit" value="' . $rb->get('team.select') . '" />'
-                        . '</form>'
-                        . '</div>';
+                    . '</form>'
+                . '</div>';
             } else {
                 if ($showMsg != 'false') {
                     $return .= parent::getError($rb->get('project.notset'));
@@ -229,15 +229,15 @@
 
             if ($projectsOptions != '') {
                 $return .= ''
-                        . '<div class="gray-box-float">'
-                        . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                . '<div class="gray-box-float">'
+                    . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="auto-submit">'
                         . '<label for="select-project">' . $rb->get('project.selectlab') . ':</label> '
                         . '<select name="select-project" id="select-project" class="w160">'
-                        . $projectsOptions
+                            . $projectsOptions
                         . '</select> '
                         . '<input type="submit" name="select-project-submit" value="' . $rb->get('project.select') . '" />'
-                        . '</form>'
-                        . '</div>';
+                    . '</form>'
+                . '</div>';
             } else {
                 if ($showMsg != 'false') {
                     $return .= parent::getWarning($rb->get('projects.nodata'));
@@ -1244,70 +1244,71 @@
                     $teamId = $player['team'];
                     $updateType = 'add';
                 } elseif ($_POST['player-new'] == $rb->get('players.new')) {
+                    $teamId = self::getTeamId();
                     $updateType = 'add';
                 }
 
                 $return .= ''
-                        . '<div class="player-edit-form">'
-                        . '<form name="player-edit-form" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                . '<div class="player-edit-form">'
+                    . '<form name="player-edit-form" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<div class="player-edit-name">'
-                        . '<label for="player-edit-name">' . $rb->get('players.form.name') . ':</label>'
-                        . '<input type="text" name="player-edit-name" id="player-edit-name" value="' . $player['name'] . '" />'
+                            . '<label for="player-edit-name">' . $rb->get('players.form.name') . ':</label>'
+                            . '<input type="text" name="player-edit-name" id="player-edit-name" value="' . $player['name'] . '" />'
                         . '</div>'
                         . '<div class="player-edit-surname">'
-                        . '<label for="player-edit-surname">' . $rb->get('players.form.surname') . ':</label>'
-                        . '<input type="text" name="player-edit-surname" id="player-edit-surname" value="' . $player['surname'] . '" />'
+                            . '<label for="player-edit-surname">' . $rb->get('players.form.surname') . ':</label>'
+                            . '<input type="text" name="player-edit-surname" id="player-edit-surname" value="' . $player['surname'] . '" />'
                         . '</div>'
                         . '<div class="player-edit-surname">'
-                        . '<label for="player-edit-url">' . $rb->get('players.form.url') . ':</label>'
-                        . '<input type="text" name="player-edit-url" id="player-edit-url" value="' . $player['url'] . '" />'
+                            . '<label for="player-edit-url">' . $rb->get('players.form.url') . ':</label>'
+                            . '<input type="text" name="player-edit-url" id="player-edit-url" value="' . $player['url'] . '" />'
                         . '</div>'
                         . '<div class="player-edit-birthyear">'
-                        . '<label for="player-edit-birthyear">' . $rb->get('players.form.birthyear') . ':</label>'
-                        . '<input type="text" name="player-edit-birthyear" id="player-edit-birthyear" value="' . $player['birthyear'] . '" />'
+                            . '<label for="player-edit-birthyear">' . $rb->get('players.form.birthyear') . ':</label>'
+                            . '<input type="text" name="player-edit-birthyear" id="player-edit-birthyear" value="' . $player['birthyear'] . '" />'
                         . '</div>'
                         . '<div class="player-edit-number">'
-                        . '<label for="player-edit-number">' . $rb->get('players.form.number') . ':</label>'
-                        . '<input type="text" name="player-edit-number" id="player-edit-number" value="' . $player['number'] . '" />'
+                            . '<label for="player-edit-number">' . $rb->get('players.form.number') . ':</label>'
+                            . '<input type="text" name="player-edit-number" id="player-edit-number" value="' . $player['number'] . '" />'
                         . '</div>'
                         . '<div class="player-edit-position">'
-                        . '<label for="player-edit-position">' . $rb->get('players.form.position') . ':</label>'
-                        . '<select name="player-edit-position" id="player-edit-position">'
-                        . '<option value="1"' . ($player['position'] == 1 ? ' selected="selected"' : '') . '>' . $rb->get('player.position-goa') . '</option>'
-                        . '<option value="2"' . ($player['position'] == 2 ? ' selected="selected"' : '') . '>' . $rb->get('player.position-def') . '</option>'
-                        . '<option value="3"' . ($player['position'] == 3 ? ' selected="selected"' : '') . '>' . $rb->get('player.position-att') . '</option>'
-                        . '</select>'
+                            . '<label for="player-edit-position">' . $rb->get('players.form.position') . ':</label>'
+                            . '<select name="player-edit-position" id="player-edit-position">'
+                                . '<option value="1"' . ($player['position'] == 1 ? ' selected="selected"' : '') . '>' . $rb->get('player.position-goa') . '</option>'
+                                . '<option value="2"' . ($player['position'] == 2 ? ' selected="selected"' : '') . '>' . $rb->get('player.position-def') . '</option>'
+                                . '<option value="3"' . ($player['position'] == 3 ? ' selected="selected"' : '') . '>' . $rb->get('player.position-att') . '</option>'
+                            . '</select>'
                         . '</div>'
                         . '<div class="player-edit-photo">'
-                        . '<label for="player-edit-photo">' . $rb->get('players.form.photo') . '</label>'
-                        . '<input type="text" name="player-edit-photo" id="player-edit-photo" value="' . $player['photo'] . '" />'
+                            . '<label for="player-edit-photo">' . $rb->get('players.form.photo') . '</label>'
+                            . '<input type="text" name="player-edit-photo" id="player-edit-photo" value="' . $player['photo'] . '" />'
                         . '</div>'
                         . '<div class="player-edit-season">'
-                        . '<label for="player-edit-season">' . $rb->get('players.form.season') . '</label>'
-                        . '<select name="player-edit-season" id="player-edit-season">'
-                        . self::getSeasonsOptions(0, 0, $seasonId)
+                            . '<label for="player-edit-season">' . $rb->get('players.form.season') . '</label>'
+                            . '<select name="player-edit-season" id="player-edit-season">'
+                            . self::getSeasonsOptions(0, 0, $seasonId)
                         . '</select>'
                         . '</div>'
                         . '<div class="player-edit-team">'
-                        . '<label for="player-edit-team">' . $rb->get('players.form.team') . '</label>'
-                        . '<select name="player-edit-team" id="player-edit-team">'
-                        . self::getTeamsOptions($teamId)
+                            . '<label for="player-edit-team">' . $rb->get('players.form.team') . '</label>'
+                            . '<select name="player-edit-team" id="player-edit-team">'
+                            . self::getTeamsOptions($teamId)
                         . '</select>'
                         . '</div>'
                         . '<div class="gray-box">'
-                        . '<label for="player-edit-onloan">' . $rb->get('players.form.onloan') . '</label>'
-                        . '<input type="checkbox" name="player-edit-onloan" id="player-edit-onloan" ' . ($player['on_loan'] == 1 ? ' checked="checked"' : '') . '/>'
+                            . '<label for="player-edit-onloan">' . $rb->get('players.form.onloan') . '</label>'
+                            . '<input type="checkbox" name="player-edit-onloan" id="player-edit-onloan" ' . ($player['on_loan'] == 1 ? ' checked="checked"' : '') . '/>'
                         . '</div>'
                         . '<div class="player-edt-submit">'
-                        . '<input type="hidden" name="player-id" value="' . $playerId . '" />'
-                        . '<input type="hidden" name="season-id" value="' . $seasonId . '" />'
-                        . '<input type="hidden" name="team-id" value="' . $teamId . '" />'
-                        . '<input type="hidden" name="update-type" value="' . $updateType . '" />'
-                        . '<input type="submit" name="player-save" value="' . $rb->get('player.form.save') . '" />'
+                            . '<input type="hidden" name="player-id" value="' . $playerId . '" />'
+                            . '<input type="hidden" name="season-id" value="' . $seasonId . '" />'
+                            . '<input type="hidden" name="team-id" value="' . $teamId . '" />'
+                            . '<input type="hidden" name="update-type" value="' . $updateType . '" />'
+                            . '<input type="submit" name="player-save" value="' . $rb->get('player.form.save') . '" />'
                         . '</div>'
-                        . '</form>'
-                        . '</div>'
-                        . '<div class="clear"></div>';
+                    . '</form>'
+                . '</div>'
+                . '<div class="clear"></div>';
 
                 if ($useFrames == "false") {
                     return $return;
