@@ -219,6 +219,11 @@
         }
 
         public function processRequestNG() {
+            if (array_key_exists('query-list', $_GET)) {
+                parent::db()->getDataAccess()->saveQueries(true);
+            }
+
+
             $this->UrlResolver = new UrlResolver();
             $this->UrlCache = new UrlCache();
 
@@ -1040,6 +1045,16 @@
                     . '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
                 . '</div>';
             }
+            if (array_key_exists('query-list', $_GET)) {
+                foreach (parent::db()->getDataAccess()->getQueries() as $key => $query) {
+                    $diacont .= ''
+                    . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
+                        . '<div style="color: red; font-weight: bold;">Query ' . $key . ':</div>'
+                        . '<div><code>' . $query . '</code></div>'
+                    . '</div>';
+                }
+
+            }
             if (strlen($this->PageLog) != 0) {
                 $diacont .= ''
                 . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
@@ -1306,6 +1321,9 @@
             }
             if (array_key_exists('query-stats', $_GET)) {
                 $url = self::addUrlParameter($url, 'query-stats', '');
+            }
+            if (array_key_exists('query-list', $_GET)) {
+                $url = self::addUrlParameter($url, 'query-list', '');
             }
             if (array_key_exists('auto-login-ignore', $_GET)) {
                 $url = self::addUrlParameter($url, 'auto-login-ignore', '');

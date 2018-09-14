@@ -365,10 +365,11 @@
             .'<div class="gray-box">'
                 .'<strong>There are some special GET parameters in the system, here is list of them: </strong>'
                 .'<ul>'
-                    .'<li>auto-login-ignore - ignore auto-login parameteres for login:login</li>'
-                    .'<li>duration-stats - time required to generate response</li>'
-                    .'<li>mem-stats - wfw memory cosumption stats</li>'
-                    .'<li>query-stats - counts database queries per one request</li>'
+                    .'<li><strong>auto-login-ignore</strong> - ignore auto-login parameteres for login:login.</li>'
+                    .'<li><strong>duration-stats</strong> - time required to generate response.</li>'
+                    .'<li><strong>mem-stats</strong> - wfw memory cosumption stats.</li>'
+                    .'<li><strong>query-stats</strong> - counts database queries per one request.</li>'
+                    .'<li><strong>query-list</strong> - prints all SQL queries.</li>'
                 .'</ul>'
             .'</div>';
             

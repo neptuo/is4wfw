@@ -16,6 +16,9 @@ class DataAccess {
     private $queriesPerRequest = 0;
 	private $cacheResults = 'REQUEST';
 	private $oldCacheStrategy = '';
+
+	private $saveQueries = false;
+	private $queries = array();
 	
 	private $inTransaction = false;
   
@@ -102,23 +105,27 @@ class DataAccess {
 		$this->errorMessage = '';
 		$this->errorCode = 0;
 			
-		if($this->isOpened) {
-			if($showQuery || $this->mockMode) {
+		if ($this->isOpened) {
+			if ($showQuery || $this->mockMode) {
 				$pquery = str_replace('<', '&lt;', str_replace('>', '&gt;', $query));
-				if($forceImmediateOutput || $this->mockMode) {
+				if ($forceImmediateOutput || $this->mockMode) {
 					echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$pquery."</code></div>";
 				} else {
 					$webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$pquery."</code></div>";
 				}
-			}
+			} 
 			  
-			if(!$notExecuteQuery && !$this->mockMode) {
+			if (!$notExecuteQuery && !$this->mockMode) {
+				if ($this->saveQueries) {
+					array_push($this->queries, $query);
+				}
+				
 				$result = @mysqli_query($this->connection, $query);
 				
 				self::tryToProcessError($query);
 			}
 			
-			return ;
+			return;
 		} else {
 			trigger_error("Connection is closed, can't execute query!", E_USER_WARNING);
 		}
@@ -140,17 +147,17 @@ class DataAccess {
     	global $webObject;
 		global $requestStorage;
 		
-		if($this->isOpened) {
-			if($showQuery || $this->mockMode) {
-				if($forceImmediateOutput || $this->mockMode) {
+		if ($this->isOpened) {
+			if ($showQuery || $this->mockMode) {
+				if ($forceImmediateOutput || $this->mockMode) {
 					echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
 			  	} else {
 					$webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$query."</code></div>";
 				}
-			}
+			} 
 			  
 			$hashQuery = '';
-			if(!$notExecuteQuery) {
+			if (!$notExecuteQuery) {
 				$return = array();
 				$result = array();
 				$hashQuery = sha1($query);
@@ -162,11 +169,15 @@ class DataAccess {
 				} 
 				
 				$this->queriesPerRequest ++;
+				if ($this->saveQueries) {
+					array_push($this->queries, $query);
+				}
+
 				$result = mysqli_query($this->connection, $query);
   				
   				self::tryToProcessError($query);
   				
-				if($this->errorCode == 0) {
+				if ($this->errorCode == 0) {
 					$this->rowsCount = mysqli_num_rows($result);
 					while($row = mysqli_fetch_assoc($result)) {
 						$return[] = $row;
@@ -174,9 +185,9 @@ class DataAccess {
 				}
 			}
 			
-			if($this->errorCode == 0) {
-				if($printOutput || $this->mockMode) {
-					if($forceImmediateOutput || $this->mockMode) {
+			if ($this->errorCode == 0) {
+				if ($printOutput || $this->mockMode) {
+					if ($forceImmediateOutput || $this->mockMode) {
 						echo "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px; overflow: auto;\"><strong style=\"color: red;\">SQL output:</strong><pre>";
 						$str = print_r($return, true);
 						echo htmlentities($str);
@@ -189,7 +200,7 @@ class DataAccess {
 					}
 				}
 				
-				if($this->cacheResults == 'REQUEST' && $requestStorage != null) {
+				if ($this->cacheResults == 'REQUEST' && $requestStorage != null) {
 					$requestStorage->set($hashQuery, $return, 'database-cache');
 				}
 				return $return;
@@ -215,7 +226,7 @@ class DataAccess {
      */                   
     public function fetchSingle($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
     	$data = self::fetchAll($query, $showQuery, $printOutput, $forceImmediateOutput, $notExecuteQuery);
-    	if(count($data) > 0) {
+    	if (count($data) > 0) {
     		return $data[0];
     	} else {
     		return array();
@@ -315,6 +326,14 @@ class DataAccess {
 
 	public function escape($value) {
 		return mysqli_real_escape_string($this->connection, $value);
+	}
+
+	public function saveQueries($value) {
+		$this->saveQueries = $value;
+	}
+
+	public function getQueries() {
+		return $this->queries;
 	}
 }
 
