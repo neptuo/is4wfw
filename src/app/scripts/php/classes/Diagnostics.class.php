@@ -1,5 +1,7 @@
 <?php
 
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/Formatter.class.php");
+
 	class Diagnostics {
 		
 		private $initMemory = 0;
@@ -22,13 +24,13 @@
 			return ''
 			.'<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
 				.'<div style="color: red; font-weight: bold;">Initial memory used:</div>'
-				.'<div>'.$this->initMemory.'B</div>'
+				.'<div>' . Formatter::toByteString($this->initMemory) . '</div>'
 				.'<div style="color: red; font-weight: bold;">Current memory used:</div>'
-				.'<div>'.memory_get_usage().'B</div>'
+				.'<div>' . Formatter::toByteString(memory_get_usage()) . '</div>'
 				.'<div style="color: red; font-weight: bold;">Difference:</div>'
-				.'<div>'.self::getMyUsedMemory().'B</div>'
+				.'<div>' . Formatter::toByteString(self::getMyUsedMemory()) . '</div>'
 				.'<div style="color: red; font-weight: bold;">Peak memory:</div>'
-				.'<div>'.memory_get_peak_usage().'B</div>'
+				.'<div>' . Formatter::toByteString(memory_get_peak_usage()) . '</div>'
 			.'</div>';
 		}
 		
