@@ -49,15 +49,15 @@
                 case "week": $lastTime = time() - (60 * 60 * 24 * 7); break;
             }
 
-            $counterItem = $dbObject->fetchAll("SELECT `timestamp`, `count` FROM `counter` WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$id.";");
+            $counterItem = $dbObject->fetchAll("SELECT `timestamp`, `count` FROM `counter` WHERE `ip` = \"".$userIp."\" AND `counter_id` = " . $dbObject->escape($id) . ";");
             if (count($counterItem) > 0) {
                 if ($counterItem[0]['timestamp'] > $lastTime) {
-                    $dbObject->execute("UPDATE `counter` SET `timestamp` = ".time()." WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$id.";");
+                    $dbObject->execute("UPDATE `counter` SET `timestamp` = ".time()." WHERE `ip` = \"".$userIp."\" AND `counter_id` = " . $dbObject->escape($id) . ";");
                 } else {
-                    $dbObject->execute("UPDATE `counter` SET `timestamp` = ".time().", `count` = ".($counterItem[0]['count'] + 1)." WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$id.";");
+                    $dbObject->execute("UPDATE `counter` SET `timestamp` = ".time().", `count` = " . ($counterItem[0]['count'] + 1) . " WHERE `ip` = \"".$userIp."\" AND `counter_id` = " . $dbObject->escape($id) . ";");
                 }
             } else {
-                $dbObject->execute("INSERT INTO `counter`(`ip`, `timestamp`, `count`, `counter_id`) VALUES (\"".$userIp."\", ".time().", 1, ".$id.");");
+                $dbObject->execute("INSERT INTO `counter`(`ip`, `timestamp`, `count`, `counter_id`) VALUES (\"".$userIp."\", ".time().", 1, " . $dbObject->escape($id) . ");");
             }
         }
 
@@ -107,7 +107,7 @@
                 return;
             }
                 
-            $cols = $dbObject->fetchAll("SELECT `ip`, `timestamp`, `count` FROM `counter` WHERE `counter_id` = ".$id.";");
+            $cols = $dbObject->fetchAll("SELECT `ip`, `timestamp`, `count` FROM `counter` WHERE `counter_id` = " . $dbObject->escape($id) . ";");
             $_SESSION['counter'] = array();
             $_SESSION['counter']['all'] = 0;
             $_SESSION['counter']['visitors'] = 0;
@@ -179,7 +179,7 @@
                 $every = "day";
             }
             
-            $counterItem = $dbObject->fetchAll("SELECT `timestamp` FROM `counter` WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$counterId.";");
+            $counterItem = $dbObject->fetchAll("SELECT `timestamp` FROM `counter` WHERE `ip` = \"".$userIp."\" AND `counter_id` = " . $dbObject->escape($counterId) . ";");
             if (count($counterItem) > 0) {
                 $lastTime = time();
                 switch ($every) {
@@ -209,7 +209,7 @@
                 $every = "day";
             }
             
-            $counterItem = $dbObject->fetchAll("SELECT `timestamp` FROM `counter` WHERE `ip` = \"".$userIp."\" AND `counter_id` = ".$counterId.";");
+            $counterItem = $dbObject->fetchAll("SELECT `timestamp` FROM `counter` WHERE `ip` = \"".$userIp."\" AND `counter_id` = " . $dbObject->escape($counterId) . ";");
             if (count($counterItem) > 0) {
                 $lastTime = time();
                 switch($every) {
