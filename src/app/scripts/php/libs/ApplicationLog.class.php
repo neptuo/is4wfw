@@ -19,13 +19,11 @@
 		/**
 		 *
 		 *	Shows list of application logs
-		*	C tag.
-		*
-		*/
+		 *	C tag.
+		 *
+		 */
 		public function listLogs($useFrames = false, $showMsg = false) {
 			$return = '';
-			
-			//$return .= parent::getWarning('Coming soon ...');
 			
 			$logFiles = self::fileList(LOGS_PATH, array('log'), false);
 			$data = array();
@@ -33,32 +31,34 @@
 			$projects = parent::db()->fetchAll('select `id`, `name` from `web_project` order by `id`;');
 			
 			foreach($logFiles as $file) {
-				$arr = self::parseLogName($file);
-				if($arr[0] != 0) {
-					$id = $arr[0];
-					foreach($projects as $prj) {
-						if($arr[0] == $prj['id']) {
-							$arr[0] = $prj['name'];
+				$item = self::parseLogName($file);
+				if ($item[0] != 0) {
+					$id = $item[0];
+					foreach ($projects as $prj) {
+						if ($item[0] == $prj['id']) {
+							$item[0] = $prj['name'];
 							break;
 						}
 					}
-					if($arr[0] == $id) {
-						$arr[0] = 'Unknown project [id='.$id.']';
+					if ($item[0] == $id) {
+						$item[0] = 'Unknown project [id='.$id.']';
 					}
 				} else {
-					$arr[0] = 'Global log file';
+					$item[0] = 'Global log file';
 				}
 				
-				$arr[1] = date('d.m.Y', $arr[1]);
-				$arr[2] = ''
+				$item[1] = date('d.m.Y', $item[1]);
+				$item[2] = ''
 				.'<form name="show-log" action="" method="post">'
 					.'<input type="hidden" name="log-name" value="'.$file.'" />'
-					.'<input type="submit" name="show-log" value="Show log" />'
+					.'<input type="hidden" name="show-log" value="Show log" />'
+					.'<input type="image" src="~/images/page_edi.png" name="show-log" value="Show log" />'
 				.'</form>';
-				$data[] = $arr;
+
+				$data[] = $item;
 			}
 			
-			if($data != array()) {
+			if ($data != array()) {
 				$grid = new BaseGrid();
 				$grid->setHeader(array(0 => 'Project name:', 1 => 'Date:', 2 => ''));
 				$grid->addRows($data);
