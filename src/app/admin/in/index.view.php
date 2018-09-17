@@ -7,10 +7,14 @@
 			<sys:printNotes useFrames="false" showMsg="false" />
 		</fieldset>
 
-		<p>
+		<br >
+		<fieldset>
+			<legend>
+				<strong>Repository:</strong>
+			</legend>
 			<sys:repositoryLink text="Open project page at GitHub" />
 			<br />
 			<sys:repositoryIssueCreateLink text="Report a new issue" />
-		</p>
+		</fieldset>
 	</div>
 </v:template>
