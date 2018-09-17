@@ -225,15 +225,19 @@
                 }
             }
 
-            $projectsOptions = self::getProjectsOptions(self::getProjectId(), WEB_R_WRITE);
+            $projects = self::getProjectsOptions(self::getProjectId(), WEB_R_WRITE);
 
-            if ($projectsOptions != '') {
+            if ($projects['data'] != array()) {
+                if (count($projects['data']) == 1) {
+                    self::setProjectId($projects['data'][0]['id']);
+                }
+
                 $return .= ''
                 . '<div class="gray-box-float">'
-                    . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="auto-submit">'
+                    . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '"' . (count($projects['data']) > 1 ? ' class="auto-submit"' : '') . '>'
                         . '<label for="select-project">' . $rb->get('project.selectlab') . ':</label> '
                         . '<select name="select-project" id="select-project" class="w160">'
-                            . $projectsOptions
+                            . $projects['html']
                         . '</select> '
                         . '<input type="submit" name="select-project-submit" value="' . $rb->get('project.select') . '" />'
                     . '</form>'
@@ -3815,6 +3819,7 @@
             return $return;
         }
 
+        // Vrací jak vygenerované HTML, tak data; formou asociativního pole s klíči 'html' a 'data'.
         public function getProjectsOptions($prselId, $permType) {
             $return = '';
 
@@ -3824,7 +3829,7 @@
                     $return .= '<option value="' . $project['id'] . '"' . (($project['id'] == $prselId) ? ' selected="selected"' : '') . '>' . $project['name'] . '</option>';
                 }
             }
-            return $return;
+            return array('html' => $return, 'data' => $projects);
         }
 
         public function isSetProjectId() {
