@@ -287,17 +287,18 @@
             $projects = parent::db()->fetchAll(parent::query()->get('selectProjects', array(), 'sport'));
             if (count($projects) > 0) {
                 $return .= ''
-                        . '<table class="standart">'
-                        . '<tr>'
+                . '<table class="standart">'
+                    . '<tr>'
                         . '<th>' . $rb->get('projects.id') . ':</th>'
                         . '<th>' . $rb->get('projects.name') . ':</th>'
                         . '<th>' . $rb->get('projects.url') . ':</th>'
                         . '<th></th>'
-                        . '</tr>';
+                    . '</tr>';
+
                 for ($i = 0; $i < count($projects); $i++) {
                     $can = UniversalPermission::checkUserPermissions($this->UPDisc, $projects[$i]['id'], WEB_R_DELETE);
                     $return .= ''
-                            . '<tr class="' . ((($i % 2) == 1) ? 'even' : 'idle') . '">'
+                        . '<tr class="' . ((($i % 2) == 1) ? 'even' : 'idle') . '">'
                             . '<td>' . $projects[$i]['id'] . '</td>'
                             . '<td>' . $projects[$i]['name'] . '</td>'
                             . '<td>' . $projects[$i]['url'] . '</td>'
@@ -305,18 +306,21 @@
                             . ($can ? ''
                                     . '<form name="projects-edit" action="' . $actionUrl . '" method="post">'
                                     . '<input type="hidden" name="project-id" value="' . $projects[$i]['id'] . '" />'
+                                    . '<input type="hidden" name="project-edit" value="' . $rb->get('projects.edit') . '" />'
                                     . '<input type="image" src="~/images/page_edi.png" name="project-edit" value="' . $rb->get('projects.edit') . '" title="' . $rb->get('projects.edit.title') . '" />'
                                     . '</form> ' : '')
                             . ($can ? ''
                                     . '<form name="projects-delete" action="" method="post">'
                                     . '<input type="hidden" name="project-id" value="' . $projects[$i]['id'] . '" />'
+                                    . '<input type="hidden" name="project-delete" value="' . $rb->get('projects.delete') . '" />'
                                     . '<input class="confirm" type="image" src="~/images/page_del.png" name="project-delete" value="' . $rb->get('projects.delete') . '" title="' . $rb->get('projects.delete.title') . ', id ' . $projects[$i]['id'] . '" />'
                                     . '</form>' : '')
                             . '</td>'
-                            . '</tr>';
+                        . '</tr>';
                 }
+
                 $return .= ''
-                        . '</table>';
+                . '</table>';
             } else {
                 $return .= parent::getWarning($rb->get('projects.nodata'));
             }
@@ -2440,16 +2444,16 @@
                 if (count($data) > 0) {
                     foreach ($data as $key => $d) {
                         $form = ''
-                                . '<form name="rounds-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '"> '
+                            . '<form name="rounds-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '"> '
                                 . '<input type="hidden" name="round-id" value="' . $d['id'] . '" /> '
                                 . '<input type="hidden" name="round-edit" value="' . $rb->get('rounds.edit') . '" /> '
                                 . '<input type="image" src="~/images/page_edi.png" name="round-edit" value="' . $rb->get('rounds.edit') . '" title="' . $rb->get('rounds.editcap') . ', id=' . $d['id'] . '" />'
-                                . '</form> '
-                                . '<form name="rounds-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '"> '
+                            . '</form> '
+                            . '<form name="rounds-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '"> '
                                 . '<input type="hidden" name="round-id" value="' . $d['id'] . '" /> '
                                 . '<input type="hidden" name="round-delete" value="' . $rb->get('rounds.delete') . '" /> '
                                 . '<input class="confirm" type="image" src="~/images/page_del.png" name="round-delete" value="' . $rb->get('rounds.delete') . '" title="' . $rb->get('rounds.deletecap') . ', id=' . $d['id'] . '" /> '
-                                . '</form>';
+                            . '</form>';
                         $data[$key]['form'] = $form;
                         $data[$key]['visible'] = ($data[$key]['visible'] == 1 ? $rb->get('rounds.yes') : $rb->get('rounds.no'));
                     }
@@ -3823,13 +3827,15 @@
         public function getProjectsOptions($prselId, $permType) {
             $return = '';
 
+            $data = array();
             $projects = parent::db()->fetchAll('select `id`, `name` from `w_sport_project` order by `name`;');
             foreach ($projects as $project) {
                 if (UniversalPermission::checkUserPermissions($this->UPDisc, $project['id'], $permType)) {
+                    array_push($data, $project);
                     $return .= '<option value="' . $project['id'] . '"' . (($project['id'] == $prselId) ? ' selected="selected"' : '') . '>' . $project['name'] . '</option>';
                 }
             }
-            return array('html' => $return, 'data' => $projects);
+            return array('html' => $return, 'data' => $data);
         }
 
         public function isSetProjectId() {
