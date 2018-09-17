@@ -243,16 +243,25 @@ class DataAccess {
 			
 			if (is_object($logObject)) {
 				$backtrace = debug_backtrace();
-				$callstack = "\n";
+				$callstack = PHP_EOL;
 				foreach ($backtrace as $index => $item) {
-					$callstack .= 'File: ' . $item['file'] . '; at line: ' . $item['line'] . '; func: ' . $item['function'] . "\n";
+					if ($index == 0) {
+						continue;
+					}
+
+					if ($index > 1) {
+						$callstack .= PHP_EOL;
+					}
+
+					$callstack .= 'File: ' . $item['file'] . '; at line: ' . $item['line'] . '; func: ' . $item['function'];
 
 					if ($index > 5) {
 						break;
 					}
 				}
 
-				$logObject->write("Mysql query error! \nERRNO = " . $this->errorCode . ", \nERRORMSG = " . $this->errorMessage . ", \nQUERY = " . $query . ", \nCALLSTACK = " . $callstack . "\n");
+				$message = "Mysql query error! " . PHP_EOL . "ERRNO = " . $this->errorCode . ", " . PHP_EOL . "ERRORMSG = " . $this->errorMessage . ", " . PHP_EOL . "QUERY = " . $query . ", " . PHP_EOL . "CALLSTACK = " . $callstack;
+				$logObject->write($message);
 			} else {
 				echo 'Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMessage.', QUERY = '.$query.'';
 			}

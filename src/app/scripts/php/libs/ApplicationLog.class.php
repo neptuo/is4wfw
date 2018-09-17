@@ -69,7 +69,7 @@
 			if ($useFrames == "false") {
 				return $return;
 			} else {
-				return parent :: getFrame('Application Logs', $return, "", true);
+				return parent::getFrame('Application Logs', $return, "", true);
 			}
 		}
 
@@ -86,9 +86,15 @@
 				$fileName = $_POST['log-name'];
 				if (file_exists(LOGS_PATH . $fileName)) {
 					$content = file_get_contents(LOGS_PATH . $fileName);
+					$content = str_replace(PHP_EOL, "<br />", $content);
+					$content = preg_replace("([0-9][0-9]:[0-9][0-9]:[0-9][0-9])", "<br /><strong>$0</strong><br />", $content);
+					if (parent::startsWith($content, "<br />")) {
+						$content = substr($content, 6);
+					}
+
 					$return .= ''
 					.'<div id="editors" class="gray-box">'
-						.'<textarea id="robots" name="robots" rows="20">'.$content.'</textarea>'
+						.'<code>' . $content . '</code>'
 						//class="edit-area html" 
 					.'</div>';
 				} else {
@@ -99,21 +105,21 @@
 			if ($useFrames == "false") {
 				return $return;
 			} else {
-				return parent :: getFrame('Application Log', $return, "", true);
+				return parent::getFrame('Application Log', $return, "", true);
 			}
 		}
 		
 		public function fileList($folder, $fileTypes, $dirsOK) {
-			if($dir = @opendir($folder)){
+			if ($dir = @opendir($folder)){
 				$found = array();
-				while(false !== ($item = readdir($dir))) {
+				while (false !== ($item = readdir($dir))) {
 					$fileInfo = pathinfo($item);
-					if($dirsOK) {
-						if((array_key_exists('extension', $fileInfo) && in_array($fileInfo['extension'],$fileTypes)) || !array_key_exists('extension', $fileInfo)){
+					if ($dirsOK) {
+						if ((array_key_exists('extension', $fileInfo) && in_array($fileInfo['extension'],$fileTypes)) || !array_key_exists('extension', $fileInfo)){
 							$found[] = $item;
 						}
 					} else {
-						if((array_key_exists('extension', $fileInfo) && in_array($fileInfo['extension'],$fileTypes))){
+						if( (array_key_exists('extension', $fileInfo) && in_array($fileInfo['extension'],$fileTypes))){
 							$found[] = $item;
 						}
 					}
