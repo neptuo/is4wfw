@@ -150,6 +150,32 @@
       Zobrazí verzí frameworku, na které je možné aktualizovat.
     </comment>
   </tag>
+  <tag>
+    <tagname>repositoryLink</tagname>
+    <function>repositoryLink</function>
+    <attribute>
+      <attname>text</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attdef>GitHub</attdef>
+    </attribute>
+    <comment>
+      Zobrazí odkaz do repositáře s projektem (zdrojové kódy).
+    </comment>
+  </tag>
+  <tag>
+    <tagname>repositoryIssueCreateLink</tagname>
+    <function>repositoryIssueCreateLink</function>
+    <attribute>
+      <attname>text</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attdef>Report</attdef>
+    </attribute>
+    <comment>
+      Zobrazí odkaz pro založení hlášení o chybě.
+    </comment>
+  </tag>
   <property>
   	<propname>cmsWindowsStyle</propname>
   	<setfunction>setCmsWindowsStyle</setfunction>

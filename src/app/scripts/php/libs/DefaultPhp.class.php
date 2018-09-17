@@ -492,7 +492,11 @@
                                 }
 
                                 if ($hasDefault) {
-                                    $attributeValue = eval('return '. $att->attdef.';');
+                                    if ($att->atttype == 'string') {
+                                        $attributeValue = eval('return "'. $att->attdef.'";');
+                                    } else {
+                                        $attributeValue = eval('return '. $att->attdef.';');
+                                    }
                                     $return[(string)$att->attname] = array('value' => $attributeValue, 'type' => 'eval');
                                 } else if (strtolower($att->attreq) == "required") {
                                     $str = "Missing required attribute! [".$att->attname."]";

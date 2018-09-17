@@ -6,5 +6,11 @@
 			</legend>
 			<sys:printNotes useFrames="false" showMsg="false" />
 		</fieldset>
+
+		<p>
+			<sys:repositoryLink text="Open project page at GitHub" />
+			<br />
+			<sys:repositoryIssueCreateLink text="Report a new issue" />
+		</p>
 	</div>
 </v:template>

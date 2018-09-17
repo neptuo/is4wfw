@@ -927,7 +927,15 @@
 
 			return $result;
 		}
-		
+
+		public function repositoryLink($linkText) {
+			return '<a target="_blank" href="https://github.com/maraf/PHP-WebFramework">' . $linkText . '</a>';
+		}
+
+		public function repositoryIssueCreateLink($linkText) {
+			return '<a target="_blank" href="https://github.com/maraf/PHP-WebFramework/issues/new">' . $linkText . '</a>';
+		}
+
 		/* ---------- PROPERTIES ---------------------- */
 		
 		public function setCmsWindowsStyle($value) {
