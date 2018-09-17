@@ -49,7 +49,7 @@
 				
 				$item[1] = date('d.m.Y', $item[1]);
 				$item[2] = ''
-				.'<form name="show-log" action="" method="post">'
+				.'<form name="show-log" action="' . $_SERVER['REQUEST_URI'] . '" method="post">'
 					.'<input type="hidden" name="log-name" value="'.$file.'" />'
 					.'<input type="hidden" name="show-log" value="Show log" />'
 					.'<input type="image" src="~/images/page_edi.png" name="show-log" value="Show log" />'
@@ -64,7 +64,6 @@
 				$grid->addRows($data);
 				$return .= $grid->render();
 			}
-
 
 			if ($useFrames == "false") {
 				return $return;
@@ -119,11 +118,12 @@
 							$found[] = $item;
 						}
 					} else {
-						if( (array_key_exists('extension', $fileInfo) && in_array($fileInfo['extension'],$fileTypes))){
+						if ( (array_key_exists('extension', $fileInfo) && in_array($fileInfo['extension'],$fileTypes))){
 							$found[] = $item;
 						}
 					}
 				}
+
 				closedir($dir);
 				natcasesort($found);
 				return $found;
@@ -132,7 +132,7 @@
 			}
 		}
 
-		public function parseLogName ($name) {
+		public function parseLogName($name) {
 			$parts = split('-', $name);
 			$projectId = 0;
 			$date = '5';
@@ -140,7 +140,7 @@
 			$name = split('.log', $name);
 			$name = $name[0];
 			
-			if($parts[0] != '') {
+			if ($parts[0] != '') {
 				$projectId = $parts[0];
 				$dateString = substr($name, 3, strlen($name));
 				$date = strtotime($dateString);
