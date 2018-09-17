@@ -238,11 +238,21 @@ class DataAccess {
     	global $logObject;
 		
 		$this->errorCode = mysqli_errno($this->connection);
-		if($this->errorCode != 0) {
+		if ($this->errorCode != 0) {
 			$this->errorMessage = mysqli_error($this->connection);
 			
-			if(is_object($logObject)) {
-				$logObject->write('Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMessage.', QUERY = '.$query.'');
+			if (is_object($logObject)) {
+				$backtrace = debug_backtrace();
+				$callstack = "\n";
+				foreach ($backtrace as $index => $item) {
+					$callstack .= 'File: ' . $item['file'] . '; at line: ' . $item['line'] . '; func: ' . $item['function'] . "\n";
+
+					if ($index > 5) {
+						break;
+					}
+				}
+
+				$logObject->write("Mysql query error! \nERRNO = " . $this->errorCode . ", \nERRORMSG = " . $this->errorMessage . ", \nQUERY = " . $query . ", \nCALLSTACK = " . $callstack . "\n");
 			} else {
 				echo 'Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMessage.', QUERY = '.$query.'';
 			}
