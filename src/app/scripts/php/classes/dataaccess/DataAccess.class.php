@@ -262,6 +262,7 @@ class DataAccess {
 
 				$message = "Mysql query error! " . PHP_EOL . "ERRNO = " . $this->errorCode . ", " . PHP_EOL . "ERRORMSG = " . $this->errorMessage . ", " . PHP_EOL . "QUERY = " . $query . ", " . PHP_EOL . "CALLSTACK = " . $callstack;
 				$logObject->write($message);
+				throw new Exception($message);
 			} else {
 				echo 'Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMessage.', QUERY = '.$query.'';
 			}

@@ -190,7 +190,7 @@ class CustomTagParser {
         }
 
         $identifier = 'template_' . $tagPrefix . '_' . $functionName . '_' . $identifier;
-        $functionDefinition = "function " . $identifier . "() { global $" . $tagPrefix . "Object; return $" . $tagPrefix . "Object" . '->' . $functionName . '(' . $attributes . "); }";
+        $functionDefinition = "function " . $identifier . "() { try { global $" . $tagPrefix . "Object; return $" . $tagPrefix . "Object" . '->' . $functionName . '(' . $attributes . '); } catch (Exception $e) { return ""; } }';
         
         // self::log($functionDefinition);
         eval($functionDefinition);
