@@ -325,7 +325,7 @@
             
             $return .= ''
             .'<div class="select-class-path">'
-                .'<form name="select-class-path" method="post" action="'.$_SERVER['REQUEST_URI'].'">'
+                .'<form name="select-class-path" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="auto-submit">'
                     .'<label for="select-class-path-select">'.$rb->get('select-class-path.label').':</label> '
                     .'<select id="select-class-path-select" name="select-class-path-select">'
                         .'<option value="php.libs.Article"'.($_SESSION['select-class-path'] == 'php.libs.Article' ? 'selected="selected"' : '').'>php.libs.Article</option>'
