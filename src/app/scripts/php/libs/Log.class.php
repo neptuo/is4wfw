@@ -58,7 +58,7 @@
         }
 
         public function exception($e) {
-            $message = "An exception of type '" . get_class($e) . "' has occured. " . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+            $message = "An exception of type '" . get_class($e) . "' has occured. " . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . '@ ' . parent::currentFullUrl();
             self::write($message);
         }
     }

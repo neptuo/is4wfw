@@ -539,6 +539,10 @@
             return $length === 0 || 
             (substr($haystack, -$length) === $needle);
         }
+
+        public function currentFullUrl() {
+            return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        }
     }
 
 ?>
