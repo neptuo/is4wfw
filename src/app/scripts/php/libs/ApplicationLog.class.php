@@ -85,6 +85,7 @@
 				$fileName = $_POST['log-name'];
 				if (file_exists(LOGS_PATH . $fileName)) {
 					$content = file_get_contents(LOGS_PATH . $fileName);
+					$content = htmlspecialchars($content);
 					$content = str_replace(PHP_EOL, "<br />", $content);
 					$content = preg_replace("([0-9][0-9]:[0-9][0-9]:[0-9][0-9])", "<br /><strong>$0</strong><br />", $content);
 					if (parent::startsWith($content, "<br />")) {

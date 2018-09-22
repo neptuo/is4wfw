@@ -57,6 +57,10 @@
             fwrite($this->File, date("H:i:s") . "\t" . $msg . "\r\n");
         }
 
+        public function exception($e) {
+            $message = "An exception of type '" . get_class($e) . "' has occured. " . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+            self::write($message);
+        }
     }
 
 ?>

@@ -1,6 +1,7 @@
 <?php
 
 require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/DataAccessException.class.php");
 
 class DataAccess {
 	public static $CharsetSystemProperty = 'DataAccess.Charset';
@@ -240,32 +241,7 @@ class DataAccess {
 		$this->errorCode = mysqli_errno($this->connection);
 		if ($this->errorCode != 0) {
 			$this->errorMessage = mysqli_error($this->connection);
-			
-			if (is_object($logObject)) {
-				$backtrace = debug_backtrace();
-				$callstack = PHP_EOL;
-				foreach ($backtrace as $index => $item) {
-					if ($index == 0) {
-						continue;
-					}
-
-					if ($index > 1) {
-						$callstack .= PHP_EOL;
-					}
-
-					$callstack .= 'File: ' . $item['file'] . '; at line: ' . $item['line'] . '; func: ' . $item['function'];
-
-					if ($index > 5) {
-						break;
-					}
-				}
-
-				$message = "Mysql query error! " . PHP_EOL . "ERRNO = " . $this->errorCode . ", " . PHP_EOL . "ERRORMSG = " . $this->errorMessage . ", " . PHP_EOL . "QUERY = " . $query . ", " . PHP_EOL . "CALLSTACK = " . $callstack;
-				$logObject->write($message);
-				throw new Exception($message);
-			} else {
-				echo 'Mysql query error! ERRNO = '.$this->errorCode.', ERRORMSG = '.$this->errorMessage.', QUERY = '.$query.'';
-			}
+			throw new DataAccessException($this->errorCode, $this->errorMessage, $query);
 		}
 	}
 		
@@ -275,7 +251,7 @@ class DataAccess {
 	 *
 	 */		 		 		 		
 	public function setMockMode($enabled) {
-		if($enabled == true) {
+		if ($enabled == true) {
 			$this->mockMode = true;
 			echo '<div style="color: white; margin: 5px; padding: 5px; border: 2px solid gray;"><div style="background: red; padding: 2px 5px; font-weight: bold;">Using mock mode ...</div></div>';
 		} else {
