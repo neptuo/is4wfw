@@ -1005,7 +1005,42 @@
             }
         }
 
-        
+        private function loadIncludedFiles() {
+            $allHeaders = getallheaders();
+            $userBrowser = $allHeaders['User-Agent'];
+            $browser = 'for_all';
+            if (preg_match("(Firefox)", $userBrowser)) {
+                $browser = 'for_firefox';
+            } elseif (preg_match("(MSIE 8.0)", $userBrowser)) {
+                $browser = 'for_msie8';
+            } elseif (preg_match("(MSIE 7.0)", $userBrowser)) {
+                $browser = 'for_msie7';
+            } elseif (preg_match("(MSIE 6.0)", $userBrowser)) {
+                $browser = 'for_msie6';
+            } elseif (preg_match("(Opera)", $userBrowser)) {
+                $browser = 'for_opera';
+            } elseif (preg_match("(Safari)", $userBrowser)) {
+                $browser = 'for_safari';
+            }
+
+            $pageIds = implode(', ', $this->PagesId);
+            $files = parent::db()->fetchAll("SELECT pfi.`page_id`, pf.`id`, pf.`type` FROM `page_file_inc` pfi LEFT JOIN `page_file` pf ON pfi.`file_id` = pf.`id` WHERE pfi.`page_id` in (" . $pageIds . ") AND pfi.`language_id` = " . $this->LanguageId . " AND (pf.`for_all` = 1 OR pf.`" . $browser . "` = 1) ORDER BY pfi.`order`;");
+            foreach ($this->PagesId as $pageId) {
+                foreach ($files as $file) {
+                    if ($file['page_id'] == $pageId) {
+                        $fileUrl = '~/file.php?fid=' . $file['id'];
+                        switch ($file['type']) {
+                            case WEB_TYPE_CSS: 
+                                $this->PageStyles .= (($this->Template == 'xml') ? '<rssmm:link-ref>' . $fileUrl . '</rssmm:link-ref>' : '<link rel="stylesheet" href="' . $fileUrl . '" type="text/css" />');
+                                break;
+                            case WEB_TYPE_JS: 
+                                $this->PageScripts .= (($this->Template == 'xml') ? '<rssmm:script-ref>' . $fileUrl . '</rssmm:script-ref>' : '<script type="text/javascript" src="' . $fileUrl . '"></script>');
+                                break;
+                        }
+                    }
+                }
+            }
+        }
 
         /**
          *
@@ -1021,6 +1056,8 @@
             if (!RoleHelper::canUser(DefaultWeb::$PageRightDesc, $this->PagesId, WEB_R_READ)) {
                 self::generateErrorPage('403');
             }
+
+            self::loadIncludedFiles();
 
             $lang = $this->UrlResolver->getLanguage()['language'];
             $isLang = strlen($lang) > 0;
@@ -1476,34 +1513,6 @@
             }
             $this->Keywords .= ( (strlen($return['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ',' . $return['keywords'] : $return['keywords']) : '');
 
-            $allHeaders = getallheaders();
-            $userBrowser = $allHeaders['User-Agent'];
-            $browser = 'for_all';
-            if (preg_match("(Firefox)", $userBrowser)) {
-                $browser = 'for_firefox';
-            } elseif (preg_match("(MSIE 8.0)", $userBrowser)) {
-                $browser = 'for_msie8';
-            } elseif (preg_match("(MSIE 7.0)", $userBrowser)) {
-                $browser = 'for_msie7';
-            } elseif (preg_match("(MSIE 6.0)", $userBrowser)) {
-                $browser = 'for_msie6';
-            } elseif (preg_match("(Opera)", $userBrowser)) {
-                $browser = 'for_opera';
-            } elseif (preg_match("(Safari)", $userBrowser)) {
-                $browser = 'for_safari';
-            }
-
-            $files = $dbObject->fetchAll("SELECT `page_file`.`id`, `page_file`.`name`, `page_file`.`type` FROM `page_file_inc` LEFT JOIN `page_file` ON `page_file_inc`.`file_id` = `page_file`.`id` WHERE `page_file_inc`.`page_id` = " . $this->ParentId . " AND `page_file_inc`.`language_id` = " . $this->LanguageId . " AND (`for_all` = 1 OR `" . $browser . "` = 1) ORDER BY `page_file_inc`.`order`;");
-            foreach ($files as $file) {
-                switch ($file['type']) {
-                    //case WEB_TYPE_CSS: $this->PageHead .= '<link rel="stylesheet" href="~/css/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'" type="text/css" />'; break;
-                    //case WEB_TYPE_JS: $this->PageHead .= '<script type="text/javascript" src="~/js/'.$file['id'].'-'.str_replace(' ', '-', strtolower($file['name'])).'"></script>'; break;
-                    case WEB_TYPE_CSS: $this->PageStyles .= ( ($this->Template == 'xml') ? '<rssmm:link-ref>~/file.php?fid=' . $file['id'] . '</rssmm:link-ref>' : '<link rel="stylesheet" href="~/file.php?fid=' . $file['id'] . '" type="text/css" />');
-                        break;
-                    case WEB_TYPE_JS: $this->PageScripts .= ( ($this->Template == 'xml') ? '<rssmm:script-ref>~/file.php?fid=' . $file['id'] . '</rssmm:script-ref>' : '<script type="text/javascript" src="~/file.php?fid=' . $file['id'] . '"></script>');
-                        break;
-                }
-            }
             $this->Path = $path[1];
 
             //$this->PageHead .= preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['head']);
