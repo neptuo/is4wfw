@@ -1025,8 +1025,7 @@
                 }
             }
 
-            $lang = parent::db()->fetchAll("SELECT `language` FROM `language` WHERE `id` = " . $this->LanguageId . ";");
-            $lang = $lang[0]['language'];
+            $lang = $this->UrlResolver->getLanguage()['language'];
             $isLang = strlen($lang) > 0;
 
             $keywords = file_get_contents("keywords.txt");
