@@ -1,6 +1,7 @@
 <?php
 
     require_once("BaseTagLib.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/RoleHelper.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/RequestStorage.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/SessionStorage.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/QueryStorage.class.php");
@@ -1018,11 +1019,8 @@
         public function flush($path = null) {
             $_SESSION['last-request']['pages-id'] = $this->PagesId;
 
-            foreach ($this->PagesId as $page) {
-                $rights = parent::db()->fetchAll("SELECT `group`.`name` FROM `group` LEFT JOIN `page_right` ON `group`.`gid` = `page_right`.`gid` WHERE `page_right`.`pid` = " . $page . " AND `type` = " . WEB_R_READ . " AND (`group`.`gid` IN (" . parent::login()->getGroupsIdsAsString() . ") OR `group`.`parent_gid` IN (" . parent::login()->getGroupsIdsAsString() . "));");
-                if (count($rights) == 0) {
-                    self::generateErrorPage($this->ProjectId, 403);
-                }
+            if (!RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(DefaultWeb::$PageRightDesc, $this->PagesId, WEB_R_READ))) {
+                self::generateErrorPage($this->ProjectId, 403);
             }
 
             $lang = $this->UrlResolver->getLanguage()['language'];
@@ -1814,6 +1812,10 @@
 
         public static $TemplateRightDesc = array(
             'template_right', 'tid', 'gid', 'type'
+        );
+
+        public static $PageRightDesc = array(
+            'page_right', 'pid', 'gid', 'type'
         );
 
         /**

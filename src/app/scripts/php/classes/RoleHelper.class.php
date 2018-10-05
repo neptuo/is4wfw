@@ -10,7 +10,7 @@ class RoleCacheHelper extends BaseTagLib {
 	}
 	
 	public function is($sourceId, $targetId) {
-		if($sourceId == $targetId) {
+		if ($sourceId == $targetId) {
 			return true;
 		}
 	
@@ -41,10 +41,10 @@ class RoleCacheHelper extends BaseTagLib {
 }
 
 class RoleHelper {
-	private static $instance;
+	static $instance;
 	
 	public static function refreshCache() {
-		if(RoleHelper::$instance == null) {
+		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
 		
@@ -52,29 +52,29 @@ class RoleHelper {
 	}
 	
 	public static function isInRole($sourceId, $targetId) {
-		if(RoleHelper::$instance == null) {
+		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
 		
-		if(is_array($sourceId)) {
-			foreach($sourceId as $sId) {
-				if(is_array($targetId)) {
-					foreach($targetId as $tId) {			
-						if(RoleHelper::$instance->is($sId, $tId)) {
+		if (is_array($sourceId)) {
+			foreach ($sourceId as $sId) {
+				if (is_array($targetId)) {
+					foreach ($targetId as $tId) {			
+						if (RoleHelper::$instance->is($sId, $tId)) {
 							return true;
 						}
 					}
 				} else {
-					if(RoleHelper::$instance->is($sId, $targetId)) {
+					if (RoleHelper::$instance->is($sId, $targetId)) {
 						return true;
 					}
 				}
 			}
 			return false;
 		} else {
-			if(is_array($targetId)) {
-				foreach($targetId as $tId) {			
-					if(RoleHelper::$instance->is($sourceId, $tId)) {
+			if (is_array($targetId)) {
+				foreach ($targetId as $tId) {			
+					if (RoleHelper::$instance->is($sourceId, $tId)) {
 						return true;
 					}
 				}
@@ -85,20 +85,20 @@ class RoleHelper {
 	}
 	
 	public static function getRoles($groupIds) {
-		if(RoleHelper::$instance == null) {
+		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
 		
 		$result = array();
 	
-		if(is_array($groupIds)) {
-			foreach($groupIds as $group) {
+		if (is_array($groupIds)) {
+			foreach ($groupIds as $group) {
 				$result = array_merge($result, RoleHelper::$instance->getRoles($group));
 			}
 		}
 		
 		$return = $groupIds;
-		foreach($result as $g) {
+		foreach ($result as $g) {
 			$return[count($return)] = $g['target_id'];
 		}
 		
@@ -106,7 +106,7 @@ class RoleHelper {
 	}
 	
 	public static function getCurrentRoles() {
-		if(RoleHelper::$instance == null) {
+		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
 		
@@ -114,6 +114,10 @@ class RoleHelper {
 	}
 	
 	public static function getUserRoles($uid) {
+		if (RoleHelper::$instance == null) {
+			RoleHelper::$instance = new RoleCacheHelper();
+		}
+
 		$sql = 'select `gid` from `user_in_group` where `uid` = '.$uid.';';
 		$result = RoleHelper::$instance->db()->getDataAccess()->fetchAll($sql);
 		$return = array();
@@ -129,16 +133,21 @@ class RoleHelper {
 	}
 	
 	public static function getRights2($table, $objectColumn, $groupColumn, $typeColumn, $objectId, $type = 0) {
-		if(RoleHelper::$instance == null) {
+		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
+		
 		RoleHelper::$instance->db()->getDataAccess()->disableCache();
 		
-		$sql = 'select `'.$objectColumn.'`, `'.$groupColumn.'`, `'.$typeColumn.'` from `'.$table.'` where `'.$objectColumn.'` = '.$objectId.($type != 0 ? ' and `'.$typeColumn.'` = '.$type : '').';';
+		if (is_array($objectId)) {
+			$objectId = implode(', ', $objectId);
+		}
+
+		$sql = 'select `' . $objectColumn . '`, `' . $groupColumn . '`, `'  .$typeColumn . '` from `' . $table . '` where `' . $objectColumn . '` in (' . $objectId . ')' . ($type != 0 ? ' and `' . $typeColumn .'` = ' . $type : '').';';
 		$result = RoleHelper::$instance->db()->getDataAccess()->fetchAll($sql);
 		
 		$return = array();
-		foreach($result as $i => $res) {
+		foreach ($result as $i => $res) {
 			$return[$i] = $res['gid'];
 		}
 		
@@ -151,7 +160,7 @@ class RoleHelper {
 	}
 	
 	public static function setRights2($table, $objectColumn, $groupColumn, $typeColumn, $objectId, $allowedGroupIds, $newGroupIds, $type) {
-		if(RoleHelper::$instance == null) {
+		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
 		
@@ -159,17 +168,17 @@ class RoleHelper {
 		$result = RoleHelper::$instance->db()->getDataAccess()->fetchAll($sql/*, true, true, true*/);
 		$perms = array();
 		RoleHelper::$instance->db()->getDataAccess()->transaction();
-		foreach($result as $perm) {
-			if(RoleHelper::isInRole($allowedGroupIds, $perm[$groupColumn])) {
+		foreach ($result as $perm) {
+			if (RoleHelper::isInRole($allowedGroupIds, $perm[$groupColumn])) {
 				$perms[count($perms)] = $perm[$groupColumn];
-				if(!in_array($perm[$groupColumn], $newGroupIds)) {
+				if (!in_array($perm[$groupColumn], $newGroupIds)) {
 					$deleteSql = 'delete from `'.$table.'` where `'.$objectColumn.'` = '.$objectId.' and `'.$groupColumn.'` = '.$perm[$groupColumn].' and `'.$typeColumn.'` = '.$type.';';
 					RoleHelper::$instance->db()->getDataAccess()->execute($deleteSql/*, true, true, true*/);
 				}
 			}
 		}
-		foreach($newGroupIds as $newId) {
-			if(!in_array($newId, $perms)) {
+		foreach ($newGroupIds as $newId) {
+			if (!in_array($newId, $perms)) {
 				$insertSql = 'insert into `'.$table.'`(`'.$objectColumn.'`, `'.$groupColumn.'`, `'.$typeColumn.'`) values('.$objectId.', '.$newId.', '.$type.');';
 				RoleHelper::$instance->db()->getDataAccess()->execute($insertSql/*, true, true, true*/);
 			}
@@ -182,7 +191,7 @@ class RoleHelper {
 	}
 	
 	public static function deleteRights2($table, $objectColumn, $groupColumn, $typeColumn, $objectId) {
-		if(RoleHelper::$instance == null) {
+		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
 		
@@ -193,7 +202,7 @@ class RoleHelper {
 	}
 	
 	public static function getPermissionsOrDefalt($tableDesc, $objectId, $type, $altTableDesc = array(), $altObjectId = null) {
-	   if(RoleHelper::$instance == null) {
+	   	if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
 		
@@ -203,21 +212,21 @@ class RoleHelper {
 	public static function getPermissionsOrDefalt2($table, $objectColumn, $groupColumn, $typeColumn, $objectId, $type, 
 	       $altTable = null, $altObjectColumn = null, $altGroupColumn = null, $altTypeColumn = null, $altObjectId = null) {
 		   
-		if(RoleHelper::$instance == null) {
+		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
 		
 		$result = array();
-		if($objectId != '' && $objectId != 0 && $objectId > 0) {
+		if ($objectId != '' && $objectId != 0 && $objectId > 0) {
 			$sql = 'select `'.$objectColumn.'`, `'.$groupColumn.'`, `'.$typeColumn.'` from `'.$table.'` where `'.$objectColumn.'` = '.$objectId.' and `'.$typeColumn.'` = '.$type.';';
 			$result = RoleHelper::$instance->db()->getDataAccess()->fetchAll($sql);
-		} elseif($altObjectId != null && $altObjectId != '') {
+		} elseif ($altObjectId != null && $altObjectId != '') {
 			$sql = 'select `'.$altObjectColumn.'`, `'.$altGroupColumn.'`, `'.$altTypeColumn.'` from `'.$altTable.'` where `'.$altObjectColumn.'` = '.$altObjectId.' and `'.$altTypeColumn.'` = '.$type.';';
 			$result = RoleHelper::$instance->db()->getDataAccess()->fetchAll($sql);
 		}
 		
 		$return = array();
-		foreach($result as $item) {
+		foreach ($result as $item) {
 			$return[count($return)] = $item[$groupColumn];
 		}
 		
@@ -225,11 +234,11 @@ class RoleHelper {
 	}
 	
 	public static function canCurrentEditUser($uid) {
-		if(RoleHelper::$instance == null) {
+		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
 		}
 		
-		if(RoleHelper::$instance->login()->getUserId() == $uid) {
+		if (RoleHelper::$instance->login()->getUserId() == $uid) {
 			return true;
 		}
 	
