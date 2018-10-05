@@ -132,6 +132,14 @@ class RoleHelper {
 		return self::getRights2($tableDesc[0], $tableDesc[1], $tableDesc[2], $tableDesc[3], $objectId, $type);
 	}
 	
+	private static function arrayToString($value) {
+		if (is_array($value)) {
+			$value = implode(', ', $value);
+		}
+
+		return $value;
+	}
+
 	public static function getRights2($table, $objectColumn, $groupColumn, $typeColumn, $objectId, $type = 0) {
 		if (RoleHelper::$instance == null) {
 			RoleHelper::$instance = new RoleCacheHelper();
@@ -139,10 +147,7 @@ class RoleHelper {
 		
 		RoleHelper::$instance->db()->getDataAccess()->disableCache();
 		
-		if (is_array($objectId)) {
-			$objectId = implode(', ', $objectId);
-		}
-
+		$objectId = RoleHelper::arrayToString($objectId);
 		$sql = 'select `' . $objectColumn . '`, `' . $groupColumn . '`, `'  .$typeColumn . '` from `' . $table . '` where `' . $objectColumn . '` in (' . $objectId . ')' . ($type != 0 ? ' and `' . $typeColumn .'` = ' . $type : '').';';
 		$result = RoleHelper::$instance->db()->getDataAccess()->fetchAll($sql);
 		
@@ -265,6 +270,30 @@ class RoleHelper {
 		}
 		
 		return 'exists(select * from `' . $table . '` r where r.`' . $objectColumn . '` = ' . $joinExpression . ' and r.`' . $typeColumn . '` = ' . $type . ' and r.`' . $groupColumn . '` in (' . RoleHelper::$instance->login()->getGroupsIdsAsString() . '))';
+	}
+
+	public static function canUser($tableDesc, $objectId, $type) {
+		return self::canUser2($tableDesc[0], $tableDesc[1], $tableDesc[2], $tableDesc[3], $objectId, $type);
+	}
+
+	public static function canUser2($table, $objectColumn, $groupColumn, $typeColumn, $objectId, $type) {
+		if (RoleHelper::$instance == null) {
+			RoleHelper::$instance = new RoleCacheHelper();
+		}
+
+		if (is_array($objectId)) {
+			$ids = $objectId;
+		} else {
+			$ids = array($objectId);
+		}
+		
+		$groupId = RoleHelper::arrayToString(RoleHelper::$instance->login()->getGroupsIds());
+		$objectId = RoleHelper::arrayToString($objectId);
+		$sql = 'select distinct r.`' . $objectColumn . '` as `object_id` from `' . $table . '` r left join `rolecache` rc on r.`' . $groupColumn . '` = rc.`target_id` where r.`' . $objectColumn . '` in (' . $objectId . ') and (rc.`source_id` in (' . $groupId . ') or r.`' . $groupColumn . '` in (' . $groupId . ')) and r.`' . $typeColumn . '` = ' . $type . ';';
+		$result = RoleHelper::$instance->db()->getDataAccess()->fetchAll($sql);
+		$result = array_column($result, 'object_id');
+
+		return RoleHelper::$instance->array_equal($ids, $result);
 	}
 	
 	/* ================== HTML ======================================================== */

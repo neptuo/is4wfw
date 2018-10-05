@@ -1019,8 +1019,8 @@
         public function flush($path = null) {
             $_SESSION['last-request']['pages-id'] = $this->PagesId;
 
-            if (!RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(DefaultWeb::$PageRightDesc, $this->PagesId, WEB_R_READ))) {
-                self::generateErrorPage($this->ProjectId, 403);
+            if (!RoleHelper::canUser(DefaultWeb::$PageRightDesc, $this->PagesId, WEB_R_READ)) {
+                self::generateErrorPage('403');
             }
 
             $lang = $this->UrlResolver->getLanguage()['language'];
