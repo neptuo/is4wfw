@@ -146,12 +146,6 @@
 
         private function parsePageUrl($pageUrls, $projectId) {
             // Vyber jazyk, pokud neni prazdny
-            $langs = array();
-            if (!parent::request()->exists('language-id', 'web')) {
-                $langs = parent::db()->fetchAll('select `id`, `language` from `language`;');
-            } else {
-                $langs = parent::db()->fetchAll('select `id`, `language` from `language` where `id` = ' . parent::request()->get('language-id', 'web') . ';');
-            }
             $langs = parent::db()->fetchAll('select `id`, `language` from `language`;');
 
             $oldLangId = parent::request()->get('language-id', 'web');

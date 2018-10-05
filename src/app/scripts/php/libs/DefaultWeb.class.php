@@ -290,16 +290,7 @@
                 self::flush();
             } else {
                 // Stranka neexistuje -> Projit Forwardy s 404 nebo All Errors
-                self::processForwards(self::findForward(array('404', 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'));
-
-                $path = USER_PATH . 'error404.html';
-                if (!file_exists($path)) {
-                    $path = APP_PATH . 'error404.html';
-                }
-                
-                header("HTTP/1.1 404 Not Found");
-                echo file_get_contents($path);
-                exit;
+                self::generateErrorPage('404');
             }
         }
 
@@ -310,8 +301,13 @@
             $pageUrl = self::composeUrl($pageId, $langId, false);
             $url = parent::db()->fetchSingle('select `http`, `https`, `domain_url`, `root_url`, `virtual_url` from `web_url` join `page` on `web_url`.`project_id` = `page`.`wp` where `page`.`id` = '.$pageId.' order by `web_url`.`default` desc, `web_url`.`id`;');
             
-            if(strpos($pageUrl, 'http://') != -1 || strpos($pageUrl, 'https://') != -1) {
+            if (strpos($pageUrl, 'http://') != -1 || strpos($pageUrl, 'https://') != -1) {
                 $pageUrl = substr($pageUrl, strpos($pageUrl, '/', 8), strlen($pageUrl));
+            }
+
+            $indexOfQuery = strpos($pageUrl, '?');
+            if ($indexOfQuery !== false) {
+                $pageUrl = substr($pageUrl, 0, $indexOfQuery);
             }
             
             $scriptUrl = UrlResolver::combinePath($url['root_url'], '/index.php');
@@ -488,11 +484,14 @@
                     // Presmerovat
                     if ($forward->getType() == 'Substitute' && !$this->IsSubstituting) {
                         self::substituteRequestFor($forward->getPageId(), $forward->getLangId());
+                        return true;
                     } elseif($forward->getType() == 'Forward') {
                         self::redirectTo($forward->getPageId(), $forward->getLangId());
                     }
                 }
             }
+
+            return false;
         }
 
         /**
@@ -816,7 +815,7 @@
 
                 $this->PageContent = self::getContent();
             } else {
-                self::generateErrorPage($this->ProjectId, 404);
+                self::generateErrorPage('404');
             }
 
             self::flush();
@@ -871,14 +870,14 @@
                 if ($_REQUEST['temp-stop'] != 'stop') {
                     //echo 'Generate err page!';
                     $_REQUEST['temp-stop'] = 'stop';
-                    self::generateErrorPage($this->ProjectId, 404);
+                    self::generateErrorPage('404');
                 } else {
                     echo 'Bad!';
                     exit;
                 }
             } elseif (count($return) == 0 && $path[0] == "" && $path[1] == "") {
                 if (count($this->PagesId) == 0) {
-                    self::generateErrorPage($this->ProjectId, 404);
+                    self::generateErrorPage('404');
                 } else {
                     return;
                 }
@@ -961,7 +960,7 @@
                     }
                 }
 
-                self::generateErrorPage($this->ProjectId, 404);
+                self::generateErrorPage('404');
             }
         }
 
@@ -2351,74 +2350,39 @@
          * 	@param		errorCode				error code, 403, 404, ... , all		 		 
          *
          */
-        private function generateErrorPage($projectId, $errorCode) {
-            global $loginObject;
-            global $dbObject;
+        private function generateErrorPage($errorCode) {
+            $domainUrl = $_SERVER['HTTP_HOST'];
+            $rootUrl = INSTANCE_URL;
+            $virtualUrl = $_REQUEST['WEB_PAGE_PATH'];
+            $fullUrl = UrlResolver::combinePath($domainUrl, UrlResolver::combinePath($rootUrl, $virtualUrl));
 
-            $info = $dbObject->fetchAll('SELECT `url`, `http`, `https`, `error_all_pid`, `error_404_pid`, `error_403_pid` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) AND `id` = ' . $projectId . ';');
-            if (count($info) == 1) {
-                switch ($errorCode) {
-                    case 404: $pid = $info[0]['error_404_pid'];
-                        header("HTTP/1.1 404 Not Found");
-                        break;
-                    case 403: $pid = $info[0]['error_403_pid'];
-                        header("HTTP/1.1 403 Forbidden");
-                        break;
-                    case 'all': $pid = $info[0]['error_all_pid'];
-                        break;
-                }
+            if (self::processForwards(self::findForward(array($errorCode, 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'))) {
+                return;
             }
 
-            if ($pid != 0) {
-                $wp = $dbObject->fetchAll('SELECT `url` FROM `web_project` LEFT JOIN `page` ON `web_project`.`id` = `page`.`wp` WHERE `page`.`id` = ' . $pid . ';');
-                $url = '';
-                $pageLang = parent::db()->fetchSingle('select `language_id` from `info` where `page_id` = ' . $pid . ' and `language_id` = ' . $this->LanguageId . ';');
-                if ($pageLang != array()) {
-                    $url = self::composeUrl($pid, $this->LanguageId, 'no');
-                } else {
-                    $pageLang = parent::db()->fetchSingle('select `language_id` from `info` where `page_id` = ' . $pid . ';');
-                    if ($pageLang != array()) {
-                        $url = self::composeUrl($pid, $pageLang['language_id'], 'no');
-                    } else {
-                        header("HTTP/1.1 404 Not Found");
-                        echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-                        exit;
-                    }
-                }
-                $_GET['WEB_PAGE_PATH'] = substr($url, 1, strlen($url));
-                //$this->ServerName = substr($wp[0]['url'], 0, strpos($wp[0]['url'], '/'));
-                if ($_SERVER['HTTPS'] == 'on' && $info[0]['https'] == 1) {
-                    $this->Https = 'on';
-                } elseif ($info[0]['http'] == 1) {
-                    $this->Https = '';
-                } else {
-                    if ($errorCode == 404) {
-                        header("HTTP/1.1 404 Not Found");
-                        echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-                        exit;
-                    } elseif ($errorCode == 403) {
-                        header("HTTP/1.1 403 Forbidden");
-                        echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
-                        exit;
-                    } else {
-                        echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
-                        exit;
-                    }
-                }
-                self::processRequest();
+            $relativePath = 'error' . $errorCode . '.html';
+            $path = USER_PATH . $relativePath;
+            if (!file_exists($path)) {
+                $path = APP_PATH . $relativePath;
+            }
+            
+            if (file_exists($path)) {
+                header("HTTP/1.1 404 Not Found");
+                echo file_get_contents($path);
+                exit;
+            }
+
+            if ($errorCode == 404) {
+                header("HTTP/1.1 404 Not Found");
+                echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exist.</p>';
+                exit;
+            } elseif ($errorCode == 403) {
+                header("HTTP/1.1 403 Forbidden");
+                echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
+                exit;
             } else {
-                if ($errorCode == 404) {
-                    header("HTTP/1.1 404 Not Found");
-                    echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exist.</p>';
-                    exit;
-                } elseif ($errorCode == 403) {
-                    header("HTTP/1.1 403 Forbidden");
-                    echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
-                    exit;
-                } else {
-                    echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
-                    exit;
-                }
+                echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
+                exit;
             }
         }
         
