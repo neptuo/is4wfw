@@ -543,6 +543,18 @@
         public function currentFullUrl() {
             return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         }
+
+        public function debugFrame($title, $content, $contentTag = null) {
+            if ($contentTag !== null && $contentTag !== '') {
+                $content = '<' . $contentTag . '>' . $content . '</' . $contentTag . '>';
+            }
+
+            return ''
+            . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
+                . '<div style="color: red; font-weight: bold;">' . $title . ':</div>'
+                . '<div style="color: black;">' . $content . '</div>'
+            . '</div>';
+        }
     }
 
 ?>

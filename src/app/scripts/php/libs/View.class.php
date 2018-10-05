@@ -40,6 +40,10 @@
         /* ======================= TAGS ========================================= */
 
         public function processView($path) {
+            if (array_key_exists('query-list', $_GET)) {
+                parent::db()->getDataAccess()->saveQueries(true);
+            }
+
             $this->Resources = array();
             $this->Content = array();
             $this->Log = '';
@@ -166,33 +170,31 @@
                     $diacont .= $webObject->Diagnostics->printDuration();
                 }
                 if (array_key_exists('query-stats', $_GET)) {
-                    $diacont .= ''
-                    . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                        . '<div style="color: red; font-weight: bold;">Database queries:</div>'
-                        . '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
-                    . '</div>';
+                    $diacont .= parent::debugFrame('Database queries', parent::db()->getQueriesPerRequest());
                 }
-                if(strlen($webObject->PageLog) != 0) {
-                    $diacont .= ''
-                    . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                        . '<div style="color: red; font-weight: bold;">Page Log:</div>'
-                        . '<div>' . $webObject->PageLog . '</div>'
-                    . '</div>';
+                if (array_key_exists('query-list', $_GET)) {
+                    foreach (parent::db()->getDataAccess()->getQueries() as $key => $query) {
+                        $diacont .= parent::debugFrame('Query ' . $key, $query, 'code');
+                    }
+
+                }
+                if (strlen($this->PageLog) != 0) {
+                    $diacont .= parent::debugFrame('Page Log', $webObject->PageLog);
                 }
 
                 $return = '' .
-                        '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' .
-                        '<html xmlns="http://www.w3.org/1999/xhtml">' .
-                        '<head>' .
+                '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' .
+                '<html xmlns="http://www.w3.org/1999/xhtml">' .
+                    '<head>' .
                         '<meta http-equiv="content-type" content="text/html; charset=utf-8" />' .
                         '<meta name="description" content="' . $this->Title . '" />' .
                         '<meta name="robots" content="all, index, follow" />' .
                         '<meta name="author" content="Marek Fišera" />' .
-                        '<title>' . $this->Title . '</title>' .
+                    '<title>' . $this->Title . '</title>' .
                         $styles .
-                        '</head>' .
-                        '<body>' . $content . $scripts . $diacont . '</body>' .
-                        '</html>';
+                    '</head>' .
+                    '<body>' . $content . $scripts . $diacont . '</body>' .
+                '</html>';
             }
 
             $return = preg_replace_callback('(<web:frame( title="([^"]*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array(

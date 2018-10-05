@@ -223,7 +223,6 @@
                 parent::db()->getDataAccess()->saveQueries(true);
             }
 
-
             $this->UrlResolver = new UrlResolver();
             $this->UrlCache = new UrlCache();
 
@@ -1042,28 +1041,16 @@
                     $diacont .= $this->Diagnostics->printDuration();
                 }
                 if (array_key_exists('query-stats', $_GET)) {
-                    $diacont .= ''
-                    . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                        . '<div style="color: red; font-weight: bold;">Database queries:</div>'
-                        . '<div>' . parent::db()->getQueriesPerRequest() . '</div>'
-                    . '</div>';
+                    $diacont .= parent::debugFrame('Database queries', parent::db()->getQueriesPerRequest());
                 }
                 if (array_key_exists('query-list', $_GET)) {
                     foreach (parent::db()->getDataAccess()->getQueries() as $key => $query) {
-                        $diacont .= ''
-                        . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                            . '<div style="color: red; font-weight: bold;">Query ' . $key . ':</div>'
-                            . '<div><code>' . $query . '</code></div>'
-                        . '</div>';
+                        $diacont .= parent::debugFrame('Query ' . $key, $query, 'code');
                     }
 
                 }
                 if (strlen($this->PageLog) != 0) {
-                    $diacont .= ''
-                    . '<div style="border: 2px solid #666666; margin: 10px; padding: 10px; background: #eeeeee;">'
-                        . '<div style="color: red; font-weight: bold;">Page Log:</div>'
-                        . '<div>' . $this->PageLog . '</div>'
-                    . '</div>';
+                    $diacont .= parent::debugFrame('Page Log', $this->PageLog);
                 }
             }
 
