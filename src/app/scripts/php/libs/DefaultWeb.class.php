@@ -1005,7 +1005,7 @@
             }
         }
 
-        private function loadIncludedFiles() {
+        private function loadPageFiles() {
             $allHeaders = getallheaders();
             $userBrowser = $allHeaders['User-Agent'];
             $browser = 'for_all';
@@ -1057,7 +1057,7 @@
                 self::generateErrorPage('403');
             }
 
-            self::loadIncludedFiles();
+            self::loadPageFiles();
 
             $lang = $this->UrlResolver->getLanguage()['language'];
             $isLang = strlen($lang) > 0;
