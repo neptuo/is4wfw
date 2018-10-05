@@ -268,7 +268,7 @@
                 //echo '<pre>';
                 //print_r($_POST);
                 //echo '</pre>';
-                $project = array('id' => $_POST['project-id'], 'name' => $_POST['project-name'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d'], 'wysiwyg' => $_POST['project-edit-styles-wysiwyg'], 'error_all_pid' => $_POST['project-errors-all'], 'error_404_pid' => $_POST['project-errors-404'], 'error_403_pid' => $_POST['project-errors-403']);
+                $project = array('id' => $_POST['project-id'], 'name' => $_POST['project-name'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d'], 'wysiwyg' => $_POST['project-edit-styles-wysiwyg']);
                 $urls['domain'] = $_POST['project-urls-domain'];
                 $urls['root'] = $_POST['project-urls-root'];
                 $urls['virtual'] = $_POST['project-urls-virtual'];
@@ -290,7 +290,7 @@
                     if (count($errors) == 0) {
                         if ($project['id'] == 0) {
                             // vlozit novy projekt
-                            parent::db()->execute('INSERT INTO `web_project`(`name`, `error_all_pid`, `error_404_pid`, `error_403_pid`) VALUES ("' . $project['name'] . '", ' . $project['error_all_pid'] . ', ' . $project['error_404_pid'] . ', ' . $project['error_403_pid'] . ');');
+                            parent::db()->execute('INSERT INTO `web_project`(`name`) VALUES ("' . $project['name'] . '");');
                             $projectId = parent::db()->getLastId();
                             $project['id'] = $projectId;
 
@@ -333,7 +333,7 @@
                             }
                         } else {
                             // update stavajiciho projektu
-                            parent::db()->execute('UPDATE `web_project` SET `name` = "' . $project['name'] . '", `error_all_pid` = ' . $project['error_all_pid'] . ', `error_404_pid` = ' . $project['error_404_pid'] . ', `error_403_pid` = ' . $project['error_403_pid'] . ' WHERE `id` = ' . $project['id'] . ';');
+                            parent::db()->execute('UPDATE `web_project` SET `name` = "' . $project['name'] . '" WHERE `id` = ' . $project['id'] . ';');
 
                             parent::db()->execute('delete from `web_url` where `project_id` = ' . $project['id'] . ';');
                             foreach ($urls['domain'] as $key => $domainUrl) {
@@ -453,7 +453,7 @@
                     $projectId = $project['id'];
                 } elseif ($_POST['edit'] == $rb->get('project.edit')) {
                     $projectId = $_POST['wp'];
-                    $project = parent::db()->fetchSingle('SELECT `id`, `name`, `error_all_pid`, `error_404_pid`, `error_403_pid` FROM `web_project` WHERE `id` = ' . $projectId . ';');
+                    $project = parent::db()->fetchSingle('SELECT `id`, `name` FROM `web_project` WHERE `id` = ' . $projectId . ';');
                     if ($project != array()) {
                         $aliases = parent::db()->fetchAll('select `id`, `domain_url`, `root_url`, `virtual_url`, `http`, `https`, `default`, `enabled` from `web_url` where `project_id` = ' . $projectId . ' order by `id`;');
                         $project['aliases'] = $aliases;
@@ -504,28 +504,6 @@
                 $groupSelectW .= '</select>';
                 $groupSelectD .= '</select>';
 
-                // Stranky pro errory ...
-                $project['error-all-options'] = $project['error-404-options'] = $project['error-403-options'] = '<option value="0">Don\'t set</option>';
-                $prjs = $dbObject->fetchAll('SELECT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `id`;');
-                foreach ($prjs as $prj) {
-                    $project['error-all-options'] .= '<optgroup class="webproject" label="' . $prj['name'] . '">';
-                    $project['error-404-options'] .= '<optgroup class="webproject" label="' . $prj['name'] . '">';
-                    $project['error-403-options'] .= '<optgroup class="webproject" label="' . $prj['name'] . '">';
-                    //$strProjects .= '<optgroup class="webproject" value="wp'.$project['id'].'">'.$project['name'].'</optgroup>';
-                    $pages = $dbObject->fetchAll('SELECT DISTINCT `page`.`id`, `info`.`name` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` LEFT JOIN `page_right` ON `page`.`id` = `page_right`.`pid` LEFT JOIN `group` ON `page_right`.`gid` = `group`.`gid` WHERE `page_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) AND `page`.`wp` = ' . $prj['id'] . ' ORDER BY `info`.`page_id`;');
-                    $i = 0;
-                    foreach ($pages as $page) {
-                        $project['error-all-options'] .= '<option' . (($project['error_all_pid'] == $page['id']) ? ' selected="selected"' : '') . ' value="' . $page['id'] . '">- ' . (($page['id'] < 10) ? '000' . $page['id'] : ($page['id'] < 100) ? '00' . $page['id'] : ($page['id'] < 1000) ? '0' . $page['id'] : $page['id'] ) . ' - ' . $page['name'] . '</option>';
-                        $project['error-404-options'] .= '<option' . (($project['error_404_pid'] == $page['id']) ? ' selected="selected"' : '') . ' value="' . $page['id'] . '">- ' . (($page['id'] < 10) ? '000' . $page['id'] : ($page['id'] < 100) ? '00' . $page['id'] : ($page['id'] < 1000) ? '0' . $page['id'] : $page['id'] ) . ' - ' . $page['name'] . '</option>';
-                        $project['error-403-options'] .= '<option' . (($project['error_403_pid'] == $page['id']) ? ' selected="selected"' : '') . ' value="' . $page['id'] . '">- ' . (($page['id'] < 10) ? '000' . $page['id'] : ($page['id'] < 100) ? '00' . $page['id'] : ($page['id'] < 1000) ? '0' . $page['id'] : $page['id'] ) . ' - ' . $page['name'] . '</option>';
-                        //$strProjects .= '<option value="'.$page['id'].'">- '.(($page['id'] < 10) ? '0'.$page['id'] : $page['id'] ).' - '.$page['name'].'</option>';
-                        $i++;
-                    }
-                    $project['error-all-options'] .= '</optgroup>';
-                    $project['error-404-options'] .= '</optgroup>';
-                    $project['error-403-options'] .= '</optgroup>';
-                }
-
                 // Vybrat styly pro wysiwyg!!!!
                 $allStyles = $dbObject->fetchAll('SELECT `id`, `name` FROM `page_file` WHERE `wp` = ' . $projectId . ' AND `type` = ' . WEB_TYPE_CSS . ';');
                 $selectedStyles = $dbObject->fetchAll('SELECT `tf_id` FROM `wp_wysiwyg_file` WHERE `wp` = ' . $projectId . ';');
@@ -545,124 +523,110 @@
                 $urls = '';
                 foreach ($project['aliases'] as $alias) {
                     $urls .= ''
-                            . '<tr>'
-                            . '<td>'
+                    . '<tr>'
+                        . '<td>'
                             . '<input class="w300" type="text" name="project-urls-domain[' . $alias['id'] . ']" value="' . $alias['domain_url'] . '" />'
-                            . '</td>'
-                            . '<td>'
+                        . '</td>'
+                        . '<td>'
                             . '<input class="w300" type="text" name="project-urls-root[' . $alias['id'] . ']" value="' . $alias['root_url'] . '" />'
-                            . '</td>'
-                            . '<td>'
+                        . '</td>'
+                        . '<td>'
                             . '<input  class="w300" name="project-urls-virtual[' . $alias['id'] . ']" value="' . $alias['virtual_url'] . '" />'
-                            . '</td>'
-                            . '<td>'
+                        . '</td>'
+                        . '<td>'
                             . '<input type="checkbox" name="project-urls-http[' . $alias['id'] . ']"' . ($alias['http'] ? ' checked="checked"' : '') . ' />'
-                            . '</td>'
-                            . '<td>'
+                        . '</td>'
+                        . '<td>'
                             . '<input type="checkbox" name="project-urls-https[' . $alias['id'] . ']"' . ($alias['https'] ? ' checked="checked"' : '') . ' />'
-                            . '</td>'
-                            . '<td>'
+                        . '</td>'
+                        . '<td>'
                             . '<input type="radio" name="project-urls-default"' . ($alias['default'] ? ' checked="checked"' : '') . ' value="' . $alias['id'] . '" />'
-                            . '</td>'
-                            . '<td>'
+                        . '</td>'
+                        . '<td>'
                             . '<input type="checkbox" name="project-urls-enabled[' . $alias['id'] . ']"' . ($alias['enabled'] ? ' checked="checked"' : '') . ' />'
-                            . '</td>'
-                            . '</tr>';
+                        . '</td>'
+                    . '</tr>';
                 }
                 $urls .= ''
-                        . '<tr>'
-                        . '<td>'
+                . '<tr>'
+                    . '<td>'
                         . '<input class="w300" type="text" name="project-urls-domain[new]" value="" />'
-                        . '</td>'
-                        . '<td>'
+                    . '</td>'
+                    . '<td>'
                         . '<input class="w300" type="text" name="project-urls-root[new]" value="" />'
-                        . '</td>'
-                        . '<td>'
+                    . '</td>'
+                    . '<td>'
                         . '<input class="w300" type="text" name="project-urls-virtual[new]" value="" />'
-                        . '</td>'
-                        . '<td>'
+                    . '</td>'
+                    . '<td>'
                         . '<input type="checkbox" name="project-urls-http[new]" checked="checked" />'
-                        . '</td>'
-                        . '<td>'
+                    . '</td>'
+                    . '<td>'
                         . '<input type="checkbox" name="project-urls-https[new]" checked="checked" />'
-                        . '</td>'
-                        . '<td>'
+                    . '</td>'
+                    . '<td>'
                         . '<input type="radio" name="project-urls-default" value="new" />'
-                        . '</td>'
-                        . '<td>'
+                    . '</td>'
+                    . '<td>'
                         . '<input type="checkbox" name="project-urls-enabled[new]" checked="checked" />'
-                        . '</td>'
-                        . '</tr>';
+                    . '</td>'
+                . '</tr>';
 
                 // Vytvorit formular ....
                 $return .= ''
-                        . '<form name="project-edit-detail" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                        . $warnings
-                        . '<div class="floatedl">'
-                        . '<div class="gray-box">'
-                        . '<label class="w100" for="project-edit-name' . $project['id'] . '">' . $rb->get('project.name') . ':</label> '
-                        . '<input class="w300" type="text" id="project-edit-name' . $project['id'] . '" name="project-name" value="' . $project['name'] . '" />'
-                        . '</div>'
-                        . '<div class="gray-box">'
-                        . '<label class="w100" for="project-edit-error-all-' . $project['id'] . '" title="Obsolete: ' . $rb->get('project.errornotinuse') . '">' . $rb->get('project.allerror') . ':</label> '
-                        . '<select class="w300" id="project-edit-error-all-' . $project['id'] . '" name="project-errors-all">' . $project['error-all-options'] . '</select>'
-                        . '</div>'
-                        . '<div class="gray-box">'
-                        . '<label class="w100" for="project-edit-error-404-' . $project['id'] . '" title="Obsolete: ' . $rb->get('project.errornotinuse') . '">' . $rb->get('project.error404') . ':</label> '
-                        . '<select class="w300" id="project-edit-error-404-' . $project['id'] . '" name="project-errors-404">' . $project['error-404-options'] . '</select>'
-                        . '</div>'
-                        . '<div class="gray-box">'
-                        . '<label class="w100" for="project-edit-error-403-' . $project['id'] . '" title="Obsolete: ' . $rb->get('project.errornotinuse') . '">' . $rb->get('project.error403') . ':</label> '
-                        . '<select class="w300" id="project-edit-error-403-' . $project['id'] . '" name="project-errors-403">' . $project['error-403-options'] . '</select>'
-                        . '</div>'
-                        . '</div>'
-                        . '<div class="floatedl">'
-                        . '<div class="project-edit-rights">'
+                . '<form name="project-edit-detail" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                    . $warnings
+                    . '<div class="gray-box">'
+                        . '<label class="w60" for="project-edit-name' . $project['id'] . '">' . $rb->get('project.name') . ':</label> '
+                        . '<input class="w400" type="text" id="project-edit-name' . $project['id'] . '" name="project-name" value="' . $project['name'] . '" />'
+                    . '</div>'
+                    . '<div class="project-edit-rights">'
                         . (($show['read']) ? ''
-                                . '<div class="project-edit-right-read">'
-                                . '<label for="project-right-edit-groups-r-' . $project['id'] . '">' . $rb->get('project.read') . ':</label>'
-                                . $groupSelectR
-                                . '</div>' : '')
+                        . '<div class="project-edit-right-read">'
+                            . '<label for="project-right-edit-groups-r-' . $project['id'] . '">' . $rb->get('project.read') . ':</label>'
+                            . $groupSelectR
+                        . '</div>' : '')
                         . (($show['write']) ? ''
-                                . '<div class="project-edit-right-write">'
-                                . '<label for="project-right-edit-groups-w-' . $project['id'] . '">' . $rb->get('project.write') . ':</label>'
-                                . $groupSelectW
-                                . '</div>' : '')
+                        . '<div class="project-edit-right-write">'
+                            . '<label for="project-right-edit-groups-w-' . $project['id'] . '">' . $rb->get('project.write') . ':</label>'
+                            . $groupSelectW
+                        . '</div>' : '')
                         . (($show['delete']) ? ''
-                                . '<div class="project-edit-right-delete">'
-                                . '<label for="project-right-edit-groups-d-' . $project['id'] . '">' . $rb->get('project.delete') . ':</label>'
-                                . $groupSelectD
-                                . '</div>' : '')
+                        . '<div class="project-edit-right-delete">'
+                            . '<label for="project-right-edit-groups-d-' . $project['id'] . '">' . $rb->get('project.delete') . ':</label>'
+                            . $groupSelectD
+                        . '</div>' : '')
                         . '<div class="project-edit-styles-wysiwyg">'
-                        . '<label for="project-edit-styles-wysiwyg-' . $project['id'] . '">' . $rb->get('project.wysiwyg') . ':</label> '
-                        . $styleSelect
+                            . '<label for="project-edit-styles-wysiwyg-' . $project['id'] . '">' . $rb->get('project.wysiwyg') . ':</label> '
+                            . $styleSelect
                         . '</div>'
-                        . '</div>'
-                        . '</div>'
-                        . '<div class="clear"></div>'
-                        . '<div class="gray-box">'
+                    . '</div>'
+                    . '<div class="clear"></div>'
+                    . '<div class="gray-box">'
                         . '<span class="red">' . $rb->get('project.urlstitle') . ':</span> '
                         . '<span class="small-note">' . $rb->get('project.urldeletenote') . '</span>'
-                        . '</div>'
-                        . '<table class="gray-box">'
+                    . '</div>'
+                    . '<table class="gray-box">'
                         . '<tr>'
-                        . '<th>' . $rb->get('project.domainurl') . ':</th>'
-                        . '<th>' . $rb->get('project.rooturl') . ':</th>'
-                        . '<th>' . $rb->get('project.virtualurl') . ':</th>'
-                        . '<th>' . $rb->get('project.http') . ':</th>'
-                        . '<th>' . $rb->get('project.https') . ':</th>'
-                        . '<th>' . $rb->get('project.default') . ':</th>'
-                        . '<th>' . $rb->get('project.enabled') . ':</th>'
+                            . '<th>' . $rb->get('project.domainurl') . ':</th>'
+                            . '<th>' . $rb->get('project.rooturl') . ':</th>'
+                            . '<th>' . $rb->get('project.virtualurl') . ':</th>'
+                            . '<th>' . $rb->get('project.http') . ':</th>'
+                            . '<th>' . $rb->get('project.https') . ':</th>'
+                            . '<th>' . $rb->get('project.default') . ':</th>'
+                            . '<th>' . $rb->get('project.enabled') . ':</th>'
+                        . '</tr>'
                         . $urls
-                        . '</table>'
-                        . '<div class="clear"></div>'
-                        . '<div class="gray-box">'
+                    . '</table>'
+                    . '<div class="clear"></div>'
+                    . '<div class="gray-box">'
                         . '<input type="hidden" name="project-id" value="' . $project['id'] . '" />'
                         . '<input type="submit" name="save-project" value="' . $rb->get('project.save') . '" /> '
                         . '<input type="submit" name="save-project" value="' . $rb->get('project.saveandclose') . '" /> '
                         . '<input type="submit" name="save-project" value="' . $rb->get('project.close') . '" /> '
-                        . '</div>'
-                        . '</form>';
+                    . '</div>'
+                . '</form>';
+
                 return parent::getFrame($rb->get('project.edittile') . ' :: (' . ($project['id'] == 0 ? 'New' : $project['id']) . ') ' . $project['name'], $return, '', true);
             }
         }

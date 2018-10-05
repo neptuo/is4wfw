@@ -261,7 +261,7 @@
         }
 
         private function loadProjectById($projectId) {
-            $this->WebProject = parent::db()->fetchSingle('select `id`, `name`, `error_all_pid`, `error_404_pid`, `error_403_pid` from `web_project` where `id` = ' . $projectId . ';');
+            $this->WebProject = parent::db()->fetchSingle('select `id`, `name` from `web_project` where `id` = ' . $projectId . ';');
         }
 
         public function selectProject($url) {
