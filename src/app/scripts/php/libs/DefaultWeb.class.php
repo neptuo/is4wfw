@@ -248,7 +248,7 @@
             if ($item != array()) {
                 // Stranka jiz je v urlcache
                 $this->UrlResolver->setPagesId(self::parsePagesId($item['pages_id']));
-                $this->UrlResolver->selectProjectById($item['project_id'], $item['domain_url'], $item['root_url'], $item['virtual_url']);
+                $this->UrlResolver->selectProjectById($item);
                 $this->UrlResolver->selectLanguage($item['language_id']);
                 
                 if ($item['cachetime'] != -1) {

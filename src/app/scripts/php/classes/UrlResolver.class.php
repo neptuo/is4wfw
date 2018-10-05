@@ -266,14 +266,25 @@
             }
         }
 
+        private function loadProjectById($projectId) {
+            $this->WebProject = parent::db()->fetchSingle('select `id`, `name`, `error_all_pid`, `error_404_pid`, `error_403_pid` from `web_project` where `id` = ' . $projectId . ';');
+        }
+
         public function selectProject($url) {
-            $this->WebProject = parent::db()->fetchSingle('select `id`, `name`, `error_all_pid`, `error_404_pid`, `error_403_pid` from `web_project` where `id` = ' . $url['project_id'] . ';');
+            self::loadProjectById($url['project_id']);
             $this->WebProject['alias'] = $url;
         }
 
-        public function selectProjectById($id, $domainUrl, $rootUrl, $virtualUrl) {
-            $this->WebProject = parent::db()->fetchSingle('select `id`, `name`, `error_all_pid`, `error_404_pid`, `error_403_pid` from `web_project` where `id` = ' . $id . ';');
-            $this->WebProject['alias'] = parent::db()->fetchSingle('select `id`, `project_id`, `domain_url`, `root_url`, `virtual_url`, `http`, `https`, `default` from `web_url` where `domain_url` = "' . $domainUrl . '" and `root_url` = "' . $rootUrl . '" and `virtual_url` = "' . $virtualUrl . '";');
+        public function selectProjectById($cacheItem) {
+            self::loadProjectById($cacheItem['project_id']);
+            $this->WebProject['alias'] = array(
+                'project_id' => $cacheItem['project_id'],
+                'domain_url' => $cacheItem['domain_url'],
+                'root_url' => $cacheItem['root_url'],
+                'virtual_url' => $cacheItem['virtual_url'],
+                'http' => $cacheItem['http'],
+                'https' => $cacheItem['https'],
+            );
         }
 
         public function selectLanguage($id) {
