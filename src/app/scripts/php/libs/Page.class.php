@@ -1747,7 +1747,7 @@
         public function managePageProperties($useFrames) {
             $pageId = $_POST['page-id'];
             
-            if($_POST['manageprops-delete'] == parent::rb('button.deleteselected')) {
+            if ($_POST['manageprops-delete'] == parent::rb('button.deleteselected')) {
                 foreach($_POST['manageprops-delete-item'] as $i => $item) {
                     parent::dao('PageProperty')->delete($i);
                 }
@@ -1755,7 +1755,7 @@
                 $_POST['manage-properties'] = parent::rb('pagelist.action.manageprops');
             }
             
-            if($_POST['manageprops-save'] == parent::rb('button.save')) {
+            if ($_POST['manageprops-save'] == parent::rb('button.save')) {
                 //Update
                 foreach($_POST['manageprops-name'] as $i => $name) {
                     $item = array('name' => $_POST['manageprops-name'][$i], 'value' => $_POST['manageprops-value'][$i], 'page_id' => $pageId, 'id' => $i);
@@ -1771,7 +1771,6 @@
             }
         
             if($_POST['manage-properties'] == parent::rb('pagelist.action.manageprops')) {
-                
                 $dataModel = array('items' => parent::dao('PageProperty')->getPage($pageId), 'page_id' => $pageId);
             
                 if($useFrames) {
