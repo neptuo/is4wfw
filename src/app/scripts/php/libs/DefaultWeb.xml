@@ -507,6 +507,30 @@
       Pomocí "isInverted" je možné podmínku otočit.
     </comment>
   </fulltag>
+  <fulltag>
+    <tagname>switch</tagname>
+    <function>switchCondition</function>
+    <attribute>
+      <attname>when</attname>
+      <attreq>required</attreq>
+    </attribute>
+    <comment>
+      Umožňuje v těle definovat několik příkazů web:cache, ze kterých je vybrán maximálně jeden, který odpovídá hodnotě atributu "when".
+    </comment>
+  </fulltag>
+  <fulltag>
+    <tagname>case</tagname>
+    <function>switchConditionCase</function>
+    <attribute>
+      <attname>is</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attdef>x.x-def</attdef>
+    </attribute>
+    <comment>
+      Použitelný uvnitř web:switch. Definuje jeden test na porovnávanou hodnotu. Pokud atribut "is" není definován, jedná se o 'default' case.
+    </comment>
+  </fulltag>
   <tag>
     <tagname>doctype</tagname>
     <function>setDoctype</function>

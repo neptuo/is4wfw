@@ -166,6 +166,10 @@
         private $Template = null;
         private $StartPageId = null;
         private $ParentPageId = null;
+        
+
+        private $switchConditionWhenStack = array();
+        private $switchConditionCaseStack = array();
 
         /**
          *
@@ -1458,7 +1462,12 @@
                     }
                 } else if($phpObject->isAnyProperty($object[0])) {
                     global ${$object[0] . "Object"};
-                    $func = 'getProperty';
+
+                    if ($this->PropertyUse === 'set') {
+                        $func = 'setProperty';
+                    } else {
+                        $func = 'getProperty';
+                    }
                     eval('$return =  ${$object[0]."Object"}->{$func}("' . $object[1] . '", "' . $this->PropertyAttr . '");');
                     return $return;
                 }
@@ -2414,10 +2423,7 @@
             }
 
             if ($condition) {
-                $parser = new FullTagParser();
-                $parser->setContent($content);
-                $parser->startParsing();
-                $return = $parser->getResult();
+                $return = self::parseContent($content);
             }
 
             return $return;
@@ -2445,6 +2451,42 @@
 
         public function getFavicon($url, $contentType) {
             return '<link rel="icon" type="' . $contentType . '" href="' . $url . '" />';
+        }
+
+        public function switchCondition($content, $when) {
+            $result = '';
+
+            $index = array_push($this->switchConditionWhenStack, $when) - 1;
+            self::parseContent($content);
+            array_pop($this->switchConditionWhenStack);
+
+            if (array_key_exists($index, $this->switchConditionCaseStack)) {
+                $result = $this->switchConditionCaseStack[$index];
+                unset($this->switchConditionCaseStack[$index]);
+            }
+
+            return $result;
+        }
+
+        public function switchConditionCase($content, $is = 'x.x-def') {
+            $index = count($this->switchConditionWhenStack);
+            if ($index == 0) {
+                return '';
+            }
+
+            $index--;
+
+            if (array_key_exists($index, $this->switchConditionCaseStack)) {
+                return '';
+            }
+
+            $when = $this->switchConditionWhenStack[$index];
+            $condition = $is === 'x.x-def' || $when == $is;
+            if ($condition === true) {
+                $this->switchConditionCaseStack[$index] = self::parseContent($content);
+            }
+
+            return '';
         }
 
         /* ================== PROPERTIES ================================================== */
