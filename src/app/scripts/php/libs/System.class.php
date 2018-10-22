@@ -861,7 +861,6 @@
 						self::removeDirectory(APP_PATH);
 					}
 					
-					$zip = new ZipArchive();
 					if (self::zipExtract($targetFileName, $targetPath)) {
 						unlink($targetFileName);
 						if ($type == 'full') {
