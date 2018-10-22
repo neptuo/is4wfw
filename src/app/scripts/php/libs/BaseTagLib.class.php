@@ -517,10 +517,10 @@
         public function zipExtract($zipFileName, $targetPath) {
             $zip = new ZipArchive();
             if ($zip->open($zipFileName) === TRUE) {
-                $zip->extractTo($targetPath);
+                $extractResult = $zip->extractTo($targetPath);
                 $zip->close();
 
-                return true;
+                return $extractResult === FALSE;
             }
 
             return false;
