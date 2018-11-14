@@ -516,11 +516,11 @@
 
         public function zipExtract($zipFileName, $targetPath) {
             $zip = new ZipArchive();
-            if ($zip->open($zipFileName) === TRUE) {
+            $extractResult = $zip->open($zipFileName);
+            if ($extractResult === true) {
                 $extractResult = $zip->extractTo($targetPath);
                 $zip->close();
-
-                return $extractResult === FALSE;
+                return $extractResult === true;
             }
 
             return false;

@@ -8,6 +8,8 @@ if ($null -eq $versionName)
     return;
 }
 
+Push-Location $PSScriptRoot;
+
 # Compute release name.
 $srcPath = "src";
 $artifactsPath = "artifacts";
@@ -15,13 +17,13 @@ $releaseName = "phpwfw-" + $versionName + "-full";
 $targetFileName = $releaseName + ".zip";
 
 # Create artifacts directory.
-$targetFilePath = Join-Path -Path (Get-Location) -ChildPath $artifactsPath;
+$targetFilePath = Join-Path -Path (Join-Path -Path (Get-Location) -ChildPath "..") -ChildPath $artifactsPath;
 if (!(Test-Path $targetFilePath))
 {
     New-Item -ItemType Directory $targetFilePath | Out-Null;
 }
     
-# Delete patch file if exists.
+# Delete full file if exists.
 $targetFilePath = Join-Path -Path $targetFilePath -ChildPath $targetFileName;
 if (Test-Path($targetFilePath)) 
 {
@@ -29,5 +31,11 @@ if (Test-Path($targetFilePath))
 }
 
 # Create new archive.
-$sourceDirectoryPath = Join-Path -Path $srcPath -ChildPath "*";
-Compress-Archive -Path $sourceDirectoryPath -DestinationPath $targetFilePath | Out-Null;
+$currentPath = $PSScriptRoot;
+$archiverPath = Join-Path -Path $currentPath -ChildPath "7za.exe";
+$sourceDirectoryPath = Join-Path -Path ".." -ChildPath $srcPath;
+Push-Location $sourceDirectoryPath;
+Invoke-Expression ($archiverPath + " a -tzip " + $targetFilePath) | Out-Null;
+Pop-Location;
+
+Write-Host ("Created file '" + $targetFilePath + "'");

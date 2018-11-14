@@ -20,6 +20,8 @@ if ($null -eq $versionName)
     $versionName = $target;
 }
 
+Push-Location $PSScriptRoot;
+
 # Compute release name.
 $srcPath = "src";
 $artifactsPath = "artifacts";
@@ -46,38 +48,48 @@ foreach ($file in $changedFiles)
 
         # Copy to temp including relative path.
         $tempTargetFile = Join-Path -Path $tempPath -ChildPath $targetFile;
-        if (Test-Path $file) 
+        $sourceFile = Join-Path -Path ".." -ChildPath $file;
+        if (Test-Path $sourceFile) 
         {
-            Copy-Item -Force $file $tempTargetFile | Out-Null;
+            Copy-Item -Force $sourceFile $tempTargetFile | Out-Null;
+            $hasFile = $true;
         }
-
-        $hasFile = $true;
     }
 }
 
 if ($hasFile) 
 {
     # Create artifacts directory.
-    $targetFilePath = Join-Path -Path (Get-Location) -ChildPath $artifactsPath;
+    $targetFilePath = Join-Path -Path (Join-Path -Path (Get-Location) -ChildPath "..") -ChildPath $artifactsPath;
     if (!(Test-Path $targetFilePath))
     {
         New-Item -ItemType Directory $targetFilePath | Out-Null;
     }
     
-    # Delete patch file if exists.
+    $currentPath = $PSScriptRoot;
     $targetFilePath = Join-Path -Path $artifactsPath -ChildPath $targetFileName;
+    $targetFilePath = (Join-Path -Path $currentPath -ChildPath (Join-Path -Path ".." -ChildPath $targetFilePath));
+    
+    # Delete patch file if exists.
     if (Test-Path($targetFilePath)) 
     {
         Remove-Item $targetFilePath;
     }
-
+    
     # Create new archive.
-    Compress-Archive -Path ($tempPath + "\*") -DestinationPath $targetFilePath | Out-Null;
+    $archiverPath = Join-Path -Path $currentPath -ChildPath "7za.exe";
+    Push-Location $tempPath;
+    Invoke-Expression ($archiverPath + " a -tzip " + $targetFilePath) | Out-Null;
+    Pop-Location;
+
+    Write-Host ("Created file '" + $targetFilePath + "'");
 }
 else 
 {
     Write-Output "Nothing in patch.";
 }
+
+Pop-Location;
 
 # Delete files in temp.
 Remove-Item -Force -Recurse $tempPath;
