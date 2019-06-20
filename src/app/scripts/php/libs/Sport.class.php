@@ -529,18 +529,22 @@
             $rb->loadBundle($this->BundleName, $this->BundleLang);
             $season = array();
 
-
             if ($_POST['season-save'] == $rb->get('seasons.form.save')) {
                 if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
                     $seasonId = $_POST['season-id'];
                     $seasonStart = $_POST['season-edit-start'];
                     $seasonEnd = $_POST['season-edit-end'];
                     if ($seasonStart < $seasonEnd) {
-                        $season = $dbObject->fetchAll(parent::query()->get('selectSeasonById', array('id' => $seasonId), 'sport'));
+                        if ($seasonId != '') {
+                            $season = $dbObject->fetchAll(parent::query()->get('selectSeasonById', array('id' => $seasonId), 'sport'));
+                        } else {
+                            $season = array();
+                        }
+                        
                         if (count($season) > 0) {
                             $dbObject->execute(parent::query()->get('updateSeasonById', array('startYear' => $seasonStart, 'endYear' => $seasonEnd, 'id' => $seasonId), 'sport'));
                         } else {
-                            $dbObject->execute(parent::query()->get('insertSeason', array('startYear' => $seasonStart, 'endYear' => $seasonEnd, 'projectId' => self::getProjectId()), 'sport'));
+                            $dbObject->execute(parent::query()->get('insertSeason', array('startYear' => $seasonStart, 'endYear' => $seasonEnd, 'projectId' => self::getProjectId()), 'sport'), true);
                         }
                     } else {
                         $return .= parent::getError($rb->get('season.error.startgtend'));
