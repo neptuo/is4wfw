@@ -3769,7 +3769,11 @@
 
             $seasql = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` WHERE `project_id` = ' . self::getProjectId() . ' ORDER BY `start_year` DESC;');
             foreach ($seasql as $sea) {
-                $tea = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE ' . ($teamId != '' ? '`id` = ' . $teamId . ' AND ' : '' ) . '`season` = ' . $sea['id'] . ';');
+                if ($teamId != '') {
+                    $tea = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE `id` = ' . $teamId . ' AND `season` = ' . $sea['id'] . ';');
+                } else {
+                    $tea = array();
+                }
                 if (count($tea) == 0 || $sea['id'] == $seasonId) {
                     $return .= '<option value="' . $sea['id'] . '"' . (($sea['id'] == $seaselId) ? 'selected="selectd"' : '') . '>' . $sea['start_year'] . ' - ' . $sea['end_year'] . '</option>';
                 }
