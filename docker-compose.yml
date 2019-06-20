@@ -21,6 +21,8 @@ services:
       - "8082:80"
     expose:
       - "9000"
+    environment:
+      XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_enable=1
     volumes:
       - ./src/.htaccess:/var/www/html/.htaccess:ro
       - ./src/app:/var/www/html/app:ro
