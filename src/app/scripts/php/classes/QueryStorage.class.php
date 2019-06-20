@@ -25,7 +25,6 @@ class QueryStorage {
             'selectMatchByIdProjectId' => 'select `id`, `h_team`, `a_team`, `h_score`, `a_score`, `h_shoots`, `a_shoots`, `h_penalty`, `a_penalty`, `h_extratime`, `a_extratime`, `comment`, `round`, `in_table`, `season`, `date`, `time`, `refs`, `refs2`, `place`, `main_stuff`, `stuff`, `stuff2`, `notplayed` FROM `w_sport_match` WHERE `id` = {id} and `project_id` = {projectId};',
             'roundsByProjectIdSeasonId' => 'select `id`, `number`, `name`, `visible`, `season_id` from `w_sport_round` where `project_id` = {projectId} and `season_id` = {seasonId} order by `number`',
             'roundById' => 'select `id`, `number`, `visible`, `name` from `w_sport_round` where `id` = {id};',
-            'roundsIdByNumberNotId' => 'select `id` from `w_sport_round` where `number` = {number} and `id` != {id} and `season_id` = {seasonId};',
             'updateRound' => 'update `w_sport_round` set `name` = "{name}", `number` = {number}, `visible` = {visible} where `id` = {id};',
             'insertRound' => 'insert into `w_sport_round`(`name`, `number`, `visible`, `season_id`, `project_id`) values ("{name}", {number}, {visible}, {season_id}, {project_id});',
             'roundDeleteById' => 'delete from `w_sport_round` where `id` = {id};'

@@ -2527,7 +2527,11 @@
                     $round['project_id'] = self::getProjectId();
 
                     //parent::db()->setMockMode(true);
-                    $roothnum = parent::db()->fetchAll(parent::query()->get('roundsIdByNumberNotId', array('number' => $round['number'], 'id' => $round['id'], 'seasonId' => $round['season_id']), 'sport'));
+                    if ($round['id'] != '') {
+                        $roothnum = parent::db()->fetchAll('select `id` from `w_sport_round` where `number` = ' . $round['number'] . ' and `id` != ' . $round['id'] . ' and `season_id` = ' . $round['season_id'] . ';');
+                    } else {
+                        $roothnum = parent::db()->fetchAll('select `id` from `w_sport_round` where `number` = ' . $round['number'] . ' and `season_id` = ' . $round['season_id'] . ';');
+                    }
                     if (count($roothnum) > 0) {
                         $return .= parent::getError($rb->get('rounds.numberunique'));
                         $ok = false;
@@ -2538,8 +2542,7 @@
                     }
 
                     if ($ok) {
-                        $rr = parent::db()->fetchAll(parent::query()->get('roundById', array('id' => $round['id']), 'sport'));
-                        if (count($rr) == 1) {
+                        if ($round['id'] != '') {
                             parent::db()->execute(parent::query()->get('updateRound', $round, 'sport'));
                         } else {
                             parent::db()->execute(parent::query()->get('insertRound', $round, 'sport'));
