@@ -1931,7 +1931,12 @@
                     //parent::db()->setMockMode(true);
                     parent::db()->disableCache();
                     if ($ok) {
-                        $tmpma = parent::db()->fetchSingle(parent::query()->get('selectMatchByIdSeasonId', array('id' => $match['id'], 'seasonId' => $match['season']), 'sport'));
+                        if ($match['id'] != '') {
+                            $tmpma = parent::db()->fetchSingle(parent::query()->get('selectMatchByIdSeasonId', array('id' => $match['id'], 'seasonId' => $match['season']), 'sport'));
+                        } else {
+                            $tmpma = array();
+                        }
+
                         if ($tmpma != array()) {
                             if ($tmpma['in_table'] != 0 && $tmpma['notplayed'] != 1) {
                                 $tmpma['season'] = $match['season'];
@@ -1945,7 +1950,9 @@
                         }
                         if ($match['in_table'] != 0 && $match['notplayed'] != 1) {
                             self::addMatchToTable($match);
-                            parent::db()->execute(parent::query()->get('updateTableIdInStatsByMid', array('tableId' => $match['in_table'], 'mid' => $match['id']), 'sport'));
+                            if ($match['id'] != '') {
+                                parent::db()->execute(parent::query()->get('updateTableIdInStatsByMid', array('tableId' => $match['in_table'], 'mid' => $match['id']), 'sport'));
+                            }
                         }
                     } else {
                         $isValidationError = true;
