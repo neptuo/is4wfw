@@ -774,6 +774,12 @@
                     $urls = parent::db()->fetchAll('select `url` from `w_sport_team` where `url` = "' . $url . '" and `project_id` = ' . self::getProjectId() . ($teamId != '' ? ' and `id` != ' . $teamId : '') . ';');
                     if ($name != '' && count($urls) == 0) {
                         //parent::db()->setMockMode(true);
+                        if ($teamId == '') {
+                            $teamId = 0;
+                        }
+                        if ($seasonId == '') {
+                            $seasonId = 0;
+                        }
 
                         $seasql = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE `id` = ' . $teamId . ' AND `season` = ' . $seasonId . ';');
                         if (count($seasql) > 0) {
@@ -798,14 +804,16 @@
                             }
                         }
 
-                        $values = '';
-                        foreach ($tables as $tbl) {
-                            if ($values != '') {
-                                $values .= ', ';
+                        if (count($tables) > 0) {
+                            $values = '';
+                            foreach ($tables as $tbl) {
+                                if ($values != '') {
+                                    $values .= ', ';
+                                }
+                                $values .= '(' . $teamId . ', 0, 0, 0, 0, 0, 0, 0, ' . $season . ', 0, ' . $tbl . ', ' . self::getProjectId() . ')';
                             }
-                            $values .= '(' . $teamId . ', 0, 0, 0, 0, 0, 0, 0, ' . $season . ', 0, ' . $tbl . ', ' . self::getProjectId() . ')';
+                            parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `positionfix`, `table_id`, `project_id`) values ' . $values);
                         }
-                        parent::db()->execute('insert into `w_sport_table`(`team`, `matches`, `wins`, `draws`, `loses`, `s_score`, `r_score`, `points`, `season`, `positionfix`, `table_id`, `project_id`) values ' . $values);
 
                         //parent::db()->setMockMode(false);
                     } else {
@@ -3761,7 +3769,7 @@
 
             $seasql = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` WHERE `project_id` = ' . self::getProjectId() . ' ORDER BY `start_year` DESC;');
             foreach ($seasql as $sea) {
-                $tea = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE `id` = ' . $teamId . ' AND `season` = ' . $sea['id'] . ';');
+                $tea = $dbObject->fetchAll('SELECT `id` FROM `w_sport_team` WHERE ' . ($teamId != '' ? '`id` = ' . $teamId . ' AND ' : '' ) . '`season` = ' . $sea['id'] . ';');
                 if (count($tea) == 0 || $sea['id'] == $seasonId) {
                     $return .= '<option value="' . $sea['id'] . '"' . (($sea['id'] == $seaselId) ? 'selected="selectd"' : '') . '>' . $sea['start_year'] . ' - ' . $sea['end_year'] . '</option>';
                 }
