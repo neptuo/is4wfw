@@ -540,7 +540,7 @@
                         } else {
                             $season = array();
                         }
-                        
+
                         if (count($season) > 0) {
                             $dbObject->execute(parent::query()->get('updateSeasonById', array('startYear' => $seasonStart, 'endYear' => $seasonEnd, 'id' => $seasonId), 'sport'));
                         } else {
@@ -1522,7 +1522,13 @@
                         $return .= parent::getError($rb->get('table.error.namemustbeunique'));
                         $isValidationFailed = true;
                     } else {
-                        $tables = parent::db()->fetchAll('select `id` from `w_sport_tables` where `id` = ' . $table['id'] . ';');
+                        if ($table['id'] != '') {
+                            $tables = parent::db()->fetchAll('select `id` from `w_sport_tables` where `id` = ' . $table['id'] . ';');
+                        } else {
+                            $tables = array();
+                            unset($table['id']);
+                        }
+
                         if (count($tables) == 1) {
                             $dao->update($table);
                         } else {
