@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>UI controls.</name>
+  <classname>Ui</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro generování prvků uživatelského rozhraní.
+  </comment>
+  <tag>
+    <tagname>dropdownlist</tagname>
+    <function>dropdownlist</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název HTML prvku.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>entity</attname>
+      <attreq>required</attreq>
+      <attcomment>Název entity, ze které se mají čerpat data.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>display</attname>
+      <attreq>required</attreq>
+      <attcomment>Název sloupce, který se má zobrazit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+      <attcomment>Název název sloupce, který se má použit jako hodnota.</attcomment>
+    </attribute>
+    <comment>
+      Vygeneruje dropdownlist z DB entity.
+    </comment>
+  </tag>
+</taglib>
+

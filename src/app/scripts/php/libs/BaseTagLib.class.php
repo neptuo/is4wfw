@@ -217,6 +217,10 @@
             return $dbObject;
         }
 
+        public function dataAccess() {
+            return self::db()->getDataAccess();
+        }
+
         public function login() {
             global $loginObject;
             return $loginObject;
@@ -558,6 +562,42 @@
 
         public function array_equal($a, $b) {
             return is_array($a) && is_array($b) && count($a) == count($b) && array_diff($a, $b) === array_diff($b, $a);
+        }
+
+        public function isPost() {
+            return $_SERVER['REQUEST_METHOD'] == "POST";
+        }
+
+        public function isGet() {
+            return $_SERVER['REQUEST_METHOD'] == "GEt";
+        }
+
+        public function pushModel($model) {
+            $stack = self::request()->get('models');
+			if ($stack == NULL) {
+                $stack = new Stack();
+                self::request()->set('models', $stack);
+			}
+
+			$stack->push($model);
+        }
+
+        public function peekModel() {
+            $stack = self::request()->get('models');
+			if ($stack == NULL || $stack->isEmpty()) {
+                return array();
+			}
+
+            return $stack->peek();
+        }
+
+        public function popModel() {
+            $stack = self::request()->get('models');
+			if ($stack == NULL || $stack->isEmpty()) {
+                return array();
+			}
+
+			return $stack->pop($model);
         }
     }
 
