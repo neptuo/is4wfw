@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Custom entity.</name>
+  <classname>CustomEntity</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro generování a práci s uživatelskými entitami.
+  </comment>
+  <fulltag>
+    <tagname>form</tagname>
+    <function>form</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
+    </attribute>
+    <comment>
+      Vygeneruje formulář pro přidání/úpravu záznamu v uživatelské entitě.
+    </comment>
+  </fulltag>
+</taglib>
+

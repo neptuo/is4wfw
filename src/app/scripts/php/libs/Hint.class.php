@@ -331,6 +331,7 @@
                         .'<option value="php.libs.Article"'.($_SESSION['select-class-path'] == 'php.libs.Article' ? 'selected="selected"' : '').'>php.libs.Article</option>'
                         .'<option value="php.libs.Counter"'.($_SESSION['select-class-path'] == 'php.libs.Counter' ? 'selected="selected"' : '').'>php.libs.Counter</option>'
                         .'<option value="php.libs.CustomForm"'.($_SESSION['select-class-path'] == 'php.libs.CustomForm' ? 'selected="selected"' : '').'>php.libs.CustomForm</option>'
+                        .'<option value="php.libs.CustomEntity"'.($_SESSION['select-class-path'] == 'php.libs.CustomEntity' ? 'selected="selected"' : '').'>php.libs.CustomEntity</option>'
                         .'<option value="php.libs.Database"'.($_SESSION['select-class-path'] == 'php.libs.Database' ? 'selected="selected"' : '').'>php.libs.Database</option>'
                         .'<option value="php.libs.DefaultPhp"'.($_SESSION['select-class-path'] == 'php.libs.DefaultPhp' ? 'selected="selected"' : '').'>php.libs.DefaultPhp</option>'
                         .'<option value="php.libs.DefaultWeb"'.($_SESSION['select-class-path'] == 'php.libs.DefaultWeb' ? 'selected="selected"' : '').'>php.libs.DefaultWeb</option>'
