@@ -1,6 +1,7 @@
 <?php
 
 	require_once("BaseTagLib.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Model.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
 	class CustomEntity extends BaseTagLib {

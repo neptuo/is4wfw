@@ -14,7 +14,7 @@
     <attribute>
       <attname>name</attname>
       <attreq>required</attreq>
-      <attcomment>Název HTML prvku.</attcomment>
+      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>entity</attname>
@@ -33,6 +33,30 @@
     </attribute>
     <comment>
       Vygeneruje dropdownlist z DB entity.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>textbox</tagname>
+    <function>textbox</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+    </attribute>
+    <comment>
+      Vygeneruje input pro zadání textu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>checkbox</tagname>
+    <function>checkbox</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+    </attribute>
+    <comment>
+      Vygeneruje checkbox.
     </comment>
   </tag>
 </taglib>

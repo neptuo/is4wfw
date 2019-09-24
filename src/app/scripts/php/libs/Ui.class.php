@@ -16,12 +16,14 @@
 		private function setModelValue($key, $value) {
 			self::peekModel()[$key] = $value;
 		}
+
+		private function setModelValueFromRequest($modelKey, $requestKey) {
+			self::peekModel()[$modelKey] = $_REQUEST[$requestKey];
+		}
 		
 		public function dropdownlist($name, $entity, $display, $id) {
 			if (!self::isGet()) {
-				// Process request data.
-				$value = $_REQUEST[$name];
-				self::setModelValue($name, $value);
+				self::setModelValueFromRequest($name, $name);
 			}
 
 			$modelValue = self::getModelValue($name);
@@ -37,6 +39,25 @@
 			$result .= "</select>";
 			
 			return $result;
+		}
+
+		public function textbox($name) {
+			if (!self::isGet()) {
+				self::setModelValueFromRequest($name, $name);
+			}
+
+			$modelValue = self::getModelValue($name);
+			return "<input name='$name' type='text' value='$modelValue' />";
+		}
+
+		public function checkbox($name) {
+			if (!self::isGet()) {
+				$modelValue = $_REQUEST[$name];
+				self::setModelValue($name, $modelValue == "on");
+			}
+
+			$modelValue = self::getModelValue($name);
+			return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 ? " checked='checked'" : '') . " />";
 		}
 	}
 
