@@ -9,6 +9,10 @@
 			parent::setTagLibXml("Ui.xml");
 		}
 
+		private function isRegistration() {
+			return self::peekModel()->isRegistration();
+		}
+
 		private function isSubmit() {
 			return self::peekModel()->isSubmit();
 		}
@@ -21,8 +25,16 @@
 			return self::peekModel()[$key]['value'];
 		}
 
-		private function setModelValue($key, $value, $type) {
-			self::peekModel()[$key] = array('value' => $value, 'type' => $type);
+		private function setModel($key, $value) {
+			self::peekModel()[$key] = $value;
+		}
+
+		private function setModelType($key, $type) {
+			self::setModel($key, array('type' => $type));
+		}
+
+		private function setModelValue($key, $value) {
+			self::peekModel()[$key]['value'] = $value;
 		}
 
 		private function setModelValueFromRequest($modelKey, $requestKey, $type) {
@@ -41,15 +53,18 @@
 		}
 		
 		public function dropdownlist($name, $entity, $display, $id) {
-			if (self::isSubmit()) {
-				self::setModelValueFromRequest($name, $name, "number");
+			if (self::isRegistration() || self::isSubmit()) {
+				self::setModelType($name, "reference");
 			}
 
-			$result = "";
+			if (self::isSubmit()) {
+				self::setModelValueFromRequest($name, $name);
+			}
+
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
 				
-				$result .= "<select name='$name'>";
+				$result = "<select name='$name'>";
 
 				$data = self::dataAccess()->fetchAll("SELECT `$id`, `$display` FROM `$entity` ORDER BY `$display`;");
 				foreach ($data as $item) {
@@ -58,14 +73,18 @@
 				}
 
 				$result .= "</select>";
+				return $result;
 			}
 			
-			return $result;
 		}
 
 		public function textbox($name) {
+			if (self::isRegistration() || self::isSubmit()) {
+				self::setModelType($name, "string");
+			}
+
 			if (self::isSubmit()) {
-				self::setModelValueFromRequest($name, $name, "string");
+				self::setModelValueFromRequest($name, $name);
 			}
 
 			if (self::isRender()) {
@@ -75,9 +94,13 @@
 		}
 
 		public function checkbox($name) {
+			if (self::isRegistration() || self::isSubmit()) {
+				self::setModelType($name, "bool");
+			}
+
 			if (self::isSubmit()) {
 				$modelValue = $_REQUEST[$name];
-				self::setModelValue($name, $modelValue == "on", "bool");
+				self::setModelValue($name, $modelValue == "on");
 			}
 
 			if (self::isRender()) {
