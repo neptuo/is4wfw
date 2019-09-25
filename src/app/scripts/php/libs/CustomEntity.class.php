@@ -19,13 +19,17 @@
             self::pushModel($model);
 
             if (self::isHttpMethod($method) && ($submit == NULL || array_key_exists($submit, $_REQUEST))) {
+                self::peekModel()->submit();
                 self::parseContent($template);
 
                 // TODO: Insert value.
                 print_r($model);
             }
 
-            return self::ui()->form($template, "post");
+            self::peekModel()->render();
+            $result = self::ui()->form($template, "post");
+            self::popModel();
+            return $result;
 		}
 	}
 
