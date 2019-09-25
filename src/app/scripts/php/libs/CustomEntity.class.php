@@ -29,12 +29,7 @@
                 print_r($model);
             }
 
-            $result = ""
-            . "<form method='post' action='" . $_SERVER['REQUEST_URI'] . "'>"
-                . self::parseContent($template)
-            . "</form>";
-
-			return $result;
+            return self::ui()->form($template, "post");
 		}
 	}
 

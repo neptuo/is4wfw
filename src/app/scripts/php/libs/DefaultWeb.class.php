@@ -1542,14 +1542,6 @@
 
             return $pageContent;
         }
-        
-        private function parseContent($content) {
-            $parser = new FullTagParser();
-            $parser->setContent($content);
-            $parser->startParsing();
-            $return = $parser->getResult();
-            return $return;
-        }
 
         /**
          *

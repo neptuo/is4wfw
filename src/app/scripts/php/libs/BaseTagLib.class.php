@@ -3,6 +3,7 @@
     require_once('System.class.php');
     require_once('FileAdmin.class.php');
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ExtensionParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
 
     /**
@@ -215,6 +216,16 @@
         public function db() {
             global $dbObject;
             return $dbObject;
+        }
+
+        public function ui() {
+            global $uiObject;
+            if ($uiObject == NULL) {
+                self::php()->autoRegisterPrefix("ui");
+                global $uiObject;
+            }
+
+            return $uiObject;
         }
 
         public function dataAccess() {
@@ -564,12 +575,16 @@
             return is_array($a) && is_array($b) && count($a) == count($b) && array_diff($a, $b) === array_diff($b, $a);
         }
 
+        public function isHttpMethod($method) {
+            return $_SERVER['REQUEST_METHOD'] == $method;
+        }
+
         public function isPost() {
-            return $_SERVER['REQUEST_METHOD'] == "POST";
+            return self::isHttpMethod("POST");
         }
 
         public function isGet() {
-            return $_SERVER['REQUEST_METHOD'] == "GEt";
+            return self::isHttpMethod("GET");
         }
 
         public function pushModel($model) {
@@ -598,6 +613,14 @@
 			}
 
 			return $stack->pop($model);
+        }
+        
+        public function parseContent($content) {
+            $parser = new FullTagParser();
+            $parser->setContent($content);
+            $parser->startParsing();
+            $return = $parser->getResult();
+            return $return;
         }
     }
 

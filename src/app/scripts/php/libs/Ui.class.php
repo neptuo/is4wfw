@@ -20,6 +20,17 @@
 		private function setModelValueFromRequest($modelKey, $requestKey) {
 			self::peekModel()[$modelKey] = $_REQUEST[$requestKey];
 		}
+
+		public function form($template, $method = "post", $action = NULL) {
+			if ($action == NULL) {
+				$action = $_SERVER['REQUEST_URI'];
+			}
+
+            return ""
+            . "<form method='$method' action='$action'>"
+                . self::parseContent($template)
+            . "</form>";
+		}
 		
 		public function dropdownlist($name, $entity, $display, $id) {
 			if (!self::isGet()) {
