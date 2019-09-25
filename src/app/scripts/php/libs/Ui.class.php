@@ -9,8 +9,16 @@
 			parent::setTagLibXml("Ui.xml");
 		}
 
+		private function isSubmit() {
+			return self::peekModel()->isSubmit();
+		}
+
+		private function isRender() {
+			return self::peekModel()->isRender();
+		}
+
 		private function getModelValue($key) {
-			return self::peekModel()[$key];
+			return self::peekModel()[$key]['value'];
 		}
 
 		private function setModelValue($key, $value, $type) {
@@ -33,42 +41,49 @@
 		}
 		
 		public function dropdownlist($name, $entity, $display, $id) {
-			if (!self::isGet()) {
+			if (self::isSubmit()) {
 				self::setModelValueFromRequest($name, $name, "number");
 			}
 
-			$modelValue = self::getModelValue($name);
-			
-			$result = "<select name='$name'>";
+			$result = "";
+			if (self::isRender()) {
+				$modelValue = self::getModelValue($name);
+				
+				$result .= "<select name='$name'>";
 
-			$data = self::dataAccess()->fetchAll("SELECT `$id`, `$display` FROM `$entity` ORDER BY `$display`;");
-			foreach ($data as $item) {
-				$itemValue = $item[$id];
-				$result .= "<option value='$itemValue'" . ($modelValue == $itemValue ? " selected='selected'" : "") . ">$item[$display]</option>";
+				$data = self::dataAccess()->fetchAll("SELECT `$id`, `$display` FROM `$entity` ORDER BY `$display`;");
+				foreach ($data as $item) {
+					$itemValue = $item[$id];
+					$result .= "<option value='$itemValue'" . ($modelValue == $itemValue ? " selected='selected'" : "") . ">$item[$display]</option>";
+				}
+
+				$result .= "</select>";
 			}
-
-			$result .= "</select>";
 			
 			return $result;
 		}
 
 		public function textbox($name) {
-			if (!self::isGet()) {
+			if (self::isSubmit()) {
 				self::setModelValueFromRequest($name, $name, "string");
 			}
 
-			$modelValue = self::getModelValue($name);
-			return "<input name='$name' type='text' value='$modelValue' />";
+			if (self::isRender()) {
+				$modelValue = self::getModelValue($name);
+				return "<input name='$name' type='text' value='$modelValue' />";
+			}
 		}
 
 		public function checkbox($name) {
-			if (!self::isGet()) {
+			if (self::isSubmit()) {
 				$modelValue = $_REQUEST[$name];
 				self::setModelValue($name, $modelValue == "on", "bool");
 			}
 
-			$modelValue = self::getModelValue($name);
-			return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 ? " checked='checked'" : '') . " />";
+			if (self::isRender()) {
+				$modelValue = self::getModelValue($name);
+				return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 ? " checked='checked'" : '') . " />";
+			}
 		}
 	}
 
