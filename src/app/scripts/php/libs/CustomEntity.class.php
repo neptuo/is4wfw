@@ -10,23 +10,33 @@
 			parent::setTagLibXml("CustomEntity.xml");
 		}
         
-		public function form($template, $name, $method = "POST", $submit) {
-            if ($method == "GET" && $submit == NULL) {
+		public function form($template, $name, $id = 0, $method = "POST", $submit = "") {
+            if ($method == "GET" && $submit == "") {
                 trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
             }
 
             $model = new Model();
             self::pushModel($model);
 
-            if (self::isHttpMethod($method) && ($submit == NULL || array_key_exists($submit, $_REQUEST))) {
-                self::peekModel()->submit();
+            if ($id > 0) {
+                $model->registration();
                 self::parseContent($template);
+                $model->registration(false);
 
-                // TODO: Insert value.
+                // TODO: Load data.
                 print_r($model);
             }
 
-            self::peekModel()->render();
+            if (self::isHttpMethod($method) && ($submit == "" || array_key_exists($submit, $_REQUEST))) {
+                $model->submit();
+                self::parseContent($template);
+                $model->submit(false);
+
+                // TODO: Insert/update value.
+                print_r($model);
+            }
+
+            $model->render();
             $result = self::ui()->form($template, "post");
             self::popModel();
             return $result;

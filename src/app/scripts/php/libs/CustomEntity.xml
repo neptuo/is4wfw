@@ -17,6 +17,13 @@
       <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
     </attribute>
     <attribute>
+      <attname>id</attname>
+      <attreq>implied</attreq>
+      <attcomment>Id záznamu, které se má editovat.</attcomment>
+      <atttype>number</atttype>
+      <attdef>0</attdef>
+    </attribute>
+    <attribute>
       <attname>method</attname>
       <attreq>implied</attreq>
       <attdef>POST</attdef>
