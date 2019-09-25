@@ -16,6 +16,17 @@
       <attreq>required</attreq>
       <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
     </attribute>
+    <attribute>
+      <attname>method</attname>
+      <attreq>implied</attreq>
+      <attdef>POST</attdef>
+      <attcomment>HTTP metoda, kterou se má odeslat formulář (GET, POST, PUT, DELETE).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>submit</attname>
+      <attreq>implied</attreq>
+      <attcomment>Název klíče z requestu, kterým je možné odeslat formulář. Pokud není zadáno, formulář se odešle jakýmkoli requestem. Je povinný pro method=GET.</attcomment>
+    </attribute>
     <comment>
       Vygeneruje formulář pro přidání/úpravu záznamu v uživatelské entitě.
     </comment>

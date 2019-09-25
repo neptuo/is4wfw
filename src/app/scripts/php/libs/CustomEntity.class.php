@@ -10,19 +10,15 @@
 			parent::setTagLibXml("CustomEntity.xml");
 		}
         
-        private function parseContent($content) {
-            $parser = new FullTagParser();
-            $parser->setContent($content);
-            $parser->startParsing();
-            $return = $parser->getResult();
-            return $return;
-        }
-		
-		public function form($template, $name) {
+		public function form($template, $name, $method = "POST", $submit) {
+            if ($method == "GET" && $submit == NULL) {
+                trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
+            }
+
             $model = new Model();
             self::pushModel($model);
 
-            if (self::isPost()) {
+            if (self::isHttpMethod($method) && ($submit == NULL || array_key_exists($submit, $_REQUEST))) {
                 self::parseContent($template);
 
                 // TODO: Insert value.
