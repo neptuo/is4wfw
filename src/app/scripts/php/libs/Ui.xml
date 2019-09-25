@@ -8,6 +8,19 @@
   <comment>
     Knihovna pro generování prvků uživatelského rozhraní.
   </comment>
+  <fulltag>
+    <tagname>form</tagname>
+    <function>form</function>
+    <attribute>
+      <attname>method</attname>
+      <attreq>implied</attreq>
+      <attdef>POST</attdef>
+      <attcomment>HTTP metoda, kterou se má formář odeslat.</attcomment>
+    </attribute>
+    <comment>
+      Vygeneruje formulář.
+    </comment>
+  </fulltag>
   <tag>
     <tagname>dropdownlist</tagname>
     <function>dropdownlist</function>

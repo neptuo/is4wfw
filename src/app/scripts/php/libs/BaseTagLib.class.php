@@ -379,6 +379,19 @@
             $parser = ExtensionParser::initialize($name, self::rb(), $data);
             return $parser->parse();
         }
+
+        private static $partialViews = array();
+
+        public function partialView($path) {
+            if (array_key_exists($path, self::$partialViews)) {
+                $content = self::$partialViews[$path];
+            } else {
+                $content = file_get_contents(APP_SCRIPTS_PATH . 'views/templates/'.$path.'.view.php');
+                self::$partialViews[$path] = $content;
+            }
+
+            return self::parseContent($content);
+        }
         
         private $daos = array();
         

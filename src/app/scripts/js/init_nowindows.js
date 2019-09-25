@@ -64,6 +64,7 @@ function init(event) {
 	//initKeystrokes(event);
 	
 	initClickableGrid();
+	initCustomEntities();
 	
 	var inputs = document.getElementsByTagName('input');
 	for(var i = 0; i < inputs.length; i ++) {
@@ -1075,3 +1076,16 @@ function ajaxAutoRedirect() {
 }
 
 // Aktualizovat vypis adresare ;-)
+
+function initCustomEntities() {
+	$(".ce-creator-add").click(function(e) {
+		var $form = $(e.currentTarget).closest("form");
+		var $target = $form.find(".ce-columns");
+		var $source = $form.find(".ce-column").last();
+		
+		var $new = $source.clone();
+		$new.find("input").val("");
+
+		$target.append($new);
+	})
+}

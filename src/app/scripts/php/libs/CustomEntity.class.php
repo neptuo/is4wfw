@@ -8,7 +8,23 @@
 
 		public function __construct() {
 			parent::setTagLibXml("CustomEntity.xml");
-		}
+        }
+        
+        public function creator() {
+            $model = new Model();
+            self::pushModel($model);
+
+            if (array_key_exists("ce-submit", $_REQUEST)) {
+                $model->submit();
+                self::partialView("customentities/creator");
+                $model->submit(false);
+            }
+
+            $model->render();
+            $result = self::partialView("customentities/creator");
+            self::popModel();
+            return $result;
+        }
         
 		public function form($template, $name, $id = 0, $method = "POST", $submit = "") {
             if ($method == "GET" && $submit == "") {
