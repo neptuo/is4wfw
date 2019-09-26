@@ -44,6 +44,8 @@
 		public function form($template, $method = "post", $action = NULL) {
 			if ($action == NULL) {
 				$action = $_SERVER['REQUEST_URI'];
+			} else {
+				$action = self::web()->composeUrl($action);
 			}
 
             return ""

@@ -17,6 +17,11 @@
       <attdef>POST</attdef>
       <attcomment>HTTP metoda, kterou se má formář odeslat.</attcomment>
     </attribute>
+    <attribute>
+      <attname>action</attname>
+      <attreq>implied</attreq>
+      <attcomment>URL, na kterou se má přesměrovat při odeslání formuláře.</attcomment>
+    </attribute>
     <comment>
       Vygeneruje formulář.
     </comment>
