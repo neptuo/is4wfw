@@ -52,7 +52,7 @@
             . "</form>";
 		}
 		
-		public function dropdownlist($name, $entity, $display, $id) {
+		public function dropdownlist($name, $source, $display, $id) {
 			if (self::isRegistration() || self::isSubmit()) {
 				self::setModelType($name, "reference");
 			}
@@ -66,7 +66,12 @@
 				
 				$result = "<select name='$name'>";
 
-				$data = self::dataAccess()->fetchAll("SELECT `$id`, `$display` FROM `$entity` ORDER BY `$display`;");
+				if (is_array($source)) {
+					$data = $source;
+				} else {
+					$data = self::dataAccess()->fetchAll("SELECT `$id`, `$display` FROM `$source` ORDER BY `$display`;");
+				}
+
 				foreach ($data as $item) {
 					$itemValue = $item[$id];
 					$result .= "<option value='$itemValue'" . ($modelValue == $itemValue ? " selected='selected'" : "") . ">$item[$display]</option>";
