@@ -10,20 +10,28 @@
 			parent::setTagLibXml("CustomEntity.xml");
         }
         
-        public function creator() {
+        public function tableCreator() {
             $model = new Model();
             self::pushModel($model);
 
-            if (array_key_exists("ce-submit", $_REQUEST)) {
+            if (array_key_exists("ce-creator-save", $_REQUEST)) {
                 $model->submit();
-                self::partialView("customentities/creator");
+                self::partialView("customentities/tableCreator");
                 $model->submit(false);
             }
 
             $model->render();
-            $result = self::partialView("customentities/creator");
+            $result = self::partialView("customentities/tableCreator");
             self::popModel();
             return $result;
+        }
+
+        public function getTableColumnTypes() {
+            return array(
+                array("key" => "number", "name" => "Number", "db" => "INT"),
+                array("key" => "string", "name" => "Text", "db" => "TINYTEXT"),
+                array("key" => "bool", "name" => "Boolean", "db" => "BIT")
+            );
         }
         
 		public function form($template, $name, $id = 0, $method = "POST", $submit = "") {

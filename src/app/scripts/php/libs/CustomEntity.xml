@@ -9,10 +9,10 @@
     Knihovna pro generování a práci s uživatelskými entitami.
   </comment>
   <tag>
-    <tagname>creator</tagname>
-    <function>creator</function>
+    <tagname>tableCreator</tagname>
+    <function>tableCreator</function>
     <comment>
-      Generátor uživatelských entit.
+      Generátor základu tabulky uživatelských entit.
     </comment>
   </tag>
   <fulltag>
@@ -45,5 +45,12 @@
       Vygeneruje formulář pro přidání/úpravu záznamu v uživatelské entitě.
     </comment>
   </fulltag>
+  <property>
+        <propname>tableColumnTypes</propname>
+        <getfunction>getTableColumnTypes</getfunction>
+        <comment>
+            Vrací pole podporovaných typů sloupců pro table creator ('key' => 'name' pairs).
+        </comment>
+    </property>
 </taglib>
 
