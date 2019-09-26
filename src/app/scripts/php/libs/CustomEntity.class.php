@@ -6,8 +6,12 @@
 
 	class CustomEntity extends BaseTagLib {
 
+        private $tables;
+
 		public function __construct() {
-			parent::setTagLibXml("CustomEntity.xml");
+            parent::setTagLibXml("CustomEntity.xml");
+            
+            $this->tables = new Stack();
         }
 
         private function getDbType($type) {
@@ -75,6 +79,24 @@
                 array("key" => "string", "name" => "Text", "db" => "TINYTEXT"),
                 array("key" => "bool", "name" => "Boolean", "db" => "BIT")
             );
+        }
+
+        public function listTables($template) {
+            $tables = self::dataAccess()->fetchAll("show tables");
+
+            $result = "";
+            foreach ($tables as $table) {
+                $tableName = end($table);
+                $this->tables->push($tableName);
+                $result .= self::parseContent($template);
+                $this->tables->pop();
+            }
+
+            return $result;
+        }
+
+        public function getTableName() {
+            return $this->tables->peek();
         }
         
 		public function form($template, $name, $id = 0, $method = "POST", $submit = "") {

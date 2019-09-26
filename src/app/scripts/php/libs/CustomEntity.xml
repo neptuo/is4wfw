@@ -16,6 +16,13 @@
     </comment>
   </tag>
   <fulltag>
+    <tagname>listTables</tagname>
+    <function>listTables</function>
+    <comment>
+      Vypíše seznam všech uživatelských tabulek.
+    </comment>
+  </fulltag>
+  <fulltag>
     <tagname>form</tagname>
     <function>form</function>
     <attribute>
@@ -46,11 +53,18 @@
     </comment>
   </fulltag>
   <property>
-        <propname>tableColumnTypes</propname>
-        <getfunction>getTableColumnTypes</getfunction>
-        <comment>
-            Vrací pole podporovaných typů sloupců pro table creator ('key' => 'name' pairs).
-        </comment>
-    </property>
+    <propname>tableColumnTypes</propname>
+    <getfunction>getTableColumnTypes</getfunction>
+    <comment>
+        Vrací pole podporovaných typů sloupců pro table creator ('key' => 'name' pairs).
+    </comment>
+  </property>
+  <property>
+    <propname>tableName</propname>
+    <getfunction>getTableName</getfunction>
+    <comment>
+        Vrací aktuální název tabulky při průchodu přes "ce:listTables".
+    </comment>
+  </property>
 </taglib>
 
