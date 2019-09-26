@@ -19,7 +19,19 @@
     <tagname>listTables</tagname>
     <function>listTables</function>
     <comment>
-      Vypíše seznam všech uživatelských tabulek.
+      Vypíše seznam všech uživatelských entity.
+    </comment>
+  </fulltag>
+  <fulltag>
+    <tagname>listTableColumns</tagname>
+    <function>listTableColumns</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název entity, pro kterou se mají zobrazit sloupce.</attcomment>
+    </attribute>
+    <comment>
+      Vypíše seznam sloupců vybrané uživatelké entity.
     </comment>
   </fulltag>
   <fulltag>
@@ -64,6 +76,20 @@
     <getfunction>getTableName</getfunction>
     <comment>
         Vrací aktuální název tabulky při průchodu přes "ce:listTables".
+    </comment>
+  </property>
+  <property>
+    <propname>tableColumnName</propname>
+    <getfunction>getTableColumnName</getfunction>
+    <comment>
+        Vrací aktuální název sloupce při průchodu přes "ce:listTableColumns".
+    </comment>
+  </property>
+  <property>
+    <propname>tableColumnType</propname>
+    <getfunction>getTableColumnType</getfunction>
+    <comment>
+        Vrací aktuální type sloupce při průchodu přes "ce:listTableColumns".
     </comment>
   </property>
 </taglib>

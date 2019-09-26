@@ -7,11 +7,13 @@
 	class CustomEntity extends BaseTagLib {
 
         private $tables;
+        private $columns;
 
 		public function __construct() {
             parent::setTagLibXml("CustomEntity.xml");
             
             $this->tables = new Stack();
+            $this->columns = new Stack();
         }
 
         private function getDbType($type) {
@@ -97,6 +99,27 @@
 
         public function getTableName() {
             return $this->tables->peek();
+        }
+
+        public function listTableColumns($template, $name) {
+            $columns = self::dataAccess()->fetchAll("show columns from `$name`;");
+            
+            $result = "";
+            foreach ($columns as $column) {
+                $this->columns->push($column);
+                $result .= self::parseContent($template);
+                $this->columns->pop();
+            }
+
+            return $result;
+        }
+
+        public function getTableColumnName() {
+            return $this->columns->peek()["Field"];
+        }
+
+        public function getTableColumnType() {
+            return $this->columns->peek()["Type"];
         }
         
 		public function form($template, $name, $id = 0, $method = "POST", $submit = "") {
