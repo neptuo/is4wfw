@@ -9,6 +9,44 @@
 		public function __construct() {
 			parent::setTagLibXml("CustomEntity.xml");
         }
+
+        private function getDbType($type) {
+            $items = self::getTableColumnTypes();
+            foreach ($items as $item) {
+                if ($item["key"] == $type) {
+                    return $item["db"];
+                }
+            }
+            
+            return NULL;
+        }
+
+        private function createTable($model) {
+            $sql = "CREATE TABLE `ce_" . $model["entity-name"]["value"] . "` (";
+            $primary = ', PRIMARY KEY (';
+
+            $columnName = $model["primary-key-1-name"]["value"];
+            $sql .= "`" . $columnName . "` " . (self::getDbType($model["primary-key-1-type"]["value"])) . " NOT NULL" . ($model["primary-key-1-identity"]["value"] ? " AUTO_INCREMENT" : "");
+            $primary .= "`" . $columnName . "`";
+
+            $columnName = $model["primary-key-2-name"]["value"];
+            if ($columnName != "") {
+                $sql .= ", `" . $columnName . "` " . (self::getDbType($model["primary-key-2-type"]["value"])) . " NOT NULL";
+                $primary .= ", `" . $columnName . "`";
+            }
+
+            $columnName = $model["primary-key-3-name"]["value"];
+            if ($columnName != "") {
+                $sql .= ", `" . $columnName . "` " . (self::getDbType($model["primary-key-3-type"]["value"])) . " NOT NULL";
+                $primary .= ", `" . $columnName . "`";
+            }
+
+            $sql .= "`)";
+            $sql .= $primary . ') ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ROW_FORMAT=FIXED;';
+
+            self::dataAccess()->execute($sql, true, true, true);
+            return true;
+        }
         
         public function tableCreator() {
             $model = new Model();
@@ -18,6 +56,11 @@
                 $model->submit();
                 self::partialView("customentities/tableCreator");
                 $model->submit(false);
+
+                if (self::createTable($model)) {
+                    self::redirectToSelf();
+                    return;
+                }
             }
 
             $model->render();
