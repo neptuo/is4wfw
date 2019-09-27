@@ -6,6 +6,8 @@
 
 	class CustomEntity extends BaseTagLib {
 
+        const tablePrefix = "ce_";
+
         private $tables;
         private $columns;
 
@@ -39,7 +41,7 @@
         }
 
         private function createTable($model) {
-            $sql = "CREATE TABLE `ce_" . $model["entity-name"]["value"] . "` (";
+            $sql = "CREATE TABLE `" . self::tablePrefix . $model["entity-name"]["value"] . "` (";
             $primary = ', PRIMARY KEY (';
 
             $columnName = $model["primary-key-1-name"]["value"];
@@ -108,12 +110,21 @@
             );
         }
 
+        public function tableDeleter($template, $name) {
+            $name = self::ensureTableName($name);
+
+            $sql = "DROP TABLE `$name`;";
+            self::dataAccess()->execute($sql);
+
+            self::parseContent($template);
+        }
+
         public function listTables($template) {
-            $tables = self::dataAccess()->fetchAll("show tables");
+            $tables = self::dataAccess()->fetchAll("SHOW TABLES LIKE '" . self::tablePrefix . "%'");
 
             $result = "";
             foreach ($tables as $table) {
-                $tableName = end($table);
+                $tableName = substr(end($table), strlen(self::tablePrefix));
                 $this->tables->push($tableName);
                 $result .= self::parseContent($template);
                 $this->tables->pop();
@@ -126,7 +137,21 @@
             return $this->tables->peek();
         }
 
+        private function ensureTableName($name) {
+            if (!self::startsWith($name, self::tablePrefix)) {
+                $name = self::tablePrefix . $name;
+                $table = self::dataAccess()->fetchAll("SHOW TABLES LIKE '$name';");
+                if (count($table) == 0) {
+                    trigger_error("Table name must be custom entity", E_USER_ERROR);
+                }
+            }
+
+            return $name;
+        }
+
         public function listTableColumns($template, $name) {
+            $name = self::ensureTableName($name);
+
             $columns = self::dataAccess()->fetchAll("show columns from `$name`;");
             
             $result = "";
@@ -156,6 +181,8 @@
         }
 
         public function tableColumnCreator($name) {
+            $name = self::ensureTableName($name);
+
             $model = new Model();
             self::pushModel($model);
 
@@ -177,6 +204,8 @@
         }
 
         public function tableColumnDeleter($template, $tableName, $columnName) {
+            $tableName = self::ensureTableName($tableName);
+
             $sql = "ALTER TABLE `$tableName` DROP COLUMN `$columnName`;";
             self::dataAccess()->execute($sql);
 

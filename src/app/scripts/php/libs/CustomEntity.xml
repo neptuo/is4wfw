@@ -47,6 +47,19 @@
     </comment>
   </fulltag>
   <fulltag>
+    <tagname>tableDeleter</tagname>
+    <function>tableDeleter</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název entity, která se má odstranit.</attcomment>
+    </attribute>
+    <comment>
+      Odstraní uživatelkou entitu.
+    </comment>
+  </fulltag>
+  <fulltag>
     <tagname>tableColumnDeleter</tagname>
     <function>tableColumnDeleter</function>
     <lookless>true</lookless>
@@ -61,7 +74,7 @@
       <attcomment>Název sloupce, který se má odstranit.</attcomment>
     </attribute>
     <comment>
-      Odstraní sloupce z tabulky
+      Odstraní sloupec z uživatelké entity.
     </comment>
   </fulltag>
 
@@ -99,7 +112,7 @@
     <propname>tableColumnTypes</propname>
     <getfunction>getTableColumnTypes</getfunction>
     <comment>
-        Vrací pole podporovaných typů sloupců pro table creator ('key' => 'name' pairs).
+        Vrací pole podporovaných typů sloupců pro table / column creator ('key', 'name', 'db').
     </comment>
   </property>
   <property>
