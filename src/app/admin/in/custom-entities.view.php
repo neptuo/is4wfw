@@ -32,7 +32,7 @@
 					</td>
 				</tr>
 			</ce:listTables>
-		<table>
+		</table>
 		<hr />
 		<ui:form>
 			<div class="gray-box">
