@@ -7,6 +7,7 @@
 	class CustomEntity extends BaseTagLib {
 
         const tablePrefix = "ce_";
+        const primaryKeyAttributePrefix = "key-";
 
         private $tables;
         private $columns;
@@ -18,26 +19,27 @@
             $this->columns = new Stack();
         }
 
-        private function mapTypeToDb($type) {
+        private function mapType($sourceKey, $sourceValue, $targetKey) {
             $items = self::getTableColumnTypes();
             foreach ($items as $item) {
-                if ($item["key"] == $type) {
-                    return $item["db"];
+                if ($item[$sourceKey] == $sourceValue) {
+                    return $item[$targetKey];
                 }
             }
             
             return NULL;
         }
 
+        private function mapTypeToDb($type) {
+            return self::mapType("key", $type, "db");
+        }
+
+        private function mapTypeToEscapeCharacter($type) {
+            return self::mapType("key", $type, "escape");
+        }
+
         private function mapDbTypeToName($type) {
-            $items = self::getTableColumnTypes();
-            foreach ($items as $item) {
-                if ($item["db"] == $type) {
-                    return $item["name"];
-                }
-            }
-            
-            return NULL;
+            return self::mapType("db", $type, "name");
         }
 
         private function createTable($model) {
@@ -104,9 +106,9 @@
 
         public function getTableColumnTypes() {
             return array(
-                array("key" => "number", "name" => "Number", "db" => "int(11)"),
-                array("key" => "string", "name" => "Text", "db" => "tinytext"),
-                array("key" => "bool", "name" => "Boolean", "db" => "bit(1)")
+                array("key" => "number", "name" => "Number", "db" => "int(11)", "escape" => ""),
+                array("key" => "string", "name" => "Text", "db" => "tinytext", "escape" => "'"),
+                array("key" => "bool", "name" => "Boolean", "db" => "bit(1)", "escape" => "")
             );
         }
 
@@ -213,22 +215,92 @@
         }
 
 
+        private function findPrimaryKeysInAttributes($params) {
+            $result = array();
+            foreach ($params as $key => $value) {
+                if (self::startsWith($key, self::primaryKeyAttributePrefix)) {
+                    $result[substr($key, strlen(self::primaryKeyAttributePrefix))] = $value;
+                }
+            }
+
+            return $result;
+        }
+
+        private function escapeSqlValue($item) {
+            $escape = self::mapTypeToEscapeCharacter($item["type"]);
+            if (strlen($escape) > 0) {
+                $item["value"] = self::dataAccess()->escape($item["value"]);
+            }
+
+            return $escape . $item["value"] . $escape;
+        }
         
-		public function form($template, $name, $id = 0, $method = "POST", $submit = "") {
+        private function getInsertSql($name, $model) {
+            $columns = "";
+            $value = "";
+            foreach ($model as $key => $item) {
+                $columns = self::joinString($columns, "`$key`");
+                $values = self::joinString($values, self::escapeSqlValue($item));
+            }
+
+            $sql = "INSERT INTO `$name`($columns) VALUES ($values);";
+            return $sql;
+        }
+        
+        private function getUpdateSql($name, $keys, $model) {
+            $values = "";
+            $condition = "";
+
+            foreach ($model as $key => $item) {
+                $values = self::joinString($values, "`$key` = " . self::escapeSqlValue($item));
+            }
+
+            foreach ($keys as $key => $value) {
+                $condition = self::joinString($condition, "$key = $value", " AND");
+            }
+
+            $sql = "UPDATE `$name` SET $values WHERE $condition;";
+            return $sql;
+        }
+
+        private function getSelectSql($name, $keys, $model) {
+            $columns = "";
+            $condition = "";
+            foreach ($model as $key => $item) {
+                $columns = self::joinString($columns, "`$key`");
+            }
+
+            foreach ($keys as $key => $value) {
+                $condition = self::joinString($condition, "$key = $value", " AND");
+            }
+
+            $sql = "SELECT $columns FROM `$name` WHERE $condition";
+            return $sql;
+        }
+
+		public function form($template, $name, $method = "POST", $submit = "", $nextPageId = 0, $params = array()) {
+            $name = self::ensureTableName($name);
+
             if ($method == "GET" && $submit == "") {
                 trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
             }
 
+            $keys = self::findPrimaryKeysInAttributes($params);
+            $isUpdate = count($keys) > 0;
+
             $model = new Model();
             self::pushModel($model);
 
-            if ($id > 0) {
+            if ($isUpdate) {
                 $model->registration();
                 self::parseContent($template);
                 $model->registration(false);
 
-                // TODO: Load data.
-                print_r($model);
+                $sql = self::getSelectSql($name, $keys, $model);
+                $data = self::dataAccess()->fetchSingle($sql);
+                foreach ($model as $key => $item) {
+                    $model[$key]["value"] = $data[$key];
+                }
             }
 
             if (self::isHttpMethod($method) && ($submit == "" || array_key_exists($submit, $_REQUEST))) {
@@ -236,8 +308,23 @@
                 self::parseContent($template);
                 $model->submit(false);
 
-                // TODO: Insert/update value.
-                print_r($model);
+                if ($isUpdate) {
+                    $sql = self::getUpdateSql($name, $keys, $model);
+                } else {
+                    $sql = self::getInsertSql($name, $model);
+                }
+
+                self::dataAccess()->execute($sql);
+
+                if ($nextPageId != 0) {
+                    self::web()->redirectTo($nextPageId);
+                } else {
+                    if (!$isUpdate) {
+                        self::popModel();
+                        $model = new Model();
+                        self::pushModel($model);
+                    }
+                }
             }
 
             $model->render();

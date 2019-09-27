@@ -87,13 +87,6 @@
       <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
     </attribute>
     <attribute>
-      <attname>id</attname>
-      <attreq>implied</attreq>
-      <attcomment>Id záznamu, které se má editovat.</attcomment>
-      <atttype>number</atttype>
-      <attdef>0</attdef>
-    </attribute>
-    <attribute>
       <attname>method</attname>
       <attreq>implied</attreq>
       <attdef>POST</attdef>
@@ -104,8 +97,17 @@
       <attreq>implied</attreq>
       <attcomment>Název klíče z requestu, kterým je možné odeslat formulář. Pokud není zadáno, formulář se odešle jakýmkoli requestem. Je povinný pro method=GET.</attcomment>
     </attribute>
+    <attribute>
+      <attname>nextPageId</attname>
+      <attreq>implied</attreq>
+      <atttype>number</atttype>
+      <attdef>0</attdef>
+      <attcomment>Id stránky, kam se má přesměrovat po úspěšném uložení záznamu.</attcomment>
+    </attribute>
+    <anyAttribute />
     <comment>
       Vygeneruje formulář pro přidání/úpravu záznamu v uživatelské entitě.
+      Všechny atributy začínající na "key-" jsou použity pro identifikaci záznamu pro editaci.
     </comment>
   </fulltag>
   <property>

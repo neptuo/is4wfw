@@ -568,6 +568,14 @@
             (substr($haystack, -$length) === $needle);
         }
 
+        public function joinString($base, $item, $separator = ", ") {
+            if (strlen($base) > 0) {
+                $base .= $separator;
+            }
+
+            return $base . $item;
+        }
+
         public function currentFullUrl() {
             return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         }

@@ -107,12 +107,12 @@
 
 			if (self::isSubmit()) {
 				$modelValue = $_REQUEST[$name];
-				self::setModelValue($name, $modelValue == "on");
+				self::setModelValue($name, $modelValue == "on" ? 1 : 0);
 			}
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
-				return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 ? " checked='checked'" : '') . " />";
+				return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 || $modelValue === "1" ? " checked='checked'" : '') . " />";
 			}
 		}
 	}
