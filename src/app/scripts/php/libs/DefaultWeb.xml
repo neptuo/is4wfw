@@ -302,6 +302,10 @@
     </comment>
   </tag>
   <tag>
+    <tagname>redirectToSelf</tagname>
+    <function>redirectToSelf</function>
+  </tag>
+  <tag>
     <tagname>lang</tagname>
     <function>getLanguages</function>
     <attribute>
