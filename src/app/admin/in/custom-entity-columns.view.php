@@ -1,12 +1,23 @@
 <v:template src="~/templates/in-template.view">
-	<web:frame title="post:ce-table">
+	<web:a pageId="~/in/custom-entities.view" text="&laquo; Custom Entities" />
+	<web:condition when="post:ce-delete" is="delete">
+		<ce:tableColumnDeleter tableName="query:table" columnName="post:ce-column">
+			<web:redirectToSelf />
+		</ce:tableColumnDeleter>
+	</web:condition>
+	<web:condition when="post:ce-column-create" is="create">
+		<web:frame title="Create Column">
+			<ce:tableColumnCreator name="query:table" />
+		</web:frame>
+	</web:condition>
+	<web:frame title="query:table">
 		<table class="standart">
 			<tr>
 				<th>Name</th>
 				<th>Type</th>
 				<th></th>
 			</tr>
-			<ce:listTableColumns name="query:ce-table">
+			<ce:listTableColumns name="query:table">
 				<tr>
 					<td>
 						<web:getProperty name="ce:tableColumnName" />
@@ -26,7 +37,7 @@
 		<table>
 		<hr />
 		<ui:form>
-			<button name="ce-column-create" value="create">Create</button>
+			<button name="ce-column-create" value="create">Create New Column</button>
 		</ui:form>
 	</web:frame>
 </v:template>

@@ -34,23 +34,37 @@
             $columnName = $model["primary-key-1-name"]["value"];
             $sql .= "`" . $columnName . "` " . (self::getDbType($model["primary-key-1-type"]["value"])) . " NOT NULL" . ($model["primary-key-1-identity"]["value"] ? " AUTO_INCREMENT" : "");
             $primary .= "`" . $columnName . "`";
-
+            
             $columnName = $model["primary-key-2-name"]["value"];
             if ($columnName != "") {
                 $sql .= ", `" . $columnName . "` " . (self::getDbType($model["primary-key-2-type"]["value"])) . " NOT NULL";
                 $primary .= ", `" . $columnName . "`";
             }
-
+            
             $columnName = $model["primary-key-3-name"]["value"];
             if ($columnName != "") {
                 $sql .= ", `" . $columnName . "` " . (self::getDbType($model["primary-key-3-type"]["value"])) . " NOT NULL";
                 $primary .= ", `" . $columnName . "`";
             }
 
-            $sql .= "`)";
+            $primary .= ")";
             $sql .= $primary . ') ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ROW_FORMAT=FIXED;';
+            
+            self::dataAccess()->execute($sql);
+            return true;
+        }
 
-            self::dataAccess()->execute($sql, true, true, true);
+        private function createTableColumn($tableName, $model) {
+            $sql = "ALTER TABLE `$tableName` ADD COLUMN `" . $model["column-name"]["value"] . "` " . (self::getDbType($model["column-type"]["value"]));
+            if ($model["column-required"]["value"]) {
+                $sql .= " NOT NULL";
+            } else {
+                $sql .= " NULL";
+            }
+
+            $sql .= ";";
+
+            self::dataAccess()->execute($sql);
             return true;
         }
         
@@ -121,6 +135,36 @@
         public function getTableColumnType() {
             return $this->columns->peek()["Type"];
         }
+
+        public function tableColumnCreator($name) {
+            $model = new Model();
+            self::pushModel($model);
+
+            if (array_key_exists("ce-column-creator-save", $_REQUEST)) {
+                $model->submit();
+                self::partialView("customentities/tableColumnCreator");
+                $model->submit(false);
+
+                if (self::createTableColumn($name, $model)) {
+                    self::redirectToSelf();
+                    return;
+                }
+            }
+
+            $model->render();
+            $result = self::partialView("customentities/tableColumnCreator");
+            self::popModel();
+            return $result;
+        }
+
+        public function tableColumnDeleter($template, $tableName, $columnName) {
+            $sql = "ALTER TABLE `$tableName` DROP COLUMN `$columnName`;";
+            self::dataAccess()->execute($sql);
+
+            self::parseContent($template);
+        }
+
+
         
 		public function form($template, $name, $id = 0, $method = "POST", $submit = "") {
             if ($method == "GET" && $submit == "") {

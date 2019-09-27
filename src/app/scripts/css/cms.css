@@ -79,6 +79,11 @@ select[multiple=multiple] {
     padding: 3px;
 }
 
+.image-button {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .add-rem-text-files-submit {
     margin-top: 10px;
 }

@@ -4,7 +4,7 @@
 			<ce:tableCreator />
 		</web:frame>
 	</web:condition>
-	<web:frame title="List">
+	<web:frame title="Custom Entities">
 		<table class="standart">
 			<tr>
 				<th>Name</th>
@@ -21,11 +21,9 @@
 							<input type="hidden" name="ce-edit" value="edit" />
 							<input type="image" src="~/images/page_edi.png" title="Edit table definition" disabled="disabled" />
 						</ui:form>
-						<ui:form method="GET" action="~/in/custom-entity-columns.view">
-							<input type="hidden" name="ce-table" value="<web:getProperty name="ce:tableName" />" />
-							<input type="hidden" name="ce-columns" value="columns" />
-							<input type="image" src="~/images/page_pro.png" title="Edit table columns" />
-						</ui:form>
+						<web:a pageId="~/in/custom-entity-columns.view" param-table="ce:tableName" class="image-button">
+							<img src="~/images/page_pro.png" />
+						</web:a>
 						<ui:form>
 							<input type="hidden" name="ce-table" value="<web:getProperty name="ce:tableName" />" />
 							<input type="hidden" name="ce-delete" value="delete" />
@@ -37,7 +35,9 @@
 		<table>
 		<hr />
 		<ui:form>
-			<button name="ce-manage-create" value="create">Create</button>
+			<div class="gray-box">
+				<button name="ce-manage-create" value="create">Create New Entity</button>
+			</div>
 		</ui:form>
 	</web:frame>
 </v:template>

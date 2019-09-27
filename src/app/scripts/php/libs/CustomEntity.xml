@@ -15,6 +15,18 @@
       Generátor základu tabulky uživatelských entit.
     </comment>
   </tag>
+  <tag>
+    <tagname>tableColumnCreator</tagname>
+    <function>tableColumnCreator</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název entity, do které se má přidat sloupec.</attcomment>
+    </attribute>
+    <comment>
+      Generátor pro přidání sloupce do tabulky uživatelské entity.
+    </comment>
+  </tag>
   <fulltag>
     <tagname>listTables</tagname>
     <function>listTables</function>
@@ -34,6 +46,25 @@
       Vypíše seznam sloupců vybrané uživatelké entity.
     </comment>
   </fulltag>
+  <fulltag>
+    <tagname>tableColumnDeleter</tagname>
+    <function>tableColumnDeleter</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>tableName</attname>
+      <attreq>required</attreq>
+      <attcomment>Název entity, ze které se má sloupec odstranit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>columnName</attname>
+      <attreq>required</attreq>
+      <attcomment>Název sloupce, který se má odstranit.</attcomment>
+    </attribute>
+    <comment>
+      Odstraní sloupce z tabulky
+    </comment>
+  </fulltag>
+
   <fulltag>
     <tagname>form</tagname>
     <function>form</function>
