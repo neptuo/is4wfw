@@ -1,5 +1,9 @@
 <?php
 
+    if (!ini_get('date.timezone')) {
+        date_default_timezone_set('GMT');
+    }
+
     // Paths and urls.
     define("APP_PATH", INSTANCE_PATH . "app/");
     define("APP_ADMIN_PATH", APP_PATH . "admin/");
