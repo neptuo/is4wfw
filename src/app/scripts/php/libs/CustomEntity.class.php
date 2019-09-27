@@ -16,11 +16,22 @@
             $this->columns = new Stack();
         }
 
-        private function getDbType($type) {
+        private function mapTypeToDb($type) {
             $items = self::getTableColumnTypes();
             foreach ($items as $item) {
                 if ($item["key"] == $type) {
                     return $item["db"];
+                }
+            }
+            
+            return NULL;
+        }
+
+        private function mapDbTypeToName($type) {
+            $items = self::getTableColumnTypes();
+            foreach ($items as $item) {
+                if ($item["db"] == $type) {
+                    return $item["name"];
                 }
             }
             
@@ -32,18 +43,18 @@
             $primary = ', PRIMARY KEY (';
 
             $columnName = $model["primary-key-1-name"]["value"];
-            $sql .= "`" . $columnName . "` " . (self::getDbType($model["primary-key-1-type"]["value"])) . " NOT NULL" . ($model["primary-key-1-identity"]["value"] ? " AUTO_INCREMENT" : "");
+            $sql .= "`" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-1-type"]["value"])) . " NOT NULL" . ($model["primary-key-1-identity"]["value"] ? " AUTO_INCREMENT" : "");
             $primary .= "`" . $columnName . "`";
             
             $columnName = $model["primary-key-2-name"]["value"];
             if ($columnName != "") {
-                $sql .= ", `" . $columnName . "` " . (self::getDbType($model["primary-key-2-type"]["value"])) . " NOT NULL";
+                $sql .= ", `" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-2-type"]["value"])) . " NOT NULL";
                 $primary .= ", `" . $columnName . "`";
             }
             
             $columnName = $model["primary-key-3-name"]["value"];
             if ($columnName != "") {
-                $sql .= ", `" . $columnName . "` " . (self::getDbType($model["primary-key-3-type"]["value"])) . " NOT NULL";
+                $sql .= ", `" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-3-type"]["value"])) . " NOT NULL";
                 $primary .= ", `" . $columnName . "`";
             }
 
@@ -55,7 +66,7 @@
         }
 
         private function createTableColumn($tableName, $model) {
-            $sql = "ALTER TABLE `$tableName` ADD COLUMN `" . $model["column-name"]["value"] . "` " . (self::getDbType($model["column-type"]["value"]));
+            $sql = "ALTER TABLE `$tableName` ADD COLUMN `" . $model["column-name"]["value"] . "` " . (self::mapTypeToDb($model["column-type"]["value"]));
             if ($model["column-required"]["value"]) {
                 $sql .= " NOT NULL";
             } else {
@@ -91,9 +102,9 @@
 
         public function getTableColumnTypes() {
             return array(
-                array("key" => "number", "name" => "Number", "db" => "INT"),
-                array("key" => "string", "name" => "Text", "db" => "TINYTEXT"),
-                array("key" => "bool", "name" => "Boolean", "db" => "BIT")
+                array("key" => "number", "name" => "Number", "db" => "int(11)"),
+                array("key" => "string", "name" => "Text", "db" => "tinytext"),
+                array("key" => "bool", "name" => "Boolean", "db" => "bit(1)")
             );
         }
 
@@ -133,7 +144,15 @@
         }
 
         public function getTableColumnType() {
-            return $this->columns->peek()["Type"];
+            return self::mapDbTypeToName($this->columns->peek()["Type"]);
+        }
+
+        public function getTableColumnPrimaryKey() {
+            return $this->columns->peek()["Key"] == "PRI";
+        }
+
+        public function getTableColumnRequired() {
+            return $this->columns->peek()["Null"] == "NO";
         }
 
         public function tableColumnCreator($name) {

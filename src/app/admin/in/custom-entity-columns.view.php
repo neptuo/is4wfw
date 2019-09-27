@@ -15,6 +15,8 @@
 			<tr>
 				<th>Name</th>
 				<th>Type</th>
+				<th>Required</th>
+				<th>Primary</th>
 				<th></th>
 			</tr>
 			<ce:listTableColumns name="query:table">
@@ -26,11 +28,19 @@
 						<web:getProperty name="ce:tableColumnType" />
 					</td>
 					<td>
-						<ui:form>
-							<input type="hidden" name="ce-column" value="<web:getProperty name="ce:tableColumnName" />" />
-							<input type="hidden" name="ce-delete" value="delete" />
-							<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity column '<web:getProperty name="ce:tableColumnName" />'" />
-						</ui:form>
+						<web:getProperty name="ce:tableColumnRequired" />
+					</td>
+					<td>
+						<web:getProperty name="ce:tableColumnPrimaryKey" />
+					</td>
+					<td>
+						<web:condition when="ce:tableColumnPrimaryKey" is="false">
+							<ui:form>
+								<input type="hidden" name="ce-column" value="<web:getProperty name="ce:tableColumnName" />" />
+								<input type="hidden" name="ce-delete" value="delete" />
+								<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity column '<web:getProperty name="ce:tableColumnName" />'" />
+							</ui:form>
+						</web:condition>
 					</td>
 				</tr>
 			</ce:listTableColumns>

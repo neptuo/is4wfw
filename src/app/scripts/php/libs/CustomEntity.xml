@@ -106,21 +106,35 @@
     <propname>tableName</propname>
     <getfunction>getTableName</getfunction>
     <comment>
-        Vrací aktuální název tabulky při průchodu přes "ce:listTables".
+        Vrací název aktuální tabulky při průchodu přes "ce:listTables".
     </comment>
   </property>
   <property>
     <propname>tableColumnName</propname>
     <getfunction>getTableColumnName</getfunction>
     <comment>
-        Vrací aktuální název sloupce při průchodu přes "ce:listTableColumns".
+        Vrací název aktuálního sloupce při průchodu přes "ce:listTableColumns".
     </comment>
   </property>
   <property>
     <propname>tableColumnType</propname>
     <getfunction>getTableColumnType</getfunction>
     <comment>
-        Vrací aktuální type sloupce při průchodu přes "ce:listTableColumns".
+        Vrací typ aktuálního sloupce při průchodu přes "ce:listTableColumns".
+    </comment>
+  </property>
+  <property>
+    <propname>tableColumnPrimaryKey</propname>
+    <getfunction>getTableColumnPrimaryKey</getfunction>
+    <comment>
+        Vrací zda je primární klíčem aktuální sloupec při průchodu přes "ce:listTableColumns".
+    </comment>
+  </property>
+  <property>
+    <propname>tableColumnRequired</propname>
+    <getfunction>getTableColumnRequired</getfunction>
+    <comment>
+        Vrací zda je povinný aktuální sloupec při průchodu přes "ce:listTableColumns".
     </comment>
   </property>
 </taglib>
