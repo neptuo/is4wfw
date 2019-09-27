@@ -1035,14 +1035,20 @@ function initClickableGrid() {
 		$(rows[i]).click(function(e) {
 			var el = e.target ? e.target : e.srcElement;
 
-			$buttons = $(el).parent('tr').find('input[type=image]');
-			$button = $buttons.filter('[src$=edi.png]');
-			if ($button.length == 0) {
-				$button = $buttons[0];
+			$tr = $(el).parent('tr');
+			$buttonEdit = $tr.find('.button-edit');
+			if ($buttonEdit.length != 0) {
+				$button = $buttonEdit[0];
 			} else {
-				$button = $button[0];
+				$buttons = $tr.find('input[type=image]');
+				$button = $buttons.filter('[src$=edi.png]');
+				if ($button.length == 0) {
+					$button = $buttons[0];
+				} else {
+					$button = $button[0];
+				}
 			}
-			
+
 			if ($button != null) {
 				$button.click();
 			}

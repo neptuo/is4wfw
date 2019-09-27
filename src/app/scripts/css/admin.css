@@ -153,6 +153,18 @@ table.standart {
     border-collapse: collapse;
 }
 
+table.standart tr:nth-child(odd) {
+    background-color: #eeeeee;
+}
+
+table.standart tr:nth-child(even) {
+    background-color: white;
+}
+
+table.standart tr:hover td {
+    background-color: yellow !important;
+}
+
 .dir-list th {
     height: 20px;
 }

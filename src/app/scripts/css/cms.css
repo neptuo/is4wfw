@@ -226,6 +226,18 @@ table.standart th {
     border-bottom: 1px solid black;
 }
 
+table.standart tr:nth-child(odd) {
+    background-color: #eeeeee;
+}
+
+table.standart tr:nth-child(even) {
+    background-color: white;
+}
+
+table.standart tr:hover td {
+    background-color: yellow !important;
+}
+
 table.match-stats-table {
     margin: 10px 0;
 }
@@ -1732,26 +1744,30 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu li.menu-item.li-6 a {
-    background: url('/images/icons/drive.png') no-repeat 4px center;
+    background: url('/images/icons/page_attachment.gif') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-7 a {
-    background: url('/images/icons/book_open.png') no-repeat 4px center;
+    background: url('/images/icons/drive.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-8 a {
-    background: url('/images/icons/comment.png') no-repeat 4px center;
+    background: url('/images/icons/book_open.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-9 a {
-    background: url('/images/icons/magnifier.png') no-repeat 4px center;
+    background: url('/images/icons/comment.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-10 a {
-    background: url('/images/icons/arrow_branch.png') no-repeat 4px center;
+    background: url('/images/icons/magnifier.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-11 a {
+    background: url('/images/icons/arrow_branch.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-12 a {
     background: url('/images/icons/building.png') no-repeat 4px center;
 }
 
