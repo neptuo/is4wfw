@@ -218,7 +218,7 @@
         private function findPrimaryKeysInAttributes($params) {
             $result = array();
             foreach ($params as $key => $value) {
-                if (self::startsWith($key, self::primaryKeyAttributePrefix)) {
+                if (self::startsWith($key, self::primaryKeyAttributePrefix) && !empty($value)) {
                     $result[substr($key, strlen(self::primaryKeyAttributePrefix))] = $value;
                 }
             }
