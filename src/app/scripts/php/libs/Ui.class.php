@@ -22,19 +22,11 @@
 		}
 
 		private function getModelValue($key) {
-			return self::peekModel()[$key]['value'];
-		}
-
-		private function setModel($key, $value) {
-			self::peekModel()[$key] = $value;
-		}
-
-		private function setModelType($key, $type) {
-			self::setModel($key, array('type' => $type));
+			return self::peekModel()[$key];
 		}
 
 		private function setModelValue($key, $value) {
-			self::peekModel()[$key]['value'] = $value;
+			self::peekModel()[$key] = $value;
 		}
 
 		private function setModelValueFromRequest($modelKey, $requestKey, $type) {
@@ -56,7 +48,7 @@
 		
 		public function dropdownlist($name, $source, $display, $id) {
 			if (self::isRegistration() || self::isSubmit()) {
-				self::setModelType($name, "reference");
+				self::setModelValue($name, NULL);
 			}
 
 			if (self::isSubmit()) {
@@ -87,7 +79,7 @@
 
 		public function textbox($name) {
 			if (self::isRegistration() || self::isSubmit()) {
-				self::setModelType($name, "string");
+				self::setModelValue($name, NULL);
 			}
 
 			if (self::isSubmit()) {
@@ -102,7 +94,7 @@
 
 		public function checkbox($name) {
 			if (self::isRegistration() || self::isSubmit()) {
-				self::setModelType($name, "bool");
+				self::setModelValue($name, NULL);
 			}
 
 			if (self::isSubmit()) {
