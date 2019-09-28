@@ -104,6 +104,7 @@
             if ($columnName != "") {
                 $keyElement = $definitionXml->addChild("column");
                 $keyElement->addChild("name", $columnName);
+                $keyElement->addChild("type", $model["primary-key-2-type"]["value"]);
                 $keyElement->addChild("primaryKey", TRUE);
                 $keyElement->addChild("required", TRUE);
             }
@@ -112,12 +113,13 @@
             if ($columnName != "") {
                 $keyElement = $definitionXml->addChild("column");
                 $keyElement->addChild("name", $columnName);
+                $keyElement->addChild("type", $model["primary-key-3-type"]["value"]);
                 $keyElement->addChild("primaryKey", TRUE);
                 $keyElement->addChild("required", TRUE);
             }
 
             $createSql = self::getCreateSql($tableName, $model);
-            $insertSql = "INSERT INTO `custom_entity`(`name`, `description`, `definition`) VALUES ('" . self::dataAccess()->escape($name) . "', '" . self::dataAccess()->escape($model["entity-description"]["value"]) . "', '" . self::dataAccess()->escape($definitionXml->asXml()) . "');";
+            $insertSql = self::sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"]["value"], "definition" => $definitionXml->asXml()));
 
             try {
                 self::executeSql($insertSql, $createSql);
@@ -199,7 +201,7 @@
 
             self::executeSql(
                 "DROP TABLE `$tableName`;", 
-                "DELETE FROM `custom_entity` WHERE `name` = '" . self::dataAccess()->escape($name) . "';"
+                self::sql()->delete("custom_entity", array("name" => $name))
             );
             self::parseContent($template);
         }
@@ -248,8 +250,7 @@
         }
 
         private function getUpdateDefinitionSql($name, $xml) {
-            $sql = "UPDATE `custom_entity` SET `definition` = '" . self::dataAccess()->escape($xml->asXml()) . "' WHERE `name` = '" . self::dataAccess()->escape($name) . "';";
-            return $sql;
+            return self::sql()->update("custom_entity", array("definition" => $xml->asXml()), array("name" => $name));
         }
 
         public function listTableColumns($template, $name) {

@@ -2,6 +2,7 @@
 
     require_once('System.class.php');
     require_once('FileAdmin.class.php');
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/SqlBuilder.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ExtensionParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
@@ -230,6 +231,10 @@
 
         public function dataAccess() {
             return self::db()->getDataAccess();
+        }
+
+        public function sql() {
+            return new SqlBuilder(self::dataAccess());
         }
 
         public function login() {
