@@ -3,6 +3,10 @@
         <label class="w90">Entity Name:</label>
         <ui:textbox name="entity-name" />
     </div>
+    <div class="gray-box">
+        <label class="w90">Description:</label>
+        <ui:textbox name="entity-description" />
+    </div>
     <hr />
     <div class="ce-primary-key-1">
         <div class="gray-box">

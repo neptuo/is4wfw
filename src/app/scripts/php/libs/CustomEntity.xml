@@ -140,6 +140,13 @@
     </comment>
   </property>
   <property>
+    <propname>tableDescription</propname>
+    <getfunction>getTableDescription</getfunction>
+    <comment>
+        Vrací popisek aktuální tabulky při průchodu přes "ce:listTables".
+    </comment>
+  </property>
+  <property>
     <propname>tableColumnName</propname>
     <getfunction>getTableColumnName</getfunction>
     <comment>

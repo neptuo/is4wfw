@@ -13,12 +13,16 @@
 		<table class="standart clickable">
 			<tr>
 				<th>Name</th>
+				<th>Description</th>
 				<th></th>
 			</tr>
 			<ce:listTables>
 				<tr>
 					<td>
 						<web:getProperty name="ce:tableName" />
+					</td>
+					<td>
+						<web:getProperty name="ce:tableDescription" />
 					</td>
 					<td>
 						<web:a pageId="~/in/custom-entity-columns.view" param-table="ce:tableName" class="image-button button-edit">

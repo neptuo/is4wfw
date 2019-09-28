@@ -493,7 +493,7 @@
 
                                 if ($hasDefault) {
                                     if ($att->atttype == 'string') {
-                                        $attributeValue = eval('return "'. $att->attdef.'";');
+                                        $attributeValue = "'" . eval('return "'. $att->attdef.'";') . "'";
                                     } else {
                                         $attributeValue = eval('return '. $att->attdef.';');
                                     }

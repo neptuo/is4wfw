@@ -38,12 +38,12 @@
             return self::mapType("key", $type, "escape");
         }
 
-        private function mapDbTypeToName($type) {
-            return self::mapType("db", $type, "name");
+        private function mapTypeToName($type) {
+            return self::mapType("key", $type, "name");
         }
 
-        private function createTable($model) {
-            $sql = "CREATE TABLE `" . self::tablePrefix . $model["entity-name"]["value"] . "` (";
+        private function getCreateSql($name, $model) {
+            $sql = "CREATE TABLE `$name` (";
             $primary = ', PRIMARY KEY (';
 
             $columnName = $model["primary-key-1-name"]["value"];
@@ -64,23 +64,105 @@
 
             $primary .= ")";
             $sql .= $primary . ') ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ROW_FORMAT=FIXED;';
+            return $sql;
+        }
+
+        private function executeSql($sql1, $sql2 = "", $sql3 = "") {
+            self::dataAccess()->transaction();
+
+            try {
+                self::dataAccess()->execute($sql1);
+
+                if (!empty($sql2)) {
+                    self::dataAccess()->execute($sql2);
+                }
+
+                if (!empty($sql3)) {
+                    self::dataAccess()->execute($sql3);
+                }
+
+                self::dataAccess()->commit();
+            } catch(DataAccessException $e) {
+                self::dataAccess()->rollback();
+                throw $e;
+            }
+        }
+
+        private function createTable($model) {
+            $definitionXml = new SimpleXMLElement("<definition />");
+            $name = $model["entity-name"]["value"];
+            $tableName = self::tablePrefix . $name;
+
+            $columnName = $model["primary-key-1-name"]["value"];
+            $keyElement = $definitionXml->addChild("column");
+            $keyElement->addChild("name", $columnName);
+            $keyElement->addChild("type", $model["primary-key-1-type"]["value"]);
+            $keyElement->addChild("primaryKey", TRUE);
+            $keyElement->addChild("required", TRUE);
+
+            $columnName = $model["primary-key-2-name"]["value"];
+            if ($columnName != "") {
+                $keyElement = $definitionXml->addChild("column");
+                $keyElement->addChild("name", $columnName);
+                $keyElement->addChild("primaryKey", TRUE);
+                $keyElement->addChild("required", TRUE);
+            }
             
-            self::dataAccess()->execute($sql);
+            $columnName = $model["primary-key-3-name"]["value"];
+            if ($columnName != "") {
+                $keyElement = $definitionXml->addChild("column");
+                $keyElement->addChild("name", $columnName);
+                $keyElement->addChild("primaryKey", TRUE);
+                $keyElement->addChild("required", TRUE);
+            }
+
+            $createSql = self::getCreateSql($tableName, $model);
+            $insertSql = "INSERT INTO `custom_entity`(`name`, `description`, `definition`) VALUES ('" . self::dataAccess()->escape($name) . "', '" . self::dataAccess()->escape($model["entity-description"]["value"]) . "', '" . self::dataAccess()->escape($definitionXml->asXml()) . "');";
+
+            try {
+                self::executeSql($insertSql, $createSql);
+            } catch(DataAccessException $e) {
+                return false;
+            }
+            
             return true;
         }
 
-        private function createTableColumn($tableName, $model) {
-            $sql = "ALTER TABLE `$tableName` ADD COLUMN `" . $model["column-name"]["value"] . "` " . (self::mapTypeToDb($model["column-type"]["value"]));
-            if ($model["column-required"]["value"]) {
-                $sql .= " NOT NULL";
+        private function createTableColumn($name, $tableName, $model) {
+            $modelName = $model["column-name"]["value"];
+            $modelType = $model["column-type"]["value"];
+            $modelRequired = $model["column-required"]["value"];
+
+            $alterSql = "ALTER TABLE `$tableName` ADD COLUMN `" . $modelName . "` " . (self::mapTypeToDb($modelType));
+            if ($modelRequired) {
+                $alterSql .= " NOT NULL";
             } else {
-                $sql .= " NULL";
+                $alterSql .= " NULL";
             }
 
-            $sql .= ";";
+            $alterSql .= ";";
 
-            self::dataAccess()->execute($sql);
-            return true;
+            $xml = self::getDefinition($name);
+            if ($xml == NULL) {
+                return false;
+            }
+
+            $column = $xml->addChild("column");
+            $column->addChild("name", $modelName);
+            $column->addChild("type", $modelType);
+
+            if ($modelRequired) {
+                $column->addChild("required", TRUE);
+            }
+
+            $updateSql = self::getUpdateDefinitionSql($name, $xml);
+            
+            try {
+                self::executeSql($updateSql, $alterSql);
+                return true;
+            } catch (DataAccessException $e) {
+                return false;
+            }
         }
         
         public function tableCreator() {
@@ -113,21 +195,21 @@
         }
 
         public function tableDeleter($template, $name) {
-            $name = self::ensureTableName($name);
+            $tableName = self::ensureTableName($name);
 
-            $sql = "DROP TABLE `$name`;";
-            self::dataAccess()->execute($sql);
-
+            self::executeSql(
+                "DROP TABLE `$tableName`;", 
+                "DELETE FROM `custom_entity` WHERE `name` = '" . self::dataAccess()->escape($name) . "';"
+            );
             self::parseContent($template);
         }
 
         public function listTables($template) {
-            $tables = self::dataAccess()->fetchAll("SHOW TABLES LIKE '" . self::tablePrefix . "%'");
+            $tables = self::dataAccess()->fetchAll("SELECT `name`, `description` FROM `custom_entity`;");
 
             $result = "";
             foreach ($tables as $table) {
-                $tableName = substr(end($table), strlen(self::tablePrefix));
-                $this->tables->push($tableName);
+                $this->tables->push($table);
                 $result .= self::parseContent($template);
                 $this->tables->pop();
             }
@@ -136,28 +218,50 @@
         }
 
         public function getTableName() {
-            return $this->tables->peek();
+            return $this->tables->peek()["name"];
+        }
+
+        public function getTableDescription() {
+            return $this->tables->peek()["description"];
         }
 
         private function ensureTableName($name) {
             if (!self::startsWith($name, self::tablePrefix)) {
-                $name = self::tablePrefix . $name;
-                $table = self::dataAccess()->fetchAll("SHOW TABLES LIKE '$name';");
+                $tableName = self::tablePrefix . $name;
+                $table = self::dataAccess()->fetchAll("SELECT `name` FROM `custom_entity` WHERE `name` = '" . self::dataAccess()->escape($name) . "';");
                 if (count($table) == 0) {
                     trigger_error("Table name must be custom entity", E_USER_ERROR);
                 }
             }
 
-            return $name;
+            return $tableName;
+        }
+
+        private function getDefinition($name) {
+            $definition = self::dataAccess()->fetchSingle("SELECT `definition` FROM `custom_entity` WHERE `name` = '" . self::dataAccess()->escape($name) . "';");
+            if (empty($definition)) {
+                return NULL;
+            }
+
+            $xml = new SimpleXMLElement($definition['definition']);
+            return $xml;
+        }
+
+        private function getUpdateDefinitionSql($name, $xml) {
+            $sql = "UPDATE `custom_entity` SET `definition` = '" . self::dataAccess()->escape($xml->asXml()) . "' WHERE `name` = '" . self::dataAccess()->escape($name) . "';";
+            return $sql;
         }
 
         public function listTableColumns($template, $name) {
-            $name = self::ensureTableName($name);
+            $tableName = self::ensureTableName($name);
 
-            $columns = self::dataAccess()->fetchAll("show columns from `$name`;");
-            
+            $xml = self::getDefinition($name);
+            if ($xml == NULL) {
+                return "";
+            }
+
             $result = "";
-            foreach ($columns as $column) {
+            foreach ($xml->column as $column) {
                 $this->columns->push($column);
                 $result .= self::parseContent($template);
                 $this->columns->pop();
@@ -167,23 +271,23 @@
         }
 
         public function getTableColumnName() {
-            return $this->columns->peek()["Field"];
+            return $this->columns->peek()->name;
         }
 
         public function getTableColumnType() {
-            return self::mapDbTypeToName($this->columns->peek()["Type"]);
+            return self::mapTypeToName($this->columns->peek()->type);
         }
 
         public function getTableColumnPrimaryKey() {
-            return $this->columns->peek()["Key"] == "PRI";
+            return $this->columns->peek()->primaryKey == TRUE;
         }
 
         public function getTableColumnRequired() {
-            return $this->columns->peek()["Null"] == "NO";
+            return $this->columns->peek()->required == TRUE;
         }
 
         public function tableColumnCreator($name) {
-            $name = self::ensureTableName($name);
+            $tableName = self::ensureTableName($name);
 
             $model = new Model();
             self::pushModel($model);
@@ -193,7 +297,7 @@
                 self::partialView("customentities/tableColumnCreator");
                 $model->submit(false);
 
-                if (self::createTableColumn($name, $model)) {
+                if (self::createTableColumn($name, $tableName, $model)) {
                     self::redirectToSelf();
                     return;
                 }
@@ -205,12 +309,25 @@
             return $result;
         }
 
-        public function tableColumnDeleter($template, $tableName, $columnName) {
-            $tableName = self::ensureTableName($tableName);
+        public function tableColumnDeleter($template, $entityName, $columnName) {
+            $tableName = self::ensureTableName($entityName);
+            
+            $xml = self::getDefinition($entityName);
+            if ($xml == NULL) {
+                return;
+            }
 
-            $sql = "ALTER TABLE `$tableName` DROP COLUMN `$columnName`;";
-            self::dataAccess()->execute($sql);
+            for ($i=0; $i < count($xml->column); $i++) { 
+                if ($xml->column[$i]->name == $columnName) {
+                    unset($xml->column[$i]);
+                    break;
+                }
+            }
 
+            $updateSql = self::getUpdateDefinitionSql($entityName, $xml);
+            $alterSql = "ALTER TABLE `$tableName` DROP COLUMN `$columnName`;";
+
+            self::executeSql($updateSql, $alterSql);
             self::parseContent($template);
         }
 
