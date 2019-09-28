@@ -46,19 +46,19 @@
             $sql = "CREATE TABLE `$name` (";
             $primary = ', PRIMARY KEY (';
 
-            $columnName = $model["primary-key-1-name"]["value"];
-            $sql .= "`" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-1-type"]["value"])) . " NOT NULL" . ($model["primary-key-1-identity"]["value"] ? " AUTO_INCREMENT" : "");
+            $columnName = $model["primary-key-1-name"];
+            $sql .= "`" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-1-type"])) . " NOT NULL" . ($model["primary-key-1-identity"] ? " AUTO_INCREMENT" : "");
             $primary .= "`" . $columnName . "`";
             
-            $columnName = $model["primary-key-2-name"]["value"];
+            $columnName = $model["primary-key-2-name"];
             if ($columnName != "") {
-                $sql .= ", `" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-2-type"]["value"])) . " NOT NULL";
+                $sql .= ", `" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-2-type"])) . " NOT NULL";
                 $primary .= ", `" . $columnName . "`";
             }
             
-            $columnName = $model["primary-key-3-name"]["value"];
+            $columnName = $model["primary-key-3-name"];
             if ($columnName != "") {
-                $sql .= ", `" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-3-type"]["value"])) . " NOT NULL";
+                $sql .= ", `" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-3-type"])) . " NOT NULL";
                 $primary .= ", `" . $columnName . "`";
             }
 
@@ -90,36 +90,36 @@
 
         private function createTable($model) {
             $definitionXml = new SimpleXMLElement("<definition />");
-            $name = $model["entity-name"]["value"];
+            $name = $model["entity-name"];
             $tableName = self::tablePrefix . $name;
 
-            $columnName = $model["primary-key-1-name"]["value"];
+            $columnName = $model["primary-key-1-name"];
             $keyElement = $definitionXml->addChild("column");
             $keyElement->addChild("name", $columnName);
-            $keyElement->addChild("type", $model["primary-key-1-type"]["value"]);
+            $keyElement->addChild("type", $model["primary-key-1-type"]);
             $keyElement->addChild("primaryKey", TRUE);
             $keyElement->addChild("required", TRUE);
 
-            $columnName = $model["primary-key-2-name"]["value"];
+            $columnName = $model["primary-key-2-name"];
             if ($columnName != "") {
                 $keyElement = $definitionXml->addChild("column");
                 $keyElement->addChild("name", $columnName);
-                $keyElement->addChild("type", $model["primary-key-2-type"]["value"]);
+                $keyElement->addChild("type", $model["primary-key-2-type"]);
                 $keyElement->addChild("primaryKey", TRUE);
                 $keyElement->addChild("required", TRUE);
             }
             
-            $columnName = $model["primary-key-3-name"]["value"];
+            $columnName = $model["primary-key-3-name"];
             if ($columnName != "") {
                 $keyElement = $definitionXml->addChild("column");
                 $keyElement->addChild("name", $columnName);
-                $keyElement->addChild("type", $model["primary-key-3-type"]["value"]);
+                $keyElement->addChild("type", $model["primary-key-3-type"]);
                 $keyElement->addChild("primaryKey", TRUE);
                 $keyElement->addChild("required", TRUE);
             }
 
             $createSql = self::getCreateSql($tableName, $model);
-            $insertSql = self::sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"]["value"], "definition" => $definitionXml->asXml()));
+            $insertSql = self::sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"], "definition" => $definitionXml->asXml()));
 
             try {
                 self::executeSql($insertSql, $createSql);
@@ -131,9 +131,9 @@
         }
 
         private function createTableColumn($name, $tableName, $model) {
-            $modelName = $model["column-name"]["value"];
-            $modelType = $model["column-type"]["value"];
-            $modelRequired = $model["column-required"]["value"];
+            $modelName = $model["column-name"];
+            $modelType = $model["column-type"];
+            $modelRequired = $model["column-required"];
 
             $alterSql = "ALTER TABLE `$tableName` ADD COLUMN `" . $modelName . "` " . (self::mapTypeToDb($modelType));
             if ($modelRequired) {
