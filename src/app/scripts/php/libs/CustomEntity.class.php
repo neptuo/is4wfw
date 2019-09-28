@@ -344,41 +344,40 @@
             return $result;
         }
 
-        private function escapeSqlValue($item) {
-            $escape = self::mapTypeToEscapeCharacter($item["type"]);
-            if (strlen($escape) > 0) {
-                $item["value"] = self::dataAccess()->escape($item["value"]);
+        private function parseUserValue($column, $value) {
+            switch ($column->type) {
+                case 'string':
+                    return $value;
+                case 'number':
+                    return intval($value);
+                case 'bool':
+                    return boolval($value);
+                default:
+                    throw new Exception("Not supported field type '$column->name'.");
+            }
+        }
+
+        private function prepareValuesFromModel($xml, $model) {
+            $values = array();
+            foreach ($xml->column as $column) {
+                if (array_key_exists((string)$column->name, $model)) {
+                    $value = self::parseUserValue($column, $model[(string)$column->name]);
+                    $values[(string)$column->name] = $value;
+                }
             }
 
-            return $escape . $item["value"] . $escape;
+            return $values;
         }
         
-        private function getInsertSql($name, $model) {
-            $columns = "";
-            $value = "";
-            foreach ($model as $key => $item) {
-                $columns = self::joinString($columns, "`$key`");
-                $values = self::joinString($values, self::escapeSqlValue($item));
-            }
-
-            $sql = "INSERT INTO `$name`($columns) VALUES ($values);";
-            return $sql;
+        private function getInsertSql($name, $xml, $model) {
+            $values = self::prepareValuesFromModel($xml, $model);
+            return self::sql()->insert($name, $values);
         }
         
-        private function getUpdateSql($name, $keys, $model) {
-            $values = "";
-            $condition = "";
-
-            foreach ($model as $key => $item) {
-                $values = self::joinString($values, "`$key` = " . self::escapeSqlValue($item));
-            }
-
-            foreach ($keys as $key => $value) {
-                $condition = self::joinString($condition, "`$key` = $value", " AND");
-            }
-
-            $sql = "UPDATE `$name` SET $values WHERE $condition;";
-            return $sql;
+        private function getUpdateSql($name, $xml, $keys, $model) {
+            $values = self::prepareValuesFromModel($xml, $model);
+            $filter = self::prepareValuesFromModel($xml, $keys);
+            return self::sql()->update($name, $values, $filter);
         }
 
         private function getSelectSql($name, $keys, $model) {
@@ -397,20 +396,11 @@
         }
 
         private function getDeleteSql($name, $params) {
-            foreach ($params as $key => $value) {
-                $condition = self::joinString($condition, "`$key` = $value", " AND");
-            }
-
-            if (!empty($condition)) {
-                $condition  = " WHERE $condition";
-            }
-
-            $sql = "DELETE FROM `$name`$condition;";
-            return $sql;
+            return self::sql()->delete($name, $params);
         }
 
 		public function form($template, $name, $method = "POST", $submit = "", $nextPageId = 0, $params = array()) {
-            $name = self::ensureTableName($name);
+            $tableName = self::ensureTableName($name);
 
             if ($method == "GET" && $submit == "") {
                 trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
@@ -427,10 +417,10 @@
                 self::parseContent($template);
                 $model->registration(false);
 
-                $sql = self::getSelectSql($name, $keys, $model);
+                $sql = self::getSelectSql($tableName, $keys, $model);
                 $data = self::dataAccess()->fetchSingle($sql);
                 foreach ($model as $key => $item) {
-                    $model[$key]["value"] = $data[$key];
+                    $model[$key] = $data[$key];
                 }
             }
 
@@ -439,10 +429,12 @@
                 self::parseContent($template);
                 $model->submit(false);
 
+                $xml = self::getDefinition($name);
+
                 if ($isUpdate) {
-                    $sql = self::getUpdateSql($name, $keys, $model);
+                    $sql = self::getUpdateSql($tableName, $xml, $keys, $model);
                 } else {
-                    $sql = self::getInsertSql($name, $model);
+                    $sql = self::getInsertSql($tableName, $xml, $model);
                 }
 
                 self::dataAccess()->execute($sql);

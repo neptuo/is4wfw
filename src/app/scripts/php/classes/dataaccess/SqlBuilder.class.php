@@ -18,6 +18,8 @@
         private function escape($value) {
             if (is_string($value)) {
                 $value = "'" . $this->dataAccess->escape($value) . "'";
+            } else if (is_bool($value)) {
+                $value = $value ? 1 : 0;
             }
 
             return $value;
