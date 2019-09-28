@@ -256,7 +256,7 @@
             }
 
             foreach ($keys as $key => $value) {
-                $condition = self::joinString($condition, "$key = $value", " AND");
+                $condition = self::joinString($condition, "`$key` = $value", " AND");
             }
 
             $sql = "UPDATE `$name` SET $values WHERE $condition;";
@@ -275,6 +275,19 @@
             }
 
             $sql = "SELECT $columns FROM `$name` WHERE $condition";
+            return $sql;
+        }
+
+        private function getDeleteSql($name, $params) {
+            foreach ($params as $key => $value) {
+                $condition = self::joinString($condition, "`$key` = $value", " AND");
+            }
+
+            if (!empty($condition)) {
+                $condition  = " WHERE $condition";
+            }
+
+            $sql = "DELETE FROM `$name`$condition;";
             return $sql;
         }
 
@@ -331,7 +344,15 @@
             $result = self::ui()->form($template, "post");
             self::popModel();
             return $result;
-		}
+        }
+        
+        public function deleter($template, $name, $params = array()) {
+            $name = self::ensureTableName($name);
+
+            $sql = self::getDeleteSql($name, $params);
+            self::dataAccess()->execute($sql);
+            self::parseContent($template);
+        }
 	}
 
 ?>

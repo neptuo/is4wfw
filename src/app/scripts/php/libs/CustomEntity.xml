@@ -110,6 +110,21 @@
       Všechny atributy začínající na "key-" jsou použity pro identifikaci záznamu pro editaci.
     </comment>
   </fulltag>
+  <fulltag>
+    <tagname>deleter</tagname>
+    <function>deleter</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Smaže všechny záznamy z entity podle "params".
+    </comment>
+  </fulltag>
+
   <property>
     <propname>tableColumnTypes</propname>
     <getfunction>getTableColumnTypes</getfunction>
