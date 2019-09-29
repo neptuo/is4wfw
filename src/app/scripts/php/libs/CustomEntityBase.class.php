@@ -51,6 +51,7 @@
                     array("key" => "longtext", "name" => "Long Text", "db" => "text", "fromUser" => function($value) { return $value; }),
                     array("key" => "bool", "name" => "Boolean", "db" => "bit(1)", "fromUser" => function($value) { return boolval($value); }),
                     array("key" => "singlereference", "name" => "Single Reference", "db" => "int(11)", "fromUser" => function($value) { return intval($value); }),
+                    array("key" => "multireference-singlecolumn", "name" => "Multi Reference in Single Column", "db" => "tinytext", "fromUser" => function($value) { return self::parseMultiReferenceSingleColumn($value); }),
                     array("key" => "directory", "name" => "Directory in FileSystem", "db" => "int(11)", "fromUser" => function($value) { return intval($value); })
                 );
             }
@@ -66,6 +67,14 @@
             }
 
             return $this->types;
+        }
+
+        private function parseMultiReferenceSingleColumn($value) {
+            if (is_array($value)) {
+                return implode(",", $value);
+            }
+
+            return strval($value);
         }
     }
 

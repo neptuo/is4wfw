@@ -155,9 +155,8 @@
                     $sql = self::getUpdateSql($tableName, $xml, $keys, $model);
                     self::dataAccess()->execute($sql);
                 } else {
-                    $sql = self::insert($tableName, $xml, $model);
+                    self::insert($tableName, $xml, $model);
                 }
-
 
                 if ($nextPageId != 0) {
                     self::web()->redirectTo($nextPageId);
