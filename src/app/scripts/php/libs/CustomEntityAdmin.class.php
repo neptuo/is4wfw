@@ -166,7 +166,7 @@
         
         public function tableCreator() {
             $model = new EditModel();
-            self::pushModel($model);
+            self::pushEditModel($model);
 
             if (array_key_exists("ce-creator-save", $_REQUEST)) {
                 $model->submit();
@@ -181,7 +181,7 @@
 
             $model->render();
             $result = self::partialView("customentities/tableCreator");
-            self::popModel();
+            self::popEditModel();
             return $result;
         }
 
@@ -262,7 +262,7 @@
             $tableName = self::ensureTableName($name);
 
             $model = new EditModel();
-            self::pushModel($model);
+            self::pushEditModel($model);
 
             if (array_key_exists("ce-column-creator-save", $_REQUEST)) {
                 $model->submit();
@@ -277,7 +277,7 @@
 
             $model->render();
             $result = self::partialView("customentities/tableColumnCreator");
-            self::popModel();
+            self::popEditModel();
             return $result;
         }
 

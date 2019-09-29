@@ -89,7 +89,7 @@
             $isUpdate = count($keys) > 0;
 
             $model = new EditModel();
-            self::pushModel($model);
+            self::pushEditModel($model);
 
             if ($isUpdate) {
                 $model->registration();
@@ -122,16 +122,16 @@
                     self::web()->redirectTo($nextPageId);
                 } else {
                     if (!$isUpdate) {
-                        self::popModel();
+                        self::popEditModel();
                         $model = new EditModel();
-                        self::pushModel($model);
+                        self::pushEditModel($model);
                     }
                 }
             }
 
             $model->render();
             $result = self::ui()->form($template, "post");
-            self::popModel();
+            self::popEditModel();
             return $result;
         }
         
