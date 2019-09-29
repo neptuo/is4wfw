@@ -65,6 +65,7 @@ function init(event) {
 	
 	initClickableGrid();
 	initCustomEntities();
+	initTogglers();
 	
 	var inputs = document.getElementsByTagName('input');
 	for(var i = 0; i < inputs.length; i ++) {
@@ -1094,4 +1095,25 @@ function initCustomEntities() {
 
 		$target.append($new);
 	})
+}
+
+function initTogglers() {
+	$toggles = $("[data-toggle]").hide();
+	function switchGroup(group, value) {
+		var value = group + "-" + value;
+		$toggles.filter("[data-toggle^='" + group + "']").hide();
+		$toggles.filter("[data-toggle='" + value + "']").show();
+	}
+
+	$("[data-toggler]").each(function ($i, el) {
+		var $el = $(el);
+		var group = $el.attr("data-toggler");
+		if (el.tagName == "SELECT") {
+			$el.change(function () {
+				switchGroup(group, $(this).val());
+			});
+
+			switchGroup(group, $el.val());
+		}
+	});
 }

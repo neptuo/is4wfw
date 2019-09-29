@@ -676,6 +676,15 @@
             $return = $parser->getResult();
             return $return;
         }
+
+        protected function formatString($format, $model) {
+            foreach ($model as $key => $value) {
+                $source = "{" . $key . "}";
+                $format = str_replace($source, $value, $format);
+            }
+
+            return $format;
+        }
     }
 
 ?>

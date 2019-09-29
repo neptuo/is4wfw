@@ -97,7 +97,7 @@
         private function getUpdateSql($name, $xml, $keys, $model) {
             $values = self::prepareValuesFromModel($xml, $model);
             $filter = self::prepareValuesFromModel($xml, $keys);
-            return self::sql()->update($name, $values["columns"], $filter);
+            return self::sql()->update($name, $values["columns"], $filter["columns"]);
         }
 
         private function getSelectSql($name, $keys, $model) {

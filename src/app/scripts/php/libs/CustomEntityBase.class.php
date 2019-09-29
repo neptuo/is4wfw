@@ -33,15 +33,6 @@
             return self::sql()->update("custom_entity", array("definition" => $xml->asXml()), array("name" => $name));
         }
 
-        protected function formatString($format, $model) {
-            foreach ($model as $key => $value) {
-                $source = "{" . $key . "}";
-                $format = str_replace($source, $value, $format);
-            }
-
-            return $format;
-        }
-
         protected function findIdentityColumn($xml) {
             foreach ($xml->column as $column) {
                 if ($column->identity == TRUE) {
@@ -59,6 +50,7 @@
                     array("key" => "shorttext", "name" => "Short Text", "db" => "tinytext", "fromUser" => function($value) { return $value; }),
                     array("key" => "longtext", "name" => "Long Text", "db" => "text", "fromUser" => function($value) { return $value; }),
                     array("key" => "bool", "name" => "Boolean", "db" => "bit(1)", "fromUser" => function($value) { return boolval($value); }),
+                    array("key" => "singlereference", "name" => "Single Reference", "db" => "int(11)", "fromUser" => function($value) { return intval($value); }),
                     array("key" => "directory", "name" => "Directory in FileSystem", "db" => "int(11)", "fromUser" => function($value) { return intval($value); })
                 );
             }

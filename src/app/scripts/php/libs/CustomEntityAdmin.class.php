@@ -132,6 +132,7 @@
             $modelType = $model["column-type"];
             $modelRequired = $model["column-required"];
 
+            $fkSql = "";
             $alterSql = "ALTER TABLE `$tableName` ADD COLUMN `" . $modelName . "` " . (self::mapTypeToDb($modelType));
             if ($modelRequired) {
                 $alterSql .= " NOT NULL";
@@ -140,6 +141,12 @@
             }
 
             $alterSql .= ";";
+
+            if ($modelType == "singlereference") {
+                $referenceTable = $model["column-singlerefence-table"];
+                $referenceColumn = $model["column-singlerefence-column"];
+                $fkSql = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$modelName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
+            }
 
             $xml = self::getDefinition($name);
             if ($xml == NULL) {
@@ -157,7 +164,7 @@
             $updateSql = self::getUpdateDefinitionSql($name, $xml);
             
             try {
-                self::executeSql($updateSql, $alterSql);
+                self::executeSql($updateSql, $alterSql, $fkSql);
                 return true;
             } catch (DataAccessException $e) {
                 return false;
