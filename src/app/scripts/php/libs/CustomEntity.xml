@@ -41,6 +41,21 @@
     </comment>
   </fulltag>
   <fulltag>
+    <tagname>list</tagname>
+    <function>getList</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název entity, která se má vypsat.</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vypíše seznam dat z entity "name".
+      Všechny atributy začínající na "filter-" se složí do where clausule.
+      Všechny atributy začínající na "orderBy-" se složí do order by clausule, hodnota může být asc/desc.
+    </comment>
+  </fulltag>
+  <fulltag>
     <tagname>deleter</tagname>
     <function>deleter</function>
     <lookless>true</lookless>
@@ -54,5 +69,7 @@
       Smaže všechny záznamy z entity podle "params".
     </comment>
   </fulltag>
+
+  <anyProperty />
 </taglib>
 

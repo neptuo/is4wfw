@@ -2,21 +2,24 @@
 
 	require_once("CustomEntityBase.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
 	class CustomEntity extends CustomEntityBase {
 
         const primaryKeyAttributePrefix = "key-";
+        const filterAttributePrefix = "filter-";
+        const orderByAttributePrefix = "orderBy-";
 
 		public function __construct() {
             parent::setTagLibXml("CustomEntity.xml");
         }
 
-        private function findPrimaryKeysInAttributes($params) {
+        private function findAttributesByPrefix($params, $prefix) {
             $result = array();
             foreach ($params as $key => $value) {
-                if (self::startsWith($key, self::primaryKeyAttributePrefix) && !empty($value)) {
-                    $result[substr($key, strlen(self::primaryKeyAttributePrefix))] = $value;
+                if (self::startsWith($key, $prefix) && !empty($value)) {
+                    $result[substr($key, strlen($prefix))] = $value;
                 }
             }
 
@@ -85,7 +88,7 @@
                 trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
             }
 
-            $keys = self::findPrimaryKeysInAttributes($params);
+            $keys = self::findAttributesByPrefix($params, self::primaryKeyAttributePrefix);
             $isUpdate = count($keys) > 0;
 
             $model = new EditModel();
@@ -134,11 +137,42 @@
             self::popEditModel();
             return $result;
         }
+
+        public function getList($template, $name, $params = array()) {
+            $tableName = self::ensureTableName($name);
+            $filter = self::findAttributesByPrefix($params, self::filterAttributePrefix);
+            $orderBy = self::findAttributesByPrefix($params, self::orderByAttributePrefix);
+
+            $model = new ListModel();
+            self::pushListModel($model);
+
+            $model->registration();
+            self::parseContent($template);
+            $model->registration(false);
+            
+            $result = "";
+
+            $sql = self::sql()->select($tableName, $model->fields(), $filter, $orderBy);
+            $data = self::dataAccess()->fetchAll($sql);
+
+            $model->render();
+            foreach ($data as $item) {
+                $model->data($item);
+                $result .= self::parseContent($template);
+            }
+
+            self::popListModel();
+            return $result;
+        }
+
+		public function getProperty($name) {
+            return self::peekListModel()->field($name);
+		}
         
         public function deleter($template, $name, $params = array()) {
-            $name = self::ensureTableName($name);
+            $tableName = self::ensureTableName($name);
 
-            $sql = self::getDeleteSql($name, $params);
+            $sql = self::getDeleteSql($tableName, $params);
             self::dataAccess()->execute($sql);
             self::parseContent($template);
         }

@@ -26,20 +26,41 @@
         }
 
         private function condition($filter, $operator = "AND") {
+            $result = "";
+
             foreach ($filter as $key => $value) {
                 $value = self::escape($value);
-                $condition = self::joinString($condition, "`$key` = $value", " " . $operator);
+                $result = self::joinString($result, "`$key` = $value", " " . $operator);
             }
 
-            return $condition;
+            return $result;
+        }
+        
+        private function appendWhere($value) {
+            if (!empty($value)) {
+                $value = " WHERE $value";
+            }
+            
+            return $value;
         }
 
-        private function appendWhere($condition) {
-            if (!empty($condition)) {
-                $condition = " WHERE $condition";
+        private function orderBy($orderBy) {
+            $result = "";
+
+            foreach ($orderBy as $key => $value) {
+                $value = ($value == "desc" || $value == "DESC") ? "DESC" : "ASC";
+                $result = self::joinString($result, "`$key` $value", ", ");
             }
 
-            return $condition;
+            return $result;
+        }
+
+        private function appendOrderBy($value) {
+            if (!empty($value)) {
+                $value = " ORDER BY $value";
+            }
+
+            return $value;
         }
 
         public function insert($tableName, $item) {
@@ -73,6 +94,21 @@
             $condition = self::appendWhere($condition);
 
             $sql = "DELETE FROM `$tableName`$condition;";
+            return $sql;
+        }
+
+        public function select($tableName, $fields, $filter = array(), $orderBy = array()) {
+            $condition = self::condition($filter, "AND");
+            $condition = self::appendWhere($condition);
+            $order = self::orderBy($orderBy);
+            $order = self::appendOrderBy($order);
+            
+            $columns = "";
+            foreach ($fields as $key) {
+                $columns = self::joinString($columns, "`$key`");
+            }
+
+            $sql = "SELECT $columns FROM `$tableName`$condition$order";
             return $sql;
         }
     }
