@@ -613,32 +613,60 @@
             return self::isHttpMethod("GET");
         }
 
-        public function pushEditModel($model) {
-            $stack = self::request()->get('models');
-			if ($stack == NULL) {
+        private function getModelStack($key, $createIfNotExists = false) {
+            $stack = self::request()->get($key);
+			if ($stack == NULL && $createIfNotExists) {
                 $stack = new Stack();
-                self::request()->set('models', $stack);
-			}
+                self::request()->set($key, $stack);
+            }
+            
+            return $stack;
+        }
 
+        public function pushEditModel($model) {
+            $stack = self::getModelStack("editModels", true);
 			$stack->push($model);
         }
 
         public function peekEditModel() {
-            $stack = self::request()->get('models');
-			if ($stack == NULL || $stack->isEmpty()) {
-                return array();
+            $stack = self::getModelStack("editModels", false);
+			if ($stack == NULL) {
+                return new EditModel();
 			}
 
             return $stack->peek();
         }
 
         public function popEditModel() {
-            $stack = self::request()->get('models');
-			if ($stack == NULL || $stack->isEmpty()) {
-                return array();
+            $stack = self::getModelStack("editModels", false);
+			if ($stack == NULL) {
+                return new EditModel();
 			}
 
-			return $stack->pop($model);
+            return $stack->pop();
+        }
+
+        public function pushListModel($model) {
+            $stack = self::getModelStack("listModels", true);
+			$stack->push($model);
+        }
+
+        public function peekListModel() {
+            $stack = self::getModelStack("listModels", false);
+			if ($stack == NULL) {
+                return new ListModel();
+			}
+
+            return $stack->peek();
+        }
+
+        public function popListModel() {
+            $stack = self::getModelStack("listModels", false);
+			if ($stack == NULL) {
+                return new ListModel();
+			}
+
+            return $stack->pop();
         }
         
         public function parseContent($content) {
