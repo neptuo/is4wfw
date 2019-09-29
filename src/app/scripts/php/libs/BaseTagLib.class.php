@@ -613,7 +613,7 @@
             return self::isHttpMethod("GET");
         }
 
-        public function pushModel($model) {
+        public function pushEditModel($model) {
             $stack = self::request()->get('models');
 			if ($stack == NULL) {
                 $stack = new Stack();
@@ -623,7 +623,7 @@
 			$stack->push($model);
         }
 
-        public function peekModel() {
+        public function peekEditModel() {
             $stack = self::request()->get('models');
 			if ($stack == NULL || $stack->isEmpty()) {
                 return array();
@@ -632,7 +632,7 @@
             return $stack->peek();
         }
 
-        public function popModel() {
+        public function popEditModel() {
             $stack = self::request()->get('models');
 			if ($stack == NULL || $stack->isEmpty()) {
                 return array();

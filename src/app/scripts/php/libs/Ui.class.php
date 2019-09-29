@@ -10,23 +10,23 @@
 		}
 
 		private function isRegistration() {
-			return self::peekModel()->isRegistration();
+			return self::peekEditModel()->isRegistration();
 		}
 
 		private function isSubmit() {
-			return self::peekModel()->isSubmit();
+			return self::peekEditModel()->isSubmit();
 		}
 
 		private function isRender() {
-			return self::peekModel()->isRender();
+			return self::peekEditModel()->isRender();
 		}
 
 		private function getModelValue($key) {
-			return self::peekModel()[$key];
+			return self::peekEditModel()[$key];
 		}
 
 		private function setModelValue($key, $value) {
-			self::peekModel()[$key] = $value;
+			self::peekEditModel()[$key] = $value;
 		}
 
 		private function setModelValueFromRequest($modelKey, $requestKey, $type) {
