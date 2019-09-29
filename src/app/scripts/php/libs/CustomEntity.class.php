@@ -27,16 +27,12 @@
         }
 
         private function parseUserValue($column, $value) {
-            switch ($column->type) {
-                case 'string':
-                    return $value;
-                case 'number':
-                    return intval($value);
-                case 'bool':
-                    return boolval($value);
-                default:
-                    throw new Exception("Not supported field type '$column->name'.");
+            $type = self::getTableColumnTypes((string)$column->type);
+            if ($type == NULL) {
+                return NULL;
             }
+
+            return $type["fromUser"]($value);
         }
 
         private function prepareValuesFromModel($xml, $model) {

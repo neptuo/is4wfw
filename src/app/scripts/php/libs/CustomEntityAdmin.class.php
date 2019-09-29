@@ -31,10 +31,6 @@
             return self::mapType("key", $type, "db");
         }
 
-        private function mapTypeToEscapeCharacter($type) {
-            return self::mapType("key", $type, "escape");
-        }
-
         private function mapTypeToName($type) {
             return self::mapType("key", $type, "name");
         }
@@ -183,14 +179,6 @@
             $result = self::partialView("customentities/tableCreator");
             self::popEditModel();
             return $result;
-        }
-
-        public function getTableColumnTypes() {
-            return array(
-                array("key" => "number", "name" => "Number", "db" => "int(11)", "escape" => ""),
-                array("key" => "string", "name" => "Text", "db" => "tinytext", "escape" => "'"),
-                array("key" => "bool", "name" => "Boolean", "db" => "bit(1)", "escape" => "")
-            );
         }
 
         public function tableDeleter($template, $name) {
