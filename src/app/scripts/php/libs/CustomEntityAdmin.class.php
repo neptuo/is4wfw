@@ -1,7 +1,7 @@
 <?php
 
 	require_once("CustomEntityBase.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/Model.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
 	class CustomEntityAdmin extends CustomEntityBase {
@@ -165,7 +165,7 @@
         }
         
         public function tableCreator() {
-            $model = new Model();
+            $model = new EditModel();
             self::pushModel($model);
 
             if (array_key_exists("ce-creator-save", $_REQUEST)) {
@@ -261,7 +261,7 @@
         public function tableColumnCreator($name) {
             $tableName = self::ensureTableName($name);
 
-            $model = new Model();
+            $model = new EditModel();
             self::pushModel($model);
 
             if (array_key_exists("ce-column-creator-save", $_REQUEST)) {

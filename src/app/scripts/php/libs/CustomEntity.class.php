@@ -1,7 +1,7 @@
 <?php
 
 	require_once("CustomEntityBase.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/Model.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
 	class CustomEntity extends CustomEntityBase {
@@ -88,7 +88,7 @@
             $keys = self::findPrimaryKeysInAttributes($params);
             $isUpdate = count($keys) > 0;
 
-            $model = new Model();
+            $model = new EditModel();
             self::pushModel($model);
 
             if ($isUpdate) {
@@ -123,7 +123,7 @@
                 } else {
                     if (!$isUpdate) {
                         self::popModel();
-                        $model = new Model();
+                        $model = new EditModel();
                         self::pushModel($model);
                     }
                 }
