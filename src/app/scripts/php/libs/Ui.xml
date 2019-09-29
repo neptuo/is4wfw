@@ -22,8 +22,10 @@
       <attreq>implied</attreq>
       <attcomment>URL, na kterou se má přesměrovat při odeslání formuláře.</attcomment>
     </attribute>
+    <anyAttribute />
     <comment>
       Vygeneruje formulář.
+      Všechny ostatní atributy jsou předány HTML select elementu.
     </comment>
   </fulltag>
   <tag>
@@ -49,8 +51,10 @@
       <attreq>required</attreq>
       <attcomment>Název název sloupce, který se má použit jako hodnota.</attcomment>
     </attribute>
+    <anyAttribute />
     <comment>
       Vygeneruje dropdownlist z DB entity.
+      Všechny ostatní atributy jsou předány HTML select elementu.
     </comment>
   </tag>
   <tag>
@@ -61,8 +65,10 @@
       <attreq>required</attreq>
       <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
+    <anyAttribute />
     <comment>
       Vygeneruje input pro zadání textu.
+      Všechny ostatní atributy jsou předány HTML select elementu.
     </comment>
   </tag>
   <tag>
@@ -73,8 +79,10 @@
       <attreq>required</attreq>
       <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
+    <anyAttribute />
     <comment>
       Vygeneruje checkbox.
+      Všechny ostatní atributy jsou předány HTML select elementu.
     </comment>
   </tag>
 </taglib>

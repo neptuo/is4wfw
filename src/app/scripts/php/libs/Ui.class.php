@@ -33,20 +33,35 @@
 			self::setModelValue($modelKey, $_REQUEST[$requestKey], $type);
 		}
 
-		public function form($template, $method = "post", $action = NULL) {
+		private function joinAttributes($params) {
+			$attributes = "";
+			foreach ($params as $key => $value) {
+				$attributes = self::joinString($attributes, "$key='$value'", " ");
+			}
+
+			if (!empty($attributes)) {
+				$attributes = " $attributes";
+			}
+
+			return $attributes;
+		}
+
+		public function form($template, $method = "post", $action = NULL, $params = array()) {
 			if ($action == NULL) {
 				$action = $_SERVER['REQUEST_URI'];
 			} else {
 				$action = self::web()->composeUrl($action);
 			}
 
+			$attributes = self::joinAttributes($params);
+
             return ""
-            . "<form method='$method' action='$action'>"
+            . "<form method='$method' action='$action'$attributes>"
                 . self::parseContent($template)
             . "</form>";
 		}
 		
-		public function dropdownlist($name, $source, $display, $id) {
+		public function dropdownlist($name, $source, $display, $id, $params = array()) {
 			if (self::isRegistration() || self::isSubmit()) {
 				self::setModelValue($name, NULL);
 			}
@@ -57,8 +72,9 @@
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
+				$attributes = self::joinAttributes($params);
 				
-				$result = "<select name='$name'>";
+				$result = "<select name='$name'$attributes>";
 
 				if (is_array($source)) {
 					$data = $source;
@@ -88,7 +104,8 @@
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
-				return "<input name='$name' type='text' value='$modelValue' />";
+				$attributes = self::joinAttributes($params);
+				return "<input name='$name' type='text' value='$modelValue'$attributes />";
 			}
 		}
 
@@ -104,7 +121,8 @@
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
-				return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 || $modelValue === "1" ? " checked='checked'" : '') . " />";
+				$attributes = self::joinAttributes($params);
+				return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 || $modelValue === "1" ? " checked='checked'" : '') . "$attributes />";
 			}
 		}
 	}
