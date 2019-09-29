@@ -34,7 +34,7 @@
     <attribute>
       <attname>name</attname>
       <attreq>required</attreq>
-      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+      <attcomment>Název fieldu, který se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>source</attname>
@@ -55,6 +55,41 @@
     <comment>
       Vygeneruje dropdownlist z DB entity.
       Všechny ostatní atributy jsou předány HTML select elementu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>checkboxlist</tagname>
+    <function>checkboxlist</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, který se má nastavovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>source</attname>
+      <attreq>required</attreq>
+      <attcomment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>display</attname>
+      <attreq>required</attreq>
+      <attcomment>Název sloupce, který se má zobrazit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+      <attcomment>Název název sloupce, který se má použit jako hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>repeat</attname>
+      <attreq>implied</attreq>
+      <attdef>vertical</attdef>
+      <attcomment>Směr, jakým se mají checkboxy opakovat ("horizontal" nebo "vertical").</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vygeneruje checkboxlist z DB entity.
+      Všechny ostatní atributy jsou předány checkboxu.
     </comment>
   </tag>
   <tag>

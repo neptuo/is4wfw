@@ -90,7 +90,46 @@
 				$result .= "</select>";
 				return $result;
 			}
-			
+		}
+		
+		public function checkboxlist($name, $source, $display, $id, $repeat, $params = array()) {
+			if (self::isRegistration() || self::isSubmit()) {
+				self::setModelValue($name, NULL);
+			}
+
+			if (self::isSubmit()) {
+				$modelValue = $_REQUEST[$name];
+				self::setModelValue($name, $modelValue);
+			}
+
+			if (self::isRender()) {
+				$modelValue = self::getModelValue($name);
+				if (!is_array($modelValue)) {
+					$modelValue = explode(",", $modelValue);
+				}
+
+				if (is_array($source)) {
+					$data = $source;
+				} else {
+					$data = self::dataAccess()->fetchAll("SELECT `$id`, `$display` FROM `$source` ORDER BY `$display`;");
+				}
+				
+				$itemContainerTagName = $repeat == "vertical" ? "div" : "span";
+				$attributes = self::joinAttributes($params);
+
+				foreach ($data as $item) {
+					$itemValue = $item[$id];
+					$result .= ""
+					. "<$itemContainerTagName>"
+						. "<label>"
+							. "<input name='" . $name . "[]' value='$itemValue' type='checkbox'" . (in_array($itemValue, $modelValue) ? " checked='checked'" : '') . "$attributes />"
+							. $item[$display]
+						. "</label>"
+					. "</$itemContainerTagName>";
+				}
+
+				return $result;
+			}
 		}
 
 		public function textbox($name) {
