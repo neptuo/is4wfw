@@ -1,13 +1,13 @@
 <v:template src="~/templates/in-template.view">
 	<web:a pageId="~/in/custom-entities.view" text="&laquo; Custom Entities" />
 	<web:condition when="post:ce-delete" is="delete">
-		<ce:tableColumnDeleter tableName="query:table" columnName="post:ce-column">
+		<ced:tableColumnDeleter tableName="query:table" columnName="post:ce-column">
 			<web:redirectToSelf />
-		</ce:tableColumnDeleter>
+		</ced:tableColumnDeleter>
 	</web:condition>
 	<web:condition when="post:ce-column-create" is="create">
 		<web:frame title="Create Column">
-			<ce:tableColumnCreator name="query:table" />
+			<ced:tableColumnCreator name="query:table" />
 		</web:frame>
 	</web:condition>
 	<web:frame title="query:table">
@@ -19,31 +19,31 @@
 				<th>Primary</th>
 				<th></th>
 			</tr>
-			<ce:listTableColumns name="query:table">
+			<ced:listTableColumns name="query:table">
 				<tr>
 					<td>
-						<web:getProperty name="ce:tableColumnName" />
+						<web:getProperty name="ced:tableColumnName" />
 					</td>
 					<td>
-						<web:getProperty name="ce:tableColumnType" />
+						<web:getProperty name="ced:tableColumnType" />
 					</td>
 					<td>
-						<web:getProperty name="ce:tableColumnRequired" />
+						<web:getProperty name="ced:tableColumnRequired" />
 					</td>
 					<td>
-						<web:getProperty name="ce:tableColumnPrimaryKey" />
+						<web:getProperty name="ced:tableColumnPrimaryKey" />
 					</td>
 					<td>
-						<web:condition when="ce:tableColumnPrimaryKey" is="false">
+						<web:condition when="ced:tableColumnPrimaryKey" is="false">
 							<ui:form>
-								<input type="hidden" name="ce-column" value="<web:getProperty name="ce:tableColumnName" />" />
+								<input type="hidden" name="ce-column" value="<web:getProperty name="ced:tableColumnName" />" />
 								<input type="hidden" name="ce-delete" value="delete" />
-								<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity column '<web:getProperty name="ce:tableColumnName" />'" />
+								<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity column '<web:getProperty name="ced:tableColumnName" />'" />
 							</ui:form>
 						</web:condition>
 					</td>
 				</tr>
-			</ce:listTableColumns>
+			</ced:listTableColumns>
 		<table>
 		<hr />
 		<ui:form>

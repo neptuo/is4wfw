@@ -4,6 +4,7 @@
 	<reg prefix="cn" class="php.libs.Counter" />
 	<reg prefix="cf" class="php.libs.CustomForm" />
 	<reg prefix="ce" class="php.libs.CustomEntity" />
+	<reg prefix="ced" class="php.libs.CustomEntityAdmin" />
 	<reg prefix="f" class="php.libs.File" />
 	<reg prefix="fa" class="php.libs.FileAdmin" />
 	<reg prefix="google" class="php.libs.Google" />

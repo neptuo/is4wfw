@@ -6,78 +6,8 @@
   <version>1.00</version>
   <count>*</count>
   <comment>
-    Knihovna pro generování a práci s uživatelskými entitami.
+    Knihovna pro práci s uživatelskými entitami.
   </comment>
-  <tag>
-    <tagname>tableCreator</tagname>
-    <function>tableCreator</function>
-    <comment>
-      Generátor základu tabulky uživatelských entit.
-    </comment>
-  </tag>
-  <tag>
-    <tagname>tableColumnCreator</tagname>
-    <function>tableColumnCreator</function>
-    <attribute>
-      <attname>name</attname>
-      <attreq>required</attreq>
-      <attcomment>Název entity, do které se má přidat sloupec.</attcomment>
-    </attribute>
-    <comment>
-      Generátor pro přidání sloupce do tabulky uživatelské entity.
-    </comment>
-  </tag>
-  <fulltag>
-    <tagname>listTables</tagname>
-    <function>listTables</function>
-    <comment>
-      Vypíše seznam všech uživatelských entity.
-    </comment>
-  </fulltag>
-  <fulltag>
-    <tagname>listTableColumns</tagname>
-    <function>listTableColumns</function>
-    <attribute>
-      <attname>name</attname>
-      <attreq>required</attreq>
-      <attcomment>Název entity, pro kterou se mají zobrazit sloupce.</attcomment>
-    </attribute>
-    <comment>
-      Vypíše seznam sloupců vybrané uživatelké entity.
-    </comment>
-  </fulltag>
-  <fulltag>
-    <tagname>tableDeleter</tagname>
-    <function>tableDeleter</function>
-    <lookless>true</lookless>
-    <attribute>
-      <attname>name</attname>
-      <attreq>required</attreq>
-      <attcomment>Název entity, která se má odstranit.</attcomment>
-    </attribute>
-    <comment>
-      Odstraní uživatelkou entitu.
-    </comment>
-  </fulltag>
-  <fulltag>
-    <tagname>tableColumnDeleter</tagname>
-    <function>tableColumnDeleter</function>
-    <lookless>true</lookless>
-    <attribute>
-      <attname>tableName</attname>
-      <attreq>required</attreq>
-      <attcomment>Název entity, ze které se má sloupec odstranit.</attcomment>
-    </attribute>
-    <attribute>
-      <attname>columnName</attname>
-      <attreq>required</attreq>
-      <attcomment>Název sloupce, který se má odstranit.</attcomment>
-    </attribute>
-    <comment>
-      Odstraní sloupec z uživatelké entity.
-    </comment>
-  </fulltag>
-
   <fulltag>
     <tagname>form</tagname>
     <function>form</function>
@@ -124,55 +54,5 @@
       Smaže všechny záznamy z entity podle "params".
     </comment>
   </fulltag>
-
-  <property>
-    <propname>tableColumnTypes</propname>
-    <getfunction>getTableColumnTypes</getfunction>
-    <comment>
-        Vrací pole podporovaných typů sloupců pro table / column creator ('key', 'name', 'db').
-    </comment>
-  </property>
-  <property>
-    <propname>tableName</propname>
-    <getfunction>getTableName</getfunction>
-    <comment>
-        Vrací název aktuální tabulky při průchodu přes "ce:listTables".
-    </comment>
-  </property>
-  <property>
-    <propname>tableDescription</propname>
-    <getfunction>getTableDescription</getfunction>
-    <comment>
-        Vrací popisek aktuální tabulky při průchodu přes "ce:listTables".
-    </comment>
-  </property>
-  <property>
-    <propname>tableColumnName</propname>
-    <getfunction>getTableColumnName</getfunction>
-    <comment>
-        Vrací název aktuálního sloupce při průchodu přes "ce:listTableColumns".
-    </comment>
-  </property>
-  <property>
-    <propname>tableColumnType</propname>
-    <getfunction>getTableColumnType</getfunction>
-    <comment>
-        Vrací typ aktuálního sloupce při průchodu přes "ce:listTableColumns".
-    </comment>
-  </property>
-  <property>
-    <propname>tableColumnPrimaryKey</propname>
-    <getfunction>getTableColumnPrimaryKey</getfunction>
-    <comment>
-        Vrací zda je primární klíčem aktuální sloupec při průchodu přes "ce:listTableColumns".
-    </comment>
-  </property>
-  <property>
-    <propname>tableColumnRequired</propname>
-    <getfunction>getTableColumnRequired</getfunction>
-    <comment>
-        Vrací zda je povinný aktuální sloupec při průchodu přes "ce:listTableColumns".
-    </comment>
-  </property>
 </taglib>
 

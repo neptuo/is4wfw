@@ -18,7 +18,7 @@
         </div>
         <div class="gray-box">
             <label class="w90">Type:</label>
-            <ui:dropdownlist name="primary-key-1-type" source="ce:tableColumnTypes" display="name" value="key" />
+            <ui:dropdownlist name="primary-key-1-type" source="ced:tableColumnTypes" display="name" value="key" />
         </div>
         <div class="gray-box">
             <label>
@@ -38,7 +38,7 @@
         </div>
         <div class="gray-box">
             <label class="w90">Type:</label>
-            <ui:dropdownlist name="primary-key-2-type" source="ce:tableColumnTypes" display="name" value="key" />
+            <ui:dropdownlist name="primary-key-2-type" source="ced:tableColumnTypes" display="name" value="key" />
         </div>
         <hr />
     </div>
@@ -52,7 +52,7 @@
         </div>
         <div class="gray-box">
             <label class="w90">Type:</label>
-            <ui:dropdownlist name="primary-key-3-type" source="ce:tableColumnTypes" display="name" value="key" />
+            <ui:dropdownlist name="primary-key-3-type" source="ced:tableColumnTypes" display="name" value="key" />
         </div>
         <hr />
     </div>
