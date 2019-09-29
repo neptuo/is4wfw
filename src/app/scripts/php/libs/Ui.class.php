@@ -1,7 +1,7 @@
 <?php
 
 	require_once("BaseTagLib.class.php");
-	require_once("BaseTagLib.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
 
 	class Ui extends BaseTagLib {
 

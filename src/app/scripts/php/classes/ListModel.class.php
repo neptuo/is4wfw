@@ -1,9 +1,8 @@
 <?php
 
-    class Model extends ArrayObject
+    class ListModel extends ArrayObject
     {
         private $isRegistration;
-        private $isSubmit;
         private $isRender;
 
         public function isRegistration() {
@@ -14,14 +13,6 @@
             $this->isRegistration = $value;
         }
 
-        public function isSubmit() {
-            return $this->isSubmit;
-        }
-
-        public function submit($value = true) {
-            $this->isSubmit = $value;
-        }
-        
         public function isRender() {
             return $this->isRender;
         }
