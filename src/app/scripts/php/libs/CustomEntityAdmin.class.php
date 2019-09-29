@@ -92,6 +92,10 @@
             $keyElement->addChild("type", $model["primary-key-1-type"]);
             $keyElement->addChild("primaryKey", TRUE);
             $keyElement->addChild("required", TRUE);
+            
+            if ($model["primary-key-1-identity"]) {
+                $keyElement->addChild("identity", TRUE);
+            }
 
             $columnName = $model["primary-key-2-name"];
             if ($columnName != "") {

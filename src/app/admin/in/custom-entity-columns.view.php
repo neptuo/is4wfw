@@ -47,7 +47,9 @@
 		<table>
 		<hr />
 		<ui:form>
-			<button name="ce-column-create" value="create">Create New Column</button>
+			<div class="gray-box">
+				<button name="ce-column-create" value="create">Create New Column</button>
+			</div>
 		</ui:form>
 	</web:frame>
 </v:template>

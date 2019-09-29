@@ -36,26 +36,68 @@
         }
 
         private function prepareValuesFromModel($xml, $model) {
-            $values = array();
+            $columns = array();
+            $extras = array();
             foreach ($xml->column as $column) {
-                if (array_key_exists((string)$column->name, $model)) {
-                    $value = self::parseUserValue($column, $model[(string)$column->name]);
-                    $values[(string)$column->name] = $value;
+                $columnName = (string)$column->name;
+                if (array_key_exists($columnName, $model)) {
+                    $value = $model[$columnName];
+                    if (is_array($value) && array_key_exists("type", $value)) {
+                        $extras[$columnName] = $value;
+                    } else {
+                        $value = self::parseUserValue($column, $value);
+                        $columns[$columnName] = $value;
+                    }
                 }
             }
 
-            return $values;
+            return array(
+                "columns" => $columns,
+                "extras" => $extras
+            );
         }
         
-        private function getInsertSql($name, $xml, $model) {
+        private function insert($name, $xml, $model) {
             $values = self::prepareValuesFromModel($xml, $model);
-            return self::sql()->insert($name, $values);
+            $sql = self::sql()->insert($name, $values["columns"]);
+
+            if (empty($values["extras"])) {
+                self::dataAccess()->execute($sql);
+            } else {
+                self::dataAccess()->transaction(function($da) use ($name, $xml, $model, $values, $sql) {
+                    $da->execute($sql);
+                    
+                    $identity = self::findIdentityColumn($xml);
+                    if ($identity != NULL) {
+                        $id = $da->getLastId();
+                        $model[(string)$identity->name] = $id;
+                    }
+                    
+                    foreach ($values["extras"] as $columnName => $extra) {
+                        if ($extra["type"] == "emptyDirectory") {
+                            $fa = new FileAdmin();
+                            $directoryName = self::formatString($extra['nameFormat'], $model);
+                            $directory = $fa->createDirectory($extra['parentDirId'], $directoryName);
+
+                            $filter = array();
+                            foreach ($xml->column as $column) {
+                                if ($column->primaryKey == TRUE) {
+                                    $filter[(string)$column->name] = $model[(string)$column->name];
+                                }
+                            }
+                            
+                            $sql = self::sql()->update($name, array($columnName => $directory['id']), $filter);
+                            $da->execute($sql);
+                        }
+                    }
+                });
+            }
         }
         
         private function getUpdateSql($name, $xml, $keys, $model) {
             $values = self::prepareValuesFromModel($xml, $model);
             $filter = self::prepareValuesFromModel($xml, $keys);
-            return self::sql()->update($name, $values, $filter);
+            return self::sql()->update($name, $values["columns"], $filter);
         }
 
         private function getSelectSql($name, $keys, $model) {
@@ -111,11 +153,11 @@
 
                 if ($isUpdate) {
                     $sql = self::getUpdateSql($tableName, $xml, $keys, $model);
+                    self::dataAccess()->execute($sql);
                 } else {
-                    $sql = self::getInsertSql($tableName, $xml, $model);
+                    $sql = self::insert($tableName, $xml, $model);
                 }
 
-                self::dataAccess()->execute($sql);
 
                 if ($nextPageId != 0) {
                     self::web()->redirectTo($nextPageId);
@@ -132,6 +174,16 @@
             $result = self::ui()->form($template, "post");
             self::popEditModel();
             return $result;
+        }
+
+        public function emptyDirectory($name, $parentDirId, $nameFormat) {
+            if (self::peekEditModel()->isSubmit()) {
+                self::peekEditModel()[$name] = array(
+                    "type" => "emptyDirectory",
+                    "parentDirId" => $parentDirId,
+                    "nameFormat" => $nameFormat
+                );
+            }
         }
 
         public function getList($template, $name, $params = array()) {

@@ -40,6 +40,25 @@
       Všechny atributy začínající na "key-" jsou použity pro identifikaci záznamu pro editaci.
     </comment>
   </fulltag>
+  <tag>
+    <tagname>emptyDirectory</tagname>
+    <function>emptyDirectory</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název sloupce, pro který se má vytvořit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>parentDirId</attname>
+      <attreq>required</attreq>
+      <attcomment>Id rodičovské složky, ve které má být vytvořena nová.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>nameFormat</attname>
+      <attreq>required</attreq>
+      <attcomment>Formátovací řetězec pro název nové složky. Např.: "{id} - {name}".</attcomment>
+    </attribute>
+  </tag>
   <fulltag>
     <tagname>list</tagname>
     <function>getList</function>

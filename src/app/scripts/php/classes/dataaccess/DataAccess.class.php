@@ -52,24 +52,47 @@ class DataAccess {
 	}
 	
 	public function disconnect(){
-		if(self::inTransaction()) {
+		if (self::inTransaction()) {
 			self::commit();
 		}
-		if(self::isOpened()) {
+		if (self::isOpened()) {
 			mysqli_close($this->connection);
 		}
 	}
 	
-	public function transaction(){
-		if(!self::inTransaction()) {
+	private function startTransaction() {
+		if (!self::inTransaction()) {
 			$sql = "start transaction";
 			$this->inTransaction = true;
 			return $this->execute($sql);  	
 		}
+
+		return false;
+	}
+
+	public function transaction($handler = NULL){
+		$isStarted = self::startTransaction();
+		if ($handler == NULL) {
+			return $isStarted;
+		} else {
+			if (!$isStarted) {
+				$handler($this);
+				return $isStarted;
+			} else {
+				try {
+					$handler($this);
+					self::commit();
+				} catch (Exception $e) {
+					self::rollback();
+					throw $e;
+				}
+			}
+		}
+		
 	}
 	
 	public function commit(){
-		if(self::inTransaction()) {
+		if (self::inTransaction()) {
 			$sql = "commit";
 			$this->inTransaction = false;
 			return $this->execute($sql); 
@@ -77,7 +100,7 @@ class DataAccess {
 	}
 	
 	public function rollback(){
-		if(self::inTransaction()) {
+		if (self::inTransaction()) {
 			$sql = "rollback";
 			$this->inTransaction = false;
 			return $this->execute($sql); 
