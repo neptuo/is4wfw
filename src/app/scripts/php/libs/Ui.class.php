@@ -29,8 +29,8 @@
 			self::peekEditModel()[$key] = $value;
 		}
 
-		private function setModelValueFromRequest($modelKey, $requestKey, $type) {
-			self::setModelValue($modelKey, $_REQUEST[$requestKey], $type);
+		private function setModelValueFromRequest($modelKey, $requestKey) {
+			self::setModelValue($modelKey, $_REQUEST[$requestKey]);
 		}
 
 		private function joinAttributes($params) {
@@ -132,7 +132,7 @@
 			}
 		}
 
-		public function textbox($name) {
+		public function textbox($name, $params = array()) {
 			if (self::isRegistration() || self::isSubmit()) {
 				self::setModelValue($name, NULL);
 			}
@@ -148,7 +148,7 @@
 			}
 		}
 
-		public function checkbox($name) {
+		public function checkbox($name, $params = array()) {
 			if (self::isRegistration() || self::isSubmit()) {
 				self::setModelValue($name, NULL);
 			}
