@@ -38,41 +38,69 @@
         private function prepareValuesFromModel($xml, $model) {
             $columns = array();
             $extras = array();
+            $external = array();
             foreach ($xml->column as $column) {
                 $columnName = (string)$column->name;
+                $columnType = (string)$column->type;
                 if (array_key_exists($columnName, $model)) {
                     $value = $model[$columnName];
                     if (is_array($value) && array_key_exists("type", $value)) {
                         $extras[$columnName] = $value;
                     } else {
-                        $value = self::parseUserValue($column, $value);
-                        $columns[$columnName] = $value;
+                        $typeDefinition = self::getTableColumnTypes($columnType);
+                        if ($typeDefinition["hasColumn"]) {
+                            $value = self::parseUserValue($column, $value);
+                            $columns[$columnName] = $value;
+                        } else {
+                            $value = self::parseUserValue($column, $value);
+                            if ($columnType == "multireference-jointable") {
+                                $external[$columnName] = array(
+                                    "type" => $columnType,
+                                    "value" => $value,
+                                    "table" => $column->table,
+                                    "targetColumn" => $column->targetColumn,
+                                );
+                            }
+                        }
                     }
                 }
             }
 
             return array(
                 "columns" => $columns,
-                "extras" => $extras
+                "extras" => $extras,
+                "external" => $external
             );
+        }
+
+        private function updateExternals($values, $xml, $model) {
+            foreach ($values["external"] as $columnName => $external) {
+                if ($external["type"] == "multireference-jointable") {
+                    $column = self::findColumn($xml, $columnName);
+                    self::updateJoinTable($xml, $column, $model);
+                }
+            }
         }
         
         private function insert($name, $xml, $model) {
             $values = self::prepareValuesFromModel($xml, $model);
             $sql = self::sql()->insert($name, $values["columns"]);
 
-            if (empty($values["extras"])) {
+            if (empty($values["extras"]) && empty($values["external"])) {
                 self::dataAccess()->execute($sql);
             } else {
                 self::dataAccess()->transaction(function($da) use ($name, $xml, $model, $values, $sql) {
+                    // Execute insert.
                     $da->execute($sql);
                     
+                    // Get last identity value if inserted.
                     $identity = self::findIdentityColumn($xml);
                     if ($identity != NULL) {
                         $id = $da->getLastId();
                         $model[(string)$identity->name] = $id;
                     }
                     
+                    // Process extras.
                     foreach ($values["extras"] as $columnName => $extra) {
                         if ($extra["type"] == "emptyDirectory") {
                             $fa = new FileAdmin();
@@ -90,28 +118,78 @@
                             $da->execute($sql);
                         }
                     }
+
+                    // Process external tables.
+                    self::updateExternals($values, $xml, $model);
                 });
             }
         }
         
-        private function getUpdateSql($name, $xml, $keys, $model) {
+        private function update($name, $xml, $keys, $model) {
             $values = self::prepareValuesFromModel($xml, $model);
             $filter = self::prepareValuesFromModel($xml, $keys);
-            return self::sql()->update($name, $values["columns"], $filter["columns"]);
+            $sql = self::sql()->update($name, $values["columns"], $filter["columns"]);
+
+            if (empty($values["extras"]) && empty($values["external"])) {
+                self::dataAccess()->execute($sql);
+            } else {
+                self::dataAccess()->transaction(function($da) use ($name, $xml, $model, $values, $sql) {
+                    // Execute update.
+                    $da->execute($sql);
+
+                    // Process external tables.
+                    self::updateExternals($values, $xml, $model);
+                });
+            }
         }
 
-        private function getSelectSql($name, $keys, $model) {
+        private function loadModel($name, $xml, $keys, $model) {
             $columns = "";
             $condition = "";
-            foreach ($model as $key => $item) {
-                $columns = self::joinString($columns, "`$key`");
+            $external = array();
+            foreach ($xml->column as $column) {
+                $columnName = (string)$column->name;
+                $columnType = (string)$column->type;
+                if (array_key_exists($columnName, $model)) {
+                    if (!$typeDefinition["hasColumn"]) {
+                        if ($columnType == "multireference-jointable") {
+                            self::registerPrimaryKeysToModel($xml, $model);
+
+                            $external[$columnName] = array(
+                                "type" => $columnType
+                            );
+                        }
+                    }
+                }
+            }
+
+            foreach ($xml->column as $column) {
+                $columnName = (string)$column->name;
+                $columnType = (string)$column->type;
+                if (array_key_exists($columnName, $model)) {
+                    $typeDefinition = self::getTableColumnTypes($columnType);
+                    if ($typeDefinition["hasColumn"]) {
+                        $columns = self::joinString($columns, "`$columnName`");
+                    }
+                }
             }
 
             foreach ($keys as $key => $value) {
                 $condition = self::joinString($condition, "$key = $value", " AND");
             }
 
-            $sql = "SELECT $columns FROM `$name` WHERE $condition";
+            $data = self::dataAccess()->fetchSingle("SELECT $columns FROM `$name` WHERE $condition");
+            foreach ($model as $key => $item) {
+                $model[$key] = $data[$key];
+            }
+
+            foreach ($external as $columnName => $item) {
+                if ($item["type"] == "multireference-jointable") {
+                    $value = self::loadJoinTableData($xml, $model, $columnName);
+                    $model[$columnName] = $value;
+                }
+            }
+
             return $sql;
         }
 
@@ -121,6 +199,7 @@
 
 		public function form($template, $name, $method = "POST", $submit = "", $nextPageId = 0, $params = array()) {
             $tableName = self::ensureTableName($name);
+            $xml = self::getDefinition($name);
 
             if ($method == "GET" && $submit == "") {
                 trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
@@ -137,11 +216,7 @@
                 self::parseContent($template);
                 $model->registration(false);
 
-                $sql = self::getSelectSql($tableName, $keys, $model);
-                $data = self::dataAccess()->fetchSingle($sql);
-                foreach ($model as $key => $item) {
-                    $model[$key] = $data[$key];
-                }
+                self::loadModel($tableName, $xml, $keys, $model);
             }
 
             if (self::isHttpMethod($method) && ($submit == "" || array_key_exists($submit, $_REQUEST))) {
@@ -149,11 +224,8 @@
                 self::parseContent($template);
                 $model->submit(false);
 
-                $xml = self::getDefinition($name);
-
                 if ($isUpdate) {
-                    $sql = self::getUpdateSql($tableName, $xml, $keys, $model);
-                    self::dataAccess()->execute($sql);
+                    self::update($tableName, $xml, $keys, $model);
                 } else {
                     self::insert($tableName, $xml, $model);
                 }

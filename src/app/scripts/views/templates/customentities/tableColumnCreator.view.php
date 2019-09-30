@@ -16,7 +16,7 @@
         </div>
         <div data-toggle="type-singlereference">
             <div class="gray-box">
-                <strong>Reference</strong>
+                <strong>Single Reference</strong>
             </div>
             <div class="gray-box">
                 <label class="w90">Table:</label>
@@ -25,6 +25,31 @@
             <div class="gray-box">
                 <label class="w90">Column:</label>
                 <ui:textbox name="column-singlerefence-column" />
+            </div>
+        </div>
+        <div data-toggle="type-multireference-jointable">
+            <div class="gray-box">
+                <strong>Multi Reference</strong>
+            </div>
+            <div class="gray-box">
+                <label class="w120">Join Table:</label>
+                <ui:textbox name="column-multireference-table" class="w200" />
+            </div>
+            <div class="gray-box">
+                <label class="w120">Primary Key 1:</label>
+                <ui:textbox name="column-multireference-primarykey1-column" />
+            </div>
+            <div class="gray-box">
+                <label class="w120">Primary Key 2:</label>
+                <ui:textbox name="column-multireference-primarykey2-column" />
+            </div>
+            <div class="gray-box">
+                <label class="w120">Primary Key 3:</label>
+                <ui:textbox name="column-multireference-primarykey3-column" />
+            </div>
+            <div class="gray-box">
+                <label class="w120" title="Column where selected foreign ids will be stored">Target Column:</label>
+                <ui:textbox name="column-multireference-targetcolumn" />
             </div>
         </div>
     </div>

@@ -132,20 +132,20 @@
             $modelType = $model["column-type"];
             $modelRequired = $model["column-required"];
 
+            $typeDefinition = self::getTableColumnTypes($modelType);
+
             $fkSql = "";
-            $alterSql = "ALTER TABLE `$tableName` ADD COLUMN `" . $modelName . "` " . (self::mapTypeToDb($modelType));
-            if ($modelRequired) {
-                $alterSql .= " NOT NULL";
-            } else {
-                $alterSql .= " NULL";
-            }
+            $alterSql = "";
 
-            $alterSql .= ";";
+            if ($typeDefinition["hasColumn"]) {
+                $alterSql = "ALTER TABLE `$tableName` ADD COLUMN `" . $modelName . "` " . (self::mapTypeToDb($modelType));
+                if ($modelRequired) {
+                    $alterSql .= " NOT NULL";
+                } else {
+                    $alterSql .= " NULL";
+                }
 
-            if ($modelType == "singlereference") {
-                $referenceTable = $model["column-singlerefence-table"];
-                $referenceColumn = $model["column-singlerefence-column"];
-                $fkSql = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$modelName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
+                $alterSql .= ";";
             }
 
             $xml = self::getDefinition($name);
@@ -159,6 +159,28 @@
 
             if ($modelRequired) {
                 $column->addChild("required", TRUE);
+            }
+
+            if ($modelType == "singlereference") {
+                $referenceTable = $model["column-singlerefence-table"];
+                $referenceColumn = $model["column-singlerefence-column"];
+                $fkSql = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$modelName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
+            } else if ($modelType == "multireference-jointable") {
+                $joinTable = $model["column-multireference-table"];
+                $targetColumn = $model["column-multireference-targetcolumn"];
+                $column->addChild("joinTable", $joinTable);
+                $column->addChild("targetColumn", $targetColumn);
+                $primaryKeysElements = $column->addChild("primaryKeyMappings");
+                
+                $primaryKeys = self::getPrimaryKeyColumns($xml);
+                for ($i=0; $i < count($primaryKeys); $i++) { 
+                    $primaryKey = $primaryKeys[$i];
+                    $primaryKeyColumnName = (string)$primaryKey->name;
+                    $mappedColumnName = $model["column-multireference-primarykey" . ($i + 1) . "-column"];
+                    $primaryKeysElements->addChild("mappedTo", $mappedColumnName);
+                    
+                    $fkSql .= "ALTER TABLE `$joinTable` ADD FOREIGN KEY (`$mappedColumnName`) REFERENCES `$tableName`(`$primaryKeyColumnName`);";
+                }
             }
 
             $updateSql = self::getUpdateDefinitionSql($name, $xml);
@@ -290,13 +312,17 @@
 
             for ($i=0; $i < count($xml->column); $i++) { 
                 if ($xml->column[$i]->name == $columnName) {
+                    $typeDefinition = self::getTableColumnTypes((string)$xml->column[$i]->Type);
                     unset($xml->column[$i]);
                     break;
                 }
             }
 
             $updateSql = self::getUpdateDefinitionSql($entityName, $xml);
-            $alterSql = "ALTER TABLE `$tableName` DROP COLUMN `$columnName`;";
+
+            if ($typeDefinition["hasColumn"]) {
+                $alterSql = "ALTER TABLE `$tableName` DROP COLUMN `$columnName`;";
+            }
 
             self::executeSql($updateSql, $alterSql);
             self::parseContent($template);
