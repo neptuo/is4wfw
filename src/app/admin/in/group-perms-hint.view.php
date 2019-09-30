@@ -8,7 +8,7 @@
             <br />
             CMS.Hint, CMS.HintProperties, CMS.HintPerms
             <br />
-            CMS.Web, CMS.Web.Pages, CMS.Web.TextFiles, CMS.Web.Templates, CMS.Web.EmbeddedResources, CMS.Web.CustomForms, CMS.Web.Articles, CMS.Web.ArticleLines, CMS.Web.ArticleLabels, CMS.Web.FileManager, CMS.Web.Guestbooks, CMS.Web.Inquiries, CMS.Web.WebForwards, CMS.Web.WebProjects
+            CMS.Web, CMS.Web.Pages, CMS.Web.TextFiles, CMS.Web.Templates, CMS.Web.EmbeddedResources, CMS.Web.CustomForms, CMS.Web.CustomEntities, CMS.Web.Articles, CMS.Web.ArticleLines, CMS.Web.ArticleLabels, CMS.Web.FileManager, CMS.Web.Guestbooks, CMS.Web.Inquiries, CMS.Web.WebForwards, CMS.Web.WebProjects
             <br />
             CMS.Floorball, CMS.Floorball.Projects, CMS.Floorball.Seasons, CMS.Floorball.Rounds, CMS.Floorball.Tables, CMS.Floorball.Teams, CMS.Floorball.Players, CMS.Floorball.Matches, CMS.Floorball.TablesContent
             <br />
