@@ -132,7 +132,7 @@
 			}
 		}
 
-		public function textbox($name, $params = array()) {
+		public function textbox($name, $default = "", $params = array()) {
 			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
@@ -143,6 +143,10 @@
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
+				if (empty($modelValue)) {
+					$modelValue = $default;
+				}
+
 				$attributes = self::joinAttributes($params);
 				return "<input name='$name' type='text' value='$modelValue'$attributes />";
 			}

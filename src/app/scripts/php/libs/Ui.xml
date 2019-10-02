@@ -100,6 +100,11 @@
       <attreq>required</attreq>
       <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
+    <attribute>
+      <attname>default</attname>
+      <attreq>implied</attreq>
+      <attcomment>Výchozí hodnota.</attcomment>
+    </attribute>
     <anyAttribute />
     <comment>
       Vygeneruje input pro zadání textu.
