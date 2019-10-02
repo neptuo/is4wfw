@@ -44,6 +44,10 @@
                 $columnType = (string)$column->type;
                 if (array_key_exists($columnName, $model)) {
                     $value = $model[$columnName];
+                    if (is_callable($value)) {
+                        $value = $value();
+                    }
+
                     if (is_array($value) && array_key_exists("type", $value)) {
                         $extras[$columnName] = $value;
                     } else {

@@ -176,6 +176,13 @@
                         "fromUser" => function($value) { return $value; }
                     ),
                     array(
+                        "key" => "url", 
+                        "name" => "URL path", 
+                        "db" => "tinytext", 
+                        "hasColumn" => true,
+                        "fromUser" => function($value) { return self::convertToValidUrl($value); }
+                    ),
+                    array(
                         "key" => "bool", 
                         "name" => "Boolean", 
                         "db" => "bit(1)", 
