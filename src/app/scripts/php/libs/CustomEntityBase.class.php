@@ -155,7 +155,7 @@
             if ($this->types == null) {
                 $this->types = array(
                     array(
-                        "key" => "number", 
+                        "key" => "int", 
                         "name" => "Integer", 
                         "db" => "int",
                         "db.formatter" => function($c) { 
@@ -169,6 +169,19 @@
                         "hasColumn" => true,
                         "fromUser" => function($value) { return intval($value); }
                     ),
+                    array(
+                        "key" => "float", 
+                        "name" => "Float", 
+                        "db" => "float",
+                        "db.formatter" => function($c) { 
+                            $size = (int)$c->size;
+                            $decimals = (int)$c->decimals;
+                            if ($size != null && $decimals != null) {
+                                return "float($size, $decimals)";
+                            }
+
+                            return "float";
+                        }, 
                         "hasColumn" => true,
                         "fromUser" => function($value) { return intval($value); }
                     ),

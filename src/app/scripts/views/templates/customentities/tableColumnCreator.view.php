@@ -14,6 +14,15 @@
                 Required
             </label>
         </div>
+        <div data-toggle="type-int">
+            <div class="gray-box">
+                <strong>Integer</strong>
+            </div>
+            <div class="gray-box">
+                <label class="w90">Size:</label>
+                <ui:textbox name="column-int-size" default="11" />
+            </div>
+        </div>
         <div data-toggle="type-singlereference">
             <div class="gray-box">
                 <strong>Single Reference</strong>

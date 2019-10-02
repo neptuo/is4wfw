@@ -123,6 +123,12 @@
             }
 
             // TODO: Set precision if needed.
+            if ($columnType == "int") {
+                $size = $model["column-int-size"];
+                if (!empty($size)) {
+                    $column->size = $size;
+                }
+            }
 
             $typeDefinition = self::getTableColumnTypes($column);
             $dbType = self::getTableColumnDbType($typeDefinition, $column);
