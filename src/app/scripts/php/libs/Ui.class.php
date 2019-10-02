@@ -164,6 +164,32 @@
 				return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 || $modelValue === "1" ? " checked='checked'" : '') . "$attributes />";
 			}
 		}
+
+		private function ensureModelDefaultValue($model, $name, $format) {
+			$value = $model[$name];
+            if (empty($value)) {
+                $model[$name] = function() use ($model, $format) { return self::formatString($format, $model); };
+            }
+		}
+
+        public function defaultValue($template, $name, $format) {
+            $model = self::peekEditModel();
+            if ($model->isSubmit()) {
+				self::parseContent($template);
+				self::ensureModelDefaultValue($model, $name, $format);
+            }
+
+            if ($model->isRender()) {
+                return self::parseContent($template);
+            }
+        }
+
+        public function defaultValueWithoutEditor($name, $format) {
+            $model = self::peekEditModel();
+            if ($model->isSubmit()) {
+				self::ensureModelDefaultValue($model, $name, $format);
+            }
+        }
 	}
 
 ?>

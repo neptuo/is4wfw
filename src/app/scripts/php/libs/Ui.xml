@@ -120,5 +120,38 @@
       Všechny ostatní atributy jsou předány HTML select elementu.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>defaultValue</tagname>
+    <function>defaultValue</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>format</attname>
+      <attreq>required</attreq>
+      <attcomment>Formátovací řetězec, který se má použít pokud vnitřní objekt neposkytne hodnotu. Např.: "{id} - {name}".</attcomment>
+    </attribute>
+    <comment>
+      Obaluje libovolný editační tag a pokud neposkytne hodnotu fieldu "name", tak použije "format" pro nastavení hodnoty.
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>defaultValue</tagname>
+    <function>defaultValueWithoutEditor</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>format</attname>
+      <attreq>required</attreq>
+      <attcomment>Formátovací řetězec, který se použije pro poskytnutí hodnoty. Např.: "{id} - {name}".</attcomment>
+    </attribute>
+    <comment>
+      Nastavuje hodnotu fieldu "name" na hodnotu podle "format".
+    </comment>
+  </tag>
 </taglib>
-
