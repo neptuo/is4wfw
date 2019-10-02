@@ -23,6 +23,19 @@
                 <ui:textbox name="column-int-size" default="11" />
             </div>
         </div>
+        <div data-toggle="type-float">
+            <div class="gray-box">
+                <strong>Float</strong>
+            </div>
+            <div class="gray-box">
+                <label class="w90">Size:</label>
+                <ui:textbox name="column-float-size" default="10" />
+            </div>
+            <div class="gray-box">
+                <label class="w90">Decimals:</label>
+                <ui:textbox name="column-float-decimals" default="2" />
+            </div>
+        </div>
         <div data-toggle="type-singlereference">
             <div class="gray-box">
                 <strong>Single Reference</strong>

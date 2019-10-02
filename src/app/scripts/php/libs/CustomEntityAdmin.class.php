@@ -122,11 +122,18 @@
                 $column->addChild("required", true);
             }
 
-            // TODO: Set precision if needed.
+            // Set precision if needed.
             if ($columnType == "int") {
                 $size = $model["column-int-size"];
                 if (!empty($size)) {
                     $column->size = $size;
+                }
+            } else if ($columnType == "float") {
+                $size = $model["column-float-size"];
+                $decimals = $model["column-float-decimals"];
+                if (!empty($size) && !empty($decimals)) {
+                    $column->size = $size;
+                    $column->decimals = $decimals;
                 }
             }
 
