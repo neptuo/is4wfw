@@ -62,7 +62,7 @@
 		}
 		
 		public function dropdownlist($name, $source, $display, $id, $params = array()) {
-			if (self::isRegistration() || self::isSubmit()) {
+			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
 
@@ -93,7 +93,7 @@
 		}
 		
 		public function checkboxlist($name, $source, $display, $id, $repeat, $params = array()) {
-			if (self::isRegistration() || self::isSubmit()) {
+			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
 
@@ -133,7 +133,7 @@
 		}
 
 		public function textbox($name, $params = array()) {
-			if (self::isRegistration() || self::isSubmit()) {
+			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
 
@@ -149,7 +149,7 @@
 		}
 
 		public function checkbox($name, $params = array()) {
-			if (self::isRegistration() || self::isSubmit()) {
+			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
 
@@ -174,6 +174,10 @@
 
         public function defaultValue($template, $name, $format) {
             $model = self::peekEditModel();
+            if ($model->isRegistration()) {
+				self::setModelValue($name, NULL);
+			}
+
             if ($model->isSubmit()) {
 				self::parseContent($template);
 				self::ensureModelDefaultValue($model, $name, $format);
@@ -185,11 +189,21 @@
         }
 
         public function defaultValueWithoutEditor($name, $format) {
-            $model = self::peekEditModel();
+			$model = self::peekEditModel();
+            if ($model->isRegistration()) {
+				self::setModelValue($name, NULL);
+			}
+			
             if ($model->isSubmit()) {
 				self::ensureModelDefaultValue($model, $name, $format);
             }
-        }
+		}
+		
+		public function constantValue($name, $value) {
+			if (self::isSubmit()) {
+				self::setModelValue($name, $value);
+			}
+		}
 	}
 
 ?>

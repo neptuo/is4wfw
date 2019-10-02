@@ -154,4 +154,21 @@
       Nastavuje hodnotu fieldu "name" na hodnotu podle "format".
     </comment>
   </tag>
+  <tag>
+    <tagname>constant</tagname>
+    <function>constantValue</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+      <attcomment>Hodnota, která se použije při každém odeslání formuláře.</attcomment>
+    </attribute>
+    <comment>
+      Nastavuje hodnotu fieldu "name" na hodnotu "value", při každém odeslání formuláře.
+    </comment>
+  </tag>
 </taglib>
