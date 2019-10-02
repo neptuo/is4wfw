@@ -4,6 +4,7 @@
 
     class CustomEntityBase extends BaseTagLib {
         const TablePrefix = "ce_";
+        const TableLocalizationPrefix = "celang_";
 
         private $types;
 
@@ -14,8 +15,20 @@
                 if (count($table) == 0) {
                     trigger_error("Table name must be custom entity", E_USER_ERROR);
                 }
+            } else {
+                $tableName = $name;
             }
-
+            
+            return $tableName;
+        }
+        
+        protected function ensureTableLocalizationName($name) {
+            if (!self::startsWith($name, self::TableLocalizationPrefix)) {
+                $tableName = self::TableLocalizationPrefix . $name;
+            } else {
+                $tableName = $name;
+            }
+            
             return $tableName;
         }
 
@@ -183,6 +196,7 @@
                             return "float";
                         }, 
                         "hasColumn" => true,
+                        "isLocalizable" => false,
                         "fromUser" => function($value) { return intval($value); }
                     ),
                     array(
@@ -190,6 +204,7 @@
                         "name" => "Short Text", 
                         "db" => "tinytext", 
                         "hasColumn" => true,
+                        "isLocalizable" => true,
                         "fromUser" => function($value) { return $value; }
                     ),
                     array(
@@ -197,6 +212,7 @@
                         "name" => "Long Text", 
                         "db" => "text", 
                         "hasColumn" => true,
+                        "isLocalizable" => true,
                         "fromUser" => function($value) { return $value; }
                     ),
                     array(
@@ -204,6 +220,7 @@
                         "name" => "URL path", 
                         "db" => "tinytext", 
                         "hasColumn" => true,
+                        "isLocalizable" => true,
                         "fromUser" => function($value) { return self::convertToValidUrl($value); }
                     ),
                     array(
@@ -211,6 +228,7 @@
                         "name" => "Boolean", 
                         "db" => "bit(1)", 
                         "hasColumn" => true,
+                        "isLocalizable" => false,
                         "fromUser" => function($value) { return boolval($value); }
                     ),
                     array(
@@ -218,6 +236,7 @@
                         "name" => "Single Reference", 
                         "db" => "int(11)", 
                         "hasColumn" => true,
+                        "isLocalizable" => false,
                         "fromUser" => function($value) { return intval($value); }
                     ),
                     array(
@@ -225,6 +244,7 @@
                         "name" => "Multi Reference in Single Column", 
                         "db" => "tinytext", 
                         "hasColumn" => true,
+                        "isLocalizable" => false,
                         "fromUser" => function($value) { return self::parseMultiReferenceSingleColumn($value); }
                     ),
                     array(
@@ -232,6 +252,7 @@
                         "name" => "Multi Reference with Join Table", 
                         "db" => "tinytext", 
                         "hasColumn" => false,
+                        "isLocalizable" => false,
                         "fromUser" => function($value) { return self::parseMultiReferenceSingleColumn($value); }
                     ),
                     array(
@@ -239,6 +260,7 @@
                         "name" => "Directory in FileSystem", 
                         "db" => "int(11)", 
                         "hasColumn" => true,
+                        "isLocalizable" => false,
                         "fromUser" => function($value) { return intval($value); }
                     )
                 );

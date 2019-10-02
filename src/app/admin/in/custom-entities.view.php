@@ -28,6 +28,9 @@
 						<web:a pageId="~/in/custom-entity-columns.view" param-table="ced:tableName" class="image-button button-edit">
 							<img src="~/images/page_pro.png" />
 						</web:a>
+						<web:a pageId="~/in/custom-entity-localization.view" param-table="ced:tableName" class="image-button button-edit">
+							<img src="~/images/lang.png" />
+						</web:a>
 						<ui:form>
 							<input type="hidden" name="ce-table" value="<web:getProperty name="ced:tableName" />" />
 							<input type="hidden" name="ce-delete" value="delete" />

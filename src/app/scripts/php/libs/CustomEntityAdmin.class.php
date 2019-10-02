@@ -317,7 +317,6 @@
 
         public function tableColumnDeleter($template, $entityName, $columnName) {
             $tableName = self::ensureTableName($entityName);
-            
             $xml = self::getDefinition($entityName);
             if ($xml == NULL) {
                 return;
@@ -339,6 +338,132 @@
 
             self::executeSql($updateSql, $alterSql);
             self::parseContent($template);
+        }
+
+        private $tableLocalizationColumns;
+
+        private function getLocalizableColumns($xml) {
+            $columns = array();
+            foreach ($xml->column as $column) {
+                if ($column->primaryKey == true) {
+                    continue;
+                }
+                
+                $typeDefinition = self::getTableColumnTypes($column);
+                if (!$typeDefinition["isLocalizable"]) {
+                    continue;
+                }
+                
+                $columns[] = array(
+                    "name" => (string)$column->name
+                );
+            }
+
+            return $columns;
+        }
+
+        private function updateXmlLocalizedColumns($xml, $columns) {
+            foreach ($xml->column as $column) {
+                if (in_array((string)$column->name, $columns)) {
+                    $column->localized = true;
+                } else {
+                    unset($column->localized);
+                }
+            }
+        }
+
+        public function tableLocalizationEditor($name) {
+            self::ensureTableName($name);
+            $tableName = self::ensureTableLocalizationName($name);
+            $xml = self::getDefinition($name);
+            if ($xml == NULL) {
+                return;
+            }
+
+            $model = new EditModel();
+            self::pushEditModel($model);
+
+            $columns = array();
+            foreach ($xml->column as $column) {
+                if ($column->localized == true) {
+                    $columns[] = (string)$column->name;
+                }
+            }
+            $model["columns"] = $columns;
+
+            if (array_key_exists("ced-localizable-save", $_REQUEST)) {
+                $model->submit(true);
+                self::partialView("customentities/tableLocalizationEditor");
+                $model->submit(false);
+
+                $newColumns = $model["columns"];
+                self::updateXmlLocalizedColumns($xml, $newColumns);
+
+                $sql = array(self::getUpdateDefinitionSql($name, $xml));
+
+                if (empty($newColumns)) {
+                    $sql[] = "DROP TABLE IF EXISTS `$tableName`;";
+                } else {
+                    if (empty($columns)) {
+                        $sql[] = self::getCreateLocalizationSql($tableName, $xml);
+                    }
+
+                    foreach ($columns as $columnName) {
+                        if (!in_array($columnName, $newColumns)) {
+                            $sql[] = "ALTER TABLE `$tableName` DROP COLUMN `$columnName`;";
+                        }
+                    }
+
+                    foreach ($newColumns as $columnName) {
+                        if (!in_array($columnName, $columns)) {
+                            $column = self::findColumn($xml, $columnName);
+                            $columnType = self::mapTypeToDb((string)$column->type);
+                            $sql[] = "ALTER TABLE `$tableName` ADD COLUMN `" . $columnName . "` $columnType; ";
+                        }
+                    }
+                }
+
+                self::dataAccess()->transaction(function($da) use ($sql) {
+                    foreach ($sql as $item) {
+                        $da->execute($item);
+                    }
+                });
+            }
+            
+            $model->render(true);
+            
+            $this->tableLocalizationColumns = self::getLocalizableColumns($xml);
+            $result .= self::partialView("customentities/tableLocalizationEditor");
+            $this->tableLocalizableColumns = null;
+            
+            $model->render(false);
+            self::popEditModel();
+            
+            return $result;
+        }
+
+        private function getCreateLocalizationSql($tableName, $xml) {
+            $columns = "";
+            $primary = '';
+
+            foreach ($xml->column as $column) {
+                if ($column->primaryKey == true) {
+                    $columnName = (string)$column->name;
+                    $columnType = self::getTableColumnTypes($column, "db");
+                    $columns = self::joinString($columns, "`$columnName` $columnType NULL");
+                    $primary = self::joinString($primary, "`$columnName`");
+                }
+            }
+
+            $columns .= ", `lang_id` int(11) NOT NULL";
+            $primary .= ", `lang_id`";
+
+            $sql = "CREATE TABLE `$tableName` ($columns, PRIMARY KEY ($primary)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ROW_FORMAT=FIXED;";
+            return $sql;
+        }
+
+        public function getTableLocalizationColumns() {
+            return $this->tableLocalizationColumns;
         }
 	}
 
