@@ -122,6 +122,10 @@
                 $column->addChild("required", true);
             }
 
+            if ($model["column-unique"]) {
+                $column->addChild("unique", true);
+            }
+
             // Set precision if needed.
             if ($columnType == "int") {
                 $size = $model["column-int-size"];
@@ -148,6 +152,10 @@
                     $alterSql .= " NOT NULL";
                 } else {
                     $alterSql .= " NULL";
+                }
+
+                if ($column->unique == true) {
+                    $alterSql .= " UNIQUE";
                 }
 
                 $alterSql .= ";";
@@ -280,6 +288,10 @@
             return $this->columns->peek()->required == TRUE;
         }
 
+        public function getTableColumnUnique() {
+            return $this->columns->peek()->unique == TRUE;
+        }
+
         public function tableColumnCreator($name) {
             $tableName = self::ensureTableName($name);
 
@@ -313,7 +325,7 @@
 
             for ($i=0; $i < count($xml->column); $i++) { 
                 if ($xml->column[$i]->name == $columnName) {
-                    $typeDefinition = self::getTableColumnTypes((string)$xml->column[$i]);
+                    $typeDefinition = self::getTableColumnTypes($xml->column[$i]);
                     unset($xml->column[$i]);
                     break;
                 }

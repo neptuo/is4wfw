@@ -9,9 +9,14 @@
             <ui:dropdownlist name="column-type" source="ced:tableColumnTypes" display="name" value="key" data-toggler="type" />
         </div>
         <div class="gray-box">
+            <label class="w90">Options:</label>
             <label>
                 <ui:checkbox name="column-required" />
                 Required
+            </label>
+            <label>
+                <ui:checkbox name="column-unique" />
+                Unique
             </label>
         </div>
         <div data-toggle="type-int">

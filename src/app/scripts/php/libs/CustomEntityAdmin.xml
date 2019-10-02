@@ -126,5 +126,12 @@
         Vrací zda je povinný aktuální sloupec při průchodu přes "ce:listTableColumns".
     </comment>
   </property>
+  <property>
+    <propname>tableColumnUnique</propname>
+    <getfunction>getTableColumnUnique</getfunction>
+    <comment>
+        Vrací zda hodnoty aktuálního sloupce při průchodu přes "ce:listTableColumns" jsou unikátní.
+    </comment>
+  </property>
 </taglib>
 

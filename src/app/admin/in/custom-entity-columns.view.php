@@ -15,8 +15,9 @@
 			<tr>
 				<th>Name</th>
 				<th>Type</th>
-				<th>Required</th>
 				<th>Primary</th>
+				<th>Required</th>
+				<th>Unique</th>
 				<th></th>
 			</tr>
 			<ced:listTableColumns name="query:table">
@@ -28,12 +29,17 @@
 						<web:getProperty name="ced:tableColumnType" />
 					</td>
 					<td>
+						<web:condition when="ced:tableColumnPrimaryKey">
+							Yes
+						</web:condition>
+					</td>
+					<td>
 						<web:condition when="ced:tableColumnRequired">
 							Yes
 						</web:condition>
 					</td>
 					<td>
-						<web:condition when="ced:tableColumnPrimaryKey">
+						<web:condition when="ced:tableColumnUnique">
 							Yes
 						</web:condition>
 					</td>
