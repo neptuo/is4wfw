@@ -151,13 +151,24 @@
             return $result;
         }
 
-        public function getTableColumnTypes($key = NULL) {
-            if ($this->types == NULL) {
+        public function getTableColumnTypes($column = null, $key = null) {
+            if ($this->types == null) {
                 $this->types = array(
                     array(
                         "key" => "number", 
-                        "name" => "Number", 
-                        "db" => "int(11)", 
+                        "name" => "Integer", 
+                        "db" => "int",
+                        "db.formatter" => function($c) { 
+                            $size = (int)$c->size;
+                            if ($size != null) {
+                                return "int($size)";
+                            }
+
+                            return "int";
+                        }, 
+                        "hasColumn" => true,
+                        "fromUser" => function($value) { return intval($value); }
+                    ),
                         "hasColumn" => true,
                         "fromUser" => function($value) { return intval($value); }
                     ),
@@ -220,17 +231,35 @@
                 );
             }
 
-            if ($key != NULL) {
+            if ($column != null) {
+                $columnType = (string)$column->type;
                 foreach ($this->types as $item) {
-                    if ($item["key"] == $key) {
+                    if ($item["key"] == $columnType) {
+                        if ($key != null) {
+                            if ($key == "db") {
+                                return self::getTableColumnDbType($item, $column);
+                            }
+
+                            return $item[$key];
+                        }
+
                         return $item;
                     }
                 }
 
-                return NULL;
+                return null;
             }
 
             return $this->types;
+        }
+
+        public function getTableColumnDbType($type, $column) {
+            $formatter = $type["db.formatter"];
+            if ($formatter != null) {
+                return $formatter($column);
+            }
+
+            return $type["db"];
         }
 
         private function parseMultiReferenceSingleColumn($value) {

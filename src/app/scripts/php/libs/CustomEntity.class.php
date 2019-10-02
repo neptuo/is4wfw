@@ -27,7 +27,7 @@
         }
 
         private function parseUserValue($column, $value) {
-            $type = self::getTableColumnTypes((string)$column->type);
+            $type = self::getTableColumnTypes($column);
             if ($type == NULL) {
                 return NULL;
             }
@@ -51,7 +51,7 @@
                     if (is_array($value) && array_key_exists("type", $value)) {
                         $extras[$columnName] = $value;
                     } else {
-                        $typeDefinition = self::getTableColumnTypes($columnType);
+                        $typeDefinition = self::getTableColumnTypes($column);
                         if ($typeDefinition["hasColumn"]) {
                             $value = self::parseUserValue($column, $value);
                             $columns[$columnName] = $value;
@@ -171,7 +171,7 @@
                 $columnName = (string)$column->name;
                 $columnType = (string)$column->type;
                 if (array_key_exists($columnName, $model)) {
-                    $typeDefinition = self::getTableColumnTypes($columnType);
+                    $typeDefinition = self::getTableColumnTypes($column);
                     if ($typeDefinition["hasColumn"]) {
                         $columns = self::joinString($columns, "`$columnName`");
                     }

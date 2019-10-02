@@ -16,47 +16,25 @@
             $this->columns = new Stack();
         }
 
-        private function mapType($sourceKey, $sourceValue, $targetKey) {
-            $items = self::getTableColumnTypes();
-            foreach ($items as $item) {
-                if ($item[$sourceKey] == $sourceValue) {
-                    return $item[$targetKey];
+        private function getCreateSql($name, $xml) {
+            $columns = "";
+            $primary = '';
+
+            foreach ($xml->column as $column) {
+                if ($column->primaryKey == true) {
+                    $columnName = (string)$column->name;
+                    $dbType = self::getTableColumnTypes($column, "db");
+                    $columns = self::joinString($columns, "`$columnName` $dbType NOT NULL");
+
+                    if ($column->identity == true) {
+                        $columns .= " AUTO_INCREMENT";
+                    }
+
+                    $primary = self::joinString($primary, "`$columnName`");
                 }
             }
-            
-            return NULL;
-        }
 
-        private function mapTypeToDb($type) {
-            return self::mapType("key", $type, "db");
-        }
-
-        private function mapTypeToName($type) {
-            return self::mapType("key", $type, "name");
-        }
-
-        private function getCreateSql($name, $model) {
-            $sql = "CREATE TABLE `$name` (";
-            $primary = ', PRIMARY KEY (';
-
-            $columnName = $model["primary-key-1-name"];
-            $sql .= "`" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-1-type"])) . " NOT NULL" . ($model["primary-key-1-identity"] ? " AUTO_INCREMENT" : "");
-            $primary .= "`" . $columnName . "`";
-            
-            $columnName = $model["primary-key-2-name"];
-            if ($columnName != "") {
-                $sql .= ", `" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-2-type"])) . " NOT NULL";
-                $primary .= ", `" . $columnName . "`";
-            }
-            
-            $columnName = $model["primary-key-3-name"];
-            if ($columnName != "") {
-                $sql .= ", `" . $columnName . "` " . (self::mapTypeToDb($model["primary-key-3-type"])) . " NOT NULL";
-                $primary .= ", `" . $columnName . "`";
-            }
-
-            $primary .= ")";
-            $sql .= $primary . ') ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ROW_FORMAT=FIXED;';
+            $sql = "CREATE TABLE `$name` ($columns, PRIMARY KEY (" . $primary . ')) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ROW_FORMAT=FIXED;';
             return $sql;
         }
 
@@ -90,11 +68,11 @@
             $keyElement = $definitionXml->addChild("column");
             $keyElement->addChild("name", $columnName);
             $keyElement->addChild("type", $model["primary-key-1-type"]);
-            $keyElement->addChild("primaryKey", TRUE);
-            $keyElement->addChild("required", TRUE);
+            $keyElement->addChild("primaryKey", true);
+            $keyElement->addChild("required", true);
             
             if ($model["primary-key-1-identity"]) {
-                $keyElement->addChild("identity", TRUE);
+                $keyElement->addChild("identity", true);
             }
 
             $columnName = $model["primary-key-2-name"];
@@ -102,8 +80,8 @@
                 $keyElement = $definitionXml->addChild("column");
                 $keyElement->addChild("name", $columnName);
                 $keyElement->addChild("type", $model["primary-key-2-type"]);
-                $keyElement->addChild("primaryKey", TRUE);
-                $keyElement->addChild("required", TRUE);
+                $keyElement->addChild("primaryKey", true);
+                $keyElement->addChild("required", true);
             }
             
             $columnName = $model["primary-key-3-name"];
@@ -111,11 +89,11 @@
                 $keyElement = $definitionXml->addChild("column");
                 $keyElement->addChild("name", $columnName);
                 $keyElement->addChild("type", $model["primary-key-3-type"]);
-                $keyElement->addChild("primaryKey", TRUE);
-                $keyElement->addChild("required", TRUE);
+                $keyElement->addChild("primaryKey", true);
+                $keyElement->addChild("required", true);
             }
 
-            $createSql = self::getCreateSql($tableName, $model);
+            $createSql = self::getCreateSql($tableName, $definitionXml);
             $insertSql = self::sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"], "definition" => $definitionXml->asXml()));
 
             try {
@@ -128,25 +106,8 @@
         }
 
         private function createTableColumn($name, $tableName, $model) {
-            $modelName = $model["column-name"];
-            $modelType = $model["column-type"];
-            $modelRequired = $model["column-required"];
-
-            $typeDefinition = self::getTableColumnTypes($modelType);
-
-            $fkSql = "";
-            $alterSql = "";
-
-            if ($typeDefinition["hasColumn"]) {
-                $alterSql = "ALTER TABLE `$tableName` ADD COLUMN `" . $modelName . "` " . (self::mapTypeToDb($modelType));
-                if ($modelRequired) {
-                    $alterSql .= " NOT NULL";
-                } else {
-                    $alterSql .= " NULL";
-                }
-
-                $alterSql .= ";";
-            }
+            $columnName = $model["column-name"];
+            $columnType = $model["column-type"];
 
             $xml = self::getDefinition($name);
             if ($xml == NULL) {
@@ -154,18 +115,37 @@
             }
 
             $column = $xml->addChild("column");
-            $column->addChild("name", $modelName);
-            $column->addChild("type", $modelType);
+            $column->addChild("name", $columnName);
+            $column->addChild("type", $columnType);
 
-            if ($modelRequired) {
-                $column->addChild("required", TRUE);
+            if ($model["column-required"]) {
+                $column->addChild("required", true);
             }
 
-            if ($modelType == "singlereference") {
+            // TODO: Set precision if needed.
+
+            $typeDefinition = self::getTableColumnTypes($column);
+            $dbType = self::getTableColumnDbType($typeDefinition, $column);
+
+            $sql = array();
+
+            if ($typeDefinition["hasColumn"]) {
+                $alterSql = "ALTER TABLE `$tableName` ADD COLUMN `" . $columnName . "` $dbType";
+                if ($column->required == true) {
+                    $alterSql .= " NOT NULL";
+                } else {
+                    $alterSql .= " NULL";
+                }
+
+                $alterSql .= ";";
+                $sql[] = $alterSql;
+            }
+
+            if ($columnType == "singlereference") {
                 $referenceTable = $model["column-singlerefence-table"];
                 $referenceColumn = $model["column-singlerefence-column"];
-                $fkSql = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$modelName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
-            } else if ($modelType == "multireference-jointable") {
+                $sql[] = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$columnName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
+            } else if ($columnType == "multireference-jointable") {
                 $joinTable = $model["column-multireference-table"];
                 $targetColumn = $model["column-multireference-targetcolumn"];
                 $column->addChild("joinTable", $joinTable);
@@ -179,14 +159,21 @@
                     $mappedColumnName = $model["column-multireference-primarykey" . ($i + 1) . "-column"];
                     $primaryKeysElements->addChild("mappedTo", $mappedColumnName);
                     
-                    $fkSql .= "ALTER TABLE `$joinTable` ADD FOREIGN KEY (`$mappedColumnName`) REFERENCES `$tableName`(`$primaryKeyColumnName`);";
+                    $sql[] = "ALTER TABLE `$joinTable` ADD FOREIGN KEY (`$mappedColumnName`) REFERENCES `$tableName`(`$primaryKeyColumnName`);";
                 }
             }
 
-            $updateSql = self::getUpdateDefinitionSql($name, $xml);
+            $sql[] = self::getUpdateDefinitionSql($name, $xml);
             
             try {
-                self::executeSql($updateSql, $alterSql, $fkSql);
+                self::dataAccess()->transaction(function($da) use ($sql) {
+                    foreach ($sql as $item) {
+                        if (!empty($item)) {
+                            $da->execute($item);
+                        }
+                    }
+                });
+
                 return true;
             } catch (DataAccessException $e) {
                 return false;
@@ -268,7 +255,8 @@
         }
 
         public function getTableColumnType() {
-            return self::mapTypeToName($this->columns->peek()->type);
+            $typeDefinition = self::getTableColumnTypes($this->columns->peek());
+            return $typeDefinition["name"];
         }
 
         public function getTableColumnPrimaryKey() {
@@ -312,7 +300,7 @@
 
             for ($i=0; $i < count($xml->column); $i++) { 
                 if ($xml->column[$i]->name == $columnName) {
-                    $typeDefinition = self::getTableColumnTypes((string)$xml->column[$i]->Type);
+                    $typeDefinition = self::getTableColumnTypes((string)$xml->column[$i]);
                     unset($xml->column[$i]);
                     break;
                 }
