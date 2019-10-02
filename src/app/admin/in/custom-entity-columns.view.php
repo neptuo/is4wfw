@@ -28,10 +28,14 @@
 						<web:getProperty name="ced:tableColumnType" />
 					</td>
 					<td>
-						<web:getProperty name="ced:tableColumnRequired" />
+						<web:condition when="ced:tableColumnRequired">
+							Yes
+						</web:condition>
 					</td>
 					<td>
-						<web:getProperty name="ced:tableColumnPrimaryKey" />
+						<web:condition when="ced:tableColumnPrimaryKey">
+							Yes
+						</web:condition>
 					</td>
 					<td>
 						<web:condition when="ced:tableColumnPrimaryKey" is="false">
