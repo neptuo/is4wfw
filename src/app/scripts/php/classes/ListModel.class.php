@@ -6,6 +6,7 @@
         private $isRender;
 
         private $fields;
+        private $items;
         private $data;
 
         public function __construct() {
@@ -38,6 +39,14 @@
                 $this->fields[] = $name;
             } else if ($this->isRender) {
                 return $this->data[$name];
+            }
+        }
+
+        public function items($items = "z.z-def") {
+            if ($items != "z.z-def") {
+                $this->items = $items;
+            } else {
+                return $this->items;
             }
         }
 

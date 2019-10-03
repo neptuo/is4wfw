@@ -46,6 +46,71 @@
 			return $attributes;
 		}
 
+		// ------- LIST -------------------------------------------------------
+
+		public function getProperty($name) {
+			$model = self::peekListModel();
+			if ($model == null) {
+				return null;
+			}
+
+			if ($name == "_") {
+				return $model->data();
+			}
+
+			return $model->field($name);
+		}
+
+		public function forEachListModel($template, $model) {
+			self::pushListModel($model);
+			$result = "";
+			
+			if ($model->isRegistration()) {
+				self::parseContent($template);
+			}
+			
+			if ($model->isRender()) {
+				foreach ($model->items() as $item) {
+					$model->data($item);
+					$result .= self::parseContent($template);
+				}
+			}
+
+			self::popListModel();
+			return $result;
+		}
+
+		private function singleListModel($template, $model, $indexGetter) {
+			self::pushListModel($model);
+			$result = "";
+			
+			if ($model->isRegistration()) {
+				self::parseContent($template);
+			}
+			
+			if ($model->isRender()) {
+				$items = $model->items();
+				if (count($items) > 0) {
+					$item = $items[$indexGetter($items)];
+					$model->data($item);
+					$result .= self::parseContent($template);
+				}
+			}
+
+			self::popListModel();
+			return $result;
+		}
+
+		public function firstListModel($template, $model) {
+			return self::singleListModel($template, $model, function($items) { return 0; });
+		}
+
+		public function lastListModel($template, $model) {
+			return self::singleListModel($template, $model, function($items) { return count($items) - 1; });
+		}
+
+		// ------- EDITORS ----------------------------------------------------
+
 		public function form($template, $method = "post", $action = NULL, $params = array()) {
 			if ($action == NULL) {
 				$action = $_SERVER['REQUEST_URI'];

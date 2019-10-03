@@ -646,13 +646,33 @@
             return $stack->pop();
         }
 
+        private $stacks;
+
+        private function getLocalModelStack($key, $createIfNotExists = false) {
+            if ($this->stacks == null) {
+                if ($createIfNotExists) {
+                    $this->stacks = array();
+                } else {
+                    return null;
+                }
+            }
+
+            $stack = $this->stacks[$key];
+			if ($stack == null && $createIfNotExists) {
+                $stack = new Stack();
+                $this->stacks[$key] = $stack;
+            }
+            
+            return $stack;
+        }
+
         public function pushListModel($model) {
-            $stack = self::getModelStack("listModels", true);
+            $stack = self::getLocalModelStack("listModels", true);
 			$stack->push($model);
         }
 
         public function peekListModel() {
-            $stack = self::getModelStack("listModels", false);
+            $stack = self::getLocalModelStack("listModels", false);
 			if ($stack == NULL) {
                 return new ListModel();
 			}
@@ -661,7 +681,7 @@
         }
 
         public function popListModel() {
-            $stack = self::getModelStack("listModels", false);
+            $stack = self::getLocalModelStack("listModels", false);
 			if ($stack == NULL) {
                 return new ListModel();
 			}
