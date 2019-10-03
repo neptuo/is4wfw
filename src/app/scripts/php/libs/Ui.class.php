@@ -48,19 +48,6 @@
 
 		// ------- LIST -------------------------------------------------------
 
-		public function getProperty($name) {
-			$model = self::peekListModel();
-			if ($model == null) {
-				return null;
-			}
-
-			if ($name == "_") {
-				return $model->data();
-			}
-
-			return $model->field($name);
-		}
-
 		public function forEachListModel($template, $model) {
 			self::pushListModel($model);
 			$result = "";
@@ -107,6 +94,30 @@
 
 		public function lastListModel($template, $model) {
 			return self::singleListModel($template, $model, function($items) { return count($items) - 1; });
+		}
+
+		public function emptyListModel($template, $model) {
+			if ($model->isRegistration()) {
+				self::parseContent($template);
+			}
+			
+			if ($model->isRender()) {
+				if (count($model->items()) == 0) {
+					return self::parseContent($template);
+				}
+			}
+		}
+
+		public function anyListModel($template, $model) {
+			if ($model->isRegistration()) {
+				self::parseContent($template);
+			}
+			
+			if ($model->isRender()) {
+				if (count($model->items()) > 0) {
+					return self::parseContent($template);
+				}
+			}
 		}
 
 		// ------- EDITORS ----------------------------------------------------
