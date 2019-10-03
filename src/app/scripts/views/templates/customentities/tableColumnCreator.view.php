@@ -41,6 +41,24 @@
                 <ui:textbox name="column-float-decimals" default="2" />
             </div>
         </div>
+        <div data-toggle="type-varchar">
+            <div class="gray-box">
+                <strong>Text (varchar)</strong>
+            </div>
+            <div class="gray-box">
+                <label class="w90">Size:</label>
+                <ui:textbox name="column-varchar-size" default="50" />
+            </div>
+        </div>
+        <div data-toggle="type-url">
+            <div class="gray-box">
+                <strong>URL</strong>
+            </div>
+            <div class="gray-box">
+                <label class="w90">Size:</label>
+                <ui:textbox name="column-url-size" default="50" />
+            </div>
+        </div>
         <div data-toggle="type-singlereference">
             <div class="gray-box">
                 <strong>Single Reference</strong>

@@ -216,9 +216,33 @@
                         "fromUser" => function($value) { return $value; }
                     ),
                     array(
+                        "key" => "varchar", 
+                        "name" => "Fixed-size text", 
+                        "db" => "varchar", 
+                        "db.formatter" => function($c) { 
+                            $size = (int)$c->size;
+                            if ($size != null) {
+                                return "varchar($size)";
+                            }
+
+                            return "varchar";
+                        }, 
+                        "hasColumn" => true,
+                        "isLocalizable" => true,
+                        "fromUser" => function($value) { return $value; }
+                    ),
+                    array(
                         "key" => "url", 
                         "name" => "URL path", 
-                        "db" => "tinytext", 
+                        "db" => "varchar", 
+                        "db.formatter" => function($c) { 
+                            $size = (int)$c->size;
+                            if ($size == null) {
+                                $size = 50;
+                            }
+                            
+                            return "varchar($size)";
+                        }, 
                         "hasColumn" => true,
                         "isLocalizable" => true,
                         "fromUser" => function($value) { return self::convertToValidUrl($value); }

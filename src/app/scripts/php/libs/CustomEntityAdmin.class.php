@@ -140,6 +140,16 @@
                     $column->size = $size;
                     $column->decimals = $decimals;
                 }
+            } else if ($columnType == "varchar") {
+                $size = $model["column-varchar-size"];
+                if (!empty($size)) {
+                    $column->size = $size;
+                }
+            } else if ($columnType == "url") {
+                $size = $model["column-url-size"];
+                if (!empty($size)) {
+                    $column->size = $size;
+                }
             }
 
             $typeDefinition = self::getTableColumnTypes($column);
