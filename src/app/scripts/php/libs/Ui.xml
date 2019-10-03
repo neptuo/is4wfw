@@ -54,21 +54,6 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>forEach</tagname>
-    <function>runForEach</function>
-    <attribute>
-      <attname>items</attname>
-      <attreq>required</attreq>
-      <attcomment>Pole položek, které se mají enumerovat.</attcomment>
-    </attribute>
-    <anyAttribute />
-    <comment>
-      Pro každou položku z "items" vygeneruje obsah šablony.
-      Přístup k atributům aktuální položky je možný pomocí 'anyProperty'. 
-      Pro "ui:_" vrácí celý aktuální item, nikoli jen konkrétní atribut.
-    </comment>
-  </fulltag>
-  <fulltag>
     <tagname>form</tagname>
     <function>form</function>
     <attribute>
@@ -78,7 +63,7 @@
       <attcomment>HTTP metoda, kterou se má formář odeslat.</attcomment>
     </attribute>
     <attribute>
-      <attname>action</attname>
+      <attname>pageId</attname>
       <attreq>implied</attreq>
       <attcomment>URL, na kterou se má přesměrovat při odeslání formuláře.</attcomment>
     </attribute>

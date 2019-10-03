@@ -111,7 +111,7 @@
 
 		// ------- EDITORS ----------------------------------------------------
 
-		public function form($template, $method = "post", $action = NULL, $params = array()) {
+		public function form($template, $method = "post", $pageId = null, $params = array()) {
 			if ($action == NULL) {
 				$action = $_SERVER['REQUEST_URI'];
 			} else {
