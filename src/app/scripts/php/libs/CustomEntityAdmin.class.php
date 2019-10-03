@@ -2,6 +2,7 @@
 
 	require_once("CustomEntityBase.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
 	class CustomEntityAdmin extends CustomEntityBase {
@@ -233,63 +234,77 @@
         }
 
         public function listTables($template) {
-            $tables = self::dataAccess()->fetchAll("SELECT `name`, `description` FROM `custom_entity`;");
+            $tables = self::dataAccess()->fetchAll(self::sql()->select("custom_entity", array("name", "description")));
+            $model = new ListModel();
+            $model->items($tables);
+            self::pushListModel($model);
 
-            $result = "";
-            foreach ($tables as $table) {
-                $this->tables->push($table);
-                $result .= self::parseContent($template);
-                $this->tables->pop();
-            }
-
+            $model->render();
+            $result = self::parseContent($template);
+            
+            self::popListModel();
             return $result;
         }
 
+        public function getListTables() {
+            return self::peekListModel();
+        }
+
         public function getTableName() {
-            return $this->tables->peek()["name"];
+            return self::peekListModel()->field("name");
         }
 
         public function getTableDescription() {
-            return $this->tables->peek()["description"];
+            return self::peekListModel()->field("description");
         }
 
         public function listTableColumns($template, $name) {
             $tableName = self::ensureTableName($name);
-
             $xml = self::getDefinition($name);
             if ($xml == NULL) {
                 return "";
             }
 
-            $result = "";
+            $columns = array();
             foreach ($xml->column as $column) {
-                $this->columns->push($column);
-                $result .= self::parseContent($template);
-                $this->columns->pop();
+                $columns[] = $column;
             }
+            // $columns = $xml->column;
 
+            $model = new ListModel();
+            $model->items($columns);
+            self::pushListModel($model);
+
+            $model->render();
+            $result = self::parseContent($template);
+            
+            self::popListModel();
             return $result;
         }
 
+        public function getListTableColumns() {
+            return self::peekListModel();
+        }
+
         public function getTableColumnName() {
-            return $this->columns->peek()->name;
+            return self::peekListModel()->data()->name;
         }
 
         public function getTableColumnType() {
-            $typeDefinition = self::getTableColumnTypes($this->columns->peek());
+            $typeDefinition = self::getTableColumnTypes(self::peekListModel()->data());
             return $typeDefinition["name"];
         }
 
         public function getTableColumnPrimaryKey() {
-            return $this->columns->peek()->primaryKey == TRUE;
+            return self::peekListModel()->data()->primaryKey == TRUE;
         }
 
         public function getTableColumnRequired() {
-            return $this->columns->peek()->required == TRUE;
+            return self::peekListModel()->data()->required == TRUE;
         }
 
         public function getTableColumnUnique() {
-            return $this->columns->peek()->unique == TRUE;
+            return self::peekListModel()->data()->unique == TRUE;
         }
 
         public function tableColumnCreator($name) {

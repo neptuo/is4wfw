@@ -261,6 +261,10 @@
             }
         }
 
+        public function getListData() {
+            return self::peekListModel();
+        }
+
         public function getList($template, $name, $params = array()) {
             $tableName = self::ensureTableName($name);
             $filter = self::findAttributesByPrefix($params, self::filterAttributePrefix);
@@ -279,17 +283,24 @@
             $data = self::dataAccess()->fetchAll($sql);
 
             $model->render();
-            foreach ($data as $item) {
-                $model->data($item);
-                $result .= self::parseContent($template);
-            }
+            $model->items($data);
+            $result .= self::parseContent($template);
 
             self::popListModel();
             return $result;
         }
 
 		public function getProperty($name) {
-            return self::peekListModel()->field($name);
+			$model = self::peekListModel();
+			if ($model == null) {
+				return null;
+			}
+
+			if ($name == "_") {
+				return $model->data();
+			}
+
+			return $model->field($name);
 		}
         
         public function deleter($template, $name, $params = array()) {

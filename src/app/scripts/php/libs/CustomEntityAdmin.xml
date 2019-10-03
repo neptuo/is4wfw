@@ -34,6 +34,13 @@
       Vypíše seznam všech uživatelských entity.
     </comment>
   </fulltag>
+  <property>
+    <propname>listTables</propname>
+    <getfunction>getListTables</getfunction>
+    <comment>
+      Vrací seznam tabulek uvnitř "ced:listTables".
+    </comment>
+  </property>
   <fulltag>
     <tagname>listTableColumns</tagname>
     <function>listTableColumns</function>
@@ -46,6 +53,13 @@
       Vypíše seznam sloupců vybrané uživatelké entity.
     </comment>
   </fulltag>
+  <property>
+    <propname>listTableColumns</propname>
+    <getfunction>getListTableColumns</getfunction>
+    <comment>
+      Vrací seznam tabulek uvnitř "ced:listTableColumns".
+    </comment>
+  </property>
   <fulltag>
     <tagname>tableDeleter</tagname>
     <function>tableDeleter</function>

@@ -70,6 +70,7 @@
     <anyAttribute />
     <comment>
       Vypíše seznam dat z entity "name".
+      List model se nastaví do "ce:list", vypisovat pak lze pomocí "ce:*" (atribut) nebo "ce:_" (celá položka).
       Všechny atributy začínající na "filter-" se složí do where clausule.
       Všechny atributy začínající na "orderBy-" se složí do order by clausule, hodnota může být asc/desc.
     </comment>
@@ -88,7 +89,13 @@
       Smaže všechny záznamy z entity podle "params".
     </comment>
   </fulltag>
-
+  <property>
+    <propname>list</propname>
+    <getfunction>getListData</getfunction>
+    <comment>
+        Vrací list model uvnitř "ce:list".
+    </comment>
+  </property>
   <anyProperty />
 </taglib>
 
