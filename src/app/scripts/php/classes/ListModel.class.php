@@ -36,7 +36,9 @@
 
         public function field($name) {
             if ($this->isRegistration) {
-                $this->fields[] = $name;
+                if (!in_array($name, $this->fields)) {
+                    $this->fields[] = $name;
+                }
             } else if ($this->isRender) {
                 return $this->data[$name];
             }
