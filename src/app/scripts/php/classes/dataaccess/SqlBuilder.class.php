@@ -29,8 +29,26 @@
             $result = "";
 
             foreach ($filter as $key => $value) {
-                $value = self::escape($value);
-                $result = self::joinString($result, "`$key` = $value", " " . $operator);
+                $assignValue = null;
+                if (is_array($value)) {
+                    $valueString = "";
+                    foreach ($value as $item) {
+                        if (!empty($item)) {
+                            $valueString = self::joinString($valueString, self::escape($item));
+                        }
+                    }
+
+                    if (!empty($valueString)) {
+                        $assignValue = " IN ($valueString)";
+                    }
+                } else {
+                    $value = self::escape($value);
+                    $assignValue = " = $value";
+                }
+
+                if ($assignValue != null) {
+                    $result = self::joinString($result, "`$key`$assignValue", " " . $operator);
+                }
             }
 
             return $result;
