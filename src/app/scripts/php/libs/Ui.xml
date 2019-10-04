@@ -182,6 +182,30 @@
     </comment>
   </tag>
   <tag>
+    <tagname>textarea</tagname>
+    <function>textarea</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>default</attname>
+      <attreq>implied</attreq>
+      <attcomment>Výchozí hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>mode</attname>
+      <attreq>implied</attreq>
+      <attcomment></attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vygeneruje textareu pro zadání textu.
+      Všechny ostatní atributy jsou předány HTML select elementu.
+    </comment>
+  </tag>
+  <tag>
     <tagname>checkbox</tagname>
     <function>checkbox</function>
     <attribute>

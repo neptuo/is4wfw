@@ -246,6 +246,26 @@
 			}
 		}
 
+		public function textarea($name, $default = "", $params = array()) {
+			if (self::isRegistration()) {
+				self::setModelValue($name, NULL);
+			}
+
+			if (self::isSubmit()) {
+				self::setModelValueFromRequest($name, $name);
+			}
+
+			if (self::isRender()) {
+				$modelValue = self::getModelValue($name);
+				if (empty($modelValue)) {
+					$modelValue = $default;
+				}
+
+				$attributes = self::joinAttributes($params);
+				return "<textarea name='$name'$attributes>$modelValue</textarea>";
+			}
+		}
+
 		public function checkbox($name, $params = array()) {
 			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
