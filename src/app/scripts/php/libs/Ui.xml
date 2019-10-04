@@ -19,6 +19,7 @@
     <anyAttribute />
     <comment>
       Pro každou položku z "items" vygeneruje obsah šablony.
+      Všechny atributy s prefixem "filter-" slouží pro odfiltrování dat.
     </comment>
   </fulltag>
   <fulltag>
@@ -113,6 +114,12 @@
       <attname>value</attname>
       <attreq>required</attreq>
       <attcomment>Název název sloupce, který se má použit jako hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>emptyText</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Pokud je zadán, obsahuje hodnotu pro nevyplněnou položku.</attcomment>
     </attribute>
     <anyAttribute />
     <comment>

@@ -48,9 +48,11 @@
 
 		// ------- LIST -------------------------------------------------------
 
-		public function forEachListModel($template, $model) {
+		public function forEachListModel($template, $model, $params = array()) {
 			self::pushListModel($model);
 			$result = "";
+
+			$where = self::findAttributesByPrefix($params, "filter-");
 			
 			if ($model->isRegistration()) {
 				self::parseContent($template);
@@ -58,13 +60,25 @@
 			
 			if ($model->isRender()) {
 				foreach ($model->items() as $item) {
-					$model->data($item);
-					$result .= self::parseContent($template);
+					if (self::isPassedByWhere($item, $where)) {
+						$model->data($item);
+						$result .= self::parseContent($template);
+					}
 				}
 			}
 
 			self::popListModel();
 			return $result;
+		}
+
+		private function isPassedByWhere($item, $where) {
+			foreach ($where as $key => $value) {
+				if ($item[$key] != $value) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		private function singleListModel($template, $model, $indexGetter) {
@@ -137,7 +151,7 @@
             . "</form>";
 		}
 		
-		public function dropdownlist($name, $source, $display, $id, $params = array()) {
+		public function dropdownlist($name, $source, $display, $id, $emptyText = "", $params = array()) {
 			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
@@ -156,6 +170,10 @@
 					$data = $source;
 				} else {
 					$data = self::dataAccess()->fetchAll("SELECT `$id`, `$display` FROM `$source` ORDER BY `$display`;");
+				}
+
+				if (!empty($emptyText)) {
+					$result .= "<option value=''" . (empty($modelValue) ? " selected='selected'" : "") . ">$emptyText</option>";
 				}
 
 				foreach ($data as $item) {
