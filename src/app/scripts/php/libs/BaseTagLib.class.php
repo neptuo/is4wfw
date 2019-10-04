@@ -628,13 +628,18 @@
 			$stack->push($model);
         }
 
-        public function peekEditModel() {
+        public function peekEditModel($createIfNotExists = true) {
+            $model = null;
             $stack = self::getModelStack("editModels", false);
-			if ($stack == NULL) {
-                return new EditModel();
-			}
+            if ($stack != null) {
+                $model = $stack->peek();
+            }
 
-            return $stack->peek();
+            if ($model == null && $createIfNotExists) {
+                $model = new ListModel();
+            }
+
+            return $model;
         }
 
         public function popEditModel() {
@@ -671,13 +676,18 @@
 			$stack->push($model);
         }
 
-        public function peekListModel() {
+        public function peekListModel($createIfNotExists = true) {
+            $model = null;
             $stack = self::getLocalModelStack("listModels", false);
-			if ($stack == NULL) {
-                return new ListModel();
-			}
+            if ($stack != null) {
+                $model = $stack->peek();
+            }
 
-            return $stack->peek();
+            if ($model == null && $createIfNotExists) {
+                $model = new ListModel();
+            }
+
+            return $model;
         }
 
         public function popListModel() {
@@ -688,10 +698,24 @@
 
             return $stack->pop();
         }
+
+        public function hasListModel() {
+            $stack = self::getLocalModelStack("listModels", false);
+			if ($stack == NULL) {
+                return false;
+			}
+
+            return $stack->peek() != null;
+        }
         
-        public function parseContent($content) {
+        public function parseContent($content, $tagsToParse = null) {
             $parser = new FullTagParser();
             $parser->setContent($content);
+
+            if ($tagsToParse != null) {
+                $parser->setTagsToParse($tagsToParse);
+            }
+
             $parser->startParsing();
             $return = $parser->getResult();
             return $return;
@@ -704,6 +728,17 @@
             }
 
             return $format;
+        }
+
+        protected function findAttributesByPrefix($params, $prefix) {
+            $result = array();
+            foreach ($params as $key => $value) {
+                if (self::startsWith($key, $prefix) && !empty($value)) {
+                    $result[substr($key, strlen($prefix))] = $value;
+                }
+            }
+
+            return $result;
         }
     }
 

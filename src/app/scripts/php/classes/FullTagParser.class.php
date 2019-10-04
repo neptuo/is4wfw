@@ -28,12 +28,21 @@ class FullTagParser extends CustomTagParser {
         $object = explode(":", $ctag[1]);
 
         $skipped = self::isSkippedTag($ctag);
-        if ($skipped !== FALSE) {
-            return $skipped;
-        }
 
         $attributes = self::tryProcessAttributes($ctag[2]);
         if ($attributes === FALSE) {
+            return '';
+        }
+
+        if ($skipped) {
+            self::evalAttributesWithoutProcessingTag($attributes);
+
+            // Parse $ctag[5].
+            $parser = new FullTagParser();
+            $parser->setContent($ctag[5]);
+            $parser->setTagsToParse($this->TagsToParse);
+            $parser->startParsing();
+            $parser->getResult();
             return '';
         }
 

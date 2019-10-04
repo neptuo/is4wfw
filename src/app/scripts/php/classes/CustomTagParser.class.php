@@ -74,7 +74,7 @@ class CustomTagParser {
 	
 	public function setTagsToParse($tags) {
 		$this->TagsToParse = $tags;
-	}
+    }
 
     protected function addSingletonGlobalObject($obj) {
         if (!in_array($obj, $this->GlobalObjects)) {
@@ -98,6 +98,15 @@ class CustomTagParser {
         }
         
         return false;
+    }
+
+    protected function evalAttributesWithoutProcessingTag($attributes) {
+        foreach ($attributes as $key => $value) {
+            if ($value["type"] == "eval") {
+                $eval = $value["value"] . ";";
+                eval($eval);
+            }
+        }
     }
 
     protected function tryProcessAttributes($rawAttributes) {
@@ -224,12 +233,14 @@ class CustomTagParser {
         $object = explode(":", $ctag[1]);
 
         $skipped = self::isSkippedTag($ctag);
-        if ($skipped !== FALSE) {
-            return $skipped;
-        }
 
         $attributes = self::tryProcessAttributes($ctag[3]);
         if ($attributes === FALSE) {
+            return '';
+        }
+
+        if ($skipped) {
+            self::evalAttributesWithoutProcessingTag($attributes);
             return '';
         }
 
