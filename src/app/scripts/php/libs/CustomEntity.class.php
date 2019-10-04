@@ -11,19 +11,11 @@
         const filterAttributePrefix = "filter-";
         const orderByAttributePrefix = "orderBy-";
 
-		public function __construct() {
+        private $tagPrefix;
+
+		public function __construct($tagPrefix) {
             parent::setTagLibXml("CustomEntity.xml");
-        }
-
-        private function findAttributesByPrefix($params, $prefix) {
-            $result = array();
-            foreach ($params as $key => $value) {
-                if (self::startsWith($key, $prefix) && !empty($value)) {
-                    $result[substr($key, strlen($prefix))] = $value;
-                }
-            }
-
-            return $result;
+            $this->tagPrefix = $tagPrefix;
         }
 
         private function parseUserValue($column, $value) {
@@ -274,7 +266,7 @@
             self::pushListModel($model);
 
             $model->registration();
-            self::parseContent($template);
+            self::parseContent($template, array($this->tagPrefix . ":register"));
             $model->registration(false);
             
             $result = "";
@@ -288,6 +280,10 @@
 
             self::popListModel();
             return $result;
+        }
+
+        public function register($name) {
+            self::getProperty($name);
         }
 
 		public function getProperty($name) {

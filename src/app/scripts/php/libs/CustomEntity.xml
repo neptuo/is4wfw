@@ -41,6 +41,18 @@
     </comment>
   </fulltag>
   <tag>
+    <tagname>register</tagname>
+    <function>register</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název sloupce, který se má zaregistrovat do dotazu.</attcomment>
+    </attribute>
+    <comment>
+      Zaregistruje do dotazu sloupec podle "name" i přesto, že se pomocí custom property nikde nevypisuje.
+    </comment>
+  </tag>
+  <tag>
     <tagname>emptyDirectory</tagname>
     <function>emptyDirectory</function>
     <attribute>
