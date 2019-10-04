@@ -27,6 +27,11 @@
       <attreq>required</attreq>
       <attcomment>Může nabývat hodnot 'request', 'session' a 'application'.</attcomment>
     </attribute>
+    <attribute>
+      <attname>select</attname>
+      <attreq>implied</attreq>
+      <attcomment>Pokud je "value" pole, pak použije hodnotu proměnné pro transformaci tohoto pole a z každé položky vybere daný klíč, výsledné pole pak nastaví jako hodnotu proměnné (obdoba LINQ select).</attcomment>
+    </attribute>
     <comment>
       Nastaví hodnotu proměnné s názvem 'name'.
     </comment>
