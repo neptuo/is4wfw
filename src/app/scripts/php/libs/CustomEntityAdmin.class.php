@@ -442,7 +442,7 @@
                     foreach ($newColumns as $columnName) {
                         if (!in_array($columnName, $columns)) {
                             $column = self::findColumn($xml, $columnName);
-                            $columnType = self::mapTypeToDb((string)$column->type);
+                            $columnType = self::getTableColumnTypes($column, "db");
                             $sql[] = "ALTER TABLE `$tableName` ADD COLUMN `" . $columnName . "` $columnType; ";
                         }
                     }
@@ -475,7 +475,7 @@
                 if ($column->primaryKey == true) {
                     $columnName = (string)$column->name;
                     $columnType = self::getTableColumnTypes($column, "db");
-                    $columns = self::joinString($columns, "`$columnName` $columnType NULL");
+                    $columns = self::joinString($columns, "`$columnName` $columnType NOT NULL");
                     $primary = self::joinString($primary, "`$columnName`");
                 }
             }
