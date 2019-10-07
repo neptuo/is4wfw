@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Localization bundle library</name>
+  <classname>Localization</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro správu a práci s lokalizačními bundly.
+  </comment>
+  <tag>
+    <tagname>setLanguage</tagname>
+    <function>setLanguage</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název jazyku.</attcomment>
+    </attribute>
+    <comment>
+      Nastaví aktuálně používaný jazyk pro všechny bundly.
+    </comment>
+  </tag>
+</taglib>
+

@@ -11,6 +11,7 @@
 	<reg prefix="g" class="php.libs.Guestbook" />
 	<reg prefix="i" class="php.libs.Inquiry" />
 	<reg prefix="img" class="php.libs.Image" />
+	<reg prefix="loc" class="php.libs.Localization" />
 	<reg prefix="p" class="php.libs.Page" />
 	<reg prefix="s" class="php.libs.Sport" />
 	<reg prefix="sys" class="php.libs.System" />
