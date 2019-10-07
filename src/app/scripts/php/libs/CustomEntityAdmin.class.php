@@ -3,7 +3,6 @@
 	require_once("CustomEntityBase.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
 	class CustomEntityAdmin extends CustomEntityBase {
 

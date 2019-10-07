@@ -8,6 +8,7 @@
     <item name="Users &amp; Roles" name-cs="Uživatelé a role" url="~/in/users.view" security:requirePerm="CMS.Settings.Users" />
     <item name="User log" url="~/in/user-log.view" security:requirePerm="CMS.Settings.UserLog" />
     <item name="Application log" url="~/in/application-log.view" security:requirePerm="CMS.Settings.ApplicationLog" />
+    <item name="Localization bundles" url="~/in/localization-bundles.view" security:requirePerm="CMS.Settings.LocalizationBundles" />
     <item name="Database connections" url="~/in/database-connections.view" security:requirePerm="CMS.Settings.DatabaseConnections" />
     <item name="Personal properties" name-cs="Uživatelské nastavení" url="~/in/personal-properties.view" security:requirePerm="CMS.Settings.PersonalProperties" />
     <item name="Personal notes" name-cs="Uživatelské poznámky" url="~/in/personal-notes.view" security:requirePerm="CMS.Settings.PersonalNotes" />

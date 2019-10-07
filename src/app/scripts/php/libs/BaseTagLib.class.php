@@ -3,8 +3,11 @@
     require_once('System.class.php');
     require_once('FileAdmin.class.php');
     require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/SqlBuilder.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ExtensionParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
 
     /**
