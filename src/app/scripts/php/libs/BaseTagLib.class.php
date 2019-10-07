@@ -642,7 +642,7 @@
             }
 
             if ($model == null && $createIfNotExists) {
-                $model = new ListModel();
+                $model = new EditModel();
             }
 
             return $model;
