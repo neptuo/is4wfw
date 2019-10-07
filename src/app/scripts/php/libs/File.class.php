@@ -28,24 +28,11 @@
          *  Holds file id when dynamic rewrite.
          *
          */                        
-        private $CurrentId = 0;     
-
-        private $BundleName = 'file';
-        
-        private $BundleLang = 'cs';	
+        private $CurrentId = 0;
 
         public function __construct() {
-        global $webObject;
-        
-        parent::setTagLibXml("File.xml");
-        //$_SESSION['dir-id'] = 0;
-        
-            if($webObject->LanguageName != '') {
-            $rb = new LocalizationBundle();
-            if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-            $this->BundleLang = $webObject->LanguageName;
-            }
-        }
+            parent::setTagLibXml("File.xml");
+            self::setLocalizationBundle("file");
         }
         
         function __destruct() {
@@ -69,8 +56,7 @@
         public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false, $browsable = true, $parentName = false, $nameWithExtension = false, $fileNameHeader = false) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
             $origDirId = $dirId;
 
@@ -153,8 +139,7 @@
         private function getList($dirId, $editable, $showParent, $showTitleInsteadOfName, $parentName, $nameWithExtension, $fileNameHeader) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
                 
                 $dirs = $dbObject->fetchAll('SELECT distinct `directory`.`id`, `directory`.`name`, .`directory`.`timestamp` FROM `directory` LEFT JOIN `directory_right` ON `directory`.`id` = `directory_right`.`did` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `parent_id` = '.$dirId.' AND `directory_right`.`type` = '.WEB_R_READ.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `name`;');
@@ -289,8 +274,7 @@
         public function showNewDirectoryForm($dirId = false, $useFrames = false, $useRights = false) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
             $dirId = self::setDirId($dirId);
             
@@ -524,8 +508,7 @@
         public function showUploadForm($dirId = false, $useRights = false, $useFrames = false) {
             global $dbObject;
             global $loginObject;
-        $rb = new LocalizationBundle();
-        $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
             $dirId = self::setDirId($dirId);
             
@@ -641,8 +624,7 @@
         private function processFileUpload() {
             global $dbObject;
             global $loginObject;
-        $rb = new LocalizationBundle();
-        $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $fileName = $_POST['file-name'];
             $dirId = $_POST['dir-id'];
             $fileTitle = $_POST['file-title'];

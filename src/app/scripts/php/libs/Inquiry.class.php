@@ -20,7 +20,7 @@
 			global $webObject;
 
 			parent::setTagLibXml("Inquiry.xml");
-			parent::loadLocalizationBundle('inquiry');
+			parent::setLocalizationBundle('inquiry');
 		}
 		
 		private function resetInquiry($inquiryId) {

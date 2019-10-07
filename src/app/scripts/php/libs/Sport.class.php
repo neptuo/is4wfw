@@ -17,8 +17,6 @@
      */
     class Sport extends BaseTagLib {
 
-        private $BundleName = 'sport';
-        private $BundleLang = 'cs';
         private $SubQueriesSQL = '';
         private $ConditionsSQL = '';
         private $UPDisc = 'sport_proj';
@@ -26,16 +24,8 @@
         private $ViewPhase = 0;
 
         public function __construct() {
-            global $webObject;
-
-            parent::setTagLibXml("Sport.xml");
-
-            if ($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $this->BundleLang = $webObject->LanguageName;
-                }
-            }
+            self::setTagLibXml("Sport.xml");
+            self::setLocalizationBundle("sport");
         }
 
         /**
@@ -71,8 +61,7 @@
          */
         public function selectSeason($useFrames = false, $showMsg = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($_POST['select-season-submit'] == $rb->get('season.select')) {
@@ -119,8 +108,7 @@
          */
         public function selectTable($useFrames = false, $showMsg = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($_POST['select-table-submit'] == $rb->get('tables.select')) {
@@ -167,8 +155,7 @@
          */
         public function selectTeam($useFrames = false, $showMsg = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($_POST['select-team-submit'] == $rb->get('team.select')) {
@@ -214,8 +201,7 @@
          *
          */
         public function selectProject($useFrames = false, $showMsg = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($_POST['select-project-submit'] == $rb->get('project.select')) {
@@ -261,8 +247,7 @@
          *
          */
         public function showEditProjects($pageId = false, $useFrames = false, $showMsg = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $retrun = '';
 
             if ($pageId != false) {
@@ -346,8 +331,7 @@
         public function showEditProjectForm($useFrames = false, $showMsg = false) {
             global $dbObject;
             $return = '';
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($_POST['project-submit'] == $rb->get('project.submit')) {
@@ -442,8 +426,7 @@
         public function showEditSeasons($pageId = false, $useFrames = false, $showMsg = false) {
             global $dbObject;
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $retrun = '';
 
             if (self::isSetProjectId()) {
@@ -525,8 +508,7 @@
         public function showEditSeasonForm($useFrames = false, $showMsg = false) {
             global $dbObject;
             $return = '';
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $season = array();
 
             if ($_POST['season-save'] == $rb->get('seasons.form.save')) {
@@ -607,8 +589,7 @@
         public function showEditTeams($pageId = false, $useFrames = false, $showMsg = false) {
             global $dbObject;
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $retrun = '';
 
             if (self::isSetProjectId()) {
@@ -754,8 +735,7 @@
          */
         public function showEditTeamForm($useFrames = false, $showMsg = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $team = array();
 
@@ -916,8 +896,7 @@
 
         public function showCopyTeamTableStatsForm($useFrames = false) {
             $return = '';
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if (UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_WRITE)) {
                 $ok = true;
@@ -1026,8 +1005,7 @@
          */
         public function showEditPlayers($pageId = false, $useFrames = false, $showMsg = false) {
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $retrun = '';
             $actionUrl = $_SERVER['REQUEST_URI'];
 
@@ -1178,8 +1156,7 @@
          */
         public function showEditPlayerForm($useFrames = false, $showMsg = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $ok = true;
             $player = array();
             $return = '';
@@ -1347,8 +1324,7 @@
             global $webObject;
             $return = '';
             $player = array();
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($_POST['player-search-submit'] == $rb->get('player.search.submit')) {
                 $name = $_POST['player-search-name'];
@@ -1436,8 +1412,7 @@
          *
          */
         public function showEditTables($pageId = false, $useFrames = false, $showMsg = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $retrun = '';
 
             if (!self::isSetProjectId()) {
@@ -1504,8 +1479,7 @@
         }
 
         public function showEditTableForm($pageId = false, $useFrames = false, $showMsg = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $retrun = '';
             $table = array();
             $dao = parent::dao('SportTable');
@@ -1609,8 +1583,7 @@
         public function showEditMatches($pageId = false, $useFrames = false, $showMsg = false) {
             global $dbObject;
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $retrun = '';
 
             if ($pageId != false) {
@@ -1853,8 +1826,7 @@
         public function showEditMatchForm($useFrames = false, $showMsg = false) {
             global $dbObject;
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $match = array();
             $return = '';
             $isValidationError = false;
@@ -2129,8 +2101,7 @@
          */
         public function showEditStatsForm($useFrames = false, $showMsg = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $ok = true;
             $return = '';
 
@@ -2450,8 +2421,7 @@
         public function showEditRounds($pageId = false, $useFrames = false, $showMsg = false) {
             global $dbObject;
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $retrun = '';
 
             $projectId = self::getProjectId();
@@ -2522,8 +2492,7 @@
         public function showEditRoundForm($useFrames = false, $showMsg = false) {
             global $dbObject;
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $round = array();
             $return = '';
             $ok = true;
@@ -2605,8 +2574,7 @@
         public function showSeasons($templateId, $sorting, $noDataMessage) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if (strtolower($sorting) == 'asc') {
@@ -2654,8 +2622,7 @@
          */
         public function showSeason($field, $seasonId = false, $errMsg = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $data = array();
 
@@ -2711,8 +2678,7 @@
         public function showTable($seasonId = false, $tableId = false, $editable = false, $useFrames = false, $showMsg = false, $thenByFix = false) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if (!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
@@ -2837,8 +2803,7 @@
          */
         public function showTeams($templateId, $seasonId, $noDataMessage, $teamId = false, $sortBy = false, $sorting = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if (!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
@@ -2891,8 +2856,7 @@
          */
         public function showTeam($field, $teamId = false, $seasonId = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $data = array();
 
@@ -2948,8 +2912,7 @@
         public function showMatches($templateId, $noDataMessage, $sorting = false, $matchId = false, $round = false, $teamId = false, $seasonId = false, $onlyPlayed = true, $state = null) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if (!UniversalPermission::checkUserPermissions($this->UPDisc, self::getProjectId(), WEB_R_READ)) {
@@ -3059,8 +3022,7 @@
          */
         public function showMatch($field, $matchId = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $data = array();
 
@@ -3146,8 +3108,7 @@
         public function showRounds($templateId, $sorting, $noDataMessage, $seasonId = false, $teamId = false, $onlyPlayed = true, $state = '', $startRoundId = false, $maxRoundId = false, $limit = false) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $teamSql = '';
             $joinSql = '';
@@ -3224,8 +3185,7 @@
          *
          */
         public function showRound($field, $roundId = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $data = array();
 
@@ -3280,8 +3240,7 @@
         public function showPlayers($templateId, $sorting, $sortBy, $playerId = false, $tableId = false, $teamId = false, $seasonId = false, $fromMatchId = false, $only = false, $scope = false, $showGolmans = false, $limit = false, $offset = false, $noDataMessage = false) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($offset == '') {
@@ -3364,8 +3323,7 @@
          */
         public function showPlayer($field, $playerId = false, $tableId = false, $teamId = false, $seasonId = false, $errMsg = false) {
             global $dbObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($this->ViewPhase == 1) {
@@ -3480,8 +3438,7 @@
         public function showPlayersNG($templateId, $noDataMessage, $seasonId = false, $tableId = false, $matchId = false, $playerId = false, $teamId = false, $includeOnLoan = false, $positions = false, $sortBy = false, $sorting = false) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             $where = ' `project_id` = ' . self::getProjectId();
@@ -3541,8 +3498,7 @@
         }
 
         public function showPlayerNG($field, $playerId = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $data = array();
 
@@ -3592,8 +3548,7 @@
         public function showPlayersStatsNG($templateId, $type, $noDataMessage, $seasonId = false, $tableId = false, $playerId = false, $matchId = false, $sortBy = false, $sorting = false, $positions = false, $partWhere = false) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $ok = true;
             $sqlpart = '';
@@ -3692,8 +3647,7 @@
         }
 
         public function showPlayerStatsNG($field) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $data = array();
 
@@ -3745,8 +3699,7 @@
         // ------------------------------------------------------------------------------------------------------------------- \\
 
         public function getPlayerPosition($pos) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             switch ($pos) {
                 case 1: return $rb->get('player.position-goa');
@@ -3756,8 +3709,7 @@
         }
 
         public function getPlayerPositionShortcut($pos) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             switch ($pos) {
                 case 1: return $rb->get('player.position-goa-short');

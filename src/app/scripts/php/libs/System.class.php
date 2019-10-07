@@ -75,7 +75,7 @@
 		);
 
 		public function manageProperties($userId = false, $useFrames = false, $showMsg = false) {
-			parent::loadLocalizationBundle('system');
+			parent::setLocalizationBundle('system');
 
 			$title = '';
 			if ($userId == '' || $userId == 'current') {

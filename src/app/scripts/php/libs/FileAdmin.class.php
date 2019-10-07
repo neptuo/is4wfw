@@ -49,7 +49,7 @@
 			global $webObject;
 
 			parent::setTagLibXml("FileAdmin.xml");
-			parent::loadLocalizationBundle('fileadmin');
+			parent::setLocalizationBundle('fileadmin');
 			
 			self::transformFileSystem();
 		}

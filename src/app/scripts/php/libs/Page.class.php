@@ -21,30 +21,18 @@
             'page_right', 'pid', 'gid', 'type'
         );
 
-        private $BundleName = 'page';
-        private $BundleLang = 'cs';
         private $MessageFromEdit = '';
 
         public function __construct() {
-            global $webObject;
-            parent::setTagLibXml("Page.xml");
-
-            if ($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $this->BundleLang = $webObject->LanguageName;
-                }
-            }
-            
-            parent::loadLocalizationBundle('page');
+            self::setTagLibXml("Page.xml");
+            self::setLocalizationBundle('page');
         }
 
         public function showEditPage($paramPageId = false, $paramLangId = false) {
             global $dbObject;
             global $loginObject;
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             
             if($paramPageId != 0 && $paramLangId != 0) {
@@ -836,8 +824,7 @@
             global $dbObject;
             global $loginObject;
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             $projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`value` >= ' . $loginObject->getGroupValue() . ';');
@@ -1433,8 +1420,7 @@
         private function generatePageList($parentId, $editable, $inn, $projectId) {
             global $dbObject;
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $sql_return = $dbObject->fetchAll("SELECT `page`.`parent_id`, `page`.`id` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `page`.`wp` = " . $projectId . " GROUP BY `page`.`id` ORDER BY `info`.`page_pos`;");
             if (count($sql_return) == 0 && $parentId == 0) {
@@ -1646,8 +1632,7 @@
         public function showEditPageFile() {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
             $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
 
@@ -1793,8 +1778,7 @@
         public function showPageFiles($editable = false) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
             $editable = (strtolower($editable) == "true") ? true : false;
             $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
@@ -1906,8 +1890,7 @@
          *
          */
         private function getTextFileSearchForm() {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($_POST['text-file-search-submit'] == $rb->get('tf.search')) {
                 parent::session()->set('name', $_POST['text-file-search-name'], 'tf-search');
@@ -1965,8 +1948,7 @@
          *
          */
         private function getFileUpdateForm($fileId, $fileName, $fileContent, $browsers, $fileTypes) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $htmlBrowsers = '';
             foreach ($browsers as $browser => $value) {
                 $htmlBrowsers .= ''
@@ -2227,8 +2209,7 @@
          *
          */
         public function updateKeywords() {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $return = $msg = '';
 
@@ -2732,8 +2713,7 @@
         }
 
         public function showEmbeddedResources($useFrames = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($_POST['er-delete'] == $rb->get('er.delete')) {
@@ -2800,8 +2780,7 @@
         }
 
         public function showEditEmbeddedResourceFrom($useFrames = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $er;
             $fromSave = false;
@@ -2868,8 +2847,7 @@
         }
 
         public function showWebForwards($useFrames = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($_POST['wf-delete'] == $rb->get('wf.delete')) {
@@ -2942,8 +2920,7 @@
         }
 
         public function showEditWebForwardFrom($useFrames = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $wf;
             $fromSave = false;

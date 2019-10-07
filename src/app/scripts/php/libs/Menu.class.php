@@ -15,19 +15,9 @@
      */
     class Menu extends BaseTagLib {
 
-        private $BundleName = 'view';
-        private $BundleLang = 'cs';
-
         public function __construct() {
-
-            parent::setTagLibXml("Menu.xml");
-
-            if ($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $this->BundleLang = $webObject->LanguageName;
-                }
-            }
+            self::setTagLibXml("Menu.xml");
+            self::setLocalizationBundle("view");
         }
 
         /* ======================= TAGS ========================================= */

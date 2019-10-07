@@ -15,20 +15,9 @@
      */  
     class Hint extends BaseTagLib {
 
-        private $BundleName = 'hint';
-        private $BundleLang = 'cs';
-
         public function __construct() {
-            global $webObject;
-
-            parent::setTagLibXml("Hint.xml");
-        
-            if ($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $BundleLang = $webObject->LanguageName;
-                }
-            }
+            self::setTagLibXml("Hint.xml");
+            self::setLocalizationBundle("hint");
         }
 
         /**
@@ -44,8 +33,7 @@
          */                                    
         public function showHintForLib($classPath = false, $useFrames = false, $showMsg = false) {
             global $phpObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             
             $cpArray = $phpObject->str_tr($classPath, '.');
@@ -308,8 +296,7 @@
          *
          */                                            
         public function selectClassPath($useFrames = false, $showMsg = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             
             if ($_POST['select-class-path-submit'] == $rb->get('select-class-path.submit')) {
@@ -385,8 +372,7 @@
             
             
         public function getPropertyList($useFrames = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             
             $return = ''
             .'<div class="gray-box">'
@@ -424,8 +410,7 @@
         }
 
         public function getAutoRegistered($useFrames = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             
             $grid = new BaseGrid();
             $grid->setHeader(array(

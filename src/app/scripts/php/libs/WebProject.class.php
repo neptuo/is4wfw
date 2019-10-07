@@ -15,20 +15,9 @@
      */
     class WebProject extends BaseTagLib {
 
-        private $BundleName = 'webproject';
-        private $BundleLang = 'cs';
-
         public function __construct() {
-            global $webObject;
-
-            parent::setTagLibXml("WebProject.xml");
-
-            if ($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $this->BundleLang = $webObject->LanguageName;
-                }
-            }
+            self::setTagLibXml("WebProject.xml");
+            self::setLocalizationBundle("webproject");
         }
 
         /**
@@ -40,8 +29,7 @@
         public function selectProject($label = false, $useFrames = false, $showMsg = false) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
             $projects = array();
 
@@ -125,8 +113,7 @@
          *
          */
         public function showProjects($detailPageId = false, $editable = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             global $webObject;
             global $dbObject;
             global $loginObject;
@@ -255,8 +242,7 @@
          *
          */
         public function showEditForm($showNotSelectedError = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             global $webObject;
             global $dbObject;
             global $loginObject;

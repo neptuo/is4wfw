@@ -14,20 +14,9 @@
 	 */  
 	class PageNG extends BaseTagLib {
 
-		private $BundleName = 'pageng';
-		private $BundleLang = 'cs';
-
 		public function __construct() {
-			global $webObject;
-			
-			parent::setTagLibXml("PageNG.xml");
-			
-			if($webObject->LanguageName != '') {
-				$rb = new LocalizationBundle();
-				if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-					$BundleLang = $webObject->LanguageName;
-				}
-			}
+			self::setTagLibXml("PageNG.xml");
+			self::setLocalizationBundle("pageng");
 			
 			if($_GET['clear'] == 'session') {
 				unset($_SESSION['pageng']);
@@ -38,8 +27,7 @@
 		public function selectLanguage($useFrames = false, $showMsg = false) {
 			global $dbObject;
 			global $webObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			$return = '';
 			
 			if($_POST['page-ng-select-language-submit'] == $rb->get('selectlang.submit')) {
@@ -117,8 +105,7 @@
 			global $dbObject;
 			global $webObject;
 			global $loginObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			$return = '';
 			
 			if(self::getLanguage() != '' && $_SESSION['selected-project'] != '') {
@@ -213,8 +200,7 @@
 		public function searchFilter($templateId, $useFrames = false, $showMsg = false) {
 			global $webObject;
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			$return = '';
 			
 			if($_POST['search-filter-submit'] == $rb->get('searchfilter.submit')) {
@@ -289,8 +275,7 @@
 		
 		public function pageName($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['name'] = $_POST['pageng-page-field-name'];
@@ -334,8 +319,7 @@
 		
 		public function pageId($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['id'] = $_POST['pageng-page-field-id'];
@@ -377,8 +361,7 @@
 		
 		public function pageUrl($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['pageurl'] = $_POST['pageng-page-field-pageurl'];
@@ -420,8 +403,7 @@
 		
 		public function pageKeywords($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['keywords'] = $_POST['pageng-page-field-keywords'];
@@ -463,8 +445,7 @@
 		
 		public function pageTimestamp($type, $pageId = false, $langId = false, $ignore = false, $format = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['timestamp'] = $_POST['pageng-page-field-timestamp'];
@@ -512,8 +493,7 @@
 		
 		public function pageCachetime($type, $pageId = false, $langId = false, $ignore = false, $verbous = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['cachetime'] = $_POST['pageng-page-field-cachetime'];
@@ -577,8 +557,7 @@
 		
 		public function pageTagLibStart($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['tlstart'] = $_POST['pageng-page-field-tlstart'];
@@ -622,8 +601,7 @@
 		
 		public function pageTagLibEnd($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['tlend'] = $_POST['pageng-page-field-tlend'];
@@ -667,8 +645,7 @@
 		
 		public function pageHead($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['head'] = $_POST['pageng-page-field-head'];
@@ -712,8 +689,7 @@
 		
 		public function pageContent($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['content'] = $_POST['pageng-page-field-content'];
@@ -757,8 +733,7 @@
 		
 		public function pageInTitle($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['intitle'] = ($_POST['pageng-page-field-intitle'] == 'on' ? 1 : 0);
@@ -804,8 +779,7 @@
 		
 		public function pageInMenu($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['inmenu'] = ($_POST['pageng-page-field-inmenu'] == 'on' ? 1 : 0);
@@ -851,8 +825,7 @@
 		
 		public function pageIsVisible($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['isvisible'] = ($_POST['pageng-page-field-isvisible'] == 'on' ? 1 : 0);
@@ -899,8 +872,7 @@
 		public function pageRightRead($type, $pageId = false, $langId = false, $verbous = false) {
 			global $dbObject;
 			global $loginObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['rightread'] = $_POST['pageng-page-field-rightread'];
@@ -974,8 +946,7 @@
 		public function pageRightWrite($type, $pageId = false, $langId = false, $verbous = false) {
 			global $dbObject;
 			global $loginObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['rightwrite'] = $_POST['pageng-page-field-rightwrite'];
@@ -1050,8 +1021,7 @@
 		public function pageRightDelete($type, $pageId = false, $langId = false, $verbous = false) {
 			global $dbObject;
 			global $loginObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['rightdelete'] = $_POST['pageng-page-field-rightdelete'];
@@ -1125,8 +1095,7 @@
 		
 		public function pageActionEdit($pageId, $langId, $type, $detailPageId = false) {
 			global $webObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			$return = '';
 			
 			if($_POST['pagengpageedit'] == $rb->get('pageaction.pageedit')) {
@@ -1155,8 +1124,7 @@
 		}
 		
 		public function pageActionDelete($pageId, $langId, $type) {
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			$return = '';
 			
 			if($_POST['pagengpagedelete'] == $rb->get('pageaction.pagedelete')) {
@@ -1182,8 +1150,7 @@
 		
 		public function pageActionAddsub($pageId, $langId, $type, $detailPageId = false) {
 			global $webObject;
-			$rb = new LocalizationBundle();
-			$rb->loadBundle($this->BundleName, $this->BundleLang);
+			$rb = self::rb();
 			$return = '';
 			
 			if($_POST['pagengpageaddsub'] == $rb->get('pageaction.pageaddsub')) {

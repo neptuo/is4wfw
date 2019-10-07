@@ -13,27 +13,16 @@
      */
     class User extends BaseTagLib {
 
-        private $BundleName = 'user';
-        private $BundleLang = 'cs';
-
         public function __construct() {
-            global $webObject;
             self::setTagLibXml("User.xml");
-
-            if ($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $this->BundleLang = $webObject->LanguageName;
-                }
-            }
+            self::setLocalizationBundle("user");
         }
 
         public function showUserManagement($attUserId = false, $defaultMainGroupId = false) {
             global $dbObject;
             global $loginObject;
             $return = '';
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($_POST['user-edit-save'] == $rb->get('management.save')) {
                 $uid = $_POST['user-edit-uid'];
@@ -212,8 +201,7 @@
         private function editForm($user, $groups, $showMain) {
             global $dbObject;
             global $loginObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') ORDER BY `value`;');
             $groupSelect = '<select id="user-edit-groups" name="user-edit-groups[]" multiple="multiple" size="6">';
@@ -507,8 +495,7 @@
         }
 
         public function editGroupPerms($useFrames = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = '';
 
             if ($_POST['group-perm-save'] == $rb->get('gperm.save')) {
@@ -722,8 +709,7 @@
 
         public function registerUser($groups, $disableUser = false, $pageId = false) {
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $user = array();
             $ok = true;
             $messages = array();
@@ -828,7 +814,7 @@
         }
 
         public function changePassword() {
-            parent::loadLocalizationBundle('user');
+            parent::setLocalizationBundle('user');
 
             $return = '';
 

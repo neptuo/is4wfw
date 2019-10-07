@@ -15,8 +15,6 @@
      */
     class CustomForm extends BaseTagLib {
 
-        private $BundleName = 'customform';
-        private $BundleLang = 'en';
         private $FunctionRegex = '#([a-zA-Z0-9]+)\(([^)]*)\)#';
         private $EmailRegex = '/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i';
         private $CreatorError = "";
@@ -38,13 +36,7 @@
             global $webObject;
 
             parent::setTagLibXml("CustomForm.xml");
-
-            if ($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $this->BundleLang = $webObject->LanguageName;
-                }
-            }
+            parent::setLocalizationBundle("customform");
         }
 
         /* ===================== LIST =========================================== */
@@ -55,8 +47,7 @@
         }
 
         public function listRowsFullTag($templateContent, $formId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = -1, $noDataMessage = false, $params = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
             $rules = "";
 
@@ -273,8 +264,7 @@
 
         public function formFullTag($templateContent, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailIsHtml = false) {
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
             
             if (is_array($rowId)) {
@@ -482,8 +472,7 @@
         }
 
         private function formValidateAgainstTemplate($formId, $templateContent) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $this->FormPhase = 1;
             $this->FormFieldsFound = array();
@@ -613,8 +602,7 @@
         // pro date -> formatovac!!!
         public function field($name, $viewType = false, $type = false, $required = false, $validation = false, $elementId = false, $transformation = false, $default = false, $errorMessage = false, $requiredValue = false, $transient = false, $data = false, $cssClass = false, $dirId = false, $referenceFormId = false, $referenceCaptionField = false) {
             global $webObject;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
             
             if ($this->EmailPhase == 1) {
@@ -1003,8 +991,7 @@
         /* ===================== LIST =========================================== */
 
         public function formList($userFrames = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $return = "";
 
             if ($_POST['list-delete'] == $rb->get('cf.list.delete')) {
@@ -1080,8 +1067,7 @@
         /* ===================== CREATOR ======================================== */
 
         public function formCreator($useFrames = false) {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             $step = self::creatorSetStep();
             $return = "";
 
@@ -1119,8 +1105,7 @@
         }
 
         private function creatorSetStep() {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($_POST['creator-submit'] == $rb->get('cf.creator.step0.button')) {
                 if (self::creatorValidate0()) {
@@ -1154,8 +1139,7 @@
         /*     * ********************* STEP 0 **************************************** */
 
         private function creatorStep0() {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $return = ''
             . '<form name="creator-step-0" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
@@ -1182,8 +1166,7 @@
         }
 
         private function creatorValidate0() {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $formId = $_POST['creator-id'];
             $fields = $_POST['creator-fields'];
@@ -1215,8 +1198,7 @@
         /*     * ********************* STEP 1 **************************************** */
 
         private function creatorStep1() {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $return .= ''
             . '<form name="creator-step-1" method="post" ation="' . $_SERVER['REQUEST_URI'] . '">'
@@ -1257,8 +1239,7 @@
         }
 
         private function creatorValidate1() {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $ok = true;
             $names = array();
@@ -1325,8 +1306,7 @@
         /*     * ********************* STEP 2 **************************************** */
 
         private function creatorStep2() {
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $return .= ''
             . '<form name="creator-step-2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'

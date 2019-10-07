@@ -15,8 +15,6 @@
      */
     class View extends BaseTagLib {
 
-        private $BundleName = 'view';
-        private $BundleLang = 'cs';
         private $Resources;
         private $Content;
         private $FullParser;
@@ -26,15 +24,8 @@
         private $CurrentTemplatePointer;
 
         public function __construct() {
-            global $webObject;
-            parent :: setTagLibXml("View.xml");
-
-            if ($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $this->BundleLang = $webObject->LanguageName;
-                }
-            }
+            self::setTagLibXml("View.xml");
+            self::setLocalizationBundle("view");
         }
 
         /* ======================= TAGS ========================================= */

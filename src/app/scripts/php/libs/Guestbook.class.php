@@ -13,21 +13,11 @@
      */  
     class Guestbook extends BaseTagLib {
 
-        private $BundleName = 'guestbook';
-        private $BundleLang = 'cs';
         private $GuestbookId = 0;
 
         public function __construct() {
-            global $webObject;
-        
-            parent::setTagLibXml("Guestbook.xml");
-            
-            if($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $this->BundleLang = $webObject->LanguageName;
-                }
-            }
+            self::setTagLibXml("Guestbook.xml");
+            self::setLocalizationBundle("guestbook");
         }
         
         /**
@@ -45,8 +35,7 @@
             global $webObject;
             global $dbObject;
             
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             
             $return = "";
             $message = "";
@@ -240,8 +229,7 @@
             global $webObject;
             global $dbObject;
             
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             
             $return = "";
             if($guestbookId == 'false') {
@@ -273,8 +261,7 @@
             global $webObject;
             global $dbObject;
             
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
             
             $rows = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `timestamp` FROM `guestbook` WHERE `guestbook_id` = ".$guestbookId." AND `parent_id` = ".$parentId." ORDER BY `timestamp` DESC;");
             

@@ -32,18 +32,8 @@
         private $BundleLang = 'cs';
 
         public function __construct() {
-            global $dbObject;
-            global $webObject;
-            parent::setTagLibXml("Article.xml");
-
-            if ($webObject->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if ($rb->testBundleExists($this->BundleName, $webObject->LanguageName)) {
-                    $this->BundleLang = $webObject->LanguageName;
-                }
-            }
-            
-            parent::loadLocalizationBundle('article');
+            self::setTagLibXml("Article.xml");
+            self::setLocalizationBundle('article');
         }
         
         protected function canUser($objectId, $rightType) {
@@ -89,8 +79,7 @@
             $return = '';
             $detail = false;
             $link = "";
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($lineId == '') {
                 if (parent::request()->exists('line-url')) {
@@ -398,8 +387,7 @@
             global $loginObject;
             $langId = $webObject->LanguageId;
             $return = '';
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $articleLangId = ($articleLangId != false) ? $articleLangId : $webObject->LanguageId;
 
@@ -675,8 +663,7 @@
             global $webObject;
             $return = '';
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($detailPageId != false) {
                 $actionUrl = $webObject->composeUrl($detailPageId);
@@ -1007,8 +994,7 @@
             global $webObject;
             $return = '';
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($lineId == false) {
                 if ($method == "get" || $method == "post") {
@@ -1076,8 +1062,7 @@
             global $loginObject;
             $return = '';
             $actionUrl = '';
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($_POST['article-line-delete'] == $rb->get('lines.delete')) {
                 $lineId = $_POST['delete-line-id'];
@@ -1182,8 +1167,7 @@
             global $dbObject;
             global $loginObject;
             $return = '';
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($_POST['select-article-line'] == $rb->get('lines.select')) {
                 $lineId = $_POST['line-id'];
@@ -1256,8 +1240,7 @@
             global $webObject;
             $return = '';
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($detailPageId != false) {
                 $actionUrl = $webObject->composeUrl($detailPageId);
@@ -1294,8 +1277,7 @@
             $article = array();
             $articleContent = array();
             $usedLangs = array();
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $isClosing = $_POST['article-save-close'] == $rb->get('articles.saveandclose') || $_POST['article-close'] == $rb->get('articles.close');
             $hasCustomForm = $customFormId != '' && $customFormTemplateId != '';
@@ -1725,8 +1707,7 @@
             $return = '';
             $ok = true;
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $lineId = ((array_key_exists('edit-line-id', $_POST)) ? $_POST['edit-line-id'] : 0);
             // test na prava zapisu do rady clanku
@@ -1972,8 +1953,7 @@
         public function showEditLabels($useFrames = false) {
             $return = '';
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             $labels = parent::db()->fetchAll('select `id`, `name`, `url`, `order` from `article_label` order by `order`;');
 
@@ -2040,8 +2020,7 @@
             $actionUrl = $_SERVER['REQUEST_URI'];
             $label = array();
             $ok = true;
-            $rb = new LocalizationBundle();
-            $rb->loadBundle($this->BundleName, $this->BundleLang);
+            $rb = self::rb();
 
             if ($_POST['label-edit-save'] == $rb->get('label.save')) {
                 $label['id'] = $_POST['label-edit-id'];

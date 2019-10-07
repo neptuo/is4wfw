@@ -359,20 +359,23 @@
         private $BundleName;
         private $BundleLang = 'cs';
         
-        public function loadLocalizationBundle($name) {
+        public function setLocalizationBundle($name) {
             $this->BundleName = $name;
-            if ($this->web()->LanguageName != '') {
-                $rb = new LocalizationBundle();
-                if ($rb->testBundleExists($this->BundleName, self::web()->LanguageName)) {
-                    $this->BundleLang = self::web()->LanguageName;
-                }
-            }
-            
-            $this->LocalizationBundle = new LocalizationBundle();
-            $this->LocalizationBundle->loadBundle($this->BundleName, $this->BundleLang);
         }
         
         public function rb($key = false) {
+            if ($this->LocalizationBundle == null) {
+                if ($this->web()->LanguageName != '') {
+                    $rb = new LocalizationBundle();
+                    if ($rb->testBundleExists($this->BundleName, self::web()->LanguageName)) {
+                        $this->BundleLang = self::web()->LanguageName;
+                    }
+                }
+                
+                $this->LocalizationBundle = new LocalizationBundle();
+                $this->LocalizationBundle->loadBundle($this->BundleName, $this->BundleLang);
+            }
+
             if($key == false) {
                 return $this->LocalizationBundle;
             } else {
