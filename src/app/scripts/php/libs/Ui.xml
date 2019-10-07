@@ -73,6 +73,80 @@
     </comment>
   </fulltag>
   <fulltag>
+    <tagname>grid</tagname>
+    <function>grid</function>
+    <attribute>
+      <attname>items</attname>
+      <attreq>required</attreq>
+      <attcomment>Pole položek.</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vypíše grid/tabulky pro položky z "items".
+      Všechny další atributy jsou použity jako HTML atributy tabulky.
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>column</tagname>
+    <function>gridColumn</function>
+    <attribute>
+      <attname>header</attname>
+      <attreq>implied</attreq>
+      <attcomment>Nadpis slouce v gridu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>implied</attreq>
+      <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
+    </attribute>
+    <comment>
+      Základ sloupec pro "ui:grid".
+    </comment>
+  </tag>
+  <tag>
+    <tagname>columnBoolean</tagname>
+    <function>gridColumnBoolean</function>
+    <attribute>
+      <attname>header</attname>
+      <attreq>implied</attreq>
+      <attcomment>Nadpis slouce v gridu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>implied</attreq>
+      <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>trueText</attname>
+      <attreq>implied</attreq>
+      <attcomment>Hodnota text sloupce, pokud je "value" true.</attcomment>
+      <atttype>string</atttype>
+      <attdef>Yes</attdef>
+    </attribute>
+    <attribute>
+      <attname>falseText</attname>
+      <attreq>implied</attreq>
+      <attcomment>Hodnota text sloupce, pokud je "value" false.</attcomment>
+      <atttype>string</atttype>
+      <attdef></attdef>
+    </attribute>
+    <comment>
+      Boolový sloupec pro "ui:grid".
+    </comment>
+  </tag>
+  <fulltag>
+    <tagname>columnTemplate</tagname>
+    <function>gridColumnTemplate</function>
+    <attribute>
+      <attname>header</attname>
+      <attreq>implied</attreq>
+      <attcomment>Nadpis slouce v gridu.</attcomment>
+    </attribute>
+    <comment>
+      Sloupec pro "ui:grid", který má hodnotu definovanou šablonou.
+    </comment>
+  </fulltag>
+  <fulltag>
     <tagname>form</tagname>
     <function>form</function>
     <attribute>

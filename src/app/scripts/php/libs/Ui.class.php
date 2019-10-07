@@ -134,6 +134,70 @@
 			}
 		}
 
+		// ------- GRID -------------------------------------------------------
+
+		private $gridPhase = "";
+
+		public function grid($template, $model, $params = array()) {
+			if ($model->isRender()) {
+				$result = "";
+
+				$items = $model->items();
+				if (count($items) > 0) {
+					$attributes = self::joinAttributes($params);
+
+					// Header
+					$this->gridPhase = "header";
+					$result .= "<table$attributes>";
+					$result .= "<tr>";
+					$result .= self::parseContent($template);
+					$result .= "</tr>";
+					
+					// Body
+					$this->gridPhase = "body";
+					foreach ($items as $item) {
+						$model->data($item);
+						
+						$result .= "<tr>";
+						$result .= self::parseContent($template);
+						$result .= "</tr>";
+					}
+					
+					// Reset
+					$this->gridPhase = "";
+					$result .= "</table>";
+				}
+
+				return $result;
+			}
+		}
+
+		public function gridColumn($header, $value) {
+			if ($this->gridPhase == "header") {
+				return "<th>$header</th>";
+			} else if ($this->gridPhase == "body") {
+				return "<td>$value</td>";
+			}
+
+			return "";
+		}
+
+		public function gridColumnBoolean($header, $value, $trueText = "Yes", $falseText = "") {
+			return self::gridColumn($header, $value ? $trueText : $falseText);
+		}
+
+		public function gridColumnTemplate($template, $header) {
+			if ($this->gridPhase == "header") {
+				return "<th>$header</th>";
+			} else if ($this->gridPhase == "body") {
+				return "<td>" . self::parseContent($template) . "</td>";
+			}
+
+			return "";
+		}
+
+
+
 		// ------- EDITORS ----------------------------------------------------
 
 		public function form($template, $method = "post", $pageId = null, $params = array()) {
