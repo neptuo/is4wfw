@@ -138,7 +138,8 @@ class DataAccess {
 					$webObject->PageLog .= "<div style=\"border: 2px solid gray; padding: 5px; margin: 5px;\"><strong style=\"color: red;\">SQL query:</strong><br /><code>".$pquery."</code></div>";
 				}
 			} 
-			  
+			
+			$result = false;
 			if (!$notExecuteQuery && !$this->mockMode) {
 				if ($this->saveQueries) {
 					array_push($this->queries, $query);
@@ -149,7 +150,7 @@ class DataAccess {
 				self::tryToProcessError($query);
 			}
 			
-			return;
+			return $result;
 		} else {
 			trigger_error("Connection is closed, can't execute query!", E_USER_WARNING);
 		}
