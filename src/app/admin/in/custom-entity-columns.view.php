@@ -12,50 +12,22 @@
 	</web:condition>
 	<web:frame title="query:table">
 		<ced:listTableColumns name="query:table">
-			<table class="standart">
-				<tr>
-					<th>Name</th>
-					<th>Type</th>
-					<th>Primary</th>
-					<th>Required</th>
-					<th>Unique</th>
-					<th></th>
-				</tr>
-				<ui:forEach items="ced:listTableColumns">
-					<tr>
-						<td>
-							<web:getProperty name="ced:tableColumnName" />
-						</td>
-						<td>
-							<web:getProperty name="ced:tableColumnType" />
-						</td>
-						<td>
-							<web:condition when="ced:tableColumnPrimaryKey">
-								Yes
-							</web:condition>
-						</td>
-						<td>
-							<web:condition when="ced:tableColumnRequired">
-								Yes
-							</web:condition>
-						</td>
-						<td>
-							<web:condition when="ced:tableColumnUnique">
-								Yes
-							</web:condition>
-						</td>
-						<td>
-							<web:condition when="ced:tableColumnPrimaryKey" is="false">
-								<ui:form>
-									<input type="hidden" name="ce-column" value="<web:getProperty name="ced:tableColumnName" />" />
-									<input type="hidden" name="ce-delete" value="delete" />
-									<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity column '<web:getProperty name="ced:tableColumnName" />'" />
-								</ui:form>
-							</web:condition>
-						</td>
-					</tr>
-				</ui:forEach>
-			<table>
+			<ui:grid items="ced:listTableColumns" class="standart clickable">
+				<ui:column header="Name" value="ced:tableColumnName" />
+				<ui:column header="Type" value="ced:tableColumnType" />
+				<ui:columnBoolean header="Primary" value="ced:tableColumnPrimaryKey" />
+				<ui:columnBoolean header="Required" value="ced:tableColumnRequired" />
+				<ui:columnBoolean header="Unique" value="ced:tableColumnUnique" />
+				<ui:columnTemplate header="">
+					<web:condition when="ced:tableColumnPrimaryKey" is="false">
+						<ui:form>
+							<input type="hidden" name="ce-column" value="<web:getProperty name="ced:tableColumnName" />" />
+							<input type="hidden" name="ce-delete" value="delete" />
+							<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity column '<web:getProperty name="ced:tableColumnName" />'" />
+						</ui:form>
+					</web:condition>
+				</ui:columnTemplate>
+			</ui:grid>
 		</ced:listTableColumns>
 		<hr />
 		<ui:form>

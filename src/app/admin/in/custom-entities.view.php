@@ -14,38 +14,23 @@
 			<ui:empty items="ced:listTables">
 				<h4 class="warning">No Custom Entities</h4>
 			</ui:empty>
-			<ui:any items="ced:listTables">
-				<table class="standart clickable">
-					<tr>
-						<th>Name</th>
-						<th>Description</th>
-						<th></th>
-					</tr>
-					<ui:forEach items="ced:listTables">
-						<tr>
-							<td>
-								<web:getProperty name="ced:tableName" />
-							</td>
-							<td>
-								<web:getProperty name="ced:tableDescription" />
-							</td>
-							<td>
-								<web:a pageId="~/in/custom-entity-columns.view" param-table="ced:tableName" class="image-button button-edit">
-									<img src="~/images/page_pro.png" />
-								</web:a>
-								<web:a pageId="~/in/custom-entity-localization.view" param-table="ced:tableName" class="image-button button-edit">
-									<img src="~/images/lang.png" />
-								</web:a>
-								<ui:form>
-									<input type="hidden" name="ce-table" value="<web:getProperty name="ced:tableName" />" />
-									<input type="hidden" name="ce-delete" value="delete" />
-									<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity '<web:getProperty name="ced:tableName" />'" />
-								</ui:form>
-							</td>
-						</tr>
-					</ui:forEach>
-				</table>
-			</ui:any>
+			<ui:grid items="ced:listTables" class="standart clickable">
+				<ui:column header="Name" value="ced:tableName" />
+				<ui:column header="Description" value="ced:tableDescription" />
+				<ui:columnTemplate header="">
+					<web:a pageId="~/in/custom-entity-columns.view" param-table="ced:tableName" class="image-button button-edit">
+						<img src="~/images/page_pro.png" />
+					</web:a>
+					<web:a pageId="~/in/custom-entity-localization.view" param-table="ced:tableName" class="image-button">
+						<img src="~/images/lang.png" />
+					</web:a>
+					<ui:form>
+						<input type="hidden" name="ce-table" value="<web:getProperty name="ced:tableName" />" />
+						<input type="hidden" name="ce-delete" value="delete" />
+						<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity '<web:getProperty name="ced:tableName" />'" />
+					</ui:form>
+				</ui:columnTemplate>
+			</ui:grid>
 		</ced:listTables>
 		<hr />
 		<ui:form>
