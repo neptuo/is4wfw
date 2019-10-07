@@ -211,6 +211,7 @@
 				$itemContainerTagName = $repeat == "vertical" ? "div" : "span";
 				$attributes = self::joinAttributes($params);
 
+				$result = "";
 				foreach ($data as $item) {
 					$itemValue = $item[$id];
 					$result .= ""
@@ -321,6 +322,67 @@
 			if (self::isSubmit()) {
 				self::setModelValue($name, $value);
 			}
+		}
+
+		private $localizableName;
+		private $localizableLangId;
+		private $localizableLangName;
+
+		private function ensureLangIds($langIds) {
+			if (empty($langIds)) {
+				$sql = self::sql()->select("language", array("id"));
+				$langIds = self::dataAccess()->fetchAll($sql);
+			}
+
+			return $langIds;
+		}
+
+		public function localizable($template, $name, $langIds = "") {
+			$langIds = explode(",", $langIds);
+
+			$model = self::peekEditModel();
+            if ($model->isRegistration()) {
+				$langIds = self::ensureLangIds($langIds);
+				foreach ($langIds as $langId) {
+					$this->localizableName = "$name:$langId";
+					self::parseContent($template);
+				}
+			}
+			
+            if ($model->isSubmit()) {
+				$langIds = self::ensureLangIds($langIds);
+				foreach ($langIds as $langId) {
+					$this->localizableName = "$name:$langId";
+					self::parseContent($template);
+				}
+            }
+
+            if ($model->isRender()) {
+				$sql = self::sql()->select("language", array("id", "language"), array("id" => $langIds));
+				$data = self::dataAccess()->fetchAll($sql);
+				
+				$result = "";
+				foreach ($data as $lang) {
+					$this->localizableName = "$name:" . $lang["id"];
+					$this->localizableLangId = $lang["id"];
+					$this->localizableLangName = $lang["language"];
+					$result .= self::parseContent($template);
+				}
+
+				return $result;
+            }
+		}
+
+		public function getLocalizableName() {
+			return $this->localizableName;
+		}
+		
+		public function getLocalizableLangId() {
+			return $this->localizableLangId;
+		}
+		
+		public function getLocalizableLangName() {
+			return $this->localizableLangName;
 		}
 	}
 

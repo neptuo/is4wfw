@@ -25,7 +25,7 @@
             return $value;
         }
 
-        private function condition($filter, $operator = "AND") {
+        private function condition($filter, $operator = "AND ") {
             $result = "";
 
             foreach ($filter as $key => $value) {
@@ -94,7 +94,7 @@
         }
 
         public function update($tableName, $item, $filter) {
-            $condition = self::condition($filter, "AND");
+            $condition = self::condition($filter, "AND ");
             $condition = self::appendWhere($condition);
 
             $values = "";
@@ -108,7 +108,7 @@
         }
 
         public function delete($tableName, $filter) {
-            $condition = self::condition($filter, "AND");
+            $condition = self::condition($filter, "AND ");
             $condition = self::appendWhere($condition);
 
             $sql = "DELETE FROM `$tableName`$condition;";
@@ -116,7 +116,7 @@
         }
 
         public function select($tableName, $fields, $filter = array(), $orderBy = array()) {
-            $condition = self::condition($filter, "AND");
+            $condition = self::condition($filter, "AND ");
             $condition = self::appendWhere($condition);
             $order = self::orderBy($orderBy);
             $order = self::appendOrderBy($order);
@@ -126,7 +126,15 @@
                 $columns = self::joinString($columns, "`$key`");
             }
 
-            $sql = "SELECT $columns FROM `$tableName`$condition$order";
+            $sql = "SELECT $columns FROM `$tableName`$condition$order;";
+            return $sql;
+        }
+
+        public function count($tableName, $filter = array()) {
+            $condition = self::condition($filter, "AND");
+            $condition = self::appendWhere($condition);
+
+            $sql = "SELECT COUNT(*) as `count` FROM `$tableName`$condition;";
             return $sql;
         }
     }

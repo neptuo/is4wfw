@@ -270,4 +270,43 @@
       Nastavuje hodnotu fieldu "name" na hodnotu "value", při každém odeslání formuláře.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>localizable</tagname>
+    <function>localizable</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>langIds</attname>
+      <attreq>implied</attreq>
+      <attcomment>Podmnožina jazyků, které se mají zobrazit.</attcomment>
+    </attribute>
+    <comment>
+      Pro každý jazyk vygeneruje obsah šablony.
+      Nastavuje proměnné "ui:localizableName", "ui:localizableLangId" a "ui:localizableLangName".
+    </comment>
+  </fulltag>
+  <property>
+    <propname>localizableName</propname>
+    <getfunction>getLocalizableName</getfunction>
+    <comment>
+        Vrací název fieldu uvnitř "ui:localizable".
+    </comment>
+  </property>
+  <property>
+    <propname>localizableLangId</propname>
+    <getfunction>getLocalizableLangId</getfunction>
+    <comment>
+        Vrací id jazyku uvnitř "ui:localizable".
+    </comment>
+  </property>
+  <property>
+    <propname>localizableLangName</propname>
+    <getfunction>getLocalizableLangName</getfunction>
+    <comment>
+        Vrací název jazyku uvnitř "ui:localizable".
+    </comment>
+  </property>
 </taglib>

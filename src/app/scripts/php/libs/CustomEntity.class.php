@@ -69,6 +69,36 @@
             );
         }
 
+        private function prepareLocalizedValuesFromModel($xml, $model, $langIds) {
+            $langs = array();
+            foreach ($langIds as $langId) {
+                $columns = array();
+                foreach ($xml->column as $column) {
+                    if ($column->localized == true) {
+                        $columnName = (string)$column->name;
+                        $columnType = (string)$column->type;
+
+                        $key = "$columnName:$langId";
+                        if (array_key_exists($key, $model)) {
+                            $value = $model[$key];
+                            if (is_callable($value)) {
+                                $value = $value();
+                            }
+
+                            $value = self::parseUserValue($column, $value);
+                            $columns[$columnName] = $value;
+                        }
+                    }
+                }
+
+                if (!empty($columns)) {
+                    $langs[$langId] = $columns;
+                }
+            }
+
+            return $langs;
+        }
+
         private function updateExternals($values, $xml, $model) {
             foreach ($values["external"] as $columnName => $external) {
                 if ($external["type"] == "multireference-jointable") {
@@ -77,69 +107,92 @@
                 }
             }
         }
-        
-        private function insert($name, $xml, $model) {
-            $values = self::prepareValuesFromModel($xml, $model);
-            $sql = self::sql()->insert($name, $values["columns"]);
 
-            if (empty($values["extras"]) && empty($values["external"])) {
+        private function updateLocalized($tableName, $xml, $model, $primaryKeys, $langIds, $isNewRecord = false) {
+            $langs = self::prepareLocalizedValuesFromModel($xml, $model, $langIds);
+            foreach ($langs as $langId => $lang) {
+                // Check if update is possible.
+                if ($isNewRecord) {
+                    $count == 0;
+                } else {
+                    $count = self::dataAccess()->fetchSingle(self::sql()->count($tableName, $primaryKeys));
+                }
+
+                // Insert or Update.
+                if ($count["count"] == 0) {
+                    $lang["lang_id"] = $langId;
+                    $lang = array_merge($lang, $primaryKeys);
+                    $sql = self::sql()->insert($tableName, $lang);
+                } else {
+                    $primaryKeys["lang_id"] = $langId;
+                    $sql = self::sql()->update($tableName, $lang, $primaryKeys);
+                }
+
                 self::dataAccess()->execute($sql);
-            } else {
-                self::dataAccess()->transaction(function($da) use ($name, $xml, $model, $values, $sql) {
-                    // Execute insert.
-                    $da->execute($sql);
-                    
-                    // Get last identity value if inserted.
-                    $identity = self::findIdentityColumn($xml);
-                    if ($identity != NULL) {
-                        $id = $da->getLastId();
-                        $model[(string)$identity->name] = $id;
-                    }
-                    
-                    // Process extras.
-                    foreach ($values["extras"] as $columnName => $extra) {
-                        if ($extra["type"] == "emptyDirectory") {
-                            $fa = new FileAdmin();
-                            $directoryName = self::formatString($extra['nameFormat'], $model);
-                            $directory = $fa->createDirectory($extra['parentDirId'], $directoryName);
-
-                            $filter = array();
-                            foreach ($xml->column as $column) {
-                                if ($column->primaryKey == TRUE) {
-                                    $filter[(string)$column->name] = $model[(string)$column->name];
-                                }
-                            }
-                            
-                            $sql = self::sql()->update($name, array($columnName => $directory['id']), $filter);
-                            $da->execute($sql);
-                        }
-                    }
-
-                    // Process external tables.
-                    self::updateExternals($values, $xml, $model);
-                });
             }
         }
         
-        private function update($name, $xml, $keys, $model) {
+        private function insert($tableName, $tableLocalizationName, $xml, $model, $langIds) {
             $values = self::prepareValuesFromModel($xml, $model);
-            $filter = self::prepareValuesFromModel($xml, $keys);
-            $sql = self::sql()->update($name, $values["columns"], $filter["columns"]);
+            $sql = self::sql()->insert($tableName, $values["columns"]);
 
-            if (empty($values["extras"]) && empty($values["external"])) {
-                self::dataAccess()->execute($sql);
-            } else {
-                self::dataAccess()->transaction(function($da) use ($name, $xml, $model, $values, $sql) {
-                    // Execute update.
-                    $da->execute($sql);
+            self::dataAccess()->transaction(function($da) use ($tableName, $tableLocalizationName, $xml, $model, $values, $sql, $langIds) {
+                // Execute insert.
+                $da->execute($sql);
+                
+                // Get last identity value if inserted.
+                $identity = self::findIdentityColumn($xml);
+                if ($identity != NULL) {
+                    $id = $da->getLastId();
+                    $model[(string)$identity->name] = $id;
+                }
 
-                    // Process external tables.
-                    self::updateExternals($values, $xml, $model);
-                });
-            }
+                // Prepare filter/keys for additional inserts/updates.
+                $primaryKeys = array();
+                foreach ($xml->column as $column) {
+                    if ($column->primaryKey == TRUE) {
+                        $primaryKeys[(string)$column->name] = $model[(string)$column->name];
+                    }
+                }
+                
+                // Process extras.
+                foreach ($values["extras"] as $columnName => $extra) {
+                    if ($extra["type"] == "emptyDirectory") {
+                        $fa = new FileAdmin();
+                        $directoryName = self::formatString($extra['nameFormat'], $model);
+                        $directory = $fa->createDirectory($extra['parentDirId'], $directoryName);
+                        
+                        $sql = self::sql()->update($tableName, array($columnName => $directory['id']), $primaryKeys);
+                        $da->execute($sql);
+                    }
+                }
+
+                // Process external tables.
+                self::updateExternals($values, $xml, $model);
+
+                // Process localization.
+                self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
+            });
+        }
+        
+        private function update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds) {
+            $values = self::prepareValuesFromModel($xml, $model);
+            $primaryKeys = self::prepareValuesFromModel($xml, $keys)["columns"];
+            $sql = self::sql()->update($tableName, $values["columns"], $primaryKeys);
+
+            self::dataAccess()->transaction(function($da) use ($tableName, $tableLocalizationName, $xml, $model, $values, $sql, $langIds, $primaryKeys) {
+                // Execute update.
+                $da->execute($sql);
+
+                // Process external tables.
+                self::updateExternals($values, $xml, $model);
+
+                // Process localization.
+                self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
+            });
         }
 
-        private function loadModel($name, $xml, $keys, $model) {
+        private function loadModel($name, $xml, $keys, $model, $langIds) {
             $columns = "";
             $condition = "";
             $external = array();
@@ -168,34 +221,75 @@
                         $columns = self::joinString($columns, "`$columnName`");
                     }
                 }
+
+                // Localization
+                foreach ($langIds as $langId) {
+                    $key = "$columnName:$langId";
+                    if (array_key_exists($key, $model)) {
+                        $localizableColumns[] = $columnName;
+                        break;
+                    }
+                }
             }
 
             foreach ($keys as $key => $value) {
                 $condition = self::joinString($condition, "$key = $value", " AND");
             }
 
+            // Load main data.
             $data = self::dataAccess()->fetchSingle("SELECT $columns FROM `$name` WHERE $condition");
             foreach ($model as $key => $item) {
                 $model[$key] = $data[$key];
             }
 
+            // Load externals.
             foreach ($external as $columnName => $item) {
                 if ($item["type"] == "multireference-jointable") {
                     $value = self::loadJoinTableData($xml, $model, $columnName);
                     $model[$columnName] = $value;
                 }
             }
+        }
 
-            return $sql;
+        private function loadLocalizedModel($tableName, $xml, $keys, $model, $langIds) {
+            $columns = array();
+
+            // Find model keys.
+            foreach ($xml->column as $column) {
+                $columnName = (string)$column->name;
+
+                foreach ($langIds as $langId) {
+                    $key = "$columnName:$langId";
+                    if (array_key_exists($key, $model)) {
+                        $columns[] = $columnName;
+                        break;
+                    }
+                }
+            }
+
+            // Load data.
+            if (!empty($columns)) {
+                foreach ($langIds as $langId) {
+                    $localizableKeys = $keys;
+                    $localizableKeys["lang_id"] = $langId;
+                    $sql = self::sql()->select($tableName, $columns, $localizableKeys);
+                    $data = self::dataAccess()->fetchSingle($sql);
+                    foreach ($columns as $column) {
+                        $model["$column:$langId"] = $data[$column];
+                    }
+                }
+            }
         }
 
         private function getDeleteSql($name, $params) {
             return self::sql()->delete($name, $params);
         }
 
-		public function form($template, $name, $method = "POST", $submit = "", $nextPageId = 0, $params = array()) {
+		public function form($template, $name, $method = "POST", $submit = "", $nextPageId = 0, $langIds = "", $params = array()) {
             $tableName = self::ensureTableName($name);
+            $tableLocalizationName = self::ensureTableLocalizationName($name);
             $xml = self::getDefinition($name);
+            $langIds = explode(",", $langIds);
 
             if ($method == "GET" && $submit == "") {
                 trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
@@ -212,7 +306,8 @@
                 self::parseContent($template);
                 $model->registration(false);
 
-                self::loadModel($tableName, $xml, $keys, $model);
+                self::loadModel($tableName, $xml, $keys, $model, $langIds);
+                self::loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
             }
 
             if (self::isHttpMethod($method) && ($submit == "" || array_key_exists($submit, $_REQUEST))) {
@@ -221,9 +316,9 @@
                 $model->submit(false);
 
                 if ($isUpdate) {
-                    self::update($tableName, $xml, $keys, $model);
+                    self::update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds);
                 } else {
-                    self::insert($tableName, $xml, $model);
+                    self::insert($tableName, $tableLocalizationName, $xml, $model, $langIds);
                 }
 
                 if ($nextPageId != 0) {
