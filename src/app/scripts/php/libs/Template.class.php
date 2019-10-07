@@ -19,18 +19,30 @@
 		}
 		
 		public function includeById($id, $params) {
+			return self::includeWithBodyById(null, $id, $params);
+		}
+		
+		public function includeWithBodyById($template, $id, $params) {
+			$oldContent = parent::request()->get('content', 'template:include');
 			$oldParams = parent::request()->get('params', 'template:include');
 			parent::request()->set('params', $params, 'template:include');
+			parent::request()->set('content', $template, 'template:include');
 			
 			$return = parent::web()->includeTemplate($id);
+			
+			parent::request()->set('params', $oldParams, 'template:include');
+			parent::request()->set('content', $oldContent, 'template:include');
+			
+			return $return;
+		}
 
-			if ($oldParams == null) {
-				parent::request()->clear('template:include');
-			} else {
-				parent::request()->set('params', $oldParams, 'template:include');
+		public function content() {
+			$content = parent::request()->get('content', 'template:include');
+			if ($content != null) {
+				return self::parseContent($content);
 			}
 
-			return $return;
+			return "";
 		}
 
 		public function getProperty($name) {
@@ -39,7 +51,7 @@
 				return $params[$name];
 			}
 
-			return '';
+			return "";
 		}
 	}
 

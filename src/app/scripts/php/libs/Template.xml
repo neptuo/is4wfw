@@ -24,6 +24,30 @@
       Všechny další atributy jsou parametry šablony.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>include</tagname>
+    <function>includeWithBodyById</function>
+    <attribute>
+      <attname>id</attname>
+      <attreq>required</attreq>
+      <atttype>number</atttype>
+      <attcomment>ID šablony, která se má vložit.</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vloží obsah šablony.
+      Uživatel musí mít právo READ k dané šabloně.
+      Všechny další atributy jsou parametry šablony.
+      Tělo je použito pro "template:content".
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>content</tagname>
+    <function>content</function>
+    <comment>
+      Vkládá tělo tagu "template:include" (párové značky).
+    </comment>
+  </tag>
   <anyProperty />
 </taglib>
 
