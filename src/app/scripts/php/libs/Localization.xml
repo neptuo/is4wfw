@@ -19,8 +19,23 @@
       <attcomment>Název jazyku.</attcomment>
     </attribute>
     <comment>
-      Nastaví aktuálně používaný jazyk pro všechny bundly.
+      Nastaví aktuálně používaný jazyk pro všechny (ještě nenačtené) bundly.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>use</tagname>
+    <function>useBundle</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název bundlu, který se má načíst.</attcomment>
+    </attribute>
+    <comment>
+      Načte systémový bundle podle "name". Uvnitř šablony je možné s ním pracovat.
+    </comment>
+  </fulltag>
+  <anyProperty />
 </taglib>
 

@@ -19,6 +19,15 @@
 		public function setLanguage($name) {
 			self::web()->LanguageName = $name;
 		}
+
+		public function useBundle($template, $name) {
+			self::setLocalizationBundle($name);
+			return self::parseContent($template);
+		}
+
+		public function getProperty($name) {
+			return self::rb($name);
+		}
 	}
 
 ?>
