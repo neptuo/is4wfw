@@ -10,11 +10,31 @@
         private $tables;
         private $columns;
 
+        private $tableEngines = array(
+            array(
+                "key" => "InnoDB",
+                "name" => "InnoDB"
+            ),
+            array(
+                "key" => "MyISAM",
+                "name" => "MyISAM"
+            )
+        );
+
 		public function __construct() {
             parent::setTagLibXml("CustomEntityAdmin.xml");
             
             $this->tables = new Stack();
             $this->columns = new Stack();
+        }
+
+        private function getTableEngineSql($xml) {
+            $engine = "ENGINE=" . (string)$xml->engine;
+            if ($xml->engine == "MyISAM") {
+                $engine .= " ROW_FORMAT=FIXED";
+            }
+
+            return $engine;
         }
 
         private function getCreateSql($name, $xml) {
@@ -35,7 +55,8 @@
                 }
             }
 
-            $sql = "CREATE TABLE `$name` ($columns, PRIMARY KEY (" . $primary . ')) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ROW_FORMAT=FIXED;';
+            $engine = self::getTableEngineSql($xml);
+            $sql = "CREATE TABLE `$name` ($columns, PRIMARY KEY ($primary)) $engine DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;";
             return $sql;
         }
 
@@ -61,12 +82,15 @@
         }
 
         private function createTable($model) {
-            $definitionXml = new SimpleXMLElement("<definition />");
+            $xml = new SimpleXMLElement("<definition />");
             $name = $model["entity-name"];
+            $engine = $model["entity-engine"];
             $tableName = self::TablePrefix . $name;
 
+            $xml->engine = $engine;
+
             $columnName = $model["primary-key-1-name"];
-            $keyElement = $definitionXml->addChild("column");
+            $keyElement = $xml->addChild("column");
             $keyElement->addChild("name", $columnName);
             $keyElement->addChild("type", $model["primary-key-1-type"]);
             $keyElement->addChild("primaryKey", true);
@@ -78,7 +102,7 @@
 
             $columnName = $model["primary-key-2-name"];
             if ($columnName != "") {
-                $keyElement = $definitionXml->addChild("column");
+                $keyElement = $xml->addChild("column");
                 $keyElement->addChild("name", $columnName);
                 $keyElement->addChild("type", $model["primary-key-2-type"]);
                 $keyElement->addChild("primaryKey", true);
@@ -87,15 +111,15 @@
             
             $columnName = $model["primary-key-3-name"];
             if ($columnName != "") {
-                $keyElement = $definitionXml->addChild("column");
+                $keyElement = $xml->addChild("column");
                 $keyElement->addChild("name", $columnName);
                 $keyElement->addChild("type", $model["primary-key-3-type"]);
                 $keyElement->addChild("primaryKey", true);
                 $keyElement->addChild("required", true);
             }
 
-            $createSql = self::getCreateSql($tableName, $definitionXml);
-            $insertSql = self::sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"], "definition" => $definitionXml->asXml()));
+            $createSql = self::getCreateSql($tableName, $xml);
+            $insertSql = self::sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"], "definition" => $xml->asXml()));
 
             try {
                 self::executeSql($insertSql, $createSql);
@@ -176,6 +200,9 @@
             if ($columnType == "singlereference") {
                 $referenceTable = $model["column-singlerefence-table"];
                 $referenceColumn = $model["column-singlerefence-column"];
+                $column->addChild("targetTable", $targetCreferenceTableolumn);
+                $column->addChild("targetColumn", $referenceColumn);
+
                 $sql[] = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$columnName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
             } else if ($columnType == "multireference-jointable") {
                 $joinTable = $model["column-multireference-table"];
@@ -184,6 +211,11 @@
                 $column->addChild("targetColumn", $targetColumn);
                 $primaryKeysElements = $column->addChild("primaryKeyMappings");
                 
+                $cascade = "";
+                if ($xml->engine == "InnoDB") {
+                    $cascade = " ON DELETE CASCADE";
+                }
+
                 $primaryKeys = self::getPrimaryKeyColumns($xml);
                 for ($i=0; $i < count($primaryKeys); $i++) { 
                     $primaryKey = $primaryKeys[$i];
@@ -191,7 +223,7 @@
                     $mappedColumnName = $model["column-multireference-primarykey" . ($i + 1) . "-column"];
                     $primaryKeysElements->addChild("mappedTo", $mappedColumnName);
                     
-                    $sql[] = "ALTER TABLE `$joinTable` ADD FOREIGN KEY (`$mappedColumnName`) REFERENCES `$tableName`(`$primaryKeyColumnName`);";
+                    $sql[] = "ALTER TABLE `$joinTable` ADD FOREIGN KEY (`$mappedColumnName`) REFERENCES `$tableName`(`$primaryKeyColumnName`)$cascade;";
                 }
             }
 
@@ -244,7 +276,7 @@
         }
 
         public function listTables($template) {
-            $tables = self::dataAccess()->fetchAll(self::sql()->select("custom_entity", array("name", "description")));
+            $tables = self::dataAccess()->fetchAll(self::sql()->select("custom_entity", array("name", "description"), array(), array("name" => "asc")));
             $model = new ListModel();
             $model->items($tables);
             self::pushListModel($model);
@@ -483,12 +515,17 @@
             $columns .= ", `lang_id` int(11) NOT NULL";
             $primary .= ", `lang_id`";
 
-            $sql = "CREATE TABLE `$tableName` ($columns, PRIMARY KEY ($primary)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci ROW_FORMAT=FIXED;";
+            $engine = self::getTableEngineSql($xml);
+            $sql = "CREATE TABLE `$tableName` ($columns, PRIMARY KEY ($primary)) $engine DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;";
             return $sql;
         }
 
         public function getTableLocalizationColumns() {
             return $this->tableLocalizationColumns;
+        }
+
+        public function getTableEngines() {
+            return $this->tableEngines;
         }
 	}
 

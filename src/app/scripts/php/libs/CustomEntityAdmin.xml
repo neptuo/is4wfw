@@ -111,6 +111,13 @@
     </comment>
   </property>
   <property>
+    <propname>tableEngines</propname>
+    <getfunction>getTableEngines</getfunction>
+    <comment>
+        Vrací pole podporovaných DB engine ('key', 'name').
+    </comment>
+  </property>
+  <property>
     <propname>tableName</propname>
     <getfunction>getTableName</getfunction>
     <comment>

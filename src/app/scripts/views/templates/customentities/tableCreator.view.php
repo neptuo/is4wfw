@@ -5,7 +5,11 @@
     </div>
     <div class="gray-box">
         <label class="w90">Description:</label>
-        <ui:textbox name="entity-description" />
+        <ui:textbox name="entity-description" class="w400" />
+    </div>
+    <div class="gray-box">
+        <label class="w90">Engine:</label>
+        <ui:dropdownlist name="entity-engine" source="ced:tableEngines" display="name" value="key" />
     </div>
     <hr />
     <div class="ce-primary-key-1">
