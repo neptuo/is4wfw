@@ -28,7 +28,7 @@
 	.'</form>';
 
 	$rb = new LocalizationBundle();
-	$rb->loadBundle('inquiry', 'en');
+	$rb->load('inquiry', 'en');
 	
 	$data = array();
 	$data['question'] = 'Like it?';

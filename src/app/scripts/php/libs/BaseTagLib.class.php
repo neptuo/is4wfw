@@ -367,13 +367,13 @@
             if ($this->LocalizationBundle == null) {
                 if ($this->web()->LanguageName != '') {
                     $rb = new LocalizationBundle();
-                    if ($rb->testBundleExists($this->BundleName, self::web()->LanguageName)) {
+                    if ($rb->exists($this->BundleName, self::web()->LanguageName)) {
                         $this->BundleLang = self::web()->LanguageName;
                     }
                 }
                 
                 $this->LocalizationBundle = new LocalizationBundle();
-                $this->LocalizationBundle->loadBundle($this->BundleName, $this->BundleLang);
+                $this->LocalizationBundle->load($this->BundleName, $this->BundleLang);
             }
 
             if($key == false) {
