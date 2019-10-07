@@ -22,7 +22,7 @@
     define("USER_PATH", INSTANCE_PATH . "user/");
     define("USER_FILESYSTEM_PATH", USER_PATH . "filesystem/");
     define("USER_FILESYSTEM_URL", INSTANCE_URL . "files/");
-    define("USER_BUNDLES_PATH", INSTANCE_PATH . "bundles/");
+    define("USER_BUNDLES_PATH", USER_PATH . "bundles/");
     define("USER_PUBLIC_PATH", USER_PATH . "public/");
     define("USER_PUBLIC_URL", INSTANCE_URL . "public/");
 

@@ -20,8 +20,8 @@
 			self::web()->LanguageName = $name;
 		}
 
-		public function useBundle($template, $name) {
-			self::setLocalizationBundle($name);
+		public function useBundle($template, $name, $system = true) {
+			self::setLocalizationBundle($name, $system);
 			return self::parseContent($template);
 		}
 

@@ -361,21 +361,31 @@
         private $LocalizationBundle;
         private $BundleName;
         private $BundleLang = 'cs';
+        private $BundleIsSystem = true;
         
-        public function setLocalizationBundle($name) {
+        public function setLocalizationBundle($name, $system = true) {
             $this->BundleName = $name;
+            $this->BundleIsSystem = $system;
         }
         
         public function rb($key = false) {
             if ($this->LocalizationBundle == null) {
                 if ($this->web()->LanguageName != '') {
                     $rb = new LocalizationBundle();
+                    if (!$this->BundleIsSystem) {
+                        $rb->setIsSystem(false);
+                    }
+
                     if ($rb->exists($this->BundleName, self::web()->LanguageName)) {
                         $this->BundleLang = self::web()->LanguageName;
                     }
                 }
-                
+
                 $this->LocalizationBundle = new LocalizationBundle();
+                if (!$this->BundleIsSystem) {
+                    $this->LocalizationBundle->setIsSystem(false);
+                }
+                
                 $this->LocalizationBundle->load($this->BundleName, $this->BundleLang);
             }
 

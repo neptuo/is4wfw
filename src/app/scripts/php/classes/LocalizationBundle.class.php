@@ -83,7 +83,7 @@
 		 *	@return true if file exists, false otherwise
 		 *
 		 */	 		 		 		
-		public function exists($name = false, $lang = false, $isSystem = true) {
+		public function exists($name = false, $lang = false, $isSystem = null) {
 			if ($name != false) {
 				$this->Source = $name;
 			}
@@ -92,7 +92,7 @@
 				$this->Language = $lang;
 			}
 
-			if ($isSystem != $this->IsSystem) {
+			if ($isSystem != null) {
 				$this->IsSystem = $isSystem;
 			}
 			
@@ -126,7 +126,8 @@
 				$content = file_get_contents($filePath);
 				$pairs = split(PHP_EOL, $content);
 
-				foreach($pairs as $pair) {
+				foreach ($pairs as $pair) {
+					$pair = trim($pair);
 					if (strlen($pair) > 0) {
 						$thing = split('=' ,$pair);
 						$this->Items[$thing[0]] = $thing[1];

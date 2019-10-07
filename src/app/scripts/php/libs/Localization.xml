@@ -32,8 +32,15 @@
       <atttype>string</atttype>
       <attcomment>Název bundlu, který se má načíst.</attcomment>
     </attribute>
+    <attribute>
+      <attname>system</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>true</attdef>
+      <attcomment>Zda se jedná o systémový bundle.</attcomment>
+    </attribute>
     <comment>
-      Načte systémový bundle podle "name". Uvnitř šablony je možné s ním pracovat.
+      Načte bundle podle "name". Uvnitř šablony je možné s ním pracovat.
     </comment>
   </fulltag>
   <anyProperty />
