@@ -34,7 +34,7 @@ class CustomTagParser {
     protected $ATT_RE = '(([a-zA-Z0-9-_]+[:]?[a-zA-Z0-9-_]*)="([^"]*)")';
 
     // Regular expression for parsing property value. It requires exact match (no prefix or postfix text).
-    protected $ATT_PROPERTY_RE = '(^([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)$)';
+    protected $ATT_PROPERTY_RE = '(^([a-zA-Z0-9-_]+:[a-zA-Z0-9-_.]+)$)';
     protected $PropertyAttr = '';
     protected $PropertyUse = '';
     /**
