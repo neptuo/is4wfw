@@ -66,6 +66,7 @@ function init(event) {
 	initClickableGrid();
 	initCustomEntities();
 	initTogglers();
+	initDuplicators();
 	
 	var inputs = document.getElementsByTagName('input');
 	for(var i = 0; i < inputs.length; i ++) {
@@ -1105,7 +1106,7 @@ function initTogglers() {
 		$toggles.filter("[data-toggle='" + value + "']").show();
 	}
 
-	$("[data-toggler]").each(function ($i, el) {
+	$("[data-toggler]").each(function (i, el) {
 		var $el = $(el);
 		var group = $el.attr("data-toggler");
 		if (el.tagName == "SELECT") {
@@ -1115,5 +1116,21 @@ function initTogglers() {
 
 			switchGroup(group, $el.val());
 		}
+	});
+}
+
+function initDuplicators() {
+	$("[data-duplicator]").each(function(i, el) {
+		var $el = $(el);
+		var selector = $el.attr("data-duplicator");
+		$el.click(function (e) {
+			$duplicable = $(selector);
+			$clone = $duplicable.clone();
+			$clone.removeAttr("data-duplicable");
+			$clone.appendTo($duplicable.parent());
+			$clone.find('input[type=text], textarea').val('').first().focus();
+
+			e.preventDefault();
+		});
 	});
 }

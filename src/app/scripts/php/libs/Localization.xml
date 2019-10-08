@@ -43,6 +43,53 @@
       Načte bundle podle "name". Uvnitř šablony je možné s ním pracovat.
     </comment>
   </fulltag>
+  <tag>
+    <tagname>edit</tagname>
+    <function>edit</function>
+    <attribute>
+      <attname>bundleName</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>languageName</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
+    </attribute>
+    <comment>
+      Zobrazí editační formulář pro uživatelský bundle.
+    </comment>
+  </tag>
+  <property>
+    <propname>listItems</propname>
+    <getfunction>getListItems</getfunction>
+    <comment>
+        
+    </comment>
+  </property>
+  <property>
+    <propname>listItemKey</propname>
+    <getfunction>getListItemKey</getfunction>
+    <comment>
+        
+    </comment>
+  </property>
+  <property>
+    <propname>listItemValue</propname>
+    <getfunction>getListItemValue</getfunction>
+    <comment>
+        
+    </comment>
+  </property>
+  <property>
+    <propname>listItemIndex</propname>
+    <getfunction>getListItemIndex</getfunction>
+    <comment>
+        
+    </comment>
+  </property>
   <anyProperty />
 </taglib>
 

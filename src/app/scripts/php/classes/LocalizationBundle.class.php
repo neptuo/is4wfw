@@ -152,7 +152,7 @@
 			if (strlen($filePath) && is_writable($filePath)) {
 				$content = "";
 				foreach ($this->Items as $key => $value) {
-					$content = "$key=$value" . PHP_EOL;
+					$content .= "$key=$value" . PHP_EOL;
 				}
 
 				file_put_contents($filePath, $content);
@@ -204,7 +204,7 @@
 		 *
 		 */
 		public function getKeys() {
-			array_keys($this->Items);
+			return array_keys($this->Items);
 		}
 	}
 

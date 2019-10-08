@@ -329,7 +329,7 @@
 			}
 		}
 
-		public function textbox($name, $default = "", $params = array()) {
+		public function textbox($name, $nameIndex = -1, $default = "", $params = array()) {
 			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
@@ -340,8 +340,16 @@
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
+				if (is_array($modelValue)) {
+					$modelValue = $modelValue[$nameIndex];
+				}
+
 				if (empty($modelValue)) {
 					$modelValue = $default;
+				}
+
+				if ($nameIndex != -1) {
+					$name .= "[]";
 				}
 
 				$attributes = self::joinAttributes($params);
