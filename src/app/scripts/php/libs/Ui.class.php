@@ -25,12 +25,22 @@
 			return self::peekEditModel()[$key];
 		}
 
-		private function setModelValue($key, $value) {
-			self::peekEditModel()[$key] = $value;
+		private function setModelValue($key, $value, $index = -1) {
+			$model = self::peekEditModel();
+			if ($index != -1) {
+				$model[$key][$index] = $value;
+			} else {
+				$model[$key] = $value;
+			}
 		}
 
-		private function setModelValueFromRequest($modelKey, $requestKey) {
-			self::setModelValue($modelKey, self::peekEditModel()->request()[$requestKey]);
+		private function setModelValueFromRequest($modelKey, $requestKey, $index = -1) {
+			$value = self::peekEditModel()->request()[$requestKey];
+			if ($index != -1) {
+				$value = $value[$index];
+			}
+
+			self::setModelValue($modelKey, $value, $index);
 		}
 
 		private function joinAttributes($params) {
@@ -253,17 +263,22 @@
             return $result;
 		}
 		
-		public function dropdownlist($name, $source, $display, $id, $emptyText = "", $params = array()) {
+		public function dropdownlist($name, $nameIndex = -1, $source, $display, $id, $emptyText = "", $params = array()) {
 			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
 
 			if (self::isSubmit()) {
-				self::setModelValueFromRequest($name, $name);
+				self::setModelValueFromRequest($name, $name, $nameIndex);
 			}
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
+				if ($nameIndex != -1) {
+					$modelValue = $modelValue[$nameIndex];
+					$name .= "[]";
+				}
+				
 				$attributes = self::joinAttributes($params);
 				
 				$result = "<select name='$name'$attributes>";
@@ -300,6 +315,7 @@
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
+
 				if (!is_array($modelValue)) {
 					$modelValue = explode(",", $modelValue);
 				}
@@ -335,39 +351,41 @@
 			}
 
 			if (self::isSubmit()) {
-				self::setModelValueFromRequest($name, $name);
+				self::setModelValueFromRequest($name, $name, $nameIndex);
 			}
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
-				if (is_array($modelValue)) {
+				if ($nameIndex != -1) {
 					$modelValue = $modelValue[$nameIndex];
+					$name .= "[]";
 				}
-
+				
 				if (empty($modelValue)) {
 					$modelValue = $default;
 				}
-
-				if ($nameIndex != -1) {
-					$name .= "[]";
-				}
-
+				
 				$attributes = self::joinAttributes($params);
 				return "<input name='$name' type='text' value='$modelValue'$attributes />";
 			}
 		}
-
-		public function textarea($name, $default = "", $params = array()) {
+		
+		public function textarea($name, $nameIndex = -1, $default = "", $params = array()) {
 			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
-
+			
 			if (self::isSubmit()) {
-				self::setModelValueFromRequest($name, $name);
+				self::setModelValueFromRequest($name, $name, $nameIndex);
 			}
-
+			
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
+				if ($nameIndex != -1) {
+					$modelValue = $modelValue[$nameIndex];
+					$name .= "[]";
+				}
+
 				if (empty($modelValue)) {
 					$modelValue = $default;
 				}
@@ -377,18 +395,23 @@
 			}
 		}
 
-		public function checkbox($name, $params = array()) {
+		public function checkbox($name, $nameIndex = -1, $params = array()) {
 			if (self::isRegistration()) {
 				self::setModelValue($name, NULL);
 			}
 
 			if (self::isSubmit()) {
 				$modelValue = self::peekEditModel()->request()[$name];
-				self::setModelValue($name, $modelValue == "on" ? 1 : 0);
+				self::setModelValue($name, $modelValue == "on" ? 1 : 0, $nameIndex);
 			}
 
 			if (self::isRender()) {
 				$modelValue = self::getModelValue($name);
+				if ($nameIndex != -1) {
+					$modelValue = $modelValue[$nameIndex];
+					$name .= "[]";
+				}
+
 				$attributes = self::joinAttributes($params);
 				return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 || $modelValue === "1" ? " checked='checked'" : '') . "$attributes />";
 			}
