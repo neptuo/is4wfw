@@ -109,19 +109,11 @@
 			);
 		}
 
-		public function getListItems() {
+		public function getEditItems() {
 			return self::peekListModel();
 		}
 
-		public function getListItemKey() {
-			return self::peekListModel()->field("key");
-		}
-
-		public function getListItemValue() {
-			return self::peekListModel()->field("value");
-		}
-
-		public function getListItemIndex() {
+		public function getEditItemIndex() {
 			return self::peekListModel()->field("index");
 		}
 	}

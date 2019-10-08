@@ -63,31 +63,17 @@
     </comment>
   </tag>
   <property>
-    <propname>listItems</propname>
-    <getfunction>getListItems</getfunction>
+    <propname>editItems</propname>
+    <getfunction>getEditItems</getfunction>
     <comment>
-        
+      Vrací seznam položek uvnitř "loc:edit" ("index").
     </comment>
   </property>
   <property>
-    <propname>listItemKey</propname>
-    <getfunction>getListItemKey</getfunction>
+    <propname>editItemIndex</propname>
+    <getfunction>getEditItemIndex</getfunction>
     <comment>
-        
-    </comment>
-  </property>
-  <property>
-    <propname>listItemValue</propname>
-    <getfunction>getListItemValue</getfunction>
-    <comment>
-        
-    </comment>
-  </property>
-  <property>
-    <propname>listItemIndex</propname>
-    <getfunction>getListItemIndex</getfunction>
-    <comment>
-        
+      Vrací index aktuální položky při průchodu přes "loc:editItems".
     </comment>
   </property>
   <anyProperty />
