@@ -30,7 +30,7 @@
 		}
 
 		private function setModelValueFromRequest($modelKey, $requestKey) {
-			self::setModelValue($modelKey, $_REQUEST[$requestKey]);
+			self::setModelValue($modelKey, self::peekEditModel()->request()[$requestKey]);
 		}
 
 		private function joinAttributes($params) {
@@ -214,6 +214,44 @@
                 . self::parseContent($template)
             . "</form>";
 		}
+
+		public function filter($template, $submit, $params = array()) {
+            $model = new EditModel();
+			self::pushEditModel($model);
+
+			if (array_key_exists($submit, $_POST)) {
+				$model->submit();
+				$model->request($_POST);
+				self::parseContent($template);
+				$model->submit(false);
+
+				$url = $_SERVER['REQUEST_URI'];
+
+                foreach ($model as $key => $value) {
+					if (is_array($value)) {
+						$value = implode(",", $value);
+					}
+
+					if (!empty($value)) {
+						$url = self::addUrlParameter($url, $key, $value);
+					} else {
+						$url = self::removeUrlParameter($url, $key);
+					}
+				}
+
+				self::redirectToUrl($url);
+				return;
+			} else {
+				foreach ($_GET as $key => $value) {
+					$model[$key] = $value;
+				}
+			}
+			
+            $model->render();
+            $result = self::form($template, "POST", null, $params);
+            self::popEditModel();
+            return $result;
+		}
 		
 		public function dropdownlist($name, $source, $display, $id, $emptyText = "", $params = array()) {
 			if (self::isRegistration()) {
@@ -256,7 +294,7 @@
 			}
 
 			if (self::isSubmit()) {
-				$modelValue = $_REQUEST[$name];
+				$modelValue = self::peekEditModel()->request()[$name];
 				self::setModelValue($name, $modelValue);
 			}
 
@@ -337,7 +375,7 @@
 			}
 
 			if (self::isSubmit()) {
-				$modelValue = $_REQUEST[$name];
+				$modelValue = self::peekEditModel()->request()[$name];
 				self::setModelValue($name, $modelValue == "on" ? 1 : 0);
 			}
 

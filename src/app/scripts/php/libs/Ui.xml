@@ -166,6 +166,20 @@
       Všechny ostatní atributy jsou předány HTML select elementu.
     </comment>
   </fulltag>
+  <fulltag>
+    <tagname>filter</tagname>
+    <function>filter</function>
+    <attribute>
+      <attname>submit</attname>
+      <attreq>required</attreq>
+      <attcomment>Název tlačítka, kterým se formulář odesílá.</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vygeneruje filtrační formulář, který při odeslání provede redirect s parametry v QueryString.
+      Všechny ostatní atributy jsou předány HTML form elementu.
+    </comment>
+  </fulltag>
   <tag>
     <tagname>dropdownlist</tagname>
     <function>dropdownlist</function>
