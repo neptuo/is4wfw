@@ -1,7 +1,7 @@
 <v:template src="~/templates/in-template.view">
 	<web:a pageId="~/in/custom-entities.view" text="&laquo; Custom Entities" />
-	<web:condition when="post:ce-delete" is="delete">
-		<ced:tableColumnDeleter tableName="query:table" columnName="post:ce-column">
+	<web:condition when="post:delete" is="delete">
+		<ced:tableColumnDeleter tableName="query:table" columnName="post:column">
 			<web:redirectToSelf />
 		</ced:tableColumnDeleter>
 	</web:condition>
@@ -20,11 +20,7 @@
 				<ui:columnBoolean header="Unique" value="ced:tableColumnUnique" />
 				<ui:columnTemplate header="">
 					<web:condition when="ced:tableColumnPrimaryKey" is="false">
-						<ui:form>
-							<input type="hidden" name="ce-column" value="<web:getProperty name="ced:tableColumnName" />" />
-							<input type="hidden" name="ce-delete" value="delete" />
-							<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity column '<web:getProperty name="ced:tableColumnName" />'" />
-						</ui:form>
+						<admin:deleteButton hiddenField="delete" confirmValue="ced:tableColumnName" hidden-column="ced:tableColumnName" />
 					</web:condition>
 				</ui:columnTemplate>
 			</ui:grid>

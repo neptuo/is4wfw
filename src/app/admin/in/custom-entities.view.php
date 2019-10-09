@@ -1,6 +1,6 @@
 <v:template src="~/templates/in-template.view">
-	<web:condition when="post:ce-delete" is="delete">
-		<ced:tableDeleter name="post:ce-table">
+	<web:condition when="post:delete" is="delete">
+		<ced:tableDeleter name="post:table">
 			<web:redirectToSelf />
 		</ced:tableDeleter>
 	</web:condition>
@@ -25,11 +25,7 @@
 					<web:a pageId="~/in/custom-entity-localization.view" param-table="ced:tableName" class="image-button">
 						<img src="~/images/lang.png" />
 					</web:a>
-					<ui:form>
-						<input type="hidden" name="ce-table" value="<web:getProperty name="ced:tableName" />" />
-						<input type="hidden" name="ce-delete" value="delete" />
-						<input type="image" src="~/images/page_del.png" class="confirm" title="Delete custom entity '<web:getProperty name="ced:tableName" />'" />
-					</ui:form>
+					<admin:deleteButton hiddenField="delete" confirmValue="ced:tableName" hidden-table="ced:tableName" />
 				</ui:columnTemplate>
 			</ui:grid>
 		</ced:listTables>
