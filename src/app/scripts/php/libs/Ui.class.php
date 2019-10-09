@@ -43,19 +43,6 @@
 			self::setModelValue($modelKey, $value, $index);
 		}
 
-		private function joinAttributes($params) {
-			$attributes = "";
-			foreach ($params as $key => $value) {
-				$attributes = self::joinString($attributes, "$key='$value'", " ");
-			}
-
-			if (!empty($attributes)) {
-				$attributes = " $attributes";
-			}
-
-			return $attributes;
-		}
-
 		// ------- LIST -------------------------------------------------------
 
 		public function forEachListModel($template, $model, $params = array()) {
@@ -211,18 +198,38 @@
 		// ------- EDITORS ----------------------------------------------------
 
 		public function form($template, $method = "post", $pageId = null, $params = array()) {
-			if ($action == NULL) {
+			if ($pageId == NULL) {
 				$action = $_SERVER['REQUEST_URI'];
 			} else {
-				$action = self::web()->composeUrl($action);
+				$action = self::web()->composeUrl($pageId);
 			}
 
+			$params["method"] = $method;
+			$params["action"] = $action;
 			$attributes = self::joinAttributes($params);
 
             return ""
-            . "<form method='$method' action='$action'$attributes>"
+            . "<form$attributes>"
                 . self::parseContent($template)
             . "</form>";
+		}
+
+		private function input($params) {
+			$attributes = self::joinAttributes($params);
+            return "<input$attributes />";
+		}
+
+		public function inputHidden($name, $value, $params = array()) {
+			$params["type"] = "hidden";
+			$params["name"] = $name;
+			$params["value"] = $value;
+			return self::input($params);
+		}
+
+		public function inputImage($src, $params = array()) {
+			$params["type"] = "image";
+			$params["src"] = $src;
+			return self::input($params);
 		}
 
 		public function filter($template, $submit, $params = array()) {

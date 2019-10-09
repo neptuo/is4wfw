@@ -756,6 +756,19 @@
 
             return $result;
         }
+
+		protected function joinAttributes($params) {
+			$attributes = "";
+			foreach ($params as $key => $value) {
+				$attributes = self::joinString($attributes, "$key='$value'", " ");
+			}
+
+			if (!empty($attributes)) {
+				$attributes = " $attributes";
+			}
+
+			return $attributes;
+		}
     }
 
 ?>

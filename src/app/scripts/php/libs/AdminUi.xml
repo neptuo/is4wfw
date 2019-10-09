@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Admin UI controls.</name>
+  <classname>AdminUi</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro generování prvků uživatelského rozhraní kompatibilních s administrační částí aplikace.
+  </comment>
+  <tag>
+    <tagname>deleteButton</tagname>
+    <function>deleteButton</function>
+    <attribute>
+      <attname>hiddenField</attname>
+      <attreq>required</attreq>
+      <attcomment>Název a hodnota hidden inputu, kterým se pozná odeslání formuláře.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>confirmValue</attname>
+      <attreq>implied</attreq>
+      <attcomment>Hodnota z mazaného objektu, která se doplní do potvrzovacího dialogu.</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vykreslí formulář pro smazání objektu (image button).
+      Všechny atributy začínající "hidden-" jsou přidány jako hidden inputy formuláře.
+      Všechyn ostatní atributy jsou přidání jako atributy HTML form elementu.
+    </comment>
+  </tag>
+</taglib>

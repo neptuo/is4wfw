@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <autoregister>
 	<reg prefix="a" class="php.libs.Article" />
+	<reg prefix="admin" class="php.libs.AdminUi" />
 	<reg prefix="cn" class="php.libs.Counter" />
 	<reg prefix="cf" class="php.libs.CustomForm" />
 	<reg prefix="ce" class="php.libs.CustomEntity" />
