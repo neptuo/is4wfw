@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Language library</name>
+  <classname>Language</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro jazyků.
+  </comment>
+  <fulltag>
+    <tagname>list</tagname>
+    <function>listItems</function>
+    <comment>
+      Vypíše seznam jazyků.
+    </comment>
+  </fulltag>
+  <property>
+    <propname>list</propname>
+    <getfunction>getListItems</getfunction>
+    <comment>
+        Vrací seznam jazyků uvnitř "lang:list".
+    </comment>
+  </property>
+  <property>
+    <propname>id</propname>
+    <getfunction>getListItemId</getfunction>
+    <comment>
+        Vrací id aktuálního jazyku uvnitř "lang:list".
+    </comment>
+  </property>
+  <property>
+    <propname>url</propname>
+    <getfunction>getListItemUrl</getfunction>
+    <comment>
+        Vrací url aktuálního jazyku uvnitř "lang:list".
+    </comment>
+  </property>
+</taglib>
+
