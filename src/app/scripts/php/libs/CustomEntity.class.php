@@ -320,7 +320,7 @@
                     self::insert($tableName, $tableLocalizationName, $xml, $model, $langIds);
                 }
 
-                if ($nextPageId != 0) {
+                if (!empty($nextPageId)) {
                     self::web()->redirectTo($nextPageId);
                 } else {
                     if (!$isUpdate) {

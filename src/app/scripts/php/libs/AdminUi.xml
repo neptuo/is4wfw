@@ -14,11 +14,13 @@
     <attribute>
       <attname>hiddenField</attname>
       <attreq>required</attreq>
+      <atttype>string</atttype>
       <attcomment>Název a hodnota hidden inputu, kterým se pozná odeslání formuláře.</attcomment>
     </attribute>
     <attribute>
       <attname>confirmValue</attname>
       <attreq>implied</attreq>
+      <atttype>string</atttype>
       <attcomment>Hodnota z mazaného objektu, která se doplní do potvrzovacího dialogu.</attcomment>
     </attribute>
     <anyAttribute />

@@ -20,6 +20,7 @@
       <attname>method</attname>
       <attreq>implied</attreq>
       <attdef>POST</attdef>
+      <atttype>string</atttype>
       <attcomment>HTTP metoda, kterou se má odeslat formulář (GET, POST, PUT, DELETE).</attcomment>
     </attribute>
     <attribute>

@@ -42,6 +42,12 @@
                 $this->request = $request;
             }
         }
+
+        public function copyFrom($data) {
+            foreach ($data as $key => $value) {
+                $this[$key] = $value;
+            }
+        }
     }
 
 ?>

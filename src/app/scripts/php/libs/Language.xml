@@ -15,6 +15,53 @@
       Vypíše seznam jazyků.
     </comment>
   </fulltag>
+  <fulltag>
+    <tagname>form</tagname>
+    <function>form</function>
+    <attribute>
+      <attname>id</attname>
+      <attreq>implied</attreq>
+      <attdef>0</attdef>
+      <attcomment>Id záznamu k editaci. Pokud je 0 (nebo nevyplněno), pak se vytváří nový záznam.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>method</attname>
+      <attreq>implied</attreq>
+      <attdef>POST</attdef>
+      <atttype>string</atttype>
+      <attcomment>HTTP metoda, kterou se má odeslat formulář (GET, POST, PUT, DELETE).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>submit</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název klíče, kterým se formulář odesílá.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>nextPageId</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Id stránky, kam má být uživatel přesměrován.</attcomment>
+    </attribute>
+    <comment>
+      Vykreslí editační formulář.
+    </comment>
+  </fulltag>
+  <fulltag>
+    <tagname>deleter</tagname>
+    <function>deleter</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>id</attname>
+      <attreq>required</attreq>
+      <atttype>number</atttype>
+      <attdef>0</attdef>
+      <attcomment>Id záznamu, který se má smazat.</attcomment>
+    </attribute>
+    <comment>
+      Smaže jazyk s "id".
+    </comment>
+  </fulltag>
   <property>
     <propname>list</propname>
     <getfunction>getListItems</getfunction>
