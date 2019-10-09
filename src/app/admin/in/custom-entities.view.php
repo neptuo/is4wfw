@@ -17,6 +17,7 @@
 			<ui:grid items="ced:listTables" class="standart clickable">
 				<ui:column header="Name" value="ced:tableName" />
 				<ui:column header="Description" value="ced:tableDescription" />
+				<ui:columnBoolean header="Audit log" value="ced:tableAuditLog" />
 				<ui:columnTemplate header="">
 					<web:a pageId="~/in/custom-entity-columns.view" param-table="ced:tableName" class="image-button button-edit">
 						<img src="~/images/page_pro.png" />

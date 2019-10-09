@@ -87,6 +87,10 @@
             $tableName = self::TablePrefix . $name;
 
             $xml->engine = $engine;
+            if ($model["entity-audit-log"]) {
+                $audit = $xml->addChild("audit");
+                $audit->log = true;
+            }
 
             $columnName = $model["primary-key-1-name"];
             $keyElement = $xml->addChild("column");
@@ -275,7 +279,11 @@
         }
 
         public function listTables($template) {
-            $tables = self::dataAccess()->fetchAll(self::sql()->select("custom_entity", array("name", "description"), array(), array("name" => "asc")));
+            $tables = self::dataAccess()->fetchAll(self::sql()->select("custom_entity", array("name", "description", "definition"), array(), array("name" => "asc")));
+            for ($i=0; $i < count($tables); $i++) { 
+                $tables[$i]["definition"] = new SimpleXMLElement($tables[$i]["definition"]);
+            }
+
             $model = new ListModel();
             $model->items($tables);
             self::pushListModel($model);
@@ -297,6 +305,10 @@
 
         public function getTableDescription() {
             return self::peekListModel()->field("description");
+        }
+
+        public function getTableAuditLog() {
+            return self::peekListModel()->field("definition")->audit->log;
         }
 
         public function listTableColumns($template, $name) {

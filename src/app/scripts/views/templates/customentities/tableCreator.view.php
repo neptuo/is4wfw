@@ -11,6 +11,13 @@
         <label class="w90">Engine:</label>
         <ui:dropdownlist name="entity-engine" source="ced:tableEngines" display="name" value="key" />
     </div>
+    <div class="gray-box">
+        <label class="w90">Audit:</label>
+        <label>
+            <ui:checkbox name="entity-audit-log" />
+            Generate audit log
+        </label>
+    </div>
     <hr />
     <div class="ce-primary-key-1">
         <div class="gray-box">

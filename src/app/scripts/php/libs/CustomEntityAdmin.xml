@@ -132,6 +132,13 @@
     </comment>
   </property>
   <property>
+    <propname>tableAuditLog</propname>
+    <getfunction>getTableAuditLog</getfunction>
+    <comment>
+      Vrací zda se generuje audit log pro aktuální tabulku při průchodu přes "ce:listTables".
+    </comment>
+  </property>
+  <property>
     <propname>tableColumnName</propname>
     <getfunction>getTableColumnName</getfunction>
     <comment>
