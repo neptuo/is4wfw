@@ -164,6 +164,10 @@
             return $result;
         }
 
+        protected function hasAuditLog($xml) {
+            return $xml->audit->log;
+        }
+
         public function getTableColumnTypes($column = null, $key = null) {
             if ($this->types == null) {
                 $this->types = array(

@@ -308,7 +308,7 @@
         }
 
         public function getTableAuditLog() {
-            return self::peekListModel()->field("definition")->audit->log;
+            return self::hasAuditLog(self::peekListModel()->field("definition"));
         }
 
         public function listTableColumns($template, $name) {
