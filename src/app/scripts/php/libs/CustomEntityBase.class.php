@@ -168,6 +168,10 @@
             return $xml->audit->log;
         }
 
+        protected function audit($tableName, $message) {
+            // TODO: Write to log + userId
+        }
+
         public function getTableColumnTypes($column = null, $key = null) {
             if ($this->types == null) {
                 $this->types = array(

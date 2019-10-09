@@ -172,6 +172,11 @@
 
                 // Process localization.
                 self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
+
+                if (self::hasAuditLog($xml)) {
+                    $auditKey = implode(", ", $primaryKeys);
+                    self::audit($tableName, "Insert $auditKey.");
+                }
             });
         }
         
@@ -189,6 +194,11 @@
 
                 // Process localization.
                 self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
+
+                if (self::hasAuditLog($xml)) {
+                    $auditKey = implode(", ", $primaryKeys);
+                    self::audit($tableName, "Update $auditKey.");
+                }
             });
         }
 
