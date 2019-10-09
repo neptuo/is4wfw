@@ -20,7 +20,8 @@
 	class System extends BaseTagLib {
 
 		public function __construct() {
-			parent::setTagLibXml("System.xml");
+			self::setTagLibXml("System.xml");
+			self::setLocalizationBundle("system");
 		}
 
 		public $UserSettingsEditors = array(
