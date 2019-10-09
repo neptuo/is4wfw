@@ -57,6 +57,17 @@
             fwrite($this->File, date("H:i:s") . "\t" . $msg . "\r\n");
         }
 
+        public function writeToCustom($logName, $msg) {
+            $path = LOGS_PATH . $logName . "-" . date("Y-m-d") . ".log";
+            if (is_file($path)) {
+                $file = fopen($path, "a");
+            } else {
+                $file = fopen($path, "w");
+            }
+            fwrite($file, date("H:i:s") . PHP_EOL . $msg . PHP_EOL);
+            fclose($file);
+        }
+
         public function exception($e) {
             $message = "An exception of type '" . get_class($e) . "' has occured. " . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . '@ ' . parent::currentFullUrl();
             self::write($message);

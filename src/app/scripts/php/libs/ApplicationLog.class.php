@@ -32,7 +32,7 @@
 			
 			foreach($logFiles as $file) {
 				$item = self::parseLogName($file);
-				if ($item[0] != 0) {
+				if (is_numeric($item[0])) {
 					$id = $item[0];
 					foreach ($projects as $prj) {
 						if ($item[0] == $prj['id']) {
@@ -43,7 +43,7 @@
 					if ($item[0] == $id) {
 						$item[0] = 'Unknown project [id='.$id.']';
 					}
-				} else {
+				} else if (empty($item[0])) {
 					$item[0] = 'Global log file';
 				}
 				
@@ -134,16 +134,17 @@
 		}
 
 		public function parseLogName($name) {
-			$parts = split('-', $name);
 			$projectId = 0;
 			$date = '5';
 			
 			$name = split('.log', $name);
 			$name = $name[0];
-			
+
+			$parts = split('-', $name);
 			if ($parts[0] != '') {
 				$projectId = $parts[0];
-				$dateString = substr($name, 3, strlen($name));
+				unset($parts[0]);
+				$dateString = implode("-", $parts);
 				$date = strtotime($dateString);
 			} else {
 				$dateString = substr($name, 2, strlen($name));

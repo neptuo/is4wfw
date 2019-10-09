@@ -193,8 +193,9 @@
                 }
             }
             
-            // TODO: Write to log.
             $xmlString = $xml->asXML();
+            global $logObject;
+            $logObject->writeToCustom($tableName, $xmlString);
         }
 
         public function getTableColumnTypes($column = null, $key = null) {
