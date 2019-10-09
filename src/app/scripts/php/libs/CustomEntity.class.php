@@ -174,8 +174,7 @@
                 self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
 
                 if (self::hasAuditLog($xml)) {
-                    $auditKey = implode(", ", $primaryKeys);
-                    self::audit($tableName, "Insert $auditKey.");
+                    self::audit($tableName, "insert", $primaryKeys);
                 }
             });
         }
@@ -196,8 +195,7 @@
                 self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
 
                 if (self::hasAuditLog($xml)) {
-                    $auditKey = implode(", ", $primaryKeys);
-                    self::audit($tableName, "Update $auditKey.");
+                    self::audit($tableName, "update", $primaryKeys);
                 }
             });
         }
@@ -229,15 +227,6 @@
                     $typeDefinition = self::getTableColumnTypes($column);
                     if ($typeDefinition["hasColumn"]) {
                         $columns = self::joinString($columns, "`$columnName`");
-                    }
-                }
-
-                // Localization
-                foreach ($langIds as $langId) {
-                    $key = "$columnName:$langId";
-                    if (array_key_exists($key, $model)) {
-                        $localizableColumns[] = $columnName;
-                        break;
                     }
                 }
             }
@@ -406,9 +395,15 @@
         
         public function deleter($template, $name, $params = array()) {
             $tableName = self::ensureTableName($name);
+            $xml = self::getDefinition($name);
 
             $sql = self::getDeleteSql($tableName, $params);
             self::dataAccess()->execute($sql);
+            
+            if (self::hasAuditLog($xml)) {
+                self::audit($tableName, "delete", $params);
+            }
+
             self::parseContent($template);
         }
 	}

@@ -168,8 +168,33 @@
             return $xml->audit->log;
         }
 
-        protected function audit($tableName, $message) {
-            // TODO: Write to log + userId
+        protected function audit(String $tableName, String $operationType, Array $keys, Array $values = array()) {
+            if (parent::startsWith($tableName, self::TablePrefix)) {
+                $tableName = substr($tableName, strlen(self::TablePrefix));
+            }
+
+            $xml = new SimpleXMLElement("<audit/>");
+            $xml->timestamp = time();
+            $xml->entity = $tableName;
+            $xml->operation = $operationType;
+            $xml->userId = parent::login()->getUserId();
+
+            if (!empty($keys)) {
+                $keysXml = $xml->addChild("keys");
+                foreach ($keys as $key => $value) {
+                    $keysXml->{$key} = $value;
+                }
+            }
+            
+            if (!empty($values)) {
+                $valuesXml = $xml->addChild("values");
+                foreach ($values as $key => $value) {
+                    $valuesXml->{$key} = $value;
+                }
+            }
+            
+            // TODO: Write to log.
+            $xmlString = $xml->asXML();
         }
 
         public function getTableColumnTypes($column = null, $key = null) {
