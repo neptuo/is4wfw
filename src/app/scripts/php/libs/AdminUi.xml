@@ -37,13 +37,8 @@
       <attname>label</attname>
       <attreq>required</attreq>
       <atttype>string</atttype>
-      <attcomment>Popisek.</attcomment>
-    </attribute>
-    <attribute>
-      <attname>labelCss</attname>
-      <attreq>required</attreq>
-      <atttype>string</atttype>
-      <attcomment>CSS třída pro label.</attcomment>
+      <prefix>true</prefix>
+      <attcomment>Popisek (dvojtečka je přidána automaticky). Všechny prefix jsou použity jako HTML atributy elementu label.</attcomment>
     </attribute>
   </fulltag>
 </taglib>

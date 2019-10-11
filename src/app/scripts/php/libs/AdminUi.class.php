@@ -22,16 +22,26 @@
 			return parent::ui()->form($template);
 		}
 
-		public function field($template, $label, $labelCss = "") {
-			return ""
+		public function field($template, $label) {
+			$labelText = $label[""];
+			if (!parent::endsWith($labelText, ":")) {
+				$labelText .= ":";
+			}
+
+			unset($label[""]);
+			$labelAttributes = parent::joinAttributes($label);
+
+			$result = ""
 			. "<div class='gray-box'>"
 				. "<label>"
-					. "<span class='$labelCss'>"
-						. $label . ":"
+					. "<span$labelAttributes>"
+						. $labelText
 					. "</span>"
 					. self::parseContent($template)
 				. "</label>"
 			."</div>";
+
+			return $result;
 		}
 	}
 
