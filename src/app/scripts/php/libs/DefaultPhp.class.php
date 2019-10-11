@@ -459,6 +459,20 @@
             }
         }
 
+        private function processParsedAttributeValue($attribute, $definition, $hasDefault) {
+            $attributeValue = self::getConvertValue($attribute['value'], $definition);
+            if ($attributeValue != null) {
+                $attributeValueType = 'raw';
+                if (($hasDefault && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
+                    $attributeValueType = 'eval';
+                }
+
+                return array('value' => $attributeValue['value'], 'type' => $attributeValueType);
+            }
+
+            return null;
+        }
+
         private function sortAttributesInternal($tagListName, $tagPrefix, $tagName, $atts) {
             $return = array();
             if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
@@ -469,49 +483,80 @@
                 $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix]) ."/" . ${$tagPrefix."Object"}->getTagLibXml();
             }
             
+            $processedAtts = array();
             if (isset($xmlPath)) {
                 if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
                     $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
                     foreach ($xml->{$tagListName} as $tag) {
                         if ($tag->tagname == $tagName) {
                             for ($i = 0; $i < count($tag->attribute); $i ++) {
+                                $isProcessed = false;
                                 $att = $tag->attribute[$i];
+                                $attName = (string)$att->attname;
                                 $hasDefault = isset($att->attdef);
-                                if (array_key_exists((string)$att->attname, $atts)) {
-                                    $attribute = $atts[(string)$att->attname];
-                                    $attributeValue = self::getConvertValue($attribute['value'], $att);
-                                    if ($attributeValue != null) {
-                                        $attributeValueType = 'raw';
-                                        if (($hasDefault && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
-                                            $attributeValueType = 'eval';
+                                if ($att->prefix == true) {
+                                    $attPrefix = "$attName-";
+                                    $attributeValue = array();
+                                    foreach ($atts as $usedName => $usedValue) {
+                                        if (parent::startsWith($usedName, $attPrefix)) {
+                                            $strippedName = substr($usedName, strlen($attPrefix));
+
+                                            $attribute = $atts[$usedName];
+                                            $processValue = self::processParsedAttributeValue($attribute, $att, $hasDefault);
+                                            if ($processValue != null) {
+                                                $processedAtts[] = $usedName;
+                                                $attributeValue[$strippedName] = $processValue;
+                                                continue;
+                                            }
+                                        }
+                                    }
+
+                                    $return[$attName] = array('value' => $attributeValue, 'type' => "eval");
+                                    $isProcessed = true;
+                                }
+                                
+                                if (array_key_exists($attName, $atts)) {
+                                    $attribute = $atts[$attName];
+                                    $processValue = self::processParsedAttributeValue($attribute, $att, $hasDefault);
+                                    if ($processValue != null) {
+                                        $processedAtts[] = $attName;
+                                        if (array_key_exists($attName, $return)) {
+                                            $return[$attName]["value"][""] = $processValue;
+                                        } else {
+                                            $return[$attName] = $processValue;
                                         }
 
-                                        $return[(string)$att->attname] = array('value' => $attributeValue['value'], 'type' => $attributeValueType);
-                                        continue;
+                                        $isProcessed = true;
                                     }
                                 }
 
+                                if ($isProcessed) {
+                                    continue;
+                                }
+                                
                                 if ($hasDefault) {
                                     if ($att->atttype == 'string') {
                                         $attributeValue = "'" . eval('return "'. $att->attdef.'";') . "'";
                                     } else {
                                         $attributeValue = eval('return '. $att->attdef.';');
                                     }
-                                    $return[(string)$att->attname] = array('value' => $attributeValue, 'type' => 'eval');
+                                    
+                                    $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
                                 } else if (strtolower($att->attreq) == "required") {
                                     $str = "Missing required attribute! [".$att->attname."]";
                                     trigger_error($str , E_USER_WARNING);
                                     echo parent::getError($str);
                                     return false;
                                 } else {
-                                    $return[(string)$att->attname] = array('value' => false, 'type' => 'raw');
+                                    $return[$attName] = array('value' => false, 'type' => 'raw');
                                 }
                             }
                     
                             if (isset($tag->anyAttribute)) {
                                 $params = array();
                                 foreach ($atts as $usedName => $usedValue) {
-                                    if (!array_key_exists($usedName, $return)) {
+                                    if (!in_array($usedName, $processedAtts)) {
+                                        $processedAtts[] = $usedName;
                                         $params[$usedName] = $usedValue;
                                     }
                                 }
@@ -522,11 +567,24 @@
                         }
                     }
 
-                    return $return;
+                    if (count($processedAtts) == count($atts)) {
+                        return $return;
+                    } else {
+                        foreach ($atts as $name => $value) {
+                            if (!in_array($name, $processedAtts)) {
+                                $str = "Used undefined attribute! [$name] on [$tagPrefix:$tagName]";
+                                trigger_error($str , E_USER_WARNING);
+                                echo parent::getError($str);
+                            }
+                        }
+
+                        return false;
+                    }
+
                 } else {
                     $str = "Xml library definition doesn't exists! [".$xmlPath."]";
                     trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
+                    echo parent::getError($str);
                     return false;
                 }
                 
@@ -601,7 +659,12 @@
          *
          */                                                
         public function sortFullAttributes($tagPrefix, $tagName, $attributes, $content) {
-            $return = array_merge(array(DefaultPhp::$FullTagTemplateName => array('value' => $content, 'type' => 'raw')), self::sortAttributesInternal("fulltag", $tagPrefix, $tagName, $attributes));
+            $sorted = self::sortAttributesInternal("fulltag", $tagPrefix, $tagName, $attributes);
+            if ($sorted === false) {
+                return false;
+            }
+
+            $return = array_merge(array(DefaultPhp::$FullTagTemplateName => array('value' => $content, 'type' => 'raw')), $sorted);
             return $return;
         }
         

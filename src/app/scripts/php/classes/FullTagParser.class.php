@@ -48,9 +48,12 @@ class FullTagParser extends CustomTagParser {
 
         if ($phpObject->isRegistered($object[0]) && $phpObject->isFullTag($object[0], $object[1], $attributes)) {
             $attributes = $phpObject->sortFullAttributes($object[0], $object[1], $attributes, $ctag[5]);
+            if ($attributes === false) {
+                return "";
+            }
             
             $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
-            if ($functionName && ($attributes !== false)) {
+            if ($functionName) {
                 return self::generateFunctionOutput($object[0], $functionName, $attributes);
             }
         }

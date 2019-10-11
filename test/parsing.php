@@ -1,8 +1,7 @@
 <?php
 
-    require_once("../../user/instance.inc.php");
-    require_once("../scripts/php/includes/settings.inc.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "includes/instance.inc.php");
+    require_once("../user/instance.inc.php");
+    require_once("../app/scripts/php/includes/settings.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "includes/settings.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
@@ -15,9 +14,13 @@
     $phpObject = new DefaultPhp();
     $webObject = new DefaultWeb();
 
-    $Content = '<web:lang />';
+    $Content = '<hr />
+<admin:field label="Entity Name" label-class="w90" style="background: red">
+    <input type="text" name="entity-name" />
+</admin:field>
+<hr />';
 
-    $parser = new CustomTagParser();
+    $parser = new FullTagParser();
     $parser->setContent($Content);
     $parser->startParsing();
     echo $parser->getResult();
@@ -25,13 +28,13 @@
     //$webObject->loadPageContent();
     //$webObject->flush();
 
-    echo '<br /><br />';
-    $pageId = "~/webapp/index";
+    // echo '<br /><br />';
+    // $pageId = "~/webapp/index";
 
-    if(is_numeric($pageId)) {
-        echo $webObject->composeUrl($pageId);
-    } else {
-        echo $pageId;
-    }
+    // if(is_numeric($pageId)) {
+    //     echo $webObject->composeUrl($pageId);
+    // } else {
+    //     echo $pageId;
+    // }
 
 ?>
