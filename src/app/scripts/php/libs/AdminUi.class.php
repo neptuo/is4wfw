@@ -21,6 +21,18 @@
 
 			return parent::ui()->form($template);
 		}
+
+		public function field($template, $label, $labelCss = "") {
+			return ""
+			. "<div class='gray-box'>"
+				. "<label>"
+					. "<span class='$labelCss'>"
+						. $label . ":"
+					. "</span>"
+					. self::parseContent($template)
+				. "</label>"
+			."</div>";
+		}
 	}
 
 ?>

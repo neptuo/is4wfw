@@ -30,4 +30,20 @@
       Všechyn ostatní atributy jsou přidání jako atributy HTML form elementu.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>field</tagname>
+    <function>field</function>
+    <attribute>
+      <attname>label</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Popisek.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>labelCss</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>CSS třída pro label.</attcomment>
+    </attribute>
+  </fulltag>
 </taglib>
