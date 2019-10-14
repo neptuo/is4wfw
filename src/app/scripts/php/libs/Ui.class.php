@@ -293,7 +293,7 @@
 				if (is_array($source)) {
 					$data = $source;
 				} else {
-					$data = self::dataAccess()->fetchAll("SELECT `$id`, `$display` FROM `$source` ORDER BY `$display`;");
+					$data = self::dataAccess()->fetchAll(parent::sql()->select($source, array($id, $display), array(), array($display => "asc")));
 				}
 
 				if (!empty($emptyText)) {
@@ -330,7 +330,7 @@
 				if (is_array($source)) {
 					$data = $source;
 				} else {
-					$data = self::dataAccess()->fetchAll("SELECT `$id`, `$display` FROM `$source` ORDER BY `$display`;");
+					$data = self::dataAccess()->fetchAll(parent::sql()->select($source, array($id, $display), array(), array($display => "asc")));
 				}
 				
 				$itemContainerTagName = $repeat == "vertical" ? "div" : "span";
