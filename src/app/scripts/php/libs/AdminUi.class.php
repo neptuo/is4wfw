@@ -22,6 +22,11 @@
 			return parent::ui()->form($template);
 		}
 
+		public function newButton($pageId, $text, $params = array()) {
+			$params["id"] = "new";
+			return parent::web()->makeAnchor($pageId, $text, false, "button", "", "", "", "", "", $params);
+		}
+
 		public function field($template, $label) {
 			$labelText = $label[""];
 			if (!parent::endsWith($labelText, ":")) {

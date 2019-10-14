@@ -27,7 +27,28 @@
     <comment>
       Vykreslí formulář pro smazání objektu (image button).
       Všechny atributy začínající "hidden-" jsou přidány jako hidden inputy formuláře.
-      Všechyn ostatní atributy jsou přidání jako atributy HTML form elementu.
+      Všechny ostatní atributy jsou přidání jako atributy HTML form elementu.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>newButton</tagname>
+    <function>newButton</function>
+    <attribute>
+      <attname>pageId</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Id stránky, kam má odkaz vést.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>text</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Text odkazu.</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vykreslí odkaz pro založení objektu (link s třídou button).
+      Všechny ostatní atributy jsou přidání jako atributy HTML form elementu.
     </comment>
   </tag>
   <fulltag>
