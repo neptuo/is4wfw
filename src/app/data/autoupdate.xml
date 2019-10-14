@@ -69,4 +69,5 @@
     <script build="346">UPDATE `language` SET `name` = 'Czech', `natural_name` = 'Česky' WHERE `language` = 'cs';</script>
     <script build="346">UPDATE `language` SET `name` = 'English', `natural_name` = 'English' WHERE `language` = 'en';</script>
     <script build="346">UPDATE `language` SET `name` = `language` WHERE `name` = '';</script>
+    <script build="347">ALTER TABLE `language` MODIFY COLUMN `id` INT NOT NULL AUTO_INCREMENT;</script>
 </autoupdate>
