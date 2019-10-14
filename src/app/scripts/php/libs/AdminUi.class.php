@@ -48,6 +48,52 @@
 
 			return $result;
 		}
+
+		private $edit = array();
+
+		public function edit($template, $id) {
+			$prev = $this->edit;
+			$this->edit = array();
+
+			if ($id === "") {
+				$this->edit["isEdit"] = false;
+				$this->edit["title"] = "";
+				return;
+			}
+
+			if (!is_numeric($id)) {
+				$id = 0;
+			}
+
+			$this->edit["id"] = $id;
+			$this->edit["isEdit"] = true;
+			if ($id == 0) {
+				$this->edit["title"] = "Create";
+			} else {
+				$this->edit["title"] = "Edit";
+			}
+
+			$result = self::parseContent($template);
+
+			$this->edit = $prev;
+			return $result;
+		}
+
+		public function isEdit() {
+			return $this->edit["isEdit"] == true;
+		}
+
+		public function isNew() {
+			return self::isEdit() && $this->edit["id"] == 0;
+		}
+		
+		public function getEditId() {
+			return $this->edit["id"];
+		}
+		
+		public function getEditTitle() {
+			return $this->edit["title"];
+		}
 	}
 
 ?>

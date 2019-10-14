@@ -62,4 +62,45 @@
       <attcomment>Popisek (dvojtečka je přidána automaticky). Všechny prefix jsou použity jako HTML atributy elementu label.</attcomment>
     </attribute>
   </fulltag>
+  <fulltag>
+    <tagname>edit</tagname>
+    <function>edit</function>
+    <attribute>
+      <attname>id</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Hodnota id, podle které se má rozhodovat.</attcomment>
+    </attribute>
+    <comment>
+      Inicializuje proměnné "admin:edit" (true/false) a "admin:editTitle" (titulek "Create"/"Edit").
+    </comment>
+  </fulltag>
+  <property>
+    <propname>edit</propname>
+    <getfunction>isEdit</getfunction>
+    <comment>
+      Vrací true/false pokud se nacházíme v editačním módu (nebo při založení objektu).
+    </comment>
+  </property>
+  <property>
+    <propname>new</propname>
+    <getfunction>isNew</getfunction>
+    <comment>
+      Vrací true/false pokud se nacházíme v módu pro založení objektu.
+    </comment>
+  </property>
+  <property>
+    <propname>editId</propname>
+    <getfunction>getEditId</getfunction>
+    <comment>
+      Vrací id pro editační mód.
+    </comment>
+  </property>
+  <property>
+    <propname>editTitle</propname>
+    <getfunction>getEditTitle</getfunction>
+    <comment>
+      Vrací titulek pro editační mód.
+    </comment>
+  </property>
 </taglib>
