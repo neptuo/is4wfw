@@ -7,10 +7,6 @@
 
 	class CustomEntity extends CustomEntityBase {
 
-        const primaryKeyAttributePrefix = "key-";
-        const filterAttributePrefix = "filter-";
-        const orderByAttributePrefix = "orderBy-";
-
         private $tagPrefix;
 
 		public function __construct($tagPrefix) {
@@ -285,17 +281,17 @@
             return self::sql()->delete($name, $params);
         }
 
-		public function form($template, $name, $method = "POST", $submit = "", $nextPageId = 0, $langIds = "", $params = array()) {
+		public function form($template, $name, $method = "POST", $submit = "", $nextPageId = 0, $langIds = "", $keys = array()) {
             $tableName = self::ensureTableName($name);
             $tableLocalizationName = self::ensureTableLocalizationName($name);
             $xml = self::getDefinition($name);
             $langIds = explode(",", $langIds);
+            $keys = parent::removeKeysWithEmptyValues($keys);
 
             if ($method == "GET" && $submit == "") {
                 trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
             }
 
-            $keys = self::findAttributesByPrefix($params, self::primaryKeyAttributePrefix);
             $isUpdate = count($keys) > 0;
 
             $model = new EditModel();
@@ -352,10 +348,10 @@
             return self::peekListModel();
         }
 
-        public function getList($template, $name, $params = array()) {
+        public function getList($template, $name, $filter = array(), $orderBy = array()) {
             $tableName = self::ensureTableName($name);
-            $filter = self::findAttributesByPrefix($params, self::filterAttributePrefix);
-            $orderBy = self::findAttributesByPrefix($params, self::orderByAttributePrefix);
+            $filter = parent::removeKeysWithEmptyValues($filter);
+            $orderBy = parent::removeKeysWithEmptyValues($orderBy);
 
             $model = new ListModel();
             self::pushListModel($model);

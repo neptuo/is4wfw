@@ -40,10 +40,16 @@
       <attreq>implied</attreq>
       <attcomment>Id jazyků, pro které mají zpracovávat lokalizované pole.</attcomment>
     </attribute>
+    <attribute>
+      <attname>key</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Primární klíče pro editaci záznamu. Klíčem je název sloupce.</attcomment>
+    </attribute>
     <anyAttribute />
     <comment>
       Vygeneruje formulář pro přidání/úpravu záznamu v uživatelské entitě.
-      Všechny atributy začínající na "key-" jsou použity pro identifikaci záznamu pro editaci.
+      Při editaci je nutné uvést všechny primární klíče záznamu, který se má editovat.
     </comment>
   </fulltag>
   <tag>
@@ -85,12 +91,21 @@
       <attreq>required</attreq>
       <attcomment>Název entity, která se má vypsat.</attcomment>
     </attribute>
-    <anyAttribute />
+    <attribute>
+      <attname>filter</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Filtry, kterým data musí vyhovovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>orderBy</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</attcomment>
+    </attribute>
     <comment>
       Vypíše seznam dat z entity "name".
       List model se nastaví do "ce:list", vypisovat pak lze pomocí "ce:*" (atribut) nebo "ce:_" (celá položka).
-      Všechny atributy začínající na "filter-" se složí do where clausule.
-      Všechny atributy začínající na "orderBy-" se složí do order by clausule, hodnota může být asc/desc.
     </comment>
   </fulltag>
   <fulltag>

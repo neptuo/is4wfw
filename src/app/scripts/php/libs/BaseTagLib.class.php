@@ -768,7 +768,17 @@
 			}
 
 			return $attributes;
-		}
+        }
+        
+        protected function removeKeysWithEmptyValues($array) {
+            foreach ($array as $key => $value) {
+                if (is_null($value) || $value == '') {
+                    unset($array[$key]);
+                }
+            }
+
+            return $array;
+        }
     }
 
 ?>
