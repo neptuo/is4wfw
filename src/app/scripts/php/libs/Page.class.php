@@ -1440,7 +1440,7 @@
                 } else {
                     $last = "";
                 }
-                $pg_info = $dbObject->fetchAll("SELECT `name`, `is_visible`, `language`, `language`.`id` AS `lang_id` FROM `info` LEFT JOIN `language` ON `info`.`language_id` = `language`.`id` WHERE `info`.`page_id` = " . $tmp['id'] . ";");
+                $pg_info = $dbObject->fetchAll("SELECT `info`.`name`, `info`.`is_visible`, `language`, `language`.`id` AS `lang_id` FROM `info` LEFT JOIN `language` ON `info`.`language_id` = `language`.`id` WHERE `info`.`page_id` = " . $tmp['id'] . ";");
                 if (count($pg_info) > 0) {
                     $count++;
                     $innText = '<span class="page-id-col" title="Page Id">(' . $tmp['id'] . ')</span> <span class="page-name' . ($pg_info[0]['is_visible'] == 0 ? ' gray-color' : '') . '" title="Page Name">' . $pg_info[0]['name'] . '</span> : ' . '<span class="page-languages">( ';
