@@ -21,6 +21,7 @@
     <attribute>
       <attname>id</attname>
       <attreq>implied</attreq>
+      <atttype>number</atttype>
       <attdef>0</attdef>
       <attcomment>Id záznamu k editaci. Pokud je 0 (nebo nevyplněno), pak se vytváří nový záznam.</attcomment>
     </attribute>
@@ -74,6 +75,20 @@
     <getfunction>getListItemId</getfunction>
     <comment>
         Vrací id aktuálního jazyku uvnitř "lang:list".
+    </comment>
+  </property>
+  <property>
+    <propname>name</propname>
+    <getfunction>getListItemName</getfunction>
+    <comment>
+        Vrací název aktuálního jazyku uvnitř "lang:list".
+    </comment>
+  </property>
+  <property>
+    <propname>natural_name</propname>
+    <getfunction>getListItemNaturalName</getfunction>
+    <comment>
+        Vrací natural název aktuálního jazyku uvnitř "lang:list".
     </comment>
   </property>
   <property>

@@ -4,13 +4,20 @@
 			<web:redirectTo pageId="~/in/languages.view" />
 		</lang:deleter>
 	</web:condition>
-	<web:condition when="query:id">
-		<web:frame title="Create/Edit">
-			<lang:form id="query:id" submit="save" nextPageId="~/in/languages.view">
-				<div class="gray-box">
-					<label>Url:</label>
-					<ui:textbox name="language" />
-				</div>
+
+	<admin:edit id="query:id">
+		<web:frame title="admin:editTitle">
+			<lang:form id="admin:editId" submit="save" nextPageId="~/in/languages.view">
+				<admin:field label="Name" label-class="w110">
+					<ui:textbox name="name" />
+				</admin:field>
+				<admin:field label="Natural name" label-class="w110">
+					<ui:textbox name="natural_name" />
+				</admin:field>
+				<admin:field label="Url" label-class="w110">
+					<ui:textbox name="language" class="w60" />
+				</admin:field>
+				<hr />
 				<div class="gray-box">
 					<input type="hidden" name="edit" value="edit" />
 					<button name="save" value="save">Save and Close</button>
@@ -18,15 +25,17 @@
 				</div>
 			</lang:form>
 		</web:frame>
-	</web:condition>
+	</admin:edit>
 
-	<web:frame title="Languages">
+	<web:frame title="List">
 		<lang:list>
 			<ui:empty items="lang:list">
 				<h4 class="warning">No Languages</h4>
 			</ui:empty>
 			<ui:grid items="lang:list" class="standart clickable">
 				<ui:column header="Id" value="lang:id" />
+				<ui:column header="Name" value="lang:name" />
+				<ui:column header="Natural name" value="lang:natural_name" />
 				<ui:column header="Url" value="lang:url" />
 				<ui:columnTemplate>
 					<web:a pageId="~/in/languages.view" param-id="lang:id" class="image-button button-edit">
@@ -39,12 +48,8 @@
 		<hr />
 		<div class="gray-box">
 			<ui:form>
-				<web:a pageId="~/in/languages.view" text="Create New Language" class="button" param-id="new" />
+				<admin:newButton pageId="~/in/languages.view" text="Create New Language" />
 			</ui:form>
 		</div>
 	</web:frame>
-
-	<php:using prefix="pg" class="php.libs.Page">
-		<pg:showLanguages editable="true" />
-	</php:using>
 </v:template>

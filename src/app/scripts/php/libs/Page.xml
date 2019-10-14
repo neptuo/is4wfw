@@ -102,6 +102,7 @@
       <attname>editable</attname>
       <attreq>implied</attreq>
     </attribute>
+    <obsolete>Nahrazeno knihovnou "language".</obsolete>
     <comment>
       Zobrazí jazykové verze, pokud je editable true, zobrazí formulář na mazání.
     </comment>

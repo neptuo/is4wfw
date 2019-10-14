@@ -48,6 +48,15 @@
                 $this[$key] = $value;
             }
         }
+
+        public function fields() {
+            $keys = array();
+            foreach ($this as $key => $value) {
+                $keys[] = $key;
+            }
+            
+            return $keys;
+        }
     }
 
 ?>

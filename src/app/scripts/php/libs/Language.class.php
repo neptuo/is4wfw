@@ -24,7 +24,7 @@
 			$model = new ListModel();
 			parent::pushListModel($model);
 
-			$sql = parent::sql()->select(self::TableName, array("id", "language"), array(), array("id" => "asc"));
+			$sql = parent::sql()->select(self::TableName, array("id", "language", "name", "natural_name"), array(), array("id" => "asc"));
 			$data = self::dataAccess()->fetchAll($sql);
 
 			$model->render();
@@ -41,6 +41,14 @@
 
 		public function getListItemId() {
 			return parent::peekListModel()->field("id");
+		}
+
+		public function getListItemName() {
+			return parent::peekListModel()->field("name");
+		}
+
+		public function getListItemNaturalName() {
+			return parent::peekListModel()->field("natural_name");
 		}
 
 		public function getListItemUrl() {
@@ -78,7 +86,12 @@
             }
 
 			if ($isUpdate) {
-				$sql = parent::sql()->select(self::TableName, array("language"), array("id" => $id));
+                $model->registration();
+                self::parseContent($template);
+				$model->registration(false);
+				
+				$columns = $model->fields();
+				$sql = parent::sql()->select(self::TableName, $columns, array("id" => $id));
 				$data = parent::dataAccess()->fetchSingle($sql);
 				if (empty($data)) {
 					self::popEditModel();

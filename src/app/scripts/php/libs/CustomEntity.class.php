@@ -208,6 +208,7 @@
                 $columnName = (string)$column->name;
                 $columnType = (string)$column->type;
                 if (array_key_exists($columnName, $model)) {
+                    $typeDefinition = self::getTableColumnTypes($column);
                     if (!$typeDefinition["hasColumn"]) {
                         if ($columnType == "multireference-jointable") {
                             self::registerPrimaryKeysToModel($xml, $model);
