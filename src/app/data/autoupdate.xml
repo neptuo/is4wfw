@@ -64,4 +64,9 @@
     <script build="341">INSERT INTO `group_perms`(`group_id`, `name`, `value`, `type`) values (1, 'CMS.Web.CustomEntities', 'true', 'bool');</script>
     <script build="342">CREATE TABLE `custom_entity` ( `name` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL , `description` TINYTEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NULL, `definition` TEXT CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL, PRIMARY KEY (`name`)) ENGINE = MYISAM CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
     <script build="343">INSERT INTO `group_perms`(`group_id`, `name`, `value`, `type`) values (1, 'CMS.Settings.LocalizationBundles', 'true', 'bool');</script>
+    <script build="344">ALTER TABLE `language` ADD `name` TINYTEXT NULL DEFAULT '', ADD `natural_name` TINYTEXT DEFAULT '';</script>
+    <script build="345">UPDATE `language` SET `name` = 'Default', `natural_name` = 'Default' WHERE `language` = '';</script>
+    <script build="346">UPDATE `language` SET `name` = 'Czech', `natural_name` = 'Cesky' WHERE `language` = 'cs';</script>
+    <script build="346">UPDATE `language` SET `name` = 'English', `natural_name` = 'English' WHERE `language` = 'en';</script>
+    <script build="346">UPDATE `language` SET `name` = `language` WHERE `name` = '';</script>
 </autoupdate>
