@@ -149,7 +149,7 @@
 			}
 
 			$filePath = self::getFilePath();
-			if (strlen($filePath) && is_writable($filePath)) {
+			if (strlen($filePath)) {
 				$content = "";
 				foreach ($this->Items as $key => $value) {
 					$content .= "$key=$value" . PHP_EOL;
