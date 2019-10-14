@@ -18,7 +18,7 @@
 		<utils:concat output="listTitle" value1="loc:columnlist.title" value2=" :: " value3="query:table" />
 		<web:frame title="utils:listTitle">
 			<ced:listTableColumns name="query:table">
-				<ui:grid items="ced:listTableColumns" class="standart clickable">
+				<ui:grid items="ced:listTableColumns" class="standart">
 					<ui:column header="loc:columnlist.name" value="ced:tableColumnName" />
 					<ui:column header="loc:columnlist.type" value="ced:tableColumnType" />
 					<ui:columnBoolean header="loc:columnlist.primary" value="ced:tableColumnPrimaryKey" />
