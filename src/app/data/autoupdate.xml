@@ -66,7 +66,7 @@
     <script build="343">INSERT INTO `group_perms`(`group_id`, `name`, `value`, `type`) values (1, 'CMS.Settings.LocalizationBundles', 'true', 'bool');</script>
     <script build="344">ALTER TABLE `language` ADD `name` TINYTEXT NULL DEFAULT '', ADD `natural_name` TINYTEXT DEFAULT '';</script>
     <script build="345">UPDATE `language` SET `name` = 'Default', `natural_name` = 'Default' WHERE `language` = '';</script>
-    <script build="346">UPDATE `language` SET `name` = 'Czech', `natural_name` = 'Cesky' WHERE `language` = 'cs';</script>
+    <script build="346">UPDATE `language` SET `name` = 'Czech', `natural_name` = 'Česky' WHERE `language` = 'cs';</script>
     <script build="346">UPDATE `language` SET `name` = 'English', `natural_name` = 'English' WHERE `language` = 'en';</script>
     <script build="346">UPDATE `language` SET `name` = `language` WHERE `name` = '';</script>
 </autoupdate>
