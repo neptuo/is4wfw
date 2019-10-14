@@ -301,6 +301,7 @@ class CustomTagParser {
             }
         }
 
+        // #131 - Apostrophes are later stripped when binding to number attribute.
         if ($object[0] == 'query' && strlen($object[1]) > 0){
             return "'" . addcslashes($_GET[$object[1]], "'") . "'";
         } elseif($object[0] == 'post' && strlen($object[1]) > 0){

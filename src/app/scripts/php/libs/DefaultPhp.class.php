@@ -619,8 +619,9 @@
                     case 'string':
                         return array('value' => $val, 'type' => 'raw');
                     case 'number':
-                        if (is_numeric($val)) {
-                            return array('value' => $val, 'type' => 'eval');
+                        $trimmed = trim($val, "'");
+                        if (is_numeric($trimmed)) {
+                            return array('value' => $trimmed, 'type' => 'eval');
                         } else {
                             return null;
                         }
