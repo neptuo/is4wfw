@@ -315,6 +315,7 @@
                 .'<form name="select-class-path" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="auto-submit">'
                     .'<label for="select-class-path-select">'.$rb->get('select-class-path.label').':</label> '
                     .'<select id="select-class-path-select" name="select-class-path-select">'
+                        .'<option value="php.libs.AdminUi"'.($_SESSION['select-class-path'] == 'php.libs.AdminUi' ? 'selected="selected"' : '').'>php.libs.AdminUi</option>'
                         .'<option value="php.libs.Article"'.($_SESSION['select-class-path'] == 'php.libs.Article' ? 'selected="selected"' : '').'>php.libs.Article</option>'
                         .'<option value="php.libs.Counter"'.($_SESSION['select-class-path'] == 'php.libs.Counter' ? 'selected="selected"' : '').'>php.libs.Counter</option>'
                         .'<option value="php.libs.CustomForm"'.($_SESSION['select-class-path'] == 'php.libs.CustomForm' ? 'selected="selected"' : '').'>php.libs.CustomForm</option>'
