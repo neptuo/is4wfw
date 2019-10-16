@@ -467,6 +467,7 @@
 		private $localizableName;
 		private $localizableLangId;
 		private $localizableLangName;
+		private $localizableLangUrl;
 
 		private function ensureLangIds($langIds) {
 			if (empty($langIds)) {
@@ -498,14 +499,15 @@
             }
 
             if ($model->isRender()) {
-				$sql = self::sql()->select("language", array("id", "language"), array("id" => $langIds));
+				$sql = self::sql()->select("language", array("id", "name", "language"), array("id" => $langIds));
 				$data = self::dataAccess()->fetchAll($sql);
 				
 				$result = "";
 				foreach ($data as $lang) {
 					$this->localizableName = "$name:" . $lang["id"];
 					$this->localizableLangId = $lang["id"];
-					$this->localizableLangName = $lang["language"];
+					$this->localizableLangName = $lang["name"];
+					$this->localizableLangUrl = $lang["language"];
 					$result .= self::parseContent($template);
 				}
 
@@ -523,6 +525,10 @@
 		
 		public function getLocalizableLangName() {
 			return $this->localizableLangName;
+		}
+		
+		public function getLocalizableLangUrl() {
+			return $this->localizableLangUrl;
 		}
 	}
 

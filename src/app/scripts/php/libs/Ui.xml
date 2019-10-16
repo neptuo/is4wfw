@@ -403,21 +403,28 @@
     <propname>localizableName</propname>
     <getfunction>getLocalizableName</getfunction>
     <comment>
-        Vrací název fieldu uvnitř "ui:localizable".
+      Vrací název fieldu uvnitř "ui:localizable".
     </comment>
   </property>
   <property>
     <propname>localizableLangId</propname>
     <getfunction>getLocalizableLangId</getfunction>
     <comment>
-        Vrací id jazyku uvnitř "ui:localizable".
+      Vrací id jazyku uvnitř "ui:localizable".
     </comment>
   </property>
   <property>
     <propname>localizableLangName</propname>
     <getfunction>getLocalizableLangName</getfunction>
     <comment>
-        Vrací název jazyku uvnitř "ui:localizable".
+      Vrací název jazyku uvnitř "ui:localizable".
+    </comment>
+  </property>
+  <property>
+    <propname>localizableLangUrl</propname>
+    <getfunction>getLocalizableLangUrl</getfunction>
+    <comment>
+      Vrací URL token jazyku uvnitř "ui:localizable".
     </comment>
   </property>
 </taglib>
