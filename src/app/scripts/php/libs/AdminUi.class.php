@@ -22,9 +22,9 @@
 			return parent::ui()->form($template);
 		}
 
-		public function newButton($pageId, $text, $params = array()) {
-			$params["id"] = "new";
-			return parent::web()->makeAnchor($pageId, $text, false, "button", "", "", "", "", "", $params);
+		public function newButton($pageId, $text, $paramName = "id", $param = array()) {
+			$param[$paramName] = "new";
+			return parent::web()->makeAnchor($pageId, $text, false, "button", "", "", "", "", "", $param);
 		}
 
 		public function field($template, $label) {

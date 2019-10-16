@@ -45,10 +45,22 @@
       <atttype>string</atttype>
       <attcomment>Text odkazu.</attcomment>
     </attribute>
-    <anyAttribute />
+    <attribute>
+      <attname>paramName</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attdef>id</attdef>
+      <attcomment>Název id parametru, který bude mít hodnotu "new".</attcomment>
+    </attribute>
+    <attribute>
+      <attname>param</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <prefix>true</prefix>
+      <attcomment>Seznam parametrů předaných do odkazu.</attcomment>
+    </attribute>
     <comment>
       Vykreslí odkaz pro založení objektu (link s třídou button).
-      Všechny ostatní atributy jsou přidání jako atributy HTML form elementu.
     </comment>
   </tag>
   <fulltag>
