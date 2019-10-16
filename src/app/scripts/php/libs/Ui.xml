@@ -303,11 +303,6 @@
       <attreq>implied</attreq>
       <attcomment>Výchozí hodnota.</attcomment>
     </attribute>
-    <attribute>
-      <attname>mode</attname>
-      <attreq>implied</attreq>
-      <attcomment></attcomment>
-    </attribute>
     <anyAttribute />
     <comment>
       Vygeneruje textareu pro zadání textu.
