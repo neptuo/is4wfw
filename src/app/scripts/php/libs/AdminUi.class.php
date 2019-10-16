@@ -27,7 +27,7 @@
 			return parent::web()->makeAnchor($pageId, $text, false, "button", "", "", "", "", "", $param);
 		}
 
-		public function field($template, $label) {
+		public function field($template, $label, $params = array()) {
 			$labelText = $label[""];
 			if (!parent::endsWith($labelText, ":")) {
 				$labelText .= ":";
@@ -36,8 +36,16 @@
 			unset($label[""]);
 			$labelAttributes = parent::joinAttributes($label);
 
+			if (array_key_exists("class", $params)) {
+				$params["class"] .= " gray-box";
+			} else {
+				$params["class"] = "gray-box";
+			}
+
+			$divAttributes = parent::joinAttributes($params);
+
 			$result = ""
-			. "<div class='gray-box'>"
+			. "<div$divAttributes>"
 				. "<label>"
 					. "<span$labelAttributes>"
 						. $labelText

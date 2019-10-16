@@ -73,6 +73,11 @@
       <prefix>true</prefix>
       <attcomment>Popisek (dvojtečka je přidána automaticky). Všechny prefix jsou použity jako HTML atributy elementu label.</attcomment>
     </attribute>
+    <anyAttribute />
+    <comment>
+      Vykreslí field tak, jak má v admin layoutu vypadat.
+      Všechny další atributy jsou přidány obalovému divu
+    </comment>
   </fulltag>
   <fulltag>
     <tagname>edit</tagname>
