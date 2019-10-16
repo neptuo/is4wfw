@@ -47,9 +47,7 @@
 		</lang:list>
 		<hr />
 		<div class="gray-box">
-			<ui:form>
-				<admin:newButton pageId="~/in/languages.view" text="Create New Language" />
-			</ui:form>
+			<admin:newButton pageId="~/in/languages.view" text="Create New Language" />
 		</div>
 	</web:frame>
 </v:template>
