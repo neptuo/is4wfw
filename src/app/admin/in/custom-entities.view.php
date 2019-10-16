@@ -5,11 +5,11 @@
 				<web:redirectToSelf />
 			</ced:tableDeleter>
 		</web:condition>
-		<web:condition when="post:create" is="create">
+		<admin:edit id="query:table">
 			<web:frame title="loc:tablelist.create">
 				<ced:tableCreator />
 			</web:frame>
-		</web:condition>
+		</admin:edit>
 		<web:frame title="loc:tablelist.title">
 			<ced:listTables>
 				<ui:empty items="ced:listTables">
@@ -33,13 +33,9 @@
 				</ui:grid>
 			</ced:listTables>
 			<hr />
-			<ui:form>
-				<div class="gray-box">
-					<button name="create" value="create">
-						<web:getProperty name="loc:tablelist.create" />
-					</button>
-				</div>
-			</ui:form>
+			<div class="gray-box">
+				<admin:newButton pageId="~/in/custom-entities.view" paramName="table" text="loc:tablelist.create" />
+			</div>
 		</web:frame>
 	</loc:use>
 </v:template>

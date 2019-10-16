@@ -9,11 +9,11 @@
 		<utils:concat output="backButtonText" value1="&laquo;" value2=" " value3="loc:tablelist.title" />
 		<web:a pageId="~/in/custom-entities.view" text="utils:backButtonText" />
 		
-		<web:condition when="post:ce-column-create" is="create">
+		<admin:edit id="query:column">
 			<web:frame title="loc:columnlist.create">
 				<ced:tableColumnCreator name="query:table" />
 			</web:frame>
-		</web:condition>
+		</admin:edit>
 
 		<utils:concat output="listTitle" value1="loc:columnlist.title" value2=" :: " value3="query:table" />
 		<web:frame title="utils:listTitle">
@@ -32,13 +32,9 @@
 				</ui:grid>
 			</ced:listTableColumns>
 			<hr />
-			<ui:form>
-				<div class="gray-box">
-					<button name="ce-column-create" value="create">
-						<web:getProperty name="loc:columnlist.create" />
-					</button>
-				</div>
-			</ui:form>
+			<div class="gray-box">
+				<admin:newButton pageId="~/in/custom-entity-columns.view" paramName="column" param-table="query:table" text="loc:columnlist.create" />
+			</div>
 		</web:frame>
 	</loc:use>
 </v:template>

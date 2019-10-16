@@ -257,7 +257,9 @@
                 $model->submit(false);
 
                 if (self::createTable($model)) {
-                    self::redirectToSelf();
+                    $url = $_SERVER['REQUEST_URI'];
+                    $url = parent::removeUrlParameter($url, "table");
+                    self::redirectToUrl($url);
                     return;
                 }
             }
@@ -372,7 +374,9 @@
                 $model->submit(false);
 
                 if (self::createTableColumn($name, $tableName, $model)) {
-                    self::redirectToSelf();
+                    $url = $_SERVER['REQUEST_URI'];
+                    $url = parent::removeUrlParameter($url, "column");
+                    self::redirectToUrl($url);
                     return;
                 }
             }
@@ -501,7 +505,7 @@
             $model->render(true);
             
             $this->tableLocalizationColumns = self::getLocalizableColumns($xml);
-            $result .= self::partialView("customentities/tableLocalizationEditor");
+            $result = self::partialView("customentities/tableLocalizationEditor");
             $this->tableLocalizableColumns = null;
             
             $model->render(false);
