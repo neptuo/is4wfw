@@ -231,7 +231,7 @@
                         }, 
                         "hasColumn" => true,
                         "isLocalizable" => false,
-                        "fromUser" => function($value) { return intval($value); }
+                        "fromUser" => function($value) { return floatval($value); }
                     ),
                     array(
                         "key" => "shorttext", 
