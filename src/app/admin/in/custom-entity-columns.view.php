@@ -9,7 +9,7 @@
 		<utils:concat output="backButtonText" value1="&laquo;" value2=" " value3="loc:tablelist.title" />
 		<web:a pageId="~/in/custom-entities.view" text="utils:backButtonText" />
 		
-		<web:condition when="post:create" is="create">
+		<web:condition when="post:ce-column-create" is="create">
 			<web:frame title="loc:columnlist.create">
 				<ced:tableColumnCreator name="query:table" />
 			</web:frame>
@@ -34,7 +34,7 @@
 			<hr />
 			<ui:form>
 				<div class="gray-box">
-					<button name="create" value="create">
+					<button name="ce-column-create" value="create">
 						<web:getProperty name="loc:columnlist.create" />
 					</button>
 				</div>
