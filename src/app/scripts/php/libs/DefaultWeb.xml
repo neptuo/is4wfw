@@ -42,6 +42,9 @@
     <attribute>
       <attname>copyParameters</attname>
       <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
     </attribute>
     <comment>
       Vygeneruje menu stránek, kde: "parentId" je id kořenové stránky menu,
@@ -295,6 +298,13 @@
     <attribute>
       <attname>ip</attname>
       <attreq>implied</attreq>
+    </attribute>
+    <attribute>
+      <attname>copyParameters</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
     </attribute>
     <comment>
       Přesměruje uživatele na danou stranku, pokud je zadán 'browser', přesměruje pouze uživatele

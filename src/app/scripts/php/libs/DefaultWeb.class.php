@@ -1826,13 +1826,13 @@
          * 	C tag.
          * 	
          * 	@param		pageId		page id to redirect
-         * 	@parem		langId		language id of page
+         * 	@param		langId		language id of page
          * 	@param		browser		browser name
          * 	@param		ip		    client ip addresses separed by comma
          * 	@return		none
          *
          */
-        public function redirectTo($pageId, $langId = false, $browser = false, $ip = false) {
+        public function redirectTo($pageId, $langId = false, $browser = false, $ip = false, $copyParameters = false) {
             global $webObject;
             global $phpObject;
 
@@ -1861,6 +1861,10 @@
                 } else {
                     $redirect = false;
                 }
+            }
+
+            if ($copyParameters) {
+                $href = parent::addUrlQueryString($href);
             }
 
             $i = 0;
