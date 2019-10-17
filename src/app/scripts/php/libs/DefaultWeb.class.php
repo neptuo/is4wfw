@@ -544,7 +544,6 @@
                     $prj_add_url = '';
                     $parsed_url = $phpObject->str_tr($project['url'], '/', 1);
                     $project['url'] = $parsed_url[0];
-                    //$temp_url_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $project['url']);
                     $temp_url = $phpObject->str_tr($project['url'], '.');
                     $temp_req = $phpObject->str_tr($domainUrl, '.', 1);
                     for ($j = 0; $j < count($temp_url); $j++) {
@@ -596,7 +595,6 @@
                         $prj_add_url = '';
                         $parsed_url = $phpObject->str_tr($project['url'], '/', 1);
                         $project['url'] = $parsed_url[0];
-                        //$temp_url_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $project['url']);
                         echo $project['url'] . '<br />';
                         $temp_url = $phpObject->str_tr($project['url'], '.');
                         $temp_req = $phpObject->str_tr($domainUrl, '.', 1);
@@ -777,7 +775,7 @@
             $this->CurrentPageTimestamp = $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['timestamp'];
             if (count($this->TempLoadedContent) == count($this->PagesId)) {
                 foreach ($this->TempLoadedContent as $page) {
-                    preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['tag_lib_start']);
+                    self::parseContent($page['tag_lib_start']);
                 }
 
                 // Parse domain for setup dynamic properties
@@ -814,7 +812,7 @@
                 }
 
                 foreach ($this->TempLoadedContent as $page) {
-                    preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['tag_lib_end']);
+                    self::parseContent($page['tag_lib_end']);
                 }
 
                 $this->PageContent = self::getContent();
@@ -889,11 +887,8 @@
                 $pathCache = $path;
                 for ($i = 0; $i < count($return); $i++) {
                     $ok = true;
-                    //$temp_path_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['href']);
                     $temp_path = $phpObject->str_tr($return[$i]['href'], '/');
                     for ($j = 0; $j < count($temp_path); $j++) {
-                        //echo '<br />['.$i.']['.$j.']'.$temp_path[$j].' === '.$path[0];
-                        //$temp_path_rrc = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $temp_path[$j]);
                         $this->PropertyAttr = $path[0];
                         $this->PropertyUse = 'set';
                         $temp_path_rrc = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $temp_path[$j]);
@@ -913,14 +908,10 @@
                             break;
                         }
                     }
-                    //exit;
-                    // Dynamic rewrite ==== IMPORTANT ---------------
-                    //$tmp_path = preg_replace_callback($this->TAG_RE, array( &$this,'parsectag'), $return[$i]['href']);
-                    // ----------------------------------------------
 
                     if ($ok/* $tmp_path == $path[0] */) {
                         $this->ParsingPages = true;
-                        preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return[$i]['tag_lib_start']);
+                        self::parseContent($return[$i]['tag_lib_start']);
 
                         $this->PagesId[] = $return[$i]['page_id'];
                         // Otestovat!!!!!!!!!
@@ -933,17 +924,17 @@
                         }
                         self::parsePages($path[0] . '/' . $path[1], $return[$i]['page_id']);
 
-                        preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return[$i]['tag_lib_end']);
+                        self::parseContent($return[$i]['tag_lib_end']);
 
                         $this->ParsingPages = false;
                         return;
                     }
                 }
                 for ($i = 0; $i < count($return); $i++) {
-                    $tmp_path = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return[$i]['href']);
+                    $tmp_path = self::parseContent($return[$i]['href']);
                     if ($tmp_path == "") {
                         $this->ParsingPages = true;
-                        preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return[$i]['tag_lib_start']);
+                        self::parseContent($return[$i]['tag_lib_start']);
 
                         $this->PagesId[] = $return[$i]['page_id'];
                         // Otestovat!!!!!!!!!
@@ -957,7 +948,7 @@
 
                         self::parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0] . '/' . $path[1], $return[$i]['page_id']);
 
-                        preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return[$i]['tag_lib_end']);
+                        self::parseContent($return[$i]['tag_lib_end']);
 
                         $this->ParsingPages = false;
                         return;
@@ -1373,71 +1364,6 @@
 
         /**
          *
-         *  Function parses custom tag, call right function & return content.
-         *  
-         *  @param  ctag  custom tag as string
-         *  @return return of custom tag function     
-         *
-         */
-        private function parsectag($ctag) {
-            $object = explode(":", $ctag[1]);
-            $attributes = array();
-            $this->Attributes = array();
-
-            preg_replace_callback($this->ATT_RE, array(&$this, 'parseatt'), $ctag[3]);
-
-            foreach ($this->Attributes as $tmp) {
-                $att = explode("=", $tmp);
-                if (strlen($att[0]) > 0) {
-                    $this->PropertyAttr = '';
-                    $this->PropertyUse = 'get';
-                    
-                    $valueType = 'raw';
-                    if (strlen($att[1]) > 1) {
-                        $att[1] = substr($att[1], 1, strlen($att[1]) - 2);
-                        $evaluated = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $att[1]);
-
-                        if ($att[1] != $evaluated) {
-                            $att[1] = $evaluated;
-                            $valueType = 'eval';
-                        }
-                    } else {
-                        $att[1] = '';
-                    }
-
-                    $att[1] = str_replace("\"", "\\\"", $att[1]);
-                    $attributes[$att[0]] = array('value' => $att[1], 'type' => $valueType);
-                }
-            }
-            
-            global $phpObject;
-            if ($phpObject->isRegistered($object[0]) && $phpObject->isTag($object[0], $object[1], $attributes)) {
-                $attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
-
-                global ${$object[0] . "Object"};
-                $func = $phpObject->getFuncToTag($object[0], $object[1]);
-                if ($func && ($attributes !== false)) {
-                    $attstring = "";
-                    $i = 0;
-                    foreach ($attributes as $att) {
-                        $attstring .= "'" . $att['value'] . "'";
-                        if ($i < (count($attributes) - 1)) {
-                            $attstring .= ", ";
-                        }
-                        $i++;
-                    }
-
-                    eval('$return =  ${$object[0]."Object"}->{$func}(' . $attstring . ');');
-                    return $return;
-                }
-            } else {
-                echo parent::getError('This tag is not registered! [' . $object[0] . '] ['.$object[1].']');
-                return "";
-            }
-        }
-
-        /**
-         *
          *  Function parses custom property, call right function & return content.
          *  
          *  @param  cprop  custom property as string
@@ -1490,7 +1416,6 @@
             $path = $phpObject->str_tr($this->Path, '/', 1);
             $return = $this->TempLoadedContent[$this->PagesIdIndex];
 
-            //preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['tag_lib_start']);
             self::parseContent($return['tag_lib_start']);
 
             if (count($this->PagesId) > ($this->PagesIdIndex + 1)) {
@@ -1501,7 +1426,6 @@
 
             $this->CurrentDynamicPath = $path[0];
             
-            //$tmp_path = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['href']);
             $tmp_path = self::parseContent($return['href']);
 
             $this->ParentId = $this->PagesId[$this->PagesIdIndex];
@@ -1512,24 +1436,19 @@
                 if (strlen($return['title']) > 0) {
                     $this->PropertyAttr = '';
                     $this->PropertyUse = 'get';
-                    //$this->PageTitle = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['title']) . " - " . $this->PageTitle;
                     $this->PageTitle = self::parseContent($return['title']) . " - " . $this->PageTitle;
                 }
             }
             if (strlen($return['keywords']) > 0) {
-                //$return['keywords'] = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['keywords']);
                 $return['keywords'] = self::parseContent($return['keywords']);
             }
             $this->Keywords .= ( (strlen($return['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ',' . $return['keywords'] : $return['keywords']) : '');
 
             $this->Path = $path[1];
 
-            //$this->PageHead .= preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['head']);
             $this->PageHead .= self::parseContent($return['head']);
-            //$pageContent = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['content']);
             $pageContent = self::parseContent($return['content']);
 
-            //preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return['tag_lib_end']);
             self::parseContent($return['tag_lib_end']);
 
             $this->PagesIdIndex--;
@@ -1807,7 +1726,7 @@
                 $return = $dbObject->fetchAll("SELECT `content` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` WHERE `page`.`id` = " . $pageId . " AND `content`.`language_id` = " . $languageId . ";");
                 if (count($return) == 1) {
                     if (!$notParseCTag) {
-                        return preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $return[0]['content']);
+                        return self::parseContent($return[0]['content']);
                     } else {
                         return $return[0]['content'];
                     }
@@ -2512,9 +2431,7 @@
             // parse title
             $page = $this->TempLoadedContent[$this->PagesIdIndex - 1];
             if (strlen($page['title']) > 0) {
-                $this->PropertyAttr = '';
-                $this->PropertyUse = 'get';
-                return preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['title']);
+                return self::parseContent($page['title']);
             }
         }
 
@@ -2534,9 +2451,7 @@
             // parse title
             $page = $this->TempLoadedContent[count($this->TempLoadedContent) - 1];
             if (strlen($page['title']) > 0) {
-                $this->PropertyAttr = '';
-                $this->PropertyUse = 'get';
-                return preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $page['title']);
+                return self::parseContent($page['title']);
             }
         }
 
