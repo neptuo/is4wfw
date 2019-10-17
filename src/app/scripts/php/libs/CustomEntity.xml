@@ -46,7 +46,6 @@
       <prefix>true</prefix>
       <attcomment>Primární klíče pro editaci záznamu. Klíčem je název sloupce.</attcomment>
     </attribute>
-    <anyAttribute />
     <comment>
       Vygeneruje formulář pro přidání/úpravu záznamu v uživatelské entitě.
       Při editaci je nutné uvést všechny primární klíče záznamu, který se má editovat.
@@ -117,7 +116,11 @@
       <attreq>required</attreq>
       <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
     </attribute>
-    <anyAttribute />
+    <anyAttribute>
+      <comment>
+        Slouží pro where klauzuli při mazání objektů (umožňuje mazat více objektů).
+      </comment>
+    </anyAttribute>
     <comment>
       Smaže všechny záznamy z entity podle "params".
     </comment>
@@ -126,9 +129,14 @@
     <propname>list</propname>
     <getfunction>getListData</getfunction>
     <comment>
-        Vrací list model uvnitř "ce:list".
+      Vrací list model uvnitř "ce:list".
     </comment>
   </property>
-  <anyProperty />
+  <anyProperty>
+    <comment>
+      Uvnitř "ce:list" vrací fieldy aktuální položky.
+      Uvnitř "ce:form" vrací fieldy editovaného modelu.
+    </comment>
+  </anyProperty>
 </taglib>
 

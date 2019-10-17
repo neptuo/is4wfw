@@ -113,6 +113,13 @@
                                 $obsolete = (string)$tag->attribute[$i]->obsolete;
                                 $cssClass = ' obsolete';
                             }
+                            $prefix = null;
+                            if ($tag->attribute[$i]->prefix == 'true') {
+                                $prefix = $rb->get('lib.prefix.yes');
+                                $attributeName = $attributeName . '-*';
+                            } else {
+                                $prefix = $rb->get('lib.prefix.no');
+                            }
                             $required = null;
                             if ($tag->attribute[$i]->attreq == 'required') {
                                 $required = $rb->get('lib.attreq.yes');
@@ -125,6 +132,7 @@
                             .'<tr>'
                                 .'<td class="att-name' . $cssClass . '">' . $attributeName . '</td>'
                                 .'<td class="att-req' . $cssClass . '">' . $required . '</td>'
+                                .'<td class="att-prefix' . $cssClass . '">' . $prefix . '</td>'
                                 .'<td class="att-type' . $cssClass . '">' . $tag->attribute[$i]->atttype . '</td>'
                                 .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->attdef . '</td>'
                                 .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->attcomment . '</td>'
@@ -158,6 +166,7 @@
                                         .'<tr>'
                                             .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
                                             .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+                                            .'<th class="att-prefix">'.$rb->get('lib.prefix').'</th>'
                                             .'<th class="att-type">'.$rb->get('lib.atttype').'</th>'
                                             .'<th class="att-def">'.$rb->get('lib.attdef').'</th>'
                                             .'<th class="att-comment">'.$rb->get('lib.attcomment').'</th>'
@@ -186,6 +195,13 @@
                                 $obsolete = (string)$tag->attribute[$i]->obsolete;
                                 $cssClass = ' obsolete';
                             }
+                            $prefix = null;
+                            if ($tag->attribute[$i]->prefix == 'true') {
+                                $prefix = $rb->get('lib.prefix.yes');
+                                $attributeName = $attributeName . '-*';
+                            } else {
+                                $prefix = $rb->get('lib.prefix.no');
+                            }
                             $required = null;
                             if ($tag->attribute[$i]->attreq == 'required') {
                                 $required = $rb->get('lib.attreq.yes');
@@ -198,6 +214,7 @@
                             .'<tr>'
                                 .'<td class="att-name' . $cssClass . '">' . $attributeName . '</td>'
                                 .'<td class="att-req' . $cssClass . '">' . $required . '</td>'
+                                .'<td class="att-prefix' . $cssClass . '">' . $prefix . '</td>'
                                 .'<td class="att-type' . $cssClass . '">' . $tag->attribute[$i]->atttype . '</td>'
                                 .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->attdef . '</td>'
                                 .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->attcomment . '</td>'
@@ -207,7 +224,8 @@
                         if (isset($tag->anyAttribute)) {
                             $attributes .= ''
                             .'<tr>'
-                                .'<td colspan="3">'.$rb->get('lib.attparams').'</td>'
+                                .'<td colspan="5">'.$rb->get('lib.attparams').'</td>'
+                                .'<td class="att-comment">'. str_replace(PHP_EOL, '<br />', trim($tag->anyAttribute->comment)) .'</td>'
                             .'</tr>';
                         }
                         
@@ -231,6 +249,7 @@
                                         .'<tr>'
                                             .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
                                             .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+                                            .'<th class="att-prefix">'.$rb->get('lib.prefix').'</th>'
                                             .'<th class="att-type">'.$rb->get('lib.atttype').'</th>'
                                             .'<th class="att-def">'.$rb->get('lib.attdef').'</th>'
                                             .'<th class="att-comment">'.$rb->get('lib.attcomment').'</th>'
@@ -270,6 +289,7 @@
                         $return .= ''
                         . '<div class="lib-tag">'
                             . '<h3>' . $rb->get('lib.anyproperties') . '</h3>'
+                            . '<p>' . str_replace(PHP_EOL, '<br />', trim($xml->anyProperty->comment)) . '</p>'
                         . '</div>';
                     }
                 }
