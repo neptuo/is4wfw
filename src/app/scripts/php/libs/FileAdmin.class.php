@@ -513,10 +513,11 @@
 		}
 		
 		//C-tag
-		public function fileUpload($dirId = false, $useRights = false, $useFrames = false) {
+		public function fileUpload($dirId = false, $pageId = "", $useRights = false, $useFrames = false, $isStandalone = false) {
 			$this->useRights = $useRights;
 			
 			//parent::logVar($_POST);
+			$return = "";
 
 			if(($dirId == '' || $dirId == 0) && array_key_exists('dir-id', $_POST)) {
 				$dirId = $_POST['dir-id'];
@@ -556,9 +557,11 @@
 						//print_r($write);
 						//print_r($delete);
 						$result = self::processFileUpload($dataItem, $_FILES['file-upload']['tmp_name'][$i], $read, $write, $delete);
-						if($result != null) {
+						if ($result != null) {
 							$_POST['new-file'] = parent::rb('button.newfile');
 							$return .= parent::getError($result);
+						} else if(!empty($pageId)) {
+							parent::web()->redirectTo($pageId);
 						}
 					}
 				} else {
@@ -566,7 +569,7 @@
 				}
 			}
 			
-			if($_POST['new-file'] == parent::rb('button.newfile') || $_POST['new-zipfile'] == parent::rb('button.newzipfile') || $_POST['edit-file'] == parent::rb('file.edit')) {
+			if($_POST['new-file'] == parent::rb('button.newfile') || $_POST['new-zipfile'] == parent::rb('button.newzipfile') || $_POST['edit-file'] == parent::rb('file.edit') || $isStandalone) {
 				
 				$dataItem = array('name' =>  'file'.rand(1000, 9999).rand(1000, 9999), 'dir_id' => $dirId);
 				if(array_key_exists('file-id', $_POST)) {

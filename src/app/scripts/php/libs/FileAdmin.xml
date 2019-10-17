@@ -39,6 +39,11 @@
 	    <attdef>0</attdef>
     </attribute>
     <attribute>
+      <attname>pageId</attname>
+      <attreq>implied</attreq>
+      <attcomment>Stránka, kam se má uživatel přesměrovat po úspěšném nahrátí souboru.</attcomment>
+    </attribute>
+    <attribute>
       <attname>useRights</attname>
       <attreq>implied</attreq>
 	    <attdef>true</attdef>
@@ -47,6 +52,13 @@
       <attname>useFrames</attname>
       <attreq>implied</attreq>
 	    <attdef>true</attdef>
+    </attribute>
+    <attribute>
+      <attname>isStandalone</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+	    <attdef>false</attdef>
+      <attcomment>Pokud je nastaven na "true", zobrazí se vždy (tzn. není součástí fa:browser).</attcomment>
     </attribute>
     <comment>
       Zobrazí formulář nahrání souborů
