@@ -203,12 +203,12 @@
 		}
 		
 		protected function deleteFile($fileId) {
-			if(self::canUserFile($fileId, WEB_R_DELETE)) {
+			if (self::canUserFile($fileId, WEB_R_DELETE)) {
 				$file = parent::dao('File')->get($fileId);
-				if(!parent::dao('File')->delete($file)) {
+				if (!parent::dao('File')->delete($file)) {
 					unlink(self::getPhysicalPathToFile($file));
 					RoleHelper::deleteRights(FileAdmin::$FileRightDesc, $fileId);
-					return parent::getSuccess(parent::rb('file.deleted'));
+					return true;
 				} else {
 					return parent::getError(parent::dao('File')->getErrorMessage());
 				}
@@ -373,7 +373,12 @@
 			
 			if($_POST['delete-file'] == parent::rb('file.delete')) {
 				$fileId = $_POST['file-id'];
-				$return .= self::deleteFile($fileId);
+				$message = self::deleteFile($fileId);
+				if ($message === true) {
+					$message = parent::getSuccess(parent::rb('file.deleted'));
+				}
+
+				$return .= $message;
 			}
 			
 			if($_POST['delete-dir']  == parent::rb('dir.delete')) {
@@ -666,6 +671,8 @@
 		//C-tag
 		public function directoryEditor($useRights = false, $useFrames = false) {
 			$this->useRights = $useRights;
+
+			$return = "";
 			
 			if(array_key_exists('dir-id', $_POST)) {
 				$dirId = $_POST['dir-id'];
@@ -715,6 +722,13 @@
 				}	
 			}
 		}
+
+		//C-fulltag
+		public function fileDeleter($template, $id) {
+			if (self::deleteFile($id) === true) {
+				parent::parseContent($template);
+			}
+		}
 		
 		protected function transformFileSystem() {
 			$transformed = parent::getSystemProperty('FileAdmin.fileSystemTransformed');
@@ -755,10 +769,6 @@
 				rename($oldPath, $newPath);
 			}
 		}
-		
-		/* ================== WEB ========================================================= */
-		
-		/* ================== PROPERTIES ================================================== */
 	}
 
 	function CompareFileImport($a, $b)

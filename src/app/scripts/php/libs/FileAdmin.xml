@@ -81,5 +81,24 @@
       Zobrazí formulář pro editaci složky
     </comment>
   </tag>
+  <fulltag>
+    <tagname>fileDeleter</tagname>
+    <function>fileDeleter</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>id</attname>
+      <attreq>required</attreq>
+	    <atttype>number</atttype>
+      <attcomment>Id souboru, která se má smazat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>useFrames</attname>
+      <attreq>implied</attreq>
+	    <attdef>true</attdef>
+    </attribute>
+    <comment>
+      Smaže soubor podle "id".
+    </comment>
+  </fulltag>
 </taglib>
 
