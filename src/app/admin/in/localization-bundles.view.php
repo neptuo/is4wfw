@@ -3,7 +3,9 @@
         <ui:filter submit="search">
             <div class="gray-box gray-box-float">
                 <label class="w90">Language:</label>
-                <ui:dropdownlist name="lang" source="language" display="language" value="language" class="w200" />
+                <lang:list>
+                    <ui:dropdownlist name="lang" source="lang:list" display="name" value="language" class="w200" />
+                </lang:list>
             </div>
             <div class="gray-box-float">
                 <button name="search">Open</button>
