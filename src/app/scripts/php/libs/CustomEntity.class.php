@@ -320,6 +320,8 @@
                 if (!empty($nextPageId)) {
                     self::web()->redirectTo($nextPageId);
                 } else {
+                    $model->copyFrom($keys);
+
                     $model->saved(true);
                     self::parseContent($template);
                     $model->saved(false);
