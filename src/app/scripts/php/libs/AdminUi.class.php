@@ -7,6 +7,7 @@
 
 		public function __construct() {
 			parent::setTagLibXml("AdminUi.xml");
+			parent::setLocalizationBundle("adminui");
 		}
 
 		public function deleteButton($hiddenField, $confirmValue = null, $params = array()) {
@@ -25,6 +26,52 @@
 		public function newButton($pageId, $text, $paramName = "id", $param = array()) {
 			$param[$paramName] = "new";
 			return parent::web()->makeAnchor($pageId, $text, false, "button", "", "", "", "", "", $param);
+		}
+
+		public function saveButtons($saveName = "save", $saveParam = array(), $closePageId = "", $closeParam = array()) {
+			if (parent::peekEditModel()->isSaved()) {
+				self::redirectAfterSave($saveName, $saveParam, $closePageId, $closeParam);
+			}
+			
+			if (parent::peekEditModel()->isRender()) {
+				$saveText = parent::rb("buttons.save");
+				$saveCloseText = parent::rb("buttons.saveclose");
+				$closeText = parent::rb("buttons.close");
+
+				$result = ""
+				. "<button name='$saveName' value='save'>"
+					. $saveText
+				. "</button>"
+				. "<button name='$saveName' value='save-close'>"
+					. $saveCloseText
+				. "</button>"
+				. parent::web()->makeAnchor($closePageId, $closeText, false, "button", "", "", "", "", "", $closeParam);
+
+				return $result;
+			}
+		}
+
+		public function redirectAfterSave($saveName = "save", $saveParam = array(), $closePageId = "", $closeParam = array())
+		{
+			if (array_key_exists($saveName, $_POST)) {
+				$pageId = null;
+				$param = null;
+				if ($_POST[$saveName] == "save") {
+					$pageId = parent::web()->getLastPageId();
+					$param = $saveParam;
+				} else if ($_POST[$saveName] == "save-close") {
+					$pageId = $closePageId;
+					$param = $closeParam;
+				}
+
+				if ($pageId != null) {
+					if ($pageId == "") {
+						$pageId = parent::web()->getLastPageId();
+					}
+
+					parent::web()->redirectTo($pageId, false, false, false, false, $param);
+				}
+			}
 		}
 
 		public function field($template, $label, $params = array()) {

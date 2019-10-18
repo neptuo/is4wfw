@@ -63,6 +63,74 @@
       Vykreslí odkaz pro založení objektu (link s třídou button).
     </comment>
   </tag>
+  <tag>
+    <tagname>saveButtons</tagname>
+    <function>saveButtons</function>
+    <attribute>
+      <attname>saveName</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attdef>save</attdef>
+      <attcomment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>saveParam</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <prefix>true</prefix>
+      <attcomment>Seznam parametrů předaných při přesměrování pro "Save".</attcomment>
+    </attribute>
+    <attribute>
+      <attname>closePageId</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Id stránky, kam má vést odkaz pro zavření.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>closeParam</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <prefix>true</prefix>
+      <attcomment>Seznam parametrů, které se předají "Close" odkazu.</attcomment>
+    </attribute>
+    <comment>
+      Vykreslí tlačítka ("Save", "Save and Close", "Close").
+      Zároveň pokud je aktuálně formulář odeslán, pokusí se provést odpovídající přesměrování.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>redirectAfterSave</tagname>
+    <function>redirectAfterSave</function>
+    <attribute>
+      <attname>saveName</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Id stránky, kam má vést odkaz pro zavření.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>saveParam</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <prefix>true</prefix>
+      <attcomment>Seznam parametrů předaných při přesměrování pro "Save".</attcomment>
+    </attribute>
+    <attribute>
+      <attname>closePageId</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Id stránky, kam má vést odkaz pro zavření.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>closeParam</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <prefix>true</prefix>
+      <attcomment>Seznam parametrů, které se předají "Close" odkazu.</attcomment>
+    </attribute>
+    <comment>
+      Pokud byl odeslán formulář pro tlačítko "saveName" pomocí "admin:saveButtons", provede přesměrování podle "Save" nebo "Save and Close".
+    </comment>
+  </tag>
   <fulltag>
     <tagname>field</tagname>
     <function>field</function>
