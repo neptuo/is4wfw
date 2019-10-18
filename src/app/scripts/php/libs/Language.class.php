@@ -20,11 +20,15 @@
 			parent::setTagLibXml("Language.xml");
 		}
 		
-		public function listItems($template) {
+		public function listItems($template, $filter = array(), $orderBy = array()) {
 			$model = new ListModel();
 			parent::pushListModel($model);
 
-			$sql = parent::sql()->select(self::TableName, array("id", "language", "name", "natural_name"), array(), array("id" => "asc"));
+			if (count($orderBy) == 0) {
+				$orderBy["id"] = "asc";
+			}
+
+			$sql = parent::sql()->select(self::TableName, array("id", "language", "name", "natural_name"), $filter, $orderBy);
 			$data = self::dataAccess()->fetchAll($sql);
 
 			$model->render();
