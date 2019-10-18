@@ -1,7 +1,6 @@
 $isTag = 'true' -eq $env:APPVEYOR_REPO_TAG;
 if ($isTag) {
-    $sourceCommitHash = Invoke-Expression "git rev-list --tags --max-count=1";
-    $source = Invoke-Expression "git describe --tags $sourceCommitHash";
+    $source = Invoke-Expression "git describe --abbrev=0 --tags HEAD~1";
     $target = $env:APPVEYOR_REPO_TAG_NAME;
     Write-Host "Running an Appveyor release build (tag '$target', patch source '$source').";
 
