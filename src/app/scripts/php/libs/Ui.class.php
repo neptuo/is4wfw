@@ -1,6 +1,7 @@
 <?php
 
 	require_once("BaseTagLib.class.php");
+    require_once("Session.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
 
 	class Ui extends BaseTagLib {
@@ -232,9 +233,11 @@
 			return self::input($params);
 		}
 
-		public function filter($template, $submit, $params = array()) {
+		public function filter($template, $submit, $session = "", $params = array()) {
             $model = new EditModel();
 			self::pushEditModel($model);
+
+			$session = split(",", $session);
 
 			if (array_key_exists($submit, $_POST)) {
 				$model->submit();
@@ -250,9 +253,17 @@
 					}
 
 					if (!empty($value)) {
-						$url = self::addUrlParameter($url, $key, $value);
+						if (in_array($key, $session)) {
+							parent::session()->set($key, $value, Session::StorageKey);
+						} else {
+							$url = self::addUrlParameter($url, $key, $value);
+						}
 					} else {
-						$url = self::removeUrlParameter($url, $key);
+						if (in_array($key, $session)) {
+							parent::session()->delete($key, Session::StorageKey);
+						} else {
+							$url = self::removeUrlParameter($url, $key);
+						}
 					}
 				}
 
@@ -261,6 +272,10 @@
 			} else {
 				foreach ($_GET as $key => $value) {
 					$model[$key] = $value;
+				}
+				
+				foreach (parent::session()->keys(Session::StorageKey) as $key) {
+					$model[$key] = parent::session()->get($key, Session::StorageKey);
 				}
 			}
 			
