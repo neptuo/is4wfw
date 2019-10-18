@@ -653,6 +653,9 @@
 
             if ($model == null && $createIfNotExists) {
                 $model = new EditModel();
+                $model->submit(true);
+                $model->render(true);
+                $model->saved(true);
             }
 
             return $model;
