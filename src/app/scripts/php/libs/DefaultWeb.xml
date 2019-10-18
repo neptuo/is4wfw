@@ -38,6 +38,7 @@
     <attribute>
       <attname>template</attname>
       <attreq>implied</attreq>
+      <obsolete>Již se nepoužívá (vnitřně není ani implementováno).</obsolete>
     </attribute>
     <attribute>
       <attname>copyParameters</attname>
@@ -45,6 +46,13 @@
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>display</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attdef>name</attdef>
+      <attcomment>Vlastnost z "info", která se má použít jako text odkazu ("name" nebo "title").</attcomment>
     </attribute>
     <comment>
       Vygeneruje menu stránek, kde: "parentId" je id kořenové stránky menu,

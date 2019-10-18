@@ -1472,7 +1472,7 @@
          *  @return generated menu                    
          *
          */
-        public function getMenu($parentId = false, $inner = false, $classes = false, $rel = false, $template = false, $copyParameters = false, $inn = false) {
+        public function getMenu($parentId = false, $inner = false, $classes = false, $rel = false, $template = false, $copyParameters = false, $display = "name", $inn = false) {
             global $dbObject;
             global $loginObject;
             if ($inn == false) {
@@ -1481,8 +1481,9 @@
             if ($inner == false) {
                 $inner = 1000;
             }
+            $content = "";
             $parentId = (!$parentId) ? 0 : $parentId;
-            $return = $dbObject->fetchAll("SELECT `page`.`id`, `info`.`name`, `info`.`href` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `info`.`in_menu` = 1 AND `is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`wp` = " . $this->ProjectId . " ORDER BY `info`.`page_pos`;");
+            $return = $dbObject->fetchAll("SELECT `page`.`id`, `info`.`$display` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `info`.`in_menu` = 1 AND `is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`wp` = " . $this->ProjectId . " ORDER BY `info`.`page_pos`;");
             if (count($return) > 0) {
                 $content .= '<div class="menu menu-' . $inn . ((strlen($classes) > 0) ? ' ' . $classes : '') . '"><ul class="ul-' . $inn . '">';
                 $i = 1;
@@ -1493,7 +1494,6 @@
                     }
                     $href = self::composeUrl($lnk['id'], $this->LanguageId, false, true, $copyParameters);
                     $parent = (in_array($lnk['id'], $this->PagesId)) ? true : false;
-                    //$active = (($lnk['id'] == $this->PagesId[count($this->PagesId) - 1]) ? true : false);
 
                     $active = false;
                     if ($href == '/' . $_REQUEST['WEB_PAGE_PATH']) {
@@ -1501,21 +1501,27 @@
                         $parent = false;
                     }
 
-
-                    //$class = ($this->ParentId == $lnk['id']) ? " class=\"active-item\"" : "";
                     if ($inner > 1) {
-                        $tmpContent = self::getMenu($lnk['id'], $inner, (($parent || $active) ? 'active-submenu' : ''), false, $copyParameters, $inn + 1);
+                        $innerParentId = $lnk['id'];
+                        $innerClasses = ($parent || $active) ? 'active-submenu' : '';
+                        $tmpContent = self::getMenu($innerParentId, $inner, $innerClasses, false, false, $copyParameters, $display, $inn + 1);
+                    }
+
+                    $lnkName = $lnk[$display];
+                    if ($display == "title") {
+                        $lnkName = self::parseContent($lnk[$display]);
                     }
 
                     $content .= ''
-                            . '<li class="menu-item li-' . $i . (($parent) ? ' active-parent' : '') . (($active) ? ' active-item' : '') . ' ' . ((strlen($tmpContent) != 0) ? 'parent' : 'single') . '">'
-                            . '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
+                    . '<li class="menu-item li-' . $i . (($parent) ? ' active-parent' : '') . (($active) ? ' active-item' : '') . ' ' . ((strlen($tmpContent) != 0) ? 'parent' : 'single') . '">'
+                        . '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
                             . '<a href="' . $href . '"' . (($rel != false) ? ' rel="' . $rel . '"' : '') . '>'
-                            . '<span>' . $lnk['name'] . '</span>'
+                                . '<span>' . $lnkName . '</span>'
                             . '</a>'
-                            . '</div>'
-                            . $tmpContent
-                            . '</li>';
+                        . '</div>'
+                        . $tmpContent
+                    . '</li>';
+
                     $i++;
                 }
                 $inner--;
