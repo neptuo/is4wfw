@@ -5,6 +5,7 @@
         private $isRegistration;
         private $isSubmit;
         private $isRender;
+        private $isSaved;
         private $request;
 
         public function isRegistration() {
@@ -29,6 +30,14 @@
 
         public function render() {
             $this->isRender = true;
+        }
+        
+        public function isSaved() {
+            return $this->isSaved;
+        }
+
+        public function saved($value = true) {
+            $this->isSaved = $value;
         }
 
         public function request($request = null) {

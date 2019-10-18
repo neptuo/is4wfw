@@ -320,6 +320,10 @@
                 if (!empty($nextPageId)) {
                     self::web()->redirectTo($nextPageId);
                 } else {
+                    $model->saved(true);
+                    self::parseContent($template);
+                    $model->saved(false);
+
                     if (!$isUpdate) {
                         self::popEditModel();
                         $model = new EditModel();
@@ -332,6 +336,10 @@
             $result = self::ui()->form($template, "post");
             self::popEditModel();
             return $result;
+        }
+
+        public function isFormSaved() {
+            return parent::peekEditModel()->isSaved();
         }
 
         public function emptyDirectory($name, $parentDirId, $nameFormat) {
@@ -378,16 +386,27 @@
         }
 
 		public function getProperty($name) {
-			$model = self::peekListModel();
-			if ($model == null) {
-				return null;
+            // Inside "ce:list".
+			$model = parent::peekListModel(false);
+			if ($model != null) {
+                if ($name == "_") {
+                    return $model->data();
+                }
+    
+                return $model->field($name);
 			}
 
-			if ($name == "_") {
-				return $model->data();
-			}
-
-			return $model->field($name);
+            // Inside "ce:form".
+            $model = parent::peekEditModel(false);
+            if ($model != null) {
+                if ($name == "_") {
+                    return $model;
+                }
+                
+                return $model[$name];
+            }
+            
+            return null;
 		}
         
         public function deleter($template, $name, $params = array()) {

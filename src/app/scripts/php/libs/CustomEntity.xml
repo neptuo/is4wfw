@@ -33,7 +33,7 @@
       <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>0</attdef>
-      <attcomment>Id stránky, kam se má přesměrovat po úspěšném uložení záznamu.</attcomment>
+      <attcomment>Id stránky, kam se má přesměrovat po úspěšném uložení záznamu (alternativou je použít "ce:formSaved" v podmínce, pak je možné do redirectu nabindovat i klíč nového záznamu).</attcomment>
     </attribute>
     <attribute>
       <attname>langIds</attname>
@@ -125,6 +125,13 @@
       Smaže všechny záznamy z entity podle "params".
     </comment>
   </fulltag>
+  <property>
+    <propname>formSaved</propname>
+    <getfunction>isFormSaved</getfunction>
+    <comment>
+      Vrací true/false, zda se povedlo uložit "ce:form".
+    </comment>
+  </property>
   <property>
     <propname>list</propname>
     <getfunction>getListData</getfunction>
