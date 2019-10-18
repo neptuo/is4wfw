@@ -1,10 +1,6 @@
 <?php
 
-define("BUILD_VERSION", 339);
-define("PATCH_VERSION", 0); // .1
-define("PREVIEW_VERSION", "-preview8"); // -beta1
-
-define("WEB_VERSION", 'v' . BUILD_VERSION . '.' . PATCH_VERSION . PREVIEW_VERSION);
+define("WEB_VERSION", "v0.0-preview1");
 define("CMS_VERSION", "v5.6");
 
 ?>

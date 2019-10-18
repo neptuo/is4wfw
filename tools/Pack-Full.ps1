@@ -10,6 +10,9 @@ if ($null -eq $versionName)
 
 Push-Location $PSScriptRoot;
 
+# Update version file.
+Invoke-Expression ".\Update-Version.ps1 $versionName";
+
 # Compute release name.
 $srcPath = "src";
 $artifactsPath = "artifacts";
