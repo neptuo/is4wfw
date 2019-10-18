@@ -298,6 +298,7 @@
     <attribute>
       <attname>ip</attname>
       <attreq>implied</attreq>
+      <attcomment>Klientská IP adresa (seznam čárkou odělených).</attcomment>
     </attribute>
     <attribute>
       <attname>copyParameters</attname>
@@ -306,9 +307,16 @@
       <attdef>false</attdef>
       <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
     </attribute>
+    <attribute>
+      <attname>param</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <prefix>true</prefix>
+      <attcomment>Seznam parametrů (klíč=hodnota), které se mají přidat do URL. Mají přednost před hodnotami při "copyParameters".</attcomment>
+    </attribute>
     <comment>
       Přesměruje uživatele na danou stranku, pokud je zadán 'browser', přesměruje pouze uživatele
-			používající odpovídající prohlížeč. Parametr IP: klientova ip adresa ( více odělených čárkou ). 
+			používající odpovídající prohlížeč. Parametr IP: . 
     </comment>
   </tag>
   <tag>

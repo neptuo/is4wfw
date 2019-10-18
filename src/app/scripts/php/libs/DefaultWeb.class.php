@@ -1832,7 +1832,7 @@
          * 	@return		none
          *
          */
-        public function redirectTo($pageId, $langId = false, $browser = false, $ip = false, $copyParameters = false) {
+        public function redirectTo($pageId, $langId = false, $browser = false, $ip = false, $copyParameters = false, $param = array()) {
             global $webObject;
             global $phpObject;
 
@@ -1867,17 +1867,9 @@
                 $href = parent::addUrlQueryString($href);
             }
 
-            $i = 0;
-            if (count($_GET) > 1 && strpos($key, $href) == -1) {
-                foreach ($_GET as $key => $param) {
-                    if ($key != 'WEB_PAGE_PATH') {
-                        if ($i == 0) {
-                            $href .= '?' . $key . '=' . $param;
-                        } else {
-                            $href .= '&' . $key . '=' . $param;
-                        }
-                        $i++;
-                    }
+            if (count($param) > 0) {
+                foreach ($param as $key => $value) {
+                    $href = parent::addUrlParameter($href, $key, $value);
                 }
             }
 
