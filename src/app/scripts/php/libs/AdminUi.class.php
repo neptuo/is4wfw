@@ -41,10 +41,10 @@
 				$result = ""
 				. "<button name='$saveName' value='save'>"
 					. $saveText
-				. "</button>"
+				. "</button> "
 				. "<button name='$saveName' value='save-close'>"
 					. $saveCloseText
-				. "</button>"
+				. "</button> "
 				. parent::web()->makeAnchor($closePageId, $closeText, false, "button", "", "", "", "", "", $closeParam);
 
 				return $result;
