@@ -3,19 +3,19 @@
 	class SessionStorage {
 		
 		public function set($key, $value, $storage = 'default') {
-			if($key != '') {
+			if ($key != '') {
 				$_SESSION['session-storage'][$storage][$key] = $value;
 			}
 		}
 		
 		public function delete($key, $storage = 'default') {
-			if($key != '') {
+			if ($key != '') {
 				unset($_SESSION['session-storage'][$storage][$key]);
 			}
 		}
 		
 		public function get($key, $storage = 'default') {
-			if(self::exists($key, $storage)) {
+			if (self::exists($key, $storage)) {
 				return $_SESSION['session-storage'][$storage][$key];
 			} else {
 				return null;
@@ -28,6 +28,14 @@
 		
 		public function exists($key, $storage = 'default') {
 			return array_key_exists($key, $_SESSION['session-storage'][$storage]);
+		}
+		
+		public function keys($storage = 'default') {
+			if (array_key_exists($storage, $_SESSION['session-storage'])) {
+				return array_keys($_SESSION['session-storage'][$storage]);
+			}
+
+			return array();
 		}
 		
 		public function dump($storage = 'default') {

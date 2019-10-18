@@ -12,16 +12,17 @@
 	<reg prefix="g" class="php.libs.Guestbook" />
 	<reg prefix="i" class="php.libs.Inquiry" />
 	<reg prefix="img" class="php.libs.Image" />
+	<reg prefix="js" class="php.libs.Js" />
 	<reg prefix="loc" class="php.libs.Localization" />
 	<reg prefix="lang" class="php.libs.Language" />
 	<reg prefix="p" class="php.libs.Page" />
 	<reg prefix="s" class="php.libs.Sport" />
 	<reg prefix="sys" class="php.libs.System" />
 	<reg prefix="u" class="php.libs.User" />
-	<reg prefix="wp" class="php.libs.WebProject" />
-	<reg prefix="js" class="php.libs.Js" />
-	<reg prefix="var" class="php.libs.Variable" />
+	<reg prefix="session" class="php.libs.Session" />
 	<reg prefix="template" class="php.libs.Template" />
 	<reg prefix="ui" class="php.libs.Ui" />
 	<reg prefix="utils" class="php.libs.Utilities" />
+	<reg prefix="var" class="php.libs.Variable" />
+	<reg prefix="wp" class="php.libs.WebProject" />
 </autoregister>
