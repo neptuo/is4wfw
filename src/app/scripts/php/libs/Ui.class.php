@@ -292,6 +292,8 @@
 
 				if (is_array($source)) {
 					$data = $source;
+				} else if ($source instanceof ListModel) {
+					$data = $source->items();
 				} else {
 					$data = self::dataAccess()->fetchAll(parent::sql()->select($source, array($id, $display), array(), array($display => "asc")));
 				}
@@ -329,6 +331,8 @@
 
 				if (is_array($source)) {
 					$data = $source;
+				} else if ($source instanceof ListModel) {
+					$data = $source->items();
 				} else {
 					$data = self::dataAccess()->fetchAll(parent::sql()->select($source, array($id, $display), array(), array($display => "asc")));
 				}
