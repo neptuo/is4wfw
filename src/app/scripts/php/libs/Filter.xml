@@ -26,6 +26,74 @@
     </attribute>
     <comment>Deklaruje filtru s názvem "name".</comment>
   </fulltag>
+  <fulltag>
+    <tagname>and</tagname>
+    <function>and</function>
+    <comment>Všechny vnitřní podmínky budou spojeny pomocí "AND".</comment>
+  </fulltag>
+  <fulltag>
+    <tagname>or</tagname>
+    <function>or</function>
+    <comment>Všechny vnitřní podmínky budou spojeny pomocí "OR".</comment>
+  </fulltag>
+  <tag>
+    <tagname>equals</tagname>
+    <function>equals</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+      <attcomment>Hodnota pro filtr.</attcomment>
+    </attribute>
+  </tag>
+  <tag>
+    <tagname>in</tagname>
+    <function>in</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>values</attname>
+      <attreq>required</attreq>
+      <attcomment>Hodnoty pro filtr (string nebo pole).</attcomment>
+    </attribute>
+  </tag>
+  <tag>
+    <tagname>like</tagname>
+    <function>like</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>startsWith</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Sloupec musí začínat textem.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>endsWith</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Sloupec musí končit textem.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>contains</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Sloupec musí končit textem.</attcomment>
+    </attribute>
+  </tag>
   <anyProperty>
     <comment>Slouží k získání dříve deklarovaného filtru. Název proměnné odpovídá názvu při deklaraci.</comment>
   </anyProperty>

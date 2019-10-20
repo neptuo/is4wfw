@@ -15,7 +15,7 @@
             return $base . $item;
         }
 
-        private function escape($value) {
+        public function escape($value) {
             if (is_string($value)) {
                 $value = "'" . $this->dataAccess->escape($value) . "'";
             } else if (is_bool($value)) {
