@@ -8,6 +8,7 @@
 	<reg prefix="ced" class="php.libs.CustomEntityAdmin" />
 	<reg prefix="f" class="php.libs.File" />
 	<reg prefix="fa" class="php.libs.FileAdmin" />
+	<reg prefix="filter" class="php.libs.Filter" />
 	<reg prefix="google" class="php.libs.Google" />
 	<reg prefix="g" class="php.libs.Guestbook" />
 	<reg prefix="i" class="php.libs.Inquiry" />
