@@ -130,7 +130,18 @@
                 $columns = self::joinString($columns, "`$key`");
             }
 
-            $sql = "SELECT $columns FROM `$tableName`$condition$order;";
+            if (is_array($tableName)) {
+                $table = $tableName["table"];
+                $alias = $tableName["alias"];
+                $tableName = "`$table`";
+                if (!empty($alias)) {
+                    $tableName .= " AS $alias";
+                }
+            } else {
+                $tableName = "`$tableName`";
+            }
+
+            $sql = "SELECT $columns FROM $tableName$condition$order;";
             return $sql;
         }
 

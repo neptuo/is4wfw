@@ -44,6 +44,7 @@
 		private function joiner($template, $joiner) {
 			$parent = $this->current->peek();
 			$instance = new FilterModel();
+			$instance->alias = $parent->alias;
 			$instance->joiner = $joiner;
 			$this->current->push($instance);
 			
@@ -128,12 +129,7 @@
 		}
 
 		public function getProperty($name) {
-			$instance = $this->instances[$name];
-			if ($instance != null) {
-				return $instance->toSql();
-			}
-
-			return "";
+			return $this->instances[$name];
 		}
 	}
 

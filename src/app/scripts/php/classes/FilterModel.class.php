@@ -5,6 +5,10 @@
         public $alias;
         public $joiner;
 
+        public function __toString() {
+            return $this->toSql();
+        }
+
         public function toSql() {
             $result = "";
             $joiner = " " . $this->joiner . " ";

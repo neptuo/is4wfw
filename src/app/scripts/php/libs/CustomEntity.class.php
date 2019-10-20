@@ -2,6 +2,7 @@
 
 	require_once("CustomEntityBase.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/FilterModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
@@ -374,6 +375,14 @@
 
             if (count($filter) == 1 && array_key_exists("", $filter)) {
                 $filter = $filter[""];
+            }
+
+            if ($filter instanceof FilterModel) {
+                if (!empty($filter->alias)) {
+                    $tableName = array("table" => $tableName, "alias" => $filter->alias);
+                }
+                
+                $filter = $filter->toSql();
             }
 
             $sql = self::sql()->select($tableName, $model->fields(), $filter, $orderBy);
