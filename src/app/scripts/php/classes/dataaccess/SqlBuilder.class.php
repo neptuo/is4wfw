@@ -26,6 +26,10 @@
         }
 
         private function condition($filter, $operator = "AND ") {
+            if (is_string($filter)) {
+                return $filter;
+            }
+
             $result = "";
 
             foreach ($filter as $key => $value) {

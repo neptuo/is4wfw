@@ -109,7 +109,7 @@
             foreach ($langs as $langId => $lang) {
                 // Check if update is possible.
                 if ($isNewRecord) {
-                    $count == 0;
+                    $count["count"] = 0;
                 } else {
                     $count = self::dataAccess()->fetchSingle(self::sql()->count($tableName, $primaryKeys));
                 }
@@ -371,6 +371,10 @@
             $model->registration(false);
             
             $result = "";
+
+            if (count($filter) == 1 && array_key_exists("", $filter)) {
+                $filter = $filter[""];
+            }
 
             $sql = self::sql()->select($tableName, $model->fields(), $filter, $orderBy);
             $data = self::dataAccess()->fetchAll($sql);

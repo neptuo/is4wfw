@@ -86,12 +86,14 @@
 				$values = $valueString;
 			}
 
-			$instance[] = self::formatColumnName($instance, $name) . " IN ($values)";
+			if (!empty($values)) {
+				$instance[] = self::formatColumnName($instance, $name) . " IN ($values)";
+			}
 		}
-
+		
 		public function like($name, $startsWith = "", $endsWith = "", $contains = "") {
 			$instance = $this->current->peek();
-
+			
 			$value = "";
 			if ($startsWith != "") {
 				$value = parent::sql()->escape($startsWith . "%");
@@ -100,8 +102,10 @@
 			} else if ($contains != "") {
 				$value = parent::sql()->escape("%" . $contains . "%");
 			}
-
-			$instance[] = self::formatColumnName($instance, $name) . " LIKE $value";
+			
+			if (!empty($value)) {
+				$instance[] = self::formatColumnName($instance, $name) . " LIKE $value";
+			}
 		}
 
 		public function getProperty($name) {
