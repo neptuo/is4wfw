@@ -59,7 +59,7 @@
 		}
 		
 		public function operatorOr($template) {
-			self::joiner($template, "AND");
+			self::joiner($template, "OR");
 		}
 
 		public function equals($name, $value) {
