@@ -62,6 +62,25 @@
 			self::joiner($template, "OR");
 		}
 
+		public function exists($template, $from, $alias, $outerColumn, $innerColumn) {
+			$parent = $this->current->peek();
+			$instance = new FilterModel();
+			$instance->alias = $alias;
+			$instance->joiner = "AND";
+			$this->current->push($instance);
+
+			$outerColumn = self::formatColumnName($parent, $outerColumn);
+			$innerColumn = self::formatColumnName($instance, $innerColumn);
+			$instance[] = "$outerColumn = $innerColumn";
+
+			self::parseContent($template);
+
+			$this->current->pop();
+			$sql = $instance->toSql();
+			$sql = "EXISTS(SELECT * FROM `$from` AS $alias WHERE $sql)";
+			$parent[] = $sql;
+		}
+
 		public function equals($name, $value) {
 			$instance = $this->current->peek();
 			$value = parent::sql()->escape($value);

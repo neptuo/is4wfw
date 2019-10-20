@@ -19,10 +19,9 @@
       <attcomment>Název filtru. Pod tímto názvem je pak možné ho získat pomocí anyProperty.</attcomment>
     </attribute>
     <attribute>
-      <attname>alies</attname>
+      <attname>alias</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
-      <attcomment>Název filtru. Pod tímto názvem je pak možné ho získat pomocí anyProperty.</attcomment>
     </attribute>
     <comment>Deklaruje filtru s názvem "name".</comment>
   </fulltag>
@@ -35,6 +34,31 @@
     <tagname>or</tagname>
     <function>operatorOr</function>
     <comment>Všechny vnitřní podmínky budou spojeny pomocí "OR".</comment>
+  </fulltag>
+  <fulltag>
+    <tagname>exists</tagname>
+    <function>exists</function>
+    <attribute>
+      <attname>from</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název název tabulky, na kterou se exists vztahuje.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>alias</attname>
+      <attreq>requierd</attreq>
+      <atttype>string</atttype>
+    </attribute>
+    <attribute>
+      <attname>outerColumn</attname>
+      <attreq>requierd</attreq>
+      <atttype>string</atttype>
+    </attribute>
+    <attribute>
+      <attname>innerColumn</attname>
+      <attreq>requierd</attreq>
+      <atttype>string</atttype>
+    </attribute>
   </fulltag>
   <tag>
     <tagname>equals</tagname>
