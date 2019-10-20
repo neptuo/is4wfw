@@ -15,25 +15,30 @@
 	class Filter extends BaseTagLib {
 
 		private $instances = array();
-		private $current = new Stack();
+		private $current;
 
 		public function __construct() {
 			parent::setTagLibXml("Filter.xml");
+			$this->current = new Stack();
 		}
 
 		private function formatColumnName($instance, $name) {
-			return $instance->alias . "`$name`";
+			$alias = $instance->alias;
+			if (empty($alias))
+				return "`$name`";
+			return "$alias.`$name`";
 		}
 		
-		public function declare($template, $name, $alias = "") {
+		public function declareInstance($template, $name, $alias = "") {
 			$instance = new FilterModel();
 			$instance->alias = $alias;
+			$instance->joiner = "AND";
 			$this->instances[$name] = $instance;
 			$this->current->push($instance);
 
 			self::parseContent($template);
 			
-			$this->aliases->pop();
+			$this->current->pop();
 		}
 
 		private function joiner($template, $joiner) {
@@ -49,11 +54,11 @@
 			$parent[] = $sql;
 		}
 		
-		public function and($template) {
+		public function operatorAnd($template) {
 			self::joiner($template, "AND");
 		}
 		
-		public function or($template) {
+		public function operatorOr($template) {
 			self::joiner($template, "AND");
 		}
 
@@ -100,7 +105,12 @@
 		}
 
 		public function getProperty($name) {
-			return $this->instances[$name];
+			$instance = $this->instances[$name];
+			if ($instance != null) {
+				return $instance->toSql();
+			}
+
+			return "";
 		}
 	}
 

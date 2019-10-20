@@ -6,7 +6,21 @@
         public $joiner;
 
         public function toSql() {
-            return "(" . implode($this->joiner, $this) . ")";
+            $result = "";
+            $joiner = " " . $this->joiner . " ";
+            foreach ($this as $value) {
+                $result = self::joinString($result, $value, $joiner);
+            }
+
+            return "($result)";
+        }
+
+        private function joinString($base, $item, $separator = ", ") {
+            if (strlen($base) > 0) {
+                $base .= $separator;
+            }
+
+            return $base . $item;
         }
     }
 

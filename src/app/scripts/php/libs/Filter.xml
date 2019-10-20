@@ -10,7 +10,7 @@
   </comment>
   <fulltag>
     <tagname>declare</tagname>
-    <function>declare</function>
+    <function>declareInstance</function>
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
@@ -28,12 +28,12 @@
   </fulltag>
   <fulltag>
     <tagname>and</tagname>
-    <function>and</function>
+    <function>operatorAnd</function>
     <comment>Všechny vnitřní podmínky budou spojeny pomocí "AND".</comment>
   </fulltag>
   <fulltag>
     <tagname>or</tagname>
-    <function>or</function>
+    <function>operatorOr</function>
     <comment>Všechny vnitřní podmínky budou spojeny pomocí "OR".</comment>
   </fulltag>
   <tag>
