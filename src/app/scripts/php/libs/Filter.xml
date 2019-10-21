@@ -74,6 +74,13 @@
       <attreq>required</attreq>
       <attcomment>Hodnota pro filtr.</attcomment>
     </attribute>
+    <attribute>
+      <attname>not</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda se má podmínka negovat, tedy "nerovná se".</attcomment>
+    </attribute>
   </tag>
   <tag>
     <tagname>in</tagname>
@@ -88,6 +95,13 @@
       <attname>values</attname>
       <attreq>required</attreq>
       <attcomment>Hodnoty pro filtr (string nebo pole).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>not</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda se má podmínka negovat, tedy "neobsahuje".</attcomment>
     </attribute>
   </tag>
   <tag>

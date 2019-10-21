@@ -82,13 +82,18 @@
 			$parent[] = $sql;
 		}
 
-		public function equals($name, $value) {
+		public function equals($name, $value, $not = false) {
 			$instance = $this->current->peek();
 			$value = parent::sql()->escape($value);
-			$instance[] = self::formatColumnName($instance, $name) . " = $value";
+			$operator = "=";
+			if ($not) {
+				$operator = "!" . $operator;
+			}
+
+			$instance[] = self::formatColumnName($instance, $name) . " $operator $value";
 		}
 
-		public function in($name, $values) {
+		public function in($name, $values, $not = false) {
 			$instance = $this->current->peek();
 
 			if (is_string($values)) {
@@ -106,8 +111,13 @@
 				$values = $valueString;
 			}
 
+			$operator = "IN";
+			if ($not) {
+				$operator = "NOT " . $operator;
+			}
+
 			if (!empty($values)) {
-				$instance[] = self::formatColumnName($instance, $name) . " IN ($values)";
+				$instance[] = self::formatColumnName($instance, $name) . " $operator ($values)";
 			}
 		}
 		
