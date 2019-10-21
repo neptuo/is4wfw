@@ -82,6 +82,16 @@
 			$parent[] = $sql;
 		}
 
+		public function empty($name, $not = false) {
+			$instance = $this->current->peek();
+			$operator = "=";
+			if ($not) {
+				$operator = "!" . $operator;
+			}
+			
+			$instance[] = self::formatColumnName($instance, $name) . " $operator ''";
+		}
+
 		public function equals($name, $value, $not = false) {
 			$instance = $this->current->peek();
 			$value = parent::sql()->escape($value);
@@ -90,7 +100,9 @@
 				$operator = "!" . $operator;
 			}
 
-			$instance[] = self::formatColumnName($instance, $name) . " $operator $value";
+			if (!empty($item)) {
+				$instance[] = self::formatColumnName($instance, $name) . " $operator $value";
+			}
 		}
 
 		public function in($name, $values, $not = false) {

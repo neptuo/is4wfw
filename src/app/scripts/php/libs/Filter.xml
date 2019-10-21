@@ -61,6 +61,23 @@
     </attribute>
   </fulltag>
   <tag>
+    <tagname>empty</tagname>
+    <function>empty</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>not</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda se má podmínka negovat, tedy "nerovná se".</attcomment>
+    </attribute>
+  </tag>
+  <tag>
     <tagname>equals</tagname>
     <function>equals</function>
     <attribute>
