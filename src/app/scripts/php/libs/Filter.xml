@@ -118,6 +118,52 @@
       <attcomment>Sloupec musí končit textem.</attcomment>
     </attribute>
   </tag>
+  <tag>
+    <tagname>greater</tagname>
+    <function>greater</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>than</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Sloupec musí být větší než.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>orEqual</attname>
+      <attreq>impleid</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda stejná hodnota má být zahrnuta ve výsledku.</attcomment>
+    </attribute>
+  </tag>
+  <tag>
+    <tagname>lower</tagname>
+    <function>lower</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>than</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Sloupec musí být menší než.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>orEqual</attname>
+      <attreq>impleid</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda stejná hodnota má být zahrnuta ve výsledku.</attcomment>
+    </attribute>
+  </tag>
   <anyProperty>
     <comment>Slouží k získání dříve deklarovaného filtru. Název proměnné odpovídá názvu při deklaraci.</comment>
   </anyProperty>

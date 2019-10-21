@@ -128,6 +128,26 @@
 			}
 		}
 
+		private function greateOrLower($name, $than, $orEqual, $operator) {
+			$instance = $this->current->peek();
+			
+			if ($orEqual) {
+				$operator .= "=";
+			}
+
+			if (!empty($than)) {
+				$instance[] = self::formatColumnName($instance, $name) . " $operator $than";
+			}
+		}
+		
+		public function greater($name, $than, $orEqual = false) {
+			self::greateOrLower($name, $than, $orEqual, ">");
+		}
+		
+		public function lower($name, $than, $orEqual = false) {
+			self::greateOrLower($name, $than, $orEqual, "<");
+		}
+
 		public function getProperty($name) {
 			return $this->instances[$name];
 		}
