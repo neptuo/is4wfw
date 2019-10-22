@@ -26,6 +26,14 @@
 
             return $base . $item;
         }
+
+        public function wrapTableName($tableName) {
+            if (!empty($this->alias)) {
+                $tableName = array("table" => $tableName, "alias" => $this->alias);
+            }
+
+            return $tableName;
+        }
     }
 
 ?>

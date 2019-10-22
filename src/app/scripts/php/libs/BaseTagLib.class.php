@@ -782,6 +782,10 @@
 
             return $array;
         }
+
+        protected function isFilterModel($filter) {
+            return count($filter) == 1 && array_key_exists("", $filter) && ($filter[""] instanceof FilterModel);
+        }
     }
 
 ?>

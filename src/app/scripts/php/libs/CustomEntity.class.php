@@ -373,15 +373,9 @@
             
             $result = "";
 
-            if (count($filter) == 1 && array_key_exists("", $filter)) {
+            if (parent::isFilterModel($filter)) {
                 $filter = $filter[""];
-            }
-
-            if ($filter instanceof FilterModel) {
-                if (!empty($filter->alias)) {
-                    $tableName = array("table" => $tableName, "alias" => $filter->alias);
-                }
-                
+                $tableName = $filter->wrapTableName($tableName);
                 $filter = $filter->toSql();
             }
 
