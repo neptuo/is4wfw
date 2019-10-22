@@ -1,9 +1,12 @@
 <v:template src="~/templates/in-template.view">
 	<web:frame title="Localization Bundles :: Instance">
+        <filter:declare name="languages">
+            <filter:empty name="language" not="true" />
+        </filter:declare>
         <ui:filter submit="search">
             <div class="gray-box gray-box-float">
                 <label class="w90">Language:</label>
-                <lang:list>
+                <lang:list filter="filter:languages">
                     <ui:dropdownlist name="lang" source="lang:list" display="name" value="language" class="w200" />
                 </lang:list>
             </div>
