@@ -34,6 +34,7 @@
 
             foreach ($filter as $key => $value) {
                 $assignValue = null;
+                $name = `$key`;
                 if (is_array($value)) {
                     $valueString = "";
                     foreach ($value as $item) {
@@ -47,11 +48,16 @@
                     }
                 } else {
                     $value = self::escape($value);
-                    $assignValue = " = $value";
+
+                    if ($key != "") {
+                        $assignValue = " = $value";
+                    } else {
+                        $assignValue = "$value";
+                    }
                 }
 
                 if ($assignValue != null) {
-                    $result = self::joinString($result, "`$key`$assignValue", " " . $operator);
+                    $result = self::joinString($result, "$name$assignValue", " " . $operator);
                 }
             }
 
