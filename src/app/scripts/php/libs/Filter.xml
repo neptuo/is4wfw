@@ -62,7 +62,7 @@
   </fulltag>
   <tag>
     <tagname>empty</tagname>
-    <function>empty</function>
+    <function>emptyValue</function>
     <attribute>
       <attname>name</attname>
       <attreq>required</attreq>

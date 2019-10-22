@@ -82,7 +82,7 @@
 			$parent[] = $sql;
 		}
 
-		public function empty($name, $not = false) {
+		public function emptyValue($name, $not = false) {
 			$instance = $this->current->peek();
 			$operator = "=";
 			if ($not) {
