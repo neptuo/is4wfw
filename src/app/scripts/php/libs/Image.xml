@@ -103,6 +103,27 @@
   </tag>
   
   <property>
+  	<propname>name</propname>
+  	<getfunction>imageName</getfunction>
+    <comment>
+      Vrací název obrázku uvnitř img:directory.
+    </comment>
+  </property>
+  <property>
+  	<propname>title</propname>
+  	<getfunction>imageTitle</getfunction>
+    <comment>
+      Vrací titulek obrázku uvnitř img:directory.
+    </comment>
+  </property>
+  <property>
+  	<propname>type</propname>
+  	<getfunction>imageType</getfunction>
+    <comment>
+      Vrací číselný typ obrázku uvnitř img:directory.
+    </comment>
+  </property>
+  <property>
   	<propname>fileId</propname>
   	<setfunction>setFileId</setfunction>
   	<getfunction>getFileId</getfunction>
