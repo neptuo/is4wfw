@@ -2,6 +2,7 @@
 
 	require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/FilterModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
 
 	/**
@@ -21,6 +22,15 @@
 		}
 		
 		public function listItems($template, $filter = array(), $orderBy = array()) {
+			$tableName = self::TableName;
+
+			$filter = parent::removeKeysWithEmptyValues($filter);
+            if (parent::isFilterModel($filter)) {
+                $filter = $filter[""];
+                $tableName = $filter->wrapTableName($tableName);
+                $filter = $filter->toSql();
+            }
+			
 			$model = new ListModel();
 			parent::pushListModel($model);
 
@@ -28,7 +38,7 @@
 				$orderBy["id"] = "asc";
 			}
 
-			$sql = parent::sql()->select(self::TableName, array("id", "language", "name", "natural_name"), $filter, $orderBy);
+			$sql = parent::sql()->select($tableName, array("id", "language", "name", "natural_name"), $filter, $orderBy);
 			$data = self::dataAccess()->fetchAll($sql);
 
 			$model->render();
