@@ -34,6 +34,45 @@
 				self::addStyle("~/css/bootstrap/bootstrap.min.css");
 			}
 		}
+
+		private function appendClass($attributes, $class) {
+			if (array_key_exists("class", $attributes)) {
+				$attributes["class"] .= " $class";
+			} else {
+				$attributes["class"] = $class;
+			}
+
+			return $attributes;
+		}
+
+		public function grid($template, $params = array()) {
+			$params = self::appendClass($params, "row");
+			$attributes = parent::joinAttributes($params);
+			$content = parent::parseContent($template);
+			return "<div$attributes>$content</div>";
+		}
+		
+		public function column($template, $default = "", $small = "", $medium = "", $large = "", $extraLarge = "", $params = array()) {
+			if ($default != "") {
+				$params = self::appendClass($params, "col-$default");
+			}
+			if ($small != "") {
+				$params = self::appendClass($params, "col-sm-$small");
+			}
+			if ($medium != "") {
+				$params = self::appendClass($params, "col-md-$medium");
+			}
+			if ($large != "") {
+				$params = self::appendClass($params, "col-lg-$large");
+			}
+			if ($extraLarge != "") {
+				$params = self::appendClass($params, "col-xl-$extraLarge");
+			}
+			
+			$attributes = parent::joinAttributes($params);
+			$content = parent::parseContent($template);
+			return "<div$attributes>$content</div>";
+		}
 	}
 
 ?>

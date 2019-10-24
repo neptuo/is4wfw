@@ -13,4 +13,45 @@
     <function>resources</function>
     <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá.</comment>
   </tag>
+  <fulltag>
+    <tagname>grid</tagname>
+    <function>grid</function>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému divu.</comment>
+    </anyAttribute>
+    <comment>Vykresluje obalový div pro grid (div class="row").</comment>
+  </fulltag>
+  <fulltag>
+    <tagname>column</tagname>
+    <function>column</function>
+    <attribute>
+      <attname>default</attname>
+      <attype>string</attype>
+      <attcomment>Výchozí šířka (pro všechny velikosti, defakto extra small).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>small</attname>
+      <attype>string</attype>
+      <attcomment>Šířka small.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>medium</attname>
+      <attype>string</attype>
+      <attcomment>Šířka medium.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>large</attname>
+      <attype>string</attype>
+      <attcomment>Šířka large.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>extraLarge</attname>
+      <attype>string</attype>
+      <attcomment>Šířka extra large.</attcomment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému divu.</comment>
+    </anyAttribute>
+    <comment>Vykresluje obalový div pro sloupec gridu (div class="col-*").</comment>
+  </fulltag>
 </taglib>
