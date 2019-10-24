@@ -1037,6 +1037,14 @@
             }
         }
 
+        public function addScript($html) {
+            $this->PageScripts .= $html;
+        }
+
+        public function addStyle($html) {
+            $this->PageStyles .= $html;
+        }
+
         /**
          *
          *  Flushes page content to output.

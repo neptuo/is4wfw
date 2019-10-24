@@ -143,7 +143,7 @@
 
         public function addResourcesToPage($names, $type, $as = false) {
             global $phpObject;
-            $return .= '';
+            $return = '';
 
             if ($type != "js" && $type != "css") {
                 $type = "js";

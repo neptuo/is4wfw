@@ -228,8 +228,17 @@
                 self::php()->autoRegisterPrefix("ui");
                 global $uiObject;
             }
-
+            
             return $uiObject;
+        }
+        
+        public function js() {
+            global $jsObject;
+            if ($jsObject == NULL) {
+                return self::autolib('js');
+            }
+
+            return $jsObject;
         }
 
         public function dataAccess() {
