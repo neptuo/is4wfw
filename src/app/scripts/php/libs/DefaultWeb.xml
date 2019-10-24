@@ -30,6 +30,7 @@
     <attribute>
       <attname>classes</attname>
       <attreq>implied</attreq>
+      <attcomment>Css třída přidaná divu pro každé menu (kořenový div a pro každé pod menu).</attcomment>
     </attribute>
     <attribute>
       <attname>rel</attname>
