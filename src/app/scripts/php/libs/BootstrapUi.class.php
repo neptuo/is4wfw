@@ -6,6 +6,7 @@
 	class BootstrapUi extends BaseTagLib {
 
 		private $areResourcesIncluded = false;
+		private $lastId = 0;
 
 		public function __construct() {
 			parent::setTagLibXml("BootstrapUi.xml");
@@ -106,6 +107,33 @@
 			$attributes = parent::joinAttributes($params);
 			$content = parent::parseContent($template);
 			return "<div$attributes>$headerHtml<div class='card-body'>$titleHtml$content</div></div>";
+		}
+
+		private function newId() {
+			$this->lastId++;
+			return "bs-" . $this->lastId;
+		}
+
+		public function formGroup($template, $label = array(), $params = array()) {
+			$labelId = "";
+			if (array_key_exists("for", $label)) {
+				$labelId = $label["for"];
+			} else {
+				$labelId = self::newId();
+				$label["for"] = $labelId;
+			}
+
+			$labelHtml = self::getTagHtml($label, "label");
+			
+			parent::ui()->pushId($labelId);
+
+			$params = self::appendClass($params, "form-group");
+			$attributes = parent::joinAttributes($params);
+			$content = parent::parseContent($template);
+			$result = "<div$attributes>$labelHtml$content</div>";
+
+			parent::ui()->popId($labelId);
+			return $result;
 		}
 	}
 

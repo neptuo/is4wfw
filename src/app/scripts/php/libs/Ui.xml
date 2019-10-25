@@ -432,4 +432,11 @@
       Vrací URL token jazyku uvnitř "ui:localizable".
     </comment>
   </property>
+  <property>
+    <propname>id</propname>
+    <getfunction>peekId</getfunction>
+    <comment>
+      Vrací aktuální "id" pro ui prvek.
+    </comment>
+  </property>
 </taglib>

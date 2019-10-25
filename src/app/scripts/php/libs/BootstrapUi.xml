@@ -74,4 +74,18 @@
     </anyAttribute>
     <comment>Vykresluje komponentu "card". Tělo automaticky obaluje do div class="card-body".</comment>
   </fulltag>
+  <fulltag>
+    <tagname>formGroup</tagname>
+    <function>formGroup</function>
+    <attribute>
+      <attname>label</attname>
+      <attype>string</attype>
+      <prefix>true</prefix>
+      <attcomment>Popisek fieldu. Výchozí atribut je textem. Ostatní atributy jsou předány tagu.</attcomment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému divu.</comment>
+    </anyAttribute>
+    <comment>Vykresluje komponentu "form-group". Pokud není zadán "label-for", pak se ho pokusí vygenerovat na "ui" komponenty by ho měly použit.</comment>
+  </fulltag>
 </taglib>

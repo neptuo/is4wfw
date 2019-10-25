@@ -6,6 +6,8 @@
 
 	class Ui extends BaseTagLib {
 
+		private $id;
+
 		public function __construct() {
 			parent::setTagLibXml("Ui.xml");
 		}
@@ -42,6 +44,39 @@
 			}
 
 			self::setModelValue($modelKey, $value, $index);
+		}
+
+		public function pushId($id) {
+			if ($this->id == null) {
+				$this->id = new Stack();
+			}
+
+			$this->id->push($id);
+		}
+
+		public function peekId() {
+			if ($this->id == null) {
+				return "";
+			}
+
+			return $this->id->peek();
+		}
+
+		public function popId() {
+			if ($this->id == null) {
+				return "";
+			}
+
+			return $this->id->pop();
+		}
+
+		private function appendId($params) {
+			if (!array_key_exists("id", $params)) {
+				$id = self::peekId();
+				if ($id != "") {
+					$params["id"] = $id;
+				}
+			}
 		}
 
 		// ------- LIST -------------------------------------------------------
@@ -301,6 +336,7 @@
 					$name .= "[]";
 				}
 				
+				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);
 				
 				$result = "<select name='$name'$attributes>";
@@ -391,6 +427,7 @@
 					$modelValue = $default;
 				}
 				
+				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);
 				return "<input name='$name' type='text' value='$modelValue'$attributes />";
 			}
@@ -416,6 +453,7 @@
 					$modelValue = $default;
 				}
 
+				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);
 				return "<textarea name='$name'$attributes>$modelValue</textarea>";
 			}
@@ -438,6 +476,7 @@
 					$name .= "[]";
 				}
 
+				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);
 				return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 || $modelValue === "1" ? " checked='checked'" : '') . "$attributes />";
 			}
