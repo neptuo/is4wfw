@@ -41,4 +41,5 @@ Push-Location $sourceDirectoryPath;
 Invoke-Expression ($archiverPath + " a -tzip " + $targetFilePath) | Out-Null;
 Pop-Location;
 
-Write-Host ("Created file '" + $targetFilePath + "'");
+Write-Host "Created file '$targetFilePath'";
+Pop-Location;

@@ -31,6 +31,34 @@ $artifactsPath = "artifacts";
 $releaseName = "phpwfw-" + $versionName + "-patch";
 $targetFileName = $releaseName + ".zip";
 
+# Helper function for copying files to temp.
+function Copy-FileToTemp {
+    param (
+        [Parameter(Mandatory=$True)]
+        $tempPath, 
+        [Parameter(Mandatory=$True)]
+        $file
+    )
+    
+    $targetFile = $file.Substring($srcPath.Length + 1);
+    $targetDirectoryPath = Split-Path -Parent $targetFile;
+        
+    # Create relative path in temp.
+    $tempDirectoryPath = Join-Path -Path $tempPath -ChildPath $targetDirectoryPath;
+    New-Item -Force -ItemType Directory $tempDirectoryPath | Out-Null;
+
+    # Copy to temp including relative path.
+    $tempFile = Join-Path -Path $tempPath -ChildPath $targetFile;
+    $sourceFile = Join-Path -Path ".." -ChildPath $file;
+    if (Test-Path $sourceFile) 
+    {
+        Copy-Item -Force $sourceFile $tempFile | Out-Null;
+        return $true;
+    }
+
+    return $false;
+}
+
 # Create temp root.
 $tempPath = Join-Path -Path $env:TEMP -ChildPath $releaseName;
 New-Item -Force -ItemType Directory $tempPath | Out-Null;
@@ -42,19 +70,8 @@ foreach ($file in $changedFiles)
     if ($file.StartsWith($srcPath)) 
     {
         # Get relative path.
-        $targetFile = $file.Substring($srcPath.Length + 1);
-        $targetDirectoryPath = Split-Path -Parent $targetFile;
-        
-        # Create relative path in temp.
-        $tempDirectoryPath = Join-Path -Path $tempPath -ChildPath $targetDirectoryPath;
-        New-Item -Force -ItemType Directory $tempDirectoryPath | Out-Null;
-
-        # Copy to temp including relative path.
-        $tempTargetFile = Join-Path -Path $tempPath -ChildPath $targetFile;
-        $sourceFile = Join-Path -Path ".." -ChildPath $file;
-        if (Test-Path $sourceFile) 
+        if (Copy-FileToTemp -TempPath $tempPath -File $file) 
         {
-            Copy-Item -Force $sourceFile $tempTargetFile | Out-Null;
             $hasFile = $true;
         }
     }
@@ -62,6 +79,8 @@ foreach ($file in $changedFiles)
 
 if ($hasFile) 
 {
+    Copy-FileToTemp -TempPath $tempPath -File "src/app/scripts/php/includes/version.inc.php" | Out-Null;
+
     # Create artifacts directory.
     $targetFilePath = Join-Path -Path (Join-Path -Path (Get-Location) -ChildPath "..") -ChildPath $artifactsPath;
     if (!(Test-Path $targetFilePath))
@@ -85,7 +104,7 @@ if ($hasFile)
     Invoke-Expression ($archiverPath + " a -tzip " + $targetFilePath) | Out-Null;
     Pop-Location;
 
-    Write-Host ("Created file '" + $targetFilePath + "'");
+    Write-Host "Created file '$targetFilePath'";
 }
 else 
 {
