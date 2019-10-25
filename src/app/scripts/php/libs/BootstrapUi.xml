@@ -54,4 +54,24 @@
     </anyAttribute>
     <comment>Vykresluje obalový div pro sloupec gridu (div class="col-*").</comment>
   </fulltag>
+  <fulltag>
+    <tagname>card</tagname>
+    <function>card</function>
+    <attribute>
+      <attname>header</attname>
+      <attype>string</attype>
+      <prefix>true</prefix>
+      <attcomment>Nadpis karty. Výchozí atribut je textem. Atribut "header-tag" slouží pro nastavení tagu (výchozí je "div"). Ostatní atributy jsou předány tagu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>title</attname>
+      <attype>string</attype>
+      <prefix>true</prefix>
+      <attcomment>Pod nadpis karty (uvnitř těla). Výchozí atribut je textem. Atribut "title-tag" slouží pro nastavení tagu (výchozí je "h5"). Ostatní atributy jsou předány tagu.</attcomment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému divu.</comment>
+    </anyAttribute>
+    <comment>Vykresluje komponentu "card". Tělo automaticky obaluje do div class="card-body".</comment>
+  </fulltag>
 </taglib>
