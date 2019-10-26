@@ -543,7 +543,7 @@
                                     
                                     $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
                                 } else if (strtolower($att->attreq) == "required") {
-                                    $str = "Missing required attribute! [".$att->attname."]";
+                                    $str = "Missing required attribute '$att->attname' on tag '$tagPrefix:$tagName'.";
                                     trigger_error($str , E_USER_WARNING);
                                     echo parent::getError($str);
                                     return false;
