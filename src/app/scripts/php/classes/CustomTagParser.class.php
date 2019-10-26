@@ -251,7 +251,7 @@ class CustomTagParser {
             if ($functionName && ($attributes !== false)) {
                 if ($this->UseCaching) {
                     self::addSingletonGlobalObject('$' . $object[0] . 'Object');
-                    return '<?php echo $' . $object[0] . 'Object->' . $func . '(' . self::concatAttributesToString($attributes) . ') ?>';
+                    return '<?php echo $' . $object[0] . 'Object->' . $functionName . '(' . self::concatAttributesToString($attributes) . ') ?>';
                 } else {
                     if ($object[0] == 'php') {
                         eval('$return =  ${$object[0]."Object"}->{$functionName}(' . self::concatAttributesToString($attributes) . ');');

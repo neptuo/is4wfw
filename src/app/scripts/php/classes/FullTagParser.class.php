@@ -12,7 +12,9 @@ class FullTagParser extends CustomTagParser {
      */
     //private $FULL_TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)(\b[^>]*)>(((\s*)|(.*))*)</\1>)';
     //protected $FULL_TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)(( *([a-zA-Z0-9]+="[^"]*") *)*)>(((\s*)|(.*))*)</\1>)';
-    protected $FULL_TAG_RE = '(<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)(( *([a-zA-Z0-9:\-_]+="[^"]*") *)*)>(((\s*)|(.*))*)</\1>)';
+    // protected $FULL_TAG_RE = '(<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)(( *([a-zA-Z0-9:\-_]+="[^"]*") *)*)>(((\s*)|(.*)|(?R))*)</\1>)';
+    // protected $FULL_TAG_RE = "/<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)([^>]*?)(([\s]*\/>)|(>((([^<]*?|<\!\-\-.*?\-\->)|(?R))*)<\/\\1[\s]*>))/sm";
+    protected $FULL_TAG_RE = "#<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)((.*?)(?=\/>)\/>|([^>]*)>((?:[^<]|<(?!/?\\1[^>]*>)|(?R))+)</\\1>)#";
 
     
     /**
@@ -25,11 +27,16 @@ class FullTagParser extends CustomTagParser {
     private function parsefulltag($ctag) {
         global $phpObject;
 
+        // Self closing tag.
+        if (count($ctag) == 4) {
+            return parent::parsectag($ctag);
+        }
+
         $object = explode(":", $ctag[1]);
 
         $skipped = self::isSkippedTag($ctag);
 
-        $attributes = self::tryProcessAttributes($ctag[2]);
+        $attributes = self::tryProcessAttributes($ctag[4]);
         if ($attributes === FALSE) {
             return '';
         }
@@ -73,9 +80,6 @@ class FullTagParser extends CustomTagParser {
         $this->Result = str_replace("'", "\\'", $this->Result);
         
         $this->Result = preg_replace_callback($this->FULL_TAG_RE, array(&$this, 'parsefulltag'), $this->Result);
-        self::checkPregError();
-
-        $this->Result = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $this->Result);
         self::checkPregError();
 
         $this->Result = eval("return '". $this->Result . "';");
