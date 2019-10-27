@@ -84,6 +84,8 @@
 		// ------- LIST -------------------------------------------------------
 
 		public function forEachListModel($template, $model, $params = array()) {
+			$template = parent::getParsedTemplate($template);
+
 			self::pushListModel($model);
 			$result = "";
 
@@ -177,6 +179,8 @@
 			if ($model->isRender()) {
 				$result = "";
 
+				$template = parent::getParsedTemplate($template);
+
 				$items = $model->items();
 				if (count($items) > 0) {
 					$attributes = self::joinAttributes($params);
@@ -185,7 +189,7 @@
 					$this->gridPhase = "header";
 					$result .= "<table$attributes>";
 					$result .= "<tr>";
-					$result .= self::parseContent($template);
+					$result .= $template;
 					$result .= "</tr>";
 					
 					// Body
@@ -194,7 +198,7 @@
 						$model->data($item);
 						
 						$result .= "<tr>";
-						$result .= self::parseContent($template);
+						$result .= $template;
 						$result .= "</tr>";
 					}
 					

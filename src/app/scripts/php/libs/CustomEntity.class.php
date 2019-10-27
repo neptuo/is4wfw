@@ -292,6 +292,8 @@
             if ($method == "GET" && $submit == "") {
                 trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
             }
+			
+			$template = parent::getParsedTemplate($template);
 
             $isUpdate = count($keys) > 0;
 
