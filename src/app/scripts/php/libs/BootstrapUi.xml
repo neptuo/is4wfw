@@ -26,27 +26,27 @@
     <function>column</function>
     <attribute>
       <attname>default</attname>
-      <attype>string</attype>
+      <atttype>string</atttype>
       <attcomment>Výchozí šířka (pro všechny velikosti, defakto extra small).</attcomment>
     </attribute>
     <attribute>
       <attname>small</attname>
-      <attype>string</attype>
+      <atttype>string</atttype>
       <attcomment>Šířka small.</attcomment>
     </attribute>
     <attribute>
       <attname>medium</attname>
-      <attype>string</attype>
+      <atttype>string</atttype>
       <attcomment>Šířka medium.</attcomment>
     </attribute>
     <attribute>
       <attname>large</attname>
-      <attype>string</attype>
+      <atttype>string</atttype>
       <attcomment>Šířka large.</attcomment>
     </attribute>
     <attribute>
       <attname>extraLarge</attname>
-      <attype>string</attype>
+      <atttype>string</atttype>
       <attcomment>Šířka extra large.</attcomment>
     </attribute>
     <anyAttribute>
@@ -59,13 +59,13 @@
     <function>card</function>
     <attribute>
       <attname>header</attname>
-      <attype>string</attype>
+      <atttype>string</atttype>
       <prefix>true</prefix>
       <attcomment>Nadpis karty. Výchozí atribut je textem. Atribut "header-tag" slouží pro nastavení tagu (výchozí je "div"). Ostatní atributy jsou předány tagu.</attcomment>
     </attribute>
     <attribute>
       <attname>title</attname>
-      <attype>string</attype>
+      <atttype>string</atttype>
       <prefix>true</prefix>
       <attcomment>Pod nadpis karty (uvnitř těla). Výchozí atribut je textem. Atribut "title-tag" slouží pro nastavení tagu (výchozí je "h5"). Ostatní atributy jsou předány tagu.</attcomment>
     </attribute>
@@ -79,7 +79,7 @@
     <function>formGroup</function>
     <attribute>
       <attname>label</attname>
-      <attype>string</attype>
+      <atttype>string</atttype>
       <prefix>true</prefix>
       <attcomment>Popisek fieldu. Výchozí atribut je textem. Ostatní atributy jsou předány tagu.</attcomment>
     </attribute>
