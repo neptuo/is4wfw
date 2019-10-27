@@ -2,6 +2,7 @@
 
 require_once(APP_SCRIPTS_PHP_PATH . "classes/CustomTagParser.class.php");
 require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/ParsedTemplate.class.php");
 
 class FullTagParser extends CustomTagParser {
 
@@ -76,13 +77,29 @@ class FullTagParser extends CustomTagParser {
     public function startParsing() {
         parent::setUseCaching(false);
 
-        $this->Result = $this->Content;
-        $this->Result = str_replace("'", "\\'", $this->Result);
+        if ($this->Content != "") {
+            $this->Result = $this->Content;
+            $this->Result = str_replace("'", "\\'", $this->Result);
+            
+            $this->Result = preg_replace_callback($this->FULL_TAG_RE, array(&$this, 'parsefulltag'), $this->Result);
+            self::checkPregError();
+        } else {
+            $this->Result = "";
+        }
         
-        $this->Result = preg_replace_callback($this->FULL_TAG_RE, array(&$this, 'parsefulltag'), $this->Result);
-        self::checkPregError();
+        $this->Result = new ParsedTemplate("return '". $this->Result . "';");
+    }
 
-        $this->Result = eval("return '". $this->Result . "';");
+    public function getParsedTemplate() {
+        return $this->Result;
+    }
+
+    public function getResult() {
+        return $this->Result->evaluate();
+    }
+
+    public function __toString() {
+        return $this->getResult();
     }
 }
 

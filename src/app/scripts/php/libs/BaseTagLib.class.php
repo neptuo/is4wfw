@@ -6,6 +6,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ExtensionParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ParsedTemplate.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
@@ -737,6 +738,16 @@
         }
         
         public function parseContent($content, $tagsToParse = null) {
+            $parser = self::getParsedTemplate($content, $tagsToParse);
+            $return = $parser->evaluate();
+            return $return;
+        }
+
+        public function getParsedTemplate($content, $tagsToParse = null) {
+            if ($content instanceof ParsedTemplate) {
+                return $content;
+            }
+
             $parser = new FullTagParser();
             $parser->setContent($content);
 
@@ -745,8 +756,8 @@
             }
 
             $parser->startParsing();
-            $return = $parser->getResult();
-            return $return;
+            $parsedTemplate = $parser->getParsedTemplate();
+            return $parsedTemplate;
         }
 
         protected function formatString($format, $model) {
