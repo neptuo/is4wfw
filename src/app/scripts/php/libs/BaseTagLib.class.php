@@ -750,9 +750,11 @@
                 return $content;
             }
 
-            $hash = sha1($content);
-            if (array_key_exists($hash, $this->parsedTemplates)) {
-                return $this->parsedTemplates[$hash];
+            if ($tagsToParse == null) {
+                $hash = sha1($content);
+                if (array_key_exists($hash, $this->parsedTemplates)) {
+                    return $this->parsedTemplates[$hash];
+                }
             }
 
             $parser = new FullTagParser();
@@ -764,7 +766,10 @@
 
             $parser->startParsing();
             $parsedTemplate = $parser->getParsedTemplate();
-            $this->parsedTemplates[$hash] = $parsedTemplate;
+
+            if ($tagsToParse == null) {
+                $this->parsedTemplates[$hash] = $parsedTemplate;
+            }
 
             return $parsedTemplate;
         }
