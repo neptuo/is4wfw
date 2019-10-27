@@ -221,6 +221,39 @@
          *          
          */
         public function showLogoutForm($group, $pageId) {
+            if (!self::refreshPrivate($group)) {
+                parent::web()->redirectTo($pageId);
+            }
+
+            return ''
+            . '<div class="logout-form">'
+                . '<form name="logout" method="post" action="' . $_SERVER['REQUEST_URI'] . (array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '') . '">'
+                    . '<p class="logout-submit">'
+                        . '<input type="submit" name="logout" value="Log out" />'
+                    . '</p>'
+                . '</form>'
+            . '</div>';
+        }
+
+        public function logout($template, $group) {
+            $sql = parent::sql()->update("user_log", array("logout_timestamp" => time()), array("session_id" => $this->SessionId));
+            parent::db()->execute($sql);
+            $this->LoggedIn = false;
+
+            $sessionId = $group . '_session_id';
+            $_SESSION[$sessionId] = '';
+            unset($_SESSION[$sessionId]);
+
+            parent::parseContent($template);
+        }
+
+        public function refresh($template, $group) {
+            if (!self::refreshPrivate($group)) {
+                parent::parseContent($template);
+            }
+        }
+        
+        public function refreshPrivate($group) {
             if (self::isLogged()) {
                 require_once('System.class.php');
                 $name = 'Login.session';
@@ -231,34 +264,17 @@
                 }
 
                 if ($_POST['logout'] == "Log out" || ($this->Logtime + 60 * $sessionTime ) < time()) {
-                    // process logout
-                    global $dbObject;
-                    global $webObject;
-
-                    $dbObject->execute("UPDATE `user_log` SET `logout_timestamp` = " . time() . " WHERE `session_id` = " . $this->SessionId . ";");
-                    $this->LoggedIn = false;
-                    $_SESSION[$group . '_session_id'] = '';
-                    unset($_SESSION[$group . '_session_id']);
-                    //session_destroy();
-
+                    self::logout("", $group);
+                    return false;
                     parent::web()->redirectTo($pageId);
                 } else {
-                    global $dbObject;
                     $this->Logtime = time();
-                    $dbObject->execute("UPDATE `user_log` SET `timestamp` = " . $this->Logtime . " WHERE `session_id` = " . $this->SessionId . ";");
+                    $sql = parent::sql()->update("user_log", array("timestamp" => $this->Logtime), array("session_id" => $this->SessionId));
+                    parent::db()->execute($sql);
+                    return true;
                 }
-
-                $return = '<div class="logout-form">' .
-                        '<form name="logout" method="post" action="' . $_SERVER['REQUEST_URI'] . (array_key_exists('auto-login-ignore', $_REQUEST) ? '?auto-login-ignore' : '') . '">' .
-                        '<p class="logout-submit">' .
-                        '<input type="submit" name="logout" value="Log out" />' .
-                        '</p>' .
-                        '</form>' .
-                        '</div>';
-
-                return $return;
             } else {
-                parent::web()->redirectTo($pageId);
+                return false;
             }
         }
 

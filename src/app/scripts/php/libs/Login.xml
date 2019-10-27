@@ -62,6 +62,34 @@
       nevypršelo. Po odhlášení je uživatel přesměrován na stránku "pageId".
     </comment>
   </tag>
+  <fulltag>
+    <tagname>logout</tagname>
+    <function>logout</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>group</attname>
+      <attreq>required</attreq>
+      <attcomment>Název skupiny, pro kterou se má odhlášení provést.</attcomment>
+    </attribute>
+    <comment>
+      Provede odhlášení uživatele ze skupiny "group".
+      Těla je vykonáno, pokud se odhlášení provedlo.
+    </comment>
+  </fulltag>
+  <fulltag>
+    <tagname>refresh</tagname>
+    <function>refresh</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>group</attname>
+      <attreq>required</attreq>
+      <attcomment>Název skupiny, pro kterou se má obnovení provést.</attcomment>
+    </attribute>
+    <comment>
+      Provede obnovu přihlašovacího tiketu.
+      V případě, že již není platný, vykoná se tělo.
+    </comment>
+  </fulltag>
   <tag>
     <tagname>info</tagname>
     <function>loggedUserInfo</function>
@@ -99,10 +127,16 @@
   </tag>
   <property>
   	<propname>loggedUserId</propname>
-  	<setfunction>setUserId</setfunction>
   	<getfunction>getUserId</getfunction>
     <comment>
-      Uchovává hodnotu Id aktuálního uživatele. Zatím implentován jen getter.
+      Vrací id aktuálního uživatele.
+    </comment>
+  </property>
+  <property>
+  	<propname>isLogged</propname>
+  	<getfunction>isLogged</getfunction>
+    <comment>
+      Vrací "true" pokud je uživatel přihlášen.
     </comment>
   </property>
 </taglib>
