@@ -268,9 +268,20 @@
          *  C tag.     
          *
          */
-        public function loggedUserInfo() {
+        public function loggedUserInfo($field = '') {
             if (self::isLogged()) {
-                return '<div class="user-info"><div class="user-name">' . $this->UserName . ' ' . $this->UserSurname . '</div><div class="user-group">' . $this->UsedGroup['name'] . '</div><div class="user-login">' . $this->UserLogin . '@' . $_SERVER['HTTP_HOST'] . '</div></div>';
+                $login = $this->UserLogin . '@' . $_SERVER['HTTP_HOST'];
+
+                if ($field == "name") {
+                    return $this->UserName;
+                } else if ($field == "surname") {
+                    return $this->UserSurname;
+                } else if ($field == "group") {
+                    return $this->UsedGroup['name'];
+                } else if ($field == "login") {
+                    return $login;
+                }
+                return '<div class="user-info"><div class="user-name">' . $this->UserName . ' ' . $this->UserSurname . '</div><div class="user-group">' . $this->UsedGroup['name'] . '</div><div class="user-login">' . $login . '</div></div>';
             } else {
                 return '<div class="user-info">Not logged!</div>';
             }
