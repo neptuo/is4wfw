@@ -17,7 +17,7 @@
     <tagname>grid</tagname>
     <function>grid</function>
     <anyAttribute>
-      <comment>Všechny atributy jsou předány obalovému divu.</comment>
+      <comment>Všechny atributy jsou předány obalovému "div".</comment>
     </anyAttribute>
     <comment>Vykresluje obalový div pro grid (div class="row").</comment>
   </fulltag>
@@ -50,7 +50,7 @@
       <attcomment>Šířka extra large.</attcomment>
     </attribute>
     <anyAttribute>
-      <comment>Všechny atributy jsou předány obalovému divu.</comment>
+      <comment>Všechny atributy jsou předány obalovému "div".</comment>
     </anyAttribute>
     <comment>Vykresluje obalový div pro sloupec gridu (div class="col-*").</comment>
   </fulltag>
@@ -70,7 +70,7 @@
       <attcomment>Pod nadpis karty (uvnitř těla). Výchozí atribut je textem. Atribut "title-tag" slouží pro nastavení tagu (výchozí je "h5"). Ostatní atributy jsou předány tagu.</attcomment>
     </attribute>
     <anyAttribute>
-      <comment>Všechny atributy jsou předány obalovému divu.</comment>
+      <comment>Všechny atributy jsou předány obalovému "div".</comment>
     </anyAttribute>
     <comment>Vykresluje komponentu "card". Tělo automaticky obaluje do div class="card-body".</comment>
   </fulltag>
@@ -84,8 +84,54 @@
       <attcomment>Popisek fieldu. Výchozí atribut je textem. Ostatní atributy jsou předány tagu.</attcomment>
     </attribute>
     <anyAttribute>
-      <comment>Všechny atributy jsou předány obalovému divu.</comment>
+      <comment>Všechny atributy jsou předány obalovému "div".</comment>
     </anyAttribute>
     <comment>Vykresluje komponentu "form-group". Pokud není zadán "label-for", pak se ho pokusí vygenerovat na "ui" komponenty by ho měly použit.</comment>
   </fulltag>
+  <fulltag>
+    <tagname>nav</tagname>
+    <function>nav</function>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému "div".</comment>
+    </anyAttribute>
+    <comment>
+      Vygeneruje obalový tag pro "nav".
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>navItem</tagname>
+    <function>navItem</function>
+    <attribute>
+      <attname>text</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+      <attcomment>Popisek odkazu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>url</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+      <attcomment>URL odkazu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isActive</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda se jedná o vybraný/aktivní položku.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isDisabled</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda má být položka zakázána.</attcomment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému "li".</comment>
+    </anyAttribute>
+    <comment>
+      Vygeneruje obalový tag pro "nav".
+    </comment>
+  </tag>
 </taglib>

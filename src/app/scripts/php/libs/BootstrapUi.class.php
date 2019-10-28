@@ -135,6 +135,34 @@
 			parent::ui()->popId($labelId);
 			return $result;
 		}
+
+		public function nav($template, $params = array()) {
+			$params = self::appendClass($params, "nav");
+			$attributes = parent::joinAttributes($params);
+			$content = parent::parseContent($template);
+			$result = "<div$attributes>$content</div>";
+			return $result;
+		}
+
+		public function navItem($text, $url, $isActive = false, $isDisabled = false, $params = array()) {
+			$params = self::appendClass($params, "nav-item");
+			if ($isActive) {
+				$params = self::appendClass($params, "active");
+			}
+
+			$attributes = parent::joinAttributes($params);
+
+			$linkClass = "nav-link";
+			if ($isDisabled) {
+				$linkClass .= " disabled";
+			}
+
+			$result = ""
+			. "<li$attributes>"
+				. "<a href='$url' class='$linkClass'>$text</a>"
+			. "</li>";
+			return $result;
+		}
 	}
 
 ?>
