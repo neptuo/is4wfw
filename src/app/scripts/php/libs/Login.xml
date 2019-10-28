@@ -46,6 +46,33 @@
       V případě úspechu je přesměrován na stránku "pageId".
     </comment>
   </tag>
+  <fulltag>
+    <tagname>login</tagname>
+    <function>login</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>group</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název skupiny, pro kterou se má přihlášení provést.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>username</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Uživatelské jméno.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>password</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Heslo.</attcomment>
+    </attribute>
+    <comment>
+      Provede přihlášení uživatele "username" do skupiny "group", pokud je "password" správné.
+      Těla je vykonáno, pokud se přihlášení provedlo.
+    </comment>
+  </fulltag>
   <tag>
     <tagname>logout</tagname>
     <function>showLogoutForm</function>

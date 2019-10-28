@@ -151,37 +151,11 @@
                     $_POST['login'] = "Log in";
                 }
 
+                $message = "";
                 if ($_POST['login'] == "Log in") {
-                    global $dbObject;
-                    global $webObject;
-                    $username = $_POST['username'];
-                    $password = sha1($username . $_POST['password']);
-
-                    $return = $dbObject->fetchAll('SELECT `gid` FROM `group` WHERE `name` = "' . $dbObject->escape($group) . '";');
-                    $group_id = $return[0]['gid'];
-                    $return = $dbObject->fetchAll('SELECT `user`.`uid`, `user`.`name`, `user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` WHERE `user`.`login` = "' . $dbObject->escape($username) . '" AND `user`.`password` = "' . $dbObject->escape($password) . '" AND `user_in_group`.`gid` = ' . $group_id . ' AND `enable` = 1;');
-                    if (count($return) == 1) {
-                        $uid = $return[0]['uid'];
-                        $this->UserLogin = $username;
-                        $this->UserName = $return[0]['name'];
-                        $this->UserSurame = $return[0]['surname'];
-
-                        $sessionId = rand(100000, 2000000);
-                        $timestamp = time();
-                        $dbObject->execute("INSERT INTO `user_log`(`user_id`, `session_id`, `timestamp`, `login_timestamp`, `used_group`) VALUES (" . $uid . ", " . $sessionId . ", " . $timestamp . ", " . $timestamp . ", \"" . $group . "\");");
-                        $return = $dbObject->fetchAll("SELECT `id`, `session_id` FROM `user_log` WHERE `user_id` = " . $uid . " AND `session_id` = " . $sessionId . ";");
-                        if (count($return) == 1) {
-                            $this->LogId = $return[0]['id'];
-                            $this->SessionId = $return[0]['session_id'];
-                            $_SESSION[$group . '_session_id'] = $return[0]['session_id'];
-                            $this->LoggedIn = true;
-
-                            $webObject->redirectTo($pageId);
-                        } else {
-                            $message = "Login process failed! Please, try it again.";
-                        }
-                    } else {
-                        $message = "Bad user name or password!";
+                    $message = self::loginPrivate($group, $_POST['username'], $_POST['password']);
+                    if ($message === true) {
+                        parent::web()->redirectTo($pageId);
                     }
                 }
 
@@ -192,7 +166,7 @@
                         . '<p class="login-head">Login</p>' 
                         . '<p class="login-user">' 
                             . '<label for="username">Username:</label> ' 
-                            . '<input id="username" type="text" name="username" value="' . $username . '" />' 
+                            . '<input id="username" type="text" name="username" value="' . $_POST['username'] . '" />' 
                         . '</p>' 
                         . '<p class="login-passwd">' 
                             . '<label for="password">Password:</label> ' 
@@ -208,6 +182,49 @@
             } else {
                 parent::web()->redirectTo($pageId);
             }
+        }
+
+        public function login($template, $group, $username, $password) {
+            $message = self::loginPrivate($group, $username, $password);
+            if ($message === true) {
+                parent::parseContent($template);
+            }
+        }
+
+        public function loginPrivate($group, $username, $password) {
+            $db = parent::dataAccess();
+
+            $password = sha1($username . $password);
+
+            $return = $db->fetchAll(parent::sql()->select("group", array("gid"), array("name" => $group)));
+            $group_id = $return[0]['gid'];
+            $return = $db->fetchAll('SELECT `user`.`uid`, `user`.`name`, `user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` WHERE `user`.`login` = "' . $db->escape($username) . '" AND `user`.`password` = "' . $db->escape($password) . '" AND `user_in_group`.`gid` = ' . $group_id . ' AND `enable` = 1;');
+            if (count($return) == 1) {
+                $uid = $return[0]['uid'];
+                $this->UserLogin = $username;
+                $this->UserName = $return[0]['name'];
+                $this->UserSurame = $return[0]['surname'];
+
+                $sessionId = rand(100000, 2000000);
+                $timestamp = time();
+                $userLogSql = parent::sql()->insert("user_log", array("user_id" => $uid, "session_id" => $sessionId, "timestamp" => $timestamp, "login_timestamp" => $timestamp, "used_group" => $group));
+                $db->execute($userLogSql);
+                $return = $db->fetchAll(parent::sql()->select("user_log", array("id", "session_id"), array("user_id" => $uid, "session_id" => $sessionId)));
+                if (count($return) == 1) {
+                    $this->LogId = $return[0]['id'];
+                    $this->SessionId = $return[0]['session_id'];
+                    $_SESSION[$group . '_session_id'] = $return[0]['session_id'];
+                    $this->LoggedIn = true;
+
+                    return true;
+                } else {
+                    return "Login process failed! Please, try it again.";
+                }
+            } else {
+                return "Bad user name or password!";
+            }
+
+            return false;
         }
 
         /**
