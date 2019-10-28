@@ -105,7 +105,7 @@
       <attname>saveName</attname>
       <attreq>required</attreq>
       <atttype>string</atttype>
-      <attcomment>Id stránky, kam má vést odkaz pro zavření.</attcomment>
+      <attcomment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</attcomment>
     </attribute>
     <attribute>
       <attname>saveParam</attname>
