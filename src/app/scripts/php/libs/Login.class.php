@@ -313,6 +313,8 @@
                     return $this->UsedGroup['name'];
                 } else if ($field == "login") {
                     return $login;
+                } else if ($field == "username") {
+                    return $this->UserLogin;
                 }
                 return '<div class="user-info"><div class="user-name">' . $this->UserName . ' ' . $this->UserSurname . '</div><div class="user-group">' . $this->UsedGroup['name'] . '</div><div class="user-login">' . $login . '</div></div>';
             } else {

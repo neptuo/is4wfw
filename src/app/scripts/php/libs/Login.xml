@@ -124,7 +124,7 @@
       <attname>field</attname>
       <attype>string</attype>
       <attreq>implied</attreq>
-      <attcomment>Umožňuje vypsat jen jeden field z infomací o uživateli ("name", "surname", group", "login")</attcomment>
+      <attcomment>Umožňuje vypsat jen jeden field z infomací o uživateli ("name", "surname", group", "username", "login" - username + domain)</attcomment>
     </attribute>
     <comment>
       Zobrazí informace o přihlášeném uživateli (jméno, login, skupinu).
