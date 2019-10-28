@@ -1573,8 +1573,8 @@
                     $text = self::parseContent($item[$display]);
                 }
                 
-                $url = self::composeUrl($item['id'], $this->LanguageId, false, true, $copyParameters);
-                $active = $url == '/' . $_REQUEST['WEB_PAGE_PATH'];
+                $url = self::composeUrl($item["id"], $this->LanguageId, false, true, $copyParameters);
+                $active = in_array($item["id"], $this->PagesId);
 
                 $items[] = array(
                     "display" => $text,
