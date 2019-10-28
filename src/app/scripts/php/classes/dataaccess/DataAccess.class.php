@@ -19,14 +19,18 @@ class DataAccess {
 	private $oldCacheStrategy = '';
 
 	private $saveQueries = false;
+	private $measureQueries = false;
+
 	private $queries = array();
+	private $measures = array();
 	
 	private $inTransaction = false;
   
 	public function connect($hostname, $user, $passwd, $database, $checkCharset = true){
 		$this->connection = mysqli_connect($hostname, $user, $passwd);
-		mysqli_query($this->connection, "use ".$database);
-		echo mysqli_error($this->connection);
+		$query = "use " . $database;
+		mysqli_query($this->connection, $query);
+		self::tryToProcessError($query);
 		
 		if ($this->connection) {
 			$this->isOpened = true;
@@ -145,8 +149,19 @@ class DataAccess {
 					array_push($this->queries, $query);
 				}
 				
+				$startTime = 0;
+				if ($this->measureQueries) {
+					$startTime = microtime();
+				}
+
+				// Execute the query.
 				$result = @mysqli_query($this->connection, $query);
 				
+				if ($this->measureQueries) {
+					$endTime = microtime();
+					array_push($this->measures, $endTime - $startTime);
+				}
+
 				self::tryToProcessError($query);
 			}
 			
@@ -197,7 +212,13 @@ class DataAccess {
 				if ($this->saveQueries) {
 					array_push($this->queries, $query);
 				}
+				
+				$startTime = 0;
+				if ($this->measureQueries) {
+					$startTime = microtime();
+				}
 
+				// Execute the query.
 				$result = mysqli_query($this->connection, $query);
   				
   				self::tryToProcessError($query);
@@ -207,6 +228,11 @@ class DataAccess {
 					while($row = mysqli_fetch_assoc($result)) {
 						$return[] = $row;
 					}
+				}
+				
+				if ($this->measureQueries) {
+					$endTime = microtime();
+					array_push($this->measures, $endTime - $startTime);
 				}
 			}
 			
@@ -354,6 +380,14 @@ class DataAccess {
 
 	public function getQueries() {
 		return $this->queries;
+	}
+
+	public function saveMeasures($value) {
+		$this->measureQueries = $value;
+	}
+
+	public function getMeasures() {
+		return $this->measures;
 	}
 }
 

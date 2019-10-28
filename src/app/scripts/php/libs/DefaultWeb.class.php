@@ -226,6 +226,7 @@
         public function processRequestNG() {
             if (array_key_exists('query-list', $_GET)) {
                 parent::db()->getDataAccess()->saveQueries(true);
+                parent::db()->getDataAccess()->saveMeasures(true);
             }
 
             $this->UrlResolver = new UrlResolver();
@@ -1080,10 +1081,27 @@
                     $diacont .= parent::debugFrame('Database queries', parent::db()->getQueriesPerRequest());
                 }
                 if (array_key_exists('query-list', $_GET)) {
+                    $querycont = "";
+                    $totalMeasure = 0;
+                    $measures = parent::db()->getDataAccess()->getMeasures();
+                    $worstKey = 0;
+                    $worstMeasure = 0;
                     foreach (parent::db()->getDataAccess()->getQueries() as $key => $query) {
-                        $diacont .= parent::debugFrame('Query ' . $key, $query, 'code');
+                        $totalMeasure += $measures[$key];
+                        $measure = round($measures[$key], 5);
+                        if ($measure > $worstMeasure) {
+                            $worstMeasure = $measure;
+                            $worstKey = $key;
+                        }
+
+                        $header = "Query $key ($measure ms)";
+                        $querycont .= parent::debugFrame($header, $query, 'code');
                     }
 
+                    $queryCount = count($measures);
+                    $totalMeasure = round($totalMeasure, 5);
+                    $diacont .= parent::debugFrame("Query stats", "Count: $queryCount<br />Total time: $totalMeasure ms<br />Worst: $worstKey ($worstMeasure ms)", 'code');
+                    $diacont .= $querycont;
                 }
                 if (strlen($this->PageLog) != 0) {
                     $diacont .= parent::debugFrame('Page Log', $this->PageLog);
