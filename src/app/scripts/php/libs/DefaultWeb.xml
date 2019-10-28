@@ -60,6 +60,33 @@
       "inner" je hloubka v noření menu, (př.: pro inner="1", zobrazí pouze jednu úroveň menu).
     </comment>
   </tag>
+  <fulltag>
+    <tagname>menu</tagname>
+    <function>getMenuWithTemplate</function>
+    <attribute>
+      <attname>parentId</attname>
+      <attreq>required</attreq>
+      <attcomment>Id nadřazené stránky.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>display</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attdef>name</attdef>
+      <attcomment>Vlastnost z "info", která se má použít jako "display" field ("name" nebo "title").</attcomment>
+    </attribute>
+    <attribute>
+      <attname>copyParameters</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
+    </attribute>
+    <comment>
+      Vykreslí menu. 
+      Položky jsou uložené jako list model v property "web:menu".
+    </comment>
+  </fulltag>
   <tag>
     <tagname>crumbMenu</tagname>
     <function>getCrumbMenu</function>
@@ -709,6 +736,34 @@
   	<getfunction>getDebugMode</getfunction>
     <comment>
       Vrací "true" pokud je zapnutý debug mód.
+    </comment>
+  </property>
+  <property>
+  	<propname>menu</propname>
+  	<getfunction>getMenuData</getfunction>
+    <comment>
+      Vrací list model uvnitř "web:menu".
+    </comment>
+  </property>
+  <property>
+  	<propname>menuItemDisplay</propname>
+  	<getfunction>getMenuItemDisplay</getfunction>
+    <comment>
+      Vrací "display" text pro položku uvnitř "web:menu".
+    </comment>
+  </property>
+  <property>
+  	<propname>menuItemUrl</propname>
+  	<getfunction>getMenuItemUrl</getfunction>
+    <comment>
+      Vrací URL pro položku uvnitř "web:menu".
+    </comment>
+  </property>
+  <property>
+  	<propname>menuItemActive</propname>
+  	<getfunction>getMenuItemActive</getfunction>
+    <comment>
+      Vrací "true" pokud je položka uvnitř "web:menu" aktuální.
     </comment>
   </property>
 </taglib>

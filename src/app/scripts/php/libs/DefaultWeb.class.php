@@ -1488,6 +1488,10 @@
             return $pageContent;
         }
 
+        private function getMenuItems($parentId, $display) {
+            return parent::db()->fetchAll("SELECT `page`.`id`, `info`.`$display` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `info`.`in_menu` = 1 AND `is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`wp` = " . $this->ProjectId . " ORDER BY `info`.`page_pos`;");
+        }
+
         /**
          *
          *  Generates menu.
@@ -1509,7 +1513,7 @@
             }
             $content = "";
             $parentId = (!$parentId) ? 0 : $parentId;
-            $return = $dbObject->fetchAll("SELECT `page`.`id`, `info`.`$display` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `info`.`in_menu` = 1 AND `is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`wp` = " . $this->ProjectId . " ORDER BY `info`.`page_pos`;");
+            $return = self::getMenuItems($parentId, $display);
             if (count($return) > 0) {
                 $content .= '<div class="menu menu-' . $inn . ((strlen($classes) > 0) ? ' ' . $classes : '') . '"><ul class="ul-' . $inn . '">';
                 $i = 1;
@@ -1555,6 +1559,52 @@
 
                 return $content;
             }
+        }
+
+        public function getMenuWithTemplate($template, $parentId, $display = "name", $copyParameters = false) {
+            $model = new ListModel();
+            self::pushListModel($model);
+
+            $data = self::getMenuItems($parentId, $display);
+            $items = array();
+            foreach ($data as $key => $item) {
+                $text = $item[$display];
+                if ($display == "title") {
+                    $text = self::parseContent($item[$display]);
+                }
+                
+                $url = self::composeUrl($item['id'], $this->LanguageId, false, true, $copyParameters);
+                $active = $url == '/' . $_REQUEST['WEB_PAGE_PATH'];
+
+                $items[] = array(
+                    "display" => $text,
+                    "url" => $url,
+                    "active" => $active
+                );
+            }
+
+            $model->render();
+            $model->items($items);
+            $result = self::parseContent($template);
+
+            self::popListModel();
+            return $result;
+        }
+
+        public function getMenuData() {
+            return self::peekListModel();
+        }
+
+        public function getMenuItemDisplay() {
+            return self::peekListModel()->field("display");
+        }
+
+        public function getMenuItemUrl() {
+            return self::peekListModel()->field("url");
+        }
+
+        public function getMenuItemActive() {
+            return self::peekListModel()->field("active");
         }
 
         /**
