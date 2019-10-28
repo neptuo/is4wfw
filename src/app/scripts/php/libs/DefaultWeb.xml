@@ -611,6 +611,21 @@
       V případě použití favicony z filesystému, je vhodnější použít img:favicon.
     </comment>
   </tag>
+  <tag>
+    <tagname>debug</tagname>
+    <function>debugMode</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>isEnabled</attname>
+      <attreq>required</attreq>
+      <atttype>bool</atttype>
+      <attcomment>Zda má být debug mód zapnutý nebo vypnutý.</attcomment>
+    </attribute>
+    <comment>
+      Umožňuje přepnout debug mód.
+      Pokud pokud je zapnutý, je možné používat debug parametry.
+    </comment>
+  </tag>
   <property>
   	<propname>currentPage</propname>
   	<getfunction>getCurrentPage</getfunction>
@@ -687,6 +702,13 @@
   	<getfunction>getLastPageId</getfunction>
     <comment>
       Vrácí id aktuální stránky (té poslední pro aktuální request).
+    </comment>
+  </property>
+  <property>
+  	<propname>debug</propname>
+  	<getfunction>getDebugMode</getfunction>
+    <comment>
+      Vrací "true" pokud je zapnutý debug mód.
     </comment>
   </property>
 </taglib>

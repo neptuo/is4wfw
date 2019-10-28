@@ -1070,7 +1070,7 @@
 
             // Diagnostics
             $diacont = "";
-            if (!$this->IsCached) {
+            if (!$this->IsCached && self::getDebugMode()) {
                 if (array_key_exists('mem-stats', $_GET)) {
                     $diacont = $this->Diagnostics->printMemoryStats();
                 }
@@ -2426,6 +2426,18 @@
             }
 
             return '';
+        }
+
+        public function debugMode($isEnabled) {
+            if ($isEnabled) {
+                $_SESSION["debug-mode"] = true;
+            } else {
+                unset($_SESSION["debug-mode"]);
+            }
+        }
+
+        public function getDebugMode() {
+            return array_key_exists("debug-mode", $_SESSION) && $_SESSION["debug-mode"] == true;
         }
 
         /* ================== PROPERTIES ================================================== */
