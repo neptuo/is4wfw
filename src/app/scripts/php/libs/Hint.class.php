@@ -377,7 +377,8 @@
                 .'</form>'
             .'</div>'
             .'<div class="gray-box">'
-                .'<strong>There are some special GET parameters in the system, here is list of them: </strong>'
+                .'There are some special GET parameters in the system, here is list of them:<br />'
+                . "<strong>Debug mode must be enabled to make them work</strong>"
                 .'<ul>'
                     .'<li><strong>auto-login-ignore</strong> - ignore auto-login parameteres for login:login.</li>'
                     .'<li><strong>duration-stats</strong> - time required to generate response.</li>'
@@ -390,7 +391,7 @@
             if ($useFrames == "false") {
                 return $return;
             } else {
-                return parent::getFrame($rb->get('lib.title2').': '.$classPath, $return, "", true);
+                return parent::getFrame($rb->get('lib.title2').': ', $return, "", true);
             }
         }
             
@@ -429,7 +430,7 @@
             if ($useFrames == "false") {
                 return $return;
             } else {
-                return parent::getFrame($rb->get('properties.title').': '.$classPath, $return, "", true);
+                return parent::getFrame($rb->get('properties.title').': ', $return, "", true);
             }
         }
 
