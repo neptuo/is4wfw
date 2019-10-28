@@ -175,9 +175,10 @@
 
 		private $gridPhase = "";
 
-		public function grid($template, $model, $params = array()) {
+		public function grid($template, $model, $thead = array(), $tbody = array(), $params = array()) {
 			if ($model->isRender()) {
 				$result = "";
+				$isWellStructured = count($thead) > 0 || count($tbody) > 0;
 
 				$template = parent::getParsedTemplate($template);
 
@@ -188,9 +189,22 @@
 					// Header
 					$this->gridPhase = "header";
 					$result .= "<table$attributes>";
+
+					if ($isWellStructured) {
+						$theadAttributes = parent::joinAttributes($thead);
+						$result .= "<thead$theadAttributes>";
+					}
+					
 					$result .= "<tr>";
 					$result .= $template;
 					$result .= "</tr>";
+
+					if ($isWellStructured) {
+						$result .= "</thead>";
+
+						$tbodyAttributes = parent::joinAttributes($tbody);
+						$result .= "<tbody$tbodyAttributes>";
+					}
 					
 					// Body
 					$this->gridPhase = "body";
@@ -200,6 +214,10 @@
 						$result .= "<tr>";
 						$result .= $template;
 						$result .= "</tr>";
+					}
+
+					if ($isWellStructured) {
+						$result .= "</tbody>";
 					}
 					
 					// Reset
