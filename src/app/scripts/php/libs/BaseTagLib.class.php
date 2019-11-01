@@ -649,8 +649,42 @@
             return $stack;
         }
 
+        private static $mainEditModel;
+
+        public function setMainEditModel($model) {
+            BaseTagLib::$mainEditModel = $model;
+            self::pushEditModel(BaseTagLib::$mainEditModel);
+        }
+
+        public function clearMainEditModel() {
+            BaseTagLib::$mainEditModel = null;
+            self::popEditModel();
+        }
+        
+        private static $editModelPrefix;
+        
+        public function setEditModelPrefix($name) {
+            BaseTagLib::$editModelPrefix = $name;
+        }
+        
+        public function clearEditModelPrefix() {
+            BaseTagLib::$editModelPrefix = null;
+        }
+
+        public function hasMainEditModel() {
+            return BaseTagLib::$mainEditModel != null;
+        }
+
+        public function getMainEditModel() {
+            return BaseTagLib::$mainEditModel;
+        }
+
         public function pushEditModel($model) {
             $stack = self::getModelStack("editModels", true);
+            if (BaseTagLib::$editModelPrefix != null) {
+                $model->prefix(BaseTagLib::$editModelPrefix);
+            }
+
 			$stack->push($model);
         }
 

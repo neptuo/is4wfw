@@ -47,6 +47,13 @@
             return $result;
         }
 
+        public function prefix($template, $name) {
+            parent::setEditModelPrefix($name);
+            $result = parent::parseContent($template);
+            parent::clearEditModelPrefix();
+            return $result;
+        }
+
         public function setValue($name, $value) {
             $model = parent::getMainEditModel();
             $model->set($name, -1, $value);

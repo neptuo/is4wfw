@@ -21,6 +21,19 @@
       Vytvoří formulář a zaregistruje edit model.
     </comment>
   </fulltag>
+  <fulltag>
+    <tagname>prefix</tagname>
+    <function>prefix</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název prefixu, který bude přidán všem klíčům ve formuláři.</attcomment>
+    </attribute>
+    <comment>
+      Nastaví do edit modelu prefix tak, aby se formulářové prvky nepřekrývaly, ale názvy fieldů v edit modelech zůstaly stejné.
+    </comment>
+  </fulltag>
   <tag>
     <tagname>set</tagname>
     <function>setValue</function>

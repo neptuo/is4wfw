@@ -38,11 +38,7 @@
 		}
 
 		private function setModelValueFromRequest($modelKey, $requestKey, $index = -1) {
-			$value = self::peekEditModel()->request()[$requestKey];
-			if ($index != -1) {
-				$value = $value[$index];
-			}
-
+			$value = self::peekEditModel()->request($requestKey, $index);
 			self::setModelValue($modelKey, $value, $index);
 		}
 
@@ -361,16 +357,16 @@
 			}
 
 			if (self::isRender()) {
+				$formName = parent::peekEditModel()->requestKey($name, $nameIndex);
 				$modelValue = self::getModelValue($name);
 				if ($nameIndex != -1) {
 					$modelValue = $modelValue[$nameIndex];
-					$name .= "[]";
 				}
 				
 				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);
 				
-				$result = "<select name='$name'$attributes>";
+				$result = "<select name='$formName'$attributes>";
 
 				if (is_array($source)) {
 					$data = $source;
@@ -400,11 +396,12 @@
 			}
 
 			if (self::isSubmit()) {
-				$modelValue = self::peekEditModel()->request()[$name];
+				$modelValue = self::peekEditModel()->request($name);
 				self::setModelValue($name, $modelValue);
 			}
 
 			if (self::isRender()) {
+				$formName = parent::peekEditModel()->requestKey($name);
 				$modelValue = self::getModelValue($name);
 
 				if (!is_array($modelValue)) {
@@ -428,7 +425,7 @@
 					$result .= ""
 					. "<$itemContainerTagName>"
 						. "<label>"
-							. "<input name='" . $name . "[]' value='$itemValue' type='checkbox'" . (in_array($itemValue, $modelValue) ? " checked='checked'" : '') . "$attributes />"
+							. "<input name='" . $formName . "[]' value='$itemValue' type='checkbox'" . (in_array($itemValue, $modelValue) ? " checked='checked'" : '') . "$attributes />"
 							. $item[$display]
 						. "</label>"
 					. "</$itemContainerTagName>";
@@ -448,10 +445,10 @@
 			}
 
 			if (self::isRender()) {
+				$formName = parent::peekEditModel()->requestKey($name, $nameIndex);
 				$modelValue = self::getModelValue($name);
 				if ($nameIndex != -1) {
 					$modelValue = $modelValue[$nameIndex];
-					$name .= "[]";
 				}
 				
 				if (empty($modelValue)) {
@@ -460,7 +457,7 @@
 				
 				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);
-				return "<input name='$name' type='text' value='$modelValue'$attributes />";
+				return "<input name='$formName' type='text' value='$modelValue'$attributes />";
 			}
 		}
 		
@@ -474,10 +471,10 @@
 			}
 			
 			if (self::isRender()) {
+				$formName = parent::peekEditModel()->requestKey($name, $nameIndex);
 				$modelValue = self::getModelValue($name);
 				if ($nameIndex != -1) {
 					$modelValue = $modelValue[$nameIndex];
-					$name .= "[]";
 				}
 
 				if (empty($modelValue)) {
@@ -486,7 +483,7 @@
 
 				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);
-				return "<textarea name='$name'$attributes>$modelValue</textarea>";
+				return "<textarea name='$formName'$attributes>$modelValue</textarea>";
 			}
 		}
 
@@ -496,20 +493,20 @@
 			}
 
 			if (self::isSubmit()) {
-				$modelValue = self::peekEditModel()->request()[$name];
+				$modelValue = self::peekEditModel()->request($name);
 				self::setModelValue($name, $modelValue == "on" ? 1 : 0, $nameIndex);
 			}
 
 			if (self::isRender()) {
+				$formName = parent::peekEditModel()->requestKey($name, $nameIndex);
 				$modelValue = self::getModelValue($name);
 				if ($nameIndex != -1) {
 					$modelValue = $modelValue[$nameIndex];
-					$name .= "[]";
 				}
 
 				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);
-				return "<input name='$name' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 || $modelValue === "1" ? " checked='checked'" : '') . "$attributes />";
+				return "<input name='$formName' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 || $modelValue === "1" ? " checked='checked'" : '') . "$attributes />";
 			}
 		}
 

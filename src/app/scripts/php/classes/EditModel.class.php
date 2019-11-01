@@ -2,12 +2,18 @@
 
     class EditModel extends ArrayObject
     {
+        private $prefix;
+
         private $isRegistration;
         private $isLoad;
         private $isSubmit;
         private $isRender;
         private $isSaved;
         private $request;
+
+        public function prefix($name) {
+            return $this->prefix = $name;
+        }
 
         public function isRegistration() {
             return $this->isRegistration;
@@ -57,9 +63,13 @@
             return $this->request;
         }
 
-        private function getRequestKey($name, $nameIndex = -1) {
+        private function getRequestValue($name, $nameIndex = -1) {
+            if ($this->prefix != null) {
+                $name = $this->prefix . $name;
+            }
+
             $value = self::getRequest()[$name];
-            if ($nameIndex != -1) {
+            if ($nameIndex != null && $nameIndex != -1) {
                 $value = $value[$nameIndex];
             }
 
@@ -70,10 +80,22 @@
             if ($requestOrName == null) {
                 return self::getRequest();
             } else if (is_string($requestOrName)) {
-                return self::getRequestKey($requestOrName, $nameIndex);
+                return self::getRequestValue($requestOrName, $nameIndex);
             }  else {
                 $this->request = $requestOrName;
             }
+        }
+
+        public function requestKey($name, $nameIndex = null) {
+            if ($this->prefix != null) {
+                $name = $this->prefix . $name;
+            }
+
+            if ($nameIndex != null && $nameIndex != -1) {
+                $name .= "[]";
+            }
+
+            return $name;
         }
 
         public function set($name, $nameIndex, $value) {
