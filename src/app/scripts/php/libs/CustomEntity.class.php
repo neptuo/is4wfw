@@ -277,6 +277,11 @@
 
             // Load main data.
             $data = self::dataAccess()->fetchSingle("SELECT $columns FROM `$name` WHERE $condition");
+            if (empty($data)) {
+                // We got keys, the item doesn't exist.
+                return false;
+            }
+
             foreach ($model as $key => $item) {
                 $model[$key] = $data[$key];
             }
@@ -288,6 +293,8 @@
                     $model[$columnName] = $value;
                 }
             }
+
+            return true;
         }
 
         private function loadLocalizedModel($tableName, $xml, $keys, $model, $langIds) {
@@ -347,8 +354,12 @@
                 self::parseContent($template);
                 $model->registration(false);
 
-                self::loadModel($tableName, $xml, $keys, $model, $langIds);
-                self::loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
+                $exists = self::loadModel($tableName, $xml, $keys, $model, $langIds);
+                if ($exists) {
+                    self::loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
+                } else {
+                    $isUpdate = $exists;
+                }
             }
 
             if (self::isHttpMethod($method) && ($submit == "" || array_key_exists($submit, $_REQUEST))) {
@@ -359,6 +370,10 @@
                 if ($isUpdate) {
                     self::update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds);
                 } else {
+                    foreach ($keys as $key => $value) {
+                        $model[$key] = $value;
+                    }
+
                     self::insert($tableName, $tableLocalizationName, $xml, $model, $langIds);
                 }
 
