@@ -257,21 +257,28 @@
 
 		// ------- EDITORS ----------------------------------------------------
 
+		private $isInsideForm = false;
+
 		public function form($template, $method = "post", $pageId = null, $params = array()) {
-			if ($pageId == NULL) {
-				$action = $_SERVER['REQUEST_URI'];
+			if ($this->isInsideForm) {
+				return self::parseContent($template);
 			} else {
-				$action = self::web()->composeUrl($pageId);
+				$this->isInsideForm = true;
+
+				if ($pageId == NULL) {
+					$action = $_SERVER['REQUEST_URI'];
+				} else {
+					$action = self::web()->composeUrl($pageId);
+				}
+
+				$params["method"] = $method;
+				$params["action"] = $action;
+				$attributes = self::joinAttributes($params);
+
+				$result = "<form$attributes>" . self::parseContent($template) . "</form>";
+				$this->isInsideForm = false;
+				return $result;
 			}
-
-			$params["method"] = $method;
-			$params["action"] = $action;
-			$attributes = self::joinAttributes($params);
-
-            return ""
-            . "<form$attributes>"
-                . self::parseContent($template)
-            . "</form>";
 		}
 
 		private function input($params) {
