@@ -402,8 +402,6 @@
         public function createIfEmpty($template, $name, $nameIndex, $source, $keyColumn, $valueColumn, $tableName = "", $values = array()) {
             if (self::peekEditModel()->isSubmit()) {
                 $value = self::peekEditModel()->request($name, $nameIndex);
-
-                // self::setModelValue($modelKey, $value, $index);
                 $isEmpty = false;
                 if (is_array($source)) {
                     foreach ($source as $item) {
