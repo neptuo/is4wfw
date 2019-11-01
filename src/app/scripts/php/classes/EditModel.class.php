@@ -3,6 +3,7 @@
     class EditModel extends ArrayObject
     {
         private $isRegistration;
+        private $isLoad;
         private $isSubmit;
         private $isRender;
         private $isSaved;
@@ -14,6 +15,14 @@
         
         public function registration($value = true) {
             $this->isRegistration = $value;
+        }
+
+        public function isLoad() {
+            return $this->isLoad;
+        }
+        
+        public function load($value = true) {
+            $this->isLoad = $value;
         }
 
         public function isSubmit() {

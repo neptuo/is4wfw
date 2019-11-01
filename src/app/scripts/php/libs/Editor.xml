@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Editors library</name>
+  <classname>Editor</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro realizaci edit formuláře bez pevné struktury. Tedy uživatelsky definovaného.
+  </comment>
+  <fulltag>
+    <tagname>form</tagname>
+    <function>form</function>
+    <attribute>
+      <attname>submit</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název klíče z requestu, který říká že jde o odeslání formuláře.</attcomment>
+    </attribute>
+    <comment>
+      Vytvoří formulář a zaregistruje edit model.
+    </comment>
+  </fulltag>
+  <tag>
+    <tagname>set</tagname>
+    <function>setValue</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název klíče, který se má nastavit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Hodnota klíče.</attcomment>
+    </attribute>
+    <comment>Nastaví položku modelu.</comment>
+  </tag>
+  <property>
+  	<propname>registration</propname>
+  	<getfunction>isRegistration</getfunction>
+    <comment>Vrací "true", pokud se právě jedná o fázi registrování položek.</comment>
+  </property>
+  <property>
+  	<propname>load</propname>
+  	<getfunction>isLoad</getfunction>
+    <comment>Vrací "true", pokud se právě jedná o fázi načítání dat.</comment>
+  </property>
+  <property>
+  	<propname>submit</propname>
+  	<getfunction>isSubmit</getfunction>
+    <comment>Vrací "true", pokud se právě jedná o fázi odeslání formuláře.</comment>
+  </property>
+  <property>
+  	<propname>saved</propname>
+  	<getfunction>isSaved</getfunction>
+    <comment>Vrací "true", pokud se právě jedná o fázi po uložení formuláře.</comment>
+  </property>
+</taglib>
+
