@@ -75,9 +75,33 @@
       <attreq>implied</attreq>
       <attcomment>Umožňuje nastavit jazyk pro editor, podporované hodnoty jsou "en" a "cs".</attcomment>
     </attribute>
+    <attribute>
+      <attname>jQuery</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>true</attdef>
+      <attcomment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</attcomment>
+    </attribute>
+    <comment>Vloží do stránky skripty pro tiny-mce.</comment>
+  </tag>
+  <tag>
+    <tagname>select2</tagname>
+    <function>select2</function>
+    <attribute>
+      <attname>selector</attname>
+      <attreq>implied</attreq>
+      <attcomment>jQuery selector na elementy, které se mají transformovat na select2.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>tags</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>true</attdef>
+      <attcomment>Pokud je "true", bude mít možnost uživatel zakládat nové položky.</attcomment>
+    </attribute>
     <comment>
-      Vloží do stránky skripty pro tiny-mce.
-      Vkládá do stránky i jQuery.
+      Vloží do stránky skripty a styly pro select2 (v4.0.11) a inicializuje vybrané elementy podle "selector".
+      Automaticky vkládá jQuery (v3.2.1.slim).
     </comment>
   </tag>
   <tag>

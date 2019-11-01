@@ -166,9 +166,15 @@
             return $return;
         }
 
-        public function tinyMce($ids, $language = '') {
+        public function tinyMce($ids, $language = '', $jQuery = true) {
+            if ($jQuery) {
+                $jQuery = self::formatScript('~/js/jquery/jquery.js');
+            } else {
+                $jQuery = "";
+            }
+
             $return = ''
-            . self::formatScript('~/js/jquery/jquery.js')
+            . $jQuery
             . self::formatScript('~/tiny-mce/tinymce.min.js')
             . self::formatScript('~/js/initTiny.js');
 
@@ -189,6 +195,21 @@
             }
 
             return $return;
+        }
+
+        public function select2($selector, $tags = false) {
+            parent::web()->addScript(self::formatScript("~/js/bootstrap/jquery-3.2.1.slim.min.js"));
+            parent::web()->addScript(self::formatScript('~/js/select2/select2.min.js'));
+            parent::web()->addStyle(self::formatStyle('~/css/select2/select2.min.css'));
+
+            $options = "{";
+            if ($tags) {
+                $options .= "tags: true,";
+            }
+            $options .= "}";
+
+            $result = "<script type='text/javascript'>$(function() { $('$selector').select2($options); });</script>";
+            return $result;
         }
 
         public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false) {
