@@ -83,6 +83,58 @@
     </attribute>
   </tag>
   <fulltag>
+    <tagname>createIfEmpty</tagname>
+    <function>createIfEmpty</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název fieldu, který se má nastavovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>nameIndex</attname>
+      <attreq>implied</attreq>
+      <atttype>number</atttype>
+      <attdef>-1</attdef>
+      <atttype>string</atttype>
+      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>source</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>keyColumn</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, který identifikuje klíč připojovaného záznamu záznamu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>valueColumn</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, kam se uloží hodnota zadaná uživatelem.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>tableName</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Pokud je source polem, pak je tento atribut povinný a udává název tabulky, kam se záznam založit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <prefix>true</prefix>
+      <attcomment>Seznam sloupců s dodatečnými hodnota pro založení záznamu.</attcomment>
+    </attribute>
+    <comment>
+      Typické použití: Automatické založené položky pro SingleReference, kdy pomocí select2 (nebo jiné) uživatel zadal položku, která v číselníkové tabulky ještě není.
+    </comment>
+  </fulltag>
+  <fulltag>
     <tagname>list</tagname>
     <function>getList</function>
     <attribute>

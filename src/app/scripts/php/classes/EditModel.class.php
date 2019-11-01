@@ -40,15 +40,38 @@
             $this->isSaved = $value;
         }
 
-        public function request($request = null) {
-            if ($request == null) {
-                if ($this->request == null) {
-                    return $_REQUEST;
-                } 
+        private function getRequest() {
+            if ($this->request == null) {
+                return $_REQUEST;
+            } 
 
-                return $this->request;
+            return $this->request;
+        }
+
+        private function getRequestKey($name, $nameIndex = -1) {
+            $value = self::getRequest()[$name];
+            if ($nameIndex != -1) {
+                $value = $value[$nameIndex];
+            }
+
+            return $value;
+        }
+
+        public function request($requestOrName = null, $nameIndex = null) {
+            if ($requestOrName == null) {
+                return self::getRequest();
+            } else if (is_string($requestOrName)) {
+                return self::getRequestKey($requestOrName, $nameIndex);
+            }  else {
+                $this->request = $requestOrName;
+            }
+        }
+
+        public function set($name, $nameIndex, $value) {
+            if ($nameIndex != -1) {
+                $this[$name][$nameIndex] = $value;
             } else {
-                $this->request = $request;
+                $this[$name] = $value;
             }
         }
 

@@ -128,6 +128,44 @@
                 self::dataAccess()->execute($sql);
             }
         }
+
+        private function executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys) {
+            $da = parent::dataAccess();
+
+            $fa = new FileAdmin();
+            $directoryName = self::formatString($extra['nameFormat'], $model);
+            $directory = $fa->createDirectory($extra['parentDirId'], $directoryName);
+            
+            $sql = self::sql()->update($tableName, array($columnName => $directory['id']), $primaryKeys);
+            $da->execute($sql);
+        }
+
+        private function executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys) {
+            $da = parent::dataAccess();
+
+            $source = $extra["source"];
+            $value = $extra["value"];
+            $keyColumn = $extra["keyColumn"];
+            $valueColumn = $extra["valueColumn"];
+            $values = $extra["values"];
+
+            $newId = 0;
+            $sql = parent::sql()->select($source, array($keyColumn), array($valueColumn => $value));
+            $item = $da->fetchSingle($sql);
+            if (empty($item)) {
+                $values[$valueColumn] = $value;
+                $sql = parent::sql()->insert($source, $values);
+                $da->execute($sql);
+                $newId = $da->getLastId($sql);
+            } else {
+                $newId = $item[$keyColumn];
+            }
+            
+            if ($newId != 0) {
+                $sql = self::sql()->update($tableName, array($columnName => $newId), $primaryKeys);
+                $da->execute($sql);
+            }
+        }
         
         private function insert($tableName, $tableLocalizationName, $xml, $model, $langIds) {
             $values = self::prepareValuesFromModel($xml, $model);
@@ -155,12 +193,9 @@
                 // Process extras.
                 foreach ($values["extras"] as $columnName => $extra) {
                     if ($extra["type"] == "emptyDirectory") {
-                        $fa = new FileAdmin();
-                        $directoryName = self::formatString($extra['nameFormat'], $model);
-                        $directory = $fa->createDirectory($extra['parentDirId'], $directoryName);
-                        
-                        $sql = self::sql()->update($tableName, array($columnName => $directory['id']), $primaryKeys);
-                        $da->execute($sql);
+                        self::executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys);
+                    } else if ($extra["type"] == "createIfEmpty") {
+                        self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
                     }
                 }
 
@@ -184,6 +219,13 @@
             self::dataAccess()->transaction(function($da) use ($tableName, $tableLocalizationName, $xml, $model, $values, $sql, $langIds, $primaryKeys) {
                 // Execute update.
                 $da->execute($sql);
+                
+                // Process extras.
+                foreach ($values["extras"] as $columnName => $extra) {
+                    if ($extra["type"] == "createIfEmpty") {
+                        self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
+                    }
+                }
 
                 // Process external tables.
                 self::updateExternals($values, $xml, $model);
@@ -355,6 +397,48 @@
                     "nameFormat" => $nameFormat
                 );
             }
+        }
+
+        public function createIfEmpty($template, $name, $nameIndex, $source, $keyColumn, $valueColumn, $tableName = "", $values = array()) {
+            if (self::peekEditModel()->isSubmit()) {
+                $value = self::peekEditModel()->request($name, $nameIndex);
+
+                // self::setModelValue($modelKey, $value, $index);
+                $isEmpty = false;
+                if (is_array($source)) {
+                    foreach ($source as $item) {
+                        if ($item[$keyColumn] == $value) {
+                            $isEmpty = false;
+                            break;
+                        }
+                    }
+
+                    $source = $tableName;
+                    $isEmpty = true;
+                } else {
+                    $sql = parent::sql()->count($source, array($keyColumn => $value));
+                    $count = parent::dataAccess()->fetchSingle($sql);
+                    if ($count["count"] == 0) {
+                        $isEmpty = true;
+                    }
+                }
+                
+                if ($isEmpty) {
+                    $modelValue = array(
+                        "type" => "createIfEmpty",
+                        "source" => $source,
+                        "value" => $value,
+                        "keyColumn" => $keyColumn,
+                        "valueColumn" => $valueColumn,
+                        "values" => $values
+                    );
+                    
+                    self::peekEditModel()->set($name, $nameIndex, $modelValue);
+                    return;
+                }
+            }
+
+            return parent::parseContent($template);
         }
 
         public function getListData() {
