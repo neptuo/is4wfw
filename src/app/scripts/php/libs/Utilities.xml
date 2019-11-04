@@ -42,10 +42,36 @@
       <attreq>implied</attreq>
       <attcomment>Pátá hodnota.</attcomment>
     </attribute>
-    <anyAttribute />
-    <comment>
-      Spojí hodnoty všech atributů 'value1-5' do jednoho řetězce a tuto hodnotu nastaví do proměnné 'output' v této knihovně.
-    </comment>
+    <comment>Spojí hodnoty všech atributů 'value1-5' do jednoho řetězce a tuto hodnotu nastaví do proměnné 'output' v této knihovně.</comment>
+  </tag>
+  <tag>
+    <tagname>arrayItem</tagname>
+    <function>addToArray</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>output</attname>
+      <attreq>required</attreq>
+      <attcomment>Název property z této knihovny, do níž bude uložen výstup.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>key</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <prefix>true</prefix>
+      <attcomment>Klíč hodnota, které budou předány jako položky nově vytvořené položce v hlavním poli.</attcomment>
+    </attribute>
+    <comment>Přidá do pole v propertě "output" (z této knihovny) položku. Pokud pole ještě neexistuje, vytvořího</comment>
+  </tag>
+  <tag>
+    <tagname>clear</tagname>
+    <function>clear</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>output</attname>
+      <attreq>required</attreq>
+      <attcomment>Název property z této knihovny, která má být vymazána.</attcomment>
+    </attribute>
+    <comment>Smaže dříve vytvořenou propety.</comment>
   </tag>
   <anyProperty />
 </taglib>

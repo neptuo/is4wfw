@@ -23,6 +23,18 @@
             return "";
         }
 
+        public function addToArray($output, $key = array()) {
+            if (!array_key_exists($output, $this->OutputValues)) {
+                $this->OutputValues[$output] = array();
+            }
+
+            $this->OutputValues[$output][] = $key;
+        }
+
+        public function clear($output) {
+            unset($this->OutputValues[$output]);
+        }
+
         public function getProperty($name) {
             return $this->OutputValues[$name];
         }
