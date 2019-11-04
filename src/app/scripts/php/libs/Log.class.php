@@ -69,6 +69,11 @@
         }
 
         public function exception($e) {
+            $editModel = parent::getEditModel(false);
+            if ($editModel != null && $editModel->isSave()) {
+                $editModel->exception($e);
+            }
+
             $message = "An exception of type '" . get_class($e) . "' has occured. " . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . '@ ' . parent::currentFullUrl();
             self::write($message);
         }

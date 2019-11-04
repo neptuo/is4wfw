@@ -168,50 +168,50 @@
         }
         
         private function insert($tableName, $tableLocalizationName, $xml, $model, $langIds) {
+            $da = parent::dataAccess();
             $values = self::prepareValuesFromModel($xml, $model);
             $sql = self::sql()->insert($tableName, $values["columns"]);
 
-            self::dataAccess()->transaction(function($da) use ($tableName, $tableLocalizationName, $xml, $model, $values, $sql, $langIds) {
-                // Execute insert.
-                $da->execute($sql);
-                
-                // Get last identity value if inserted.
-                $identity = self::findIdentityColumn($xml);
-                if ($identity != NULL) {
-                    $id = $da->getLastId();
-                    $model[(string)$identity->name] = $id;
-                }
+            // Execute insert.
+            $da->execute($sql);
+            
+            // Get last identity value if inserted.
+            $identity = self::findIdentityColumn($xml);
+            if ($identity != NULL) {
+                $id = $da->getLastId();
+                $model[(string)$identity->name] = $id;
+            }
 
-                // Prepare filter/keys for additional inserts/updates.
-                $primaryKeys = array();
-                foreach ($xml->column as $column) {
-                    if ($column->primaryKey == TRUE) {
-                        $primaryKeys[(string)$column->name] = $model[(string)$column->name];
-                    }
+            // Prepare filter/keys for additional inserts/updates.
+            $primaryKeys = array();
+            foreach ($xml->column as $column) {
+                if ($column->primaryKey == TRUE) {
+                    $primaryKeys[(string)$column->name] = $model[(string)$column->name];
                 }
-                
-                // Process extras.
-                foreach ($values["extras"] as $columnName => $extra) {
-                    if ($extra["type"] == "emptyDirectory") {
-                        self::executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys);
-                    } else if ($extra["type"] == "createIfEmpty") {
-                        self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
-                    }
+            }
+            
+            // Process extras.
+            foreach ($values["extras"] as $columnName => $extra) {
+                if ($extra["type"] == "emptyDirectory") {
+                    self::executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys);
+                } else if ($extra["type"] == "createIfEmpty") {
+                    self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
                 }
+            }
 
-                // Process external tables.
-                self::updateExternals($values, $xml, $model);
+            // Process external tables.
+            self::updateExternals($values, $xml, $model);
 
-                // Process localization.
-                self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
+            // Process localization.
+            self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
 
-                if (self::hasAuditLog($xml)) {
-                    self::audit($tableName, "insert", $primaryKeys);
-                }
-            });
+            if (self::hasAuditLog($xml)) {
+                self::audit($tableName, "insert", $primaryKeys);
+            }
         }
         
         private function update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds) {
+            $da = parent::dataAccess();
             $keysModel = new EditModel();
             $keysModel->copyFrom($keys);
 
@@ -219,27 +219,25 @@
             $primaryKeys = self::prepareValuesFromModel($xml, $keysModel)["columns"];
             $sql = self::sql()->update($tableName, $values["columns"], $primaryKeys);
 
-            self::dataAccess()->transaction(function($da) use ($tableName, $tableLocalizationName, $xml, $model, $values, $sql, $langIds, $primaryKeys) {
-                // Execute update.
-                $da->execute($sql);
-                
-                // Process extras.
-                foreach ($values["extras"] as $columnName => $extra) {
-                    if ($extra["type"] == "createIfEmpty") {
-                        self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
-                    }
+            // Execute update.
+            $da->execute($sql);
+            
+            // Process extras.
+            foreach ($values["extras"] as $columnName => $extra) {
+                if ($extra["type"] == "createIfEmpty") {
+                    self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
                 }
+            }
 
-                // Process external tables.
-                self::updateExternals($values, $xml, $model);
+            // Process external tables.
+            self::updateExternals($values, $xml, $model);
 
-                // Process localization.
-                self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
+            // Process localization.
+            self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
 
-                if (self::hasAuditLog($xml)) {
-                    self::audit($tableName, "update", $primaryKeys);
-                }
-            });
+            if (self::hasAuditLog($xml)) {
+                self::audit($tableName, "update", $primaryKeys);
+            }
         }
 
         private function loadModel($name, $xml, $keys, EditModel $model) {

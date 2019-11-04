@@ -35,10 +35,15 @@
                 $model->submit(false);
 
                 // Save data in transaction.
-                // TODO: Transaction + catch exception.
-                $model->save();
-                self::parseContent($template);
-                $model->save(false);
+                parent::dataAccess()->transaction(function() use ($model, $template) {
+                    $model->save();
+                    self::parseContent($template);
+                    $model->save(false);
+
+                    if ($model->hasException()) {
+                        throw new Exception("One or more exceptions raised during save phase of EditModel. All of them should be logged.");
+                    }
+                });
 
                 // Process after save redirects.
                 $model->saved(true);

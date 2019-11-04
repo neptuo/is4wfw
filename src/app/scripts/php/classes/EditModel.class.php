@@ -6,6 +6,7 @@
         private $metadata = array();
         private $container = array();
         private $index = 0;
+        private $exceptions = array();
 
         public function prefix($name = "1.1-def") {
             if ($name === "1.1-def") {
@@ -17,6 +18,14 @@
             }
 
             $this->prefix = $name;
+        }
+
+        public function exception($e) {
+            $this->exceptions[] = $e;
+        }
+
+        public function hasException() {
+            return count($this->exceptions) > 0;
         }
 
         // ------- ArrayAccess ------------------------------------------------
