@@ -335,9 +335,30 @@
         }
 
 		public function form($template, $name, $method = "POST", $submit = "", $nextPageId = 0, $langIds = "", $keys = array()) {
-            $tableName = self::ensureTableName($name);
-            $tableLocalizationName = self::ensureTableLocalizationName($name);
-            $xml = self::getDefinition($name);
+            // IsPrimary = false;
+            $model = parent::getEditModel();
+
+            if (!$model->hasMetadataKey("tableName")) {
+                $tableName = self::ensureTableName($name);
+                $model->metadata("tableName", $tableName);
+            } else {
+                $tableName = $model->metadata("tableName");
+            }
+
+            if (!$model->hasMetadataKey("tableLocalizationName")) {
+                $tableLocalizationName = self::ensureTableLocalizationName($name);
+                $model->metadata("tableLocalizationName", $tableLocalizationName);
+            } else {
+                $tableLocalizationName = $model->metadata("tableLocalizationName");
+            }
+
+            if (!$model->hasMetadataKey("xml")) {
+                $xml = self::getDefinition($name);
+                $model->metadata("xml", $xml);
+            } else {
+                $xml = $model->metadata("xml");
+            }
+
             $langIds = explode(",", $langIds);
             $keys = parent::removeKeysWithEmptyValues($keys);
 
@@ -347,12 +368,12 @@
 			
 			$template = parent::getParsedTemplate($template);
 
-            $isUpdate = count($keys) > 0;
+            if (!$model->hasMetadataKey("isUpdate")) {
+                $model->metadata("isUpdate", count($keys) > 0);
+            }
 
-            // IsPrimary = false;
-            $model = parent::getEditModel();
             if ($model->canLoad()) {
-                if ($isUpdate) {
+                if ($model->metadata("isUpdate")) {
                     $model->registration();
                     self::parseContent($template);
                     $model->registration(false);
@@ -361,7 +382,7 @@
                     if ($exists) {
                         self::loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
                     } else {
-                        $isUpdate = $exists;
+                        $model->metadata("isUpdate", false);
                     }
                 }
             }
@@ -376,7 +397,7 @@
 
             // Save if model is leased or isSubmit.
             if ($model->canSave($isSubmit)) {
-                if ($isUpdate) {
+                if ($model->metadata("isUpdate")) {
                     self::update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds);
                 } else {
                     foreach ($keys as $key => $value) {
@@ -398,7 +419,7 @@
                     self::parseContent($template);
                     $model->saved(false);
 
-                    if (!$isUpdate) {
+                    if (!$model->metadata("isUpdate")) {
                         self::popEditModel();
                         $model = new EditModel();
                         self::pushEditModel($model);

@@ -187,13 +187,17 @@
         // ------- Metadata ---------------------------------------------------
 
         public function metadata($key, $value = "0.0-def") {
-            if ($value == "0.0-def") {
+            if ($value === "0.0-def") {
                 // Get.
                 return $this->metadata[$this->prefix][$key];
             } else {
                 // Set.
                 $this->metadata[$this->prefix][$key] = $value;
             }
+        }
+
+        public function hasMetadataKey($key) {
+            return array_key_exists($this->prefix, $this->metadata) && array_key_exists($key, $this->metadata[$this->prefix]);
         }
 
         // ------- Request and model values -----------------------------------
