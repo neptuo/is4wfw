@@ -203,7 +203,7 @@
             if ($columnType == "singlereference") {
                 $referenceTable = $model["column-singlerefence-table"];
                 $referenceColumn = $model["column-singlerefence-column"];
-                $column->addChild("targetTable", $targetCreferenceTableolumn);
+                $column->addChild("targetTable", $referenceTable);
                 $column->addChild("targetColumn", $referenceColumn);
 
                 $sql[] = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$columnName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
