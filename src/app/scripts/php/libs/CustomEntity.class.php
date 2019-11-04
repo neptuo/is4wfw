@@ -334,69 +334,41 @@
             return self::sql()->delete($name, $params);
         }
 
-		public function form($template, $name, $method = "POST", $submit = "", $nextPageId = 0, $langIds = "", $keys = array()) {
-            // IsPrimary = false;
+		public function form($template, $name, $langIds = "", $keys = array()) {
             $model = parent::getEditModel();
-
-            if (!$model->hasMetadataKey("tableName")) {
-                $tableName = self::ensureTableName($name);
-                $model->metadata("tableName", $tableName);
-            } else {
-                $tableName = $model->metadata("tableName");
-            }
-
-            if (!$model->hasMetadataKey("tableLocalizationName")) {
-                $tableLocalizationName = self::ensureTableLocalizationName($name);
-                $model->metadata("tableLocalizationName", $tableLocalizationName);
-            } else {
-                $tableLocalizationName = $model->metadata("tableLocalizationName");
-            }
-
-            if (!$model->hasMetadataKey("xml")) {
-                $xml = self::getDefinition($name);
-                $model->metadata("xml", $xml);
-            } else {
-                $xml = $model->metadata("xml");
-            }
-
+            $tableName = self::ensureTableName($name, $model);
+            $tableLocalizationName = self::ensureTableLocalizationName($name, $model);
+            $xml = parent::getDefinition($name, $model);
             $langIds = explode(",", $langIds);
             $keys = parent::removeKeysWithEmptyValues($keys);
 
-            if ($method == "GET" && $submit == "") {
-                trigger_error("Missing required parameter 'submit' for 'GET' custom entity form '$name'", E_USER_ERROR);
-            }
-			
 			$template = parent::getParsedTemplate($template);
 
             if (!$model->hasMetadataKey("isUpdate")) {
                 $model->metadata("isUpdate", count($keys) > 0);
             }
 
-            if ($model->canLoad()) {
-                if ($model->metadata("isUpdate")) {
-                    $model->registration();
-                    self::parseContent($template);
-                    $model->registration(false);
+            // Load data based on fields in template.
+            if ($model->isLoad() && $model->metadata("isUpdate")) {
+                $model->registration();
+                self::parseContent($template);
+                $model->registration(false);
 
-                    $exists = self::loadModel($tableName, $xml, $keys, $model, $langIds);
-                    if ($exists) {
-                        self::loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
-                    } else {
-                        $model->metadata("isUpdate", false);
-                    }
+                $exists = self::loadModel($tableName, $xml, $keys, $model, $langIds);
+                if ($exists) {
+                    self::loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
+                } else {
+                    $model->metadata("isUpdate", false);
                 }
             }
 
             // Submit if model is leased or isSubmit.
-            $isSubmit = self::isHttpMethod($method) && ($submit == "" || array_key_exists($submit, $_REQUEST));
-            if ($model->canSubmit($isSubmit)) {
-                $model->submit();
+            if ($model->isSubmit()) {
                 self::parseContent($template);
-                $model->submit(false);
             }
 
             // Save if model is leased or isSubmit.
-            if ($model->canSave($isSubmit)) {
+            if ($model->isSave()) {
                 if ($model->metadata("isUpdate")) {
                     self::update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds);
                 } else {
@@ -409,42 +381,21 @@
             }
 
             // AfterSave if model is leased or isSubmit.
-            if ($model->canSaved($isSubmit)) {
-                if (!empty($nextPageId)) {
-                    self::web()->redirectTo($nextPageId);
-                } else {
-                    $model->copyFrom($keys);
-
-                    $model->saved(true);
-                    self::parseContent($template);
-                    $model->saved(false);
-
-                    if (!$model->metadata("isUpdate")) {
-                        self::popEditModel();
-                        $model = new EditModel();
-                        self::pushEditModel($model);
-                    }
-                }
+            if ($model->isSaved()) {
+                $model->copyFrom($keys);
+                self::parseContent($template);
             }
 
-            if ($model->canRender()) {
-                $model->render();
-                $result = self::ui()->form($template, "post");
-                $model->render(false);
+            if ($model->isRender()) {
+                $result = self::parseContent($template);
+                return $result;
             }
-
-            // IsPrimary = true;
-            parent::releaseEditModel($model);
-            return $result;
-        }
-
-        public function isFormSaved() {
-            return parent::peekEditModel()->isSaved();
         }
 
         public function emptyDirectory($name, $parentDirId, $nameFormat) {
-            if (self::peekEditModel()->isSubmit()) {
-                self::peekEditModel()[$name] = array(
+            $model = parent::getEditModel();
+            if ($model->isSubmit()) {
+                $model[$name] = array(
                     "type" => "emptyDirectory",
                     "parentDirId" => $parentDirId,
                     "nameFormat" => $nameFormat
@@ -453,8 +404,9 @@
         }
 
         public function createIfEmpty($template, $name, $nameIndex, $source, $keyColumn, $valueColumn, $tableName = "", $values = array()) {
-            if (self::peekEditModel()->isSubmit()) {
-                $value = self::peekEditModel()->request($name, $nameIndex);
+            $model = parent::getEditModel();
+            if ($model->isSubmit()) {
+                $value = $model->request($name, $nameIndex);
                 $isEmpty = false;
                 if (is_array($source)) {
                     foreach ($source as $item) {
@@ -484,7 +436,7 @@
                         "values" => $values
                     );
                     
-                    self::peekEditModel()->set($name, $nameIndex, $modelValue);
+                    $model->set($name, $nameIndex, $modelValue);
                     return;
                 }
             }
@@ -543,7 +495,7 @@
 			}
 
             // Inside "ce:form".
-            $model = parent::peekEditModel(false);
+            $model = parent::getEditModel(false);
             if ($model != null) {
                 if ($name == "_") {
                     return $model;

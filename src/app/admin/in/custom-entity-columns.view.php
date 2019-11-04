@@ -11,7 +11,13 @@
 		
 		<admin:edit id="query:column">
 			<web:frame title="loc:columnlist.create">
-				<ced:tableColumnCreator name="query:table" />
+				<edit:form submit="ce-column-creator-save">
+					<web:condition when="edit:saved">
+						<web:redirectTo pageId="~/in/custom-entity-columns.view" param-table="query:table" />
+					</web:condition>
+
+					<ced:tableColumnCreator name="query:table" />
+				</edit:form>
 			</web:frame>
 		</admin:edit>
 

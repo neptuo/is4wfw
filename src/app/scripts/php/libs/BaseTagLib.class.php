@@ -8,6 +8,8 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ParsedTemplate.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/MissingEditModelException.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
 
@@ -639,83 +641,28 @@
             return self::isHttpMethod("GET");
         }
 
-        private function getModelStack($key, $createIfNotExists = false) {
-            $stack = self::request()->get($key);
-			if ($stack == NULL && $createIfNotExists) {
-                $stack = new Stack();
-                self::request()->set($key, $stack);
-            }
-            
-            return $stack;
-        }
-
         private static $editModel;
 
-        public function setEditModel($model) {
-            BaseTagLib::$editModel = $model;
-            self::pushEditModel(BaseTagLib::$editModel);
-        }
-
-        public function getEditModel($forceOwnership = false) {
+        public function getEditModel($thowIfNull = true) {
             if (BaseTagLib::$editModel != null) {
-                if (!$forceOwnership) {
-                    BaseTagLib::$editModel->primary(false);
-                }
-
                 return BaseTagLib::$editModel;
             }
-
-            $model = new EditModel();
-            $model->primary(true);
+            
+            if ($thowIfNull) {
+                throw new MissingEditModelException();
+            } else {
+                return null;
+            }
         }
-
-        public function releaseEditModel($model) {
-            $model->primary(true);
+        
+        public function setEditModel($model) {
+            BaseTagLib::$editModel = $model;
         }
 
         public function clearEditModel() {
             BaseTagLib::$editModel = null;
         }
         
-        public function setEditModelPrefix($name) {
-            self::getEditModel(true)->prefix($name);
-        }
-        
-        public function clearEditModelPrefix() {
-            self::getEditModel(true)->prefix(null);
-        }
-
-        public function pushEditModel($model) {
-            $stack = self::getModelStack("editModels", true);
-			$stack->push($model);
-        }
-
-        public function peekEditModel($createIfNotExists = true) {
-            $model = null;
-            $stack = self::getModelStack("editModels", false);
-            if ($stack != null) {
-                $model = $stack->peek();
-            }
-
-            if ($model == null && $createIfNotExists) {
-                $model = new EditModel();
-                $model->submit(true);
-                $model->render(true);
-                $model->saved(true);
-            }
-
-            return $model;
-        }
-
-        public function popEditModel() {
-            $stack = self::getModelStack("editModels", false);
-			if ($stack == NULL) {
-                return new EditModel();
-			}
-
-            return $stack->pop();
-        }
-
         private $stacks;
 
         private function getLocalModelStack($key, $createIfNotExists = false) {

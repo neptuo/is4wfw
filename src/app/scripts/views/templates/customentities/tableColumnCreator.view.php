@@ -99,7 +99,7 @@
         </div>
     </div>
     <div class="gray-box">
-        <input type="hidden" name="ce-column-create" value="create" />
+        <input type="hidden" name="ce-column-creator-save" value="create" />
         <button type="submit" name="ce-column-creator-save" value="create">Create</button>
     </div>
 </ui:form>

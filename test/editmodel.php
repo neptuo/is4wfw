@@ -17,6 +17,11 @@
     $model["name"] = "Jane";
     $model["surname"] = "Doe";
     $model->metadata("date", "2019");
+    
+    $model->prefix("c");
+    $model->set("names", 0, "a");
+    $model->set("names", 1, "b");
+    $model->set("names", 2, "c");
 
     var_dump(array_key_exists("surname", $model));
     var_dump($model->hasKey("surname"));

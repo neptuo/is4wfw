@@ -7,7 +7,13 @@
 		</web:condition>
 		<admin:edit id="query:table">
 			<web:frame title="loc:tablelist.create">
-				<ced:tableCreator />
+				<edit:form submit="ce-creator-save">
+					<web:condition when="edit:saved">
+						<web:redirectTo pageId="~/in/custom-entities.view" />
+					</web:condition>
+
+					<ced:tableCreator />
+				</edit:form>
 			</web:frame>
 		</admin:edit>
 		<web:frame title="loc:tablelist.title">

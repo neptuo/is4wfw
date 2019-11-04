@@ -7,7 +7,11 @@
         private $container = array();
         private $index = 0;
 
-        public function prefix($name) {
+        public function prefix($name = "1.1-def") {
+            if ($name === "1.1-def") {
+                return $this->prefix;
+            }
+
             if ($name == null) {
                 $name = "";
             }
@@ -34,7 +38,11 @@
         }
     
         public function offsetGet($offset) {
-            return self::offsetExists($offset) ? $this->container[$this->prefix][$offset] : null;
+            if (self::offsetExists($offset)) {
+                return $this->container[$this->prefix][$offset];
+            } else {
+                return null;
+            }
         }
 
         // ------- Iterator ---------------------------------------------------
@@ -73,19 +81,13 @@
 
         // ------- Model phases -----------------------------------------------
         
-        private $isPrimary;
-
         private $isRegistration;
         private $isLoad;
         private $isSubmit;
         private $isSave;
-        private $isRender;
         private $isSaved;
+        private $isRender;
         
-        public function primary($value) {
-            $this->isPrimary = $value;
-        }
-
         public function isRegistration() {
             return $this->isRegistration;
         }
@@ -98,100 +100,48 @@
             return $this->isLoad;
         }
 
-        public function canLoad() {
-            if ($this->isPrimary) {
-                return true;
-            }
-
-            return self::isLoad();
-        }
-        
         public function load($value = true) {
-            if ($this->isPrimary) {
-                $this->isLoad = $value;
-            }
+            $this->isLoad = $value;
         }
 
         public function isSubmit() {
             return $this->isSubmit;
         }
 
-        public function canSubmit($canSubmit = true) {
-            if ($this->isPrimary) {
-                return $canSubmit;
-            }
-
-            return self::isSubmit();
-        }
-
         public function submit($value = true) {
-            if ($this->isPrimary) {
-                $this->isSubmit = $value;
-            }
+            $this->isSubmit = $value;
         }
 
         public function isSave() {
             return $this->isSave;
         }
 
-        public function canSave($canSave = true) {
-            if ($this->isPrimary) {
-                return $canSave;
-            }
-
-            return self::isSave();
-        }
-
         public function save($value = true) {
-            if ($this->isPrimary) {
-                $this->isSave = $value;
-            }
-        }
-        
-        public function isRender() {
-            return $this->isRender;
-        }
-
-        public function canRender() {
-            if ($this->isPrimary) {
-                return true;
-            }
-
-            return self::isRender();
-        }
-
-        public function render($value = true) {
-            if ($this->isPrimary) {
-                $this->isRender = $value;
-            }
+            $this->isSave = $value;
         }
         
         public function isSaved() {
             return $this->isSaved;
         }
 
-        public function canSaved($canSaved = true) {
-            if ($this->isPrimary) {
-                return $canSaved;
-            }
-
-            return self::isSaved();
+        public function saved($value = true) {
+            $this->isSaved = $value;
+        }
+        
+        public function isRender() {
+            return $this->isRender;
         }
 
-        public function saved($value = true) {
-            if ($this->isPrimary) {
-                $this->isSaved = $value;
-            }
+        public function render($value = true) {
+            $this->isRender = $value;
         }
 
         // ------- Metadata ---------------------------------------------------
 
         public function metadata($key, $value = "0.0-def") {
             if ($value === "0.0-def") {
-                // Get.
                 return $this->metadata[$this->prefix][$key];
             } else {
-                // Set.
                 $this->metadata[$this->prefix][$key] = $value;
             }
         }
@@ -218,7 +168,7 @@
             }
 
             $value = self::getRequest()[$name];
-            if ($nameIndex != null && $nameIndex != -1) {
+            if ($nameIndex !== null && $nameIndex != -1) {
                 $value = $value[$nameIndex];
             }
 
@@ -240,7 +190,7 @@
                 $name = $this->prefix . $name;
             }
 
-            if ($nameIndex != null && $nameIndex != -1) {
+            if ($nameIndex !== null && $nameIndex != -1) {
                 $name .= "[]";
             }
 
@@ -248,11 +198,26 @@
         }
 
         public function set($name, $nameIndex, $value) {
-            if ($nameIndex != -1) {
-                $this[$name][$nameIndex] = $value;
+            if ($nameIndex !== null && $nameIndex != -1) {
+                $array = $this[$name];
+                if ($array == null) {
+                    $array = array();
+                }
+
+                $array[$nameIndex] = $value;
+                $this[$name] = $array;
             } else {
                 $this[$name] = $value;
             }
+        }
+
+        public function get($name, $nameIndex) {
+            $value = $this[$name];
+            if ($nameIndex !== null && $nameIndex != -1) {
+                $value = $value[$nameIndex];
+            }
+
+            return $value;
         }
 
         public function copyFrom($data) {
@@ -270,12 +235,20 @@
             return $keys;
         }
 
+        private function hasPrefix() {
+            return array_key_exists($this->prefix, $this->container);
+        }
+
         public function keys() {
-            return array_keys($this->container[$this->prefix]);
+            if (self::hasPrefix()) {
+                return array_keys($this->container[$this->prefix]);
+            }
+
+            return array();
         }
 
         public function hasKey($key) {
-            return array_key_exists($key, $this->container[$this->prefix]);
+            return self::hasPrefix() && array_key_exists($key, $this->container[$this->prefix]);
         }
     }
 

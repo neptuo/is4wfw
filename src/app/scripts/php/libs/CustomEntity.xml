@@ -17,25 +17,6 @@
       <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
     </attribute>
     <attribute>
-      <attname>method</attname>
-      <attreq>implied</attreq>
-      <attdef>POST</attdef>
-      <atttype>string</atttype>
-      <attcomment>HTTP metoda, kterou se má odeslat formulář (GET, POST, PUT, DELETE).</attcomment>
-    </attribute>
-    <attribute>
-      <attname>submit</attname>
-      <attreq>implied</attreq>
-      <attcomment>Název klíče z requestu, kterým je možné odeslat formulář. Pokud není zadáno, formulář se odešle jakýmkoli requestem. Je povinný pro method=GET.</attcomment>
-    </attribute>
-    <attribute>
-      <attname>nextPageId</attname>
-      <attreq>implied</attreq>
-      <atttype>number</atttype>
-      <attdef>0</attdef>
-      <attcomment>Id stránky, kam se má přesměrovat po úspěšném uložení záznamu (alternativou je použít "ce:formSaved" v podmínce, pak je možné do redirectu nabindovat i klíč nového záznamu).</attcomment>
-    </attribute>
-    <attribute>
       <attname>langIds</attname>
       <attreq>implied</attreq>
       <attcomment>Id jazyků, pro které mají zpracovávat lokalizované pole.</attcomment>
@@ -177,13 +158,6 @@
       Smaže všechny záznamy z entity podle "params".
     </comment>
   </fulltag>
-  <property>
-    <propname>formSaved</propname>
-    <getfunction>isFormSaved</getfunction>
-    <comment>
-      Vrací true/false, zda se povedlo uložit "ce:form".
-    </comment>
-  </property>
   <property>
     <propname>list</propname>
     <getfunction>getListData</getfunction>

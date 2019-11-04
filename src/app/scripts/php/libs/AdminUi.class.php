@@ -29,11 +29,12 @@
 		}
 
 		public function saveButtons($saveName = "save", $saveParam = array(), $closePageId = "", $closeParam = array()) {
-			if (parent::peekEditModel()->isSaved()) {
+			$model = parent::getEditModel();
+			if ($model->isSaved()) {
 				self::redirectAfterSave($saveName, $saveParam, $closePageId, $closeParam);
 			}
 			
-			if (parent::peekEditModel()->isRender()) {
+			if ($model->isRender()) {
 				$saveText = parent::rb("buttons.save");
 				$saveCloseText = parent::rb("buttons.saveclose");
 				$closeText = parent::rb("buttons.close");

@@ -183,11 +183,6 @@
     <tagname>filter</tagname>
     <function>filter</function>
     <attribute>
-      <attname>submit</attname>
-      <attreq>required</attreq>
-      <attcomment>Název tlačítka, kterým se formulář odesílá.</attcomment>
-    </attribute>
-    <attribute>
       <attname>session</attname>
       <attreq>implied</attreq>
       <attcomment>Čárkou oddělený seznam parametrů, které mají jít z/do session místo z/do QueryString.</attcomment>

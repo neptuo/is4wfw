@@ -29,7 +29,7 @@
 			return self::rb($name);
 		}
 
-		private function save($rb, $editModel, $listModel) {
+		private function submit($rb, $editModel, $listModel) {
 			$keys = $_POST["key"];
 			$count = count($keys);
 			
@@ -39,13 +39,15 @@
 			}
 
 			$listModel->items($listItems);
-			
-			$editModel->submit();
 			$listModel->render();
 			self::partialView("localization/edit");
-			$editModel->submit(false);
 			$listModel->render(false);
-			
+		}
+
+		private function save($rb, $editModel, $listModel) {
+			$keys = $_POST["key"];
+			$count = count($keys);
+
 			for ($index = 0; $index < $count; $index++) { 
 				$key = $editModel["key"][$index];
 				$value = $editModel["value"][$index];
@@ -55,8 +57,6 @@
 			}
 
 			$rb->save();
-			self::redirectToSelf();
-			return;
 		}
 
 		public function edit($bundleName, $languageName) {
@@ -65,40 +65,48 @@
 			$rb->setLanguage($languageName);
 			$rb->setIsSystem(false);
 
-			$editModel = new EditModel();
+			$editModel = parent::getEditModel();
 			$listModel = new ListModel();
-			self::pushEditModel($editModel);
 			self::pushListModel($listModel);
 
-			if (array_key_exists("loc-edit-save", $_POST)) {
+			if ($editModel->isSubmit()) {
+				self::submit($rb, $editModel, $listModel);
+			}
+
+			if ($editModel->isSave()) {
 				self::save($rb, $editModel, $listModel);
 			}
 
 			$result = "";
-			$listItems = array();
+			if ($editModel->isRender()) {
+				$listItems = array();
 
-			$index = 0;
-			if ($rb->exists()) {
-				$rb->load();
-				foreach ($rb->getKeys() as $key) {
-					$listItems[] = self::createListItem($index);
-					$editModel["key"][] = $key;
-					$editModel["value"][] = $rb->get($key);
-					$index++;
+				$keys = array();
+				$values = array();
+				$index = 0;
+				if ($rb->exists()) {
+					$rb->load();
+					foreach ($rb->getKeys() as $key) {
+						$listItems[] = self::createListItem($index);
+						$keys[] = $key;
+						$values[] = $rb->get($key);
+						$index++;
+					}
 				}
+
+				$listItems[] = self::createListItem($index);
+				$keys[] = "";
+				$values[] = "";
+
+				$editModel["key"] = $keys;
+				$editModel["value"] = $values;
+				$listModel->items($listItems);
+				
+				$listModel->render();
+				$result .= self::partialView("localization/edit");
+				$listModel->render(false);
 			}
-
-			$listItems[] = self::createListItem($index);
-			$editModel["key"][] = "";
-			$editModel["value"][] = "";
-
-			$listModel->items($listItems);
 			
-			$editModel->render();
-			$listModel->render();
-			$result .= self::partialView("localization/edit");
-
-			self::popEditModel();
 			self::popListModel();
 			return $result;
 		}

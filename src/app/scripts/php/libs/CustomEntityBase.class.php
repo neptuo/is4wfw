@@ -8,38 +8,65 @@
 
         private $types;
 
-        protected function ensureTableName($name) {
-            if (!self::startsWith($name, self::TablePrefix)) {
-                $tableName = self::TablePrefix . $name;
-                $table = self::dataAccess()->fetchAll("SELECT `name` FROM `custom_entity` WHERE `name` = '" . self::dataAccess()->escape($name) . "';");
-                if (count($table) == 0) {
-                    trigger_error("Table name must be custom entity", E_USER_ERROR);
+        protected function ensureTableName($name, $model = null) {
+            if ($model == null || !$model->hasMetadataKey("tableName")) {
+                if (!self::startsWith($name, self::TablePrefix)) {
+                    $tableName = self::TablePrefix . $name;
+                    $sql = parent::sql()->select("custom_entity", array("name"), array("name" => $name));
+                    $table = self::dataAccess()->fetchAll($sql);
+                    if (count($table) == 0) {
+                        trigger_error("Table name must be custom entity", E_USER_ERROR);
+                    }
+                } else {
+                    $tableName = $name;
                 }
-            } else {
-                $tableName = $name;
+
+                if ($model != null) {
+                    $model->metadata("tableName", $tableName);
+                }
+
+                return $tableName;
             }
-            
-            return $tableName;
+
+            return $model->metadata("tableName");
         }
         
-        protected function ensureTableLocalizationName($name) {
-            if (!self::startsWith($name, self::TableLocalizationPrefix)) {
-                $tableName = self::TableLocalizationPrefix . $name;
-            } else {
-                $tableName = $name;
+        protected function ensureTableLocalizationName($name, $model = null) {
+            if ($model == null || !$model->hasMetadataKey("tableLocalizationName")) {
+                if (!self::startsWith($name, self::TableLocalizationPrefix)) {
+                    $tableName = self::TableLocalizationPrefix . $name;
+                } else {
+                    $tableName = $name;
+                }
+
+                if ($model != null) {
+                    $model->metadata("tableLocalizationName", $tableName);
+                }
+                
+                return $tableName;
             }
-            
-            return $tableName;
+
+            return $model->metadata("tableLocalizationName");
         }
 
-        protected function getDefinition($name) {
-            $definition = self::dataAccess()->fetchSingle("SELECT `definition` FROM `custom_entity` WHERE `name` = '" . self::dataAccess()->escape($name) . "';");
-            if (empty($definition)) {
-                return NULL;
+        protected function getDefinition($name, $model = null) {
+            if ($model == null || !$model->hasMetadataKey("xml")) {
+                $sql = parent::sql()->select("custom_entity", array("definition"), array("name" => $name));
+                $definition = self::dataAccess()->fetchSingle($sql);
+                $xml = null;
+
+                if (!empty($definition)) {
+                    $xml = new SimpleXMLElement($definition['definition']);
+                }
+
+                if ($model != null) {
+                    $model->metadata("xml", $xml);
+                }
+
+                return $xml;
             }
 
-            $xml = new SimpleXMLElement($definition['definition']);
-            return $xml;
+            return $model->metadata("xml");
         }
 
         protected function getUpdateDefinitionSql($name, $xml) {

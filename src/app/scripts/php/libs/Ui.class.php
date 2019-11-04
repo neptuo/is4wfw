@@ -12,34 +12,9 @@
 			parent::setTagLibXml("Ui.xml");
 		}
 
-		private function isRegistration() {
-			return self::peekEditModel()->isRegistration();
-		}
-
-		private function isSubmit() {
-			return self::peekEditModel()->isSubmit();
-		}
-
-		private function isRender() {
-			return self::peekEditModel()->isRender();
-		}
-
-		private function getModelValue($key) {
-			return self::peekEditModel()[$key];
-		}
-
-		private function setModelValue($key, $value, $index = -1) {
-			$model = self::peekEditModel();
-			if ($index != -1) {
-				$model[$key][$index] = $value;
-			} else {
-				$model[$key] = $value;
-			}
-		}
-
-		private function setModelValueFromRequest($modelKey, $requestKey, $index = -1) {
-			$value = self::peekEditModel()->request($requestKey, $index);
-			self::setModelValue($modelKey, $value, $index);
+		private function setModelValueFromRequest($model, $modelKey, $requestKey, $index = -1) {
+			$value = $model->request($requestKey, $index);
+			$model->set($modelKey, $index, $value);
 		}
 
 		public function pushId($id) {
@@ -295,18 +270,16 @@
 			return self::input($params);
 		}
 
-		public function filter($template, $submit, $session = "", $params = array()) {
-            $model = new EditModel();
-			self::pushEditModel($model);
-
+		public function filter($template, $session = "") {
+            $model = parent::getEditModel();
 			$session = split(",", $session);
 
-			if (array_key_exists($submit, $_POST)) {
-				$model->submit();
+			if ($model->isSubmit()) {
 				$model->request($_POST);
 				self::parseContent($template);
-				$model->submit(false);
+			}
 
+			if ($model->isSave()) {
 				$url = $_SERVER['REQUEST_URI'];
 
                 foreach ($model as $key => $value) {
@@ -331,7 +304,9 @@
 
 				self::redirectToUrl($url);
 				return;
-			} else {
+			}
+			
+            if ($model->isRender()) {
 				foreach ($_GET as $key => $value) {
 					$model[$key] = $value;
 				}
@@ -339,26 +314,25 @@
 				foreach (parent::session()->keys(Session::StorageKey) as $key) {
 					$model[$key] = parent::session()->get($key, Session::StorageKey);
 				}
+
+				$result = parent::parseContent($template);
+				return $result;
 			}
-			
-            $model->render();
-            $result = self::form($template, "POST", null, $params);
-            self::popEditModel();
-            return $result;
 		}
 		
 		public function dropdownlist($name, $nameIndex = -1, $source, $display, $id, $emptyText = "", $params = array()) {
-			if (self::isRegistration()) {
-				self::setModelValue($name, NULL);
+			$model = parent::getEditModel();
+			if ($model->isRegistration()) {
+				$model->set($name, null, null);
 			}
 
-			if (self::isSubmit()) {
-				self::setModelValueFromRequest($name, $name, $nameIndex);
+			if ($model->isSubmit()) {
+				self::setModelValueFromRequest($model, $name, $name, $nameIndex);
 			}
 
-			if (self::isRender()) {
-				$formName = parent::peekEditModel()->requestKey($name, $nameIndex);
-				$modelValue = self::getModelValue($name);
+			if ($model->isRender()) {
+				$formName = $model->requestKey($name, $nameIndex);
+				$modelValue = $model->get($name, $nameIndex);
 				if ($nameIndex != -1) {
 					$modelValue = $modelValue[$nameIndex];
 				}
@@ -391,18 +365,19 @@
 		}
 		
 		public function checkboxlist($name, $source, $display, $id, $repeat, $params = array()) {
-			if (self::isRegistration()) {
-				self::setModelValue($name, NULL);
+			$model = parent::getEditModel();
+			if ($model->isRegistration()) {
+				$model->set($name, null, null);
 			}
 
-			if (self::isSubmit()) {
-				$modelValue = self::peekEditModel()->request($name);
-				self::setModelValue($name, $modelValue);
+			if ($model->isSubmit()) {
+				$modelValue = $model->request($name);
+				$model->set($name, null, $modelValue);
 			}
 
-			if (self::isRender()) {
-				$formName = parent::peekEditModel()->requestKey($name);
-				$modelValue = self::getModelValue($name);
+			if ($model->isRender()) {
+				$formName = $model->requestKey($name);
+				$modelValue = $model->get($name);
 
 				if (!is_array($modelValue)) {
 					$modelValue = explode(",", $modelValue);
@@ -436,20 +411,18 @@
 		}
 
 		public function textbox($name, $nameIndex = -1, $default = "", $params = array()) {
-			if (self::isRegistration()) {
-				self::setModelValue($name, NULL);
+			$model = parent::getEditModel();
+			if ($model->isRegistration()) {
+				$model->set($name, null, null);
 			}
 
-			if (self::isSubmit()) {
-				self::setModelValueFromRequest($name, $name, $nameIndex);
+			if ($model->isSubmit()) {
+				self::setModelValueFromRequest($model, $name, $name, $nameIndex);
 			}
 
-			if (self::isRender()) {
-				$formName = parent::peekEditModel()->requestKey($name, $nameIndex);
-				$modelValue = self::getModelValue($name);
-				if ($nameIndex != -1) {
-					$modelValue = $modelValue[$nameIndex];
-				}
+			if ($model->isRender()) {
+				$formName = $model->requestKey($name, $nameIndex);
+				$modelValue = $model->get($name, $nameIndex);
 				
 				if (empty($modelValue)) {
 					$modelValue = $default;
@@ -462,20 +435,18 @@
 		}
 		
 		public function textarea($name, $nameIndex = -1, $default = "", $params = array()) {
-			if (self::isRegistration()) {
-				self::setModelValue($name, NULL);
+			$model = parent::getEditModel();
+			if ($model->isRegistration()) {
+				$model->set($name, null, null);
 			}
 			
-			if (self::isSubmit()) {
-				self::setModelValueFromRequest($name, $name, $nameIndex);
+			if ($model->isSubmit()) {
+				self::setModelValueFromRequest($model, $name, $name, $nameIndex);
 			}
 			
-			if (self::isRender()) {
-				$formName = parent::peekEditModel()->requestKey($name, $nameIndex);
-				$modelValue = self::getModelValue($name);
-				if ($nameIndex != -1) {
-					$modelValue = $modelValue[$nameIndex];
-				}
+			if ($model->isRender()) {
+				$formName = $model->requestKey($name, $nameIndex);
+				$modelValue = $model->get($name, $nameIndex);
 
 				if (empty($modelValue)) {
 					$modelValue = $default;
@@ -488,21 +459,19 @@
 		}
 
 		public function checkbox($name, $nameIndex = -1, $params = array()) {
-			if (self::isRegistration()) {
-				self::setModelValue($name, NULL);
+			$model = parent::getEditModel();
+			if ($model->isRegistration()) {
+				$model->set($name, null, null);
 			}
 
-			if (self::isSubmit()) {
-				$modelValue = self::peekEditModel()->request($name);
-				self::setModelValue($name, $modelValue == "on" ? 1 : 0, $nameIndex);
+			if ($model->isSubmit()) {
+				$modelValue = $model->request($name, $nameIndex);
+				$model->set($name, $nameIndex, $modelValue == "on" ? 1 : 0);
 			}
 
-			if (self::isRender()) {
-				$formName = parent::peekEditModel()->requestKey($name, $nameIndex);
-				$modelValue = self::getModelValue($name);
-				if ($nameIndex != -1) {
-					$modelValue = $modelValue[$nameIndex];
-				}
+			if ($model->isRender()) {
+				$formName = $model->requestKey($name, $nameIndex);
+				$modelValue = $model->get($name, $nameIndex);
 
 				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);
@@ -518,9 +487,9 @@
 		}
 
         public function defaultValue($template, $name, $format) {
-            $model = self::peekEditModel();
+            $model = parent::getEditModel();
             if ($model->isRegistration()) {
-				self::setModelValue($name, NULL);
+				$model->set($name, null, null);
 			}
 
             if ($model->isSubmit()) {
@@ -534,9 +503,9 @@
         }
 
         public function defaultValueWithoutEditor($name, $format) {
-			$model = self::peekEditModel();
+			$model = parent::getEditModel();
             if ($model->isRegistration()) {
-				self::setModelValue($name, NULL);
+				$model->set($name, null, null);
 			}
 			
             if ($model->isSubmit()) {
@@ -545,8 +514,9 @@
 		}
 		
 		public function constantValue($name, $value) {
-			if (self::isSubmit()) {
-				self::setModelValue($name, $value);
+			$model = parent::getEditModel();
+			if ($model->isSubmit()) {
+				$model->set($name, null, $value);
 			}
 		}
 
@@ -567,7 +537,7 @@
 		public function localizable($template, $name, $langIds = "") {
 			$langIds = explode(",", $langIds);
 
-			$model = self::peekEditModel();
+			$model = self::getEditModel();
             if ($model->isRegistration()) {
 				$langIds = self::ensureLangIds($langIds);
 				foreach ($langIds as $langId) {

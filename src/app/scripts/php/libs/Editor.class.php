@@ -17,11 +17,10 @@
 			parent::setTagLibXml("Editor.xml");
 		}
 		
-		public function form($template, $submit) {
+		public function form($template, $submit, $savedPageId = "") {
             $template = parent::getParsedTemplate($template);
             
             $model = new EditModel();
-            $model->primary(true);
             parent::setEditModel($model);
 
             // Načtení dat formuláře.
@@ -36,6 +35,7 @@
                 $model->submit(false);
 
                 // Save data in transaction.
+                // TODO: Transaction + catch exception.
                 $model->save();
                 self::parseContent($template);
                 $model->save(false);
@@ -54,9 +54,10 @@
         }
 
         public function prefix($template, $name) {
-            parent::setEditModelPrefix($name);
+            $model = parent::getEditModel();
+            $model->prefix($name);
             $result = parent::parseContent($template);
-            parent::clearEditModelPrefix();
+            $model->prefix(null);
             return $result;
         }
 

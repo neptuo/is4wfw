@@ -69,37 +69,17 @@
 			return parent::peekListModel()->field("language");
 		}
 
-		public function form($template, $id, $method = "POST", $submit = "", $nextPageId = "") {
-			$isUpdate = !empty($id);
+		public function form($template, $id) {
+			$model = parent::getEditModel();
 
-			$model = new EditModel();
-			self::pushEditModel($model);
+			if (!$model->hasMetadataKey("isUpdate")) {
+				$isUpdate = !empty($id);
+				$model->metadata("isUpdate", $isUpdate);
+			} else {
+				$isUpdate = $model->metadata("isUpdate");
+			}
 
-			if (self::isHttpMethod($method) && ($submit == "" || array_key_exists($submit, $_REQUEST))) {
-                $model->submit();
-                self::parseContent($template);
-                $model->submit(false);
-				
-				if (!$isUpdate) {
-					$sql = parent::sql()->insert(self::TableName, $model);
-					parent::dataAccess()->execute($sql);
-				} else {
-					$sql = parent::sql()->update(self::TableName, $model, array("id" => $id));
-					parent::dataAccess()->execute($sql);
-				}
-				
-                if (!empty($nextPageId)) {
-					self::web()->redirectTo($nextPageId);
-                } else {
-					if (!$isUpdate) {
-						self::popEditModel();
-                        $model = new EditModel();
-                        self::pushEditModel($model);
-                    }
-                }
-            }
-
-			if ($isUpdate) {
+			if ($model->isLoad() && $model->metadata("isUpdate")) {
                 $model->registration();
                 self::parseContent($template);
 				$model->registration(false);
@@ -108,17 +88,34 @@
 				$sql = parent::sql()->select(self::TableName, $columns, array("id" => $id));
 				$data = parent::dataAccess()->fetchSingle($sql);
 				if (empty($data)) {
-					self::popEditModel();
-					return "<h4 class='warning'>Such language doesn't exist.</h4>";
+					$model->metadata("isError", true);
 				}
 
 				$model->copyFrom($data);
 			}
+
+			if ($model->isSubmit()) {
+                self::parseContent($template);
+            }
+				
+			if ($model->isSave()) {
+				if (!$model->metadata("isUpdate")) {
+					$sql = parent::sql()->insert(self::TableName, $model);
+					parent::dataAccess()->execute($sql);
+				} else {
+					$sql = parent::sql()->update(self::TableName, $model, array("id" => $id));
+					parent::dataAccess()->execute($sql);
+				}
+            }
 			
-            $model->render();
-            $result = self::ui()->form($template, "post");
-            self::popEditModel();
-            return $result;
+            if ($model->isRender()) {
+				if ($model->hasMetadataKey("isError") && $model->metadata("isError")) {
+					return "<h4 class='warning'>Such language doesn't exist.</h4>";
+				}
+
+				$result = self::parseContent($template);
+				return $result;
+			}
 		}
 
 		public function deleter($template, $id) {

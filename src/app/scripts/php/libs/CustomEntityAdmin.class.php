@@ -248,26 +248,20 @@
         }
         
         public function tableCreator() {
-            $model = new EditModel();
-            self::pushEditModel($model);
+            $model = self::getEditModel();
 
-            if (array_key_exists("ce-creator-save", $_REQUEST)) {
-                $model->submit();
+            if ($model->isSubmit()) {
                 self::partialView("customentities/tableCreator");
-                $model->submit(false);
-
-                if (self::createTable($model)) {
-                    $url = $_SERVER['REQUEST_URI'];
-                    $url = parent::removeUrlParameter($url, "table");
-                    self::redirectToUrl($url);
-                    return;
-                }
             }
 
-            $model->render();
-            $result = self::partialView("customentities/tableCreator");
-            self::popEditModel();
-            return $result;
+            if ($model->isSave()) {
+                self::createTable($model);
+            }
+
+            if ($model->isRender()) {
+                $result = self::partialView("customentities/tableCreator");
+                return $result;
+            }
         }
 
         public function tableDeleter($template, $name) {
@@ -363,28 +357,21 @@
         }
 
         public function tableColumnCreator($name) {
-            $tableName = self::ensureTableName($name);
+            $model = parent::getEditModel();
+            $tableName = parent::ensureTableName($name, $model);
 
-            $model = new EditModel();
-            self::pushEditModel($model);
-
-            if (array_key_exists("ce-column-creator-save", $_REQUEST)) {
-                $model->submit();
+            if ($model->isSubmit()) {
                 self::partialView("customentities/tableColumnCreator");
-                $model->submit(false);
-
-                if (self::createTableColumn($name, $tableName, $model)) {
-                    $url = $_SERVER['REQUEST_URI'];
-                    $url = parent::removeUrlParameter($url, "column");
-                    self::redirectToUrl($url);
-                    return;
-                }
             }
 
-            $model->render();
-            $result = self::partialView("customentities/tableColumnCreator");
-            self::popEditModel();
-            return $result;
+            if ($model->isSave()) {
+                self::createTableColumn($name, $tableName, $model);
+            }
+
+            if ($model->isRender()) {
+                $result = self::partialView("customentities/tableColumnCreator");
+                return $result;
+            }
         }
 
         public function tableColumnDeleter($template, $entityName, $columnName) {
@@ -445,29 +432,28 @@
         }
 
         public function tableLocalizationEditor($name) {
-            self::ensureTableName($name);
-            $tableName = self::ensureTableLocalizationName($name);
+            $model = parent::getEditModel();
+            $tableName = parent::ensureTableLocalizationName($name, $model);
             $xml = self::getDefinition($name);
-            if ($xml == NULL) {
+            if ($xml == null) {
                 return;
             }
 
-            $model = new EditModel();
-            self::pushEditModel($model);
-
-            $columns = array();
-            foreach ($xml->column as $column) {
-                if ($column->localized == true) {
-                    $columns[] = (string)$column->name;
+            if ($model->isLoad()) {
+                $columns = array();
+                foreach ($xml->column as $column) {
+                    if ($column->localized == true) {
+                        $columns[] = (string)$column->name;
+                    }
                 }
+                $model["columns"] = $columns;
             }
-            $model["columns"] = $columns;
 
-            if (array_key_exists("ced-localizable-save", $_REQUEST)) {
-                $model->submit(true);
+            if ($model->isSubmit()) {
                 self::partialView("customentities/tableLocalizationEditor");
-                $model->submit(false);
+            }
 
+            if ($model->isSave()) {
                 $newColumns = $model["columns"];
                 self::updateXmlLocalizedColumns($xml, $newColumns);
 
@@ -502,16 +488,12 @@
                 });
             }
             
-            $model->render(true);
-            
-            $this->tableLocalizationColumns = self::getLocalizableColumns($xml);
-            $result = self::partialView("customentities/tableLocalizationEditor");
-            $this->tableLocalizableColumns = null;
-            
-            $model->render(false);
-            self::popEditModel();
-            
-            return $result;
+            if ($model->isRender()) {
+                $this->tableLocalizationColumns = self::getLocalizableColumns($xml);
+                $result = self::partialView("customentities/tableLocalizationEditor");
+                $this->tableLocalizableColumns = null;
+                return $result;
+            }
         }
 
         private function getCreateLocalizationSql($tableName, $xml) {

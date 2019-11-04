@@ -68,7 +68,7 @@
         <hr />
     </div>
     <div class="gray-box">
-        <input type="hidden" name="ce-manage-create" value="create" />
+        <input type="hidden" name="ce-creator-save" value="create" />
         <button type="submit" name="ce-creator-save" value="create">Create Table</button>
     </div>
 </ui:form>
