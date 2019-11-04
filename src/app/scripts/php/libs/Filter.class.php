@@ -93,14 +93,14 @@
 		}
 
 		public function equals($name, $value, $not = false) {
-			$instance = $this->current->peek();
-			$value = parent::sql()->escape($value);
-			$operator = "=";
-			if ($not) {
-				$operator = "!" . $operator;
-			}
+			if (!empty($value)) {
+				$instance = $this->current->peek();
+				$value = parent::sql()->escape($value);
+				$operator = "=";
+				if ($not) {
+					$operator = "!" . $operator;
+				}
 
-			if (!empty($item)) {
 				$instance[] = self::formatColumnName($instance, $name) . " $operator $value";
 			}
 		}
