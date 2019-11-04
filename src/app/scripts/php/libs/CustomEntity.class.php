@@ -466,7 +466,37 @@
                 $filter = $filter->toSql();
             }
 
-            $sql = self::sql()->select($tableName, $model->fields(), $filter, $orderBy);
+            $fields = $model->fields();
+            $xml = null;
+            foreach ($fields as $key => $value) {
+                if (strpos($value, ".") !== false) {
+                    $parts = explode(".", $value, 2);
+                    if ($xml == null) {
+                        $xml = parent::getDefinition($name);
+                    }
+
+                    $column = parent::findColumn($xml, $parts[0]);
+                    $columnType = (string)$column->type;
+                    if ($columnType == "singlereference") {
+                        $targetTable = (string)$column->targetTable;
+                        $targetColumn = (string)$column->targetColumn;
+                        $fields[$key] = array(
+                            "select" => array(
+                                "column" => $parts[1],
+                                "alias" => $value
+                            ),
+                            "leftjoin" => array(
+                                "source" => $parts[0],
+                                "target" => $targetColumn,
+                                "table" => $targetTable,
+                                "alias" => $parts[0]
+                            )
+                        );
+                    }
+                }
+            }
+
+            $sql = self::sql()->select($tableName, $fields, $filter, $orderBy);
             $data = self::dataAccess()->fetchAll($sql);
 
             $model->render();

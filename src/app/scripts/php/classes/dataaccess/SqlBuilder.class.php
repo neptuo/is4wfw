@@ -15,6 +15,14 @@
             return $base . $item;
         }
 
+        private function field($tableAlias, $field) {
+            if (empty($tableAlias)) {
+                return "`$field`";
+            }
+
+            return "$tableAlias.`$field`";
+        }
+
         public function escape($value) {
             if ($value === null) {
                 $value = "NULL";
@@ -34,9 +42,9 @@
 
             $result = "";
 
-            foreach ($filter as $key => $value) {
+            foreach ($filter as $field => $value) {
                 $assignValue = null;
-                $name = "`$key`";
+                $name = "`$field`";
                 if (is_array($value)) {
                     $valueString = "";
                     foreach ($value as $item) {
@@ -51,7 +59,7 @@
                 } else {
                     $value = self::escape($value);
 
-                    if ($key != "") {
+                    if ($field != "") {
                         $assignValue = " = $value";
                     } else {
                         $assignValue = "$value";
@@ -77,9 +85,9 @@
         private function orderBy($orderBy) {
             $result = "";
 
-            foreach ($orderBy as $key => $value) {
+            foreach ($orderBy as $field => $value) {
                 $value = ($value == "desc" || $value == "DESC") ? "DESC" : "ASC";
-                $result = self::joinString($result, "`$key` $value", ", ");
+                $result = self::joinString($result, "`$field` $value", ", ");
             }
 
             return $result;
@@ -96,8 +104,8 @@
         public function insert($tableName, $item) {
             $columns = "";
             $values = "";
-            foreach ($item as $key => $value) {
-                $columns = self::joinString($columns, "`$key`");
+            foreach ($item as $field => $value) {
+                $columns = self::joinString($columns, "`$field`");
                 $values = self::joinString($values, self::escape($value));
             }
 
@@ -110,9 +118,9 @@
             $condition = self::appendWhere($condition);
 
             $values = "";
-            foreach ($item as $key => $value) {
+            foreach ($item as $field => $value) {
                 $value = self::escape($value);
-                $values = self::joinString($values, "`$key` = $value");
+                $values = self::joinString($values, "`$field` = $value");
             }
 
             $sql = "UPDATE `$tableName` SET $values$condition;";
@@ -132,12 +140,8 @@
             $condition = self::appendWhere($condition);
             $order = self::orderBy($orderBy);
             $order = self::appendOrderBy($order);
-            
-            $columns = "";
-            foreach ($fields as $key) {
-                $columns = self::joinString($columns, "`$key`");
-            }
 
+            $alias = "";
             if (is_array($tableName)) {
                 $table = $tableName["table"];
                 $alias = $tableName["alias"];
@@ -148,8 +152,45 @@
             } else {
                 $tableName = "`$tableName`";
             }
+            
+            $joins = array();
+            $columns = "";
+            foreach ($fields as $field) {
+                $fieldTableAlias = $alias;
+                if (is_array($field)) {
+                    if (array_key_exists("leftjoin", $field)) {
+                        $leftjoin = $field["leftjoin"];
 
-            $sql = "SELECT $columns FROM $tableName$condition$order;";
+                        $fieldTableAlias = $leftjoin["alias"];
+                        if (!array_key_exists($fieldTableAlias, $joins)) {
+                            $source = self::field($alias, $leftjoin["source"]);
+                            $table = $leftjoin["table"];
+                            $target = self::field($fieldTableAlias, $leftjoin["target"]);
+                            $joins[$fieldTableAlias] = "LEFT JOIN `$table` as $fieldTableAlias ON $source = $target";
+                        }
+                    }
+                    
+                    if (array_key_exists("select", $field)) {
+                        $column = $field["select"]["column"];
+                        $as = $field["select"]["alias"];
+                        $field = self::field($fieldTableAlias, $column) . " AS `$as`";
+                    }
+                }
+                else {
+                    $field = self::field($fieldTableAlias, $field);
+                }
+
+                $columns = self::joinString($columns, $field);
+            }
+
+            if (!empty($joins)) {
+                $joins = implode(" ", $joins);
+                $joins = " $joins";
+            } else {
+                $joins = "";
+            }
+
+            $sql = "SELECT $columns FROM $tableName$joins$condition$order;";
             return $sql;
         }
 
