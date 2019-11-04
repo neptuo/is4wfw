@@ -11,10 +11,12 @@
     $model->prefix("a");
     $model["name"] = "Helen";
     $model["surname"] = "Doe";
-
+    $model->metadata("date", "2020");
+    
     $model->prefix("b");
     $model["name"] = "Jane";
     $model["surname"] = "Doe";
+    $model->metadata("date", "2019");
 
     var_dump(array_key_exists("surname", $model));
     var_dump($model->hasKey("surname"));
@@ -25,5 +27,8 @@
     foreach ($model as $key => $value) {
         echo "Key: $key; Value: $value; <br />";
     }
-
+    
+    echo "<hr />";
+    $model->prefix("a");
+    echo $model->metadata("date");
 ?>

@@ -3,6 +3,7 @@
     class EditModel implements ArrayAccess, Iterator
     {
         private $prefix;
+        private $metadata = array();
         private $container = array();
         private $index = 0;
 
@@ -183,7 +184,19 @@
             }
         }
 
-        // ------- Working with request data ----------------------------------
+        // ------- Metadata ---------------------------------------------------
+
+        public function metadata($key, $value = "0.0-def") {
+            if ($value == "0.0-def") {
+                // Get.
+                return $this->metadata[$this->prefix][$key];
+            } else {
+                // Set.
+                $this->metadata[$this->prefix][$key] = $value;
+            }
+        }
+
+        // ------- Request and model values -----------------------------------
 
         private $request;
 
