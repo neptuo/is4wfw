@@ -67,9 +67,17 @@
     <comment>Vrací "true", pokud se právě jedná o fázi odeslání formuláře.</comment>
   </property>
   <property>
+  	<propname>save</propname>
+  	<getfunction>isSave</getfunction>
+    <comment>Vrací "true", pokud se právě jedná o fázi pro uložení dat do uložiště.</comment>
+  </property>
+  <property>
   	<propname>saved</propname>
   	<getfunction>isSaved</getfunction>
     <comment>Vrací "true", pokud se právě jedná o fázi po uložení formuláře.</comment>
   </property>
+  <anyProperty>
+    <comment>Vrací libovolnou hodnotu z edit modelu podle názvu property.</comment>
+  </anyProperty>
 </taglib>
 

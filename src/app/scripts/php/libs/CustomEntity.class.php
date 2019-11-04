@@ -24,14 +24,14 @@
             return $type["fromUser"]($value);
         }
 
-        private function prepareValuesFromModel($xml, $model) {
+        private function prepareValuesFromModel($xml, EditModel $model) {
             $columns = array();
             $extras = array();
             $external = array();
             foreach ($xml->column as $column) {
                 $columnName = (string)$column->name;
                 $columnType = (string)$column->type;
-                if (array_key_exists($columnName, $model)) {
+                if ($model->hasKey($columnName)) {
                     $value = $model[$columnName];
                     if (is_callable($value)) {
                         $value = $value();
@@ -66,7 +66,7 @@
             );
         }
 
-        private function prepareLocalizedValuesFromModel($xml, $model, $langIds) {
+        private function prepareLocalizedValuesFromModel($xml, EditModel $model, $langIds) {
             $langs = array();
             foreach ($langIds as $langId) {
                 $columns = array();
@@ -76,7 +76,7 @@
                         $columnType = (string)$column->type;
 
                         $key = "$columnName:$langId";
-                        if (array_key_exists($key, $model)) {
+                        if ($model->hasKey($key)) {
                             $value = $model[$key];
                             if (is_callable($value)) {
                                 $value = $value();
@@ -212,8 +212,11 @@
         }
         
         private function update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds) {
+            $keysModel = new EditModel();
+            $keysModel->copyFrom($keys);
+
             $values = self::prepareValuesFromModel($xml, $model);
-            $primaryKeys = self::prepareValuesFromModel($xml, $keys)["columns"];
+            $primaryKeys = self::prepareValuesFromModel($xml, $keysModel)["columns"];
             $sql = self::sql()->update($tableName, $values["columns"], $primaryKeys);
 
             self::dataAccess()->transaction(function($da) use ($tableName, $tableLocalizationName, $xml, $model, $values, $sql, $langIds, $primaryKeys) {
@@ -239,14 +242,14 @@
             });
         }
 
-        private function loadModel($name, $xml, $keys, $model, $langIds) {
+        private function loadModel($name, $xml, $keys, EditModel $model) {
             $columns = "";
             $condition = "";
             $external = array();
             foreach ($xml->column as $column) {
                 $columnName = (string)$column->name;
                 $columnType = (string)$column->type;
-                if (array_key_exists($columnName, $model)) {
+                if ($model->hasKey($columnName)) {
                     $typeDefinition = self::getTableColumnTypes($column);
                     if (!$typeDefinition["hasColumn"]) {
                         if ($columnType == "multireference-jointable") {
@@ -263,7 +266,7 @@
             foreach ($xml->column as $column) {
                 $columnName = (string)$column->name;
                 $columnType = (string)$column->type;
-                if (array_key_exists($columnName, $model)) {
+                if ($model->hasKey($columnName)) {
                     $typeDefinition = self::getTableColumnTypes($column);
                     if ($typeDefinition["hasColumn"]) {
                         $columns = self::joinString($columns, "`$columnName`");
@@ -297,7 +300,7 @@
             return true;
         }
 
-        private function loadLocalizedModel($tableName, $xml, $keys, $model, $langIds) {
+        private function loadLocalizedModel($tableName, $xml, $keys, EditModel $model, $langIds) {
             $columns = array();
 
             // Find model keys.
@@ -306,7 +309,7 @@
 
                 foreach ($langIds as $langId) {
                     $key = "$columnName:$langId";
-                    if (array_key_exists($key, $model)) {
+                    if ($model->hasKey($key)) {
                         $columns[] = $columnName;
                         break;
                     }
@@ -346,27 +349,33 @@
 
             $isUpdate = count($keys) > 0;
 
-            $model = new EditModel();
-            self::pushEditModel($model);
+            // IsPrimary = false;
+            $model = parent::getEditModel();
+            if ($model->canLoad()) {
+                if ($isUpdate) {
+                    $model->registration();
+                    self::parseContent($template);
+                    $model->registration(false);
 
-            if ($isUpdate) {
-                $model->registration();
-                self::parseContent($template);
-                $model->registration(false);
-
-                $exists = self::loadModel($tableName, $xml, $keys, $model, $langIds);
-                if ($exists) {
-                    self::loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
-                } else {
-                    $isUpdate = $exists;
+                    $exists = self::loadModel($tableName, $xml, $keys, $model, $langIds);
+                    if ($exists) {
+                        self::loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
+                    } else {
+                        $isUpdate = $exists;
+                    }
                 }
             }
 
-            if (self::isHttpMethod($method) && ($submit == "" || array_key_exists($submit, $_REQUEST))) {
+            // Submit if model is leased or isSubmit.
+            $isSubmit = self::isHttpMethod($method) && ($submit == "" || array_key_exists($submit, $_REQUEST));
+            if ($model->canSubmit($isSubmit)) {
                 $model->submit();
                 self::parseContent($template);
                 $model->submit(false);
+            }
 
+            // Save if model is leased or isSubmit.
+            if ($model->canSave($isSubmit)) {
                 if ($isUpdate) {
                     self::update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds);
                 } else {
@@ -376,7 +385,10 @@
 
                     self::insert($tableName, $tableLocalizationName, $xml, $model, $langIds);
                 }
+            }
 
+            // AfterSave if model is leased or isSubmit.
+            if ($model->canSaved($isSubmit)) {
                 if (!empty($nextPageId)) {
                     self::web()->redirectTo($nextPageId);
                 } else {
@@ -394,9 +406,14 @@
                 }
             }
 
-            $model->render();
-            $result = self::ui()->form($template, "post");
-            self::popEditModel();
+            if ($model->canRender()) {
+                $model->render();
+                $result = self::ui()->form($template, "post");
+                $model->render(false);
+            }
+
+            // IsPrimary = true;
+            parent::releaseEditModel($model);
             return $result;
         }
 

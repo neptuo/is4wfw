@@ -649,42 +649,44 @@
             return $stack;
         }
 
-        private static $mainEditModel;
+        private static $editModel;
 
-        public function setMainEditModel($model) {
-            BaseTagLib::$mainEditModel = $model;
-            self::pushEditModel(BaseTagLib::$mainEditModel);
+        public function setEditModel($model) {
+            BaseTagLib::$editModel = $model;
+            self::pushEditModel(BaseTagLib::$editModel);
         }
 
-        public function clearMainEditModel() {
-            BaseTagLib::$mainEditModel = null;
-            self::popEditModel();
+        public function getEditModel($forceOwnership = false) {
+            if (BaseTagLib::$editModel != null) {
+                if (!$forceOwnership) {
+                    BaseTagLib::$editModel->primary(false);
+                }
+
+                return BaseTagLib::$editModel;
+            }
+
+            $model = new EditModel();
+            $model->primary(true);
         }
-        
-        private static $editModelPrefix;
+
+        public function releaseEditModel($model) {
+            $model->primary(true);
+        }
+
+        public function clearEditModel() {
+            BaseTagLib::$editModel = null;
+        }
         
         public function setEditModelPrefix($name) {
-            BaseTagLib::$editModelPrefix = $name;
+            self::getEditModel(true)->prefix($name);
         }
         
         public function clearEditModelPrefix() {
-            BaseTagLib::$editModelPrefix = null;
-        }
-
-        public function hasMainEditModel() {
-            return BaseTagLib::$mainEditModel != null;
-        }
-
-        public function getMainEditModel() {
-            return BaseTagLib::$mainEditModel;
+            self::getEditModel(true)->prefix(null);
         }
 
         public function pushEditModel($model) {
             $stack = self::getModelStack("editModels", true);
-            if (BaseTagLib::$editModelPrefix != null) {
-                $model->prefix(BaseTagLib::$editModelPrefix);
-            }
-
 			$stack->push($model);
         }
 

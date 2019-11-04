@@ -21,7 +21,8 @@
             $template = parent::getParsedTemplate($template);
             
             $model = new EditModel();
-            parent::setMainEditModel($model);
+            $model->primary(true);
+            parent::setEditModel($model);
 
             // Načtení dat formuláře.
             $model->load();
@@ -29,10 +30,15 @@
             $model->load(false);
 
             if (self::isHttpMethod("POST") && array_key_exists($submit, $_REQUEST)) {
-                // Submit form.
+                // Submit form / bind data into the model.
                 $model->submit();
                 self::parseContent($template);
                 $model->submit(false);
+
+                // Save data in transaction.
+                $model->save();
+                self::parseContent($template);
+                $model->save(false);
 
                 // Process after save redirects.
                 $model->saved(true);
@@ -43,7 +49,7 @@
             // Render UI.
             $model->render();
             $result = self::ui()->form($template, "post");
-            parent::clearMainEditModel();
+            parent::clearEditModel();
             return $result;
         }
 
@@ -55,28 +61,38 @@
         }
 
         public function setValue($name, $value) {
-            $model = parent::getMainEditModel();
+            $model = parent::getEditModel(true);
             $model->set($name, -1, $value);
         }
         
         public function isRegistration() {
-            $model = parent::getMainEditModel();
+            $model = parent::getEditModel(true);
             return $model != null && $model->isRegistration();
         }
         
         public function isLoad() {
-            $model = parent::getMainEditModel();
+            $model = parent::getEditModel(true);
             return $model != null && $model->isLoad();
         }
         
         public function isSubmit() {
-            $model = parent::getMainEditModel();
+            $model = parent::getEditModel(true);
             return $model != null && $model->isSubmit();
         }
         
+        public function isSave() {
+            $model = parent::getEditModel(true);
+            return $model != null && $model->isSave();
+        }
+        
         public function isSaved() {
-            $model = parent::getMainEditModel();
+            $model = parent::getEditModel(true);
             return $model != null && $model->isSaved();
+        }
+        
+        public function getProperty($name) {
+            $model = parent::getEditModel(true);
+            return $model[$name];
         }
 	}
 
