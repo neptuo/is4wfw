@@ -322,7 +322,13 @@
                         "db" => "int(11)", 
                         "hasColumn" => true,
                         "isLocalizable" => false,
-                        "fromUser" => function($value) { return intval($value); }
+                        "fromUser" => function($value) { 
+                            $value = intval($value);
+                            if ($value == 0) {
+                                return null;
+                            }
+                            return $value; 
+                        }
                     ),
                     array(
                         "key" => "multireference-singlecolumn", 
