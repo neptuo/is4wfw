@@ -234,7 +234,7 @@
                 $user['password-again'] = '1a1';
             }
 
-            $return .= ''
+            $return = ''
             . '<div class="user-edit-cover">'
                 . '<form name="user-edit-form" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<div class="user-edit-prop">'
@@ -476,22 +476,11 @@
                 $return .= '<h4 class="error">Permission Denied!</h4>';
             }
 
-            //$return .= '<div class="gray-box">Edit Admins group perms: '.self::editAdminsGroup().'</div>';
-
             if ($useFrames == "false") {
                 return $return;
             } else {
                 return parent::getFrame('Group list', $return, "", true);
             }
-        }
-
-        public function editAdminsGroup() {
-            return ''
-            . '<form name="group-perms-edit" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                . '<input type="hidden" name="group-id" value="' . 1 . '" />'
-                . '<input type="hidden" name="group-edit" value="Edit group permissions" />'
-                . '<input type="image" src="~/images/page_edi.png" name="group-edit" value="Edit group permissions" title="Edit group permissions, id(' . $group['gid'] . ')" />'
-            . '</form> ';
         }
 
         public function editGroupPerms($useFrames = false) {
@@ -776,7 +765,7 @@
                 return parent::getError('User must have at least one group!');
             }
 
-            $return .= ''
+            $return = ''
                     . '<form name="user-register" action="' . $_SERVER['REQUEST_URI'] . '" method="post">'
                     . $msgHtml
                     . '<div class="gray-box">'

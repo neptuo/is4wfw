@@ -1843,7 +1843,6 @@
         public function includeTemplate($templateId, $whenLogged = false, $whenNotLogged = false, $browser = false) {
             global $dbObject;
             global $loginObject;
-            $languageId = (!$languageId) ? $this->LanguageId : $languageId;
 
             $incForBrowser = true;
             if (strlen($browser) > 0) {

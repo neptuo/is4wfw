@@ -207,7 +207,7 @@
          *    @param    s string
          *    @param    d delimeter
          *    @param    c count         
-         *    @return parsed string into array                                         
+         *    @return array parsed string into array                                         
          *
          */
         public function str_tr($s, $d, $c = 1000000){
