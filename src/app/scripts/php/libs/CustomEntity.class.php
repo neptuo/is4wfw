@@ -241,8 +241,7 @@
         }
 
         private function loadModel($name, $xml, $keys, EditModel $model) {
-            $columns = "";
-            $condition = "";
+            $columns = array();
             $external = array();
             foreach ($xml->column as $column) {
                 $columnName = (string)$column->name;
@@ -267,17 +266,14 @@
                 if ($model->hasKey($columnName)) {
                     $typeDefinition = self::getTableColumnTypes($column);
                     if ($typeDefinition["hasColumn"]) {
-                        $columns = self::joinString($columns, "`$columnName`");
+                        $columns[] = $columnName;
                     }
                 }
             }
 
-            foreach ($keys as $key => $value) {
-                $condition = self::joinString($condition, "$key = $value", " AND");
-            }
-
             // Load main data.
-            $data = self::dataAccess()->fetchSingle("SELECT $columns FROM `$name` WHERE $condition");
+            $sql = parent::sql()->select($name, $columns, $keys);
+            $data = parent::dataAccess()->fetchSingle($sql);
             if (empty($data)) {
                 // We got keys, the item doesn't exist.
                 return false;
