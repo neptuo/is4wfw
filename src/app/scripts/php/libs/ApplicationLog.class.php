@@ -25,8 +25,26 @@
 		 */
 		public function listLogs($useFrames = false, $showMsg = false) {
 			$return = '';
+
+			if (array_key_exists("download-log", $_POST)) {
+				$logFile = $_POST["log-name"];
+				$filePath = LOGS_PATH . $logFile;
+				$fileSize = filesize($filePath);
+
+				header('Content-Type: ' . "text/plain");
+				header('Accept-Ranges: bytes');
+				header('Content-Length: ' . $fileSize);
+				header('Content-Disposition: attachment; filename=' . $logFile);
+				header('Content-Transfer-Encoding: binary');
+				$file = @fopen($filePath, 'rb');
+				if ($file) {
+					fpassthru($file);
+					exit;
+				}
+			}
 			
 			$logFiles = self::fileList(LOGS_PATH, array('log'), false);
+
 			$data = array();
 			
 			$projects = parent::db()->fetchAll('select `id`, `name` from `web_project` order by `id`;');
@@ -57,9 +75,14 @@
 				}
 				$item[3] = ''
 				.'<form name="show-log" action="' . $_SERVER['REQUEST_URI'] . '" method="post">'
-				.'<input type="hidden" name="log-name" value="'.$file.'" />'
-				.'<input type="hidden" name="show-log" value="Show log" />'
-				.'<input type="image" src="~/images/page_edi.png" name="show-log" value="Show log" />'
+					.'<input type="hidden" name="log-name" value="'.$file.'" />'
+					.'<input type="hidden" name="show-log" value="Show log" />'
+					.'<input type="image" src="~/images/page_edi.png" name="show-log" value="Show log" title="Show log ' . $item[0] . ' ' . $item[1] . '" />'
+				.'</form> '
+				.'<form action="' . $_SERVER['REQUEST_URI'] . '" method="post" target="_blank">'
+					.'<input type="hidden" name="log-name" value="'.$file.'" />'
+					.'<input type="hidden" name="download-log" value="download-log" />'
+					.'<input type="image" src="~/images/icons/arrow_down.png" title="Download log ' . $item[0] . ' ' . $item[1] . '" />'
 				.'</form>';
 
 				$data[] = $item;
