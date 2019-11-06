@@ -2,6 +2,7 @@
 
 	require_once("BaseTagLib.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/BaseGrid.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/Formatter.class.php");
 
 	/**
 	 * 
@@ -48,11 +49,17 @@
 				}
 				
 				$item[1] = date('d.m.Y', $item[1]);
-				$item[2] = ''
+
+				$fileSize = filesize(LOGS_PATH . $file);
+				$item[2] = Formatter::toByteString($fileSize);
+				if ($fileSize > 1000 * 1000) {
+					$item[2] = "<span class='red'>" . $item[2] . "</span>";
+				}
+				$item[3] = ''
 				.'<form name="show-log" action="' . $_SERVER['REQUEST_URI'] . '" method="post">'
-					.'<input type="hidden" name="log-name" value="'.$file.'" />'
-					.'<input type="hidden" name="show-log" value="Show log" />'
-					.'<input type="image" src="~/images/page_edi.png" name="show-log" value="Show log" />'
+				.'<input type="hidden" name="log-name" value="'.$file.'" />'
+				.'<input type="hidden" name="show-log" value="Show log" />'
+				.'<input type="image" src="~/images/page_edi.png" name="show-log" value="Show log" />'
 				.'</form>';
 
 				$data[] = $item;
@@ -60,7 +67,7 @@
 			
 			if ($data != array()) {
 				$grid = new BaseGrid();
-				$grid->setHeader(array(0 => 'Project name:', 1 => 'Date:', 2 => ''));
+				$grid->setHeader(array(0 => 'Project name:', 1 => 'Date:', 2 => "Size:", 3 => ''));
 				$grid->addRows($data);
 				$return .= $grid->render();
 			}
