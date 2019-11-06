@@ -3,7 +3,7 @@
 		<web:condition when="post:delete" is="delete">
 			<ced:tableColumnDeleter tableName="query:table" columnName="post:column">
 				<web:redirectToSelf />
-			</ced:tableColumDeleter>
+			</ced:tableColumnDeleter>
 		</web:condition>
 			
 		<utils:concat output="backButtonText" value1="&laquo;" value2=" " value3="loc:tablelist.title" />
