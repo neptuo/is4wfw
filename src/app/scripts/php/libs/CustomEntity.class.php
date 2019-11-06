@@ -217,10 +217,14 @@
 
             $values = self::prepareValuesFromModel($xml, $model);
             $primaryKeys = self::prepareValuesFromModel($xml, $keysModel)["columns"];
-            $sql = self::sql()->update($tableName, $values["columns"], $primaryKeys);
 
-            // Execute update.
-            $da->execute($sql);
+            // If we have columns..
+            if (count($values["columns"]) > 0) {
+                $sql = self::sql()->update($tableName, $values["columns"], $primaryKeys);
+
+                // Execute update.
+                $da->execute($sql);
+            }
             
             // Process extras.
             foreach ($values["extras"] as $columnName => $extra) {
