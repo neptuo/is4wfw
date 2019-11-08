@@ -405,37 +405,39 @@
             $model = parent::getEditModel();
             if ($model->isSubmit()) {
                 $value = $model->request($name, $nameIndex);
-                $isEmpty = false;
-                if (is_array($source)) {
-                    foreach ($source as $item) {
-                        if ($item[$keyColumn] == $value) {
-                            $isEmpty = false;
-                            break;
+                if ($value != "") {
+                    $isEmpty = false;
+                    if (is_array($source)) {
+                        foreach ($source as $item) {
+                            if ($item[$keyColumn] == $value) {
+                                $isEmpty = false;
+                                break;
+                            }
+                        }
+
+                        $source = $tableName;
+                        $isEmpty = true;
+                    } else {
+                        $sql = parent::sql()->count($source, array($keyColumn => $value));
+                        $count = parent::dataAccess()->fetchSingle($sql);
+                        if ($count["count"] == 0) {
+                            $isEmpty = true;
                         }
                     }
-
-                    $source = $tableName;
-                    $isEmpty = true;
-                } else {
-                    $sql = parent::sql()->count($source, array($keyColumn => $value));
-                    $count = parent::dataAccess()->fetchSingle($sql);
-                    if ($count["count"] == 0) {
-                        $isEmpty = true;
-                    }
-                }
-                
-                if ($isEmpty) {
-                    $modelValue = array(
-                        "type" => "createIfEmpty",
-                        "source" => $source,
-                        "value" => $value,
-                        "keyColumn" => $keyColumn,
-                        "valueColumn" => $valueColumn,
-                        "values" => $values
-                    );
                     
-                    $model->set($name, $nameIndex, $modelValue);
-                    return;
+                    if ($isEmpty) {
+                        $modelValue = array(
+                            "type" => "createIfEmpty",
+                            "source" => $source,
+                            "value" => $value,
+                            "keyColumn" => $keyColumn,
+                            "valueColumn" => $valueColumn,
+                            "values" => $values
+                        );
+                        
+                        $model->set($name, $nameIndex, $modelValue);
+                        return;
+                    }
                 }
             }
 
