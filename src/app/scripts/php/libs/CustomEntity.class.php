@@ -21,7 +21,7 @@
                 return NULL;
             }
 
-            return $type["fromUser"]($value);
+            return $type["fromUser"]($value, $column);
         }
 
         private function prepareValuesFromModel($xml, EditModel $model) {

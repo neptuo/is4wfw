@@ -241,7 +241,13 @@
                             return "int";
                         }, 
                         "hasColumn" => true,
-                        "fromUser" => function($value) { return intval($value); }
+                        "fromUser" => function($value, $column) { 
+                            if ($column->required !== true && $value == "") {
+                                return null;
+                            }
+
+                            return intval($value); 
+                        }
                     ),
                     array(
                         "key" => "float", 
@@ -258,7 +264,13 @@
                         }, 
                         "hasColumn" => true,
                         "isLocalizable" => false,
-                        "fromUser" => function($value) { return floatval($value); }
+                        "fromUser" => function($value, $column) { 
+                            if ($column->required !== true && $value == "") {
+                                return null;
+                            }
+
+                            return floatval($value); 
+                        }
                     ),
                     array(
                         "key" => "shorttext", 
@@ -314,7 +326,13 @@
                         "db" => "bit(1)", 
                         "hasColumn" => true,
                         "isLocalizable" => false,
-                        "fromUser" => function($value) { return boolval($value); }
+                        "fromUser" => function($value, $column) { 
+                            if ($column->required !== true && $value == "") {
+                                return null;
+                            }
+
+                            return boolval($value); 
+                        }
                     ),
                     array(
                         "key" => "singlereference", 
