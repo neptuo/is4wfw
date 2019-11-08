@@ -242,10 +242,17 @@
                         }, 
                         "hasColumn" => true,
                         "fromUser" => function($value, $column) { 
-                            if ($column->required !== true && $value == "") {
+                            if ($column->required != true && $value == "") {
                                 return null;
                             }
 
+                            return intval($value); 
+                        },
+                        "fromDb" => function($value) { 
+                            if ($value == "") {
+                                return null;
+                            }
+                            
                             return intval($value); 
                         }
                     ),
@@ -265,7 +272,14 @@
                         "hasColumn" => true,
                         "isLocalizable" => false,
                         "fromUser" => function($value, $column) { 
-                            if ($column->required !== true && $value == "") {
+                            if ($column->required != true && $value == "") {
+                                return null;
+                            }
+
+                            return floatval($value); 
+                        },
+                        "fromDb" => function($value) { 
+                            if ($value == "") {
                                 return null;
                             }
 
@@ -278,7 +292,8 @@
                         "db" => "tinytext", 
                         "hasColumn" => true,
                         "isLocalizable" => true,
-                        "fromUser" => function($value) { return $value; }
+                        "fromUser" => function($value) { return $value; },
+                        "fromDb" => function($value) { return $value; }
                     ),
                     array(
                         "key" => "longtext", 
@@ -286,7 +301,8 @@
                         "db" => "text", 
                         "hasColumn" => true,
                         "isLocalizable" => true,
-                        "fromUser" => function($value) { return $value; }
+                        "fromUser" => function($value) { return $value; },
+                        "fromDb" => function($value) { return $value; }
                     ),
                     array(
                         "key" => "varchar", 
@@ -302,7 +318,8 @@
                         }, 
                         "hasColumn" => true,
                         "isLocalizable" => true,
-                        "fromUser" => function($value) { return $value; }
+                        "fromUser" => function($value) { return $value; },
+                        "fromDb" => function($value) { return $value; }
                     ),
                     array(
                         "key" => "url", 
@@ -318,7 +335,8 @@
                         }, 
                         "hasColumn" => true,
                         "isLocalizable" => true,
-                        "fromUser" => function($value) { return self::convertToValidUrl($value); }
+                        "fromUser" => function($value) { return self::convertToValidUrl($value); },
+                        "fromDb" => function($value) { return $value; }
                     ),
                     array(
                         "key" => "bool", 
@@ -327,7 +345,14 @@
                         "hasColumn" => true,
                         "isLocalizable" => false,
                         "fromUser" => function($value, $column) { 
-                            if ($column->required !== true && $value == "") {
+                            if ($column->required != true && $value == "") {
+                                return null;
+                            }
+
+                            return boolval($value); 
+                        },
+                        "fromDb" => function($value) { 
+                            if ($value == "") {
                                 return null;
                             }
 
@@ -346,6 +371,13 @@
                                 return null;
                             }
                             return $value; 
+                        },
+                        "fromDb" => function($value) { 
+                            $value = intval($value);
+                            if ($value == 0) {
+                                return null;
+                            }
+                            return $value; 
                         }
                     ),
                     array(
@@ -354,7 +386,8 @@
                         "db" => "tinytext", 
                         "hasColumn" => true,
                         "isLocalizable" => false,
-                        "fromUser" => function($value) { return self::parseMultiReferenceSingleColumn($value); }
+                        "fromUser" => function($value) { return self::parseMultiReferenceSingleColumn($value); },
+                        "fromDb" => function($value) { return $value; }
                     ),
                     array(
                         "key" => "multireference-jointable", 
@@ -362,7 +395,8 @@
                         "db" => "tinytext", 
                         "hasColumn" => false,
                         "isLocalizable" => false,
-                        "fromUser" => function($value) { return self::parseMultiReferenceSingleColumn($value); }
+                        "fromUser" => function($value) { return self::parseMultiReferenceSingleColumn($value); },
+                        "fromDb" => function($value) { return $value; }
                     ),
                     array(
                         "key" => "directory", 
@@ -370,7 +404,8 @@
                         "db" => "int(11)", 
                         "hasColumn" => true,
                         "isLocalizable" => false,
-                        "fromUser" => function($value) { return intval($value); }
+                        "fromUser" => function($value) { return intval($value); },
+                        "fromDb" => function($value) { return $value; }
                     )
                 );
             }

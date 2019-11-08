@@ -24,6 +24,15 @@
             return $type["fromUser"]($value, $column);
         }
 
+        private function parseDbValue($column, $value) {
+            $type = self::getTableColumnTypes($column);
+            if ($type == NULL) {
+                return NULL;
+            }
+
+            return $type["fromDb"]($value, $column);
+        }
+
         private function prepareValuesFromModel($xml, EditModel $model) {
             $columns = array();
             $extras = array();
@@ -209,6 +218,21 @@
                 self::audit($tableName, "insert", $primaryKeys);
             }
         }
+
+        private function isChanged(EditModel $model, Array $values) {
+            $entity = $model->metadata("entity");
+            if ($entity == null || count($entity) != count($values)) {
+                return true;
+            }
+
+            foreach ($values as $key => $value) {
+                if (!array_key_exists($key, $entity) || $value !== $entity[$key]) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         
         private function update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds) {
             $da = parent::dataAccess();
@@ -219,7 +243,7 @@
             $primaryKeys = self::prepareValuesFromModel($xml, $keysModel)["columns"];
 
             // If we have columns..
-            if (count($values["columns"]) > 0) {
+            if (count($values["columns"]) > 0 && self::isChanged($model, $values["columns"])) {
                 $sql = self::sql()->update($tableName, $values["columns"], $primaryKeys);
 
                 // Execute update.
@@ -279,10 +303,19 @@
             $sql = parent::sql()->select($name, $columns, $keys);
             $data = parent::dataAccess()->fetchSingle($sql);
             if (empty($data)) {
-                // We got keys, the item doesn't exist.
+                // We got keys, but the item doesn't exist.
                 return false;
             }
 
+            // Correctly parse all data taken from DB.
+            foreach ($data as $key => $value) {
+                $column = parent::findColumn($xml, $key);
+                if ($column != null) {
+                    $data[$key] = self::parseDbValue($column, $value);
+                }
+            }
+            
+            $model->metadata("entity", $data);
             foreach ($model as $key => $item) {
                 $model[$key] = $data[$key];
             }
