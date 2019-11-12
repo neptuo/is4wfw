@@ -47,6 +47,34 @@ class CustomTagParser {
 	
     protected $TagsToParse = array();
     
+    static $Measure = false;
+    static $Measures = array();
+    
+	public static function saveMeasures($value) {
+		CustomTagParser::$Measure = $value;
+    }
+    
+    public static function getMeasures() {
+        return CustomTagParser::$Measures;
+    }
+
+    private $startTime;
+
+    protected function startMeasure() {
+        $this->startTime = 0;
+        if (CustomTagParser::$Measure) {
+            $this->startTime = microtime();
+        }
+    }
+
+    protected function stopMeasure() {
+        if (CustomTagParser::$Measure) {
+            $endTime = microtime();
+            $elapsed = $endTime - $this->startTime;
+            array_push(CustomTagParser::$Measures, array($elapsed, $this->Content));
+        }
+    }
+    
     /**
      *
      *  Parse all attributes to array.
@@ -328,6 +356,8 @@ class CustomTagParser {
      *
      */
     public function startParsing() {
+        self::startMeasure();
+
         if ($this->UseCaching) {
             $hashName = sha1($this->Content);
             $fileName = CACHE_TEMPLATES_PATH . $hashName . '.cache.php';
@@ -352,6 +382,8 @@ class CustomTagParser {
 
             $this->Result = eval("return '". $this->Result . "';");
         }
+				
+        self::stopMeasure();
     }
 	
 	public function parsePropertyExactly($value) {

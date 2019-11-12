@@ -224,9 +224,15 @@
         }
 
         public function processRequestNG() {
-            if (array_key_exists('query-list', $_GET)) {
-                parent::db()->getDataAccess()->saveQueries(true);
-                parent::db()->getDataAccess()->saveMeasures(true);
+            if (self::getDebugMode()) {
+                if (array_key_exists('query-list', $_GET)) {
+                    parent::db()->getDataAccess()->saveQueries(true);
+                    parent::db()->getDataAccess()->saveMeasures(true);
+                }
+
+                if (array_key_exists('parser-stats', $_GET)) {
+                    CustomTagParser::saveMeasures(true);
+                }
             }
 
             $this->UrlResolver = new UrlResolver();
@@ -1103,6 +1109,29 @@
                     $diacont .= parent::debugFrame("Query stats", "Count: $queryCount<br />Total time: $totalMeasure ms<br />Worst: $worstKey ($worstMeasure ms)", 'code');
                     $diacont .= $querycont;
                 }
+                if (array_key_exists('parser-stats', $_GET)) {
+                    $parsercont = "";
+                    $totalMeasure = 0;
+                    $measures = CustomTagParser::getMeasures();
+                    $worstKey = 0;
+                    $worstMeasure = 0;
+                    foreach ($measures as $key => $item) {
+                        $totalMeasure += $item[0];
+                        $measure = round($item[0], 5);
+                        if ($measure > $worstMeasure) {
+                            $worstMeasure = $measure;
+                            $worstKey = $key;
+                        }
+
+                        $header = "Parsing $key ($measure ms)";
+                        $parsercont .= parent::debugFrame($header, htmlentities($item[1]), 'code');
+                    }
+
+                    $parserCount = count($measures);
+                    $totalMeasure = round($totalMeasure, 5);
+                    $diacont .= parent::debugFrame("Parser stats", "Count: $parserCount<br />Total time: $totalMeasure ms<br />Worst: $worstKey ($worstMeasure ms)", 'code');
+                    $diacont .= $parsercont;
+                }
                 if (strlen($this->PageLog) != 0) {
                     $diacont .= parent::debugFrame('Page Log', $this->PageLog);
                 }
@@ -1369,6 +1398,9 @@
             }
             if (array_key_exists('query-list', $_GET)) {
                 $url = self::addUrlParameter($url, 'query-list', '');
+            }
+            if (array_key_exists('parser-stats', $_GET)) {
+                $url = self::addUrlParameter($url, 'parser-stats', '');
             }
             if (array_key_exists('auto-login-ignore', $_GET)) {
                 $url = self::addUrlParameter($url, 'auto-login-ignore', '');

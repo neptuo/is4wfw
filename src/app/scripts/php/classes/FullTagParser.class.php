@@ -75,6 +75,8 @@ class FullTagParser extends CustomTagParser {
      *
      */
     public function startParsing() {
+        self::startMeasure();
+
         parent::setUseCaching(false);
 
         if ($this->Content != "") {
@@ -88,6 +90,8 @@ class FullTagParser extends CustomTagParser {
         }
         
         $this->Result = new ParsedTemplate("return '". $this->Result . "';");
+				
+        self::stopMeasure();
     }
 
     public function getParsedTemplate() {
