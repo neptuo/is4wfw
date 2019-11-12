@@ -1787,12 +1787,6 @@
             if (count($projects) != 0) {
                 if (array_key_exists('selected-project', $_SESSION)) {
                     $projectId = $_SESSION['selected-project'];
-                    /* $test = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project`.`id` = '.$projectId.' AND `web_project_right`.`type` = '.WEB_R_WRITE.' AND `group`.`value` >= '.$loginObject->getGroupValue().';');
-                    if(count($test) == 0) {
-                    $projectId = $_SESSION['selected-project'];
-                    } else {
-                    $projectId = $projects[0]['id'];
-                    } */
                 } else {
                     $projectId = $projects[0]['id'];
                 }
@@ -1818,10 +1812,10 @@
             }
 
             $n = 1;
+            $returnTmp = "";
             $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` WHERE `wp` = " . $projectId . " " . self::getTextFileSearchPartSql() . " ORDER BY `id`;");
             if (count($files) != 0) {
                 $returnTmp .= ''
-                        . $searchForm
                         . '<table class="page-file-list data-table clickable standart">'
                         . '<thead>'
                         . '<tr class="file-tr">'
@@ -1865,9 +1859,7 @@
                     $n++;
                 }
                 $returnTmp .= '</tbody></table>';
-                //$return .= parent::getFrame('Text files', $returnTmp, '');
             } else {
-                //$return .= parent::getFrame('Text files', '<h4 class="error">No files to edit!</h4>', '');
                 $returnTmp .= parent::getWarning($rb->get('tf.emptylist'));
             }
 
@@ -1880,6 +1872,10 @@
                         . '</form>'
                         . '</div>';
             }
+
+            
+            $returnTmp = $searchForm . $returnTmp;
+
             $return .= parent::getFrame($rb->get('tf.title'), $returnTmp, '');
             return $return;
         }
