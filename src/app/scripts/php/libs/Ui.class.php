@@ -520,6 +520,32 @@
 			}
 		}
 
+		public function dateTimeValue($template, $name, $nameIndex, $format) {
+			$model = parent::getEditModel();
+            if ($model->isRegistration()) {
+			 	parent::parseContent($template);
+			}
+			
+            if ($model->isSubmit()) {
+				$modelValue = $model->request($name, $nameIndex);
+				$modelValue = DateTime::createFromFormat($format, $modelValue);
+				$modelValue = $modelValue->getTimestamp();
+				$model->set($name, $nameIndex, $modelValue);
+            }
+
+            if ($model->isRender()) {
+				$modelValue = $model->get($name, $nameIndex);
+
+				$dateTime = new DateTime();
+				$dateTime->setTimestamp($modelValue);
+
+				$modelValue = $dateTime->format($format);
+				$model->set($name, $nameIndex, $modelValue);
+
+				return parent::parseContent($template);
+            }
+		}
+
 		private $localizableName;
 		private $localizableLangId;
 		private $localizableLangName;

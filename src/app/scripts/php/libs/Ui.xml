@@ -395,6 +395,31 @@
     </comment>
   </tag>
   <fulltag>
+    <tagname>dateTimeValue</tagname>
+    <function>dateTimeValue</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>nameIndex</attname>
+      <attreq>implied</attreq>
+      <atttype>number</atttype>
+      <attdef>-1</attdef>
+      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>format</attname>
+      <attreq>required</attreq>
+      <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
+    </attribute>
+    <comment>
+      Obaluje libovolný editační tag a formátuje hodnotu timestampu v něm uloženou do zadaného "format".
+      Očekává, že form tag poskytuje timestamp a vnitřní editační tag string dle "format".
+    </comment>
+  </fulltag>
+  <fulltag>
     <tagname>localizable</tagname>
     <function>localizable</function>
     <attribute>
