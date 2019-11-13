@@ -105,6 +105,38 @@
     </comment>
   </tag>
   <tag>
+    <tagname>bootstrapDatePicker</tagname>
+    <function>bootstrapDatePicker</function>
+    <attribute>
+      <attname>selector</attname>
+      <attreq>implied</attreq>
+      <attcomment>jQuery selector na elementy, které se mají transformovat na datepicker.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>format</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Formátovací řetězec pro datum.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>language</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Jazyková mutace kalendáře, která se má vložit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>autoclose</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda se má kalenář zavřít po vybrání datumu.</attcomment>
+    </attribute>
+    <comment>
+      Vloží do stránky skripty a styly pro bootstrap-datepicker (v1.9).
+      Nevkládá samostatný bootstrap!
+    </comment>
+  </tag>
+  <tag>
     <tagname>ajax</tagname>
     <function>ajax</function>
     <attribute>

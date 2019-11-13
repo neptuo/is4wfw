@@ -22,12 +22,16 @@
             parent::setTagLibXml("Js.xml");
         }
 
-        public function formatScript($path) {
+        public function formatScript($path, $checkExistence = false) {
             if (in_array($path, $this->includedScripts)) {
                 return null;
             }
 
             $this->includedScripts[] = $path;
+
+            if ($checkExistence && !file_exists(str_replace("~/", APP_SCRIPTS_PATH, $path))) {
+                return null;
+            }
 
             $minPath = str_replace(".js", ".min.js", $path);
             if (file_exists(str_replace("~/", APP_SCRIPTS_PATH, $minPath))) {
@@ -209,6 +213,27 @@
             $options .= "}";
 
             $result = "<script type='text/javascript'>$(function() { $('$selector').select2($options); });</script>";
+            return $result;
+        }
+
+        public function bootstrapDatePicker($selector, $format = "", $language = "", $autoclose = false) {
+            parent::web()->addScript(self::formatScript("~/js/bootstrap-datepicker/bootstrap-datepicker.min.js"));
+            parent::web()->addScript(self::formatScript("~/js/bootstrap-datepicker/locales/bootstrap-datepicker.$language.min.js", true));
+            parent::web()->addStyle(self::formatStyle('~/css/bootstrap-datepicker/bootstrap-datepicker.min.css'));
+            
+            $options = "{";
+            if ($format != "") {
+                $options .= "format: '$format',";
+            }
+            if ($language != "") {
+                $options .= "language: '$language'";
+            }
+            if ($autoclose) {
+                $options .= "autoclose: true,";
+            }
+            $options .= "}";
+
+            $result = "<script type='text/javascript'>$(function() { $('$selector').datepicker($options); });</script>";
             return $result;
         }
 
