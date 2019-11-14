@@ -458,7 +458,7 @@
 			}
 		}
 
-		public function checkbox($name, $nameIndex = -1, $params = array()) {
+		public function checkbox($name, $nameIndex = -1, $default = false, $params = array()) {
 			$model = parent::getEditModel();
 			if ($model->isRegistration()) {
 				$model->set($name, null, null);
@@ -472,6 +472,9 @@
 			if ($model->isRender()) {
 				$formName = $model->requestKey($name, $nameIndex);
 				$modelValue = $model->get($name, $nameIndex);
+				if ($modelValue === null) {
+					$modelValue = $default;
+				}
 
 				$params = self::appendId($params);
 				$attributes = self::joinAttributes($params);

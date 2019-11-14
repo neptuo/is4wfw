@@ -337,6 +337,13 @@
       <attdef>-1</attdef>
       <attcomment>Index, pokud je "name" typu pole.</attcomment>
     </attribute>
+    <attribute>
+      <attname>default</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Výchozí hodnota.</attcomment>
+    </attribute>
     <anyAttribute />
     <comment>
       Vygeneruje checkbox.
