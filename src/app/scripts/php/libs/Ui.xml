@@ -105,7 +105,7 @@
     <attribute>
       <attname>header</attname>
       <attreq>implied</attreq>
-      <attcomment>Nadpis slouce v gridu.</attcomment>
+      <attcomment>Nadpis sloupce v gridu.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
@@ -122,7 +122,7 @@
     <attribute>
       <attname>header</attname>
       <attreq>implied</attreq>
-      <attcomment>Nadpis slouce v gridu.</attcomment>
+      <attcomment>Nadpis sloupce v gridu.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
@@ -147,13 +147,36 @@
       Boolový sloupec pro "ui:grid".
     </comment>
   </tag>
+  <tag>
+    <tagname>columnDateTime</tagname>
+    <function>gridColumnDateTime</function>
+    <attribute>
+      <attname>header</attname>
+      <attreq>implied</attreq>
+      <attcomment>Nadpis sloupce v gridu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>implied</attreq>
+      <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>format</attname>
+      <attreq>required</attreq>
+      <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
+      <atttype>string</atttype>
+    </attribute>
+    <comment>
+      Datumový sloupec pro "ui:grid".
+    </comment>
+  </tag>
   <fulltag>
     <tagname>columnTemplate</tagname>
     <function>gridColumnTemplate</function>
     <attribute>
       <attname>header</attname>
       <attreq>implied</attreq>
-      <attcomment>Nadpis slouce v gridu.</attcomment>
+      <attcomment>Nadpis sloupce v gridu.</attcomment>
     </attribute>
     <comment>
       Sloupec pro "ui:grid", který má hodnotu definovanou šablonou.
@@ -431,6 +454,23 @@
       Očekává, že form tag poskytuje timestamp a vnitřní editační tag string dle "format".
     </comment>
   </fulltag>
+  <tag>
+    <tagname>dateTimeValue</tagname>
+    <function>formatDateTime</function>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+      <attcomment>Hodnota časového razítka.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>format</attname>
+      <attreq>required</attreq>
+      <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
+    </attribute>
+    <comment>
+      Vypíše hodnota časového razítka z "value" ve formátu "format".
+    </comment>
+  </tag>
   <fulltag>
     <tagname>localizable</tagname>
     <function>localizable</function>

@@ -561,7 +561,7 @@
             }
 		}
 
-		private function formatDateTime($value, $format) {
+		public function formatDateTime($value, $format) {
 			$dateTime = new DateTime();
 			$dateTime->setTimestamp($value);
 			$value = $dateTime->format($format);
