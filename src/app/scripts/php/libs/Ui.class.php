@@ -214,6 +214,17 @@
 			return self::gridColumn($header, $value ? $trueText : $falseText);
 		}
 
+		public function gridColumnDateTime($header, $value, $format) {
+			if ($this->gridPhase == "header") {
+				return "<th>$header</th>";
+			} else if ($this->gridPhase == "body") {
+				$value = self::formatDateTime($value, $format);
+				return "<td>$value</td>";
+			}
+
+			return "";
+		}
+
 		public function gridColumnTemplate($template, $header) {
 			if ($this->gridPhase == "header") {
 				return "<th>$header</th>";
@@ -543,14 +554,19 @@
 					$modelValue = $default;
 				}
 
-				$dateTime = new DateTime();
-				$dateTime->setTimestamp($modelValue);
-
-				$modelValue = $dateTime->format($format);
+				$modelValue = self::formatDateTime($modelValue, $format);
 				$model->set($name, $nameIndex, $modelValue);
 
 				return parent::parseContent($template);
             }
+		}
+
+		private function formatDateTime($value, $format) {
+			$dateTime = new DateTime();
+			$dateTime->setTimestamp($value);
+			$value = $dateTime->format($format);
+
+			return $value;
 		}
 
 		private $localizableName;
