@@ -520,7 +520,7 @@
 			}
 		}
 
-		public function dateTimeValue($template, $name, $nameIndex, $format) {
+		public function dateTimeValue($template, $name, $nameIndex, $format, $default = "") {
 			$model = parent::getEditModel();
             if ($model->isRegistration()) {
 			 	parent::parseContent($template);
@@ -535,6 +535,10 @@
 
             if ($model->isRender()) {
 				$modelValue = $model->get($name, $nameIndex);
+
+				if (empty($modelValue)) {
+					$modelValue = $default;
+				}
 
 				$dateTime = new DateTime();
 				$dateTime->setTimestamp($modelValue);

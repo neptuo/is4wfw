@@ -414,6 +414,11 @@
       <attreq>required</attreq>
       <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
     </attribute>
+    <attribute>
+      <attname>default</attname>
+      <attreq>implied</attreq>
+      <attcomment>Výchozí hodnota.</attcomment>
+    </attribute>
     <comment>
       Obaluje libovolný editační tag a formátuje hodnotu timestampu v něm uloženou do zadaného "format".
       Očekává, že form tag poskytuje timestamp a vnitřní editační tag string dle "format".
