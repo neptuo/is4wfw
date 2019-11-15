@@ -176,9 +176,22 @@
             }
         }
         
-        private function insert($tableName, $tableLocalizationName, $xml, $model, $langIds) {
+        private function insert($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, $deleteIfEmpty = false) {
             $da = parent::dataAccess();
+            $keysModel = new EditModel();
+            $keysModel->copyFrom($keys);
+
             $values = self::prepareValuesFromModel($xml, $model);
+            $primaryKeys = self::prepareValuesFromModel($xml, $keysModel)["columns"];
+
+            if ($deleteIfEmpty && self::isEmpty($values["columns"])) {
+                return;
+            }
+
+            foreach ($keys as $key => $value) {
+                $values["columns"][$key] = $value;
+            }
+
             $sql = self::sql()->insert($tableName, $values["columns"]);
 
             // Execute insert.
@@ -423,11 +436,7 @@
                 if ($model->metadata("isUpdate")) {
                     self::update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, $deleteIfEmpty);
                 } else {
-                    foreach ($keys as $key => $value) {
-                        $model[$key] = $value;
-                    }
-
-                    self::insert($tableName, $tableLocalizationName, $xml, $model, $langIds);
+                    self::insert($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, $deleteIfEmpty);
                 }
             }
 
