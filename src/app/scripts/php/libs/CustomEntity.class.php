@@ -233,8 +233,18 @@
 
             return false;
         }
+
+        private function isEmpty(Array $values) {
+            foreach ($values as $key => $value) {
+                if (!empty($value)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
         
-        private function update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds) {
+        private function update($tableName, $tableLocalizationName, $xml, $keys, EditModel $model, $langIds, $deleteIfEmpty = false) {
             $da = parent::dataAccess();
             $keysModel = new EditModel();
             $keysModel->copyFrom($keys);
@@ -242,11 +252,21 @@
             $values = self::prepareValuesFromModel($xml, $model);
             $primaryKeys = self::prepareValuesFromModel($xml, $keysModel)["columns"];
 
-            // If we have columns..
+            // If we have chnaged columns.
             if (count($values["columns"]) > 0 && self::isChanged($model, $values["columns"])) {
-                $sql = self::sql()->update($tableName, $values["columns"], $primaryKeys);
+                if ($deleteIfEmpty && self::isEmpty($values["columns"])) {
+                    $sql = self::sql()->delete($tableName, $primaryKeys);
+                    $da->execute($sql);
 
+                    if (self::hasAuditLog($xml)) {
+                        self::audit($tableName, "delete", $primaryKeys);
+                    }
+
+                    return;
+                }
+                
                 // Execute update.
+                $sql = self::sql()->update($tableName, $values["columns"], $primaryKeys);
                 $da->execute($sql);
             }
             
@@ -365,7 +385,7 @@
             return self::sql()->delete($name, $params);
         }
 
-		public function form($template, $name, $langIds = "", $keys = array()) {
+		public function form($template, $name, $deleteIfEmpty = false, $langIds = "", $keys = array()) {
             $model = parent::getEditModel();
             $tableName = self::ensureTableName($name, $model);
             $tableLocalizationName = self::ensureTableLocalizationName($name, $model);
@@ -401,7 +421,7 @@
             // Save if model is leased or isSubmit.
             if ($model->isSave()) {
                 if ($model->metadata("isUpdate")) {
-                    self::update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds);
+                    self::update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, $deleteIfEmpty);
                 } else {
                     foreach ($keys as $key => $value) {
                         $model[$key] = $value;

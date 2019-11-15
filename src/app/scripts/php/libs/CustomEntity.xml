@@ -17,6 +17,16 @@
       <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
     </attribute>
     <attribute>
+      <attname>deleteIfEmpty</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>
+        Pokud "true" a ve vstupu od uživatele přijdou všechny hodnoty prázdné, automaticky editovaný záznam smaže.
+        Prázdné hodnoty se hledají pouze v aktuálně načtených fieldech.
+      </attcomment>
+    </attribute>
+    <attribute>
       <attname>langIds</attname>
       <attreq>implied</attreq>
       <attcomment>Id jazyků, pro které mají zpracovávat lokalizované pole.</attcomment>
