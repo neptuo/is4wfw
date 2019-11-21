@@ -421,7 +421,7 @@
 			}
 		}
 
-		public function textbox($name, $nameIndex = -1, $default = "", $params = array()) {
+		private function inputbox($type, $name, $nameIndex = -1, $default = "", $params = array()) {
 			$model = parent::getEditModel();
 			if ($model->isRegistration()) {
 				$model->set($name, null, null);
@@ -440,9 +440,19 @@
 				}
 				
 				$params = self::appendId($params);
-				$attributes = self::joinAttributes($params);
-				return "<input name='$formName' type='text' value='$modelValue'$attributes />";
+				$params["name"] = $formName;
+				$params["type"] = $type;
+				$params["value"] = $modelValue;
+				return self::input($params);
 			}
+		}
+
+		public function textbox($name, $nameIndex = -1, $default = "", $params = array()) {
+			return self::inputbox("text", $name, $nameIndex, $default, $params);
+		}
+
+		public function passwordbox($name, $nameIndex = -1, $default = "", $params = array()) {
+			return self::inputbox("password", $name, $nameIndex, $default, $params);
 		}
 		
 		public function textarea($name, $nameIndex = -1, $default = "", $params = array()) {
