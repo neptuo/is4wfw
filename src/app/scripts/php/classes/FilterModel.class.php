@@ -16,6 +16,10 @@
                 $result = self::joinString($result, $value, $joiner);
             }
 
+            if ($result === "") {
+                return null;
+            }
+
             return "($result)";
         }
 
