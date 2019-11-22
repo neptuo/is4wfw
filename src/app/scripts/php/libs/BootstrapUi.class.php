@@ -65,20 +65,30 @@
 		}
 		
 		public function column($template, $default = "", $small = "", $medium = "", $large = "", $extraLarge = "", $params = array()) {
+			$hasColumn = false;
 			if ($default != "") {
 				$params = self::appendClass($params, "col-$default");
+				$hasColumn = true;
 			}
 			if ($small != "") {
 				$params = self::appendClass($params, "col-sm-$small");
+				$hasColumn = true;
 			}
 			if ($medium != "") {
 				$params = self::appendClass($params, "col-md-$medium");
+				$hasColumn = true;
 			}
 			if ($large != "") {
 				$params = self::appendClass($params, "col-lg-$large");
+				$hasColumn = true;
 			}
 			if ($extraLarge != "") {
 				$params = self::appendClass($params, "col-xl-$extraLarge");
+				$hasColumn = true;
+			}
+			
+			if (!$hasColumn) {
+				$params = self::appendClass($params, "col");
 			}
 			
 			$attributes = parent::joinAttributes($params);
