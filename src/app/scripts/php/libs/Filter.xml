@@ -76,6 +76,25 @@
       <attdef>false</attdef>
       <attcomment>Zda se má podmínka negovat, tedy "nerovná se".</attcomment>
     </attribute>
+    <comment>Sloupec v "name" musí/nesmí odpovídat ''.</comment>
+  </tag>
+  <tag>
+    <tagname>null</tagname>
+    <function>nullValue</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>not</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda se má podmínka negovat, tedy "nerovná se".</attcomment>
+    </attribute>
+    <comment>Sloupec v "name" musí/nesmí odpovídat 'null'.</comment>
   </tag>
   <tag>
     <tagname>equals</tagname>

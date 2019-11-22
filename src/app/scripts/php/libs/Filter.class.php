@@ -92,6 +92,16 @@
 			$instance[] = self::formatColumnName($instance, $name) . " $operator ''";
 		}
 
+		public function nullValue($name, $not = false) {
+			$instance = $this->current->peek();
+			$operator = "IS";
+			if ($not) {
+				$operator = $operator . " NOT";
+			}
+			
+			$instance[] = self::formatColumnName($instance, $name) . " $operator NULL";
+		}
+
 		public function equals($name, $value, $not = false) {
 			if (!empty($value)) {
 				$instance = $this->current->peek();
