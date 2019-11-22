@@ -39,6 +39,16 @@
   <fulltag>
     <tagname>row</tagname>
     <function>row</function>
+    <attribute>
+      <attname>horizontal</attname>
+      <atttype>string</atttype>
+      <attcomment>Horizontální zarovnání položek ("left", "center", "right").</attcomment>
+    </attribute>
+    <attribute>
+      <attname>vertical</attname>
+      <atttype>string</atttype>
+      <attcomment>Vertikální zarovnání položek ("top", "center", "buttom").</attcomment>
+    </attribute>
     <anyAttribute>
       <comment>Všechny atributy jsou předány obalovému "div".</comment>
     </anyAttribute>

@@ -57,8 +57,24 @@
 			return "<div$attributes>$content</div>";
 		}
 
-		public function row($template, $params = array()) {
+		public function row($template, $horizontal = "", $vertical = "", $params = array()) {
 			$params = self::appendClass($params, "row");
+			if ($horizontal == "left") {
+				$params = self::appendClass($params, "justify-content-start");
+			} else if ($horizontal == "center") {
+				$params = self::appendClass($params, "justify-content-center");
+			} else if ($horizontal == "right") {
+				$params = self::appendClass($params, "justify-content-end");
+			}
+
+			if ($vertical == "top") {
+				$params = self::appendClass($params, "align-items-start");
+			} else if ($vertical == "center") {
+				$params = self::appendClass($params, "align-items-center");
+			} else if ($vertical == "bottom") {
+				$params = self::appendClass($params, "align-items-end");
+			}
+
 			$attributes = parent::joinAttributes($params);
 			$content = parent::parseContent($template);
 			return "<div$attributes>$content</div>";
