@@ -512,7 +512,6 @@
 
         public function getList($template, $name, $filter = array(), $orderBy = array()) {
             $tableName = self::ensureTableName($name);
-            $filter = parent::removeKeysWithEmptyValues($filter);
             $orderBy = parent::removeKeysWithEmptyValues($orderBy);
 
             $model = new ListModel();
@@ -528,10 +527,13 @@
                 $filter = $filter[""];
                 $tableName = $filter->wrapTableName($tableName);
                 $filter = $filter->toSql();
+            } else {
+                $filter = parent::removeKeysWithEmptyValues($filter);
             }
 
             $fields = $model->fields();
             $xml = null;
+            $isAliasRequired = false;
             foreach ($fields as $key => $value) {
                 if (strpos($value, ".") !== false) {
                     $parts = explode(".", $value, 2);
@@ -557,7 +559,13 @@
                             )
                         );
                     }
+
+                    $isAliasRequired = true;
                 }
+            }
+
+            if ($isAliasRequired && !is_array($tableName)) {
+                $tableName = array("table" => $tableName, "alias" => "_ce");
             }
 
             $sql = self::sql()->select($tableName, $fields, $filter, $orderBy);
