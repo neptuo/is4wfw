@@ -45,7 +45,19 @@
 			return $attributes;
 		}
 
-		public function grid($template, $params = array()) {
+		public function container($template, $fluid = false, $params = array()) {
+			if ($fluid) {
+				$params = self::appendClass($params, "container-fluid");
+			} else {
+				$params = self::appendClass($params, "container");
+			}
+
+			$attributes = parent::joinAttributes($params);
+			$content = parent::parseContent($template);
+			return "<div$attributes>$content</div>";
+		}
+
+		public function row($template, $params = array()) {
 			$params = self::appendClass($params, "row");
 			$attributes = parent::joinAttributes($params);
 			$content = parent::parseContent($template);

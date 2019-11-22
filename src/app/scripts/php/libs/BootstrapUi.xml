@@ -14,8 +14,31 @@
     <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá.</comment>
   </tag>
   <fulltag>
+    <tagname>container</tagname>
+    <function>container</function>
+    <attribute>
+      <attname>fluid</attname>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda se má jednat o fluidní kontejner (na celou šířku).</attcomment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému "div".</comment>
+    </anyAttribute>
+    <comment>Vykresluje obalový div pro grid (div class="row").</comment>
+  </fulltag>
+  <fulltag>
     <tagname>grid</tagname>
-    <function>grid</function>
+    <function>row</function>
+    <obsolete>Použijte "bs:row".</obsolete>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému "div".</comment>
+    </anyAttribute>
+    <comment>Vykresluje obalový div pro grid (div class="row").</comment>
+  </fulltag>
+  <fulltag>
+    <tagname>row</tagname>
+    <function>row</function>
     <anyAttribute>
       <comment>Všechny atributy jsou předány obalovému "div".</comment>
     </anyAttribute>
