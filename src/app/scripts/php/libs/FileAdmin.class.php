@@ -31,7 +31,8 @@
 			WEB_TYPE_CPP => "cpp", WEB_TYPE_H => "h", WEB_TYPE_JAVA => "java", WEB_TYPE_SWF => "swf",
 			WEB_TYPE_MP3 => "mp3", WEB_TYPE_PSD => "psd", WEB_TYPE_DOC => "doc", WEB_TYPE_PPT => "ppt",
 			WEB_TYPE_XLS => "xls", WEB_TYPE_MPEG => "mpeg", WEB_TYPE_MOV => "mov",
-			WEB_TYPE_BMP => "bmp", WEB_TYPE_AVI => "avi", WEB_TYPE_ICO => "ico", WEB_TYPE_HTM => "htm"
+			WEB_TYPE_BMP => "bmp", WEB_TYPE_AVI => "avi", WEB_TYPE_ICO => "ico", WEB_TYPE_HTM => "htm",
+			WEB_TYPE_TTF => "ttf", WEB_TYPE_WOFF => "woff", WEB_TYPE_WOFF => "woff2", WEB_TYPE_EOT => "eot"
 		);
 		
 		public static $FileMimeTypes = array(
@@ -42,7 +43,8 @@
 			WEB_TYPE_CPP => "text/plain", WEB_TYPE_H => "text/plain", WEB_TYPE_JAVA => "text/plain", WEB_TYPE_SWF => "application/x-shockwave-flash",
 			WEB_TYPE_MP3 => "audio/mpeg", WEB_TYPE_PSD => "application/octet-stream", WEB_TYPE_DOC => "application/msword", WEB_TYPE_PPT => "application/vnd.ms-powerpoint",
 			WEB_TYPE_XLS => "application/vnd.ms-excel", WEB_TYPE_MPEG => "video/mpeg", WEB_TYPE_MOV => "video/quicktime",
-			WEB_TYPE_BMP => "image/bmp", WEB_TYPE_AVI => "video/x-msvideo", WEB_TYPE_ICO => "image/x-icon"
+			WEB_TYPE_BMP => "image/bmp", WEB_TYPE_AVI => "video/x-msvideo", WEB_TYPE_ICO => "image/x-icon", WEB_TYPE_HTM => "text/html",
+			WEB_TYPE_TTF => "font/ttf", WEB_TYPE_WOFF => "font/woff", WEB_TYPE_WOFF => "font/woff2", WEB_TYPE_EOT => "application/vnd.ms-fontobject"
 		);
 
 		public function __construct() {

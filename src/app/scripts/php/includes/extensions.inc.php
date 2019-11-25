@@ -36,5 +36,10 @@
 	define("WEB_TYPE_AVI", 29);
 	define("WEB_TYPE_ICO", 30);
 	define("WEB_TYPE_HTM", 31);
+	define("WEB_TYPE_TTF", 32);
+	define("WEB_TYPE_WOFF", 33);
+	define("WEB_TYPE_WOFF2", 34);
+	define("WEB_TYPE_EOT", 35);
+
 
 ?>
