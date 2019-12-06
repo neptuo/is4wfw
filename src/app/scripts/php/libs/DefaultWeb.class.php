@@ -1893,7 +1893,6 @@
                 if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(DefaultWeb::$TemplateRightDesc, $templateId, WEB_R_READ))) {
                     $template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = ' . $dbObject->escape($templateId) . ';');
                     if (count($template) == 1) {
-                        require_once("scripts/php/classes/FullTagParser.class.php");
                         $Parser = new FullTagParser();
                         $Parser->setContent($template[0]['content']);
                         $Parser->startParsing();
