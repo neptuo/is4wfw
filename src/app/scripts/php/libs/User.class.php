@@ -13,6 +13,8 @@
      */
     class User extends BaseTagLib {
 
+		const TableName = "user";
+
         public function __construct() {
             self::setTagLibXml("User.xml");
             self::setLocalizationBundle("user");
@@ -878,6 +880,65 @@
         public static function hashPassword($login, $password) {
             return sha1($login . $password);
         }
+
+        public function listItems($template, $filter = array(), $orderBy = array()) {
+            $tableName = self::TableName;
+
+			$filter = parent::removeKeysWithEmptyValues($filter);
+            if (parent::isFilterModel($filter)) {
+                $filter = $filter[""];
+                $tableName = $filter->wrapTableName($tableName);
+                $filter = $filter->toSql();
+            }
+			
+			$model = new ListModel();
+			parent::pushListModel($model);
+
+			if (count($orderBy) == 0) {
+				$orderBy["uid"] = "asc";
+			}
+
+			$sql = parent::sql()->select($tableName, array("uid", "name", "surname", "login", "enable"), $filter, $orderBy);
+            $data = self::dataAccess()->fetchAll($sql);
+            
+            $dataAccessible = array();
+            foreach ($data as $item) {
+                if (RoleHelper::canCurrentEditUser($item['uid'])) {
+                    $dataAccessible[] = $item;
+                }
+            }
+
+			$model->render();
+            $model->items($dataAccessible);
+			$result = parent::parseContent($template);
+
+			parent::popListModel();
+			return $result;
+        }
+
+		public function getListItems() {
+			return parent::peekListModel();
+		}
+
+		public function getListItemUid() {
+			return parent::peekListModel()->field("uid");
+		}
+
+		public function getListItemName() {
+			return parent::peekListModel()->field("name");
+		}
+
+		public function getListItemSurname() {
+			return parent::peekListModel()->field("surname");
+		}
+
+		public function getListItemLogin() {
+			return parent::peekListModel()->field("login");
+		}
+
+		public function getListItemEnable() {
+			return parent::peekListModel()->field("enable");
+		}
     }
 
 ?>

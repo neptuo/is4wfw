@@ -105,6 +105,62 @@
       Formulář pro změnu hesla aktuálního uživatele.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>list</tagname>
+    <function>listItems</function>
+    <comment>
+      Vypíše seznam uživatelů.
+    </comment>
+  </fulltag>
+  <property>
+    <propname>list</propname>
+    <getfunction>getListItems</getfunction>
+    <comment>
+      Vrací seznam uživatelů uvnitř "u:list".
+    </comment>
+  </property>
+  <property>
+    <propname>uid</propname>
+    <getfunction>getListItemUid</getfunction>
+    <comment>
+      Vrací id aktuálního uživatel uvnitř "u:list".
+    </comment>
+  </property>
+  <property>
+    <propname>name</propname>
+    <getfunction>getListItemName</getfunction>
+    <comment>
+      Vrací jméno aktuálního uživatel uvnitř "u:list".
+    </comment>
+  </property>
+  <property>
+    <propname>surname</propname>
+    <getfunction>getListItemSurname</getfunction>
+    <comment>
+      Vrací id přijmení uživatel uvnitř "u:list".
+    </comment>
+  </property>
+  <property>
+    <propname>login</propname>
+    <getfunction>getListItemLogin</getfunction>
+    <comment>
+      Vrací login aktuálního uživatel uvnitř "u:list".
+    </comment>
+  </property>
+  <property>
+    <propname>enable</propname>
+    <getfunction>getListItemEnable</getfunction>
+    <comment>
+      Vrací true/false zda je aktuální uživatel uvnitř "u:list" povolený.
+    </comment>
+  </property>
+  <property>
+    <propname>uid</propname>
+    <getfunction>getListItemUid</getfunction>
+    <comment>
+      Vrací id aktuálního uživatel uvnitř "u:list".
+    </comment>
+  </property>
   <property>
   	<propname>userId</propname>
   	<setfunction>setUserId</setfunction>
