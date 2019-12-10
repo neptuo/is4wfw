@@ -28,6 +28,10 @@
                 $this->OutputValues[$output] = array();
             }
 
+            if (count($key) == 1 && array_key_exists("", $key)) {
+                $key = $key[""];
+            }
+
             $this->OutputValues[$output][] = $key;
         }
 
