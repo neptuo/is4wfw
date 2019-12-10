@@ -155,10 +155,10 @@
     </comment>
   </property>
   <property>
-    <propname>uid</propname>
-    <getfunction>getListItemUid</getfunction>
+    <propname>roleIds</propname>
+    <getfunction>getListItemRoleIds</getfunction>
     <comment>
-      Vrací id aktuálního uživatel uvnitř "u:list".
+      Vrací seznam id rolí aktuálního uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>

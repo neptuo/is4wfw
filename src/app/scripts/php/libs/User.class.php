@@ -903,13 +903,20 @@
             
             $dataAccessible = array();
             foreach ($data as $item) {
-                if (RoleHelper::canCurrentEditUser($item['uid'])) {
+                $uid = $item['uid'];
+                if (RoleHelper::canCurrentEditUser($uid)) {
+                    $rolesSql = parent::sql()->select("user_in_group", array("gid"), array("uid" => $uid));
+                    $rolesData = parent::dataAccess()->fetchAll($rolesSql);
+                    $item["roleIds"] = array_column($rolesData, "gid");
+
                     $dataAccessible[] = $item;
                 }
             }
 
+            $data = $dataAccessible;
+
 			$model->render();
-            $model->items($dataAccessible);
+            $model->items($data);
 			$result = parent::parseContent($template);
 
 			parent::popListModel();
@@ -938,6 +945,14 @@
 
 		public function getListItemEnable() {
 			return parent::peekListModel()->field("enable");
+		}
+
+		public function getListItemRoles() {
+			return parent::peekListModel()->field("roles");
+		}
+
+		public function getListItemRoleIds() {
+			return parent::peekListModel()->field("roleIds");
 		}
     }
 
