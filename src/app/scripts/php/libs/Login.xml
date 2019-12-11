@@ -152,6 +152,32 @@
       Přesměruje užívatele pokud není přihlášen na stránku "pageId".
     </comment>
   </tag>
+  <fulltag>
+    <tagname>authorized</tagname>
+    <function>authorized</function>
+    <attribute>
+      <attname>all</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Seznam (čárkou oddělený) skupin, ve kterých musí uživatel být, aby bylo zobrazeno tělo tagu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>any</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Seznam (čárkou oddělený) skupin, z nichž alespoň v jedné musí uživatel být, aby bylo zobrazeno tělo tagu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>none</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Seznam (čárkou oddělený) skupin, z nichž v žádné uživatel nesmí být, aby bylo zobrazeno tělo tagu.</attcomment>
+    </attribute>
+    <comment>
+      Podmíněné zobrazení části stránky.
+      Vždy musí být zadán jeden z atributů "all" nebo "any". Pokud není vyplněn ani jeden, je tělo vždy zobrazeno.
+    </comment>
+  </fulltag>
   <property>
   	<propname>loggedUserId</propname>
   	<getfunction>getUserId</getfunction>

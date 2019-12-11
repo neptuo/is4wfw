@@ -133,6 +133,17 @@
             }
         }
 
+        private function inGroup($groupName) {
+            $groups = self::getGroups();
+            foreach ($groups as $assignedGroup) {
+                if ($groupName == $assignedGroup["name"]) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         /**
          *
          * Shows login form.
@@ -292,6 +303,45 @@
                 }
             } else {
                 return false;
+            }
+        }
+
+        public function authorized($template, $all = "", $any = "", $none = "") {
+            if ($all == "" && $any == "" && $none == "") {
+                return parent::parseContent($template);
+            }
+            
+            if ($all != "") {
+                $all = explode(",", $all);
+                foreach ($all as $group) {
+                    if (!self::inGroup($group)) {
+                        return "";
+                    }
+                }
+
+                return parent::parseContent($template);
+            }
+
+            if ($any != "") {
+                $any = explode(",", $any);
+                foreach ($any as $group) {
+                    if (self::inGroup($group)) {
+                        return parent::parseContent($template);
+                    }
+                }
+
+                return "";
+            }
+
+            if ($none != "") {
+                $none = explode(",", $none);
+                foreach ($none as $group) {
+                    if (self::inGroup($group)) {
+                        return "";
+                    }
+                }
+                
+                return parent::parseContent($template);
             }
         }
 
