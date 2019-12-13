@@ -1524,6 +1524,15 @@
             return parent::db()->fetchAll("SELECT `page`.`id`, `info`.`$display` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `info`.`in_menu` = 1 AND `is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`wp` = " . $this->ProjectId . " ORDER BY `info`.`page_pos`;");
         }
 
+        private function canUserReadPage($pageId) {
+            global $dbObject;
+            global $loginObject;
+
+            $sql = "SELECT `value` FROM `page_right` LEFT JOIN `group` ON `page_right`.`gid` = `group`.`gid` WHERE `pid` = " . $pageId . " AND `type` = " . WEB_R_READ . " AND (`group`.`gid` IN (" . $loginObject->getGroupsIdsAsString() . ") OR `group`.`parent_gid` IN (" . $loginObject->getGroupsIdsAsString() . "));";
+            $rights = $dbObject->fetchAll($sql);
+            return (count($rights) > 0);
+        }
+
         /**
          *
          *  Generates menu.
@@ -1550,8 +1559,7 @@
                 $content .= '<div class="menu menu-' . $inn . ((strlen($classes) > 0) ? ' ' . $classes : '') . '"><ul class="ul-' . $inn . '">';
                 $i = 1;
                 foreach ($return as $lnk) {
-                    $rights = $dbObject->fetchAll("SELECT `value` FROM `page_right` LEFT JOIN `group` ON `page_right`.`gid` = `group`.`gid` WHERE `pid` = " . $lnk['id'] . " AND `type` = " . WEB_R_READ . " AND (`group`.`gid` IN (" . $loginObject->getGroupsIdsAsString() . ") OR `group`.`parent_gid` IN (" . $loginObject->getGroupsIdsAsString() . "));");
-                    if (count($rights) == 0) {
+                    if (!self::canUserReadPage($lnk['id'])) {
                         continue;
                     }
                     $href = self::composeUrl($lnk['id'], $this->LanguageId, false, true, $copyParameters);
@@ -1600,6 +1608,10 @@
             $data = self::getMenuItems($parentId, $display);
             $items = array();
             foreach ($data as $key => $item) {
+                if (!self::canUserReadPage($item['id'])) {
+                    continue;
+                }
+
                 $text = $item[$display];
                 if ($display == "title") {
                     $text = self::parseContent($item[$display]);
