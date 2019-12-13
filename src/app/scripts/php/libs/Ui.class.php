@@ -553,7 +553,11 @@
             if ($model->isSubmit()) {
 				$modelValue = $model->request($name, $nameIndex);
 				$modelValue = DateTime::createFromFormat($format, $modelValue);
-				$modelValue = $modelValue->getTimestamp();
+				if ($modelValue !== false) {
+					$modelValue = $modelValue->getTimestamp();
+				} else {
+					$modelValue = null;
+				}
 				$model->set($name, $nameIndex, $modelValue);
             }
 
@@ -572,6 +576,10 @@
 		}
 
 		public function formatDateTime($value, $format) {
+			if ($value == null) {
+				return null;
+			}
+
 			$dateTime = new DateTime();
 			$dateTime->setTimestamp($value);
 			$value = $dateTime->format($format);
