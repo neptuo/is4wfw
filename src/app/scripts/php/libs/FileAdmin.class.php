@@ -114,11 +114,11 @@
 						$dirId = $dirInfo[0]['parent_id'];
 						$path = $dirInfo[0][$itemPath] . '/' . $path;
 					} else {
-						ThrowMissingDirectory();
+						self::ThrowMissingDirectory();
 					}
 				}
 			} else {
-				ThrowMissingDirectory();
+				self::ThrowMissingDirectory();
 			}
 			
 			return $path;
