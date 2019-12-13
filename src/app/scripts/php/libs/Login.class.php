@@ -458,7 +458,7 @@
         
         public function getGroupsIds() {
             $return = array();
-            $id = 0;
+            $i = 0;
             foreach ($this->Groups as $gp) {
                 $return[$i] = $gp['gid'];
                 $i++;
