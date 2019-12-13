@@ -398,7 +398,7 @@
 			}
 			
 			$parentDir = parent::dao('Directory')->get($dirId);
-			if($dirId == 0) {
+			if ($dirId == 0) {
 				$parentDir = array('id' => $dirId);
 			}
 			
@@ -411,6 +411,109 @@
 			} else {
 				return $return.parent::view('fileadmin-list', $dataModel);
 			}
+		}
+
+		public function fileBrowserWithTemplate($template, $dirId, $grouped = true, $parentName = "") {
+			$dirs = parent::dao('Directory')->getFromDirectory($dirId);
+			$files = parent::dao('File')->getFromDirectory($dirId);
+
+			$resultDirs = array();
+			foreach ($dirs as $key => $dir) {
+				if (self::canReadDirectory($dir)) {
+					$item = array(
+						"id" => $dir["id"],
+						"name" => $dir["name"],
+						"url" => $dir["url"],
+						"timestamp" => $dir["timestamp"],
+						"type" => 0,
+						"title" => ""
+					);
+					$resultDirs[] = $item;
+				}
+			}
+
+			$resultFiles = array();
+			foreach ($files as $key => $file) {
+				if (self::canReadFile($file)) {
+					$item = array(
+						"id" => $file["id"],
+						"name" => $file["name"],
+						"url" => $file["url"],
+						"timestamp" => $file["timestamp"],
+						"type" => $file["type"],
+						"title" => $file["title"],
+					);
+					$resultFiles[] = $item;
+				}
+			}
+
+			if ($parentName != "") {
+				$parentId = parent::dao('Directory')->getParentId($dirId);
+				if ($parentId != null) {
+					$parent = parent::dao('Directory')->get($parentId);
+				} else {
+					$parentId = 0;
+					$parent = array();
+				}
+				$parent = array(
+					"id" => $parentId,
+					"name" => $parentName,
+					"url" => $parent["url"],
+					"timestamp" => $$parent["timestamp"],
+					"type" => 0,
+					"title" => "",
+				);
+				$parentResult = array();
+				$parentResult[] = $parent;
+			}
+
+			$items = array_merge($parentResult, $resultDirs, $resultFiles);
+			if ($grouped == false) {
+				usort($items, function($a, $b) { return strcmp($a["name"], $b["name"]); });
+			}
+
+			$model = new ListModel();
+			self::pushListModel($model);
+			
+			$model->items($items);
+			$model->render();
+            $result = self::parseContent($template);
+
+            self::popListModel();
+            return $result;
+		}
+
+		public function getFileBrowserListData() {
+			return self::peekListModel();
+		}
+
+		public function getFileBrowserItemId() {
+			return self::peekListModel()->field("id");
+		}
+
+		public function getFileBrowserItemName() {
+			return self::peekListModel()->field("name");
+		}
+
+		public function getFileBrowserItemType() {
+			return self::peekListModel()->field("type");
+		}
+
+		public function getFileBrowserItemExtension() {
+			$type = self::peekListModel()->field("type");
+			if ($type == 0) {
+				return "";
+			}
+
+			return self::$FileExtensions[$type];
+		}
+
+		public function getFileBrowserItemTitle() {
+			return self::peekListModel()->field("title");
+		}
+
+		public function getFileBrowserItemTimestamp() {
+			return self::peekListModel()->field("timestamp");
 		}
 		
 		public function processFileUploadBasic($dataItem, $fileTmpName) {

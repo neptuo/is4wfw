@@ -30,6 +30,83 @@
       Zobrazí browser souborovým systémem
     </comment>
   </tag>
+  <fulltag>
+    <tagname>browser</tagname>
+    <function>fileBrowserWithTemplate</function>
+    <attribute>
+      <attname>dirId</attname>
+      <attreq>required</attreq>
+	    <atttype>number</atttype>
+      <attcomment>Id složka, jejíž obsah se má zobrazit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>grouped</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>true</attdef>
+      <attcomment>Zda mají složky a soubory být seřazený samostatně (rozdělení do dvou skupin).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>parentName</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Pokud je vyplněný, pak bude v seznamu zahrnut i odkaz na rodičovskou složku.</attcomment>
+    </attribute>
+    <comment>
+      Vypíše seznam dat ze složky "dirId".
+      Výchozí řazení je podle názvu.
+      Položky jsou rozděleny na složky a soubory.
+    </comment>
+  </fulltag>
+  <property>
+    <propname>browserList</propname>
+    <getfunction>getFileBrowserListData</getfunction>
+    <comment>
+      Vrací list model uvnitř párového "fa:browser".
+    </comment>
+  </property>
+  <property>
+    <propname>browserId</propname>
+    <getfunction>getFileBrowserItemId</getfunction>
+    <comment>
+      Vrací id položky uvnitř párového "fa:browser".
+    </comment>
+  </property>
+  <property>
+    <propname>browserName</propname>
+    <getfunction>getFileBrowserItemName</getfunction>
+    <comment>
+      Vrací název položky uvnitř párového "fa:browser".
+    </comment>
+  </property>
+  <property>
+    <propname>browserType</propname>
+    <getfunction>getFileBrowserItemType</getfunction>
+    <comment>
+      Vrací typ (číselný) položky uvnitř párového "fa:browser".
+    </comment>
+  </property>
+  <property>
+    <propname>browserExtension</propname>
+    <getfunction>getFileBrowserItemExtension</getfunction>
+    <comment>
+      Vrací koncovku souboru uvnitř párového "fa:browser".
+    </comment>
+  </property>
+  <property>
+    <propname>browserTitle</propname>
+    <getfunction>getFileBrowserItemTitle</getfunction>
+    <comment>
+      Vrací popisek položky uvnitř párového "fa:browser".
+    </comment>
+  </property>
+  <property>
+    <propname>browserTimestamp</propname>
+    <getfunction>getFileBrowserItemTimestamp</getfunction>
+    <comment>
+      Vrací časové razítko poslední změny položky uvnitř párového "fa:browser".
+    </comment>
+  </property>
   <tag>
     <tagname>upload</tagname>
     <function>fileUpload</function>
