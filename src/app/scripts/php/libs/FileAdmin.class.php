@@ -447,6 +447,7 @@
 				}
 			}
 
+			$parentResult = array();
 			if ($parentName != "") {
 				$parentId = parent::dao('Directory')->getParentId($dirId);
 				if ($parentId != null) {
@@ -463,7 +464,6 @@
 					"type" => 0,
 					"title" => "",
 				);
-				$parentResult = array();
 				$parentResult[] = $parent;
 			}
 
