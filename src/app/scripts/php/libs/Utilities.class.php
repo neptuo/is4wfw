@@ -35,6 +35,12 @@
             $this->OutputValues[$output][] = $key;
         }
 
+        public function replaceHtmlNewLines($output, $input) {
+            $isXhtml = parent::web()->getDoctype() == "xhtml";
+            $replaced = nl2br($input, $isXhtml);
+            $this->OutputValues[$output] = $replaced;
+        }
+
         public function clear($output) {
             unset($this->OutputValues[$output]);
         }

@@ -63,6 +63,23 @@
     <comment>Přidá do pole v propertě "output" (z této knihovny) položku. Pokud pole ještě neexistuje, vytvořího</comment>
   </tag>
   <tag>
+    <tagname>replaceHtmlNewLines</tagname>
+    <function>replaceHtmlNewLines</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>output</attname>
+      <attreq>required</attreq>
+      <attcomment>Název property z této knihovny, do níž bude uložen výstup.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>input</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Hodnota, v níž se mají nahradit nové řádky za "br".</attcomment>
+    </attribute>
+    <comment>Nahradí v "input" nové řádky za "br".</comment>
+  </tag>
+  <tag>
     <tagname>clear</tagname>
     <function>clear</function>
     <lookless>true</lookless>
@@ -75,4 +92,3 @@
   </tag>
   <anyProperty />
 </taglib>
-

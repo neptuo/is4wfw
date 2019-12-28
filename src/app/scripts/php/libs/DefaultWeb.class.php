@@ -2466,6 +2466,10 @@
             }
         }
 
+        public function getDoctype() {
+            return $this->Doctype;
+        }
+
         public function setFlushOptions($template = false, $contentType = false) {
             if ($template == 'null') {
                 $this->Template = null;
