@@ -200,36 +200,42 @@
 			}
 		}
 
-		public function gridColumn($header, $value) {
+		public function gridColumn($header, $value, $th = array(), $td = array()) {
 			if ($this->gridPhase == "header") {
-				return "<th>$header</th>";
+				$thAttributes = parent::joinAttributes($th);
+				return "<th$thAttributes>$header</th>";
 			} else if ($this->gridPhase == "body") {
-				return "<td>$value</td>";
+				$tdAttributes = parent::joinAttributes($td);
+				return "<td$tdAttributes>$value</td>";
 			}
 
 			return "";
 		}
 
-		public function gridColumnBoolean($header, $value, $trueText = "Yes", $falseText = "") {
-			return self::gridColumn($header, $value ? $trueText : $falseText);
+		public function gridColumnBoolean($header, $value, $trueText = "Yes", $falseText = "", $th = array(), $td = array()) {
+			return self::gridColumn($header, $value ? $trueText : $falseText, $th, $td);
 		}
 
-		public function gridColumnDateTime($header, $value, $format) {
+		public function gridColumnDateTime($header, $value, $format, $th = array(), $td = array()) {
 			if ($this->gridPhase == "header") {
-				return "<th>$header</th>";
+				$thAttributes = parent::joinAttributes($th);
+				return "<th$thAttributes>$header</th>";
 			} else if ($this->gridPhase == "body") {
+				$tdAttributes = parent::joinAttributes($td);
 				$value = self::formatDateTime($value, $format);
-				return "<td>$value</td>";
+				return "<td$tdAttributes>$value</td>";
 			}
 
 			return "";
 		}
 
-		public function gridColumnTemplate($template, $header) {
+		public function gridColumnTemplate($template, $header, $th = array(), $td = array()) {
 			if ($this->gridPhase == "header") {
-				return "<th>$header</th>";
+				$thAttributes = parent::joinAttributes($th);
+				return "<th$thAttributes>$header</th>";
 			} else if ($this->gridPhase == "body") {
-				return "<td>" . self::parseContent($template) . "</td>";
+				$tdAttributes = parent::joinAttributes($td);
+				return "<td$tdAttributes>" . self::parseContent($template) . "</td>";
 			}
 
 			return "";

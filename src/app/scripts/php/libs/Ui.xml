@@ -112,6 +112,18 @@
       <attreq>implied</attreq>
       <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
     </attribute>
+    <attribute>
+      <attname>th</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Seznam atributů pro "th".</attcomment>
+    </attribute>
+    <attribute>
+      <attname>td</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Seznam atributů pro "td".</attcomment>
+    </attribute>
     <comment>
       Základ sloupec pro "ui:grid".
     </comment>
@@ -143,6 +155,18 @@
       <atttype>string</atttype>
       <attdef></attdef>
     </attribute>
+    <attribute>
+      <attname>th</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Seznam atributů pro "th".</attcomment>
+    </attribute>
+    <attribute>
+      <attname>td</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Seznam atributů pro "td".</attcomment>
+    </attribute>
     <comment>
       Boolový sloupec pro "ui:grid".
     </comment>
@@ -166,6 +190,18 @@
       <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
       <atttype>string</atttype>
     </attribute>
+    <attribute>
+      <attname>th</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Seznam atributů pro "th".</attcomment>
+    </attribute>
+    <attribute>
+      <attname>td</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Seznam atributů pro "td".</attcomment>
+    </attribute>
     <comment>
       Datumový sloupec pro "ui:grid".
     </comment>
@@ -177,6 +213,18 @@
       <attname>header</attname>
       <attreq>implied</attreq>
       <attcomment>Nadpis sloupce v gridu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>th</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Seznam atributů pro "th".</attcomment>
+    </attribute>
+    <attribute>
+      <attname>td</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Seznam atributů pro "td".</attcomment>
     </attribute>
     <comment>
       Sloupec pro "ui:grid", který má hodnotu definovanou šablonou.
