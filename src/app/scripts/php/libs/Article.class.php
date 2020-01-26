@@ -1333,7 +1333,11 @@
                     if (self::canUser($article['line_id'], WEB_R_WRITE)) {
                         $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $articleContent['line_old_id'] . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' ORDER BY `value` DESC;');
                         if (self::canUser($articleContent['line_old_id'], WEB_R_WRITE)) {
-                            $artc = $article['id'] == '' ? array() : $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = " . $article['id'] . " AND `language_id` = " . $articleContent['language_old_id'] . ";");
+                            if ($articleContent['language_old_id'] == "") {
+                                $artc = array();
+                            } else {
+                                $artc = $article['id'] == '' ? array() : $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = " . $article['id'] . " AND `language_id` = " . $articleContent['language_old_id'] . ";");
+                            }
                             if (count($artc) == 0) {
                                 $artc = $article['id'] == '' ? array() : $dbObject->fetchAll("SELECT `article_id` FROM `article_content` WHERE `article_id` = " . $article['id'] . ";");
                                 if (count($artc) == 0) {

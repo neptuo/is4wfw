@@ -740,7 +740,7 @@
                     $user['password'] = User::hashPassword($user['username'], $user['password1']);
 
                     //parent::db()->setMockMode(true);
-                    $groupNames = split(',', $groups);
+                    $groupNames = explode(',', $groups);
                     $user['groupId'] = $groupNames[0];
                     parent::db()->execute(parent::query()->get('register', $user, 'user'));
                     $uid = parent::db()->fetchSingle(parent::query()->get('userByUsername', $user, 'user'));

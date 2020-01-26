@@ -14,11 +14,14 @@
 			$this->token = md5(rand(1000, 1000000).rand(1000, 1000000));
 		}
 		
-		public function setFormAttrs($name, $method, $action, $className) {
+		public function setFormAttrs($name, $method, $action, $className = "") {
 			$this->formAttrs['method'] = $method;
 			$this->formAttrs['action'] = $action;
 			$this->formAttrs['name'] = $name;
-			$this->formAttrs['class'] = $className;
+
+			if ($className != "") {
+				$this->formAttrs['class'] = $className;
+			}
 		}
 		
 		/**
@@ -28,7 +31,7 @@
 		 *	@param	type				type of field: text|password|textarea|hidden|singlecheckbox	 		 
 		 *
 		 */		 		 		 		
-		public function addField($type, $name, $label, $value, $labelClassName, $fieldClassName) {
+		public function addField($type, $name, $label, $value, $labelClassName = "", $fieldClassName = "") {
 			$this->fields[] = array('name' => $name, 'type' => $type, 'label' => $label, 'value' => $value, 'labelClassName' => $labelClassName, 'fieldClassName' => $fieldClassName);
 		}
 		
@@ -67,7 +70,7 @@
 		 *	Adds submit button		 
 		 *
 		 */		 		 		
-		public function addSubmit($name, $value, $className) {
+		public function addSubmit($name, $value, $className = "") {
 			$this->buttons[] = array('type' => 'submit', 'name' => $name, 'value' => $value, 'class' => $className);
 		}
 		

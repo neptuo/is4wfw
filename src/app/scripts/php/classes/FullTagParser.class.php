@@ -84,7 +84,7 @@ class FullTagParser extends CustomTagParser {
             $this->Result = str_replace("'", "\\'", $this->Result);
             
             $this->Result = preg_replace_callback($this->FULL_TAG_RE, array(&$this, 'parsefulltag'), $this->Result);
-            self::checkPregError();
+            self::checkPregError("parsefulltag");
         } else {
             $this->Result = "";
         }

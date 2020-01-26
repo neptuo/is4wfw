@@ -195,7 +195,7 @@
             }
         }
 
-        public function login($template, $group, $username, $password) {
+        public function loginLookless($template, $group, $username, $password) {
             $message = self::loginPrivate($group, $username, $password);
             if ($message === true) {
                 parent::parseContent($template);

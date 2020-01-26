@@ -378,7 +378,7 @@ class CustomTagParser {
             ob_end_clean();
         } else {
             $this->Result = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $this->Content);
-            self::checkPregError();
+            self::checkPregError("parsectag");
 
             $this->Result = eval("return '". $this->Result . "';");
         }
@@ -390,8 +390,8 @@ class CustomTagParser {
         $this->PropertyAttr = '';
         $this->PropertyUse = 'get';
         
-        $result = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $value);
-        self::checkPregError();
+        $result = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $value);
+        self::checkPregError("parsecproperty", $value);
 
         if ($result == NULL) {
             return $value;
@@ -415,26 +415,35 @@ class CustomTagParser {
         return $randomString;
     }
 
-    protected function checkPregError() {
+    protected function checkPregError($function, $value = null) {
         global $phpObject;
 
-        if (preg_last_error() == PREG_NO_ERROR) {
-            // $phpObject->logVar('There is no error.');
+        $message = null;
+        $error = preg_last_error();
+        if ($error == PREG_NO_ERROR) {
+            // $message = "There is no error.";
         }
-        else if (preg_last_error() == PREG_INTERNAL_ERROR) {
-            $phpObject->logVar('There is an internal error!');
+        else if ($error == PREG_INTERNAL_ERROR) {
+            $message = "There is an internal error";
         }
-        else if (preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR) {
-            $phpObject->logVar('Backtrack limit was exhausted!');
+        else if ($error == PREG_BACKTRACK_LIMIT_ERROR) {
+            $message = "Backtrack limit was exhausted";
         }
-        else if (preg_last_error() == PREG_RECURSION_LIMIT_ERROR) {
-            $phpObject->logVar('Recursion limit was exhausted!');
+        else if ($error == PREG_RECURSION_LIMIT_ERROR) {
+            $message = "Recursion limit was exhausted";
         }
-        else if (preg_last_error() == PREG_BAD_UTF8_ERROR) {
-            $phpObject->logVar('Bad UTF8 error!');
+        else if ($error == PREG_BAD_UTF8_ERROR) {
+            $message = "Bad UTF8 error";
         }
-        else if (preg_last_error() == PREG_BAD_UTF8_ERROR) {
-            $phpObject->logVar('Bad UTF8 offset error!');
+        else if ($error == PREG_BAD_UTF8_OFFSET_ERROR) {
+            $message = "Bad UTF8 offset error";
+        }
+        else if ($error == PREG_JIT_STACKLIMIT_ERROR) {
+            $message = "JIT stack limit error";
+        }
+
+        if ($message != null) {
+            self::log("CustomTagParser '$function': $message, '$value'");
         }
     }
 

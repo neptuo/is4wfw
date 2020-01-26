@@ -2848,7 +2848,7 @@
 
             if ($_POST['wf-delete'] == $rb->get('wf.delete')) {
                 $id = $_POST['wf-id'];
-                WebForwardManager::delete($erid);
+                WebForwardManager::delete($id);
                 $return .= parent::getSuccess($rb->get('wf.success.deleted'));
             }
 

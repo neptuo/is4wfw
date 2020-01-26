@@ -167,10 +167,10 @@
 			$projectId = 0;
 			$date = '5';
 			
-			$name = split('.log', $name);
+			$name = explode('.log', $name);
 			$name = $name[0];
 
-			$parts = split('-', $name);
+			$parts = explode('-', $name);
 			if ($parts[0] != '') {
 				$projectId = $parts[0];
 				unset($parts[0]);

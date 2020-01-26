@@ -560,7 +560,7 @@
 					if($id == '') {
 						$dbObject->execute('INSERT INTO `db_connection`(`name`, `hostname`, `user`, `password`, `database`) VALUES("'.$name.'", "'.$hostname.'", "'.$user.'", "'.$password.'", "'.$database.'");');
 						$connnew = $dbObject->fetchAll('select max(`id`) from `db_connection`;');
-						$id = $connew[0]['id'];
+						$id = $connnew[0]['id'];
 						$return .= '<h4 class="success">Connection successfuly added!</h4>';
 					} else {
 						$dbObject->execute('UPDATE `db_connection` set `name` = "'.$name.'", `hostname` = "'.$hostname.'", `user` = "'.$user.'", `password` = "'.$password.'", `database` = "'.$database.'" where `id` = '.$id.';');

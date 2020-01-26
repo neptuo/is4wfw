@@ -8,7 +8,7 @@
 		private $rid;
 		private $cache;
 		
-		public function __construct($id, $type, $url, $rid, $cache) {
+		public function __construct($id = null, $type = null, $url = null, $rid = null, $cache = null) {
 			self::setId($id);
 			self::setType($type);
 			self::setUrl($url);

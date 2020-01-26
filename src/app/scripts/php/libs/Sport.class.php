@@ -1026,7 +1026,7 @@
                         $teamId = $_POST['team-id'];
 
                         parent::db()->execute('DELETE FROM `w_sport_player` WHERE `id` = ' . $playerId . ' AND `team` = ' . $teamId . ' AND `season` = ' . $seasonId . ' AND `position` = ' . $position . ';');
-                        parent::db()->execute('delete from `w_sport_stats` where `pid` = ' . $playerId . ' and `season` = ' . $seasonId . ' and `position` = ' . $position . ';');
+                        parent::db()->execute('delete from `w_sport_stats` where `pid` = ' . $playerId . ' and `season` = ' . $seasonId . ' and `pos` = ' . $position . ';');
                         $return .= '<h4 class="success">' . $rb->get('players.success.delete') . '</h4>';
                     } else {
                         $return .= parent::getError($rb->get('projects.error.permissionsdenied'));
@@ -3718,7 +3718,7 @@
             }
         }
 
-        public function getSeasonsOptions($teamId, $seasonId, $seaselId) {
+        public function getSeasonsOptions($teamId = 0, $seasonId = 0, $seaselId = 0) {
             global $dbObject;
             $return = '';
 
@@ -3779,7 +3779,7 @@
             return $return;
         }
 
-        public function getTeamsOptions($teaselId) {
+        public function getTeamsOptions($teaselId = 0) {
             global $dbObject;
             $return = '';
 
@@ -4051,7 +4051,7 @@
 
         private function sortByStringToSqlParams($sortBy, $sorting) {
             $return = '';
-            $sorts = split(',', $sortBy);
+            $sorts = explode(',', $sortBy);
             foreach ($sorts as $sort) {
                 if ($return != '') {
                     $return .= ', ';
@@ -4202,7 +4202,7 @@
         }
 
         public function setSeasonUrl($url) {
-            $url1 = split('-', $url);
+            $url1 = explode('-', $url);
             $row = parent::db()->fetchAll('select `id` from `w_sport_season` where `start_year` = ' . $url1[0] . ' and `end_year` = ' . $url1[1] . (self::getProjectId() != '-1' ? ' and `project_id` = ' . self::getProjectId() : '') . ';');
             if (count($row) == 1) {
                 self::setSeasonId($row[0]['id']);

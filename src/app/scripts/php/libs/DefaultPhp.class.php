@@ -1,7 +1,7 @@
 <?php
 
     require_once("BaseTagLib.class.php");
-    require_once("Error.class.php");
+    require_once("ErrorHandler.class.php");
     require_once("Log.class.php");
     require_once("Database.class.php");
     require_once("Login.class.php");
@@ -54,7 +54,7 @@
         private $_CLASSES = array(
             "php.libs.DefaultPhp" => 1, 
             "php.libs.DefaultWeb" => 1, 
-            "php.libs.Error" => 1, 
+            "php.libs.ErrorHandler" => 1, 
             "php.libs.Log" => 1, 
             "php.libs.Database" => 1,
             "php.libs.Login" => 1, 
@@ -72,13 +72,13 @@
             parent::setTagLibXml("DefaultPhp.xml");
             
             // Init defalt objects (php, error, log)
-            $GLOBALS['errorObject'] = new Error();
+            $GLOBALS['errorObject'] = new ErrorHandler();
             $GLOBALS['logObject'] = new Log();
             $GLOBALS['dbObject'] = new Database();
             $GLOBALS['loginObject'] = new Login();
             $GLOBALS['sysObject'] = new System();
             
-            set_error_handler("Error::errorHandler");
+            set_error_handler("ErrorHandler::errorHandler");
         }
     
         private $XmlStorage = array();
@@ -439,7 +439,7 @@
             }
             
             //echo ' '.$className.'<br />';
-            $tmp = new $className();
+            $tmp = new $className("");
             $xmlPath = str_replace(".", "/", $classDir)."/".$tmp->getTagLibXml();
             if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
                 $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
@@ -822,7 +822,7 @@
          */
         public function cache($cache) {
             global $webObject;
-            $webObject->cache($cache);
+            $webObject->cache($cache, 60);
         }
         
         public function usingObject($content, $prefix, $class) {

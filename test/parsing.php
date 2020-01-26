@@ -184,7 +184,6 @@ $Content = '
                 echo $parser->getResult();
             }
         }
-    }
 
     measure(function() {
         global $Content;

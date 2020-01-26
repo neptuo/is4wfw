@@ -507,7 +507,9 @@
 
                 // Url adresy
                 $urls = '';
+                $hasUrl = false;
                 foreach ($project['aliases'] as $alias) {
+                    $hasUrl = true;
                     $urls .= ''
                     . '<tr>'
                         . '<td>'
@@ -551,7 +553,7 @@
                         . '<input type="checkbox" name="project-urls-https[new]" checked="checked" />'
                     . '</td>'
                     . '<td>'
-                        . '<input type="radio" name="project-urls-default" value="new" />'
+                        . '<input type="radio" name="project-urls-default" value="new"' . (!$hasUrl ? ' checked="checked"' : '') . ' />'
                     . '</td>'
                     . '<td>'
                         . '<input type="checkbox" name="project-urls-enabled[new]" checked="checked" />'
@@ -561,7 +563,6 @@
                 // Vytvorit formular ....
                 $return .= ''
                 . '<form name="project-edit-detail" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                    . $warnings
                     . '<div class="gray-box">'
                         . '<label class="w60" for="project-edit-name' . $project['id'] . '">' . $rb->get('project.name') . ':</label> '
                         . '<input class="w400" type="text" id="project-edit-name' . $project['id'] . '" name="project-name" value="' . $project['name'] . '" />'

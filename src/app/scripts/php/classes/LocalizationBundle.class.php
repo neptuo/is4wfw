@@ -124,12 +124,12 @@
 			$filePath = self::getFilePath();
 			if (strlen($filePath) > 0 && is_file($filePath) && is_readable($filePath)) {
 				$content = file_get_contents($filePath);
-				$pairs = split(PHP_EOL, $content);
+				$pairs = explode(PHP_EOL, $content);
 
 				foreach ($pairs as $pair) {
 					$pair = trim($pair);
 					if (strlen($pair) > 0) {
-						$thing = split('=' ,$pair);
+						$thing = explode('=' ,$pair);
 						$this->Items[$thing[0]] = $thing[1];
 					}
 				}

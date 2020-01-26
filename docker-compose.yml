@@ -31,8 +31,9 @@ services:
       - ./temp/instance/user:/var/www/html/user
       - ./test:/var/www/html/test:ro
       - ./docker/php.conf:/usr/local/etc/php-fpm.d/zz-log.conf
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/php-my.ini
     links:
-        - mysql:db
+      - mysql:db
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -42,7 +43,7 @@ services:
         - mysql:db
         
   mysql:
-    image: mysql:5.7.22
+    image: mysql:8.0.19
     ports:
       - "3306:3306"
     environment:

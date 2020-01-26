@@ -240,6 +240,10 @@
 
             $found = false;
             $domainUrl = $_SERVER['HTTP_HOST'];
+            // if ($_ENV["IS4WFW_DEVELOPMENT"]) {
+            //     $domainUrl .= ":8080";
+            // }
+
             $rootUrl = INSTANCE_URL;
             $virtualUrl = $_REQUEST['WEB_PAGE_PATH'];
             $fullUrl = UrlResolver::combinePath($domainUrl, UrlResolver::combinePath($rootUrl, $virtualUrl));

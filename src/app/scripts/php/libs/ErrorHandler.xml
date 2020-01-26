@@ -2,7 +2,7 @@
 
 <taglib>
   <name>Error handle lib</name>
-  <classname>Error</classname>
+  <classname>ErrorHandler</classname>
   <classpath>php.libs</classpath>
   <version>1.01</version>
   <count>*</count>

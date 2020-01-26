@@ -446,7 +446,7 @@
                 $return .= self::showForm($formId, $templateContent, $rowId);
             } else {
                 if ($type == 'email') {
-                    $addrs = split(',', $emailAddresses);
+                    $addrs = explode(',', $emailAddresses);
                     $ok = true; //print_r($addrs);
                     foreach ($addrs as $adr) {
                         if (!preg_match($this->EmailRegex, $adr)) {
@@ -630,7 +630,7 @@
                             break;
                         case 'dropdown':
                             $return .= '<select name="' . $fname . '" id="' . $id . '" class="'.$cssClass.'"> ';
-                            $items = split(',', $data);
+                            $items = explode(',', $data);
                             foreach ($items as $item) {
                                 $return .= '<option value="' . $item . '"' . (($default == $item) ? ' selected="selected"' : '') . '>' . $item . '</option>';
                             }
@@ -807,7 +807,7 @@
             if ($validation == '') {
                 return true;
             } else {
-                $funcs = split(',', $validation);
+                $funcs = explode(',', $validation);
                 foreach ($funcs as $func) {
                     if ($func != '') {
                         $matches = array();
@@ -846,7 +846,7 @@
         }
 
         private function fieldTransformations($name, $value, $transformation) {
-            $funcs = split(',', $transformation);
+            $funcs = explode(',', $transformation);
             foreach ($funcs as $func) {
                 if ($func != '') {
                     $matches = array();
@@ -978,11 +978,11 @@
         }
 
         private function parseFieldsFromString($fields) {
-            $pairs = split(";", $fields);
+            $pairs = explode(";", $fields);
             $ret = array();
             foreach ($pairs as $pair) {
                 if (strlen($pair) != 0) {
-                    $ret[] = split(":", $pair);
+                    $ret[] = explode(":", $pair);
                 }
             }
             return $ret;

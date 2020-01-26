@@ -13,7 +13,7 @@
      *  @timestamp  2008-11-24
      *          
      */
-    class Error extends BaseTagLib {
+    class ErrorHandler extends BaseTagLib {
 
         /**
          *  

@@ -289,7 +289,7 @@
 
 		public function filter($template, $session = "") {
             $model = parent::getEditModel();
-			$session = split(",", $session);
+			$session = explode(",", $session);
 
 			if ($model->isSubmit()) {
 				$model->request($_POST);
@@ -394,7 +394,7 @@
 
 			if ($model->isRender()) {
 				$formName = $model->requestKey($name);
-				$modelValue = $model->get($name);
+				$modelValue = $model->get($name, -1);
 
 				if (!is_array($modelValue)) {
 					$modelValue = explode(",", $modelValue);

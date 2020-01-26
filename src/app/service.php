@@ -8,7 +8,7 @@
     }
 
     $found = false;
-    $url = split("/", $_SERVER['REQUEST_URI']);
+    $url = explode("/", $_SERVER['REQUEST_URI']);
     // print_r($url);
     $services = new SimpleXMLElement(file_get_contents(APP_SCRIPTS_PATH . '/config/services.xml'));
     foreach ($services as $service) {

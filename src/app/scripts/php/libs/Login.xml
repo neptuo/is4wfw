@@ -48,7 +48,7 @@
   </tag>
   <fulltag>
     <tagname>login</tagname>
-    <function>login</function>
+    <function>loginLookless</function>
     <lookless>true</lookless>
     <attribute>
       <attname>group</attname>
