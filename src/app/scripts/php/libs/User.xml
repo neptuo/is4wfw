@@ -20,6 +20,12 @@
       <attname>defaultMainGroupId</attname>
       <attreq>implied</attreq>
     </attribute>
+    <attribute>
+      <attname>propertiesUrl</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>URL na kterou má vést editace uživatelských vlastností. Pokud není vyplněna, tlačítko se nezobrazí.</attcomment>
+    </attribute>
     <comment>
       Správa uživatelů.
     </comment>

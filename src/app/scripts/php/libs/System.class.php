@@ -87,6 +87,9 @@
 				$title = parent::rb()->get('personalproperties.defaulttitle');
 			} else {
 				$title = parent::rb()->get('personalproperties.title');
+				if (!RoleHelper::canCurrentEditUser($userId)) {
+					return parent::getError(parent::rb()->get('personalproperties.permissiondenied'));
+				}
 			}
 
 			$return = '';

@@ -20,7 +20,7 @@
             self::setLocalizationBundle("user");
         }
 
-        public function showUserManagement($attUserId = false, $defaultMainGroupId = false) {
+        public function showUserManagement($attUserId = false, $defaultMainGroupId = false, $propertiesPageId = "") {
             global $dbObject;
             global $loginObject;
             $return = '';
@@ -139,6 +139,11 @@
                         . '<th class="user-list-th user-list-edit"></th>'
                         . '</tr>';
                 $users = $dbObject->fetchAll('SELECT DISTINCT `user`.`uid` AS `this_uid`, `user`.`login`, `user`.`name`,`user`.`surname` FROM `user` ORDER BY `user`.`uid`;');
+                $propertiesUrl = "";
+                if ($propertiesPageId != "") {
+                    $propertiesUrl = parent::web()->composeUrl($propertiesPageId);
+                }
+
                 foreach ($users as $user) {
                     if(!RoleHelper::canCurrentEditUser($user['this_uid'])) {
                         continue;
@@ -174,6 +179,7 @@
                             . '<input type="hidden" name="user-list-edit" value="' . $rb->get('management.edit') . '" />'
                             . '<input type="image" src="~/images/page_edi.png" name="user-list-edit" value="' . $rb->get('management.edit') . '" title="' . $rb->get('management.edit') . ', id(' . $user['this_uid'] . ')" /> '
                             . '</form>'
+                            . ($propertiesPageId != '' ? '<a href="' . parent::addUrlParameter($propertiesUrl, "uid", $user['this_uid']) . '"><img class="image-button" src="~/images/page_pro.png" /></a>' : '')
                             . '<form name="user-list-edit2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                             . '<input type="hidden" name="user-list-uid" value="' . $user['this_uid'] . '" />'
                             . '<input type="hidden" name="user-list-delete" value="' . $rb->get('management.delete') . '" />'
