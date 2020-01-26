@@ -17,12 +17,8 @@ services:
     build:
       context: .
       dockerfile: docker/php-apache-modrewrite-zip/dockerfile
-    ports:
-      - "8082:80"
     expose:
       - "9000"
-    environment:
-      XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_enable=1
     volumes:
       - ./src/.htaccess:/var/www/html/.htaccess:ro
       - ./src/app:/var/www/html/app:ro
@@ -37,10 +33,12 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    ports:
-      - "8081:80"
+    environment:
+      - PMA_USER=root
+      - PMA_PASSWORD=1234
+      - PMA_ABSOLUTE_URI=http://localhost:8080/phpmyadmin
     links:
-        - mysql:db
+      - mysql:db
         
   mysql:
     image: mysql:8.0.19
