@@ -170,6 +170,13 @@
       <attdef>false</attdef>
       <attcomment>Zda má být položka zakázána.</attcomment>
     </attribute>
+    <attribute>
+      <attname>a</attname>
+      <prefix>true</prefix>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attcomment>Seznam atributů předaných vnitřnímu "a".</attcomment>
+    </attribute>
     <anyAttribute>
       <comment>Všechny atributy jsou předány obalovému "li".</comment>
     </anyAttribute>

@@ -181,7 +181,7 @@
 			return $result;
 		}
 
-		public function navItem($text, $url, $isActive = false, $isDisabled = false, $params = array()) {
+		public function navItem($text, $url, $isActive = false, $isDisabled = false, $aParams = array(), $params = array()) {
 			$params = self::appendClass($params, "nav-item");
 			if ($isActive) {
 				$params = self::appendClass($params, "active");
@@ -194,9 +194,12 @@
 				$linkClass .= " disabled";
 			}
 
+			$aParams = self::appendClass($aParams, $linkClass);
+			$aAttributes = parent::joinAttributes($aParams);
+
 			$result = ""
 			. "<li$attributes>"
-				. "<a href='$url' class='$linkClass'>$text</a>"
+				. "<a href='$url'$aAttributes>$text</a>"
 			. "</li>";
 			return $result;
 		}
