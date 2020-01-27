@@ -15,7 +15,7 @@
 		const StorageKey = "user-values";
 
 		public function __construct() {
-			parent::setTagLibXml("Variable.xml");
+			parent::setTagLibXml("Session.xml");
 		}
 		
 		public function setValue($name, $value) {
