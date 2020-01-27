@@ -3,6 +3,7 @@
 	<reg prefix="a" class="php.libs.Article" />
 	<reg prefix="admin" class="php.libs.AdminUi" />
 	<reg prefix="bs" class="php.libs.BootstrapUi" />
+	<reg prefix="cookie" class="php.libs.Cookie" />
 	<reg prefix="cn" class="php.libs.Counter" />
 	<reg prefix="cf" class="php.libs.CustomForm" />
 	<reg prefix="ce" class="php.libs.CustomEntity" />
