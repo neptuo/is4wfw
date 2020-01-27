@@ -37,6 +37,8 @@
 				parent::request()->set($name, $value, 'variable');
 			} else if ($scope == 'session') {
 				parent::session()->set($name, $value, 'variable');
+			} else if ($scope == 'cookie') {
+				setcookie($name, $value);
 			} else if($scope == 'application') {
 				parent::dao('ApplicationVariable')->setValue($name, $value);
 			} else {

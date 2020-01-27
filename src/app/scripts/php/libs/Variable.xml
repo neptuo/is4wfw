@@ -25,7 +25,7 @@
     <attribute>
       <attname>scope</attname>
       <attreq>required</attreq>
-      <attcomment>Může nabývat hodnot 'request', 'session' a 'application'.</attcomment>
+      <attcomment>Může nabývat hodnot 'request', 'session', 'cookie' a 'application'.</attcomment>
     </attribute>
     <attribute>
       <attname>select</attname>
