@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Cookie library</name>
+  <classname>Cookie</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro ukládání a načítání hodnot z/do Cookie.
+    Je kompatibilní s knihovnou Variable v módu Cookie.
+  </comment>
+  <tag>
+    <tagname>declare</tagname>
+    <function>setValue</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název proměnné, která se má nastavit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Nová hodnota proměnné.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>expire</attname>
+      <attreq>implied</attreq>
+      <atttype>number</atttype>
+      <attdef>0</attdef>
+      <attcomment>Počet sekund, po jejichž vypršení sušenka expiruje. 0 reprezentuje session cookie.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>path</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>URL cesta, pro kterou má být sušenka platná (výchozí je "/").</attcomment>
+    </attribute>
+    <attribute>
+      <attname>domain</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Doména, pro kterou má být sušenka platná (výchozí je "/").</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isSecure</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda se má sušenka posílat pouze po HTTPS.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isHttpOnly</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda má být sušenka dostupná pro server (výchozí je false, tedy je dostupná i pro javascript).</attcomment>
+    </attribute>
+    <comment>
+      Nastaví hodnotu proměnné s názvem "name" do Session.
+    </comment>
+  </tag>
+  <anyProperty>
+    <comment>Vrátí hodnotu proměnné ze Session podle názvu property.</comment>
+  </anyProperty>
+</taglib>
+
