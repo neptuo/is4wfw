@@ -717,6 +717,20 @@
     </comment>
   </property>
   <property>
+  	<propname>currentHost</propname>
+  	<getfunction>getHttpHost</getfunction>
+    <comment>
+      Vrácí doménu aktuálního requestu (hlavička host).
+    </comment>
+  </property>
+  <property>
+  	<propname>currentProjectId</propname>
+  	<getfunction>getProjectId</getfunction>
+    <comment>
+      Vrácí ID aktuálního projektu.
+    </comment>
+  </property>
+  <property>
   	<propname>isInsideForm</propname>
   	<setfunction>setIsInsideForm</setfunction>
   	<getfunction>getIsInsideForm</getfunction>
