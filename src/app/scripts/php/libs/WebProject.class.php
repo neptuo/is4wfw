@@ -177,14 +177,18 @@
                         }
                     }
 
-                    $url = parent::db()->fetchSingle('select `http`, `https`, `domain_url`, `root_url` from `web_url` where `project_id` = ' . $project['id'] . ' order by `default` desc, `id`;');
+                    $url = parent::db()->fetchSingle('select `http`, `https`, `domain_url`, `root_url`, `virtual_url` from `web_url` where `project_id` = ' . $project['id'] . ' order by `default` desc, `id`;');
                     $project['http'] = $url['http'];
                     $project['https'] = $url['https'];
-                    if ($url['root_url'] != '') {
-                        $project['url'] = $url['domain_url'] . '/' . $url['root_url'];
-                    } else {
-                        $project['url'] = $url['domain_url'];
+                    if ($project['http'] == 1) {
+                        $project['url'] = "http";
+                    } else if ($project['https'] == 1) {
+                        $project['url'] = "https";
                     }
+                    $project['url'] = UrlResolver::combinePath($project['url'], $url['domain_url'], "://");
+                    $project['url'] = UrlResolver::combinePath($project['url'], $url['root_url']);
+                    $project['url'] = UrlResolver::combinePath($project['url'], $url['virtual_url']);
+
                     $pages = $dbObject->fetchAll('SELECT `id` FROM `page` WHERE `wp` = ' . $project['id'] . ' LIMIT 1;');
                     if ($ok == true) {
                         $return .= ''

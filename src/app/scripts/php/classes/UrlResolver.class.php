@@ -346,7 +346,7 @@
         }
 
         public static function combinePath($path1, $path2, $delim = '/') {
-            if($path1 == $delim) {
+            if ($path1 == $delim) {
                 if($path2{0} == $delim) {
                     return $path2;
                 } else {
