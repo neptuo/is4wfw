@@ -2190,6 +2190,10 @@
             return $_SERVER['HTTP_HOST'];
         }
 
+        public function getRequestPath() {
+            return $_SERVER['REQUEST_URI'];
+        }
+
         /**
          *
          * 	Return current project id.

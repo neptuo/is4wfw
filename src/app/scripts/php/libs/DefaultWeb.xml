@@ -724,6 +724,13 @@
     </comment>
   </property>
   <property>
+  	<propname>currentPath</propname>
+  	<getfunction>getRequestPath</getfunction>
+    <comment>
+      Vrácí path aktuálního requestu.
+    </comment>
+  </property>
+  <property>
   	<propname>currentProjectId</propname>
   	<getfunction>getProjectId</getfunction>
     <comment>
