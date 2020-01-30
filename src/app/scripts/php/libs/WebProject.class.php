@@ -595,7 +595,7 @@
                     . '</div>'
                     . '<table class="gray-box">'
                         . '<tr>'
-                            . '<th>' . $rb->get('project.domainurl') . ':</th>'
+                            . '<th><label title="' . $rb->get('project.domainurl.title') . '">' . $rb->get('project.domainurl') . ':</label></th>'
                             . '<th>' . $rb->get('project.rooturl') . ':</th>'
                             . '<th>' . $rb->get('project.virtualurl') . ':</th>'
                             . '<th>' . $rb->get('project.http') . ':</th>'

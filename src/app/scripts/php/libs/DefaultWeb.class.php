@@ -311,7 +311,6 @@
 
         public function substituteRequestFor($pageId, $langId) {
             $this->IsSubstituting = true;
-            //echo 'Substituting ...'.'<br />'.'<br />';
 
             $pageUrl = self::composeUrl($pageId, $langId, false);
             $url = parent::db()->fetchSingle('select `http`, `https`, `domain_url`, `root_url`, `virtual_url` from `web_url` join `page` on `web_url`.`project_id` = `page`.`wp` where `page`.`id` = '.$pageId.' order by `web_url`.`default` desc, `web_url`.`id`;');
@@ -324,22 +323,17 @@
             if ($indexOfQuery !== false) {
                 $pageUrl = substr($pageUrl, 0, $indexOfQuery);
             }
-            
-            $scriptUrl = UrlResolver::combinePath($url['root_url'], '/index.php');
-            $domainUrl = $url['domain_url'];
 
-            $_SERVER['HTTP_HOST'] = $domainUrl;
+            $scriptUrl = UrlResolver::combinePath($url['root_url'], '/index.php');
+
+            if ($url['domain_url'] != "*") {
+                $_SERVER['HTTP_HOST'] = $url['domain_url'];
+            }
+
             $_SERVER['SCRIPT_NAME'] = $scriptUrl;
             $_REQUEST['WEB_PAGE_PATH'] = $pageUrl;
 
-            /*echo $_SERVER['HTTP_HOST'].'<br />';
-            echo $_SERVER['SCRIPT_NAME'].'<br />';
-            echo $_REQUEST['WEB_PAGE_PATH'].'<br />';
-            echo $domainUrl.'<br />';
-            echo $scriptUrl.'<br />';
-            echo $pageUrl.'<br />';*/
-
-            if($this->Protocol == 'https' && $url['https'] == 1) {
+            if ($this->Protocol == 'https' && $url['https'] == 1) {
                 $_SERVER['https'] = 'on';
             }
 
@@ -1374,6 +1368,10 @@
         private function composeUrlProjectPart($pageUrl, $project, $absolute) {
             $pageUrl = UrlResolver::combinePath($project['alias']['virtual_url'], $pageUrl);
             $pageUrl = UrlResolver::combinePath($project['alias']['root_url'], $pageUrl);
+
+            if ($project['alias']['domain_url'] == "*") {
+                $project['alias']['domain_url'] = self::getHttpHost();
+            }
 
             if ($absolute) {
                 $pageUrl = UrlResolver::combinePath($project['alias']['domain_url'], $pageUrl);

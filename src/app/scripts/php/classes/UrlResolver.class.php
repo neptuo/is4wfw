@@ -25,24 +25,31 @@
         public function resolveUrl($domainUrl, $rootUrl, $pageUrl) {
             //echo $url;
             $domainProtocol = $_SERVER['HTTPS'];
-            $otherProtocol = '';
 
             if ($domainProtocol == "on") {
                 $domainProtocol = "https";
-                $otherProtocol = "http";
             } else {
                 $domainProtocol = "http";
-                $otherProtocol = "https";
             }
 
-            //echo $domainProtocol.' :: '.$domainUrl.' :: '.$rootUrl.' :: '.$pageUrl.'<br />';
+            parent::log("UrlResolve: " . $domainProtocol.' :: '.$domainUrl.' :: '.$rootUrl.' :: '.$pageUrl);
 
             $urls = parent::db()->fetchAll('select `id`, `project_id`, `domain_url`, `root_url`, `virtual_url`, `http`, `https` from `web_url` where `enabled` = 1;');
+
+            // Domains
             $selected = array();
             foreach ($urls as $url) {
                 if ($url[$domainProtocol] != 1) {
                     continue;
                 }
+
+                // Support for wildcard domains.
+                if ($url['domain_url'] == "*") {
+                    $url['domain_url'] = $domainUrl;
+                    $selected[] = $url;
+                    continue;
+                }
+
                 $projDoms = parent::str_tr($url['domain_url'], '.');
                 $reqDoms = parent::str_tr($domainUrl, '.');
                 if (count($projDoms) != count($reqDoms)) {
@@ -51,13 +58,12 @@
                     $ok = true;
                     foreach ($projDoms as $key => $dom) {
                         $fdom = self::parseSingleUrlPart($dom, $reqDoms[$key]);
-                        //$this->PropertyAttr = $reqDoms[$key];
-                        //$fdom = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $dom);
                         if ($fdom != $reqDoms[$key]) {
                             $ok = false;
                             break;
                         }
                     }
+
                     if ($ok) {
                         // Domeny sedi, pridame do selected.
                         $selected[] = $url;
@@ -66,7 +72,8 @@
                     }
                 }
             }
-            //print_r($selected);
+            
+            // Root path
             $selected2 = array();
             foreach ($selected as $url) {
                 if ($url['root_url'] == '' && $rootUrl == '') {
@@ -80,13 +87,12 @@
                         $ok = true;
                         foreach ($projRoots as $key => $root) {
                             $froot = self::parseSingleUrlPart($root, $reqRoots[$key]);
-                            //$this->PropertyAttr = $reqRoots[$key];
-                            //$froot = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $root);
                             if ($froot != $reqRoots[$key]) {
                                 $ok = false;
                                 break;
                             }
                         }
+
                         if ($ok) {
                             $selected2[] = $url;
                         } else {
@@ -95,12 +101,12 @@
                     }
                 }
             }
-            //print_r($selected2);
+            
+            // Virtual url
             $pageUrls = parent::str_tr($pageUrl, '/');
             foreach ($selected2 as $url) {
                 if ($url['virtual_url'] == '') {
                     // prejit na parsovani url stranek
-                    //print_r($pageUrls);
                     if (self::parsePageUrl($pageUrls, $url['project_id'])) {
                         // mame viteze
                         self::selectProject($url);
@@ -117,17 +123,15 @@
                         $key = 0;
                         foreach ($virUrls as $key => $vir) {
                             $fvir = self::parseSingleUrlPart($vir, $pageUrls[$key]);
-                            //$this->PropertyAttr = $pageUrls[$key];
-                            //$fvir = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $vir);
                             if ($fvir != $pageUrls[$key]) {
                                 $ok = false;
                                 break;
                             }
                         }
+
                         if ($ok) {
                             // prejit na parsovani url stranek
                             $key++;
-                            //print_r(self::subarray($pageUrls, $key));
                             if (self::parsePageUrl(self::subarray($pageUrls, $key), $url['project_id'])) {
                                 // mame viteze
                                 self::selectProject($url);
@@ -141,6 +145,7 @@
                     }
                 }
             }
+
             return false;
         }
 
