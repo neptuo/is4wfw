@@ -71,6 +71,7 @@
                 $inTitle = ($_POST['edit-in-title'] == "on") ? 1 : 0;
                 $visible = ($_POST['edit-visible'] == "on") ? 1 : 0;
                 $menu = ($_POST['edit-menu'] == "on") ? 1 : 0;
+                $isContentless = ($_POST['edit-contentless'] == "on") ? 1 : 0;
                 $head = str_replace('&amp;web:page', '&web:page', $_POST['edit-head']);
                 $content = str_replace('&amp;web:page', '&web:page', $_POST['edit-content']);
                 $tlStart = str_replace('&amp;web:page', '&web:page', $_POST['edit-tl-start']);
@@ -120,8 +121,23 @@
 
                 if (count($errors) == 0) {
                     if ($type == "page-edit") {
-                        $dbObject->execute("UPDATE `content` SET `tag_lib_start` = \"" . $tlStart . "\", `tag_lib_end` = \"" . $tlEnd . "\", `head` = \"" . $head . "\", `content` = \"" . $content . "\" WHERE `page_id` = " . $pageId . " AND `language_id` = " . $languageId . ";");
                         $dbObject->execute("UPDATE `info` SET `name` = \"" . $name . "\", `href` = \"" . $href . "\", `in_title` = \"" . $inTitle . "\", `in_menu` = " . $menu . ", `is_visible` = " . $visible . ", `keywords` = \"" . $keywords . "\", `title` = \"" . $title . "\", `timestamp` = " . time() . ", `cachetime` = " . $cacheTime . " WHERE `page_id` = " . $pageId . " AND `language_id` = " . $languageId . ";");
+                        
+                        $contentFilter = array("page_id" => $pageId, "language_id" => $languageId);
+                        if ($isContentless) {
+                            $deleteSql = parent::sql()->delete("content", $contentFilter);
+                            parent::dataAccess()->execute($deleteSql);
+                        } else {
+                            $hasContent = parent::dataAccess()->fetchSingle(parent::sql()->count("content", $contentFilter))["count"] != 0;
+                            $contentValues = array("tag_lib_start" => $tlStart, "tag_lib_end" => $tlEnd, "head" => $head, "content" => $content);
+                            if ($hasContent) {
+                                $dbObject->execute("UPDATE `content` SET `tag_lib_start` = \"" . $tlStart . "\", `tag_lib_end` = \"" . $tlEnd . "\", `head` = \"" . $head . "\", `content` = \"" . $content . "\" WHERE `page_id` = " . $pageId . " AND `language_id` = " . $languageId . ";");
+                            } else {
+                                $contentValues = array_merge($contentValues, $contentFilter);
+                                $insertSql = parent::sql()->insert("content", $contentValues);
+                                parent::dataAccess()->execute($insertSql);
+                            }
+                        }
 
                         $allUserGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value`;');
 
@@ -268,7 +284,10 @@
 
                         $this->MessageFromEdit = '<h4 class="success">' . $rb->get('page.success.added') . '</h4>';
                     } else if ($type == "page-add-lang-ver") {
-                        $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(" . $pageId . ", \"" . $tlStart . "\", \"" . $tlEnd . "\", \"" . $head . "\", \"" . $content . "\", " . $languageId . ");");
+                        if (!$isContentless) {
+                            $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(" . $pageId . ", \"" . $tlStart . "\", \"" . $tlEnd . "\", \"" . $head . "\", \"" . $content . "\", " . $languageId . ");");
+                        }
+
                         $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `title`, `timestamp`, `cachetime`) VALUES(" . $pageId . ", " . $languageId . ", \"" . $name . "\", \"" . $href . "\", " . $inTitle . ", " . $menu . ", " . $pageId . ", " . $visible . ", \"" . $keywords . "\", \"" . $title . "\", " . time() . ", " . $cacheTime . ");");
 
                         $this->MessageFromEdit = '<h4 class="success">' . $rb->get('page.success.langadded') . '</h4>';
@@ -422,7 +441,22 @@
                     }
 
                     if ($_POST['page-edit'] == $rb->get('page.action.edit')) {
-                        $sql_return = $dbObject->fetchAll("SELECT `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content`, `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`title`, `info`.`cachetime` FROM `content` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `info`.`page_id` = " . $pageId . " AND `info`.`language_id` = " . $langId . ";");
+                        // $sql_return = $dbObject->fetchAll("SELECT `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content`, `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`title`, `info`.`cachetime` FROM `content` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `info`.`page_id` = " . $pageId . " AND `info`.`language_id` = " . $langId . ";");
+                        $sql_return = array();
+                        $sql_info = $dbObject->fetchAll("SELECT `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`title`, `info`.`cachetime` FROM `info` WHERE `info`.`page_id` = " . $pageId . " AND `info`.`language_id` = " . $langId . ";");
+                        $sql_content = $dbObject->fetchAll("SELECT `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `content` WHERE `content`.`page_id` = " . $pageId . " AND `content`.`language_id` = " . $langId . ";");
+                        if ($sql_content != array()) {
+                            $sql_info[0]["tag_lib_start"] = $sql_content[0]["tag_lib_start"];
+                            $sql_info[0]["tag_lib_end"] = $sql_content[0]["tag_lib_end"];
+                            $sql_info[0]["head"] = $sql_content[0]["head"];
+                            $sql_info[0]["content"] = $sql_content[0]["content"];
+                            $sql_info[0]["contentless"] = 0;
+                        } else {
+                            $sql_info[0]["contentless"] = 1;
+                        }
+
+                        $sql_return = $sql_info;
+
                         $frameTitle = $rb->get('page.action.editation') . ' :: ' . $sql_return[0]['name'] . ' ( ' . $pageId . ' )';
                     } else {
                         $sql_return = array();
@@ -443,7 +477,7 @@
                         $sql_return[0]['name'] = $name;
                         $sql_return[0]['href'] = $href;
                         $sql_return[0]['in_title'] = $inTitle;
-                        $sql_return[0]['in_menu'] = $inMenu;
+                        $sql_return[0]['in_menu'] = $menu;
                         $sql_return[0]['is_visible'] = $visible;
                         $sql_return[0]['head'] = $head;
                         $sql_return[0]['content'] = $content;
@@ -661,6 +695,20 @@
                                 . '<div class="clear"></div>' : '')
                         . '</div>'
                         . '<div class="clear"></div>';
+
+                        if ($type == "page-add-lang-ver" || $type == "page-edit") {
+                            $defaultLanguageId = parent::dataAccess()->fetchSingle(parent::sql()->select("language", array("id"), array("language" => "")))["id"];
+                            $hasDefaultContent = parent::dataAccess()->fetchSingle(parent::sql()->count("content", array("language_id" => $defaultLanguageId, "page_id" => $pageId)))["count"] != 0;
+                            if ($hasDefaultContent) {
+                                $returnTmp .= ''
+                                . '<div class="gray-box">'
+                                    . '<label>'
+                                    . '<input type="checkbox" name="edit-contentless"' . ($sql_return[0]["contentless"] == 1 ? ' checked="checked"' : '') . '>' 
+                                    . $rb->get("page.field.contentless") 
+                                    . '</label>'
+                                . '</div>';
+                            }
+                        }
 
                         if ($propertyEditors == 'edit_area') {
                             $returnTmp .= ''
