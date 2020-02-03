@@ -341,8 +341,19 @@
         }
 
         private function loadPageData() {
-            $this->TempLoadedContent = self::sortPages(parent::db()->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `title`, `tag_lib_start`, `tag_lib_end`, `head`, `content`, `info`.`timestamp`, `cachetime` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = " . $this->UrlResolver->getLanguageId() . " AND `page`.`id` IN (" . self::pagesIdAsString() . ") AND `page`.`wp` = " . $this->UrlResolver->getWebProjectId() . ";"), $this->UrlResolver->getPagesId());
-            //print_r($this->TempLoadedContent);
+            $selectSql = ""
+                . "SELECT p.`id`, i.`name`, i.`href`, i.`in_title`, i.`keywords`, i.`title`, i.`timestamp`, i.`cachetime`, "
+                . "IFNULL(c.`tag_lib_start`, cd.`tag_lib_start`) AS `tag_lib_start`, IFNULL(c.`tag_lib_end`, cd.`tag_lib_end`) AS `tag_lib_end`, IFNULL(c.`head`, cd.`head`) AS `head`, IFNULL(c.`content`, cd.`content`) AS `content` "
+                . "FROM `page` p "
+                    . "LEFT JOIN `info` i ON p.`id` = i.`page_id` "
+                    . "LEFT JOIN `content` c ON p.`id` = c.`page_id` AND c.`language_id` = " . $this->UrlResolver->getLanguageId() . " " 
+                    . "LEFT JOIN `content` cd ON p.`id` = cd.`page_id` AND cd.`language_id` = (SELECT `id` FROM `language` WHERE `language` = '') " 
+                . "WHERE i.`is_visible` = 1 "
+                    . "AND i.`language_id` = " . $this->UrlResolver->getLanguageId() . " "
+                    . "AND p.`id` IN (" . self::pagesIdAsString() . ") "
+                    . "AND p.`wp` = " . $this->UrlResolver->getWebProjectId() . ";";
+            
+            $this->TempLoadedContent = self::sortPages(parent::db()->fetchAll($selectSql), $this->UrlResolver->getPagesId());
         }
 
         private function parsePagesId($item) {
