@@ -42,6 +42,56 @@
       <attreq>implied</attreq>
       <attcomment>Pátá hodnota.</attcomment>
     </attribute>
+    <attribute>
+      <attname>value6</attname>
+      <attreq>implied</attreq>
+      <attcomment>Šestá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value7</attname>
+      <attreq>implied</attreq>
+      <attcomment>Sedmá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value8</attname>
+      <attreq>implied</attreq>
+      <attcomment>Osmá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value9</attname>
+      <attreq>implied</attreq>
+      <attcomment>Devátá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value10</attname>
+      <attreq>implied</attreq>
+      <attcomment>Desátá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value11</attname>
+      <attreq>implied</attreq>
+      <attcomment>Jedenáctá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value12</attname>
+      <attreq>implied</attreq>
+      <attcomment>Dvanáctá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value13</attname>
+      <attreq>implied</attreq>
+      <attcomment>Třináctá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value14</attname>
+      <attreq>implied</attreq>
+      <attcomment>Čtrnáctá hodnota.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value15</attname>
+      <attreq>implied</attreq>
+      <attcomment>Pátnáctá hodnota.</attcomment>
+    </attribute>
     <comment>Spojí hodnoty všech atributů 'value1-5' do jednoho řetězce a tuto hodnotu nastaví do proměnné 'output' v této knihovně.</comment>
   </tag>
   <tag>
