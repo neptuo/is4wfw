@@ -22,6 +22,13 @@
       Všechny atributy s prefixem "filter-" slouží pro odfiltrování dat.
     </comment>
   </fulltag>
+  <property>
+    <propname>forEachIndex</propname>
+    <getfunction>getForEachIndex</getfunction>
+    <comment>
+      Vrací aktuální index při průchodu v "ui:forEach".
+    </comment>
+  </property>
   <fulltag>
     <tagname>first</tagname>
     <function>firstListModel</function>

@@ -54,6 +54,8 @@
 
 		// ------- LIST -------------------------------------------------------
 
+		private $forEachIndex;
+
 		public function forEachListModel($template, $model, $params = array()) {
 			$template = parent::getParsedTemplate($template);
 
@@ -67,12 +69,16 @@
 			}
 			
 			if ($model->isRender()) {
+				$prevIndex = $this->forEachIndex;
+				$this->forEachIndex = 0;
 				foreach ($model->items() as $item) {
 					if (self::isPassedByWhere($item, $where)) {
 						$model->data($item);
 						$result .= self::parseContent($template);
+						$this->forEachIndex++;
 					}
 				}
+				$this->forEachIndex = $prevIndex;
 			}
 
 			self::popListModel();
@@ -108,6 +114,10 @@
 
 			self::popListModel();
 			return $result;
+		}
+
+		public function getForEachIndex() {
+			return $this->forEachIndex;
 		}
 
 		public function firstListModel($template, $model) {
