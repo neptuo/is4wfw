@@ -155,6 +155,15 @@
             
             $joins = array();
             $columns = "";
+
+            $wildcardIndex = array_search("*", $fields);
+            $hasWildcard = $wildcardIndex !== false;
+            if ($hasWildcard) {
+                $field = self::field($alias, "*");
+                $columns = self::joinString($columns, $field);
+                unset($fields[$wildcardIndex]);
+            }
+
             foreach ($fields as $field) {
                 $fieldTableAlias = $alias;
                 if (is_array($field)) {
@@ -175,12 +184,13 @@
                         $as = $field["select"]["alias"];
                         $field = self::field($fieldTableAlias, $column) . " AS `$as`";
                     }
-                }
-                else {
-                    $field = self::field($fieldTableAlias, $field);
-                }
 
-                $columns = self::joinString($columns, $field);
+                    $columns = self::joinString($columns, $field);
+                }
+                else if (!$hasWildcard) {
+                    $field = self::field($fieldTableAlias, $field);
+                    $columns = self::joinString($columns, $field);
+                }
             }
 
             if (!empty($joins)) {

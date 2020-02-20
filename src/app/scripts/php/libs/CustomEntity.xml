@@ -52,6 +52,7 @@
     </attribute>
     <comment>
       Zaregistruje do dotazu sloupec podle "name" i přesto, že se pomocí custom property nikde nevypisuje.
+      Je možné použít "*" pro výběr vše sloupců z tabulky.
     </comment>
   </tag>
   <tag>
