@@ -17,6 +17,9 @@ services:
     build:
       context: .
       dockerfile: docker/php-apache-modrewrite-zip/dockerfile
+    environment:
+      - IS4WFW_DEVELOPMENT=true
+      - IS4WFW_PORT=8080
     expose:
       - "9000"
     volumes:

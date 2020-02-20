@@ -240,9 +240,6 @@
 
             $found = false;
             $domainUrl = $_SERVER['HTTP_HOST'];
-            // if ($_ENV["IS4WFW_DEVELOPMENT"]) {
-            //     $domainUrl .= ":8080";
-            // }
 
             $rootUrl = INSTANCE_URL;
             $virtualUrl = $_REQUEST['WEB_PAGE_PATH'];
@@ -1385,17 +1382,21 @@
             }
 
             if ($absolute) {
-                $pageUrl = UrlResolver::combinePath($project['alias']['domain_url'], $pageUrl);
+                $domainUrl = $project['alias']['domain_url'];
+                if ($_ENV["IS4WFW_PORT"]) {
+                    $domainUrl .= ":" . $_ENV["IS4WFW_PORT"];
+                }
+
+                $pageUrl = UrlResolver::combinePath($domainUrl, $pageUrl);
 
                 $other = ($this->Protocol == 'http') ? 'https' : 'http';
                 $prot = ($project['alias'][$this->Protocol] == 1) ? $this->Protocol : $other;
 
                 $pageUrl = UrlResolver::combinePath($prot, $pageUrl, '://');
             } else {
-                //echo $pageUrl.'<br />';
                 $pageUrl = UrlResolver::combinePath('/', $pageUrl);
-                //echo $pageUrl.'<br />';
             }
+
             return $pageUrl;
         }
 
