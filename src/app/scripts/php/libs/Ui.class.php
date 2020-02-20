@@ -152,6 +152,32 @@
 			}
 		}
 
+		private $countListModel;
+
+		public function countListModel($template, $model) {
+			if ($model->isRegistration()) {
+				self::parseContent($template);
+			}
+			
+			if ($model->isRender()) {
+				$prevCount = $this->countListModel;
+				$this->countListModel = count($model->items());
+				$result = self::parseContent($template);
+				$this->countListModel = $prevCount;
+				return $result;
+			}
+		}
+
+		public function countListModelSelfClosing($model) {
+			if ($model->isRender()) {
+				return count($model->items());
+			}
+		}
+
+		public function getCountListModel() {
+			return $this->countListModel;
+		}
+
 		// ------- GRID -------------------------------------------------------
 
 		private $gridPhase = "";

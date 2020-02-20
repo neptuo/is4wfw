@@ -79,6 +79,37 @@
       Vypíše šablonu, pokud "items" neobsahují žádná data.
     </comment>
   </fulltag>
+  <tag>
+    <tagname>count</tagname>
+    <function>countListModelSelfClosing</function>
+    <attribute>
+      <attname>items</attname>
+      <attreq>required</attreq>
+      <attcomment>Pole položek.</attcomment>
+    </attribute>
+    <comment>
+      Vrací počet položek v parametru "items".
+    </comment>
+  </tag>
+  <fulltag>
+    <tagname>count</tagname>
+    <function>countListModel</function>
+    <attribute>
+      <attname>items</attname>
+      <attreq>required</attreq>
+      <attcomment>Pole položek.</attcomment>
+    </attribute>
+    <comment>
+      Uvnitř šablony je dostupná property "ui:count".
+    </comment>
+  </fulltag>
+  <property>
+    <propname>count</propname>
+    <getfunction>getCountListModel</getfunction>
+    <comment>
+      Vrací počet položek uvnitř tagu "ui:count".
+    </comment>
+  </property>
   <fulltag>
     <tagname>grid</tagname>
     <function>grid</function>
