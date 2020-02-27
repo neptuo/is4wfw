@@ -2000,12 +2000,12 @@
             }
 
             $return .= ''
-                    . '<hr />'
-                    . '<div class="gray-box">'
-                    . '<form name="label-new" method="post" action="' . $artionUrl . '">'
+            . '<hr />'
+            . '<div class="gray-box">'
+                . '<form name="label-new" method="post" action="' . $actionUrl . '">'
                     . '<input type="submit" name="label-new" value="' . $rb->get('label.new') . '" title="' . $rb->get('label.newtitle') . '" />'
-                    . '</form>'
-                    . '</div>';
+                . '</form>'
+            . '</div>';
 
             if ($useFrames != "false") {
                 return parent::getFrame($rb->get('label.edittitle'), $return, '');
