@@ -168,6 +168,16 @@
       <attcomment>Umožňuje definovat emailovou adresu odesilate.</attcomment>
     </attribute>
     <attribute>
+      <attname>emailReplyTo</attname>
+      <attreq>implied</attreq>
+      <attcomment>Umožňuje definovat emailovou adresu, kterou se má odpovědět.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>emailReplyToFieldName</attname>
+      <attreq>implied</attreq>
+      <attcomment>Umožňuje definovat emailovou adresu, kterou se má odpovědět, z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailReplyTo', jinak se použije právě 'emailReplyTo'.</attcomment>
+    </attribute>
+    <attribute>
       <attname>emailIsHtml</attname>
       <attreq>implied</attreq>
       <attdef>false</attdef>
@@ -222,6 +232,16 @@
       <attname>emailSenderFieldName</attname>
       <attreq>implied</attreq>
       <attcomment>Umožňuje definovat emailovou adresu odesilate z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailSender', jinak se použije právě 'emailSender'.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>emailReplyTo</attname>
+      <attreq>implied</attreq>
+      <attcomment>Umožňuje definovat emailovou adresu, kterou se má odpovědět.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>emailReplyToFieldName</attname>
+      <attreq>implied</attreq>
+      <attcomment>Umožňuje definovat emailovou adresu, kterou se má odpovědět, z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailReplyTo', jinak se použije právě 'emailReplyTo'.</attcomment>
     </attribute>
     <attribute>
       <attname>emailIsHtml</attname>

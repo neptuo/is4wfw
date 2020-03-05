@@ -266,12 +266,12 @@
         
         /* ===================== FORM =========================================== */
 
-        public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailIsHtml = false) {
+        public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false) {
             $templateContent = parent::getTemplateContent($templateId);
-            return self::formFullTag($templateContent, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject, $emailSender, $emailSenderFieldName, $emailIsHtml);
+            return self::formFullTag($templateContent, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject, $emailSender, $emailSenderFieldName, $emailReplyTo, $emailReplyToFieldName, $emailIsHtml);
         }
 
-        public function formFullTag($templateContent, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailIsHtml = false) {
+        public function formFullTag($templateContent, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false) {
             global $webObject;
             $rb = new LocalizationBundle();
             $rb->loadBundle($this->BundleName, $this->BundleLang);
@@ -411,6 +411,14 @@
 
                         if (preg_match($this->EmailRegex, $emailSender)) {
                             $headers[] = 'From: ' . $emailSender;
+                        }
+
+                        if ($emailReplyToFieldName && preg_match($this->EmailRegex, $this->ViewDataRow[$emailReplyToFieldName]['value'])) {
+                            $emailReplyTo = $this->ViewDataRow[$emailReplyToFieldName]['value'];
+                        }
+
+                        if (preg_match($this->EmailRegex, $emailReplyTo)) {
+                            $headers[] = 'Reply-To: ' . $emailReplyTo;
                         }
 
                         $result = mail($emailAddresses, $subject, $content, implode(PHP_EOL, $headers));
