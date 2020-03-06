@@ -1,20 +1,20 @@
-<form name="file-upload" method="post" action="{Function fa:redirectUrlWithQueryString}" enctype="multipart/form-data">
+<form id="{Binding form-id}" name="{Binding name-prefix}file-upload" method="post" action="{Function fa:redirectUrlWithQueryString}" enctype="multipart/form-data">
 	<div class="file-upload">
 		<div class="gray-box file-upload-name">
-			<label for="file-name" class="w60">{Resource label.name}:</label>
-			<input type="text" name="file-name[]" id="file-name" value="{Binding name}" class="w300" />
+			<label for="{Binding name-prefix}file-name" class="w60">{Resource label.name}:</label>
+			<input type="text" name="{Binding name-prefix}file-name[]" id="{Binding name-prefix}file-name" value="{Binding name}" class="w300" />
 		</div>
 		<div class="gray-box file-upload-title">
-			<label for="file-title" class="w60">{Resource label.title}:</label>
-			<input type="text" name="file-title[]" id="file-title" value="{Binding title}" class="w400" />
+			<label for="{Binding name-prefix}file-title" class="w60">{Resource label.title}:</label>
+			<input type="text" name="{Binding name-prefix}file-title[]" id="{Binding name-prefix}file-title" value="{Binding title}" class="w400" />
 		</div>
 		<div class="gray-box file-upload-url">
-			<label for="file-url" class="w60">{Resource label.url}:</label>
-			<input type="text" name="file-url[]" id="file-url" value="{Binding url}" class="w400" />
+			<label for="{Binding name-prefix}file-url" class="w60">{Resource label.url}:</label>
+			<input type="text" name="{Binding name-prefix}file-url[]" id="{Binding name-prefix}file-url" value="{Binding url}" class="w400" />
 		</div>
 		<div class="gray-box file-upload-fileinput">
-			<label for="file-upload" class="w60">{Resource label.upload}:</label>
-			<input type="file" name="file-upload[]" id="file-upload" class="w250" />
+			<label for="{Binding name-prefix}file-upload" class="w60">{Resource label.upload}:</label>
+			<input type="file" name="{Binding name-prefix}file-upload[]" id="{Binding name-prefix}file-upload" class="w250" />
 		</div>
 		<hr />
 	</div>
@@ -24,30 +24,28 @@
 	</div>
 	<div class="clear"></div>
 	<div class="gray-box jq-buttons">
-		<input type="hidden" name="dir-id" value="{Binding dir_id}" />
-		<input type="hidden" name="file-id" value="{Binding id}" />
-		<input type="hidden" name="zip-out" value="{Binding zip-out}" />
-		<input type="submit" name="file-save" value="{Resource button.save}" />
+		<input type="hidden" name="{Binding name-prefix}dir-id" value="{Binding dir_id}" />
+		<input type="hidden" name="{Binding name-prefix}file-id" value="{Binding id}" />
+		<input type="hidden" name="{Binding name-prefix}zip-out" value="{Binding zip-out}" />
+		<input type="submit" name="{Binding name-prefix}file-save" value="{Resource button.save}" />
 	</div>
 </form>
 
 <script type="text/javascript">
 	
-	var binding = '{Binding id}';
-	var linkText = '{Resource button.addfile}';
-	
-	$(function() {
-		var fn = new FileName($('.file-upload').find('input[type=file]').get(0), $('.file-upload').find('input[type=text]').first().get(0));
+	(function(binding, formId, linkText) {
+		var $form = $('#' + formId);
+		var fn = new FileName($form.find('input[type=file]').get(0), $form.find('input[type=text]').first().get(0));
 		
-		if(binding == '') {
-			$('<a />').html(linkText).attr('href', 'javascript::').appendTo($('.jq-buttons')).click(function() {
-				$form = $('.file-upload');
-				$clone = $form.first().clone();
-				$form.last().after($clone);
+		if (binding == '') {
+			$('<a />').html(linkText).attr('href', 'javascript::').appendTo($form.find('.jq-buttons')).click(function() {
+				$panel = $form.find(".file-upload");
+				$clone = $panel.first().clone();
+				$panel.last().after($clone);
 				
 				var fn2 = new FileName($clone.find('input[type=file]').get(0), $clone.find('input[type=text]').first().get(0));
 			});
 		}
-	});
+	})('{Binding id}', '{Binding form-id}', '{Resource button.addfile}');
 
 </script>

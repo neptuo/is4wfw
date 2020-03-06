@@ -623,74 +623,81 @@
 		}
 		
 		//C-tag
-		public function fileUpload($dirId = false, $pageId = "", $useRights = false, $useFrames = false, $isStandalone = false) {
+		public function fileUpload($dirId = false, $pageId = "", $namePrefix = "", $useRights = false, $useFrames = false, $isStandalone = false) {
 			$this->useRights = $useRights;
 			
-			//parent::logVar($_POST);
 			$return = "";
 
-			if(($dirId == '' || $dirId == 0) && array_key_exists('dir-id', $_POST)) {
+			if ($namePrefix != "") {
+				$namePrefix = "$namePrefix-";
+			}
+
+			if (($dirId == '' || $dirId == 0) && array_key_exists('dir-id', $_POST)) {
 				$dirId = $_POST['dir-id'];
 			}
 			
-			if($_POST['file-save'] == parent::rb('button.save')) {
-				$parentId = $_POST['dir-id'];
+			if ($_POST[$namePrefix . 'file-save'] == parent::rb('button.save')) {
+				$parentId = $_POST[$namePrefix . 'dir-id'];
 			
-				$read = $_POST['file-right-r'];
+				$read = $_POST[$namePrefix . 'file-right-r'];
 				if($read == array()) {
 					$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_READ);
 				}
-				$write = $_POST['file-right-w'];
+				$write = $_POST[$namePrefix . 'file-right-w'];
 				if($write == array()) {
 					$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_WRITE);
 				}
-				$delete = $_POST['file-right-d'];
+				$delete = $_POST[$namePrefix . 'file-right-d'];
 				if($delete == array()) {
 					$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_DELETE);
 				}
 					
-				if(!$_POST['zip-out']) {
-					$fileNames = $_POST['file-name'];
+				if(!$_POST[$namePrefix . 'zip-out']) {
+					$fileNames = $_POST[$namePrefix . 'file-name'];
 					
 					foreach($fileNames as $i => $name) {
+						$requestFileName = $_FILES[$namePrefix . 'file-upload']['name'][$i];
+
 						$dataItem = array(
-							'id' => $_POST['file-id'], 
+							'id' => $_POST[$namePrefix . 'file-id'], 
 							'name' => $name, 
-							'title' => $_POST['file-title'][$i], 
+							'title' => $_POST[$namePrefix . 'file-title'][$i], 
 							'dir_id' => $parentId, 
-							'type' => self::getWebFileType($_FILES['file-upload']['name'][$i]), 
+							'type' => self::getWebFileType($requestFileName), 
 							'timestamp' => time(),
-							'url' => $_POST['file-url'][$i]
+							'url' => $_POST[$namePrefix . 'file-url'][$i]
 						);
 						
 						//print_r($read);
 						//print_r($write);
 						//print_r($delete);
-						$result = self::processFileUpload($dataItem, $_FILES['file-upload']['tmp_name'][$i], $read, $write, $delete);
+						$result = self::processFileUpload($dataItem, $_FILES[$namePrefix . 'file-upload']['tmp_name'][$i], $read, $write, $delete);
 						if ($result != null) {
-							$_POST['new-file'] = parent::rb('button.newfile');
+							$_POST[$namePrefix . 'new-file'] = parent::rb('button.newfile');
 							$return .= parent::getError($result);
 						} else if(!empty($pageId)) {
 							parent::web()->redirectTo($pageId);
 						}
 					}
 				} else {
-					self::zipOutFile($_POST['dir-id'], $_FILES['file-upload']['tmp_name'][0], $read, $write, $delete);
+					self::zipOutFile($_POST[$namePrefix . 'dir-id'], $_FILES[$namePrefix . 'file-upload']['tmp_name'][0], $read, $write, $delete);
 				}
 			}
 			
-			if($_POST['new-file'] == parent::rb('button.newfile') || $_POST['new-zipfile'] == parent::rb('button.newzipfile') || $_POST['edit-file'] == parent::rb('file.edit') || $isStandalone) {
+			if ($_POST[$namePrefix . 'new-file'] == parent::rb('button.newfile') || $_POST[$namePrefix . 'new-zipfile'] == parent::rb('button.newzipfile') || $_POST[$namePrefix . 'edit-file'] == parent::rb('file.edit') || $isStandalone) {
 				
 				$dataItem = array('name' =>  'file'.rand(1000, 9999).rand(1000, 9999), 'dir_id' => $dirId);
-				if(array_key_exists('file-id', $_POST)) {
-					$fileId = $_POST['file-id'];
+				if (array_key_exists($namePrefix . 'file-id', $_POST)) {
+					$fileId = $_POST[$namePrefix . 'file-id'];
 					$dataItem = parent::dao('File')->get($fileId);
 
 					if($dataItem['dir_id'] == '') {
 						$dataItem['dir_id'] = $dirId;
 					}
 				}
-				$dataItem['zip-out'] = ($_POST['new-zipfile'] == parent::rb('button.newzipfile'));
+				$dataItem["form-id"] = "fa-upload-" . rand(1, 1000);
+				$dataItem["name-prefix"] = $namePrefix;
+				$dataItem['zip-out'] = ($_POST[$namePrefix . 'new-zipfile'] == parent::rb('button.newzipfile'));
 			
 				if($useFrames) {
 					return parent::getFrame(parent::rb('title.fileupload'), $return.parent::view('fileadmin-fileupload', $dataItem), true);

@@ -121,6 +121,12 @@
       <attcomment>Stránka, kam se má uživatel přesměrovat po úspěšném nahrátí souboru.</attcomment>
     </attribute>
     <attribute>
+      <attname>name</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Pokud je vyplněn, pak umožňuje pojmenovat komponentu a díky tomu je možné mít více upload na jedné stránce.</attcomment>
+    </attribute>
+    <attribute>
       <attname>useRights</attname>
       <attreq>implied</attreq>
 	    <attdef>true</attdef>
