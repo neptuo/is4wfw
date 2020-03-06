@@ -143,6 +143,7 @@
 
             $fa = new FileAdmin();
             $directoryName = self::formatString($extra['nameFormat'], $model);
+            $directoryName = self::formatString($directoryName, $primaryKeys);
             $directory = $fa->createDirectory($extra['parentDirId'], $directoryName);
             
             $sql = self::sql()->update($tableName, array($columnName => $directory['id']), $primaryKeys);
