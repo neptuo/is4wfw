@@ -285,7 +285,13 @@
             
             // Process extras.
             foreach ($values["extras"] as $columnName => $extra) {
-                if ($extra["type"] == "createIfEmpty") {
+                if ($extra["type"] == "emptyDirectory") {
+                    $directorySql = parent::sql()->select($tableName, [$columnName], $primaryKeys);
+                    $directory = $da->fetchSingle($directorySql);
+                    if (empty($directory[$columnName])) {
+                        self::executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys);
+                    }
+                } else if ($extra["type"] == "createIfEmpty") {
                     self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
                 }
             }
