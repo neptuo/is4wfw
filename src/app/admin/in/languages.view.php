@@ -9,10 +9,6 @@
 	<admin:edit id="query:id">
 		<web:frame title="admin:editTitle">
 			<edit:form submit="save">
-				<web:condition when="edit:saved">
-					<web:redirectTo pageId="var:selfUrl" />
-				</web:condition>
-
 				<lang:form id="admin:editId">
 					<admin:field label="Name" label-class="w110">
 						<ui:textbox name="name" />
@@ -25,9 +21,7 @@
 					</admin:field>
 					<hr />
 					<div class="gray-box">
-						<input type="hidden" name="edit" value="edit" />
-						<button name="save" value="save">Save and Close</button>
-						<web:a pageId="var:selfUrl" text="Close" class="button" />
+						<admin:saveButtons closePageId="var:selfUrl" saveParam-id="lang:id" />
 					</div>
 				</lang:form>
 			</edit:form>

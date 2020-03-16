@@ -54,7 +54,17 @@
 		}
 
 		public function getListItemId() {
-			return parent::peekListModel()->field("id");
+			$model = parent::peekListModel(false);
+			if ($model != null) {
+				return $model->field("id");
+			}
+			
+            $model = parent::getEditModel(false);
+            if ($model != null) {
+                return $model["id"];
+			}
+			
+			return null;
 		}
 
 		public function getListItemName() {
@@ -102,10 +112,15 @@
 				if (!$model->metadata("isUpdate")) {
 					$sql = parent::sql()->insert(self::TableName, $model);
 					parent::dataAccess()->execute($sql);
+					$model["id"] = parent::dataAccess()->getLastId();
 				} else {
 					$sql = parent::sql()->update(self::TableName, $model, array("id" => $id));
 					parent::dataAccess()->execute($sql);
 				}
+			}
+			
+            if ($model->isSaved()) {
+                self::parseContent($template);
             }
 			
             if ($model->isRender()) {

@@ -28,6 +28,14 @@
             self::setLocalizationBundle("view");
         }
 
+        private function getCurrentVirtualUrlWithoutExtension() {
+            return '~/' . $_REQUEST['WEB_PAGE_PATH'];
+        }
+
+        public function getCurrentVirtualUrl() {
+            return self::getCurrentVirtualUrlWithoutExtension() . ".view";
+        }
+
         /* ======================= TAGS ========================================= */
 
         public function processView($path) {
@@ -44,7 +52,7 @@
 
             try {
                 $this->FullParser = new FullTagParser();
-                $this->FullParser->setContent(ViewHelper :: getViewContent('~/' . $_REQUEST['WEB_PAGE_PATH']));
+                $this->FullParser->setContent(ViewHelper::getViewContent(self::getCurrentVirtualUrlWithoutExtension()));
                 $this->FullParser->startParsing();
             } catch (Exception $ex) {
                 echo parent :: getError($ex->getMessage());

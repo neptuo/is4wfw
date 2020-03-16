@@ -59,6 +59,9 @@
 				$param = null;
 				if ($_POST[$saveName] == "save") {
 					$pageId = parent::web()->getLastPageId();
+					if ($pageId == null) {
+						$pageId = parent::autolib("v")->getCurrentVirtualUrl();
+					}
 					$param = $saveParam;
 				} else if ($_POST[$saveName] == "save-close") {
 					$pageId = $closePageId;
