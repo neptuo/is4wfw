@@ -358,6 +358,7 @@
                         .'<option value="php.libs.Image"'.($_SESSION['select-class-path'] == 'php.libs.Image' ? 'selected="selected"' : '').'>php.libs.Image</option>'
                         .'<option value="php.libs.Inquiry"'.($_SESSION['select-class-path'] == 'php.libs.Inquiry' ? 'selected="selected"' : '').'>php.libs.Inquiry</option>'
                         .'<option value="php.libs.Js"'.($_SESSION['select-class-path'] == 'php.libs.Js' ? 'selected="selected"' : '').'>php.libs.Js</option>'
+                        .'<option value="php.libs.Language"'.($_SESSION['select-class-path'] == 'php.libs.Language' ? 'selected="selected"' : '').'>php.libs.Language</option>'
                         .'<option value="php.libs.Localization"'.($_SESSION['select-class-path'] == 'php.libs.Localization' ? 'selected="selected"' : '').'>php.libs.Localization</option>'
                         .'<option value="php.libs.Log"'.($_SESSION['select-class-path'] == 'php.libs.Log' ? 'selected="selected"' : '').'>php.libs.Log</option>'
                         .'<option value="php.libs.Login"'.($_SESSION['select-class-path'] == 'php.libs.Login' ? 'selected="selected"' : '').'>php.libs.Login</option>'
