@@ -26,12 +26,17 @@ class Version {
         return array('major' => $major, 'patch' => $path, 'preview' => $preview);
     }
 
-    public static function toString($version) {
+    public static function toString($version, $includePreview = false) {
+        $result = null;
         if (is_array($version)) {
-            return 'v' . $version['major'] . '.' . $version['patch'];
+            $result = 'v' . $version['major'] . '.' . $version['patch'];
         }
 
-        return null;
+        if ($includePreview && !empty($version["preview"])) {
+            $result .= "-" . $version["preview"];
+        }
+
+        return $result;
     }
 }
 

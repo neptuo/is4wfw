@@ -3,6 +3,7 @@
 	require_once("BaseTagLib.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/RoleHelper.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/AppVeyorReleaseManager.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/GitHubReleaseManager.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/RecursiveZipArchive.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/BaseGrid.class.php");
@@ -675,19 +676,20 @@
 			}
 		}
 
-		private function getUpdateFormHtml($version) {
+		private function getUpdateFormHtml($version, $provider) {
 			return ''
 			. '<form method="post">'
 				. '<input type="hidden" name="update-version" value="' . $version . '" />'
+				. '<input type="hidden" name="update-provider" value="' . $provider . '" />'
 				. '<input type="hidden" name="update" value="update" />'
 				. '<input type="image" class="confirm" title="' . 'Update application to version ' . $version . '" src="~/images/icons/arrow_right.png" />'
 			. '</form>';
 		}
 
-		private function mapReleaseToGrid($release, $type) {
-			$release['version'] = Version::toString($release['version']);
-			$release['published_at'] = str_replace("T", " ", str_replace("Z", "", $release['published_at']));
-			$release['form'] = self::getUpdateFormHtml($release['version']);
+		private function mapReleaseToGrid($release, $type, $provider) {
+			$release['version'] = Version::toString($release['version'], true);
+			$release['published_at'] = substr(str_replace("T", " ", str_replace("Z", "", $release['published_at'])), 0, 19);
+			$release['form'] = self::getUpdateFormHtml($release['version'], $provider);
 			$release['version'] = '<a href="' . $release['html_url'] . '" target="_blank">' . $release['version'] . '</a>';
 
 			if ($type == 'patch') {
@@ -708,16 +710,25 @@
 		}
 
 		public function versionList() {
+			$current = Version::parse(WEB_VERSION);
+
 			$return = '';
+
+			$note = '';
+			$ghHtml = '';
+			$avHtml = '';
+
+			if (IS_DEVELOPMENT_MODE) {
+				$note .= self::getWarning('In development mode, app folder is read-only and you can\'t update the application');
+			}
 
 			$api = new GitHubReleaseManager();
 			$result = $api->getList();
 
 			if ($result['result']) {
-				$current = Version::parse(WEB_VERSION);
 				$data = $result['data'];
 
-				if ($_POST['update'] == 'update') {
+				if ($_POST['update'] == 'update' && $_POST['update-provider'] == "gh") {
 					$updated = self::updateToVersion($_POST['update-version'], $data);
 					if ($updated['result']) {
 						self::redirectToSelf();
@@ -729,64 +740,11 @@
 				$newerMajors = self::getNewerMajorReleases($data, $current);
 				$newerPatches = self::getNewerPatchReleases($data, $current);
 
-				$majorHtml = '';
-				$patchHtml = '';
+				$majorHtml = self::getReleaseGridHtml($newerMajors, 'major', "gh", 'You are running latest major version.');
+				$patchHtml = self::getReleaseGridHtml($newerPatches, 'patch', "gh", 'You are running latest patch for your major version.');
 
-				if (count($newerMajors) == 0) {
-					$majorHtml .= self::getSuccess('You are running latest major version.');
-				} else {
-					$grid = new BaseGrid();
-					$grid->addClass('clickable');
-					$grid->setHeader(
-						array(
-							'version' => 'Version', 
-							'published_at' => 'Published at', 
-							'download_size' => 'Size', 
-							'type' => 'Type', 
-							'form' => ''
-						)
-					);
-
-					foreach ($newerMajors as $release) {
-						$release = self::mapReleaseToGrid($release, 'major');
-						$grid->addRow($release);
-					}
-
-					$majorHtml .= $grid->render();
-				}
-
-				if (count($newerPatches) == 0) {
-					$patchHtml .= self::getSuccess('You are running latest patch for your major version.');
-				} else {
-					$grid = new BaseGrid();
-					$grid->addClass('clickable');
-					$grid->setHeader(
-						array(
-							'version' => 'Version', 
-							'published_at' => 'Published at', 
-							'download_size' => 'Size', 
-							'type' => 'Type', 
-							'form' => ''
-						)
-					);
-
-					foreach ($newerPatches as $release) {
-						$release = self::mapReleaseToGrid($release, 'patch');
-						$grid->addRow($release);
-					}
-						
-					$patchHtml .= $grid->render();
-				}
-
-				$note = '';
-
-				if (IS_DEVELOPMENT_MODE) {
-					$note .= self::getWarning('In development mode, app folder is read-only and you can\'t update the application');
-				}
-
-				$return .= ''
-				. $note
-				. '<div class="grid-2">'
+				$ghHtml .= ''
+				. '<div class="grid-3">'
 					. '<div class="gray-box">'
 						. '<strong>' . 'Major Update' . '</strong>'
 					. '</div>'
@@ -794,20 +752,86 @@
 						. $majorHtml
 					. '</div>'
 				. '</div>'
-				. '<div class="grid-2">'
+				. '<div class="grid-3">'
 					. '<div class="gray-box">'
 						. '<strong>' . 'Patch Update' . '</strong>'
 					. '</div>'
 					. '<div class="gray-box">'
 						. $patchHtml
 					. '</div>'
+				. '</div>';
+			} else {
+				$ghHtml .= self::getError($result['log']);
+			}
+
+			$api = new AppVeyorReleaseManager();
+			$result = $api->getList();
+
+			if ($result['result']) {
+				$data = $result['data'];
+
+				if ($_POST['update'] == 'update' && $_POST['update-provider'] == "av") {
+					$updated = self::updateToVersion($_POST['update-version'], $data);
+					if ($updated['result']) {
+						self::redirectToSelf();
+					} else {
+						$return .= self::getError('Error occured during update: ' . $updated['log']);
+					}
+				}
+
+				$newer = self::getNewerReleases($data, $current);
+				$nightlyHtml = self::getReleaseGridHtml($newer, 'major', "av", 'You are running latest nightly build.');
+
+				$avHtml = ''
+				. '<div class="grid-3">'
+					. '<div class="gray-box">'
+						. '<strong>' . 'Nightly Builds' . '</strong>'
+					. '</div>'
+					. '<div class="gray-box">'
+						. $nightlyHtml
+					. '</div>'
 				. '</div>'
 				. '<div class="clear"></div>';
 			} else {
-				$return .= self::getError($result['log']);
+				$ghHtml .= self::getError($result['log']);
 			}
 
+			$return .= ''
+			. $note
+			. $ghHtml
+			. $avHtml
+			. '<div class="clear"></div>';
+
 			return $return;
+		}
+
+		private function getReleaseGridHtml($data, $type, $provider, $emptyMessage) {
+			$html = "";
+
+			if (count($data) == 0) {
+				$html .= self::getSuccess($emptyMessage);
+			} else {
+				$grid = new BaseGrid();
+				$grid->addClass('clickable');
+				$grid->setHeader(
+					array(
+						'version' => 'Version', 
+						'published_at' => 'Published at', 
+						'download_size' => 'Size', 
+						'type' => 'Type', 
+						'form' => ''
+					)
+				);
+
+				foreach ($data as $release) {
+					$release = self::mapReleaseToGrid($release, $type, $provider);
+					$grid->addRow($release);
+				}
+					
+				$html .= $grid->render();
+			}
+
+			return $html;
 		}
 
 		public function updateToVersion($target, $releases) {
@@ -924,6 +948,18 @@
 			$result = array();
 			foreach ($data as $release) {
 				if ($release['version']['major'] == $current['major'] && $release['version']['patch'] > $current['patch']) {
+					$result[] = $release;
+				}
+			}
+
+			return $result;
+		}
+
+		private function getNewerReleases($data, $current) {
+			$result = array();
+			foreach ($data as $release) {
+				$releaseVersion = $release['version'];
+				if ($releaseVersion['major'] > $current['major'] || ($releaseVersion['major'] == $current['major'] && $releaseVersion['patch'] > $current['patch'])) {
 					$result[] = $release;
 				}
 			}
