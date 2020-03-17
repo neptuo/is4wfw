@@ -738,6 +738,13 @@
     </comment>
   </property>
   <property>
+  	<propname>currentLanguageId</propname>
+  	<getfunction>getLanguageId</getfunction>
+    <comment>
+      Vrácí ID jazyku aktuálně zpracovávané stránky/requestu.
+    </comment>
+  </property>
+  <property>
   	<propname>isInsideForm</propname>
   	<setfunction>setIsInsideForm</setfunction>
   	<getfunction>getIsInsideForm</getfunction>
