@@ -839,14 +839,17 @@
 
 			$target = Version::parse($target);
 			foreach ($releases as $release) {
-				if ($target['major'] == $release['version']['major'] && $target['patch'] == $release['version']['patch']) {
+				if ($target['major'] == $release['version']['major'] && $target['patch'] == $release['version']['patch'] && $target['preview'] == $release['version']['preview']) {
 					$api = new GitHubReleaseManager();
 
 					$current = Version::parse(WEB_VERSION);
 					
 					$type = null;
 					$downloadUrl = null;
-					if ($target['major'] == $current['major'] && $target['patch'] > $current['patch']) {
+					if ($target['major'] == $current['major'] && $target['patch'] == $current['patch'] && $target['preview'] != $current['preview']) {
+						$type = 'full';
+						$downloadUrl = $release['download']['full']['url'];
+					} else if ($target['major'] == $current['major'] && $target['patch'] > $current['patch']) {
 						if (array_key_exists('patch', $release['download'])) {
 							$type = 'patch';
 							$downloadUrl = $release['download']['patch']['url'];
