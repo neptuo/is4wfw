@@ -918,7 +918,7 @@
 		}
 
 		private function getUpdateFileName($version) {
-			return 'phpwfw-' . Version::toString($version) . '.zip';
+			return 'phpwfw-' . Version::toString($version, true) . '.zip';
 		}
 
 		private function getNewerMajorReleases($data, $current) {
