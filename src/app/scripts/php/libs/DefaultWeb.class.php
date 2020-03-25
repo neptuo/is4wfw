@@ -2617,6 +2617,13 @@
             return time();
         }
 
+        public function getTodayTimestamp() {
+            $date = new DateTime();
+            $date->setTimestamp(time());
+            $date->setTime(0, 0);
+            return $date->getTimestamp();
+        }
+
         public function setRandomNumber($val) {
             parent::session()->set('web-rand', $val);
             return $val;

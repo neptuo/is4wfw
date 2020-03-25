@@ -709,6 +709,13 @@
     </comment>
   </property>
   <property>
+  	<propname>todayTimestamp</propname>
+  	<getfunction>getTodayTimestamp</getfunction>
+    <comment>
+      Vrátí timestamp pro půlnoc dnešního dne.
+    </comment>
+  </property>
+  <property>
   	<propname>randNum</propname>
   	<setfunction>setRandomNumber</setfunction>
   	<getfunction>getRandomNumber</getfunction>

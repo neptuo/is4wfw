@@ -43,6 +43,17 @@
             $this->OutputValues[$output] = $replaced;
         }
 
+        public function dateTimeToTimestamp($output, $value, $format, $trimTime = false) {
+            $date = DateTime::createFromFormat($format, $value);
+            if ($date) {
+                if ($trimTime) {
+                    $date->setTime(0, 0);
+                }
+
+                $this->OutputValues[$output] = $date->getTimestamp();
+            }
+        }
+
         public function clear($output) {
             unset($this->OutputValues[$output]);
         }

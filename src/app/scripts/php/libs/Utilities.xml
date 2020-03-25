@@ -130,6 +130,35 @@
     <comment>Nahradí v "input" nové řádky za "br".</comment>
   </tag>
   <tag>
+    <tagname>dateTimeToTimestamp</tagname>
+    <function>dateTimeToTimestamp</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>output</attname>
+      <attreq>required</attreq>
+      <attcomment>Název property z této knihovny, do níž bude uložen výstup.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+      <attcomment>Hodnota k rozparsování.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>format</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>PHP formát string pro rozparsování "value".</attcomment>
+    </attribute>
+    <attribute>
+      <attname>trimTime</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda se má vynulovat čas.</attcomment>
+    </attribute>
+    <comment>Vrátí timestamp pro zadaný datum (a čas) dle zadaného formátu.</comment>
+  </tag>
+  <tag>
     <tagname>clear</tagname>
     <function>clear</function>
     <lookless>true</lookless>
