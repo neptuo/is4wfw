@@ -779,7 +779,7 @@
 					}
 				}
 
-				$newer = self::getNewerReleases($data, $current);
+				$newer = self::getNewerReleases($data, $current, true);
 				$nightlyHtml = self::getReleaseGridHtml($newer, 'major', "av", 'You are running latest nightly build.');
 
 				$avHtml = ''
@@ -955,12 +955,23 @@
 			return $result;
 		}
 
-		private function getNewerReleases($data, $current) {
+		private function getNewerReleases($data, $current, $includePreleases = false) {
 			$result = array();
 			foreach ($data as $release) {
 				$releaseVersion = $release['version'];
-				if ($releaseVersion['major'] > $current['major'] || ($releaseVersion['major'] == $current['major'] && $releaseVersion['patch'] > $current['patch'])) {
+				if ($releaseVersion['major'] > $current['major']) {
 					$result[] = $release;
+					continue;
+				}
+
+				if ($releaseVersion['major'] == $current['major'] && $releaseVersion['patch'] > $current['patch']) {
+					$result[] = $release;
+					continue;
+				}
+
+				if ($includePreleases && $releaseVersion['major'] == $current['major'] && $releaseVersion['patch'] == $current['patch'] && $releaseVersion['preview'] != $current['preview']) {
+					$result[] = $release;
+					continue;
 				}
 			}
 
