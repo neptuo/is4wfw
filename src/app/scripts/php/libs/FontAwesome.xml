@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>FontAwesome icons.</name>
+  <classname>FontAwesome</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro generování FontAwesome ikon.
+  </comment>
+  <tag>
+    <tagname>resources</tagname>
+    <function>resources</function>
+    <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá.</comment>
+  </tag>
+  <tag>
+    <tagname>span</tagname>
+    <function>span</function>
+    <attribute>
+      <attname>icon</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+      <attcomment>Identifikátor ikony. Standartně je automaticky přidán "fa fa-" prefix, pokud však hodnota již obsahuje mezeru, pak není přídán. Je tak možné použít ikony typu "fas fa-..".</attcomment>
+    </attribute>
+    <anyAttribute>
+      <attcomment>Všechny atributy jsou předány obalovému "span".</attcomment>
+    </anyAttribute>
+    <comment>Vrací span s ikonou.</comment>
+  </tag>
+  <anyProperty>
+    <comment>Vrací span s ikonou. Název property je použit jako identifikátor ikony.</comment>
+  </anyProperty>
+</taglib>
