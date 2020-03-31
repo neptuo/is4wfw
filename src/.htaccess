@@ -17,6 +17,11 @@ RewriteRule ^wysiwyg-styles.php$ app/wysiwyg-styles.php [END]
 # Static assets
 RewriteRule ^js/(.*)\.js$ app/scripts/js/$1.js [END]
 RewriteRule ^css/(.*)\.css$ app/scripts/css/$1.css [END]
+RewriteRule ^css/(.*)\.eot$ app/scripts/css/$1.eot [END]
+RewriteRule ^css/(.*)\.svg$ app/scripts/css/$1.svg [END]
+RewriteRule ^css/(.*)\.ttf$ app/scripts/css/$1.ttf [END]
+RewriteRule ^css/(.*)\.woff$ app/scripts/css/$1.woff [END]
+RewriteRule ^css/(.*)\.woff2$ app/scripts/css/$1.woff2 [END]
 RewriteRule ^files/([0-9/]*)\.([a-zA-Z0-9]*)$ user/filesystem/$1.$2 [END]
 RewriteRule ^public/(.*)\.(.*)$ user/public/$1.$2 [END]
 
