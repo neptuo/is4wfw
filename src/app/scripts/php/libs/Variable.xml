@@ -24,7 +24,9 @@
     </attribute>
     <attribute>
       <attname>scope</attname>
-      <attreq>required</attreq>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attdef>request</attdef>
       <attcomment>Může nabývat hodnot 'request', 'session', 'cookie' a 'application'.</attcomment>
     </attribute>
     <attribute>

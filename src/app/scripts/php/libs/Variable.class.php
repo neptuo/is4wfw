@@ -17,7 +17,7 @@
 			parent::setTagLibXml("Variable.xml");
 		}
 		
-		public function setValue($name, $value, $scope, $select = "") {
+		public function setValue($name, $value, $scope = "request", $select = "") {
 			if ($value instanceof ListModel) {
 				$value = $value->items();
 			}
