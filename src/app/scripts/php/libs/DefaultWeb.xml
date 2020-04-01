@@ -653,6 +653,11 @@
       Pokud pokud je zapnutý, je možné používat debug parametry.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>lookless</tagname>
+    <function>lookless</function>
+    <comment>Zpracuje tělo, ale kompletně ignoruje jeho výstup.</comment>
+  </fulltag>
   <property>
   	<propname>currentPage</propname>
   	<getfunction>getCurrentPage</getfunction>

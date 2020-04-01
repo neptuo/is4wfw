@@ -2554,6 +2554,11 @@
             return array_key_exists("debug-mode", $_SESSION) && $_SESSION["debug-mode"] == true;
         }
 
+        public function lookless($template) {
+            parent::parseContent($template);
+            return "";
+        }
+
         /* ================== PROPERTIES ================================================== */
 
         public function setChildPage($pageId) {
