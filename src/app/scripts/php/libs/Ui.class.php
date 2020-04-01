@@ -451,7 +451,7 @@
 				foreach ($data as $item) {
 					$itemValue = $item[$id];
 					$result .= ""
-					. "<$itemContainerTagName>"
+					. "<$itemContainerTagName$attributes>"
 						. "<label>"
 							. "<input name='" . $formName . "[]' value='$itemValue' type='checkbox'" . (in_array($itemValue, $modelValue) ? " checked='checked'" : '') . "$attributes />"
 							. $item[$display]
