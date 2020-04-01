@@ -17,7 +17,7 @@
 			parent::setTagLibXml("Editor.xml");
 		}
 		
-		public function form($template, $submit, $savedPageId = "") {
+		public function form($template, $submit, $params = []) {
             $template = parent::getParsedTemplate($template);
             
             $model = new EditModel();
@@ -53,7 +53,7 @@
 
             // Render UI.
             $model->render();
-            $result = self::ui()->form($template, "post");
+            $result = self::ui()->form($template, "post", null, $params);
             parent::clearEditModel();
             return $result;
         }

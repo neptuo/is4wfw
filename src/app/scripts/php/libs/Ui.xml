@@ -282,7 +282,9 @@
       <attreq>implied</attreq>
       <attcomment>URL, na kterou se má přesměrovat při odeslání formuláře.</attcomment>
     </attribute>
-    <anyAttribute />
+    <anyAttribute>
+      <attcomment>Všechny další atributy jsou předány "form" tagu.</attcomment>
+    </anyAttribute>
     <comment>
       Vygeneruje formulář.
       Všechny ostatní atributy jsou předány HTML select elementu.

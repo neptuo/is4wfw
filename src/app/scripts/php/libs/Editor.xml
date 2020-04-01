@@ -17,6 +17,9 @@
       <atttype>string</atttype>
       <attcomment>Název klíče z requestu, který říká že jde o odeslání formuláře.</attcomment>
     </attribute>
+    <anyAttribute>
+      <attcomment>Všechny další atributy jsou předány "form" tagu.</attcomment>
+    </anyAttribute>
     <comment>
       Vytvoří formulář a zaregistruje edit model.
     </comment>
