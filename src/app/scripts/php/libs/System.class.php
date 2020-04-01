@@ -850,7 +850,7 @@
 						$type = 'full';
 						$downloadUrl = $release['download']['full']['url'];
 					} else if ($target['major'] == $current['major'] && $target['patch'] > $current['patch']) {
-						if (array_key_exists('patch', $release['download'])) {
+						if (array_key_exists('patch', $release['download']) && $current['preview'] == null) {
 							$type = 'patch';
 							$downloadUrl = $release['download']['patch']['url'];
 						} else {
@@ -924,7 +924,7 @@
 		private function getNewerMajorReleases($data, $current) {
 			$result = array();
 			foreach ($data as $release) {
-				if ($release['version']['major'] > $current['major']) {
+				if ($release['version']['major'] > $current['major'] || ($release['version']['major'] == $current['major'] && $current['preview'] != null)) {
 					$isUsed = false;
 
 					foreach ($result as $i => $existing) {
