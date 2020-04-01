@@ -14,18 +14,32 @@
     <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá.</comment>
   </tag>
   <tag>
-    <tagname>span</tagname>
-    <function>span</function>
+    <tagname>icon</tagname>
+    <function>icon</function>
     <attribute>
-      <attname>icon</attname>
+      <attname>name</attname>
       <atttype>string</atttype>
       <attreq>required</attreq>
-      <attcomment>Identifikátor ikony. Standartně je automaticky přidán "fa fa-" prefix, pokud však hodnota již obsahuje mezeru, pak není přídán. Je tak možné použít ikony typu "fas fa-..".</attcomment>
+      <attcomment>Identifikátor ikony (automaticky se přidá "fa-" prefix).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>prefix</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attdef>fa</attdef>
+      <attcomment>Prefix / styl ikony (fa, fas, atd).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>tag</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attdef>span</attdef>
+      <attcomment>HTML tag, který se má použít.</attcomment>
     </attribute>
     <anyAttribute>
-      <attcomment>Všechny atributy jsou předány obalovému "span".</attcomment>
+      <attcomment>Všechny atributy jsou předány obalovému tagu.</attcomment>
     </anyAttribute>
-    <comment>Vrací span s ikonou.</comment>
+    <comment>Vrací HTML tag s ikonou.</comment>
   </tag>
   <anyProperty>
     <comment>Vrací span s ikonou. Název property je použit jako identifikátor ikony.</comment>

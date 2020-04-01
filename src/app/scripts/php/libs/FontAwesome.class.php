@@ -34,22 +34,17 @@
 			return $attributes;
 		}
 
-		public function span($icon, $params = []) {
+		public function icon($name, $prefix = "fa", $tag = "span", $params = []) {
 			self::resources();
 
-			if (strpos($icon, " ")) {
-				$params = self::appendClass($params, "$icon");
-			} else {
-				$params = self::appendClass($params, "fa");
-				$params = self::appendClass($params, "fa-$icon");
-			}
-
+			$params = self::appendClass($params, $prefix);
+			$params = self::appendClass($params, "fa-$name");
 			$attributes = parent::joinAttributes($params);
-			return "<span$attributes></span>";
+			return "<$tag$attributes></$tag>";
 		}
 
 		public function getProperty($name) {
-			return self::span($name, []);
+			return self::icon($name);
 		}
 	}
 
