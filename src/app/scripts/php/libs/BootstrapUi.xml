@@ -125,6 +125,96 @@
     </anyAttribute>
     <comment>Vykresluje komponentu "alert".</comment>
   </fulltag>
+  <tag>
+    <tagname>button</tagname>
+    <function>button</function>
+    <attribute>
+      <attname>text</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+      <attcomment>Text tlačítka.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>color</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attdef>primary</attdef>
+      <attcomment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark" nebo "link").</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isOutline</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda má jít o "outline" tlačítko.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>size</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attcomment>Velikost tlačítka ("large" / "lg" nebo "small" / "sm" nebo cokoli).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isBlock</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda má jít o blokové tlačítko (na celou šířku rodiče).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isActive</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda má jít o "zaškrtnuté" tlačítko.</attcomment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému "button".</comment>
+    </anyAttribute>
+    <comment>Vykresluje komponentu tlačítka (s textovým popisem).</comment>
+  </tag>
+  <fulltag>
+    <tagname>button</tagname>
+    <function>buttonFullTag</function>
+    <attribute>
+      <attname>color</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attdef>primary</attdef>
+      <attcomment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark" nebo "link").</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isOutline</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda má jít o "outline" tlačítko.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>size</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attcomment>Velikost tlačítka ("large" / "lg" nebo "small" / "sm" nebo cokoli).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isBlock</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda má jít o blokové tlačítko (na celou šířku rodiče).</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isActive</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda má jít o "zaškrtnuté" tlačítko.</attcomment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému "button".</comment>
+    </anyAttribute>
+    <comment>Vykresluje komponentu tlačítka.</comment>
+  </fulltag>
   <fulltag>
     <tagname>card</tagname>
     <function>card</function>

@@ -156,6 +156,41 @@
 			return "<div$attributes>$headerHtml$content$dismissHtml</div>";
 		}
 
+		public function buttonFullTag($template, $color = "primary", $isOutline = false, $size = "", $isBlock = false, $isActive = false, $params = []) {
+			$content = parent::parseContent($template);
+			return self::button($content, $color, $isOutline, $size, $isBlock, $isActive, $params);
+		}
+
+		public function button($text, $color = "primary", $isOutline = false, $size = "", $isBlock = false, $isActive = false, $params = []) {
+			$params = self::appendClass($params, "btn");
+			$outline = "";
+			if ($isOutline) {
+				$outline = "-outline";
+			}
+
+			$params = self::appendClass($params, "btn");
+			$params = self::appendClass($params, "btn$outline-$color");
+
+			if ($size == "large") {
+				$params = self::appendClass($params, "btn-lg");
+			} else if ($size == "small") {
+				$params = self::appendClass($params, "btn-sm");
+			} else if (!empty($size)) {
+				$params = self::appendClass($params, "btn-$size");
+			}
+
+			if ($isBlock) {
+				$params = self::appendClass($params, "btn-block");
+			}
+			
+			if ($isActive) {
+				$params = self::appendClass($params, "active");
+			}
+
+			$attributes = parent::joinAttributes($params);
+			return "<button$attributes>$text</button>";
+		}
+
 		public function card($template, $header = array(), $title = array(), $params = array()) {
 			$headerHtml = self::getTagHtml($header, "div", "card-header");
 			$titleHtml = self::getTagHtml($title, "h5", "card-title");
