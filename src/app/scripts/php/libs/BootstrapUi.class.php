@@ -136,6 +136,26 @@
 			return $html;
 		}
 
+		public function alert($template, $header = array(), $color = "primary", $isDismissible = false, $params = array()) {
+			$headerHtml = self::getTagHtml($header, "h4", "alert-heading");
+
+			$params["role"] = "alert";
+			$params = self::appendClass($params, "alert");
+			$params = self::appendClass($params, "alert-$color");
+			$dismissHtml = "";
+			if ($isDismissible) {
+				$params = self::appendClass($params, "alert-dismissible fade show");
+				$dismissHtml = ""
+				. "<button type='button' class='close' data-dismiss='alert'>"
+					. "<span aria-hidden='true'>&times;</span>"
+			  	. "</button>";
+			}
+
+			$attributes = parent::joinAttributes($params);
+			$content = parent::parseContent($template);
+			return "<div$attributes>$headerHtml$content$dismissHtml</div>";
+		}
+
 		public function card($template, $header = array(), $title = array(), $params = array()) {
 			$headerHtml = self::getTagHtml($header, "div", "card-header");
 			$titleHtml = self::getTagHtml($title, "h5", "card-title");

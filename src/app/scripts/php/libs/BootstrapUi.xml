@@ -98,6 +98,34 @@
     <comment>Vykresluje obalový div pro sloupec gridu (div class="col-*").</comment>
   </fulltag>
   <fulltag>
+    <tagname>alert</tagname>
+    <function>alert</function>
+    <attribute>
+      <attname>header</attname>
+      <atttype>string</atttype>
+      <prefix>true</prefix>
+      <attcomment>Nadpis alertu. Výchozí atribut je textem. Atribut "header-tag" slouží pro nastavení tagu (výchozí je "h4"). Ostatní atributy jsou předány tagu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>color</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attdef>primary</attdef>
+      <attcomment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark").</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isDismissible</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda má jít alert skrýt (tlačítkem "x").</attcomment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému "div".</comment>
+    </anyAttribute>
+    <comment>Vykresluje komponentu "alert".</comment>
+  </fulltag>
+  <fulltag>
     <tagname>card</tagname>
     <function>card</function>
     <attribute>
