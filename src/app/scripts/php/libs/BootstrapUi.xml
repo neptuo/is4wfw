@@ -134,11 +134,31 @@
   <fulltag>
     <tagname>nav</tagname>
     <function>nav</function>
+    <attribute>
+      <attname>tag</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attdef>ul</attdef>
+      <attcomment>Název obalového tagu ("ul" nebo "nav").</attcomment>
+    </attribute>
+    <attribute>
+      <attname>mode</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attcomment>Zda se má vykreslit jako obyčejná navigace nebo "pills" nebo "tabs".</attcomment>
+    </attribute>
+    <attribute>
+      <attname>fill</attname>
+      <atttype>bool</atttype>
+      <attreq>implied</attreq>
+      <attdef>false</attdef>
+      <attcomment>Zda se mají položky roztáhnout na celou šířku.</attcomment>
+    </attribute>
     <anyAttribute>
-      <comment>Všechny atributy jsou předány obalovému "div".</comment>
+      <comment>Všechny atributy jsou předány obalovému tagu.</comment>
     </anyAttribute>
     <comment>
-      Vygeneruje obalový tag pro "nav".
+      Vygeneruje obalový tag pro navigaci.
     </comment>
   </fulltag>
   <tag>

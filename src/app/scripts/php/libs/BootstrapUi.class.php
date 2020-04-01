@@ -173,11 +173,29 @@
 			return $result;
 		}
 
-		public function nav($template, $params = array()) {
+		private $navTag = null;
+
+		public function nav($template, $tag = "ul", $mode = "", $fill = false, $params = array()) {
+			$oldNavTag = $this->navTag;
+			$this->navTag = $tag;
+
 			$params = self::appendClass($params, "nav");
+
+			if ($mode == "pills") {
+				$params = self::appendClass($params, "nav-pills");
+			} else if ($mode == "tabs") {
+				$params = self::appendClass($params, "nav-tabs");
+			}
+
+			if ($fill) {
+				$params = self::appendClass($params, "nav-fill");
+			}
+
 			$attributes = parent::joinAttributes($params);
 			$content = parent::parseContent($template);
-			$result = "<div$attributes>$content</div>";
+			$result = "<$tag$attributes>$content</$tag>";
+
+			$this->navTag = $oldNavTag;
 			return $result;
 		}
 
@@ -195,12 +213,23 @@
 			}
 
 			$aParams = self::appendClass($aParams, $linkClass);
+			if ($isActive) {
+				$aParams = self::appendClass($aParams, "active");
+			}
+
 			$aAttributes = parent::joinAttributes($aParams);
 
-			$result = ""
-			. "<li$attributes>"
-				. "<a href='$url'$aAttributes>$text</a>"
-			. "</li>";
+			$result = "";
+			if ($this->navTag == "ul") {
+				$result .= "<li$attributes>";
+			}
+
+			$result .=  "<a href='$url'$aAttributes>$text</a>";
+
+			if ($this->navTag == "ul") {
+				$result .= "</li>";
+			}
+
 			return $result;
 		}
 	}
