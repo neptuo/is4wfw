@@ -1,15 +1,33 @@
-# Example: .\tools\Pack.ps1 v338.6 v338.7
-param($source, $target, $versionName)
+# Example: .\tools\Pack.ps1 v339.0-preview1
+param([string] $Version = $env:APPVEYOR_REPO_TAG_NAME)
 
-$fullVersion;
-if ($null -eq $versionName)
+$Source = $null;
+
+if ($Version.Contains("-")) 
 {
-    $fullVersion = $target;
-}
+    # Pre-release.
+    $Source = Invoke-Expression "git describe --abbrev=0 --tags HEAD~1";
+} 
+elseif ($Version.EndsWith(".0")) 
+{
+    # Major release.
+    $Source = $null;
+} 
 else 
 {
-    $fullVersion = $versionName;
+    # Patch release.
+    $Index = 0;
+    do {
+        $Index++;
+        $Source = Invoke-Expression "git describe --abbrev=0 --tags HEAD~$Index";
+    }
+    while ($Source.Contains("-"));
 }
 
-Invoke-Expression ((Join-Path -Path $PSScriptRoot -ChildPath "Pack-Full.ps1") + " $fullVersion")
-Invoke-Expression ((Join-Path -Path $PSScriptRoot -ChildPath "Pack-Patch.ps1") + " $source $target $versionName")
+Write-Host "Packing full version '$Version'.";
+Invoke-Expression ((Join-Path -Path $PSScriptRoot -ChildPath "Pack-Full.ps1") + " $Version");
+
+if (!($null -eq $Source)) {
+    Write-Host "Packing patch version '$Version' - '$Source'.";
+    Invoke-Expression ((Join-Path -Path $PSScriptRoot -ChildPath "Pack-Patch.ps1") + " $Source $Version")
+}
