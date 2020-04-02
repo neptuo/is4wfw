@@ -1,8 +1,5 @@
 version: '{build}'
 image: Visual Studio 2019
-branches:
-  only:
-  - master
 skip_non_tags: true
 build_script:
 - ps: .\tools\Pack.ps1 
