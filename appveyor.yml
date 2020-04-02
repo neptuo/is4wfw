@@ -1,0 +1,7 @@
+version: '{build}'
+image: Visual Studio 2019
+skip_non_tags: true
+build_script:
+- ps: .\tools\Pack.ps1 
+artifacts:
+- path: .\artifacts\*.zip
