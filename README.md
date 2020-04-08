@@ -1,6 +1,6 @@
 is4wfw
 
-Application Framework, Content Management System - https://is4wfw.neptuo.com.
+Application Framework, Content Management System - http://is4wfw.neptuo.com.
 
 ## Setup
 
