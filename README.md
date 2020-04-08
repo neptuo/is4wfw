@@ -1,6 +1,6 @@
-# (PHP-) WebFramework (phpwfw) (is4wfw)
+is4wfw
 
-Application Framework, Content Management System.
+Application Framework, Content Management System - https://is4wfw.neptuo.com.
 
 ## Setup
 
