@@ -28,17 +28,9 @@
          *  @return   none
          *
          */                        
-        public function countAccess($id = false, $every = false) {
+        public function countAccess($id = "1", $every = "day") {
             global $dbObject;
             $userIp = $_SERVER['REMOTE_ADDR'];
-
-            if ($id == false) {
-                $id = 1;
-            }
-
-            if ($every == false) {
-                $every = "day";
-            }
 
             $lastTime = time();
             switch ($every) {
