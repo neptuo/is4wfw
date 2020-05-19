@@ -147,7 +147,7 @@
     </attribute>
     <comment>
       Zobrazí editační formulář pro uživatele.
-      Fieldy: name, surname, login, password, passwordConfirm, passwordCurrent, enable, group_id.
+      Fieldy: name, surname, login, password, passwordConfirm, passwordCurrent, enable, group_id, group_ids.
       Field "group_id" musí být nastaven, jinak nepůjde nový uživatel uložit.
     </comment>
   </fulltag>
