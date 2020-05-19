@@ -63,7 +63,11 @@
 			$rb->save();
 		}
 
-		public function editFullTag($template, $bundleName, $languageName) {
+		public function editFullTag($template, $bundleName, $languageName, $filterKeyPrefix = "") {
+			if (!empty($filterKeyPrefix)) {
+				$filterKeyPrefix = explode(",", $filterKeyPrefix);
+			}
+
 			$rb = new LocalizationBundle();
 			$rb->setSource($bundleName);
 			$rb->setLanguage($languageName);
@@ -78,6 +82,20 @@
 			}
 
 			if ($editModel->isSave()) {
+				if (!empty($filterKeyPrefix)) {
+					$source = new LocalizationBundle();
+					$source->setSource($bundleName);
+					$source->setLanguage($languageName);
+					$source->setIsSystem(false);
+
+					$source->load();
+					foreach ($source->getKeys() as $key) {
+						if (!self::isKeyIncluded($filterKeyPrefix, $key)) {
+							$rb->set($key, $source->get($key));
+						}
+					}
+				}
+
 				self::save($rb, $editModel, $listModel);
 			}
 
@@ -91,10 +109,12 @@
 				if ($rb->exists()) {
 					$rb->load();
 					foreach ($rb->getKeys() as $key) {
-						$listItems[] = self::createListItem($index);
-						$keys[] = $key;
-						$values[] = $rb->get($key);
-						$index++;
+						if (self::isKeyIncluded($filterKeyPrefix, $key)) {
+							$listItems[] = self::createListItem($index);
+							$keys[] = $key;
+							$values[] = $rb->get($key);
+							$index++;
+						}
 					}
 				}
 
@@ -118,9 +138,23 @@
 			self::popListModel();
 			return $result;
 		}
+		
+		public function edit($bundleName, $languageName, $filterKeyPrefixes = "") {
+			return self::editFullTag(null, $bundleName, $languageName, $filterKeyPrefixes);
+		}
 
-		public function edit($bundleName, $languageName) {
-			return self::editFullTag(null, $bundleName, $languageName);
+		private function isKeyIncluded($filter, $key) {
+			if ($filter == null) {
+				return true;
+			}
+
+			for ($i=0; $i < count($filter); $i++) { 
+				if (parent::startsWith($key, $filter[$i])) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		private function createListItem($index) {

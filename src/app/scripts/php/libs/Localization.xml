@@ -58,6 +58,12 @@
       <atttype>string</atttype>
       <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
     </attribute>
+    <attribute>
+      <attname>filterKeyPrefix</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</attcomment>
+    </attribute>
     <comment>
       Zobrazí editační formulář pro uživatelský bundle.
     </comment>
@@ -76,6 +82,12 @@
       <attreq>required</attreq>
       <atttype>string</atttype>
       <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>filterKeyPrefix</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</attcomment>
     </attribute>
     <comment>
       Zobrazí editační formulář pro uživatelský bundle.
