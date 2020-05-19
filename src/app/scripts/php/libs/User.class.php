@@ -965,8 +965,8 @@
 			return parent::peekListModel()->field("roleIds");
         }
 
-        private static $EditIgnoredLoadKeys = ["password", "passwordConfirm", "passwordCurrent"];
-        private static $EditIgnoredSaveKeys = ["passwordConfirm", "passwordCurrent"];
+        private static $EditIgnoredLoadKeys = ["password", "passwordConfirm", "passwordCurrent", "group_ids"];
+        private static $EditIgnoredSaveKeys = ["passwordConfirm", "passwordCurrent", "group_ids"];
 
         public function edit($template, $uid = 0, $default = array()) {
             $model = parent::getEditModel();
@@ -997,6 +997,10 @@
                         }
 
                         $model->copyFrom($data);
+
+                        if ($model->hasKey("group_ids")) {
+                            $model["group_ids"] = self::getUserGroupIds($uid);
+                        }
                     }
                 } else {
                     $model->copyFrom($default);
@@ -1073,15 +1077,34 @@
 
                 // Save if valid.
                 if (!$model->hasMetadataKey("isValid") || $model->metadata("isValid")) {
+                    $groupIds = $model["group_ids"];
+
                     parent::unsetKeys($model, User::$EditIgnoredSaveKeys);
                     if (!$model->metadata("isUpdate")) {
                         $sql = parent::sql()->insert("user", $model);
                         parent::dataAccess()->execute($sql);
-                        $model["uid"] = parent::dataAccess()->getLastId();
+                        $model["uid"] = $uid = parent::dataAccess()->getLastId();
                         self::insertDefaultProperties($model["uid"]);
                     } else {
                         $sql = parent::sql()->update("user", $model, array("uid" => $uid));
                         parent::dataAccess()->execute($sql);
+                    }
+
+                    if (is_array($groupIds)) {
+                        $currentGroupIds = self::getUserGroupIds($uid);
+                        foreach ($currentGroupIds as $groupId) {
+                            if (!in_array($groupId, $groupIds)) {
+                                $sql = parent::sql()->delete("user_in_group", ["uid" => $uid, "gid" => $groupId]);
+                                parent::dataAccess()->execute($sql);
+                            }
+                        }
+
+                        foreach ($groupIds as $groupId) {
+                            if (!in_array($groupId, $currentGroupIds)) {
+                                $sql = parent::sql()->insert("user_in_group", ["uid" => $uid, "gid" => $groupId]);
+                                parent::dataAccess()->execute($sql);
+                            }
+                        }
                     }
                 }
 			}
@@ -1126,6 +1149,17 @@
             $sql = parent::sql()->select("user", ["uid"], ["login" => $login, "password" => $password]);
             $data = parent::dataAccess()->fetchSingle($sql);
             return count($data) != 0;
+        }
+
+        private function getUserGroupIds($uid) {
+            $sql = parent::sql()->select("user_in_group", ["gid"], ["uid" => $uid]);
+            $data = parent::dataAccess()->fetchAll($sql);
+            $groupIds = [];
+            for ($i=0; $i < count($data); $i++) { 
+                $groupIds[] = $data[$i]["gid"];
+            }
+
+            return $groupIds;
         }
     }
 
