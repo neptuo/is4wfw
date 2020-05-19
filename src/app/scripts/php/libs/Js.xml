@@ -31,6 +31,30 @@
     </comment>
   </tag>
   <tag>
+    <tagname>script</tagname>
+    <function>addScript</function>
+    <attribute>
+      <attname>path</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+    </attribute>
+    <comment>
+      Vloží do stránky skript s virtální (nebo absolutní) url "path", pokud takový ještě není vložen.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>style</tagname>
+    <function>addStyle</function>
+    <attribute>
+      <attname>path</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+    </attribute>
+    <comment>
+      Vloží do stránky style s virtální (nebo absolutní) url "path", pokud takový ještě není vložen.
+    </comment>
+  </tag>
+  <tag>
     <tagname>cmsResources</tagname>
     <function>getCmsResources</function>
     <attribute>

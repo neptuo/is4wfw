@@ -12,26 +12,12 @@
 			parent::setLocalizationBundle("bootstrapui");
 		}
 
-		private function addScript($virtualPath) {
-			$script = parent::js()->formatScript($virtualPath);
-			if ($script != null) {
-				parent::web()->addScript($script);
-			}
-		}
-
-		private function addStyle($virtualPath) {
-			$script = parent::js()->formatStyle($virtualPath);
-			if ($script != null) {
-				parent::web()->addStyle($script);
-			}
-		}
-
 		public function resources() {
 			if (!$this->areResourcesIncluded) {
-				self::addScript("~/js/bootstrap/jquery-3.2.1.slim.min.js");
-				self::addScript("~/js/bootstrap/popper.min.js");
-				self::addScript("~/js/bootstrap/bootstrap.min.js");
-				self::addStyle("~/css/bootstrap/bootstrap.min.css");
+				parent::js()->addScript("~/js/bootstrap/jquery-3.2.1.slim.min.js");
+				parent::js()->addScript("~/js/bootstrap/popper.min.js");
+				parent::js()->addScript("~/js/bootstrap/bootstrap.min.js");
+				parent::js()->addStyle("~/css/bootstrap/bootstrap.min.css");
 			}
 		}
 

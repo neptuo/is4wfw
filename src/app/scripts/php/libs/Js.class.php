@@ -50,6 +50,20 @@
             return '<link rel="stylesheet" href="' . $path . '?version=' . WEB_VERSION . '" type="text/css" />';
         }
 
+        public function addScript($virtualPath) {
+            $script = parent::js()->formatScript($virtualPath);
+			if ($script != null) {
+				parent::web()->addScript($script);
+			}
+        }
+
+		public function addStyle($virtualPath) {
+			$script = parent::js()->formatStyle($virtualPath);
+			if ($script != null) {
+				parent::web()->addStyle($script);
+			}
+		}
+
         /**
          *
          * 	Returns all javascripts and stylesheets required by cms.

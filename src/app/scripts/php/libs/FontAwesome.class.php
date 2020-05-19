@@ -11,16 +11,9 @@
 			parent::setTagLibXml("FontAwesome.xml");
 		}
 
-		private function addStyle($virtualPath) {
-			$script = parent::js()->formatStyle($virtualPath);
-			if ($script != null) {
-				parent::web()->addStyle($script);
-			}
-		}
-
 		public function resources() {
 			if (!$this->areResourcesIncluded) {
-				self::addStyle("~/css/fontawesome/all.min.css");
+				parent::js()->addStyle("~/css/fontawesome/all.min.css");
 			}
 		}
 
