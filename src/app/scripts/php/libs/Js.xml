@@ -174,5 +174,9 @@
       Všechny linky s target="_blank" nebo data-ajax="false" jsou ignorovány.
     </comment>
   </tag>
+  <tag>
+    <tagname>dataDuplicators</tagname>
+    <function>dataDuplicators</function>
+  </tag>
 </taglib>
 

@@ -264,6 +264,25 @@
 
             return $return;
         }
+
+        public function dataDuplicators() {
+            $script = '
+$("[data-duplicator]").each(function(i, el) {
+    var $el = $(el);
+    var selector = $el.attr("data-duplicator");
+    $el.click(function (e) {
+        $duplicable = $(selector);
+        $clone = $duplicable.clone();
+        $clone.removeAttr("data-duplicable");
+        $clone.appendTo($duplicable.parent());
+        $clone.find("input[type=text], textarea").val("").first().focus();
+
+        e.preventDefault();
+    });
+});';
+
+            return '<script type="text/javascript">' . $script . '</script>';
+        }
     }
 
 ?>
