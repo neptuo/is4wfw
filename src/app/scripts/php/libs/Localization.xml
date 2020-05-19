@@ -62,6 +62,25 @@
       Zobrazí editační formulář pro uživatelský bundle.
     </comment>
   </tag>
+  <fulltag>
+    <tagname>edit</tagname>
+    <function>editFullTag</function>
+    <attribute>
+      <attname>bundleName</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>languageName</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
+    </attribute>
+    <comment>
+      Zobrazí editační formulář pro uživatelský bundle.
+    </comment>
+  </fulltag>
   <property>
     <propname>editItems</propname>
     <getfunction>getEditItems</getfunction>

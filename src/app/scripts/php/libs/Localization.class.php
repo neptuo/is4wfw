@@ -29,7 +29,7 @@
 			return self::rb($name);
 		}
 
-		private function submit($rb, $editModel, $listModel) {
+		private function submit($rb, $editModel, $listModel, $template) {
 			$keys = $_POST["key"];
 			$count = count($keys);
 			
@@ -40,7 +40,11 @@
 
 			$listModel->items($listItems);
 			$listModel->render();
-			self::partialView("localization/edit");
+			if ($template == null) {
+				self::partialView("localization/edit");
+			} else {
+				parent::parseContent($template);
+			}
 			$listModel->render(false);
 		}
 
@@ -59,7 +63,7 @@
 			$rb->save();
 		}
 
-		public function edit($bundleName, $languageName) {
+		public function editFullTag($template, $bundleName, $languageName) {
 			$rb = new LocalizationBundle();
 			$rb->setSource($bundleName);
 			$rb->setLanguage($languageName);
@@ -70,7 +74,7 @@
 			self::pushListModel($listModel);
 
 			if ($editModel->isSubmit()) {
-				self::submit($rb, $editModel, $listModel);
+				self::submit($rb, $editModel, $listModel, $template);
 			}
 
 			if ($editModel->isSave()) {
@@ -103,12 +107,20 @@
 				$listModel->items($listItems);
 				
 				$listModel->render();
-				$result .= self::partialView("localization/edit");
+				if ($template == null) {
+					$result .= parent::partialView("localization/edit");
+				} else {
+					$result .= parent::parseContent($template);
+				}
 				$listModel->render(false);
 			}
 			
 			self::popListModel();
 			return $result;
+		}
+
+		public function edit($bundleName, $languageName) {
+			return self::editFullTag(null, $bundleName, $languageName);
 		}
 
 		private function createListItem($index) {
