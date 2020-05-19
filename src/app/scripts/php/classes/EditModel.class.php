@@ -235,10 +235,12 @@
             }
         }
 
-        public function fields() {
+        public function fields($ignoredKeys = null) {
             $keys = array();
             foreach ($this as $key => $value) {
-                $keys[] = $key;
+                if ($ignoredKeys == null || !in_array($key, $ignoredKeys)) {
+                    $keys[] = $key;
+                }
             }
             
             return $keys;

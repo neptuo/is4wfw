@@ -130,6 +130,27 @@
       Vypíše seznam uživatelů.
     </comment>
   </fulltag>
+  <fulltag>
+    <tagname>edit</tagname>
+    <function>edit</function>
+    <attribute>
+      <attname>uid</attname>
+      <attreq>implied</attreq>
+      <atttype>number</atttype>
+      <attcomment>Id uživatele, který se má editovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>default</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Výchozí hodnoty fieldů při zakládání uživatele.</attcomment>
+    </attribute>
+    <comment>
+      Zobrazí editační formulář pro uživatele.
+      Fieldy: name, surname, login, password, passwordConfirm, passwordCurrent, enable, group_id.
+      Field "group_id" musí být nastaven, jinak nepůjde nový uživatel uložit.
+    </comment>
+  </fulltag>
   <property>
     <propname>list</propname>
     <getfunction>getListItems</getfunction>

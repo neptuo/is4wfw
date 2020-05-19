@@ -20,6 +20,10 @@
             self::setLocalizationBundle("user");
         }
 
+        private function insertDefaultProperties($uid) {
+            parent::dataAccess()->execute('insert into `personal_property`(`user_id`, `name`, `value`, `type`) select '.$uid.', `name`, `value`, `type` from `personal_property` where `user_id` = 0;');
+        }
+
         public function showUserManagement($attUserId = false, $defaultMainGroupId = false, $propertiesPageId = "") {
             global $dbObject;
             global $loginObject;
@@ -78,7 +82,7 @@
                         $maxUid = $dbObject->fetchAll("SELECT MAX(`uid`) AS `muid` FROM `user`;");
                         $uid = $maxUid[0]['muid'] + 1;
                         $dbObject->execute("INSERT INTO `user`(`uid`, `login`, `name`, `surname`, `password`, `enable`, `group_id`) VALUES (" . $uid . ", \"" . $login . "\", \"" . $name . "\", \"" . $surname . "\", \"" . User::hashPassword($login, $password) . "\", " . $enable . ", " . $mainGroup . ");");
-                        $dbObject->execute('insert into `personal_property`(`user_id`, `name`, `value`, `type`) select '.$uid.', `name`, `value`, `type` from `personal_property` where `user_id` = 0;');
+                        self::insertDefaultProperties($uid);
                         foreach ($groups as $group) {
                             $dbObject->execute("INSERT INTO `user_in_group`(`uid`, `gid`) VALUES (" . $uid . ", " . $group . ");");
                         }
@@ -959,7 +963,170 @@
 
 		public function getListItemRoleIds() {
 			return parent::peekListModel()->field("roleIds");
-		}
+        }
+
+        private static $EditIgnoredLoadKeys = ["password", "passwordConfirm", "passwordCurrent"];
+        private static $EditIgnoredSaveKeys = ["passwordConfirm", "passwordCurrent"];
+
+        public function edit($template, $uid = 0, $default = array()) {
+            $model = parent::getEditModel();
+
+			if (!$model->hasMetadataKey("isUpdate")) {
+				$isUpdate = !empty($uid);
+                $model->metadata("isUpdate", $isUpdate);
+			} else {
+				$isUpdate = $model->metadata("isUpdate");
+            }
+            
+            if ($isUpdate && !RoleHelper::canCurrentEditUser($uid)) {
+                return parent::getWarning("Permission denied");
+            }
+
+			if ($model->isLoad()) {
+                if ($isUpdate) {
+                    $model->registration();
+                    self::parseContent($template);
+                    $model->registration(false);
+                    
+                    $columns = $model->fields(User::$EditIgnoredLoadKeys);
+                    if (count($columns) > 0) {
+                        $sql = parent::sql()->select("user", $columns, array("uid" => $uid));
+                        $data = parent::dataAccess()->fetchSingle($sql);
+                        if (empty($data)) {
+                            $model->metadata("isError", true);
+                        }
+
+                        $model->copyFrom($data);
+                    }
+                } else {
+                    $model->copyFrom($default);
+                }
+			}
+
+			if ($model->isSubmit()) {
+                self::parseContent($template);
+            }
+				
+			if ($model->isSave()) {
+                // Unique login.
+                if ($model->hasKey("login")) {
+                    $isValid = self::isUniqueLogin($model["login"], $uid);
+                    if (!$isValid) {
+                        $model->metadata("isValid", false);
+                    }
+                } elseif(!$isUpdate) {
+                    $model->metadata("isValid", false);
+                }
+
+                // Password checks.
+                if ($model->hasKey("password")) {
+                    $isValid = true;
+                    $password = $model["password"];
+
+                    // Length.
+                    if (strlen($password) == 0) {
+                        $isValid = false;
+                    }
+
+                    // Confirm.
+                    if ($model->hasKey("passwordConfirm")) {
+                        $passwordConfirm = $model["passwordConfirm"];
+                        if ($password != $passwordConfirm) {
+                            $isValid = false;
+                        }
+                    }
+
+                    // Match current.
+                    if ($model->hasKey("passwordCurrent") && $isUpdate) {
+                        $passwordCurrent = $model["passwordCurrent"];
+                        if (!self::isPasswordMatch($uid, $passwordCurrent)) {
+                            $isValid = false;
+                        }
+                    }
+                    
+                    // Compute hash of new one.
+                    if ($isValid) {
+                        $login = null;
+                        if ($model->hasKey("login")) {
+                            $login = $model["login"];
+                        } elseif($isUpdate) {
+                            $sql = parent::sql()->select("user", ["login"], ["uid" => $uid]);
+                            $data = parent::dataAccess()->fetchSingle($sql);
+                            $login = $data["login"];
+                        }
+
+                        $model["password"] = User::hashPassword($login, $passwordConfirm);
+                    } else {
+                        $model->metadata("isValid", false);
+                    }
+                }
+
+                // Enable.
+                if (!$model->hasKey("enable") && !$isUpdate) {
+                    $model["enable"] = 1;
+                }
+
+                // Main group id.
+                if (!$model->hasKey("group_id") && !$isUpdate) {
+                    $model->metadata("isValid", false);
+                }
+
+                // Save if valid.
+                if (!$model->hasMetadataKey("isValid") || $model->metadata("isValid")) {
+                    parent::unsetKeys($model, User::$EditIgnoredSaveKeys);
+                    if (!$model->metadata("isUpdate")) {
+                        $sql = parent::sql()->insert("user", $model);
+                        parent::dataAccess()->execute($sql);
+                        $model["uid"] = parent::dataAccess()->getLastId();
+                        self::insertDefaultProperties($model["uid"]);
+                    } else {
+                        $sql = parent::sql()->update("user", $model, array("uid" => $uid));
+                        parent::dataAccess()->execute($sql);
+                    }
+                }
+			}
+			
+            if ($model->isSaved()) {
+                if (!$model->hasMetadataKey("isValid") || $model->metadata("isValid")) {
+                    self::parseContent($template);
+                }
+            }
+			
+            if ($model->isRender()) {
+				if ($model->hasMetadataKey("isError") && $model->metadata("isError")) {
+					return parent::getWarning("Such user doesn't exist.");
+				}
+
+				$result = self::parseContent($template);
+				return $result;
+			}
+        }
+
+        private function isUniqueLogin($login, $uid = null) {
+            $sql = parent::sql()->select("user", ["uid"], ["login" => $login]);
+            $data = parent::dataAccess()->fetchSingle($sql);
+            if (count($data) == 0) {
+                return true;
+            } elseif(!empty($uid)) {
+                return $data["uid"] == $uid;
+            } else {
+                return false;
+            }
+        }
+        
+        private function isPasswordMatch($id, $password) {
+            $sql = parent::sql()->select("user", ["login"], ["uid" => $id]);
+            $data = parent::dataAccess()->fetchSingle($sql);
+            if (count($data) == 0) {
+                return false;
+            }
+
+            $login = $data["login"];
+            $password = User::hashPassword($login, $password);
+            $sql = parent::sql()->select("user", ["uid"], ["login" => $login, "password" => $password]);
+            $data = parent::dataAccess()->fetchSingle($sql);
+            return count($data) != 0;
+        }
     }
 
 ?>
