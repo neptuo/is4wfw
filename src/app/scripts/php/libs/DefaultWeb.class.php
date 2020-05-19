@@ -1674,17 +1674,17 @@
          *  @return generate links to language versions
          *
          */
-        public function getLanguages($homePage = false) {
+        public function getLanguages($homePage = false, $display = "language") {
             global $phpObject;
             global $dbObject;
 
             if ($homePage) {
-                $return = $dbObject->fetchAll("SELECT `language`.`id`, `language`.`language` FROM `info` LEFT JOIN `language` ON `info`.`language_id` = `language`.`id` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` WHERE `language`.`language` != \"\" AND `page`.`parent_id` = 0 AND `info`.`href` = \"\" ORDER BY `language`.`id`;");
+                $return = $dbObject->fetchAll("SELECT `language`.`id`, `language`.`language`, `language`.`$display` FROM `info` LEFT JOIN `language` ON `info`.`language_id` = `language`.`id` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` WHERE `language`.`language` != \"\" AND `page`.`parent_id` = 0 AND `info`.`href` = \"\" ORDER BY `language`.`id`;");
 
                 if (count($return) > 0) {
                     $ret = "<div class=\"languages\">";
                     foreach ($return as $lang) {
-                        $ret .= '<a class="lang-' . $lang['language'] . (($this->LanguageId == $lang['id']) ? ' active-language' : '') . '" href="~/' . $lang['language'] . '">' . $lang['language'] . '</a> ';
+                        $ret .= '<a class="lang-' . $lang['language'] . (($this->LanguageId == $lang['id']) ? ' active-language' : '') . '" href="~/' . $lang['language'] . '">' . $lang[$display] . '</a> ';
                     }
                     $ret .= "</div>";
                     return $ret;
@@ -1693,9 +1693,9 @@
                 }
             } else {
                 $langs = array();
-                $return = $dbObject->fetchAll("SELECT `id`, `language` FROM `language` WHERE `language` != \"\";");
+                $return = $dbObject->fetchAll("SELECT `id`, `language`, `$display` FROM `language` WHERE `language` != \"\";");
                 foreach ($return as $ln) {
-                    $names[$ln['id']] = $ln['language'];
+                    $names[$ln['id']] = $ln[$display];
                     $langs[$ln['id']] = '~/' . $ln['language'];
                 }
 
