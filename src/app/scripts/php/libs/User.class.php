@@ -1025,43 +1025,51 @@
                 // Password checks.
                 if ($model->hasKey("password")) {
                     $isValid = true;
+                    $isPasswordSkipped = false;
                     $password = $model["password"];
 
                     // Length.
                     if (strlen($password) == 0) {
-                        $isValid = false;
-                    }
-
-                    // Confirm.
-                    if ($model->hasKey("passwordConfirm")) {
-                        $passwordConfirm = $model["passwordConfirm"];
-                        if ($password != $passwordConfirm) {
+                        if ($isUpdate) {
+                            unset($model["password"]);
+                            $isPasswordSkipped = true;
+                        } else {
                             $isValid = false;
                         }
                     }
 
-                    // Match current.
-                    if ($model->hasKey("passwordCurrent") && $isUpdate) {
-                        $passwordCurrent = $model["passwordCurrent"];
-                        if (!self::isPasswordMatch($uid, $passwordCurrent)) {
-                            $isValid = false;
-                        }
-                    }
-                    
-                    // Compute hash of new one.
-                    if ($isValid) {
-                        $login = null;
-                        if ($model->hasKey("login")) {
-                            $login = $model["login"];
-                        } elseif($isUpdate) {
-                            $sql = parent::sql()->select("user", ["login"], ["uid" => $uid]);
-                            $data = parent::dataAccess()->fetchSingle($sql);
-                            $login = $data["login"];
+                    if (!$isPasswordSkipped) {
+                        // Confirm.
+                        if ($model->hasKey("passwordConfirm")) {
+                            $passwordConfirm = $model["passwordConfirm"];
+                            if ($password != $passwordConfirm) {
+                                $isValid = false;
+                            }
                         }
 
-                        $model["password"] = User::hashPassword($login, $passwordConfirm);
-                    } else {
-                        $model->metadata("isValid", false);
+                        // Match current.
+                        if ($model->hasKey("passwordCurrent") && $isUpdate) {
+                            $passwordCurrent = $model["passwordCurrent"];
+                            if (!self::isPasswordMatch($uid, $passwordCurrent)) {
+                                $isValid = false;
+                            }
+                        }
+                        
+                        // Compute hash of new one.
+                        if ($isValid) {
+                            $login = null;
+                            if ($model->hasKey("login")) {
+                                $login = $model["login"];
+                            } elseif($isUpdate) {
+                                $sql = parent::sql()->select("user", ["login"], ["uid" => $uid]);
+                                $data = parent::dataAccess()->fetchSingle($sql);
+                                $login = $data["login"];
+                            }
+
+                            $model["password"] = User::hashPassword($login, $passwordConfirm);
+                        } else {
+                            $model->metadata("isValid", false);
+                        }
                     }
                 }
 
