@@ -98,6 +98,14 @@
 
 				self::save($rb, $editModel, $listModel);
 			}
+			
+            if ($editModel->isSaved()) {
+                if ($template == null) {
+					$result .= parent::partialView("localization/edit");
+				} else {
+					$result .= parent::parseContent($template);
+				}
+            }
 
 			$result = "";
 			if ($editModel->isRender()) {
