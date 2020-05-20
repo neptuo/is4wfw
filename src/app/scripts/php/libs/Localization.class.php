@@ -87,11 +87,12 @@
 					$source->setSource($bundleName);
 					$source->setLanguage($languageName);
 					$source->setIsSystem(false);
-
-					$source->load();
-					foreach ($source->getKeys() as $key) {
-						if (!self::isKeyIncluded($filterKeyPrefix, $key)) {
-							$rb->set($key, $source->get($key));
+					if ($rb->exists()) {
+						$source->load();
+						foreach ($source->getKeys() as $key) {
+							if (!self::isKeyIncluded($filterKeyPrefix, $key)) {
+								$rb->set($key, $source->get($key));
+							}
 						}
 					}
 				}
