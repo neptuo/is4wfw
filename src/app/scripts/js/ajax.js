@@ -30,6 +30,7 @@ Ajax.prototype.AddEventListener = function(eventName, handler) {
 Ajax.prototype.Initialize = function(root) {
     root.find("a").not("[target=_blank]").not("[data-ajax=false]").click(this._OnLinkClick.bind(this));
     root.find("form").not("[target=_blank]").not("[data-ajax=false]").submit(this._OnFormSubmit.bind(this));
+    root.find("button,input[type=submit]").not("[data-ajax=false]").not("[type=button]").not("[type=reset]").click(this._OnButtonClick.bind(this));
 };
 
 Ajax.prototype._StopEvent = function(e) {
@@ -66,6 +67,13 @@ Ajax.prototype._OnLinkClick = function(e) {
     this._StopEvent(e);
 };
 
+Ajax.prototype._OnButtonClick = function(e) {
+    this._submitButton = {
+        name: e.currentTarget.name,
+        value: e.currentTarget.value
+    };
+};
+
 Ajax.prototype._OnFormSubmit = function(e) {
     var form = e.currentTarget;
     var url = form.action;
@@ -74,6 +82,12 @@ Ajax.prototype._OnFormSubmit = function(e) {
     this._RaiseEvent('loading');
 
     var data = new FormData(form);
+
+    if (this._submitButton != null) {
+        data.set(this._submitButton.name, this._submitButton.value);
+        this._submitButton = null;
+    }
+
     var request = new XMLHttpRequest();
     request.addEventListener("readystatechange", this._OnFormReadyStateChanged.bind(this));
     request.open(method, url);
