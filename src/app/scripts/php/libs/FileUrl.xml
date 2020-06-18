@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>FileUrl library</name>
+  <classname>FileUrl</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro generování odkazů na soubory pomocí property.
+  </comment>
+  <tag>
+    <tagname>declare</tagname>
+    <function>setValue</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název (property), pod kterým má být URL dostupná.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>id</attname>
+      <attreq>required</attreq>
+      <attcomment>ID souboru, jehož URL se má složit.</attcomment>
+    </attribute>
+    <comment>
+      Nastaví URL k souboru do proměnné s názvem 'name'.
+    </comment>
+  </tag>
+  <anyProperty>
+    <comment>
+      Vrátí URL soubor s ID podle názvu property (příklad: "fileUrl:42" => "~/file.php?rid=42).
+      Druhé použití umožňuje pomocí "fileUrl:declare" uložit URL do pojmenované proměnné (přístup k hodnotě poté například "fileUrl:infinite").
+      O které použití se jedná se rozhoduje podle toho, zda je název číslo nebo text.
+    </comment>
+  </anyProperty>
+</taglib>
+
