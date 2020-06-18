@@ -58,6 +58,7 @@
         }
 
         public function addScriptInline($content, $placement = "head") {
+            $content = parent::parseContent($content);
             $script = parent::web()->formatScriptInline($content);
             parent::web()->addScript($script, $placement);
         }
@@ -70,6 +71,7 @@
 		}
 
         public function addStyleInline($content) {
+            $content = parent::parseContent($content);
             $style = parent::web()->formatStyleInline($content);
             parent::web()->addStyle($style);
         }
