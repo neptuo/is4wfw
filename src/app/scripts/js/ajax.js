@@ -133,6 +133,9 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
     var response = document.createElement("document");
     response.innerHTML = responseText;
 
+    var scriptInlines = null;
+    var styleInlines = null;
+
     var head = this._FindElement(response, "rssmm:head");
     if (head != null) {
         var title = this._FindElement(head, "rssmm:title");
@@ -142,9 +145,9 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
 
         var styles = this._FindElement(head, "rssmm:styles");
         if (styles != null) {
-            styles = styles.getElementsByTagName("rssmm:link-ref");
-            for (var i = 0, count = styles.length; i < count; i++) {
-                var linkUrl = styles[i].innerHTML;
+            var styleReferences = styles.getElementsByTagName("rssmm:link-ref");
+            for (var i = 0, count = styleReferences.length; i < count; i++) {
+                var linkUrl = styleReferences[i].innerHTML;
                 if (document.querySelector("link[href='" + linkUrl + "']") == null) {
                     var link = document.createElement("link");
                     link.rel = "stylesheet";
@@ -153,13 +156,22 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
                     document.head.appendChild(link);
                 }
             }
+
+            var styleInlines = styles.getElementsByTagName("rssmm:style");
+            for (var i = 0, count = styleInlines.length; i < count; i++) {
+                var style = styleInlines[i].innerHTML;
+                var link = document.createElement("style");
+                link.type = "text/css";
+                link.innerHTML = style;
+                document.head.appendChild(link);
+            }
         }
         
         var scripts = this._FindElement(head, "rssmm:scripts");
         if (scripts != null) {
-            scripts = scripts.getElementsByTagName("rssmm:script-ref");
-            for (var i = 0, count = scripts.length; i < count; i++) {
-                var linkUrl = scripts[i].innerHTML;
+            var scriptReferences = scripts.getElementsByTagName("rssmm:script-ref");
+            for (var i = 0, count = scriptReferences.length; i < count; i++) {
+                var linkUrl = scriptReferences[i].innerHTML;
                 if (document.querySelector("script[src='" + linkUrl + "']") == null) {
                     var link = document.createElement("script");
                     link.src = linkUrl;
@@ -167,6 +179,8 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
                     document.head.appendChild(link);
                 }
             }
+
+            scriptInlines = scripts.getElementsByTagName("rssmm:script");
         }
     }
 
@@ -184,6 +198,13 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
             oldContent.html(html)
             this.Initialize(oldContent); 
         }   
+    }
+
+    if (scriptInlines != null) {
+        for (var i = 0, count = scriptInlines.length; i < count; i++) {
+            var script = scriptInlines[i].innerHTML;
+            eval(script);
+        }
     }
 
     this._RaiseEvent('completed');

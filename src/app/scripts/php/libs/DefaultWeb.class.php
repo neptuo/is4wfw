@@ -212,6 +212,10 @@
             }
         }
 
+        public function isXmlTemplate() {
+            return $this->Template == "xml";
+        }
+
         public function isZipOutput() {
             return $this->ZipOutput;
         }
@@ -1049,6 +1053,22 @@
                     }
                 }
             }
+        }
+
+        public function formatScript($url) {
+            return ($this->Template == 'xml') ? '<rssmm:script-ref>' . $url . '</rssmm:script-ref>' : '<script type="text/javascript" src="' . $url . '"></script>';
+        }
+
+        public function formatScriptInline($content) {
+            return ($this->Template == 'xml') ? '<rssmm:script>' . $content . '</rssmm:script>' : '<script type="text/javascript">' . $content . '</script>';
+        }
+
+        public function formatStyle($url) {
+            return ($this->Template == 'xml') ? '<rssmm:link-ref>' . $url . '</rssmm:link-ref>' : '<link rel="stylesheet" href="' . $url . '" type="text/css" />';
+        }
+
+        public function formatStyleInline($content) {
+            return ($this->Template == 'xml') ? '<rssmm:style>' . $content . '</rssmm:style>' : '<style type="text/css">' . $content . '</style>';
         }
 
         public function addScript($html, $placement = "head") {

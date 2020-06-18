@@ -38,7 +38,7 @@
                 $path = $minPath;
             }
             
-            return '<script type="text/javascript" src="' . $path . '?version=' . WEB_VERSION . '"></script>';
+            return parent::web()->formatScript($path . '?version=' . WEB_VERSION);
         }
 
         public function formatStyle($path) {
@@ -47,7 +47,7 @@
             }
             
             $this->includedStyles[] = $path;
-            return '<link rel="stylesheet" href="' . $path . '?version=' . WEB_VERSION . '" type="text/css" />';
+            return parent::web()->formatStyle($path . '?version=' . WEB_VERSION);
         }
 
         public function addScript($virtualPath) {
@@ -58,7 +58,7 @@
         }
 
         public function addScriptInline($content, $placement = "head") {
-            $script = '<script type="text/javascript">' . $content . '</script>';
+            $script = parent::web()->formatScriptInline($content);
             parent::web()->addScript($script, $placement);
         }
 
@@ -70,7 +70,7 @@
 		}
 
         public function addStyleInline($content) {
-            $style = '<style type="text/css">' . $content . '</style>';
+            $style = parent::web()->formatStyleInline($content);
             parent::web()->addStyle($style);
         }
 
@@ -262,6 +262,10 @@
         }
 
         public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false) {
+            if (parent::web()->isXmlTemplate()) {
+                return;
+            }
+
             if (!is_numeric($parentPageId)) {
                 $parentPageId = 'null';
             }
@@ -280,13 +284,10 @@
                 $init .= 'window["' . $varName . '"] = ajax; ';
             }
             $init .= 'ajax.Initialize($(document.body)); ';
-
-            $return = ''
-                . self::formatScript('~/js/jquery/jquery.js')
-                . self::formatScript('~/js/ajax.js')
-                . '<script type="text/javascript">' . '$(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ' . $init . '});' . '</script>';
-
-            return $return;
+            
+            self::addScript('~/js/jquery/jquery.js');
+            self::addScript('~/js/ajax.js');
+            self::addScriptInline('$(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ' . $init . '});', "tail");
         }
 
         public function dataDuplicators() {
