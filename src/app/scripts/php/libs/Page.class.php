@@ -76,19 +76,13 @@
                 $content = str_replace('&amp;web:page', '&web:page', $_POST['edit-content']);
                 $tlStart = str_replace('&amp;web:page', '&web:page', $_POST['edit-tl-start']);
                 $tlEnd = str_replace('&amp;web:page', '&web:page', $_POST['edit-tl-end']);
-                $head = str_replace('&#126', '~', $head);
-                $content = str_replace('&#126', '~', $content);
-                $tlStart = str_replace('&#126', '~', $tlStart);
-                $tlEnd = str_replace('&#126', '~', $tlEnd);
-                $head = str_replace('"', '\"', $head);
-                $content = str_replace('"', '\"', $content);
-                $tlStart = str_replace('"', '\"', $tlStart);
-                $tlEnd = str_replace('"', '\"', $tlEnd);
+                $head =    $dbObject->escape(str_replace('&#126', '~', $head));
+                $content = $dbObject->escape(str_replace('&#126', '~', $content));
+                $tlStart = $dbObject->escape(str_replace('&#126', '~', $tlStart));
+                $tlEnd =   $dbObject->escape(str_replace('&#126', '~', $tlEnd));
                 $type = $_POST['type'];
-                $keywords = str_replace('&#126', '~', $_POST['edit-keywords']);
-                $keywords = str_replace('"', '\"', $keywords);
-                $title = str_replace('&#126', '~', $_POST['edit-title']);
-                $title = str_replace('"', '\"', $title);
+                $keywords = $dbObject->escape(str_replace('&#126', '~', $_POST['edit-keywords']));
+                $title = $dbObject->escape(str_replace('&#126', '~', $_POST['edit-title']));
                 $clearUrlCache = $_POST['edit-clearurlcache'];
                 $cacheTime = $_POST['edit-cachetime'];
                 $errors = array();
@@ -98,15 +92,6 @@
                 $pageRightR = $_POST['right-edit-groups-r'];
                 $pageRightD = $_POST['right-edit-groups-d'];
                 $pageRightA = $_POST['right-edit-groups-a'];
-
-                // Surely???
-                //$head = str_replace('"', '\"', $head);
-                //$content = str_replace('"', '\"', $content);
-                //$tlStart = str_replace('"', '\"', $tlStart);
-                //$tlEnd = str_replace('"', '\"', $tlEnd);
-                // --
-                //tmp print
-                //$tlStart =  str_replace('<', '&lt;', str_replace('>', '&gt;', $tlStart));
 
                 if (strlen($name) < 2) {
                     $errors[] = $rb->get('page.error.nametooshort');
@@ -1721,8 +1706,7 @@
                     $fileId = $_POST['file-id'];
                 }
                 $fileName = $_POST['file-name'];
-                $fileContent = str_replace('&#126', '~', $_POST['file-content']);
-                $fileContent = str_replace('"', '\"', $fileContent);
+                $fileContent = $dbObject->escape(str_replace('&#126', '~', $_POST['file-content']));
                 $fileType = $_POST['file-type'];
                 $browser['all'] = (($_POST['browser-all'] == "on") ? 1 : 0);
                 $browser['msie6'] = (($_POST['browser-ie6'] == "on") ? 1 : 0);
@@ -2560,9 +2544,7 @@
             if ($_POST['template-submit'] == "Save") {
                 $templateId = $_POST['template-id'];
                 $templateName = $_POST['template-name'];
-                $templateContent = str_replace('&#126;', '~', $_POST['template-content']);
-                $templateContent = str_replace('"', '\"', $templateContent);
-                //$templateContent = str_replace('"', '\"', $templateContent);
+                $templateContent = $dbObject->escape(str_replace('&#126;', '~', $_POST['template-content']));
                 $templateR = $_POST['template-right-edit-groups-r'];
                 $templateW = $_POST['template-right-edit-groups-w'];
                 $templateD = $_POST['template-right-edit-groups-d'];
@@ -3076,10 +3058,7 @@
 
                 $content = $params['content'];
                 $content = str_replace('&amp;web:page', '&web:page', $content);
-                $content = str_replace('&#126', '~', $content);
-                // Already escaped probably because of binding from custom property.
-                // $content = str_replace('"', '\"', $content);
-                // $content = $db->escape($content);
+                $content = $db->escape(str_replace('&#126', '~', $content));
 
                 $updateContentSql .= '`content` = "' . $db->escape($content) . '"';
             }
