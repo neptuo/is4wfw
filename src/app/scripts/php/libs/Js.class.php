@@ -53,16 +53,26 @@
         public function addScript($virtualPath) {
             $script = parent::js()->formatScript($virtualPath);
 			if ($script != null) {
-				parent::web()->addScript($script);
+                parent::web()->addScript($script);
 			}
         }
 
+        public function addScriptInline($content, $placement = "head") {
+            $script = '<script type="text/javascript">' . $content . '</script>';
+            parent::web()->addScript($script, $placement);
+        }
+
 		public function addStyle($virtualPath) {
-			$script = parent::js()->formatStyle($virtualPath);
-			if ($script != null) {
-				parent::web()->addStyle($script);
+			$style = parent::js()->formatStyle($virtualPath);
+			if ($style != null) {
+				parent::web()->addStyle($style);
 			}
 		}
+
+        public function addStyleInline($content) {
+            $style = '<style type="text/css">' . $content . '</style>';
+            parent::web()->addStyle($style);
+        }
 
         /**
          *

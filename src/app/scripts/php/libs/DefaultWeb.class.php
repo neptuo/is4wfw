@@ -51,7 +51,8 @@
          *     
          */
         private $PageHead = "";
-        private $PageScripts = "";
+        private $PageHeadScripts = "";
+        private $PageTailScripts = "";
         private $PageStyles = "";
         public $PageLog = "";
         /**
@@ -1042,7 +1043,7 @@
                                 $this->PageStyles .= (($this->Template == 'xml') ? '<rssmm:link-ref>' . $fileUrl . '</rssmm:link-ref>' : '<link rel="stylesheet" href="' . $fileUrl . '" type="text/css" />');
                                 break;
                             case WEB_TYPE_JS: 
-                                $this->PageScripts .= (($this->Template == 'xml') ? '<rssmm:script-ref>' . $fileUrl . '</rssmm:script-ref>' : '<script type="text/javascript" src="' . $fileUrl . '"></script>');
+                                $this->PageHeadScripts .= (($this->Template == 'xml') ? '<rssmm:script-ref>' . $fileUrl . '</rssmm:script-ref>' : '<script type="text/javascript" src="' . $fileUrl . '"></script>');
                                 break;
                         }
                     }
@@ -1050,8 +1051,12 @@
             }
         }
 
-        public function addScript($html) {
-            $this->PageScripts .= $html;
+        public function addScript($html, $placement = "head") {
+            if ($placement == "head") {
+                $this->PageHeadScripts .= $html;
+            } else if($placement == "tail") {
+                $this->PageTailScripts .= $html;
+            }
         }
 
         public function addStyle($html) {
@@ -1160,7 +1165,7 @@
                         . '<rssmm:title>' . $this->PageTitle . '</rssmm:title>'
                         . '<rssmm:keywords>' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo</rssmm:keywords>'
                         . '<rssmm:styles>' . $this->PageStyles . '</rssmm:styles>'
-                        . '<rssmm:scripts>' . $this->PageScripts . '</rssmm:scripts>'
+                        . '<rssmm:scripts>' . $this->PageHeadScripts . $this->PageTailScripts . '</rssmm:scripts>'
                     . '</rssmm:head>'
                     . '<rssmm:content>' . $this->PageContent . '</rssmm:content>'
                     . '<rssmm:log>' . $diacont . '</rssmm:log>'
@@ -1188,10 +1193,12 @@
                         . '<meta name="robots" content="all, index, follow" />'
                         . '<meta name="author" content="Marek Fišera" />'
                         . '<title>' . $this->PageTitle . '</title>'
-                        . $this->PageHead . $this->PageStyles . $this->PageScripts
+                        . $this->PageHead . $this->PageStyles . $this->PageHeadScripts
                     . '</head>'
                     . '<body>' 
-                        . $this->PageContent . $diacont 
+                        . $this->PageContent 
+                        . $diacont 
+                        . $this->PageTailScripts
                     . '</body>'
                 . '</html>';
             }
