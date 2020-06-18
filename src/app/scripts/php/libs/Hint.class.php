@@ -350,6 +350,7 @@
                         .'<option value="php.libs.Error"'.($_SESSION['select-class-path'] == 'php.libs.Error' ? 'selected="selected"' : '').'>php.libs.Error</option>'
                         .'<option value="php.libs.File"'.($_SESSION['select-class-path'] == 'php.libs.File' ? 'selected="selected"' : '').'>php.libs.File</option>'
                         .'<option value="php.libs.FileAdmin"'.($_SESSION['select-class-path'] == 'php.libs.FileAdmin' ? 'selected="selected"' : '').'>php.libs.FileAdmin</option>'
+                        .'<option value="php.libs.FileUrl"'.($_SESSION['select-class-path'] == 'php.libs.FileUrl' ? 'selected="selected"' : '').'>php.libs.FileUrl</option>'
                         .'<option value="php.libs.Filter"'.($_SESSION['select-class-path'] == 'php.libs.Filter' ? 'selected="selected"' : '').'>php.libs.Filter</option>'
                         .'<option value="php.libs.FontAwesome"'.($_SESSION['select-class-path'] == 'php.libs.FontAwesome' ? 'selected="selected"' : '').'>php.libs.FontAwesome</option>'
                         .'<option value="php.libs.Google"'.($_SESSION['select-class-path'] == 'php.libs.Google' ? 'selected="selected"' : '').'>php.libs.Google</option>'
