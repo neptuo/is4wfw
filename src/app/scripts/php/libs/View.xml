@@ -21,6 +21,13 @@
     </comment>
   </tag>
   <fulltag>
+    <tagname>head</tagname>
+    <function>head</function>
+    <comment>
+      Přidá svůj obsah do hlavičky stránky.
+    </comment>
+  </fulltag>
+  <fulltag>
     <tagname>template</tagname>
     <function>useTemplate</function>
     <attribute>

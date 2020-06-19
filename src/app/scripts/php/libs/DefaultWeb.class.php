@@ -54,6 +54,20 @@
         private $PageHeadScripts = "";
         private $PageTailScripts = "";
         private $PageStyles = "";
+
+        public function getPageHeadScripts() {
+            return $this->PageHeadScripts;
+        }
+
+        public function getPageTailScripts() {
+            return $this->PageTailScripts;
+        }
+
+        public function getPageStyles() {
+            return $this->PageStyles;
+        }
+        
+
         public $PageLog = "";
         /**
          *

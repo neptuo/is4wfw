@@ -22,6 +22,7 @@
         private $Title;
         private $CurrentTemplateContent;
         private $CurrentTemplatePointer;
+        private $Header = "";
 
         public function __construct() {
             self::setTagLibXml("View.xml");
@@ -72,6 +73,10 @@
             $return = $parser->getResult();
 
             return $return;
+        }
+
+        public function head($content) {
+            $this->Header .= parent::parseContent($content);
         }
 
         public function getContent() {
@@ -150,16 +155,21 @@
                         '</rssmm:response>';
             } else {
                 $styles = '';
+                $styles .= ViewHelper::resolveUrl(parent::web()->getPageStyles());
                 foreach ($this->Resources['css'] as $res) {
                     $styles .= '<link rel="stylesheet" href="' . ViewHelper :: resolveUrl($res) . '" type="text/css" />';
                 }
+
                 $scripts = '';
+                $scripts .= ViewHelper::resolveUrl(parent::web()->getPageHeadScripts());
+                $scripts .= ViewHelper::resolveUrl(parent::web()->getPageTailScripts());
                 foreach ($this->Resources['js'] as $res) {
                     echo $res;
                     $scripts .= '<script type="text/javascript" src="' . ViewHelper :: resolveUrl($res) . '"></script>';
                 }
 
-                $content = ViewHelper :: resolveUrl($content);
+
+                $content = ViewHelper::resolveUrl($content);
 
                 $diacont = "";
                 if (array_key_exists('mem-stats', $_GET)) {
@@ -175,32 +185,33 @@
                     foreach (parent::db()->getDataAccess()->getQueries() as $key => $query) {
                         $diacont .= parent::debugFrame('Query ' . $key, $query, 'code');
                     }
-
                 }
                 if (strlen($this->PageLog) != 0) {
                     $diacont .= parent::debugFrame('Page Log', $webObject->PageLog);
                 }
 
                 $return = '' .
-                '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' .
-                '<html xmlns="http://www.w3.org/1999/xhtml">' .
+                '<!DOCTYPE html>' .
+                '<html>' .
                     '<head>' .
                         '<meta http-equiv="content-type" content="text/html; charset=utf-8" />' .
                         '<meta name="description" content="' . $this->Title . '" />' .
                         '<meta name="robots" content="all, index, follow" />' .
                         '<meta name="author" content="Marek Fišera" />' .
-                    '<title>' . $this->Title . '</title>' .
+                        '<title>' . $this->Title . '</title>' .
+                        $this->Header .
                         $styles .
                     '</head>' .
                     '<body>' . $content . $scripts . $diacont . '</body>' .
                 '</html>';
             }
 
-            $return = preg_replace_callback('(<web:frame( title="([^"]*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array(
-                        & $this,
-                        'parsepostframes'
-                            ), $return);
-            self :: tryToComprimeContent($return);
+            $return = preg_replace_callback(
+                '(<web:frame( title="([^"]*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', 
+                array(&$this, 'parsepostframes'), 
+                $return
+            );
+            $this->tryToComprimeContent($return);
         }
 
         private function tryToComprimeContent($content) {

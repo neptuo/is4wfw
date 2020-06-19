@@ -1,0 +1,25 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background: #E5E5E5;
+}
+
+.is4wfw.container-fluid, .is4wfw .row {
+    height: 100%;
+}
+
+.is4wfw {
+    background: #ddd;
+}
+
+.is4wfw .card {
+    border-color: #04601C;
+}
+
+.is4wfw .card-header {
+    color: #ffffff;
+    background-color: #04601C;
+}

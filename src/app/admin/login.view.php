@@ -1,26 +1,36 @@
-<v:template src="~/templates/template.view">
-	<div class="login-icons">
-		<img src="~/images/icons/service/rssmm_wfw.png" width="80" height="15" />
-	  	<img src="~/images/icons/service/ctags_php.png" width="80" height="15" />
-	  	<hr />
-	  	<img src="~/images/icons/service/valid_xhtml.png" width="80" height="15" />
-	  	<img src="~/images/icons/service/valid_css.png" width="80" height="15" />
-	  	<hr />
-	  	<img src="~/images/icons/service/firefox_copy2.gif" width="80" height="15" />
-	  	<img src="~/images/icons/service/opera.gif" width="80" height="15" />
-	  	<img src="~/images/icons/service/safari_copy2.gif" width="80" height="15" />
-	  	<hr />
-	  	<img src="~/images/icons/service/1024768.gif" width="80" height="15" />
-		<img src="~/images/icons/service/12801024.gif" width="80" height="15" />
-	  	<img src="~/images/icons/service/16001200.gif" width="80" height="15" />
-	</div>
-	<div class="login">
-		<div class="login-head"></div>
-		<div class="login-in">
-			<login:form group="web-admins" pageId="~/in/index.view" />
-		</div>
-	</div>
-	<script type="text/javascript" src="~/js/domready.js"></script>
-	<script type="text/javascript" src="~/js/formFieldEffect.js"></script>
-	<script type="text/javascript" src="~/js/initLogin.js"></script>
-</v:template>
+<v:head>
+	<meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<js:style path="~/css/login.css" />
+	<bs:resources />
+</v:head>
+
+<v:title value="is4wfw" />
+<login:init group="web-admins" />
+
+<bs:container fluid="true" class="is4wfw">
+    <bs:row vertical="center" class="justify-content-center">
+        <bs:column small="8" medium="4" >
+            <bs:card header="is4wfw">
+                <edit:form submit="login">
+                    <web:condition when="edit:save">
+                        <login:login group="web-admins" username="edit:username" password="edit:password">
+                            <web:redirectTo pageId="~/in/index.view" />
+                        </login:login>
+                    </web:condition>
+                    
+                    <bs:formGroup label="Username">
+                        <ui:textbox name="username" class="form-control form-control-sm" />
+                    </bs:formGroup>
+                    <bs:formGroup label="Password">
+                        <ui:passwordbox name="password" type="password" class="form-control form-control-sm" />
+                    </bs:formGroup>
+                    
+                    <button name="login" value="login" class="btn btn-secondary mt-2 px-3">
+                        Login
+                    </button>
+                </edit:form>
+            </bs:card>
+        </bs:column>
+    </bs:row>
+</bs:container>
