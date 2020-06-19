@@ -1562,7 +1562,7 @@
         }
 
         private function getMenuItems($parentId, $display) {
-            return parent::db()->fetchAll("SELECT `page`.`id`, `info`.`$display` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `info`.`in_menu` = 1 AND `is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`wp` = " . $this->ProjectId . " ORDER BY `info`.`page_pos`;");
+            return parent::db()->fetchAll("SELECT `page`.`id`, `info`.`$display`, `info`.`icon` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `info`.`in_menu` = 1 AND `is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`wp` = " . $this->ProjectId . " ORDER BY `info`.`page_pos`;");
         }
 
         private function canUserReadPage($pageId) {
@@ -1644,27 +1644,28 @@
 
         public function getMenuWithTemplate($template, $parentId, $display = "name", $copyParameters = false) {
             $model = new ListModel();
-            self::pushListModel($model);
+            $this->pushListModel($model);
 
-            $data = self::getMenuItems($parentId, $display);
+            $data = $this->getMenuItems($parentId, $display);
             $items = array();
             foreach ($data as $key => $item) {
-                if (!self::canUserReadPage($item['id'])) {
+                if (!$this->canUserReadPage($item['id'])) {
                     continue;
                 }
 
                 $text = $item[$display];
                 if ($display == "title") {
-                    $text = self::parseContent($item[$display]);
+                    $text = $this->parseContent($item[$display]);
                 }
                 
-                $url = self::composeUrl($item["id"], $this->LanguageId, false, true, $copyParameters);
+                $url = $this->composeUrl($item["id"], $this->LanguageId, false, true, $copyParameters);
                 $active = in_array($item["id"], $this->PagesId);
 
                 $items[] = array(
                     "display" => $text,
                     "url" => $url,
-                    "active" => $active
+                    "active" => $active,
+                    "icon" => $item["icon"]
                 );
             }
 
@@ -1677,19 +1678,23 @@
         }
 
         public function getMenuData() {
-            return self::peekListModel();
+            return $this->peekListModel();
         }
 
         public function getMenuItemDisplay() {
-            return self::peekListModel()->field("display");
+            return $this->peekListModel()->field("display");
         }
 
         public function getMenuItemUrl() {
-            return self::peekListModel()->field("url");
+            return $this->peekListModel()->field("url");
         }
 
         public function getMenuItemActive() {
-            return self::peekListModel()->field("active");
+            return $this->peekListModel()->field("active");
+        }
+
+        public function getMenuItemIcon() {
+            return $this->peekListModel()->field("icon");
         }
 
         /**

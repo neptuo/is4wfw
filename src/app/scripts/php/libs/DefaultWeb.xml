@@ -813,5 +813,12 @@
       Vrací "true" pokud je položka uvnitř "web:menu" aktuální.
     </comment>
   </property>
+  <property>
+  	<propname>menuItemIcon</propname>
+  	<getfunction>getMenuItemIcon</getfunction>
+    <comment>
+      Vrací ikonu pro položku uvnitř "web:menu".
+    </comment>
+  </property>
 </taglib>
 
