@@ -2550,8 +2550,11 @@
 
             if ($_POST['template-submit'] == "Save") {
                 $templateId = $_POST['template-id'];
-                $templateName = $_POST['template-name'];
-                $templateContent = $dbObject->escape(str_replace('&#126;', '~', $_POST['template-content']));
+                $entity = [
+                    "name" => $_POST['template-name'], 
+                    "identifier" => $_POST['template-identifier'], 
+                    "content" => str_replace('&#126;', '~', $_POST['template-content'])
+                ];
                 $templateR = $_POST['template-right-edit-groups-r'];
                 $templateW = $_POST['template-right-edit-groups-w'];
                 $templateD = $_POST['template-right-edit-groups-d'];
@@ -2562,7 +2565,8 @@
                 if (count($rights) > 0) {
                     $template = $dbObject->fetchAll('SELECT `id` FROM `template` WHERE `id` = ' . $templateId . ';');
                     if (count($template) == 0) {
-                        $dbObject->execute('INSERT INTO `template`(`name`, `content`) VALUES ("' . $templateName . '", "' . $templateContent . '");');
+                        $sql = parent::sql()->insert("template", $entity);
+                        $dbObject->execute($sql);
                         $last = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `template`;');
                         $templateId = $last[0]['id'];
                         $_POST['template-id'] = $templateId;
@@ -2570,7 +2574,8 @@
                             $return .= '<h4 class="success">Template added!</h4>';
                         }
                     } else {
-                        $dbObject->execute('UPDATE `template` SET `name` = "' . $templateName . '", `content` = "' . $templateContent . '" WHERE `id` = ' . $templateId . ';');
+                        $sql = parent::sql()->update("template", $entity, ["id" => $templateId]);
+                        $dbObject->execute($sql);
                         if ($showError != 'false') {
                             $return .= '<h4 class="success">Template updated!</h4>';
                         }
@@ -2631,7 +2636,7 @@
 
             // Pokud je v postu template-id, vyber template, testuj prava, pokud, testuj prava pro template-id 0
             $templateId = ((array_key_exists('template-id', $_POST)) ? $_POST['template-id'] : 0);
-            $template = $dbObject->fetchAll('SELECT `template`.`name`, `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
+            $template = $dbObject->fetchAll('SELECT `template`.`name`, `identifier`, `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
             if (count($template) > 0 || $templateId == 0) {
                 $show = array('read' => true, 'write' => true, 'delete' => false);
                 $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_READ . ";");
@@ -2679,8 +2684,13 @@
                 $return .= ''
                         . '<form name="template-edit-detail" method="post" action="' . $actionUrl . '">'
                         . '<div class="gray-box-float">'
-                        . '<label for="template-name" class="padded">Name:</label>'
-                        . '<input class="w435" type="text" name="template-name" id="template-name" value="' . $template['name'] . '" />'
+                            . '<label for="template-name" class="w100">Name:</label>'
+                            . '<input class="w435" type="text" name="template-name" id="template-name" value="' . $template['name'] . '" />'
+                        . '</div>'
+                        . '<div class="clear"></div>'
+                        . '<div class="gray-box-float">'
+                            . '<label for="template-identifier" class="w100" title="Can be used as tag name in template library">Identifier:</label>'
+                            . '<input class="w435" type="text" name="template-identifier" id="template-identifier" value="' . $template['identifier'] . '" />'
                         . '</div>'
                         . '<div class="clear"></div>'
                         . '<div class="template-rights">'

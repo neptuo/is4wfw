@@ -19,7 +19,7 @@
 		}
 		
 		public function includeById($id, $params) {
-			return self::includeWithBodyById(null, $id, $params);
+			return $this->includeWithBodyById(null, $id, $params);
 		}
 		
 		public function includeWithBodyById($template, $id, $params) {
@@ -39,7 +39,7 @@
 		public function content() {
 			$content = parent::request()->get('content', 'template:include');
 			if ($content != null) {
-				return self::parseContent($content);
+				return $this->parseContent($content);
 			}
 
 			return "";
