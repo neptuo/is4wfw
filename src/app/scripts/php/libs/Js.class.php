@@ -51,7 +51,7 @@
         }
 
         public function addScript($virtualPath) {
-            $script = parent::js()->formatScript($virtualPath);
+            $script = $this->formatScript($virtualPath);
 			if ($script != null) {
                 parent::web()->addScript($script);
 			}
@@ -64,7 +64,7 @@
         }
 
 		public function addStyle($virtualPath) {
-			$style = parent::js()->formatStyle($virtualPath);
+			$style = $this->formatStyle($virtualPath);
 			if ($style != null) {
 				parent::web()->addStyle($style);
 			}
@@ -74,6 +74,21 @@
             $content = parent::parseContent($content);
             $style = parent::web()->formatStyleInline($content);
             parent::web()->addStyle($style);
+        }
+
+        private $isjQueryAdded = false;
+
+        public function addjQuery($version = "3.5.1") {
+            if ($this->isjQueryAdded) {
+                return;
+            }
+
+            $this->isjQueryAdded = true;
+            if ($version == "1.4.2") {
+                $this->addScript("~/js/jquery/jquery.js");
+            } else if ($version == "3.5.1") {
+                $this->addScript("~/js/jquery/jquery-3.5.1.min.js");
+            }
         }
 
         /**
@@ -198,39 +213,32 @@
 
         public function tinyMce($ids, $language = '', $jQuery = true) {
             if ($jQuery) {
-                $jQuery = self::formatScript('~/js/jquery/jquery.js');
-            } else {
-                $jQuery = "";
+                $this->addjQuery("1.4.2");
             }
 
-            $return = ''
-            . $jQuery
-            . self::formatScript('~/tiny-mce/tinymce.min.js')
-            . self::formatScript('~/js/initTiny.js');
+            $this->addScript('~/tiny-mce/tinymce.min.js');
+            $this->addScript('~/js/initTiny.js');
 
+            $script = "";
             $ids = parent::php()->str_tr($ids, ',');
             if (count($ids) > 0) {
-                $return .= '<script type="text/javascript"> $(function() { ';
-
                 foreach ($ids as $id) {
                     $arguments = '"' . $id . '"';
                     if ($language != '') {
                         $arguments .= ', "' . $language . '"';
                     }
 
-                    $return .= 'initTiny(' . $arguments . ');';
+                    $script .= 'initTiny(' . $arguments . ');';
                 }
-
-                $return .= ' });</script>';
             }
 
-            return $return;
+            $this->addScriptInline("(function() { $script })();", "tail");
         }
 
         public function select2($selector, $tags = false) {
-            parent::web()->addScript(self::formatScript("~/js/bootstrap/jquery-3.2.1.slim.min.js"));
-            parent::web()->addScript(self::formatScript('~/js/select2/select2.min.js'));
-            parent::web()->addStyle(self::formatStyle('~/css/select2/select2.min.css'));
+            $this->addjQuery();
+            $this->addScript('~/js/select2/select2.min.js');
+            $this->addStyle('~/css/select2/select2.min.css');
 
             $options = "{";
             if ($tags) {
@@ -238,14 +246,13 @@
             }
             $options .= "}";
 
-            $result = "<script type='text/javascript'>$(function() { $('$selector').select2($options); });</script>";
-            return $result;
+            $this->addScriptInline("(function() { $('$selector').select2($options); })();", "tail");
         }
 
         public function bootstrapDatePicker($selector, $format = "", $language = "", $autoclose = false) {
-            parent::web()->addScript(self::formatScript("~/js/bootstrap-datepicker/bootstrap-datepicker.min.js"));
-            parent::web()->addScript(self::formatScript("~/js/bootstrap-datepicker/locales/bootstrap-datepicker.$language.min.js", true));
-            parent::web()->addStyle(self::formatStyle('~/css/bootstrap-datepicker/bootstrap-datepicker.min.css'));
+            $this->addScript("~/js/bootstrap-datepicker/bootstrap-datepicker.min.js");
+            $this->addScript("~/js/bootstrap-datepicker/locales/bootstrap-datepicker.$language.min.js", true);
+            $this->addStyle('~/css/bootstrap-datepicker/bootstrap-datepicker.min.css');
             
             $options = "{";
             if ($format != "") {
@@ -259,11 +266,10 @@
             }
             $options .= "}";
 
-            $result = "<script type='text/javascript'>$(function() { $('$selector').datepicker($options); });</script>";
-            return $result;
+            $this->addScriptInline("(function() { $('$selector').datepicker($options); })();", "tail");
         }
 
-        public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false) {
+        public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false, $jQuery = true) {
             if (parent::web()->isXmlTemplate()) {
                 return;
             }
@@ -287,12 +293,19 @@
             }
             $init .= 'ajax.Initialize($(document.body)); ';
             
-            self::addScript('~/js/jquery/jquery.js');
-            self::addScript('~/js/ajax.js');
-            self::addScriptInline('$(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ' . $init . '});', "tail");
+            if ($jQuery) {
+                $this->addjQuery("1.4.2");
+            }
+
+            $this->addScript('~/js/ajax.js');
+            $this->addScriptInline('(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ' . $init . '})();', "tail");
         }
 
-        public function dataDuplicators() {
+        public function dataDuplicators($jQuery = true) {
+            if ($jQuery) {
+                $this->addjQuery("1.4.2");
+            }
+
             $script = '
 $("[data-duplicator]").each(function(i, el) {
     var $el = $(el);
@@ -308,7 +321,7 @@ $("[data-duplicator]").each(function(i, el) {
     });
 });';
 
-            return '<script type="text/javascript">' . $script . '</script>';
+            $this->addScriptInline("(function() { $script })();", "tail");
         }
     }
 

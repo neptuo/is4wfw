@@ -77,6 +77,20 @@
     </comment>
   </fulltag>
   <tag>
+    <tagname>jQuery</tagname>
+    <function>addjQuery</function>
+    <attribute>
+      <attname>version</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attdef>3.5.1</attdef>
+      <attcomment>Verze jQuery: 1.4.2 (retro) nebo 3.5.1.</attcomment>
+    </attribute>
+    <comment>
+      Vloží do stránky jQuery, pokud ještě nebylo vloženo jiné. První jQuery vždy vyhrává.
+    </comment>
+  </tag>
+  <tag>
     <tagname>cmsResources</tagname>
     <function>getCmsResources</function>
     <attribute>
@@ -215,6 +229,13 @@
       <attreq>implied</attreq>
       <attcomment>Název javascriptové proměnné uvnitř window, do které se má předat instance třídy Ajax.</attcomment>
     </attribute>
+    <attribute>
+      <attname>jQuery</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>true</attdef>
+      <attcomment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</attcomment>
+    </attribute>
     <comment>
       Převede web do ajaxového formátu.
       Všechny linky s target="_blank" nebo data-ajax="false" jsou ignorovány.
@@ -223,6 +244,13 @@
   <tag>
     <tagname>dataDuplicators</tagname>
     <function>dataDuplicators</function>
+    <attribute>
+      <attname>jQuery</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>true</attdef>
+      <attcomment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</attcomment>
+    </attribute>
   </tag>
 </taglib>
 

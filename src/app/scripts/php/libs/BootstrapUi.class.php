@@ -14,7 +14,7 @@
 
 		public function resources() {
 			if (!$this->areResourcesIncluded) {
-				parent::js()->addScript("~/js/bootstrap/jquery-3.2.1.slim.min.js");
+				parent::js()->addjQuery("3.5.1");
 				parent::js()->addScript("~/js/bootstrap/popper.min.js");
 				parent::js()->addScript("~/js/bootstrap/bootstrap.min.js");
 				parent::js()->addStyle("~/css/bootstrap/bootstrap.min.css");
