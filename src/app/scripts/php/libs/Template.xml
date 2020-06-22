@@ -51,20 +51,20 @@
   <anyTag>
     <function>includeByIdentifier</function>
     <comment>
-      Vloží obsah šablony.
+      Vloží obsah šablony, kde název tagu musí odpovídat "identifier" šablony.
       Uživatel musí mít právo READ k dané šabloně.
       Všechny atributy jsou parametry šablony.
     </comment>
   </anyTag>
-  <anyFullTag>
+  <anyFulltag>
     <function>includeWithBodyByIdentifier</function>
     <comment>
-      Vloží obsah šablony.
+      Vloží obsah šablony, kde název tagu musí odpovídat "identifier" šablony.
       Uživatel musí mít právo READ k dané šabloně.
       Všechny atributy jsou parametry šablony.
       Tělo je použito pro "template:content".
     </comment>
-  </anyFullTag>
+  </anyFulltag>
   <anyProperty />
 </taglib>
 

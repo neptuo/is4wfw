@@ -50,7 +50,7 @@
                 $xml = new SimpleXMLElement(file_get_contents($xmlPath));
                 
                 $links = '<div class="gray-box">';
-                if (count($xml->tag) > 0) {
+                if (count($xml->tag) > 0 || isset($xml->anyTag)) {
                     $links .= '<div>'.$rb->get('lib.tags').':';
                     foreach($xml->tag as $tag) {
                         $obsolete = null;
@@ -59,10 +59,20 @@
                         }
                         $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#tag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
                     }
+
+                    if (isset($xml->anyTag)) {
+                        $obsolete = null;
+                        if (isset($xml->anyTag->obsolete)) {
+                            $obsolete = (string)$xml->anyTag->obsolete;
+                        }
+
+                        $links .= ' - <a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#anytag">any</a> ';
+                    }
+
                     $links .= '</div>';
                 }
                 
-                if (count($xml->fulltag) > 0) {
+                if (count($xml->fulltag) > 0 || isset($xml->anyFulltag)) {
                     $links .= '<div>'.$rb->get('lib.fulltags').':';
                     foreach($xml->fulltag as $tag) {
                         $obsolete = null;
@@ -71,6 +81,16 @@
                         }
                         $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#fulltag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
                     }
+
+                    if (isset($xml->anyFulltag)) {
+                        $obsolete = null;
+                        if (isset($xml->anyFulltag->obsolete)) {
+                            $obsolete = (string)$xml->anyFulltag->obsolete;
+                        }
+
+                        $links .= ' - <a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#anyfulltag">any</a> ';
+                    }
+                    
                     $links .= '</div>';
                 }
 
@@ -97,7 +117,7 @@
                     .'<div class="clear"></div>'
                     .$links;
 
-                if (count($xml->tag) > 0) {
+                if (count($xml->tag) > 0 || isset($xml->anyTag)) {
                     $return .= ''
                     .'<div class="tag-h2">'
                         .'<h2>'.$rb->get('lib.tags').':</h2>'
@@ -178,9 +198,29 @@
                             .'</div>'
                         .'</div>';
                     }
+
+                    if (isset($xml->anyTag)) {
+                        $tag = $xml->anyTag;
+                        
+                        $obsolete = null;
+                        if (isset($tag->obsolete)) {
+                            $obsolete = (string)$tag->obsolete;
+                        }
+
+                        $return .= ''
+                        .'<div class="lib-tag">'
+                            .'<div class="lib-tag-head">'
+                                .'<h3 id="anytag">(any other tag)</h3>'
+                                . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
+                                .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                                . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
+                                .'<div class="clear"></div>'
+                            .'</div>'
+                        .'</div>';
+                    }
                 }
 
-                if (count($xml->fulltag) > 0) {
+                if (count($xml->fulltag) > 0 || isset($xml->anyFulltag)) {
                     $return .= ''    
                     .'<div class="tag-h2">'
                         .'<h2>'.$rb->get('lib.fulltags').':</h2>'
@@ -258,6 +298,26 @@
                                         .$attributes
                                     .'</table>'
                                 : '<p>'.$rb->get('lib.noattrs').'</p>')
+                            .'</div>'
+                        .'</div>';
+                    }
+
+                    if (isset($xml->anyFulltag)) {
+                        $tag = $xml->anyFulltag;
+                        
+                        $obsolete = null;
+                        if (isset($tag->obsolete)) {
+                            $obsolete = (string)$tag->obsolete;
+                        }
+                        
+                        $return .= ''
+                        .'<div class="lib-tag">'
+                            .'<div class="lib-tag-head">'
+                                .'<h3 id="anyfulltag">(any other full tag)</h3>'
+                                . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
+                                .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                                . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
+                                .'<div class="clear"></div>'
                             .'</div>'
                         .'</div>';
                     }

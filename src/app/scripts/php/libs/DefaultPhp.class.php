@@ -388,7 +388,7 @@
                 if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
                     $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
                     
-                    if (isset($xml->anyFullTag)) {
+                    if (isset($xml->anyFulltag)) {
                         foreach ($xml->fulltag as $tag) {
                             if ($tag->tagname == $tagName) {
                                 return false;
@@ -802,8 +802,8 @@
                         }
                     }
                     
-                    if (isset($xml->anyFullTag)) {
-                        return $xml->anyFullTag->function;
+                    if (isset($xml->anyFulltag)) {
+                        return $xml->anyFulltag->function;
                     }
                     
                     $str = "Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]";
