@@ -285,26 +285,55 @@
             
             if (isset($xmlPath)) {
                 if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
+                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
                     
                     foreach ($xml->tag as $tag) {
                         if ($tag->tagname == $tagName) {
                             return true;
                         }
                     }
-                    
-                    return false;
                 } else {
                     $str = "Xml library definition doesn't exists! [".$xmlPath."]";
                     trigger_error($str , E_USER_WARNING);
                     echo "<h4 class=\"error\">".$str."</h4>";
                     return false;
                 }
-            } else {
-                return false;
             }
             
-            return true;
+            return false;
+        }
+
+        public function isAnyTag($tagPrefix, $tagName) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            }
+            
+            if (isset($xmlPath)) {
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
+                    
+                    if (isset($xml->anyTag)) {
+                        foreach ($xml->tag as $tag) {
+                            if ($tag->tagname == $tagName) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+                } else {
+                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
+                    trigger_error($str , E_USER_WARNING);
+                    echo "<h4 class=\"error\">".$str."</h4>";
+                    return false;
+                }
+            }
+            
+            return false;
         }
         
         /**
@@ -328,26 +357,55 @@
             
             if (isset($xmlPath)) {
                 if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
+                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
                     
                     foreach ($xml->fulltag as $tag) {
                         if ($tag->tagname == $tagName) {
                             return true;
                         }
                     }
-                    
-                    return false;
                 } else {
                     $str = "Xml library definition doesn't exists! [".$xmlPath."]";
                     trigger_error($str , E_USER_WARNING);
                     echo "<h4 class=\"error\">".$str."</h4>";
                     return false;
                 }
-            } else {
-                return false;
             }
             
-            return true;
+            return false;
+        }
+
+        public function isAnyFullTag($tagPrefix, $tagName) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            }
+            
+            if (isset($xmlPath)) {
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
+                    
+                    if (isset($xml->anyFullTag)) {
+                        foreach ($xml->fulltag as $tag) {
+                            if ($tag->tagname == $tagName) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
+                } else {
+                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
+                    trigger_error($str , E_USER_WARNING);
+                    echo "<h4 class=\"error\">".$str."</h4>";
+                    return false;
+                }
+            }
+            
+            return false;
         }
         
         /**
@@ -695,6 +753,10 @@
                         }
                     }
                     
+                    if (isset($xml->anyTag)) {
+                        return $xml->anyTag->function;
+                    }
+                    
                     $str = "Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]";
                     trigger_error($str , E_USER_WARNING);
                     echo "<h4 class=\"error\">".$str."</h4>";
@@ -738,6 +800,10 @@
                         if ($tag->tagname == $tagName) {
                             return (string)$tag->function;
                         }
+                    }
+                    
+                    if (isset($xml->anyFullTag)) {
+                        return $xml->anyFullTag->function;
                     }
                     
                     $str = "Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]";

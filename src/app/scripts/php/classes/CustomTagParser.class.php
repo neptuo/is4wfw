@@ -272,10 +272,17 @@ class CustomTagParser {
             return '';
         }
 
-        if ($phpObject->isRegistered($object[0]) && $phpObject->isTag($object[0], $object[1], $attributes)) {
-            $attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
+        if ($phpObject->isRegistered($object[0])) {
+            $functionName = false;
 
-            $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
+            if ($phpObject->isTag($object[0], $object[1], $attributes)) {
+                $attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
+                $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
+            } else if ($phpObject->isAnyTag($object[0], $object[1])) {
+                $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
+                $attributes = $this->sortAnyTagAttributes($object[1], $attributes);
+            }
+
             if ($functionName && ($attributes !== false)) {
                 if ($this->UseCaching) {
                     self::addSingletonGlobalObject('$' . $object[0] . 'Object');
@@ -291,6 +298,33 @@ class CustomTagParser {
         }
 
         return '<h4 class="error">This tag "' . $object[1] . '" is not registered! [' . $object[0] . ']</h4>';
+    }
+
+    protected function sortAnyTagAttributes($tagName, $attributes, $content = null) {
+        $params = array();
+        foreach ($attributes as $usedName => $usedValue) {
+            $params[$usedName] = $usedValue;
+        }
+
+        $result = [];
+        $result["tagName"] = [
+            "value" => $tagName,
+            "type" => "raw"
+        ];
+
+        if ($content != null) {
+            $result[DefaultPhp::$FullTagTemplateName] = [
+                'value' => $content, 
+                'type' => 'raw'
+            ];
+        }
+
+        $result[DefaultPhp::$ParamsName] = [
+            "value" => $params, 
+            "type" => "eval"
+        ];
+
+        return $result;
     }
 
     /**

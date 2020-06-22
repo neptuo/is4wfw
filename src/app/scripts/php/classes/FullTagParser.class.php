@@ -34,6 +34,7 @@ class FullTagParser extends CustomTagParser {
         }
 
         $object = explode(":", $ctag[1]);
+        $content = $ctag[5];
 
         $skipped = self::isSkippedTag($ctag);
 
@@ -47,20 +48,26 @@ class FullTagParser extends CustomTagParser {
 
             // Parse $ctag[5].
             $parser = new FullTagParser();
-            $parser->setContent($ctag[5]);
+            $parser->setContent($content);
             $parser->setTagsToParse($this->TagsToParse);
             $parser->startParsing();
             $parser->getResult();
             return '';
         }
 
-        if ($phpObject->isRegistered($object[0]) && $phpObject->isFullTag($object[0], $object[1], $attributes)) {
-            $attributes = $phpObject->sortFullAttributes($object[0], $object[1], $attributes, $ctag[5]);
-            if ($attributes === false) {
-                return "";
+        if ($phpObject->isRegistered($object[0])) {
+            if ($phpObject->isFullTag($object[0], $object[1], $attributes)) {
+                $attributes = $phpObject->sortFullAttributes($object[0], $object[1], $attributes, $content);
+                if ($attributes === false) {
+                    return "";
+                }
+                
+                $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
+            } else if ($phpObject->isAnyFullTag($object[0], $object[1])) {
+                $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
+                $attributes = $this->sortAnyTagAttributes($object[1], $attributes, $content);
             }
-            
-            $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
+
             if ($functionName) {
                 return self::generateFunctionOutput($object[0], $functionName, $attributes);
             }
