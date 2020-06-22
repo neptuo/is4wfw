@@ -18,7 +18,7 @@
 			parent::setTagLibXml("Template.xml");
 		}
 
-		private function include($filter, $template, $params) {
+		private function includeBy($filter, $template, $params) {
 			$sql = parent::sql()->select("template", ["id", "content"], $filter);
 			$data = parent::db()->fetchSingle($sql);
 			if (empty($data)) {
@@ -47,7 +47,7 @@
 		}
 		
 		public function includeWithBodyById($template, $id, $params) {
-			return $this->include(["id" => $id], $template, $params);
+			return $this->includeBy(["id" => $id], $template, $params);
 		}
 
 		public function includeByIdentifier($identifier, $params) {
@@ -55,7 +55,7 @@
 		}
 
 		public function includeWithBodyByIdentifier($identifier, $template, $params) {
-			return $this->include(["identifier" => $identifier], $template, $params);
+			return $this->includeBy(["identifier" => $identifier], $template, $params);
 		}
 
 		public function content() {
