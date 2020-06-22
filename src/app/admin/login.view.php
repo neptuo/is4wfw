@@ -20,7 +20,7 @@
                     </web:condition>
                     
                     <bs:formGroup label="Username">
-                        <ui:textbox name="username" class="form-control form-control-sm" />
+                        <ui:textbox name="username" class="form-control form-control-sm" autofocus="autofocus" />
                     </bs:formGroup>
                     <bs:formGroup label="Password">
                         <ui:passwordbox name="password" type="password" class="form-control form-control-sm" />
