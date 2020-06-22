@@ -48,6 +48,23 @@
       Vkládá tělo tagu "template:include" (párové značky).
     </comment>
   </tag>
+  <anyTag>
+    <function>includeByIdentifier</function>
+    <comment>
+      Vloží obsah šablony.
+      Uživatel musí mít právo READ k dané šabloně.
+      Všechny atributy jsou parametry šablony.
+    </comment>
+  </anyTag>
+  <anyFullTag>
+    <function>includeWithBodyByIdentifier</function>
+    <comment>
+      Vloží obsah šablony.
+      Uživatel musí mít právo READ k dané šabloně.
+      Všechny atributy jsou parametry šablony.
+      Tělo je použito pro "template:content".
+    </comment>
+  </anyFullTag>
   <anyProperty />
 </taglib>
 

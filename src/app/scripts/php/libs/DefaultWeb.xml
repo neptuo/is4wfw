@@ -147,6 +147,7 @@
   <tag>
     <tagname>incTemplate</tagname>
     <function>includeTemplate</function>
+    <obsolete>Použijte knihovnu "template".</obsolete>
     <attribute>
       <attname>templateId</attname>
       <attreq>required</attreq>
