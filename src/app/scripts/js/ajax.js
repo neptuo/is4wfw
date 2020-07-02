@@ -208,10 +208,12 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
         if (newContent.length == 1) {
             oldContent.replaceWith(newContent);
             this.Initialize(newContent);
+            newContent.find("[autofocus]").focus();
         } else {
             oldContent.html(html)
             this.Initialize(oldContent); 
-        }   
+            oldContent.find("[autofocus]").focus();
+        }
     }
 
     if (scriptInlines != null) {
