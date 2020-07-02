@@ -55,9 +55,16 @@
         public function data($item = "z.z-def") {
             if ($item != "z.z-def") {
                 $this->data = $item;
+                $this->hasDataItem = true;
             } else {
                 return $this->data;
             }
+        }
+
+        private $hasDataItem;
+
+        public function hasDataItem() {
+            return $this->hasDataItem;
         }
     }
 

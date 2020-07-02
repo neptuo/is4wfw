@@ -14,8 +14,15 @@
 	 */
 	class Validation extends BaseTagLib {
 
+		private $translations = [];
+
 		public function __construct() {
 			parent::setTagLibXml("Validation.xml");
+			parent::setLocalizationBundle('validation');
+		}
+
+		public function translate($identifier, $message) {
+			$this->translations[$identifier] = $message;
 		}
 
 		private function getMessages($key) {
@@ -44,17 +51,46 @@
 			}
 		}
 
+		public function getMessageList() {
+			return parent::peekListModel();
+		}
+
 		public function getMessageIdentifier() {
 			$model = parent::peekListModel();
+			if ($model->hasDataItem()) {
+				return $model->data();
+			}
+
 			$text = implode(", ", $model->items());
 			return $text;
 		}
 
 		public function getMessageText() {
 			$model = parent::peekListModel();
-			$text = implode(", ", $model->items());
-			// TODO: Translate.
+			if ($model->hasDataItem()) {
+				return $this->translateIdentifier($model->data());
+			}
+
+			$texts = [];
+			foreach ($model->items() as $identifier) {
+				$texts[] = $this->translateIdentifier($identifier);
+			}
+
+			$text = implode(", ", $texts);
 			return $text;
+		}
+
+		private function translateIdentifier($identifier) {
+			if (array_key_exists($identifier, $this->translations)) {
+				return $this->translations[$identifier];
+			}
+			
+			$locIdentifier = "message.$identifier";
+			if (in_array($locIdentifier, parent::rb()->getKeys())) {
+				return parent::rb()->get($locIdentifier);
+			}
+
+			return $identifier;
 		}
 	}
 

@@ -17,6 +17,25 @@
       Nastaví required validátor pro klíč "key".
     </comment>
   </tag>
+  <tag>
+    <tagname>translate</tagname>
+    <function>translate</function>
+    <attribute>
+      <attname>identifier</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Systémový identifikátor validační hlášky.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>message</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Přeložená textový hláška.</attcomment>
+    </attribute>
+    <comment>
+      Nastaví textovou hlášku pro daný systémový identifikátor hlášky.
+    </comment>
+  </tag>
   <fulltag>
     <tagname>message</tagname>
     <function>message</function>
