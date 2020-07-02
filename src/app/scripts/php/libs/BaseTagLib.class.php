@@ -552,6 +552,7 @@
         }
 
         protected function exit() {
+            self::php()->dispose();
             exit;
         }
 

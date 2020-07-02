@@ -235,10 +235,10 @@
                 $return = gzcompress($return, 9);
                 $return = substr($return, 0, $size);
                 print ($return);
-                exit ();
+                parent::exit();
             } else {
                 echo $return;
-                exit ();
+                parent::exit();
             }
         }
 

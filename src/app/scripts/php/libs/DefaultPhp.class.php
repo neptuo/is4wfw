@@ -45,6 +45,8 @@
          *
          */                                     
         private $_REGISTERED = array();
+
+        private $disposables = [];
         
         /**
          *
@@ -100,13 +102,9 @@
          */                                                
         public function register($tagPrefix, $classPath) {
             $classJPath = $classPath;
-            //echo $tagPrefix.', '.$classPath.'<br />';
-            //$tagPrefix = $attlist['tagPrefix'];
-            //$classPath = $attlist['classPath'];
-            // KONTROLOVAT POCET INSTANCI PODLE <count> V XML!!!
             if (!array_key_exists($tagPrefix, $this->_REGISTERED) && !array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                if (self::checkIfClassExists($tagPrefix, $classPath)) {
-                    $classArray = self::str_tr($classPath, '.');
+                if ($this->checkIfClassExists($tagPrefix, $classPath)) {
+                    $classArray = $this->str_tr($classPath, '.');
                     $classDir = "";
                     for ($i = 0; $i < count($classArray) - 1; $i ++) {
                         $classDir .= $classArray[$i];
@@ -116,11 +114,11 @@
                     }
 
                     $className = $classArray[count($classArray) - 1];
-                    $classPath = self::parseClassPath($classPath);
+                    $classPath = $this->parseClassPath($classPath);
 
                     require_once(APP_SCRIPTS_PATH . $classPath . ".class.php");
                     
-                    if (self::isCountOfInstances($className, $classDir)) {
+                    if ($this->isCountOfInstances($className, $classDir)) {
                         $GLOBALS[$tagPrefix."Object"] = new $className($tagPrefix);
                         if(array_key_exists($classJPath, $this->_CLASSES)) {
                             $this->_CLASSES[$classJPath] ++;
@@ -128,6 +126,7 @@
                             $this->_CLASSES[$classJPath] = 1;
                         }
                         $this->_REGISTERED[$tagPrefix] = $classDir;
+                        $this->tryRegisterDisposable($tagPrefix);
                     } else {
                         return '<h4 class="error">Too much instances of tag lib! [' . $classJPath . ']</h4>';
                     }
@@ -139,6 +138,36 @@
             }
             
             return "";
+        }
+
+        private function tryRegisterDisposable(string $tagPrefix) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            }
+            
+            if (isset($xmlPath)) {
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
+                    
+                    if (isset($xml->disposable)) {
+                        $this->disposables[] = $tagPrefix;
+                    }
+                } else {
+                    $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
+                    trigger_error($str , E_USER_WARNING);
+                    echo "<h4 class=\"error\">".$str."</h4>";
+                    return false;
+                }
+            } else {
+                $str = "Tag prefix isn't registered! [".$tagPrefix."]";
+                trigger_error($str , E_USER_WARNING);
+                echo "<h4 class=\"error\">".$str."</h4>";
+                return false;
+            }
         }
     
         /**
@@ -500,7 +529,7 @@
             $tmp = new $className("");
             $xmlPath = str_replace(".", "/", $classDir)."/".$tmp->getTagLibXml();
             if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
+                $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
 
                 if ((string)$xml->count == "*") {
                     return true;
@@ -872,7 +901,7 @@
                 }
                 
             } else {
-                $str = "Tag prefix isn't registered! [".$tagPrefix."]";
+            $str = "Tag prefix isn't registered! [".$tagPrefix."]";
                 trigger_error($str , E_USER_WARNING);
                 echo "<h4 class=\"error\">".$str."</h4>";
                 return false;
@@ -902,6 +931,13 @@
             
             self::unregister($prefix);
             return $return;
+        }
+
+        public function dispose() {
+            foreach ($this->disposables as $tagPrefix) {
+                global ${$tagPrefix."Object"};
+                ${$tagPrefix."Object"}->dispose();
+            }
         }
                                                 
     }
