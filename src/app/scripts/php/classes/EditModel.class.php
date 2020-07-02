@@ -162,8 +162,13 @@
 
         // ------- Validation -------------------------------------------------
 
-        public function validationMessage($key, $identifier) {
-            $this->validation[$this->prefix][$key][] = $identifier;
+        public function validationMessage($key, $identifier = "0.0-def") {
+            if ($identifier === "0.0-def") {
+                return $this->validation[$this->prefix][$key];
+            }
+            else {
+                $this->validation[$this->prefix][$key][] = $identifier;
+            }
         }
 
         public function isValid() {

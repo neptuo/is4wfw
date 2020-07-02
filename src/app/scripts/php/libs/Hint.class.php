@@ -434,6 +434,7 @@
                         .'<option value="php.libs.User"'.($_SESSION['select-class-path'] == 'php.libs.User' ? 'selected="selected"' : '').'>php.libs.User</option>'
                         .'<option value="php.libs.Ui"'.($_SESSION['select-class-path'] == 'php.libs.Ui' ? 'selected="selected"' : '').'>php.libs.Ui</option>'
                         .'<option value="php.libs.Utilities"'.($_SESSION['select-class-path'] == 'php.libs.Utilities' ? 'selected="selected"' : '').'>php.libs.Utilities</option>'
+                        .'<option value="php.libs.Validation"'.($_SESSION['select-class-path'] == 'php.libs.Validation' ? 'selected="selected"' : '').'>php.libs.Validation</option>'
                         .'<option value="php.libs.Variable"'.($_SESSION['select-class-path'] == 'php.libs.Variable' ? 'selected="selected"' : '').'>php.libs.Variable</option>'
                         .'<option value="php.libs.View"'.($_SESSION['select-class-path'] == 'php.libs.View' ? 'selected="selected"' : '').'>php.libs.View</option>'
                         .'<option value="php.libs.WebProject"'.($_SESSION['select-class-path'] == 'php.libs.WebProject' ? 'selected="selected"' : '').'>php.libs.WebProject</option>'
