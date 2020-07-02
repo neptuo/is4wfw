@@ -6,18 +6,23 @@
 		</lang:deleter>
 	</web:condition>
 
+	<val:translate identifier="required" message="Required field" />
+
 	<admin:edit id="query:id">
 		<web:frame title="admin:editTitle">
 			<edit:form submit="save">
 				<lang:form id="admin:editId">
 					<admin:field label="Name" label-class="w110">
 						<ui:textbox name="name" />
+						<admin:validation key="name" />
 					</admin:field>
 					<admin:field label="Natural name" label-class="w110">
 						<ui:textbox name="natural_name" />
+						<admin:validation key="natural_name" />
 					</admin:field>
 					<admin:field label="Url" label-class="w110">
 						<ui:textbox name="language" class="w60" />
+						<admin:validation key="language" />
 					</admin:field>
 					<hr />
 					<div class="gray-box">

@@ -4,6 +4,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/FilterModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Validator.class.php");
 
 	/**
 	 * 
@@ -21,7 +22,7 @@
 			parent::setTagLibXml("Language.xml");
 		}
 		
-		public function listItems($template, $filter = array(), $orderBy = array()) {
+		public function listItems($template, $filter = [], $orderBy = []) {
 			$tableName = self::TableName;
 
 			$filter = parent::removeKeysWithEmptyValues($filter);
@@ -38,8 +39,8 @@
 				$orderBy["id"] = "asc";
 			}
 
-			$sql = parent::sql()->select($tableName, array("id", "language", "name", "natural_name"), $filter, $orderBy);
-			$data = self::dataAccess()->fetchAll($sql);
+			$sql = parent::sql()->select($tableName, ["id", "language", "name", "natural_name"], $filter, $orderBy);
+			$data = parent::dataAccess()->fetchAll($sql);
 
 			$model->render();
             $model->items($data);
@@ -79,7 +80,7 @@
 			return parent::peekListModel()->field("language");
 		}
 
-		public function form($template, $id) {
+		public function form($template, $id = 0) {
 			$model = parent::getEditModel();
 
 			if (!$model->hasMetadataKey("isUpdate")) {
@@ -91,11 +92,11 @@
 
 			if ($model->isLoad() && $model->metadata("isUpdate")) {
                 $model->registration();
-                self::parseContent($template);
+                parent::parseContent($template);
 				$model->registration(false);
 				
 				$columns = $model->fields();
-				$sql = parent::sql()->select(self::TableName, $columns, array("id" => $id));
+				$sql = parent::sql()->select(self::TableName, $columns, ["id" => $id]);
 				$data = parent::dataAccess()->fetchSingle($sql);
 				if (empty($data)) {
 					$model->metadata("isError", true);
@@ -105,7 +106,14 @@
 			}
 
 			if ($model->isSubmit()) {
-                self::parseContent($template);
+				parent::parseContent($template);
+				
+				Validator::required($model, "name");
+				Validator::required($model, "language");
+
+				if (!$this->isUnique($model["language"], $id)) {
+					Validator::addUnique($model, "language");
+				}
             }
 				
 			if ($model->isSave()) {
@@ -114,13 +122,14 @@
 					parent::dataAccess()->execute($sql);
 					$model["id"] = parent::dataAccess()->getLastId();
 				} else {
-					$sql = parent::sql()->update(self::TableName, $model, array("id" => $id));
+					$sql = parent::sql()->update(self::TableName, $model, ["id" => $id]);
 					parent::dataAccess()->execute($sql);
+					$model["id"] = $id;
 				}
 			}
 			
             if ($model->isSaved()) {
-                self::parseContent($template);
+                parent::parseContent($template);
             }
 			
             if ($model->isRender()) {
@@ -128,16 +137,30 @@
 					return "<h4 class='warning'>Such language doesn't exist.</h4>";
 				}
 
-				$result = self::parseContent($template);
+				$result = parent::parseContent($template);
 				return $result;
 			}
 		}
 
+		private function isUnique($name, $id) {
+			$sql = parent::sql()->select(self::TableName, ["id"], ["language" => $name]);
+			$data = parent::dataAccess()->fetchSingle($sql);
+			if (empty($data)) {
+				return true;
+			}
+
+			if (!empty($id)) {
+				return $id == $data["id"];
+			}
+
+			return false;
+		}
+
 		public function deleter($template, $id) {
-            $sql = parent::sql()->delete(self::TableName, array("id" => $id));
-            self::dataAccess()->execute($sql);
+            $sql = parent::sql()->delete(self::TableName, ["id" => $id]);
+            parent::dataAccess()->execute($sql);
             
-            self::parseContent($template);
+            parent::parseContent($template);
 		}
 	}
 
