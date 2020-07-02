@@ -27,11 +27,21 @@
 
 		private function getMessages($key) {
 			$model = parent::getEditModel();
+			$messages = [];
 			if (empty($key)) {
-				return [];
+				foreach ($model->validationMessage() as $key => $items) {
+					foreach ($items as $identifier) {
+						$messages[] = ["key" => $key, "identifier" => $identifier];
+					}
+				}
+
 			} else {
-				return $model->validationMessage($key);
+				foreach ($model->validationMessage($key) as $identifier) {
+					$messages[] = ["key" => $key, "identifier" => $identifier];
+				}
 			}
+
+			return $messages;
 		}
 
 		public function message($template, $key) {
@@ -55,29 +65,39 @@
 			return parent::peekListModel();
 		}
 
-		public function getMessageIdentifier() {
+		private function projectMessages(string $field, $transform = null) {
 			$model = parent::peekListModel();
+			if ($transform == null) {
+				$transform = function($value) { 
+					return $value; 
+				};
+			}
+			
 			if ($model->hasDataItem()) {
-				return $model->data();
+				return $transform($model->field($field));
 			}
 
-			$text = implode(", ", $model->items());
-			return $text;
+			$values = [];
+			foreach ($model->items() as $item) {
+				$values[] = $transform($item[$field]);
+			}
+
+			$result = implode(", ", $values);
+			return $result;
+		}
+
+		public function getMessageKey() {
+			return $this->projectMessages("key");
+		}
+
+		public function getMessageIdentifier() {
+			return $this->projectMessages("identifier");
 		}
 
 		public function getMessageText() {
-			$model = parent::peekListModel();
-			if ($model->hasDataItem()) {
-				return $this->translateIdentifier($model->data());
-			}
-
-			$texts = [];
-			foreach ($model->items() as $identifier) {
-				$texts[] = $this->translateIdentifier($identifier);
-			}
-
-			$text = implode(", ", $texts);
-			return $text;
+			return $this->projectMessages("identifier", function($value) {
+				return $this->translateIdentifier($value);
+			});
 		}
 
 		private function translateIdentifier($identifier) {

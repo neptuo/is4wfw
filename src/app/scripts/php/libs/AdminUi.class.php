@@ -138,6 +138,18 @@
 			return $result;
 		}
 
+		public function validation($key) {
+			$template = '
+			<val:message key="' . $key . '">
+				<span class="red">
+					<strong>!</strong>
+					<web:getProperty name="val:messageText" />.
+				</span>
+			</val:message>';
+
+			return parent::parseContent($template);
+		}
+
 		public function isEdit() {
 			return $this->edit["isEdit"] == true;
 		}

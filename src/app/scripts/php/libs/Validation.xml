@@ -57,10 +57,11 @@
     </comment>
   </property>
   <property>
-    <propname>messageText</propname>
-    <getfunction>getMessageText</getfunction>
+    <propname>messageKey</propname>
+    <getfunction>getMessageKey</getfunction>
     <comment>
-        Vrací čárkou oddělené textové hlášky uvnitř "val:message".
+        Vrací čárkou oddělené klíče (= názvy fieldů) validačních hlášek uvnitř "val:message".
+        Pokud je součástí enumerace, pak vrací klíč aktuální hlášky.
     </comment>
   </property>
   <property>
@@ -68,6 +69,15 @@
     <getfunction>getMessageIdentifier</getfunction>
     <comment>
         Vrací čárkou oddělené identifikátory hlášek uvnitř "val:message".
+        Pokud je součástí enumerace, pak vrací identifikátor aktuální hlášky.
+    </comment>
+  </property>
+  <property>
+    <propname>messageText</propname>
+    <getfunction>getMessageText</getfunction>
+    <comment>
+        Vrací čárkou oddělené textové hlášky uvnitř "val:message".
+        Pokud je součástí enumerace, pak vrací text aktuální hlášky.
     </comment>
   </property>
 </taglib>

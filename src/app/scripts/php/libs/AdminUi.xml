@@ -160,6 +160,19 @@
       Inicializuje proměnné "admin:edit" (true/false) a "admin:editTitle" (titulek "Create"/"Edit").
     </comment>
   </fulltag>
+  <tag>
+    <tagname>validation</tagname>
+    <function>validation</function>
+    <attribute>
+      <attname>key</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Klíč, jejíž validační hlášky se mají zobrazit.</attcomment>
+    </attribute>
+    <comment>
+      Zobrazí standartním způsobem validační hlášky.
+    </comment>
+  </tag>
   <property>
     <propname>edit</propname>
     <getfunction>isEdit</getfunction>
