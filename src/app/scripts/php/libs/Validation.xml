@@ -12,7 +12,12 @@
   <tag>
     <tagname>required</tagname>
     <function>required</function>
-    ...
+    <attribute>
+      <attname>key</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Klíč, který má být povinný.</attcomment>
+    </attribute>
     <comment>
       Nastaví required validátor pro klíč "key".
     </comment>

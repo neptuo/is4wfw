@@ -3,6 +3,7 @@
 	require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Validator.class.php");
 
 	/**
 	 * 
@@ -19,6 +20,11 @@
 		public function __construct() {
 			parent::setTagLibXml("Validation.xml");
 			parent::setLocalizationBundle('validation');
+		}
+
+		public function required($key) {
+			$model = parent::getEditModel();
+			Validator::required($model, $key);
 		}
 
 		public function translate($identifier, $message) {

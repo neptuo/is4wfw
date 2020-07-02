@@ -6,8 +6,6 @@
 		</lang:deleter>
 	</web:condition>
 
-	<val:translate identifier="required" message="Required field" />
-
 	<admin:edit id="query:id">
 		<web:frame title="admin:editTitle">
 			<edit:form submit="save">
