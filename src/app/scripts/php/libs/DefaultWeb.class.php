@@ -1990,12 +1990,12 @@
             if ($path) {
                 // zkontrolovat odkaz, doplnit http ...
                 parent::redirectToUrl($path);
-                exit;
+                parent::exit();
             } else {
                 if (array_key_exists("path", $_REQUEST)) {
                     // zkontrolovat odkaz, doplnit http ...
                     parent::redirectToUrl($_REQUEST['path']);
-                    exit;
+                    parent::exit();
                 } else {
                     $error = "Missing argument path for redirect!";
                     trigger_error($error, E_USER_WARNING);
@@ -2103,7 +2103,7 @@
                 header('Content-Length: ' . strlen($file[0]['content']));
                 header('Content-Transfer-Encoding: binary');
                 echo $file[0]['content'];
-                exit;
+                parent::exit();
             } else {
                 trigger_error('Text File doesn\'t exists! [fileId = ' . $fileId . ']', E_USER_WARNING);
             }
@@ -2189,7 +2189,7 @@
 
             if ($ok) {
                 parent::redirectToUrl($href);
-                exit;
+                parent::exit();
             }
         }
 
@@ -2482,20 +2482,20 @@
             if (file_exists($path)) {
                 header("HTTP/1.1 404 Not Found");
                 echo file_get_contents($path);
-                exit;
+                parent::exit();
             }
 
             if ($errorCode == 404) {
                 header("HTTP/1.1 404 Not Found");
                 echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exist.</p>';
-                exit;
+                parent::exit();
             } elseif ($errorCode == 403) {
                 header("HTTP/1.1 403 Forbidden");
                 echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
-                exit;
+                parent::exit();
             } else {
                 echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
-                exit;
+                parent::exit();
             }
         }
         
