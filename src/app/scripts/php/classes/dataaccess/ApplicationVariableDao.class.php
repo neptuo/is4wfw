@@ -44,6 +44,13 @@ class ApplicationVariableDao extends AbstractDao {
 			return parent::insert($data);
 		}
 	}
+
+	public function delete($name) {
+		$data = array(
+			'name' => $name,
+		);
+		parent::delete($data);
+	}
 }
 
 ?>

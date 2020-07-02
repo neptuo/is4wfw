@@ -72,7 +72,7 @@ abstract class AbstractDao {
 	 */
 	protected function deleteSql($id){
 		$param = array($this->getDatabase(), $this->getTableName(), $this->getIdField(), $this->dataAccess->escape($id));
-		return self::setString($this->deleteSQL, $param);		
+		return self::setString($this->deleteSQL, $param);
 	}
 	
 	/*

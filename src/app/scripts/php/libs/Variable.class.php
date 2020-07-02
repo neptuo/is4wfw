@@ -65,6 +65,32 @@
 			return true;
 		}
 
+		public function removeValue($name) {
+			if ($this->isScopeAvailableForName($name, "request") && parent::request()->exists($name, 'variable')) {
+				return parent::request()->delete($name, 'variable');
+			}
+
+			if ($this->isScopeAvailableForName($name, "session") && parent::session()->exists($name, 'variable')) {
+				return parent::session()->delete($name, 'variable');
+			}
+
+			if ($this->isScopeAvailableForName($name, "temp")) {
+				if (array_key_exists($name, $this->tempValues)) {
+					unset($this->tempValues[$name]);
+					return;
+				}
+
+				if (parent::session()->exists($name, 'variable-temp')) {
+					return parent::session()->delete($name, 'variable-temp');
+				}
+			}
+
+			if ($this->isScopeAvailableForName($name, "application")) {
+				parent::dao('ApplicationVariable')->delete($name);
+				return;
+			}
+		}
+
 		public function getProperty($name) {
 			if ($this->isScopeAvailableForName($name, "request") && parent::request()->exists($name, 'variable')) {
 				return parent::request()->get($name, 'variable');
@@ -74,8 +100,14 @@
 				return parent::session()->get($name, 'variable');
 			}
 
-			if ($this->isScopeAvailableForName($name, "temp") && parent::session()->exists($name, 'variable-temp')) {
-				return parent::session()->get($name, 'variable-temp');
+			if ($this->isScopeAvailableForName($name, "temp")) {
+				if (array_key_exists($name, $this->tempValues)) {
+					return $this->tempValues[$name];
+				}
+
+				if (parent::session()->exists($name, 'variable-temp')) {
+					return parent::session()->get($name, 'variable-temp');
+				}
 			}
 
 			if ($this->isScopeAvailableForName($name, "application")) {

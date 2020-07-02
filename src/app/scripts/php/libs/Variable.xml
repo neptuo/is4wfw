@@ -59,6 +59,19 @@
       Řekne o proměnné, že patří do daného scope. Pokud se bude proměnná v rámci request ještě číst, bude se číst z tohoto scope.
     </comment>
   </tag>
+  <tag>
+    <tagname>clear</tagname>
+    <function>removeValue</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název proměnné, která se má zrušit.</attcomment>
+    </attribute>
+    <comment>
+      Smaže hodnotu proměnné.
+    </comment>
+  </tag>
   <anyProperty />
 </taglib>
 

@@ -9,6 +9,12 @@
 			}
 		}
 		
+		public function delete($key, $storage = 'default') {
+			if ($key != '') {
+				unset($this->data[$storage][$key]);
+			}
+		}
+		
 		public function get($key, $storage = 'default') {
 			if(self::exists($key, $storage)) {
 				return $this->data[$storage][$key];
