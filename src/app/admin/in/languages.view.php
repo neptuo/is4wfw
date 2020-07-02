@@ -2,12 +2,14 @@
 	<var:declare name="selfUrl" value="~/in/languages.view" scope="request" />
 	<web:condition when="post:delete" is="delete">
 		<lang:deleter id="post:id">
+			<admin:setSuccessMessage message="Language deleted." />
 			<web:redirectTo pageId="var:selfUrl" />
 		</lang:deleter>
 	</web:condition>
 
 	<admin:edit id="query:id">
 		<web:frame title="admin:editTitle">
+			<admin:successMessage />
 			<edit:form submit="save">
 				<lang:form id="admin:editId">
 					<admin:field label="Name" label-class="w110">
@@ -24,7 +26,7 @@
 					</admin:field>
 					<hr />
 					<div class="gray-box">
-						<admin:saveButtons closePageId="var:selfUrl" saveParam-id="lang:id" />
+						<admin:saveButtons closePageId="var:selfUrl" saveParam-id="lang:id" message="Language saved." />
 					</div>
 				</lang:form>
 			</edit:form>
@@ -32,6 +34,7 @@
 	</admin:edit>
 
 	<web:frame title="List">
+			<admin:successMessage />
 		<lang:list>
 			<ui:empty items="lang:list">
 				<h4 class="warning">No Languages</h4>

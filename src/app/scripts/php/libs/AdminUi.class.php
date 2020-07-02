@@ -10,6 +10,12 @@
 			parent::setLocalizationBundle("adminui");
 		}
 
+		public function setSuccessMessage($message) {
+			if ($message != "") {
+				parent::autolib("var")->setValue("admin-message", $message, "temp");
+			}
+		}
+
 		public function deleteButton($hiddenField, $confirmValue = null, $params = array()) {
 			$hiddens = parent::findAttributesByPrefix($params, "hidden-");
 			$hiddens[$hiddenField] = $hiddenField;
@@ -28,9 +34,10 @@
 			return parent::web()->makeAnchor($pageId, $text, false, "button", "", "", "", "", "", $param);
 		}
 
-		public function saveButtons($saveName = "save", $saveParam = array(), $closePageId = "", $closeParam = array()) {
+		public function saveButtons($saveName = "save", $saveParam = array(), $closePageId = "", $closeParam = array(), $message = "") {
 			$model = parent::getEditModel();
 			if ($model->isSaved()) {
+				$this->setSuccessMessage($message);
 				self::redirectAfterSave($saveName, $saveParam, $closePageId, $closeParam);
 			}
 			
@@ -150,6 +157,19 @@
 			return parent::parseContent($template);
 		}
 
+		public function successMessage() {
+			$template = '
+			<var:use name="admin-message" scope="temp" />
+			<web:condition when="var:admin-message">
+				<h4 class="success">
+					<web:getProperty name="var:admin-message" />
+					<var:clear name="admin-message" />
+				</h4>
+			</web:condition>
+			';
+			return parent::parseContent($template);
+		}
+
 		public function isEdit() {
 			return $this->edit["isEdit"] == true;
 		}
@@ -166,5 +186,3 @@
 			return $this->edit["title"];
 		}
 	}
-
-?>

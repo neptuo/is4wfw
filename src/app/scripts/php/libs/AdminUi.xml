@@ -9,6 +9,20 @@
     Knihovna pro generování prvků uživatelského rozhraní kompatibilních s administrační částí aplikace.
   </comment>
   <tag>
+    <tagname>setSuccessMessage</tagname>
+    <function>setSuccessMessage</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>message</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Hláška po úspěšném dokončení akce.</attcomment>
+    </attribute>
+    <comment>
+      Nastaví dočasnou hlášku po úspěšném dokončení akce.
+    </comment>
+  </tag>
+  <tag>
     <tagname>deleteButton</tagname>
     <function>deleteButton</function>
     <attribute>
@@ -93,6 +107,12 @@
       <prefix>true</prefix>
       <attcomment>Seznam parametrů, které se předají "Close" odkazu.</attcomment>
     </attribute>
+    <attribute>
+      <attname>message</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Temp message po úspěšném uložení.</attcomment>
+    </attribute>
     <comment>
       Vykreslí tlačítka ("Save", "Save and Close", "Close").
       Zároveň pokud je aktuálně formulář odeslán, pokusí se provést odpovídající přesměrování.
@@ -171,6 +191,13 @@
     </attribute>
     <comment>
       Zobrazí standartním způsobem validační hlášky.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>successMessage</tagname>
+    <function>successMessage</function>
+    <comment>
+      Zobrazí "success" hlášku, pokud při předchozím requestu došlo k uložení objektu (a hláška byla nastavena).
     </comment>
   </tag>
   <property>
