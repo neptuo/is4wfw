@@ -13,6 +13,9 @@
 	 */
 	class Variable extends BaseTagLib {
 
+		private $tempValues = [];
+		private $nameScopes = [];
+
 		public function __construct() {
 			parent::setTagLibXml("Variable.xml");
 		}
@@ -37,6 +40,8 @@
 				parent::request()->set($name, $value, 'variable');
 			} else if ($scope == 'session') {
 				parent::session()->set($name, $value, 'variable');
+			} else if ($scope == 'temp') {
+				$this->tempValues[$name] = $value;
 			} else if ($scope == 'cookie') {
 				setcookie($name, $value);
 			} else if($scope == 'application') {
@@ -48,17 +53,45 @@
 			return '';
 		}
 
+		public function setScope($name, $scope) {
+			$this->nameScopes[$name] = $scope;
+		}
+
+		private function isScopeAvailableForName($name, $scope) {
+			if (array_key_exists($name, $this->nameScopes)) {
+				return $this->nameScopes[$name] == $scope;
+			}
+
+			return true;
+		}
+
 		public function getProperty($name) {
-			if (parent::request()->exists($name, 'variable')) {
+			if ($this->isScopeAvailableForName($name, "request") && parent::request()->exists($name, 'variable')) {
 				return parent::request()->get($name, 'variable');
 			}
 
-			if (parent::session()->exists($name, 'variable')) {
+			if ($this->isScopeAvailableForName($name, "session") && parent::session()->exists($name, 'variable')) {
 				return parent::session()->get($name, 'variable');
 			}
 
-			$application = parent::dao('ApplicationVariable')->getValue($name);
-			return $application;
+			if ($this->isScopeAvailableForName($name, "temp") && parent::session()->exists($name, 'variable-temp')) {
+				return parent::session()->get($name, 'variable-temp');
+			}
+
+			if ($this->isScopeAvailableForName($name, "application")) {
+				$application = parent::dao('ApplicationVariable')->getValue($name);
+				return $application;
+			}
+
+			return null;
+		}
+
+		public function dispose() {
+			parent::session()->clear('variable-temp');
+
+			foreach ($this->tempValues as $name => $value) {
+				parent::session()->set($name, $value, 'variable-temp');
+			}
 		}
 	}
 

@@ -8,6 +8,7 @@
   <comment>
     Knihovna pro správu proměnných systému.
   </comment>
+  <disposable />
   <tag>
     <tagname>declare</tagname>
     <function>setValue</function>
@@ -27,7 +28,7 @@
       <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>request</attdef>
-      <attcomment>Může nabývat hodnot 'request', 'session', 'cookie' a 'application'.</attcomment>
+      <attcomment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</attcomment>
     </attribute>
     <attribute>
       <attname>select</attname>
@@ -36,6 +37,26 @@
     </attribute>
     <comment>
       Nastaví hodnotu proměnné s názvem 'name'.
+    </comment>
+  </tag>
+  <tag>
+    <tagname>use</tagname>
+    <function>setScope</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název proměnné, jejíž scope se má nastavit.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>scope</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attdef>request</attdef>
+      <attcomment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</attcomment>
+    </attribute>
+    <comment>
+      Řekne o proměnné, že patří do daného scope. Pokud se bude proměnná v rámci request ještě číst, bude se číst z tohoto scope.
     </comment>
   </tag>
   <anyProperty />
