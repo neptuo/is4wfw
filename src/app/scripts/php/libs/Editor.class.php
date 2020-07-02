@@ -25,35 +25,37 @@
 
             // Načtení dat formuláře.
             $model->load();
-            self::parseContent($template);
+            parent::parseContent($template);
             $model->load(false);
 
-            if (self::isHttpMethod("POST") && array_key_exists($submit, $_REQUEST)) {
+            if (parent::isHttpMethod("POST") && array_key_exists($submit, $_REQUEST)) {
                 // Submit form / bind data into the model.
                 $model->submit();
-                self::parseContent($template);
+                parent::parseContent($template);
                 $model->submit(false);
 
-                // Save data in transaction.
-                parent::dataAccess()->transaction(function() use ($model, $template) {
-                    $model->save();
-                    self::parseContent($template);
-                    $model->save(false);
+                if ($model->isValid()) {
+                    // Save data in transaction.
+                    parent::dataAccess()->transaction(function() use ($model, $template) {
+                        $model->save();
+                        parent::parseContent($template);
+                        $model->save(false);
 
-                    if ($model->hasException()) {
-                        throw new Exception("One or more exceptions raised during save phase of EditModel. All of them should be logged.");
-                    }
-                });
+                        if ($model->hasException()) {
+                            throw new Exception("One or more exceptions raised during save phase of EditModel. All of them should be logged.");
+                        }
+                    });
 
-                // Process after save redirects.
-                $model->saved(true);
-                self::parseContent($template);
-                $model->saved(false);
+                    // Process after save redirects.
+                    $model->saved(true);
+                    parent::parseContent($template);
+                    $model->saved(false);
+                }
             }
 
             // Render UI.
             $model->render();
-            $result = self::ui()->form($template, "post", null, $params);
+            $result = parent::ui()->form($template, "post", null, $params);
             parent::clearEditModel();
             return $result;
         }

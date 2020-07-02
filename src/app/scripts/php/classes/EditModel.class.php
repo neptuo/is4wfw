@@ -3,10 +3,11 @@
     class EditModel implements ArrayAccess, Iterator
     {
         private $prefix;
-        private $metadata = array();
-        private $container = array();
+        private $metadata = [];
+        private $container = [];
+        private $validation = [];
         private $index = 0;
-        private $exceptions = array();
+        private $exceptions = [];
 
         public function prefix($name = "1.1-def") {
             if ($name === "1.1-def") {
@@ -47,7 +48,7 @@
         }
     
         public function offsetGet($offset) {
-            if (self::offsetExists($offset)) {
+            if ($this->offsetExists($offset)) {
                 return $this->container[$this->prefix][$offset];
             } else {
                 return null;
@@ -61,19 +62,19 @@
         }
 
         public function current(){
-            $keys = self::keys();
+            $keys = $this->keys();
             $value = $this[$keys[$this->index]];
             return $value;
         }
 
         public function key(){
-            $keys = self::keys();
+            $keys = $this->keys();
             $value = $keys[$this->index];
             return $value;
         }
 
         public function next(){
-            $keys = self::keys();
+            $keys = $this->keys();
             if (isset($keys[++$this->index])) {
                 $value = $this[$keys[$this->index]];
                 return $value;
@@ -83,7 +84,7 @@
         }
 
         public function valid() {
-            $keys = self::keys();
+            $keys = $this->keys();
             $isIndexSet = isset($keys[$this->index]);
             return $isIndexSet;
         }
@@ -159,6 +160,16 @@
             return array_key_exists($this->prefix, $this->metadata) && array_key_exists($key, $this->metadata[$this->prefix]);
         }
 
+        // ------- Validation -------------------------------------------------
+
+        public function validationMessage($key, $identifier) {
+            $this->validation[$this->prefix][$key][] = $identifier;
+        }
+
+        public function isValid() {
+            return empty($this->validation);
+        }
+
         // ------- Request and model values -----------------------------------
 
         private $request;
@@ -176,7 +187,7 @@
                 $name = $this->prefix . $name;
             }
 
-            $value = self::getRequest()[$name];
+            $value = $this->getRequest()[$name];
             if ($nameIndex !== null && $nameIndex != -1) {
                 $value = $value[$nameIndex];
             }
@@ -186,9 +197,9 @@
 
         public function request($requestOrName = null, $nameIndex = null) {
             if ($requestOrName == null) {
-                return self::getRequest();
+                return $this->getRequest();
             } else if (is_string($requestOrName)) {
-                return self::getRequestValue($requestOrName, $nameIndex);
+                return $this->getRequestValue($requestOrName, $nameIndex);
             }  else {
                 $this->request = $requestOrName;
             }
@@ -251,7 +262,7 @@
         }
 
         public function keys() {
-            if (self::hasPrefix()) {
+            if ($this->hasPrefix()) {
                 return array_keys($this->container[$this->prefix]);
             }
 
@@ -259,7 +270,7 @@
         }
 
         public function hasKey($key) {
-            return self::hasPrefix() && array_key_exists($key, $this->container[$this->prefix]);
+            return $this->hasPrefix() && array_key_exists($key, $this->container[$this->prefix]);
         }
     }
 

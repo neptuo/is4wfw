@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Validation library</name>
+  <classname>Validation</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro práci s validací uvnitř šablon.
+    Vždy pracuje uvnitř aktuálního prefixu EditModelu.
+  </comment>
+  <tag>
+    <tagname>required</tagname>
+    <function>required</function>
+    ...
+    <comment>
+      Nastaví required validátor pro klíč "key".
+    </comment>
+  </tag>
+  <tag>
+    <tagname>message</tagname>
+    <function>message</function>
+    ...
+    <comment>
+      Vypíše všechny validační zprávy pro klíč "key" (pokud je vyplněný, jinak vypisuje vše).
+    </comment>
+  </tag>
+  <fulltag>
+    <tagname>messageList</tagname>
+    <function>messageList</function>
+    ...
+    <comment>
+      Umožní šablonově vypsat všechny validační zprávy pro daný klíč "key" (pokud je vyplněný, jinak vypisuje vše).
+    </comment>
+  </fulltag>
+</taglib>
+
