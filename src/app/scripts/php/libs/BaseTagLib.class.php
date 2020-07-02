@@ -547,8 +547,12 @@
                 header("Location: " . $url, true, 302);
                 echo '<script type="text/javascript">window.location.href = "' . $url . '";</script>';
                 echo '<a href="' . $url . '">Redirect to ' . $url . '</a>';
-                exit;
+                self::exit();
             }
+        }
+
+        protected function exit() {
+            exit;
         }
 
         private $requestHeaders = null;

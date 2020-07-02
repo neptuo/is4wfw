@@ -330,7 +330,7 @@
                 . '</rss>';
 
                 echo $return;
-                exit;
+                parent::exit();
             }
         }
 

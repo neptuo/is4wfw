@@ -683,7 +683,7 @@
                 if ($ok == false) {
                     header("HTTP/1.1 404 Not Found");
                     echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-                    exit;
+                    parent::exit();
                 }
 
                 if (strlen($path[1]) != 0) {
@@ -907,7 +907,7 @@
                     self::generateErrorPage('404');
                 } else {
                     echo 'Bad!';
-                    exit;
+                    parent::exit();
                 }
             } elseif (count($return) == 0 && $path[0] == "" && $path[1] == "") {
                 if (count($this->PagesId) == 0) {
@@ -1025,7 +1025,7 @@
                 if (file_exists($path) && is_readable($path) && ($cacheMTime > (time() - $time))) {
                     //echo $cacheMTime;
                     echo file_get_contents($path);
-                    exit;
+                    parent::exit();
                 } else {
                     $this->CacheFile = $name;
                 }
@@ -1304,10 +1304,10 @@
                 header('Content-Encoding: ' . $encoding);
                 print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
                 print($return);
-                exit();
+                parent::exit();
             } else {
                 echo $return;
-                exit();
+                parent::exit();
             }
         }
 

@@ -918,7 +918,7 @@
             //echo $updTime.' - '.getenv("HTTP_IF_MODIFIED_SINCE").' ; ';
             if($_SERVER["HTTP_IF_MODIFIED_SINCE"] && $updTime <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
                 header("HTTP/1.1 304 Not Modified");
-                exit;
+                parent::exit();
             }
 
             
@@ -932,7 +932,7 @@
                 $file = @ fopen($filePath, 'rb');
                 if ($file) {
                 fpassthru($file);
-                exit;
+                parent::exit();
                 } else {
                 // vrat image "file not found".
                 }
