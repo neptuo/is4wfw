@@ -24,7 +24,7 @@
 		public static $FileSystemItemPath = 'id';
 		
 		public static $FileExtensions = array(
-			WEB_TYPE_CSS => "css", WEB_TYPE_JS => "js", WEB_TYPE_JPG => "jpg", WEB_TYPE_GIF => "gif", 
+			WEB_TYPE_CSS => "css", WEB_TYPE_JS => "js", WEB_TYPE_JSON => "json", WEB_TYPE_JPG => "jpg", WEB_TYPE_GIF => "gif", 
 			WEB_TYPE_PNG => "png", WEB_TYPE_PDF => "pdf", WEB_TYPE_RAR => "rar", WEB_TYPE_ZIP => "zip", 
 			WEB_TYPE_TXT => "txt", WEB_TYPE_XML => "xml", WEB_TYPE_XSL => "xsl", WEB_TYPE_DTD => "dtd",
 			WEB_TYPE_HTML => "html", WEB_TYPE_PHP => "php", WEB_TYPE_SQL => "sql", WEB_TYPE_C => "c",
@@ -36,7 +36,7 @@
 		);
 		
 		public static $FileMimeTypes = array(
-			WEB_TYPE_CSS => "text/css", WEB_TYPE_JS => "application/x-javascript", WEB_TYPE_JPG => "image/jpeg", WEB_TYPE_GIF => "image/gif", 
+			WEB_TYPE_CSS => "text/css", WEB_TYPE_JS => "application/x-javascript", WEB_TYPE_JSON => "application/json", WEB_TYPE_JPG => "image/jpeg", WEB_TYPE_GIF => "image/gif", 
 			WEB_TYPE_PNG => "image/png", WEB_TYPE_PDF => "application/pdf", WEB_TYPE_RAR => "application/octet-stream", WEB_TYPE_ZIP => "application/zip", 
 			WEB_TYPE_TXT => "text/plain", WEB_TYPE_XML => "text/xml", WEB_TYPE_XSL => "text/plain", WEB_TYPE_DTD => "text/plain",
 			WEB_TYPE_HTML => "text/html", WEB_TYPE_HTM => "text/html", WEB_TYPE_PHP => "application/octet-stream", WEB_TYPE_SQL => "text/plain", WEB_TYPE_C => "text/plain",

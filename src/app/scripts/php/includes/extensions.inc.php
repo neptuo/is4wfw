@@ -40,6 +40,7 @@
 	define("WEB_TYPE_WOFF", 33);
 	define("WEB_TYPE_WOFF2", 34);
 	define("WEB_TYPE_EOT", 35);
+	define("WEB_TYPE_JSON", 36);
 
 
 ?>
