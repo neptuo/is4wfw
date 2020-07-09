@@ -717,12 +717,18 @@
 					if (is_array($files)) {
 						foreach ($files as $file) {
 							$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId);
-							$this->processFileUploadBasic($dataItem, $file->TempName);
+							$result = $this->processFileUploadBasic($dataItem, $file->TempName);
+							if ($result != null) {
+								throw new Error($result);
+							}
 						}
 					} else {
 						$file = $files;
 						$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId);
-						$this->processFileUploadBasic($dataItem, $file->TempName);
+						$result = $this->processFileUploadBasic($dataItem, $file->TempName);
+						if ($result != null) {
+							throw new Error($result);
+						}
 					}
 				}
 			} else if ($model->isRender()) {
