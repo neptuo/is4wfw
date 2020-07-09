@@ -37,7 +37,7 @@
       <attname>dirId</attname>
       <attreq>required</attreq>
 	    <atttype>number</atttype>
-      <attcomment>Id složka, jejíž obsah se má zobrazit.</attcomment>
+      <attcomment>Id složky, jejíž obsah se má zobrazit.</attcomment>
     </attribute>
     <attribute>
       <attname>grouped</attname>
@@ -147,6 +147,19 @@
       Zobrazí formulář nahrání souborů
     </comment>
   </tag>
+  <fulltag>
+    <tagname>upload</tagname>
+    <function>uploadFormTag</function>
+    <attribute>
+      <attname>dirId</attname>
+      <attreq>required</attreq>
+	    <atttype>number</atttype>
+      <attcomment>Id složky, do které se má uploadovat.</attcomment>
+    </attribute>
+    <comment>
+      Zpracuje soubory uvnitř modelu a nahraje je do "dirId".
+    </comment>
+  </fulltag>
   <tag>
     <tagname>directoryEditor</tagname>
     <function>directoryEditor</function>

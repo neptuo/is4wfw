@@ -4,6 +4,7 @@
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/Select.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/RoleHelper.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/FileUploadModel.class.php");
 
 	/**
 	 * 
@@ -705,6 +706,44 @@
 					return $return.parent::view('fileadmin-fileupload', $dataItem);
 				}	
 			}
+		}
+
+		public function uploadFormTag(string $template, int $dirId) {
+			$model = parent::getEditModel();
+
+			if ($model->isSave()) {
+				foreach ($model->keys() as $key) {
+					$files = $model[$key];
+					if (is_array($files)) {
+						foreach ($files as $file) {
+							$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId);
+							$this->processFileUploadBasic($dataItem, $file->TempName);
+						}
+					} else {
+						$file = $files;
+						$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId);
+						$this->processFileUploadBasic($dataItem, $file->TempName);
+					}
+				}
+			} else if ($model->isRender()) {
+				$result = parent::parseContent($template);
+				return $result;
+			}
+
+			parent::parseContent($template);
+		}
+
+		private function mapFileUploadModelToDataItem(FileUploadModel $file, int $dirId) {
+			$name = implode('.', explode('.', $file->Name, -1));
+			$dataItem = [
+				"name" => $name,
+				"title" => $name,
+				"type" => $this->getWebFileType($file->Name),
+				'timestamp' => time(), 
+				'url' => parent::convertToUrlValid($name),
+				"dir_id" => $dirId
+			];
+			return $dataItem;
 		}
 
 		public function createDirectory($parentId, $name, $url = '') {
