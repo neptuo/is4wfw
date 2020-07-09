@@ -496,13 +496,6 @@
       <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
     <attribute>
-      <attname>nameIndex</attname>
-      <attreq>implied</attreq>
-      <atttype>number</atttype>
-      <attdef>-1</attdef>
-      <attcomment>Index, pokud je "name" typu pole.</attcomment>
-    </attribute>
-    <attribute>
       <attname>isMulti</attname>
       <attreq>implied</attreq>
       <atttype>bool</atttype>

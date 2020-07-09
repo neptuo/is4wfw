@@ -3,6 +3,7 @@
 	require_once("BaseTagLib.class.php");
     require_once("Session.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/FileUploadModel.class.php");
 
 	class Ui extends BaseTagLib {
 
@@ -497,7 +498,7 @@
 			return self::inputbox("password", $name, $nameIndex, $default, $params);
 		}
 
-		public function filebox($name, $nameIndex = -1, $isMulti = false, $params = array()) {
+		public function filebox($name, $isMulti = false, $params = array()) {
 			$model = parent::getEditModel();
 
 			$formParams = $model->metadata("form");
@@ -506,17 +507,34 @@
 
 			if ($model->isSubmit()) {
 				$value = $_FILES[$name];
-				if ($model->isNameIndex($nameIndex)) {
-					$value = $value[$nameIndex];
+				$file = null;
+				if ($value != null) {
+					if ($isMulti) {
+						$file = [];
+						for ($i = 0; $i < count($value["name"]); $i++) { 
+							$item = new FileUploadModel();
+							$item->Name = $value["name"][$i];
+							$item->Type = $value["type"][$i];
+							$item->TempName = $value["tmp_name"][$i];
+							$item->Size = $value["size"][$i];
+							$file[] = $item;
+						}
+					} else {
+						$file = new FileUploadModel();
+						$file->Name = $value["name"];
+						$file->Type = $value["type"];
+						$file->TempName = $value["tmp_name"];
+						$file->Size = $value["size"];
+					}
 				}
 
-				$model->set($name, $nameIndex, $value);
+				$model->set($name, null, $file);
 			} else {
 				if ($isMulti) {
 					$params["multiple"] = "multiple";
 				}
 
-				return $this->inputbox("file", $name, $nameIndex, "", $params);
+				return $this->inputbox("file", $name, 0, "", $params);
 			}
 		}
 		
