@@ -21,6 +21,7 @@
             $template = parent::getParsedTemplate($template);
             
             $model = new EditModel();
+            $model->metadata("form", $params);
             parent::setEditModel($model);
 
             // Načtení dat formuláře.
@@ -55,7 +56,7 @@
 
             // Render UI.
             $model->render();
-            $result = parent::ui()->form($template, "post", null, $params);
+            $result = parent::ui()->form($template, "post", null, $model->metadata("form"));
             parent::clearEditModel();
             return $result;
         }

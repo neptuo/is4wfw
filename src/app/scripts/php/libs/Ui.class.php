@@ -499,6 +499,11 @@
 
 		public function filebox($name, $nameIndex = -1, $isMulti = false, $params = array()) {
 			$model = parent::getEditModel();
+
+			$formParams = $model->metadata("form");
+			$formParams["enctype"] = "multipart/form-data";
+			$model->metadata("form", $formParams);
+
 			if ($model->isSubmit()) {
 				$value = $_FILES[$name];
 				if ($model->isNameIndex($nameIndex)) {
