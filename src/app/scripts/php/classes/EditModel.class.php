@@ -195,7 +195,7 @@
             }
 
             $value = $this->getRequest()[$name];
-            if ($nameIndex !== null && $nameIndex != -1) {
+            if ($this->isNameIndex($nameIndex)) {
                 $value = $value[$nameIndex];
             }
 
@@ -217,7 +217,7 @@
                 $name = $this->prefix . $name;
             }
 
-            if ($nameIndex !== null && $nameIndex != -1) {
+            if ($this->isNameIndex($nameIndex)) {
                 $name .= "[]";
             }
 
@@ -225,7 +225,7 @@
         }
 
         public function set($name, $nameIndex, $value) {
-            if ($nameIndex !== null && $nameIndex != -1) {
+            if ($this->isNameIndex($nameIndex)) {
                 $array = $this[$name];
                 if ($array == null) {
                     $array = array();
@@ -240,11 +240,15 @@
 
         public function get($name, $nameIndex) {
             $value = $this[$name];
-            if ($nameIndex !== null && $nameIndex != -1) {
+            if ($this->isNameIndex($nameIndex)) {
                 $value = $value[$nameIndex];
             }
 
             return $value;
+        }
+
+        public function isNameIndex($nameIndex) {
+            return $nameIndex !== null && $nameIndex != -1;
         }
 
         public function copyFrom($data) {

@@ -496,6 +496,24 @@
 		public function passwordbox($name, $nameIndex = -1, $default = "", $params = array()) {
 			return self::inputbox("password", $name, $nameIndex, $default, $params);
 		}
+
+		public function filebox($name, $nameIndex = -1, $isMulti = false, $params = array()) {
+			$model = parent::getEditModel();
+			if ($model->isSubmit()) {
+				$value = $_FILES[$name];
+				if ($model->isNameIndex($nameIndex)) {
+					$value = $value[$nameIndex];
+				}
+
+				$model->set($name, $nameIndex, $value);
+			} else {
+				if ($isMulti) {
+					$params["multiple"] = "multiple";
+				}
+
+				return $this->inputbox("file", $name, $nameIndex, "", $params);
+			}
+		}
 		
 		public function textarea($name, $nameIndex = -1, $default = "", $params = array()) {
 			$model = parent::getEditModel();

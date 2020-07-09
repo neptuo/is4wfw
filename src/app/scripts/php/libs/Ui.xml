@@ -487,6 +487,34 @@
       Všechny ostatní atributy jsou předány HTML select elementu.
     </comment>
   </tag>
+  <tag>
+    <tagname>filebox</tagname>
+    <function>filebox</function>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>nameIndex</attname>
+      <attreq>implied</attreq>
+      <atttype>number</atttype>
+      <attdef>-1</attdef>
+      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>isMulti</attname>
+      <attreq>implied</attreq>
+      <atttype>bool</atttype>
+      <attdef>false</attdef>
+      <attcomment>Zda se umožňuje výběr více souborů najednou.</attcomment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vygeneruje input pro zadání souborů.
+      Všechny ostatní atributy jsou předány HTML input elementu.
+    </comment>
+  </tag>
   <fulltag>
     <tagname>defaultValue</tagname>
     <function>defaultValue</function>
