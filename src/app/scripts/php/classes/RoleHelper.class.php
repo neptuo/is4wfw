@@ -224,7 +224,12 @@ class RoleHelper {
 		$target = self::getUserRoles($uid);
 		
 		$currentMax = $instance->db()->getDataAccess()->fetchSingle(self::getCurrentEditUserSql($current));
-		$targetMax = $instance->db()->getDataAccess()->fetchSingle(self::getCurrentEditUserSql($target));
+
+		if (count($target) > 0) {
+			$targetMax = $instance->db()->getDataAccess()->fetchSingle(self::getCurrentEditUserSql($target));
+		} else {
+			$targetMax = 0;
+		}
 		
 		return $currentMax['value'] < $targetMax['value'];
 	}

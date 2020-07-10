@@ -2,6 +2,7 @@
 
     require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/RoleHelper.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Validator.class.php");
 
     /**
      *
@@ -985,7 +986,7 @@
 			if ($model->isLoad()) {
                 if ($isUpdate) {
                     $model->registration();
-                    self::parseContent($template);
+                    $this->parseContent($template);
                     $model->registration(false);
                     
                     $columns = $model->fields(User::$EditIgnoredLoadKeys);
@@ -999,7 +1000,7 @@
                         $model->copyFrom($data);
 
                         if ($model->hasKey("group_ids")) {
-                            $model["group_ids"] = self::getUserGroupIds($uid);
+                            $model["group_ids"] = $this->getUserGroupIds($uid);
                         }
                     }
                 } else {
@@ -1008,23 +1009,20 @@
 			}
 
 			if ($model->isSubmit()) {
-                self::parseContent($template);
-            }
-				
-			if ($model->isSave()) {
+                $this->parseContent($template);
+
                 // Unique login.
                 if ($model->hasKey("login")) {
-                    $isValid = self::isUniqueLogin($model["login"], $uid);
+                    $isValid = $this->isUniqueLogin($model["login"], $uid);
                     if (!$isValid) {
-                        $model->metadata("isValid", false);
+                        Validator::addUnique($model, "login");
                     }
                 } elseif(!$isUpdate) {
-                    $model->metadata("isValid", false);
+                    Validator::addRequired($model, "login");
                 }
-
+                
                 // Password checks.
                 if ($model->hasKey("password")) {
-                    $isValid = true;
                     $isPasswordSkipped = false;
                     $password = $model["password"];
 
@@ -1034,7 +1032,7 @@
                             unset($model["password"]);
                             $isPasswordSkipped = true;
                         } else {
-                            $isValid = false;
+                            Validator::addRequired($model, "password");
                         }
                     }
 
@@ -1043,34 +1041,35 @@
                         if ($model->hasKey("passwordConfirm")) {
                             $passwordConfirm = $model["passwordConfirm"];
                             if ($password != $passwordConfirm) {
-                                $isValid = false;
+                                Validator::addMustMatch($model, "passwordConfirm");
                             }
                         }
 
                         // Match current.
                         if ($model->hasKey("passwordCurrent") && $isUpdate) {
                             $passwordCurrent = $model["passwordCurrent"];
-                            if (!self::isPasswordMatch($uid, $passwordCurrent)) {
-                                $isValid = false;
+                            if (!$this->isPasswordMatch($uid, $passwordCurrent)) {
+                                Validator::addInvalidValue($model, "password");
                             }
-                        }
-                        
-                        // Compute hash of new one.
-                        if ($isValid) {
-                            $login = null;
-                            if ($model->hasKey("login")) {
-                                $login = $model["login"];
-                            } elseif($isUpdate) {
-                                $sql = parent::sql()->select("user", ["login"], ["uid" => $uid]);
-                                $data = parent::dataAccess()->fetchSingle($sql);
-                                $login = $data["login"];
-                            }
-
-                            $model["password"] = User::hashPassword($login, $passwordConfirm);
-                        } else {
-                            $model->metadata("isValid", false);
                         }
                     }
+                }
+
+            }
+				
+			if ($model->isSave()) {
+                // Compute hash of new one.
+                if ($model->hasKey("password")) {
+                    $login = null;
+                    if ($model->hasKey("login")) {
+                        $login = $model["login"];
+                    } elseif($isUpdate) {
+                        $sql = parent::sql()->select("user", ["login"], ["uid" => $uid]);
+                        $data = parent::dataAccess()->fetchSingle($sql);
+                        $login = $data["login"];
+                    }
+
+                    $model["password"] = User::hashPassword($login, $model["password"]);
                 }
 
                 // Enable.
@@ -1092,14 +1091,14 @@
                         $sql = parent::sql()->insert("user", $model);
                         parent::dataAccess()->execute($sql);
                         $model["uid"] = $uid = parent::dataAccess()->getLastId();
-                        self::insertDefaultProperties($model["uid"]);
+                        $this->insertDefaultProperties($model["uid"]);
                     } else {
                         $sql = parent::sql()->update("user", $model, array("uid" => $uid));
                         parent::dataAccess()->execute($sql);
                     }
 
                     if (is_array($groupIds)) {
-                        $currentGroupIds = self::getUserGroupIds($uid);
+                        $currentGroupIds = $this->getUserGroupIds($uid);
                         foreach ($currentGroupIds as $groupId) {
                             if (!in_array($groupId, $groupIds)) {
                                 $sql = parent::sql()->delete("user_in_group", ["uid" => $uid, "gid" => $groupId]);
@@ -1118,9 +1117,7 @@
 			}
 			
             if ($model->isSaved()) {
-                if (!$model->hasMetadataKey("isValid") || $model->metadata("isValid")) {
-                    self::parseContent($template);
-                }
+                parent::parseContent($template);
             }
 			
             if ($model->isRender()) {
@@ -1128,7 +1125,7 @@
 					return parent::getWarning("Such user doesn't exist.");
 				}
 
-				$result = self::parseContent($template);
+				$result = parent::parseContent($template);
 				return $result;
 			}
         }
