@@ -714,9 +714,30 @@
 			if ($model->isSubmit()) {
 				parent::parseContent($template);
 
-				$this->forEachModelFile($model, function($file, $key) use ($model) {
-					if ($this->getWebFileType($file->Name) == -1) {
+				$hasAccess = true;
+				if(!$this->canUserDir($dirId, WEB_R_WRITE)) {
+					$hasAccess = false;
+				}
+
+				$this->forEachModelFile($model, function($file, $key) use ($model, $hasAccess, $dirId) {
+					if (!$hasAccess) {
+						$model->validationMessage($key, parent::rb('permissiondenied'));
+					}
+
+					if (strlen($file->Name) == 0) {
+						$model->validationMessage($key, parent::rb('file.namelength'));
+					}
+
+					$type = $this->getWebFileType($file->Name);
+					if ($type == -1) {
 						$model->validationMessage($key, parent::rb('file.unsupportedtype'));
+					}
+
+					$name = $this->getFileNameWithoutExtension($file->Name);
+					$select = parent::select()->where('dir_id', '=', $dirId)->conjunct('name', '=', $name)->conjunct('type', '=', $type);
+					$existing = parent::dao('File')->select($select);
+					if (count($existing) > 0) {
+						$model->validationMessage($key, parent::rb('file.notuniquename').' "' . $file->Name . '"');
 					}
 				});
 			} else if ($model->isSave()) {
@@ -749,7 +770,7 @@
 		}
 
 		private function mapFileUploadModelToDataItem(FileUploadModel $file, int $dirId) {
-			$name = implode('.', explode('.', $file->Name, -1));
+			$name = $this->getFileNameWithoutExtension($file->Name);
 			$dataItem = [
 				"name" => $name,
 				"title" => $name,
@@ -759,6 +780,10 @@
 				"dir_id" => $dirId
 			];
 			return $dataItem;
+		}
+
+		private function getFileNameWithoutExtension($name) {
+			return implode('.', explode('.', $name, -1));
 		}
 
 		public function createDirectory($parentId, $name, $url = '') {
