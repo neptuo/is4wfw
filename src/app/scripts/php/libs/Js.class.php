@@ -249,24 +249,31 @@
             $this->addScriptInline("(function() { $('$selector').select2($options); })();", "tail");
         }
 
-        public function bootstrapDatePicker($selector, $format = "", $language = "", $autoclose = false) {
+        public function bootstrapDatePicker($selector, $format = "", $language = "", $autoclose = false, $orientation = "") {
             $this->addScript("~/js/bootstrap-datepicker/bootstrap-datepicker.min.js");
             $this->addScript("~/js/bootstrap-datepicker/locales/bootstrap-datepicker.$language.min.js", true);
             $this->addStyle('~/css/bootstrap-datepicker/bootstrap-datepicker.min.css');
             
-            $options = "{";
+            $options = [];
             if ($format != "") {
-                $options .= "format: '$format',";
+                $options[] = "format: '$format'";
             }
             if ($language != "") {
-                $options .= "language: '$language'";
+                $options[] = "language: '$language'";
             }
             if ($autoclose) {
-                $options .= "autoclose: true,";
+                $options[] = "autoclose: true";
             }
-            $options .= "}";
+            if ($orientation) {
+                $options[] = "orientation: '$orientation'";
+            }
+            
+            $optionsString = "";
+            if (count($options) > 0) {
+                $optionsString = "{" . implode(", ", $options) . "}";
+            }
 
-            $this->addScriptInline("(function() { $('$selector').datepicker($options); })();", "tail");
+            $this->addScriptInline("(function() { $('$selector').datepicker($optionsString); })();", "tail");
         }
 
         public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false, $jQuery = true) {

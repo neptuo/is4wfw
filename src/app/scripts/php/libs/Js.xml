@@ -191,6 +191,12 @@
       <attdef>false</attdef>
       <attcomment>Zda se má kalenář zavřít po vybrání datumu.</attcomment>
     </attribute>
+    <attribute>
+      <attname>orientation</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Směr, kterým se má date picker otevírat (výchozí "auto", možné hodnoty "left", "top", "right", "bottom"). Možné oddělovat mezerami.</attcomment>
+    </attribute>
     <comment>
       Vloží do stránky skripty a styly pro bootstrap-datepicker (v1.9).
       Nevkládá samostatný bootstrap!
