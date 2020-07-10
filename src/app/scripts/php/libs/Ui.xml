@@ -606,6 +606,37 @@
       Vypíše hodnota časového razítka z "value" ve formátu "format".
     </comment>
   </tag>
+  <tag>
+    <tagname>numberValue</tagname>
+    <function>formatNumber</function>
+    <attribute>
+      <attname>value</attname>
+      <attreq>required</attreq>
+      <atttype>number</atttype>
+      <attcomment>Číslo.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>thousandsSeparator</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Pokud je vyplněn, bude použit jako oddělovač tisíců.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>decimalSeparator</attname>
+      <attreq>implied</attreq>
+      <atttype>string</atttype>
+      <attcomment>Pokud je vyplněn, bude použit jako oddělovač desetinných míst.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>decimals</attname>
+      <attreq>implied</attreq>
+      <attcomment>Pokud je vyplněn, udává počet desetinných míst; nevyplněno znamená nechat původní.</attcomment>
+    </attribute>
+    <comment>
+      Vypíše formátované číslo.
+      Pokud je použit "throusandsSeparator", vždy se zaokrouhluje (výchozí dvě desetinná místa).
+    </comment>
+  </tag>
   <fulltag>
     <tagname>localizable</tagname>
     <function>localizable</function>

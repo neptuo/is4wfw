@@ -670,6 +670,20 @@
 			return $value;
 		}
 
+		public function formatNumber($value, $thousandsSeparator = "", $decimalSeparator = "", $decimals = "") {
+			if ($thousandsSeparator) {
+				if (!$decimals) {
+					$decimals = 2;
+				}
+
+				$value = number_format($value, $decimals, $decimalSeparator, $thousandsSeparator);
+			} else if (is_numeric($decimals)) {
+				$value = round($value, $decimals);
+			}
+
+			return $value;
+		}
+
 		private $localizableName;
 		private $localizableLangId;
 		private $localizableLangName;
