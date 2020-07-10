@@ -683,7 +683,7 @@
                 if ($ok == false) {
                     header("HTTP/1.1 404 Not Found");
                     echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exists.</p>';
-                    parent::exit();
+                    parent::close();
                 }
 
                 if (strlen($path[1]) != 0) {
@@ -907,7 +907,7 @@
                     self::generateErrorPage('404');
                 } else {
                     echo 'Bad!';
-                    parent::exit();
+                    parent::close();
                 }
             } elseif (count($return) == 0 && $path[0] == "" && $path[1] == "") {
                 if (count($this->PagesId) == 0) {
@@ -1025,7 +1025,7 @@
                 if (file_exists($path) && is_readable($path) && ($cacheMTime > (time() - $time))) {
                     //echo $cacheMTime;
                     echo file_get_contents($path);
-                    parent::exit();
+                    parent::close();
                 } else {
                     $this->CacheFile = $name;
                 }
@@ -1304,10 +1304,10 @@
                 header('Content-Encoding: ' . $encoding);
                 print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
                 print($return);
-                parent::exit();
+                parent::close();
             } else {
                 echo $return;
-                parent::exit();
+                parent::close();
             }
         }
 
@@ -1990,12 +1990,12 @@
             if ($path) {
                 // zkontrolovat odkaz, doplnit http ...
                 parent::redirectToUrl($path);
-                parent::exit();
+                parent::close();
             } else {
                 if (array_key_exists("path", $_REQUEST)) {
                     // zkontrolovat odkaz, doplnit http ...
                     parent::redirectToUrl($_REQUEST['path']);
-                    parent::exit();
+                    parent::close();
                 } else {
                     $error = "Missing argument path for redirect!";
                     trigger_error($error, E_USER_WARNING);
@@ -2103,7 +2103,7 @@
                 header('Content-Length: ' . strlen($file[0]['content']));
                 header('Content-Transfer-Encoding: binary');
                 echo $file[0]['content'];
-                parent::exit();
+                parent::close();
             } else {
                 trigger_error('Text File doesn\'t exists! [fileId = ' . $fileId . ']', E_USER_WARNING);
             }
@@ -2189,7 +2189,7 @@
 
             if ($ok) {
                 parent::redirectToUrl($href);
-                parent::exit();
+                parent::close();
             }
         }
 
@@ -2482,20 +2482,20 @@
             if (file_exists($path)) {
                 header("HTTP/1.1 404 Not Found");
                 echo file_get_contents($path);
-                parent::exit();
+                parent::close();
             }
 
             if ($errorCode == 404) {
                 header("HTTP/1.1 404 Not Found");
                 echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exist.</p>';
-                parent::exit();
+                parent::close();
             } elseif ($errorCode == 403) {
                 header("HTTP/1.1 403 Forbidden");
                 echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
-                parent::exit();
+                parent::close();
             } else {
                 echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
-                parent::exit();
+                parent::close();
             }
         }
         

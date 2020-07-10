@@ -39,7 +39,7 @@
 				$file = @fopen($filePath, 'rb');
 				if ($file) {
 					fpassthru($file);
-					parent::exit();
+					parent::close();
 				}
 			}
 			
