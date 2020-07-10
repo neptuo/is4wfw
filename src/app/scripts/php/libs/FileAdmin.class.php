@@ -711,32 +711,41 @@
 		public function uploadFormTag(string $template, int $dirId) {
 			$model = parent::getEditModel();
 
-			if ($model->isSave()) {
-				foreach ($model->keys() as $key) {
-					$files = $model[$key];
-					if (is_array($files)) {
-						foreach ($files as $file) {
-							$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId);
-							$result = $this->processFileUploadBasic($dataItem, $file->TempName);
-							if ($result != null) {
-								throw new Error($result);
-							}
-						}
-					} else {
-						$file = $files;
-						$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId);
-						$result = $this->processFileUploadBasic($dataItem, $file->TempName);
-						if ($result != null) {
-							throw new Error($result);
-						}
+			if ($model->isSubmit()) {
+				parent::parseContent($template);
+
+				$this->forEachModelFile($model, function($file, $key) use ($model) {
+					if ($this->getWebFileType($file->Name) == -1) {
+						$model->validationMessage($key, parent::rb('file.unsupportedtype'));
 					}
-				}
+				});
+			} else if ($model->isSave()) {
+				$this->forEachModelFile($model, function($file) use ($dirId) {
+					$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId);
+					$result = $this->processFileUploadBasic($dataItem, $file->TempName);
+					if ($result != null) {
+						throw new Error($result);
+					}
+				});
 			} else if ($model->isRender()) {
 				$result = parent::parseContent($template);
 				return $result;
+			} else {
+				parent::parseContent($template);
 			}
+		}
 
-			parent::parseContent($template);
+		private function forEachModelFile($model, $handler) {
+			foreach ($model->keys() as $key) {
+				$files = $model[$key];
+				if (is_array($files)) {
+					foreach ($files as $file) {
+						$handler($file, $key);
+					}
+				} else {
+					$handler($files);
+				}
+			}
 		}
 
 		private function mapFileUploadModelToDataItem(FileUploadModel $file, int $dirId) {
