@@ -27,7 +27,9 @@
 // <hr />';
 $Content = '
     <var:declare name="articleId" value="15" />
-    <template:article-detail id="var:articleId"  />
+    <web:condition when="var:articleId" is="15">
+        <template:article-detail id="var:articleId"  />
+    </web:condition>
 ';
 
     function measure($func) {
@@ -41,11 +43,10 @@ $Content = '
 
     function parse($parser, $content, $count, $printOutput = false) {
         for ($i=0; $i < $count; $i++) { 
-            $parser->setContent($content);
-            $parser->startParsing();
+            $result = $parser->parse($content);
 
             if ($printOutput && $i == 0) {
-                echo $parser->getResult();
+                echo $result->evaluate();
             }
         }
     }

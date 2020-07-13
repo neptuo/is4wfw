@@ -2,18 +2,8 @@
 
 class CustomTagParser {
 
-    /**
-     *
-     * 	String for parsing.
-     *
-     */
-    protected $Content = '';
-    /**
-     *
-     * 	String after parsing.
-     *
-     */
-    protected $Result = '';
+    protected $Result = "";
+
     /**
      *
      * 	Custom tag attributes.
@@ -67,11 +57,11 @@ class CustomTagParser {
         }
     }
 
-    protected function stopMeasure() {
+    protected function stopMeasure($content) {
         if (CustomTagParser::$Measure) {
             $endTime = microtime();
             $elapsed = $endTime - $this->startTime;
-            array_push(CustomTagParser::$Measures, array($elapsed, $this->Content));
+            array_push(CustomTagParser::$Measures, array($elapsed, $content));
         }
     }
     
@@ -373,49 +363,19 @@ class CustomTagParser {
 
     /**
      *
-     * 	Set content for parsing
-     * 	
-     * 	@param	content			string for parsing		 		 
-     *
-     */
-    public function setContent($content) {
-        $this->Content = $content;
-    }
-
-    /**
-     *
      * 	Parse custom tags from Content and save result to Result
      *
      */
-    public function startParsing() {
+    public function parse($content) {
         self::startMeasure();
 
-        if ($this->UseCaching) {
-            $hashName = sha1($this->Content);
-            $fileName = CACHE_TEMPLATES_PATH . $hashName . '.cache.php';
+        $result = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $content);
+        self::checkPregError("parsectag");
 
-            if (!file_exists($fileName)) {
-                $this->Result = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $this->Content);
-                $objcts = '';
-                foreach ($this->GlobalObjects as $obj) {
-                    $objcts .= 'global ' . $obj . '; ';
-                }
-                file_put_contents($fileName, '<?php ' . $objcts . ' ?>' . $this->Result);
-                $this->Result = '';
-            }
-
-            ob_start();
-            include $fileName;
-            $this->Result = ob_get_contents();
-            ob_end_clean();
-        } else {
-            $this->Result = preg_replace_callback($this->TAG_RE, array(&$this, 'parsectag'), $this->Content);
-            self::checkPregError("parsectag");
-
-            $this->Result = eval("return '". $this->Result . "';");
-        }
+        $result = eval("return '". $result . "';");
 				
-        self::stopMeasure();
+        self::stopMeasure($content);
+        return $result;
     }
 	
 	public function parsePropertyExactly($value) {
@@ -432,10 +392,6 @@ class CustomTagParser {
         $result = eval("return ". $result . ";");
         return $result;
 	}
-
-    public function getResult() {
-        return $this->Result;
-    }
 
     protected function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

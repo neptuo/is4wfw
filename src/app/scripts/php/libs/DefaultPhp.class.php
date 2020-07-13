@@ -752,7 +752,7 @@
                 return false;
             }
 
-            $return = array_merge(array(DefaultPhp::$FullTagTemplateName => array('value' => $content, 'type' => 'raw')), $sorted);
+            $return = array_merge(array(DefaultPhp::$FullTagTemplateName => array('value' => $content, 'type' => 'eval')), $sorted);
             return $return;
         }
         

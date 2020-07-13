@@ -48,12 +48,13 @@ class FullTagParser extends CustomTagParser {
 
             // Parse $ctag[5].
             $parser = new FullTagParser();
-            $parser->setContent($content);
             $parser->setTagsToParse($this->TagsToParse);
-            $parser->startParsing();
-            $parser->getResult();
+            $parser->parse($content);
             return '';
         }
+
+        $template = $this->parseInternal($content, 'parse');
+        $content = "function () { return '". $template . "'; }";
 
         if ($phpObject->isRegistered($object[0])) {
             if ($phpObject->isFullTag($object[0], $object[1], $attributes)) {
@@ -81,37 +82,35 @@ class FullTagParser extends CustomTagParser {
      * 	Parse custom tags from Content and save result to Result
      *
      */
-    public function startParsing() {
+    public function parse($content) {
+        return $this->parseInternal($content, 'compile');
+    }
+
+    private function parseInternal($content, $mode) {
         self::startMeasure();
 
         parent::setUseCaching(false);
 
         $processed = "";
-        if ($this->Content != "") {
-            $replaced = str_replace("'", "\\'", $this->Content);
+        if ($content != "") {
+            $replaced = str_replace("'", "\\'", $content);
             $processed = preg_replace_callback($this->FULL_TAG_RE, array(&$this, 'parsefulltag'), $replaced);
-            self::checkPregError("parsefulltag");
         }
 
-        $className = "Template_" . $this->generateRandomString();
-        $classDefinition = "class $className extends ParsedTemplate { " . $this->Result . PHP_EOL . PHP_EOL . " public function evaluate() { return '". $processed . "'; } }";
-        eval($classDefinition);
-        
-        $this->Result = new $className();
-				
-        self::stopMeasure();
-    }
+        self::stopMeasure($content);        
 
-    public function getParsedTemplate() {
-        return $this->Result;
-    }
-
-    public function getResult() {
-        return $this->Result->evaluate();
-    }
-
-    public function __toString() {
-        return $this->getResult();
+        if ($mode == 'parse') {
+            return $processed;
+        } else if($mode == 'compile') {
+            $className = "Template_" . $this->generateRandomString();
+            $classDefinition = "class $className extends ParsedTemplate { " . $this->Result . PHP_EOL . PHP_EOL . " public function evaluate() { return '". $processed . "'; } }";
+            eval($classDefinition);
+            
+            $result = new $className();
+            return $result;
+        } else {
+            throw new Exception("Invalid 'mode'.");
+        }
     }
 }
 

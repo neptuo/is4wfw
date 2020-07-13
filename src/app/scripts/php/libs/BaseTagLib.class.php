@@ -726,6 +726,10 @@
         }
         
         public function parseContent($content, $tagsToParse = null) {
+            if (is_callable($content)) {
+                return $content();
+            }
+
             $parser = self::getParsedTemplate($content, $tagsToParse);
             $return = $parser->evaluate();
             return $return;
@@ -746,14 +750,12 @@
             }
 
             $parser = $this->createParser();
-            $parser->setContent($content);
-
+            
             if ($tagsToParse != null) {
                 $parser->setTagsToParse($tagsToParse);
             }
-
-            $parser->startParsing();
-            $parsedTemplate = $parser->getParsedTemplate();
+            
+            $parsedTemplate = $parser->parse($content);
 
             if ($tagsToParse == null) {
                 $this->parsedTemplates[$hash] = $parsedTemplate;
