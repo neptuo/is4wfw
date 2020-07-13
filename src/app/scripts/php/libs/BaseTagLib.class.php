@@ -745,7 +745,7 @@
                 }
             }
 
-            $parser = new FullTagParser();
+            $parser = $this->createParser();
             $parser->setContent($content);
 
             if ($tagsToParse != null) {
@@ -760,6 +760,10 @@
             }
 
             return $parsedTemplate;
+        }
+
+        public function createParser() {
+            return new FullTagParser();
         }
 
         protected function formatString($format, $model) {

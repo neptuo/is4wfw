@@ -1315,8 +1315,6 @@
         }
 
         public function getFilesFromDirectory($template, $id, $type = null, $pageIndex = false, $limit = false, $noDataMessage = false) {
-            $parser = new FullTagParser();
-        
             if ($type != null) {
                 $type = explode(",", $type);
                 if (count($type) == 0) {
@@ -1339,9 +1337,7 @@
                         parent::request()->set('title', $file['title'], 'f:directoryFiles');
                         parent::request()->set('type', $file['type'], 'f:directoryFiles');
                     
-                        $parser->setContent($template);
-                        $parser->startParsing();
-                        $return .= $parser->getResult();
+                        $return .= parent::parseContent($template);
                     }
                 }
             }

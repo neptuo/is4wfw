@@ -114,10 +114,7 @@
                         $this->ViewDataRow = $row;
                         self::setRowId($row['id']);
 
-                        $Parser = new FullTagParser();
-                        $Parser->setContent($templateContent);
-                        $Parser->startParsing();
-                        $return .= $Parser->getResult();
+                        $return .= parent::parseContent($templateContent);
                         $i++;
                     }
                     
@@ -149,8 +146,7 @@
         }
 
         private function listAddToRules($rules, $key, $value, $type = null) {
-            $Parser = new FullTagParser();
-            $Parser->setUseCaching(false);
+            $Parser = $this->createParser();
             $value = $Parser->parsePropertyExactly($value);
         
             if ($type == null) {
@@ -180,11 +176,7 @@
             $this->ViewFieldsFound = array();
             $this->ViewFieldsFound[] = array('id', 'number');
 
-            $Parser = new FullTagParser();
-            $Parser->setContent($templateContent);
-            $Parser->setTagsToParse(array('cf:field', 'cf:setFieldAsCustomProperty'));
-            $Parser->startParsing();
-            $Parser->getResult();
+            parent::parseContent($templateContent, array('cf:field', 'cf:setFieldAsCustomProperty'));
 
             //print_r($this->ViewFieldsFound);
             $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');
@@ -379,10 +371,7 @@
                         $this->FormPhase = 0;
                         $this->EmailPhase = 1;
 
-                        $Parser = new FullTagParser();
-                        $Parser->setContent($templateContent);
-                        $Parser->startParsing();
-                        $content .= $Parser->getResult();
+                        $content .= parent::parseContent($templateContent);
 
                         $this->EmailPhase = 0;
 
@@ -485,10 +474,7 @@
             $this->FormPhase = 1;
             $this->FormFieldsFound = array();
 
-            $Parser = new FullTagParser();
-            $Parser->setContent($templateContent);
-            $Parser->startParsing();
-            $return .= $Parser->getResult();
+            parent::parseContent($templateContent);
 
             $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');
             if (count($formInfo) == 1) {
@@ -544,10 +530,7 @@
                 $return .= '<input type="hidden" name="cf_row-id" value="' . $rowId . '" />';
             }
 
-            $Parser = new FullTagParser();
-            $Parser->setContent($templateContent);
-            $Parser->startParsing();
-            $fcontent = $Parser->getResult();
+            $fcontent = parent::parseContent($templateContent);
 
             foreach ($this->ResourcesToAdd as $res) {
                 switch ($res[0]) {
@@ -572,10 +555,7 @@
             $this->FormId = $formId;
             $this->GeneratedFormId = $_POST['cf_gen-id'];
 
-            $Parser = new FullTagParser();
-            $Parser->setContent($templateContent);
-            $Parser->startParsing();
-            $return .= $Parser->getResult();
+            parent::parseContent($templateContent);
         }
 
         private function formProcessFileUpload($file, $dirId) {

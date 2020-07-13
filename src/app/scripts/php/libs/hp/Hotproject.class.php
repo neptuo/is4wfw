@@ -202,14 +202,11 @@
 				$projections = $dbObject->fetchAll('SELECT `name`, `subname`, `value` FROM `w_projection` WHERE `visible` = 1 ORDER BY `position`;');
 				require_once("scripts/php/classes/FullTagParser.class.php");
 				foreach($projections as $prj) {
-      	  $_SESSION['current-projection']['name'] = $prj['name'];
-        	$_SESSION['current-projection']['subname'] = $prj['subname'];
-	        $_SESSION['current-projection']['value'] = $prj['value'];
+					$_SESSION['current-projection']['name'] = $prj['name'];
+					$_SESSION['current-projection']['subname'] = $prj['subname'];
+					$_SESSION['current-projection']['value'] = $prj['value'];
   	      
-					$Parser = new FullTagParser();
-				  $Parser->setContent($templateContent);
-			  	$Parser->startParsing();
-	 				$return .= $Parser->getResult();
+	 				$return .= parent::parseContent($templateContent);
 				}
 			} else {
 				trigger_error("Template id is not valid!!", E_USER_WARNING);
@@ -419,15 +416,12 @@
 				$references = $dbObject->fetchAll('SELECT `name`, `subname`, `type` FROM `w_reference` WHERE `visible` = 1 ORDER BY `position`;');
 				require_once("scripts/php/classes/FullTagParser.class.php");
 				foreach($references as $ref) {
-      	  $_SESSION['current-reference']['name'] = $ref['name'];
-        	$_SESSION['current-reference']['subname'] = $ref['subname'];
-	        $_SESSION['current-reference']['type'] = $ref['type'];
-	        $_SESSION['current-reference']['type-name'] = $ref['type'];
+					$_SESSION['current-reference']['name'] = $ref['name'];
+					$_SESSION['current-reference']['subname'] = $ref['subname'];
+					$_SESSION['current-reference']['type'] = $ref['type'];
+					$_SESSION['current-reference']['type-name'] = $ref['type'];
   	      
-					$Parser = new FullTagParser();
-				  $Parser->setContent($templateContent);
-			  	$Parser->startParsing();
-	 				$return .= $Parser->getResult();
+					$return .= parent::parseContent($templateContent);
 				}
 			} else {
 				trigger_error("Template id is not valid!!", E_USER_WARNING);

@@ -141,10 +141,7 @@
                 }
             }
             
-            $Parser = new FullTagParser();
-            $Parser->setContent($templateContent);
-            $Parser->startParsing();
-            $return .= $Parser->getResult();
+            $return .= parent::parseContent($templateContent);
             
             return $return;
         }

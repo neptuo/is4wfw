@@ -3083,10 +3083,7 @@
             $sql = 'update `content` set ' . $updateContentSql . ' ' . $whereSql . ';';
             $db->execute($sql);
             if ($db->getDataAccess()->getErrorCode() == 0) {
-                $parser = new FullTagParser();
-                $parser->setContent($template);
-                $parser->startParsing();
-                $return .= $parser->getResult();
+                $return .= parent::parseContent($template);
             }
 
             return $return;
@@ -3128,8 +3125,7 @@
                 $whereSql .= 'i.`language_id` = ' . $languageId;
             }
 
-            $parser = new FullTagParser();
-            $parser->setContent($template);
+            $template = parent::getParsedTemplate($template);
 
             $sql .= $whereSql . ';';
             $data = parent::db()->fetchAll($sql);
@@ -3137,9 +3133,7 @@
 
             foreach ($data as $item) {
                 parent::request()->set('item', $item, 'p:pageList');
-                
-                $parser->startParsing();
-                $return .= $parser->getResult();
+                $return .= $template->evaluate();
             }
 
             parent::request()->set('item', $oldItem, 'p:pageList');

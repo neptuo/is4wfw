@@ -119,8 +119,6 @@
 			
 			if(count($pages > 0)) {
 				$templateContent = $webObject->getTemplateContent($templateId);
-				$Parser = new FullTagParser();
-				$Parser->setContent($templateContent);
 				$unset = false;
 				if(!array_key_exists('pageid' ,$_SESSION['pageng'])) {
 					$unset = true;
@@ -129,10 +127,10 @@
 				}
 				foreach($pages as $page) {
 					self::setPageId($page['page_id']);
-					$Parser->startParsing();
-				$return .= $Parser->getResult();
-			}
-			if($unset) {
+					$return .= parent::parseContent($templateContent);
+				}
+
+				if($unset) {
 					unset($_SESSION['pageng']['pageid']);
 				} else {
 					$_SESSION['pageng']['pageid'] = $oldvalue;
@@ -210,10 +208,7 @@
 			}
 			
 			$templateContent = $webObject->getTemplateContent($templateId);
-			$Parser = new FullTagParser();
-			$Parser->setContent($templateContent);
-			$Parser->startParsing();
-			$return .= $Parser->getResult();
+			$return .= parent::parseContent($templateContent);
 			
 			$return = ''
 			.'<div class="search-filter">'

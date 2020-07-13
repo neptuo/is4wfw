@@ -101,13 +101,13 @@
 			}
 			
             if ($editModel->isSaved()) {
-                if ($template == null) {
-					$result .= parent::partialView("localization/edit");
+				if ($template == null) {
+					parent::partialView("localization/edit");
 				} else {
-					$result .= parent::parseContent($template);
+					parent::parseContent($template);
 				}
             }
-
+			
 			$result = "";
 			if ($editModel->isRender()) {
 				$listItems = array();

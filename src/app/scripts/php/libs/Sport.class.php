@@ -2589,7 +2589,6 @@
             $seasons = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` where `project_id` = ' . self::getProjectId() . ' ORDER BY `start_year` ' . $sorting . ';');
             if (count($seasons) > 0) {
                 $content = parent::getTemplateContent($templateId);
-                $parser = new FullTagParser();
                 $i = 0;
                 $prevId = self::getSeasonId();
                 foreach ($seasons as $season) {
@@ -2597,9 +2596,7 @@
                     parent::request()->set('i', $i, 'sport-data');
                     self::setSeasonId($season['id']);
 
-                    $parser->setContent($content);
-                    $parser->startParsing();
-                    $return .= $parser->getResult();
+                    $return .= parent::parseContent($content);
                     $i++;
                 }
                 self::setSeasonId($prevId);
@@ -2829,10 +2826,7 @@
                     self::setSeasonId($seasonId);
                     self::setTeamId($team['id']);
 
-                    $parser = new FullTagParser();
-                    $parser->setContent($content);
-                    $parser->startParsing();
-                    $return .= $parser->getResult();
+                    $return .= parent::parseContent($content);
                     $i++;
                 }
                 self::setSeasonId($seasonId);
@@ -2976,10 +2970,7 @@
                     self::setHomeTeamId($match['h_team']);
                     self::setAwayTeamId($match['a_team']);
 
-                    $parser = new FullTagParser();
-                    $parser->setContent($content);
-                    $parser->startParsing();
-                    $return .= $parser->getResult();
+                    $return .= parent::parseContent($content);
                     $i++;
                 }
                 self::setRoundId($round);
@@ -3157,10 +3148,7 @@
                         parent::request()->set('i', $i, 'sport-data');
                         self::setRoundId($round['id']);
                         self::setSeasonId($seasonId);
-                        $Parser = new FullTagParser();
-                        $Parser->setContent($templateContent);
-                        $Parser->startParsing();
-                        $return .= $Parser->getResult();
+                        $return .= parent::parseContent($templateContent);
                         $i++;
                     }
                     self::setRoundId($lastround);
@@ -3259,15 +3247,7 @@
             $this->UsedFields = array();
             $this->ViewPhase = 1;
 
-            $parser = new FullTagParser();
-            $parser->setContent($templateContent);
-            $parser->startParsing();
-
-            //print_r($this->UsedFields);
-            //parent::db()->setMockMode(true);  
             $players = self::getPlayersFrom('most', $sorting, $sortBy, $tableId, $teamId, $seasonId, $fromMatchId, $only, $scope, $showGolmans, $limit, $playerId, $offset);
-            //echo $_SESSION['sport']['match-id'];
-            //unset($_SESSION['sport']['match-id']);
 
             if (count($players) > 0) {
                 $i = $offset + 1;
@@ -3286,10 +3266,7 @@
                     self::setTeamId($player['team-id']);
                     self::setPlayerId($player['id']);
                     $_SESSION['sport']['i'] = $i;
-                    $parser = new FullTagParser();
-                    $parser->setContent($templateContent);
-                    $parser->startParsing();
-                    $return .= $parser->getResult();
+                    $return .= parent::parseContent($templateContent);
                     $i++;
                 }
                 self::setTeamId($oldteam);
@@ -3481,10 +3458,7 @@
                     self::setTeamId($player['team']);
                     self::setPlayerId($player['id']);
 
-                    $parser = new FullTagParser();
-                    $parser->setContent($templateContent);
-                    $parser->startParsing();
-                    $return .= $parser->getResult();
+                    $return .= parent::parseContent($templateContent);
                     $i++;
                 }
                 self::setSeasonId($lastseasonId);
@@ -3626,10 +3600,7 @@
                         self::setPlayerId($stat['pid']);
                         self::setTableId($stat['table_id']);
 
-                        $parser = new FullTagParser();
-                        $parser->setContent($templateContent);
-                        $parser->startParsing();
-                        $return .= $parser->getResult();
+                        $return .= parent::parseContent($templateContent);
                         $i++;
                     }
                     self::setMatchId($lastmatchId);

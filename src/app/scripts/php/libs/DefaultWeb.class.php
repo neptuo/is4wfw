@@ -1334,8 +1334,7 @@
             $currentValues = array();
             $props = parent::dao('PageProperty')->getPage($pageId);
             if (count($props) > 0) {
-                $parser = new FullTagParser();
-                $parser->setUseCaching(false);
+                $parser = $this->createParser();
                 foreach ($props as $prop) {
                     $currentValue = self::getProperty($prop['name']);
                     if (!$currentValue || $forceDefProp) {
@@ -1882,11 +1881,7 @@
         }
 
         public function makeAnchorFullTag($template, $pageId, $languageId = false, $class = "", $activeClass = '', $id = "", $target = "", $rel = "", $type = '', $params = false) {
-            $parser = new FullTagParser();
-            $parser->setContent($template);
-            $parser->startParsing();
-            $text = $parser->getResult();
-
+            $text = parent::parseContent($template);
             return self::makeAnchor($pageId, $text, $languageId, $class, $activeClass, $id, $target, $rel, $type, $params);
         }
 
@@ -1965,10 +1960,7 @@
                 if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(DefaultWeb::$TemplateRightDesc, $templateId, WEB_R_READ))) {
                     $template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = ' . $dbObject->escape($templateId) . ';');
                     if (count($template) == 1) {
-                        $Parser = new FullTagParser();
-                        $Parser->setContent($template[0]['content']);
-                        $Parser->startParsing();
-                        $return = $Parser->getResult();
+                        $return = parent::parseContent($template[0]['content']);
                         return $return;
                     }
                 } else {
@@ -2386,11 +2378,7 @@
          *
          */
         public function getWebFrame($content, $title, $open = false) {
-            $parser = new FullTagParser();
-            $parser->setContent($content);
-            $parser->startParsing();
-            $return = $parser->getResult();
-
+            $return = parent::parseContent($content);
             $return = parent::getFrame($title, $return, '', $open == 'true' ? true : false);
             return $return;
         }

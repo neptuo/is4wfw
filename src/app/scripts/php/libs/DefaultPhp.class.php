@@ -924,10 +924,7 @@
             $return = '';
             self::register($prefix, $class);
 
-            $parser = new FullTagParser();
-            $parser->setContent($content);
-            $parser->startParsing();
-            $return = $parser->getResult();
+            $return = parent::parseContent($content);
             
             self::unregister($prefix);
             return $return;

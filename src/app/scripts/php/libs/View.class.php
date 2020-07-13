@@ -17,7 +17,6 @@
 
         private $Resources;
         private $Content;
-        private $FullParser;
         private $Log;
         private $Title;
         private $CurrentTemplateContent;
@@ -51,27 +50,22 @@
             $this->CurrentTemplateContent = array();
             $this->CurrentTemplatePointer = 0;
 
+            $result = "";
             try {
-                $this->FullParser = new FullTagParser();
-                $this->FullParser->setContent(ViewHelper::getViewContent(self::getCurrentVirtualUrlWithoutExtension()));
-                $this->FullParser->startParsing();
+                $result = parent::parseContent(ViewHelper::getViewContent(self::getCurrentVirtualUrlWithoutExtension()));
             } catch (Exception $ex) {
                 echo parent :: getError($ex->getMessage());
             }
 
-            self :: flush($this->FullParser->getResult());
+            self :: flush($result);
         }
 
         public function useTemplate($content, $src) {
             $return = '';
             $this->CurrentTemplateContent[$this->CurrentTemplatePointer] = $content;
             $this->CurrentTemplatePointer++;
-
-            $parser = new FullTagParser();
-            $parser->setContent(ViewHelper::getViewContent($src));
-            $parser->startParsing();
-            $return = $parser->getResult();
-
+            
+            $return = parent::parseContent(ViewHelper::getViewContent($src));
             return $return;
         }
 
@@ -83,11 +77,8 @@
             $return = '';
 
             $this->CurrentTemplatePointer--;
-            $parser = new FullTagParser();
-            $parser->setContent($this->CurrentTemplateContent[$this->CurrentTemplatePointer]);
-            $parser->startParsing();
-            $return = $parser->getResult();
-
+            
+            $return = parent::parseContent($this->CurrentTemplateContent[$this->CurrentTemplatePointer]);
             return $return;
         }
 
@@ -108,10 +99,7 @@
         public function showPanel($content, $id = false, $class = false) {
             $return = '';
 
-            $parser = new FullTagParser();
-            $parser->setContent($content);
-            $parser->startParsing();
-            $return = $parser->getResult();
+            $return = parent::parseContent($content);
 
             $att = '';
             if ($id != '') {

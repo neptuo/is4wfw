@@ -25,7 +25,7 @@
 			return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(FileAdmin::$FileRightDesc, $objectId, $rightType));
 		}
 
-		private function renderImage($parser, $content, $image) {
+		private function renderImage($content, $image) {
 			if ($this->canUserFile($image['id'], WEB_R_READ)) {
 				$this->setFileId($image['id']);
 				$this->setFileUrl($image['url']);
@@ -34,9 +34,7 @@
 				parent::request()->set('title', $image['title'], 'g:image');
 				parent::request()->set('type', $image['type'], 'g:image');
 
-				$parser->setContent($content);
-				$parser->startParsing();
-				return $parser->getResult();
+				return parent::parseContent($content);
 			}
 
 			return '';
@@ -44,8 +42,6 @@
 		
 		//C-tag
 		public function directoryList($content, $id, $pageIndex = false, $limit = false, $noDataMessage = false, $noDataImageId = false) {
-			$parser = new FullTagParser();
-			
 			$images = parent::dao('File')->getImagesFromDirectory($id, $pageIndex, $limit);
 			$return = '';
 
@@ -53,7 +49,7 @@
 				if($noDataImageId != '') {
 					$image = parent::dao('File')->get($noDataImageId);
 					if (count($image) != 0) {
-						$return .= self::renderImage($parser, $content, $image);
+						$return .= self::renderImage($content, $image);
 					} else {
 						$return .= $noDataMessage;
 					}
@@ -62,7 +58,7 @@
 				}
 			} else {
 				foreach($images as $image) {
-					$return .= self::renderImage($parser, $content, $image);
+					$return .= self::renderImage($content, $image);
 				}
 			}
 
@@ -71,15 +67,13 @@
 		
 		//C-tag
 		public function file($content, $id, $noDataMessage = false) {
-			$parser = new FullTagParser();
-			
 			$image = parent::dao('File')->get($id);
 			$return = '';
 
 			if(count($image) == 0) {
 				$return .= $noDataMessage;
 			} else {
-				$return .= self::renderImage($parser, $content, $image);
+				$return .= self::renderImage($content, $image);
 			}
 
 			return $return;

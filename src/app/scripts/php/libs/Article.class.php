@@ -70,7 +70,7 @@
          *  @return   	list of articles
          *
          */
-        public function showLine($lineId = false, $template = fales, $templateId = false, $pageId = false, $pageLangId = false, $articleLangId = false, $method = false, $sortBy = false, $sort = false, $noDataMessage = false, $limit = false, $visible = false, $labelIds = false, $pageable = false) {
+        public function showLine($lineId = false, $template = false, $templateId = false, $pageId = false, $pageLangId = false, $articleLangId = false, $method = false, $sortBy = false, $sort = false, $noDataMessage = false, $limit = false, $visible = false, $labelIds = false, $pageable = false) {
             global $webObject;
             global $dbObject;
             global $loginObject;
@@ -204,10 +204,7 @@
                     parent::request()->set('link', $flink, 'current-article');
                     $_SESSION['current-article']['link'] = $flink;
 
-                    $Parser = new FullTagParser();
-                    $Parser->setContent($templateContent);
-                    $Parser->startParsing();
-                    $return .= $Parser->getResult();
+                    $return .= parent::parseContent($templateContent);
                 }
                 if($pageable) {
                     $total = parent::db()->fetchSingle('select count(`article`.`id`) as `id` '.$fromWhere.';');
@@ -445,10 +442,7 @@
                 parent::request()->set('head', $article[0]['head'], 'current-article');
                 parent::request()->set('content', $article[0]['content'], 'current-article');
 
-                $Parser = new FullTagParser();
-                $Parser->setContent($templateContent);
-                $Parser->startParsing();
-                $return .= $Parser->getResult();
+                $return .= parent::parseContent($templateContent);
                 $return .= self::nextPrevNavigation($articleId, $lineId, $webObject->getPageId(), $nextLinkText, $prevLinkText);
                 
                 self::setArticleDirectoryId($lastDirectoryId);
@@ -573,10 +567,7 @@
                     parent::request()->set('label', $item, 'current-label');
                     self::setIsActiveLabel($label['id'] == $oldLabelId);
                     self::setLabelId($item['id']);
-                    $parser = new FullTagParser();
-                    $parser->setContent($templateContent);
-                    $parser->startParsing();
-                    $return .= $parser->getResult();
+                    $return .= parent::parseContent($templateContent);
                     $i++;
                 }
             } else {
