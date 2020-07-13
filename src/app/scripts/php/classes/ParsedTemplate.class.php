@@ -1,17 +1,8 @@
 <?php
 
-class ParsedTemplate 
+abstract class ParsedTemplate 
 {
-    private $eval;
-
-    public function __construct($eval)
-    {
-        $this->eval = $eval;
-    }
-
-    public function evaluate() {
-        return eval($this->eval);
-    }
+    public abstract function evaluate();
 
     public function __toString() {
         return $this->evaluate();

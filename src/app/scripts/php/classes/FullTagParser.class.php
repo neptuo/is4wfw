@@ -95,8 +95,12 @@ class FullTagParser extends CustomTagParser {
         } else {
             $this->Result = "";
         }
+
+        $className = "Template_" . $this->generateRandomString();
+        $classDefinition = "class $className extends ParsedTemplate { public function evaluate() { return '". $this->Result . "'; } }";
+        eval($classDefinition);
         
-        $this->Result = new ParsedTemplate("return '". $this->Result . "';");
+        $this->Result = new $className();
 				
         self::stopMeasure();
     }
