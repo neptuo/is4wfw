@@ -86,18 +86,15 @@ class FullTagParser extends CustomTagParser {
 
         parent::setUseCaching(false);
 
+        $processed = "";
         if ($this->Content != "") {
-            $this->Result = $this->Content;
-            $this->Result = str_replace("'", "\\'", $this->Result);
-            
-            $this->Result = preg_replace_callback($this->FULL_TAG_RE, array(&$this, 'parsefulltag'), $this->Result);
+            $replaced = str_replace("'", "\\'", $this->Content);
+            $processed = preg_replace_callback($this->FULL_TAG_RE, array(&$this, 'parsefulltag'), $replaced);
             self::checkPregError("parsefulltag");
-        } else {
-            $this->Result = "";
         }
 
         $className = "Template_" . $this->generateRandomString();
-        $classDefinition = "class $className extends ParsedTemplate { public function evaluate() { return '". $this->Result . "'; } }";
+        $classDefinition = "class $className extends ParsedTemplate { " . $this->Result . PHP_EOL . PHP_EOL . " public function evaluate() { return '". $processed . "'; } }";
         eval($classDefinition);
         
         $this->Result = new $className();

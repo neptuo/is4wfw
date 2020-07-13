@@ -233,11 +233,9 @@ class CustomTagParser {
         $bodyExecute = 'global ' . $targetObject . '; return ' . $targetObject . '->' . $functionName . '(' . $attributes . ');';
         $functionDefinition = 'function ' . $identifier . '() { try { ' . $bodyExecute . ' } catch (Exception $e) { global ' . $logObject . '; ' . $logObject . '->exception($e); return ""; } }';
         
-        // self::log($functionDefinition);
-        eval($functionDefinition);
+        $this->Result .= PHP_EOL . PHP_EOL . $functionDefinition;
 
-        $result = $identifier . "()";
-        // $result = "str_replace()";
+        $result = '$this->' . $identifier . "()";
         if ($isWrappedAsString) {
             $result = "' . " . $result . " . '";
         }
