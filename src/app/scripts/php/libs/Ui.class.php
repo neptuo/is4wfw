@@ -58,8 +58,6 @@
 		private $forEachIndex;
 
 		public function forEachListModel($template, $model, $params = array()) {
-			$template = parent::getParsedTemplate($template);
-
 			self::pushListModel($model);
 			$result = "";
 
@@ -188,8 +186,6 @@
 				$result = "";
 				$isWellStructured = count($thead) > 0 || count($tbody) > 0;
 
-				$template = parent::getParsedTemplate($template);
-
 				$items = $model->items();
 				if (count($items) > 0) {
 					$attributes = self::joinAttributes($params);
@@ -204,7 +200,7 @@
 					}
 					
 					$result .= "<tr>";
-					$result .= $template;
+					$result .= parent::parseContent($template);
 					$result .= "</tr>";
 
 					if ($isWellStructured) {
@@ -220,7 +216,7 @@
 						$model->data($item);
 						
 						$result .= "<tr>";
-						$result .= $template;
+						$result .= parent::parseContent($template);
 						$result .= "</tr>";
 					}
 

@@ -3125,15 +3125,13 @@
                 $whereSql .= 'i.`language_id` = ' . $languageId;
             }
 
-            $template = parent::getParsedTemplate($template);
-
             $sql .= $whereSql . ';';
             $data = parent::db()->fetchAll($sql);
             $oldItem = parent::request()->get('item', 'p:pageList');
 
             foreach ($data as $item) {
                 parent::request()->set('item', $item, 'p:pageList');
-                $return .= $template->evaluate();
+                $return .= parent::parseContent($template);
             }
 
             parent::request()->set('item', $oldItem, 'p:pageList');

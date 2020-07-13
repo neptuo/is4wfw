@@ -18,8 +18,6 @@
 		}
 		
 		public function form($template, $submit, $params = []) {
-            $template = parent::getParsedTemplate($template);
-            
             $model = new EditModel();
             $model->metadata("form", $params);
             parent::setEditModel($model);

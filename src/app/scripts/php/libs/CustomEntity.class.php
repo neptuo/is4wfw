@@ -413,8 +413,6 @@
             $langIds = explode(",", $langIds);
             $keys = parent::removeKeysWithEmptyValues($keys);
 
-			$template = parent::getParsedTemplate($template);
-
             if (!$model->hasMetadataKey("isUpdate")) {
                 $model->metadata("isUpdate", count($keys) > 0);
             }

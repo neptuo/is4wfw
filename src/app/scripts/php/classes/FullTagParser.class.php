@@ -83,6 +83,7 @@ class FullTagParser extends CustomTagParser {
      *
      */
     public function parse($content) {
+        $this->Result = "";
         return $this->parseInternal($content, 'compile');
     }
 

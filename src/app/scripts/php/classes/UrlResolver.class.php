@@ -179,21 +179,14 @@
                 return true;
             }
             foreach ($pages as $page) {
-                // !!!!
                 self::parseContentForCustomTags($page['tag_lib_start']);
-                //$this->Parser->setContent($page['tag_lib_start']);
-                //$this->Parser->startParsing();
 
                 $found = true;
                 $key = 0;
                 if ($page['href'] != '') {
                     $hrefs = parent::str_tr($page['href'], '/');
                     foreach ($hrefs as $key => $href) {
-                        // !!!! Jeste je potreba parsovat custom tagy s tlstart a tlend !!!!
                         $fhref = self::parseSingleUrlPart($href, $pageUrls[$key]);
-                        //$this->PropertyAttr = $pageUrls[$key];
-                        //$fhref = preg_replace_callback($this->PROP_RE, array( &$this,'parsecproperty'), $href);
-                        //echo '"'.$fhref.'" == "'.$pageUrls[$key].'"<br />';
                         if ($fhref != $pageUrls[$key]) {
                             self::parseContentForCustomTags($page['tag_lib_end']);
                             $found = false;
@@ -219,10 +212,7 @@
                     }
                 }
 
-                // !!!!
                 self::parseContentForCustomTags($page['tag_lib_end']);
-                //$this->Parser->setContent($page['tag_lib_end']);
-                //$this->Parser->startParsing();
             }
             return false;
         }
@@ -234,8 +224,7 @@
         }
 
         public function parseContentForCustomTags($content) {
-            $this->Parser->setContent($content);
-            $this->Parser->startParsing();
+            $this->Parser->parse($content);
         }
 
         private function parsecproperty($cprop) {
