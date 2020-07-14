@@ -274,6 +274,7 @@
     <attribute>
       <attname>method</attname>
       <attreq>implied</attreq>
+      <atttype>string</atttype>
       <attdef>POST</attdef>
       <attcomment>HTTP metoda, kterou se má formář odeslat.</attcomment>
     </attribute>
