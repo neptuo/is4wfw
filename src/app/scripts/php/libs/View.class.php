@@ -97,10 +97,6 @@
         }
 
         public function showPanel($content, $id = false, $class = false) {
-            $return = '';
-
-            $return = parent::parseContent($content);
-
             $att = '';
             if ($id != '') {
                 $att .= ' id="' . $id . '"';
@@ -108,7 +104,7 @@
             if ($class != '') {
                 $att .= ' class="' . $class . '"';
             }
-            $return = '<div' . $att . '>' . $return . '</div>';
+            $return = '<div' . $att . '>' . parent::parseContent($content) . '</div>';
 
             return $return;
         }
