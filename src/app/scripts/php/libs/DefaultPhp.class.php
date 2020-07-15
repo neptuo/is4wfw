@@ -141,33 +141,11 @@
         }
 
         private function tryRegisterDisposable(string $tagPrefix) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    
-                    if (isset($xml->disposable)) {
-                        $this->disposables[] = $tagPrefix;
-                    }
-                } else {
-                    $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
+            return $this->withXml($tagPrefix, function($xml) use ($tagPrefix) {
+                if (isset($xml->disposable)) {
+                    $this->disposables[] = $tagPrefix;
                 }
-            } else {
-                $str = "Tag prefix isn't registered! [".$tagPrefix."]";
-                trigger_error($str , E_USER_WARNING);
-                echo "<h4 class=\"error\">".$str."</h4>";
-                return false;
-            }
+            });
         }
     
         /**
@@ -178,21 +156,21 @@
          *
          */ 
         public function unregister($tagPrefix) {
-            //$tagPrefix = $attlist['tagPrefix'];
-            
             if (array_key_exists($tagPrefix, $this->_REGISTERED) && $tagPrefix != "php") {
                 foreach($this->_REGISTERED as $name => $tmp) {
-                    if($name == $tagPrefix) {
+                    if ($name == $tagPrefix) {
+                        $object = ${$name."Object"};
+                        if (array_key_exists($tagPrefix, $this->disposables)) {
+                            $object->dispose();
+                            unset($this->disposables[$name]);
+                        }
+
                         unset($this->_REGISTERED[$name]);
-                        unset(${$name."Object"});
+                        unset($object);
                         $this->_CLASSES[$name] --;
                         break;
                     }
                 }
-            } else {
-                //$str = "This tag prefix doesn't exist! [".$tagPrefix."]";
-                //trigger_error($str , E_USER_WARNING);
-                //echo "<h4 class=\"error\">".$str."</h4>";
             }
             
             return "";
@@ -207,7 +185,7 @@
          *
          */                                     
         private function checkIfClassExists($tagPrefix, $classPath) {
-            $path = APP_SCRIPTS_PATH . self::parseClassPath($classPath).".class.php";
+            $path = APP_SCRIPTS_PATH . $this->parseClassPath($classPath).".class.php";
             if(is_file($path)) {
                 //$cont = file_get_contents($path);
                 //if(eregi("class *"))
@@ -292,6 +270,30 @@
             
             return false;
         }
+
+        private function withXml(string $tagPrefix, $handler) {
+            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
+                global ${$tagPrefix."Object"};
+                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+            }
+            
+            if (isset($xmlPath)) {
+                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
+                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
+                    return $handler($xml);
+                } else {
+                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
+                    trigger_error($str , E_USER_WARNING);
+                    echo "<h4 class=\"error\">".$str."</h4>";
+                    return false;
+                }
+            }
+            
+            return false;
+        }
         
         /**
          *
@@ -304,65 +306,31 @@
          *
          */                                     
         public function isTag($tagPrefix, $tagName, $atts) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    
-                    foreach ($xml->tag as $tag) {
-                        if ($tag->tagname == $tagName) {
-                            return true;
-                        }
+            return $this->withXml($tagPrefix, function($xml) use ($tagName) {
+                foreach ($xml->tag as $tag) {
+                    if ($tag->tagname == $tagName) {
+                        return true;
                     }
-                } else {
-                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
                 }
-            }
-            
-            return false;
+
+                return false;
+            });
         }
 
         public function isAnyTag($tagPrefix, $tagName) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    
-                    if (isset($xml->anyTag)) {
-                        foreach ($xml->tag as $tag) {
-                            if ($tag->tagname == $tagName) {
-                                return false;
-                            }
+            return $this->withXml($tagPrefix, function($xml) use ($tagName) {
+                if (isset($xml->anyTag)) {
+                    foreach ($xml->tag as $tag) {
+                        if ($tag->tagname == $tagName) {
+                            return false;
                         }
-
-                        return true;
                     }
-                } else {
-                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
+
+                    return true;
                 }
-            }
-            
-            return false;
+
+                return false;
+            });
         }
         
         /**
@@ -376,65 +344,31 @@
          *
          */                                     
         public function isFullTag($tagPrefix, $tagName, $atts) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    
-                    foreach ($xml->fulltag as $tag) {
-                        if ($tag->tagname == $tagName) {
-                            return true;
-                        }
+            return $this->withXml($tagPrefix, function($xml) use ($tagName) {
+                foreach ($xml->fulltag as $tag) {
+                    if ($tag->tagname == $tagName) {
+                        return true;
                     }
-                } else {
-                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
                 }
-            }
-            
-            return false;
+
+                return false;
+            });
         }
 
         public function isAnyFullTag($tagPrefix, $tagName) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    
-                    if (isset($xml->anyFulltag)) {
-                        foreach ($xml->fulltag as $tag) {
-                            if ($tag->tagname == $tagName) {
-                                return false;
-                            }
+            return $this->withXml($tagPrefix, function($xml) use ($tagName) {
+                if (isset($xml->anyFulltag)) {
+                    foreach ($xml->fulltag as $tag) {
+                        if ($tag->tagname == $tagName) {
+                            return false;
                         }
-
-                        return true;
                     }
-                } else {
-                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
+
+                    return true;
                 }
-            }
-            
-            return false;
+
+                return false;
+            });
         }
         
         /**
@@ -447,63 +381,22 @@
          *
          */                                     
         public function isProperty($tagPrefix, $propName) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    
-                    foreach ($xml->property as $prop) {
-                        if ($prop->propname == $propName) {
-                            return true;
-                        }
+            return $this->withXml($tagPrefix, function($xml) use ($propName) {
+                foreach ($xml->property as $prop) {
+                    if ($prop->propname == $propName) {
+                        return true;
                     }
-
-                    return false;
-                } else {
-                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    //echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
                 }
-            } else {
+
                 return false;
-            }
-            
-            return true;
+            });
         }
 
         // Vrací true, pokud daná knihovna umožňuje <anyProperty />.
         public function isAnyProperty($tagPrefix) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    return isset($xml->anyProperty);
-                } else {
-                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    //echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
-                }
-            } else {
-                return false;
-            }
-            
-            return true;
+            return $this->withXml($tagPrefix, function($xml) {
+                return isset($xml->anyProperty);
+            });
         }
         
         /**
@@ -764,45 +657,25 @@
          *
          */                                     
         public function getFuncToTag($tagPrefix, $tagName) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    
-                    foreach ($xml->tag as $tag) {
-                        if ($tag->tagname == $tagName) {
-                            return (string)$tag->function;
-                        }
+            $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $tagName) {
+                foreach ($xml->tag as $tag) {
+                    if ($tag->tagname == $tagName) {
+                        return (string)$tag->function;
                     }
-                    
-                    if (isset($xml->anyTag)) {
-                        return $xml->anyTag->function;
-                    }
-                    
-                    $str = "Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
-                } else {
-                    $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
                 }
                 
-            } else {
-                $str = "Tag prefix isn't registered! [".$tagPrefix."]";
-                trigger_error($str , E_USER_WARNING);
-                echo "<h4 class=\"error\">".$str."</h4>";
-                return false;
+                if (isset($xml->anyTag)) {
+                    return $xml->anyTag->function;
+                }
+
+                return $this->triggerFail("Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]");
+            });
+
+            if ($functionName === false) {
+                return $this->triggerUnregisteredPrefix($tagPrefix);
             }
+
+            return $functionName;
         }
         
         /**
@@ -813,45 +686,25 @@
          *
          */                                     
         public function getFuncToFullTag($tagPrefix, $tagName) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    
-                    foreach ($xml->fulltag as $tag) {
-                        if ($tag->tagname == $tagName) {
-                            return (string)$tag->function;
-                        }
+            $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $tagName) {
+                foreach ($xml->fulltag as $tag) {
+                    if ($tag->tagname == $tagName) {
+                        return (string)$tag->function;
                     }
-                    
-                    if (isset($xml->anyFulltag)) {
-                        return $xml->anyFulltag->function;
-                    }
-                    
-                    $str = "Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
-                } else {
-                    $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
                 }
                 
-            } else {
-                $str = "Tag prefix isn't registered! [".$tagPrefix."]";
-                trigger_error($str , E_USER_WARNING);
-                echo "<h4 class=\"error\">".$str."</h4>";
-                return false;
+                if (isset($xml->anyFulltag)) {
+                    return $xml->anyFulltag->function;
+                }
+
+                return $this->triggerFail("Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]");
+            });
+
+            if ($functionName === false) {
+                return $this->triggerUnregisteredPrefix($tagPrefix);
             }
+
+            return $functionName;
         }
         
         /**
@@ -862,71 +715,36 @@
          *
          */                                     
         public function getFuncToProperty($tagPrefix, $propName, $use) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    
-                    foreach ($xml->property as $prop) {
-                        if ($prop->propname == $propName) {
-                            if (strtolower($use) == 'set') {
-                                return (string)$prop->setfunction;
-                            } elseif (strtolower($use) == 'get') {
-                                    return (string)$prop->getfunction;
-                            } else {
-                                //$str = "Bad use!";
-                                //trigger_error($str , E_USER_WARNING);
-                                //echo "<h4 class=\"error\">".$str."</h4>";
-                                return false;                        
-                            }
+            $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $propName, $use) {
+                foreach ($xml->property as $prop) {
+                    if ($prop->propname == $propName) {
+                        if (strtolower($use) == 'set') {
+                            return (string)$prop->setfunction;
+                        } elseif (strtolower($use) == 'get') {
+                            return (string)$prop->getfunction;
+                        } else {
+                            return false;                        
                         }
                     }
-                    
-                    $str = "Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
-                } else {
-                    $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
                 }
-                
-            } else {
-            $str = "Tag prefix isn't registered! [".$tagPrefix."]";
-                trigger_error($str , E_USER_WARNING);
-                echo "<h4 class=\"error\">".$str."</h4>";
-                return false;
+
+                return $this->triggerFail("Unnable to find property [".$propName."] in lib [".$tagPrefix."]");
+            });
+
+            if ($functionName === false) {
+                return $this->triggerUnregisteredPrefix($tagPrefix);
             }
-        }
-        
-        /**
-         *
-         *    Set caching in webObject :D
-         *
-         *    @param    cache bool value for caching         
-         *         
-         */
-        public function cache($cache) {
-            global $webObject;
-            $webObject->cache($cache, 60);
+
+            return $functionName;
         }
         
         public function usingObject($content, $prefix, $class) {
             $return = '';
-            self::register($prefix, $class);
+            $this->register($prefix, $class);
 
             $return = parent::parseContent($content);
             
-            self::unregister($prefix);
+            $this->unregister($prefix);
             return $return;
         }
 
@@ -936,7 +754,19 @@
                 ${$tagPrefix."Object"}->dispose();
             }
         }
-                                                
+
+        private function triggerUnregisteredPrefix($tagPrefix) {
+            return $this->triggerFail("Tag prefix isn't registered! [".$tagPrefix."]");
+        }
+
+        private function triggerFail($message) {
+            trigger_error($message , E_USER_WARNING);
+            echo "<h4 class=\"error\">".$message."</h4>";
+            return false;
+        }
+        
+        public function cache($cache) {
+        }
     }
 
 ?>

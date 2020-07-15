@@ -41,6 +41,7 @@
   <tag>
     <tagname>cache</tagname>
     <function>cache</function>
+    <obsolete>Eh...</obsolete>
     <attribute>
       <attname>allow</attname>
       <attreq>required</attreq>

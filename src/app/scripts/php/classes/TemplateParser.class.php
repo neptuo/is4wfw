@@ -110,113 +110,85 @@
             return $processed;
         }
         
-        /**
-         *
-         * 	Parses full tag
-         * 
-         *  Output of this function can't contain ' (apostrophe), as the output is evaluated as PHP code wrapped in ' (apostrophe).
-         *
-         */
+        // Parses full tag
+        // Output of this function can't contain ' (apostrophe), as the output is evaluated as PHP code wrapped in ' (apostrophe).
         private function parsefulltag($ctag) {
             global $phpObject;
 
-            // Self closing tag.
-            if (count($ctag) == 4) {
-                return $this->parsectag($ctag);
-            }
-
             $object = explode(":", $ctag[1]);
-            $content = $ctag[5];
-
+            
             $skipped = $this->isSkippedTag($ctag);
-
-            $attributes = $this->tryProcessAttributes($ctag[4]);
+            
+            $isFullTag = count($ctag) != 4;
+            $attributes = $this->tryParseAttributes($isFullTag ? $ctag[4] : $ctag[3]);
             if ($attributes === FALSE) {
                 return '';
+            }
+            
+            $content = 0;
+            if ($isFullTag) {
+                $content = $ctag[5];
             }
 
             if ($skipped) {
                 $this->evalAttributesWithoutProcessingTag($attributes);
 
-                // Parse $ctag[5].
-                $parser = new TemplateParser();
-                $parser->setTagsToParse($this->TagsToParse);
-                $parser->parse($content);
+                if ($isFullTag) {
+                    $parser = new TemplateParser();
+                    $parser->setTagsToParse($this->TagsToParse);
+                    $parser->parse($content);
+                }
                 return '';
             }
 
-            $template = $this->parseInternal($content, 'parse');
-            $content = "function () { return '". $template . "'; }";
-
+            // Now we know the tag is syntactically valid and should be processed.
             if ($phpObject->isRegistered($object[0])) {
-                if ($phpObject->isFullTag($object[0], $object[1], $attributes)) {
-                    $attributes = $phpObject->sortFullAttributes($object[0], $object[1], $attributes, $content);
-                    if ($attributes === false) {
-                        return "";
-                    }
-                    
-                    $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
-                } else if ($phpObject->isAnyFullTag($object[0], $object[1])) {
-                    $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
-                    $attributes = $this->sortAnyTagAttributes($object[1], $attributes, $content);
+                // Use decorators and content to determine whether the tags is self closing or full.
+                if (!$isFullTag) {
+                    $isFullTag = $this->hasFullTagBodyProvider($attributes);
                 }
 
-                if ($functionName) {
-                    return $this->generateFunctionOutput($object[0], $functionName, $attributes);
+                if ($isFullTag) {
+                    $template = $this->parseInternal($content, 'parse');
+                    $content = "function () { return '". $template . "'; }";
+
+                    if ($phpObject->isFullTag($object[0], $object[1], $attributes)) {
+                        $attributes = $phpObject->sortFullAttributes($object[0], $object[1], $attributes, $content);
+                        if ($attributes === false) {
+                            return "";
+                        }
+                        
+                        $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
+                    } else if ($phpObject->isAnyFullTag($object[0], $object[1])) {
+                        $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
+                        $attributes = $this->sortAnyTagAttributes($object[1], $attributes, $content);
+                    }
+
+                    if ($functionName) {
+                        return $this->generateFunctionOutput($object[0], $functionName, $attributes);
+                    }
+                } else {
+                    $functionName = false;
+
+                    if ($phpObject->isTag($object[0], $object[1], $attributes)) {
+                        $attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
+                        $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
+                    } else if ($phpObject->isAnyTag($object[0], $object[1])) {
+                        $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
+                        $attributes = $this->sortAnyTagAttributes($object[1], $attributes);
+                    }
+
+                    if ($functionName && ($attributes !== false)) {
+                        // We need to process php:register to know registered objects.
+                        if ($object[0] == 'php') {
+                            eval('$return =  ${$object[0]."Object"}->{$functionName}(' . $this->concatAttributesToString($attributes) . ');');
+                        }
+                        
+                        return $this->generateFunctionOutput($object[0], $functionName, $attributes);
+                    }
                 }
             }
             
-            return '<h4 class="error">This tag "' . $object[1] . '" is not registered! [' . $object[0] . ']</h4>';
-        }
-
-        /**
-         *
-         *  Function parses custom tag, call right function & return content.
-         * 
-         *  Output of this function can't contain ' (apostrophe), as the output is evaluated as PHP code wrapped in ' (apostrophe).
-         *
-         *  @param  ctag  custom tag as string
-         *  @return return of custom tag function
-         *
-         */
-        protected function parsectag($ctag) {
-            global $phpObject;
-
-            $object = explode(":", $ctag[1]);
-
-            $skipped = $this->isSkippedTag($ctag);
-
-            $attributes = $this->tryProcessAttributes($ctag[3]);
-            if ($attributes === FALSE) {
-                return '';
-            }
-
-            if ($skipped) {
-                $this->evalAttributesWithoutProcessingTag($attributes);
-                return '';
-            }
-
-            if ($phpObject->isRegistered($object[0])) {
-                $functionName = false;
-
-                if ($phpObject->isTag($object[0], $object[1], $attributes)) {
-                    $attributes = $phpObject->sortAttributes($object[0], $object[1], $attributes);
-                    $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
-                } else if ($phpObject->isAnyTag($object[0], $object[1])) {
-                    $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
-                    $attributes = $this->sortAnyTagAttributes($object[1], $attributes);
-                }
-
-                if ($functionName && ($attributes !== false)) {
-                    // We need to process php:register to know registered objects.
-                    if ($object[0] == 'php') {
-                        eval('$return =  ${$object[0]."Object"}->{$functionName}(' . $this->concatAttributesToString($attributes) . ');');
-                    }
-                    
-                    return $this->generateFunctionOutput($object[0], $functionName, $attributes);
-                }
-            }
-
             return '<h4 class="error">This tag "' . $object[1] . '" is not registered! [' . $object[0] . ']</h4>';
         }
 
@@ -266,6 +238,19 @@
             $this->Attributes[] = $att[0];
         }
 
+        private function hasFullTagBodyProvider($attributes) {
+            global $phpObject;
+
+            foreach ($attributes as $name => $value) {
+                $object = explode(":", $name);
+                if (count($object) == 2) {
+                    if ($phpObject->isRegistered($object[0])) {
+                        // $phpObject->
+                    }
+                }
+            }
+        }
+
         protected function sortAnyTagAttributes($tagName, $attributes, $content = null) {
             $params = array();
             foreach ($attributes as $usedName => $usedValue) {
@@ -306,7 +291,7 @@
             return $value;
         }
 
-        protected function tryProcessAttributes($rawAttributes) {
+        protected function tryParseAttributes($rawAttributes) {
             $this->Attributes = array();
             $attributes = array();
 
