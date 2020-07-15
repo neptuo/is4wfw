@@ -1,7 +1,7 @@
 <?php
 
     require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParser.class.php");
 
     /**
      *
@@ -19,7 +19,7 @@
         private $PagesId = array();
 
         public function __construct() {
-            $this->Parser = new FullTagParser();
+            $this->Parser = new TemplateParser();
         }
 
         public function resolveUrl($domainUrl, $rootUrl, $pageUrl) {

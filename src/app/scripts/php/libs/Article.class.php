@@ -1,7 +1,6 @@
 <?php
 
     require_once("BaseTagLib.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Order.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/RoleHelper.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/BaseGrid.class.php");

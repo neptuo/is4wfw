@@ -17,7 +17,6 @@
 	require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultPhp.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultWeb.class.php");
-	require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewHelper.class.php");
   
 	session_start();

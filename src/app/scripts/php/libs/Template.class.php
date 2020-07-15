@@ -1,7 +1,6 @@
 <?php
 
 	require_once("BaseTagLib.class.php");
-	require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
 
 	/**
@@ -18,7 +17,7 @@
 			parent::setTagLibXml("Template.xml");
 		}
 
-		private function includeBy($filter, $template, $params) {
+		private function findBy($filter) {
 			$sql = parent::sql()->select("template", ["id", "content"], $filter);
 			$data = parent::db()->fetchSingle($sql);
 			if (empty($data)) {
@@ -26,20 +25,26 @@
 			}
 
 			if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(DefaultWeb::$TemplateRightDesc, $data["id"], WEB_R_READ))) {
-				$oldContent = parent::request()->get('content', 'template:include');
-				$oldParams = parent::request()->get('params', 'template:include');
-				parent::request()->set('params', $params, 'template:include');
-				parent::request()->set('content', $template, 'template:include');
-
-				$result = parent::parseContent($data["content"]);
-				
-				parent::request()->set('params', $oldParams, 'template:include');
-				parent::request()->set('content', $oldContent, 'template:include');
-
-				return $result;
+				return $data["content"];
 			}
 
 			throw new Error("Permission denied when reading template id = '" . $data["id"] . "'.");
+		}
+
+		private function includeBy($filter, $template, $params) {
+			$data = $this->findBy($filter);
+
+			$oldContent = parent::request()->get('content', 'template:include');
+			$oldParams = parent::request()->get('params', 'template:include');
+			parent::request()->set('params', $params, 'template:include');
+			parent::request()->set('content', $template, 'template:include');
+
+			$result = parent::parseContent($data);
+			
+			parent::request()->set('params', $oldParams, 'template:include');
+			parent::request()->set('content', $oldContent, 'template:include');
+
+			return $result;
 		}
 		
 		public function includeById($id, $params) {
@@ -74,6 +79,15 @@
 			}
 
 			return "";
+		}
+
+		public function provideBodyById($id, $parameters) {
+			$template = $this->findBy(["id" => $id]);
+			
+			// return [DefaultPhp::$FullTagTemplateName => $template];
+			$parameters[DefaultPhp::$FullTagTemplateName] = $template;
+			$parameters[DefaultPhp::$DecoratorExecuteName] = true;
+			return $parameters;
 		}
 	}
 

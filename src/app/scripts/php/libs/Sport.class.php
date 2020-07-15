@@ -3,7 +3,6 @@
     require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/BaseGrid.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/BaseForm.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
 
     /**

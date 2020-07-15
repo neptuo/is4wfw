@@ -200,7 +200,6 @@
 			if(count($template) > 0) {
 				$templateContent = $template[0]['content'];
 				$projections = $dbObject->fetchAll('SELECT `name`, `subname`, `value` FROM `w_projection` WHERE `visible` = 1 ORDER BY `position`;');
-				require_once("scripts/php/classes/FullTagParser.class.php");
 				foreach($projections as $prj) {
 					$_SESSION['current-projection']['name'] = $prj['name'];
 					$_SESSION['current-projection']['subname'] = $prj['subname'];
@@ -414,7 +413,6 @@
 			if(count($template) > 0) {
 				$templateContent = $template[0]['content'];
 				$references = $dbObject->fetchAll('SELECT `name`, `subname`, `type` FROM `w_reference` WHERE `visible` = 1 ORDER BY `position`;');
-				require_once("scripts/php/classes/FullTagParser.class.php");
 				foreach($references as $ref) {
 					$_SESSION['current-reference']['name'] = $ref['name'];
 					$_SESSION['current-reference']['subname'] = $ref['subname'];

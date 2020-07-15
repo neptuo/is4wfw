@@ -5,7 +5,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/SqlBuilder.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ExtensionParser.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ParsedTemplate.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
@@ -765,7 +765,7 @@
         }
 
         public function createParser() {
-            return new FullTagParser();
+            return new TemplateParser();
         }
 
         protected function formatString($format, $model) {

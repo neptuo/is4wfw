@@ -6,7 +6,6 @@
     require_once("Database.class.php");
     require_once("Login.class.php");
     require_once("System.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
 
     /**
      *
@@ -23,6 +22,7 @@
         
         public static $ParamsName = 'params';
         public static $FullTagTemplateName = 'full:content';
+        public static $DecoratorExecuteName = 'decorator:execute';
     
         /**
          *

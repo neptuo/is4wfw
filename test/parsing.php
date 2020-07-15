@@ -9,7 +9,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultPhp.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultWeb.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/CustomTagParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParser.class.php");
 
     // ini_set('pcre.backtrack_limit', 1000000000);
 
@@ -17,8 +17,10 @@
     $webObject = new DefaultWeb();
     
     $phpObject->register("cetype", "php.libs.CustomEntity");
-    $phpObject->register("view", "php.libs.View");
+    $phpObject->register("template", "php.libs.Template");
     $phpObject->register("ui", "php.libs.Ui");
+    $phpObject->register("var", "php.libs.Variable");
+    $phpObject->register("view", "php.libs.View");
 
 //     $Content = '<hr />
 // <admin:field label="Entity Name" label-class="w90" style="background: red">
@@ -53,7 +55,7 @@ $Content = '
 
     measure(function() {
         global $Content;
-        $parser = new FullTagParser();
+        $parser = new TemplateParser();
         parse($parser, $Content, 1, true);
     });
 

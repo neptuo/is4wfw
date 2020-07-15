@@ -6,7 +6,6 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/SessionStorage.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/QueryStorage.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Diagnostics.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/FullTagParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/UniversalPermission.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/UrlResolver.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/UrlCache.class.php");
@@ -250,7 +249,7 @@
                 }
 
                 if (array_key_exists('parser-stats', $_GET)) {
-                    CustomTagParser::saveMeasures(true);
+                    TemplateParser::saveMeasures(true);
                 }
             }
 
@@ -1157,7 +1156,7 @@
                 if (array_key_exists('parser-stats', $_GET)) {
                     $parsercont = "";
                     $totalMeasure = 0;
-                    $measures = CustomTagParser::getMeasures();
+                    $measures = TemplateParser::getMeasures();
                     $worstKey = 0;
                     $worstMeasure = 0;
                     foreach ($measures as $key => $item) {
