@@ -6,11 +6,7 @@
 
     class FullTagParser extends CustomTagParser {
 
-        /**
-         *
-         *  Regular expression for parsing full tag.     
-         *
-         */
+        // Regular expression for parsing full tag.     
         protected $FULL_TAG_RE = "#<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)((.*?)(?=\/>)\/>|([^>]*)>((?:[^<]|<(?!/?\\1[^>]*>)|(?R))+)</\\1>)#";
 
         
@@ -79,8 +75,6 @@
          *
          */
         public function parse($content) {
-            parent::setUseCaching(false);
-
             $this->Code = new CodeWriter();
             return $this->parseInternal($content, 'compile');
         }

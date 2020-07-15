@@ -6,38 +6,22 @@
 
         protected $Code = null;
 
-        /**
-         *
-         * 	Custom tag attributes.
-         *
-         */
+        // Current custom tag attributes.
         protected $Attributes = array();
-        /**
-         *
-         *  Regular expression for parsing custom tag.     
-         *
-         */
+        // Regular expression for parsing custom tag.     
         protected $TAG_RE = '(<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)( )+((([a-zA-Z0-9-_]+[:]?[a-zA-Z0-9-_]*)="[^"]*"( )*)*)\/>)';
-        /**
-         *
-         *  Regular expression for parsing attribute.
-         *
-         */
+
+        // Regular expression for parsing attribute.
         protected $ATT_RE = '(([a-zA-Z0-9-_]+[:]?[a-zA-Z0-9-_]*)="([^"]*)")';
 
         // Regular expression for parsing property value. It requires exact match (no prefix or postfix text).
         protected $ATT_PROPERTY_RE = '(^([a-zA-Z0-9-_]+:[a-zA-Z0-9-_.]+)$)';
         protected $PropertyUse = '';
-        /**
-         *
-         * 	Array of object names that must be set as global
-         *
-         */
-        protected $GlobalObjects = array();
-        protected $UseCaching = true;
         
+        // List of custom tags to parse [[prefix => name]]
         protected $TagsToParse = array();
         
+        // true/false store measures.
         static $Measure = false;
         static $Measures = array();
         
@@ -77,28 +61,9 @@
         protected function parseatt($att) {
             $this->Attributes[] = $att[0];
         }
-
-        /**
-         *
-         * 	Use caching
-         *
-         */
-        public function setUseCaching($val) {
-            if ($val == false) {
-                $this->UseCaching = false;
-            } else {
-                $this->UseCaching = true;
-            }
-        }
         
         public function setTagsToParse($tags) {
             $this->TagsToParse = $tags;
-        }
-
-        protected function addSingletonGlobalObject($obj) {
-            if (!in_array($obj, $this->GlobalObjects)) {
-                $this->GlobalObjects[] = $obj;
-            }
         }
 
         protected function isSkippedTag($ctag) {
@@ -279,16 +244,12 @@
                 }
 
                 if ($functionName && ($attributes !== false)) {
-                    if ($this->UseCaching) {
-                        $this->addSingletonGlobalObject('$' . $object[0] . 'Object');
-                        return '<?php echo $' . $object[0] . 'Object->' . $functionName . '(' . $this->concatAttributesToString($attributes) . ') ?>';
-                    } else {
-                        if ($object[0] == 'php') {
-                            eval('$return =  ${$object[0]."Object"}->{$functionName}(' . $this->concatAttributesToString($attributes) . ');');
-                        }
-                        
-                        return $this->generateFunctionOutput($object[0], $functionName, $attributes);
+                    // We need to process php:register to know registered objects.
+                    if ($object[0] == 'php') {
+                        eval('$return =  ${$object[0]."Object"}->{$functionName}(' . $this->concatAttributesToString($attributes) . ');');
                     }
+                    
+                    return $this->generateFunctionOutput($object[0], $functionName, $attributes);
                 }
             }
 
@@ -339,21 +300,10 @@
                 if ($phpObject->isProperty($object[0], $object[1])) {
                     $functionName = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
 
-                    if ($this->UseCaching) {
-                        $this->addSingletonGlobalObject('$' . $object[0] . 'Object');
-                        return '\'.$' . $object[0] . 'Object->' . $functionName . '().\'';
-                    } else {
-                        return $this->generateFunctionOutput($object[0], $functionName, array(), false);
-                    }
+                    return $this->generateFunctionOutput($object[0], $functionName, array(), false);
                 } else if($phpObject->isAnyProperty($object[0])) {
                     $functionName = 'getProperty';
-
-                    if ($this->UseCaching) {
-                        $this->addSingletonGlobalObject('$' . $object[0] . 'Object');
-                        return '\'.$' . $object[0] . 'Object->' . $functionName . '("' . $object[1] . '").\'';
-                    } else {
-                        return $this->generateFunctionOutput($object[0], $functionName, array(array('value' => $object[1], 'type' => 'raw')), false);
-                    }
+                    return $this->generateFunctionOutput($object[0], $functionName, array(array('value' => $object[1], 'type' => 'raw')), false);
                 }
             }
 
