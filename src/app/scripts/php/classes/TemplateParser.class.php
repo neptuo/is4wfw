@@ -241,14 +241,23 @@
         private function hasFullTagBodyProvider($attributes) {
             global $phpObject;
 
+            $decorators = [];
             foreach ($attributes as $name => $value) {
                 $object = explode(":", $name);
                 if (count($object) == 2) {
-                    if ($phpObject->isRegistered($object[0])) {
-                        // $phpObject->
+                    $decorators[$object[0]][] = $object[1];
+                }
+            }
+
+            foreach ($decorators as $tagPrefix => $attributes) {
+                if ($phpObject->isRegistered($tagPrefix)) {
+                    if ($phpObject->hasFullTagBodyProvider($tagPrefix, $attributes)) {
+                        return true;
                     }
                 }
             }
+
+            return false;
         }
 
         protected function sortAnyTagAttributes($tagName, $attributes, $content = null) {

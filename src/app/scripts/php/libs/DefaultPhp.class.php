@@ -737,6 +737,22 @@
 
             return $functionName;
         }
+
+        public function hasFullTagBodyProvider($tagPrefix, $attributeNames) {
+            return $this->withXml($tagPrefix, function($xml) use ($attributeNames) {
+                foreach ($xml->decorator as $decorator) {
+                    if (isset($decorator->features->providesFullTagBody)) {
+                        foreach ($decorator->attribute as $attribute) {
+                            if (in_array($attribute->name, $attributeNames)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                return false;
+            });
+        }
         
         public function usingObject($content, $prefix, $class) {
             $return = '';
