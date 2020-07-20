@@ -81,12 +81,9 @@
 			return "";
 		}
 
-		public function provideBodyById($id, $parameters) {
+		public function provideBodyById($id) {
 			$template = $this->findBy(["id" => $id]);
-			
-			// return [DefaultPhp::$FullTagTemplateName => $template];
 			$parameters[DefaultPhp::$FullTagTemplateName] = $template;
-			$parameters[DefaultPhp::$DecoratorExecuteName] = true;
 			return $parameters;
 		}
 	}

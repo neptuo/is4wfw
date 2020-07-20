@@ -66,5 +66,17 @@
     </comment>
   </anyFulltag>
   <anyProperty />
+  <decorator>
+    <function>provideBodyById</function>
+    <attribute>
+      <name>id</name>
+      <type>number</type>
+      <comment>...</comment>
+    </attribute>
+    <features>
+      <providesFullTagBody />
+    </features>
+    <comment>...</comment>
+</decorator>
 </taglib>
 

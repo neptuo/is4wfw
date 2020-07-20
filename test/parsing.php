@@ -28,10 +28,7 @@
 // </admin:field>
 // <hr />';
 $Content = '
-    <var:declare name="articleId" value="15" />
-    <web:condition when="var:articleId" is="15">
-        <template:article-detail id="var:articleId"  />
-    </web:condition>
+<web:condition when="15" is="15" template:id="1" />
 ';
 
     function measure($func) {

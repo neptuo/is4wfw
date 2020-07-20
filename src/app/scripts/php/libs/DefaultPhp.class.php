@@ -6,6 +6,7 @@
     require_once("Database.class.php");
     require_once("Login.class.php");
     require_once("System.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateAttributeCollection.class.php");
 
     /**
      *
@@ -453,9 +454,10 @@
             return null;
         }
 
-        private function sortAttributesInternal($tagListName, $tagPrefix, $tagName, $atts) {
+        private function sortAttributesInternal(string $tagListName, string $tagPrefix, string $tagName, TemplateAttributeCollection $atts): bool {
             return $this->withXml($tagPrefix, function($xml) use ($tagListName, $tagPrefix, $tagName, $atts) {
                 $processedAtts = array();
+                $return = [];
                 foreach ($xml->{$tagListName} as $tag) {
                     if ($tag->tagname == $tagName) {
                         for ($i = 0; $i < count($tag->attribute); $i ++) {
@@ -466,11 +468,11 @@
                             if ($att->prefix == true) {
                                 $attPrefix = "$attName-";
                                 $attributeValue = array();
-                                foreach ($atts as $usedName => $usedValue) {
+                                foreach ($atts->Attributes as $usedName => $usedValue) {
                                     if (parent::startsWith($usedName, $attPrefix)) {
                                         $strippedName = substr($usedName, strlen($attPrefix));
 
-                                        $attribute = $atts[$usedName];
+                                        $attribute = $atts->Attributes[$usedName];
                                         $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
                                         if ($processValue != null) {
                                             $processedAtts[] = $usedName;
@@ -484,8 +486,8 @@
                                 $isProcessed = true;
                             }
                             
-                            if (array_key_exists($attName, $atts)) {
-                                $attribute = $atts[$attName];
+                            if (array_key_exists($attName, $atts->Attributes)) {
+                                $attribute = $atts->Attributes[$attName];
                                 $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
                                 if ($processValue != null) {
                                     $processedAtts[] = $attName;
@@ -523,7 +525,7 @@
                 
                         if (isset($tag->anyAttribute)) {
                             $params = array();
-                            foreach ($atts as $usedName => $usedValue) {
+                            foreach ($atts->Attributes as $usedName => $usedValue) {
                                 if (!in_array($usedName, $processedAtts)) {
                                     $processedAtts[] = $usedName;
                                     $params[$usedName] = $usedValue;
@@ -536,10 +538,11 @@
                     }
                 }
 
-                if (count($processedAtts) == count($atts)) {
-                    return $return;
+                if (count($processedAtts) == count($atts->Attributes)) {
+                    $atts->Attributes = $return;
+                    return true;
                 } else {
-                    foreach ($atts as $name => $value) {
+                    foreach ($atts->Attributes as $name => $value) {
                         if (!in_array($name, $processedAtts)) {
                             $this->triggerFail("Used undefined attribute! [$name] on [$tagPrefix:$tagName]");
                         }
@@ -560,8 +563,8 @@
          *    @return sorted attributes
          *
          */                                                
-        public function sortAttributes($tagPrefix, $tagName, $attributes) {
-            return self::sortAttributesInternal("tag", $tagPrefix, $tagName, $attributes);
+        public function sortAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes): bool {
+            return $this->sortAttributesInternal("tag", $tagPrefix, $tagName, $attributes);
         }
         
         protected function getConvertValue($val, $att) {
@@ -616,14 +619,13 @@
          *    @return sorted attributes
          *
          */                                                
-        public function sortFullAttributes($tagPrefix, $tagName, $attributes, $content) {
-            $sorted = self::sortAttributesInternal("fulltag", $tagPrefix, $tagName, $attributes);
-            if ($sorted === false) {
+        public function sortFullAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes, string $content): bool {
+            if (!$this->sortAttributesInternal("fulltag", $tagPrefix, $tagName, $attributes)) {
                 return false;
             }
 
-            $return = array_merge(array(DefaultPhp::$FullTagTemplateName => array('value' => $content, 'type' => 'eval')), $sorted);
-            return $return;
+            $attributes->Attributes = array_merge(array(DefaultPhp::$FullTagTemplateName => array('value' => $content, 'type' => 'eval')), $attributes->Attributes);
+            return true;
         }
         
         /**
@@ -633,7 +635,7 @@
          *    @return function name                    
          *
          */                                     
-        public function getFuncToTag($tagPrefix, $tagName) {
+        public function getFuncToTag(string $tagPrefix, string $tagName) : string {
             $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $tagName) {
                 foreach ($xml->tag as $tag) {
                     if ($tag->tagname == $tagName) {
@@ -662,7 +664,7 @@
          *    @return function name                    
          *
          */                                     
-        public function getFuncToFullTag($tagPrefix, $tagName) {
+        public function getFuncToFullTag(string $tagPrefix, string $tagName) : string {
             $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $tagName) {
                 foreach ($xml->fulltag as $tag) {
                     if ($tag->tagname == $tagName) {
@@ -691,7 +693,7 @@
          *    @return function name                    
          *
          */                                     
-        public function getFuncToProperty($tagPrefix, $propName, $use) {
+        public function getFuncToProperty(string $tagPrefix, string $propName, string $use) : string {
             $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $propName, $use) {
                 foreach ($xml->property as $prop) {
                     if ($prop->propname == $propName) {
