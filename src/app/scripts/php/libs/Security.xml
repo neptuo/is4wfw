@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Security library</name>
+  <classname>Security</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro kontrolu oprávnění uživatelů.
+  </comment>
+  <decorator>
+    <function>requireGroup</function>
+    <attribute>
+      <attname>requireGroup</attname>
+      <atttype>string</atttype>
+      <attcomment>Název skupiny uživatelů.</attcomment>
+    </attribute>
+    <features>
+      <conditionsExecution />
+    </features>
+    <comment>Je vyžadováno, aby byl uživatel přiřaz skupiny.</comment>
+  </decorator>
+  <decorator>
+    <function>requirePerm</function>
+    <attribute>
+      <attname>requirePerm</attname>
+      <atttype>string</atttype>
+      <attcomment>Název oprávnění.</attcomment>
+    </attribute>
+    <features>
+      <conditionsExecution />
+    </features>
+    <comment>Je vyžadováno, aby některá ze skupin uživatele měla povoleno oprávnění.</comment>
+  </decorator>
+</taglib>
+

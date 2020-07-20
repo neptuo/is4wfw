@@ -400,42 +400,7 @@
                 }
             }
 
-            $globalResult = $this->tryProcessGlobalAttributes($attributes);
-            if ($globalResult) {
-                return false;
-            }
-
             return $attributes;
-        }
-
-        // TODO: Remove as deprecated.
-        // Returns <c>true</c> evaluation should be stopped; Otherwise <c>false</c>.
-        protected function tryProcessGlobalAttributes(TemplateAttributeCollection $attributes) {
-            foreach ($attributes->Attributes as $key => $att) {
-                if ($key == 'security:requireGroup') {
-                    global $loginObject;
-                    $ok = false;
-                    foreach ($loginObject->getGroups() as $group) {
-                        if ($group['name'] == $att['value']) {
-                            $ok = true;
-                            break;
-                        }
-                    }
-                    if (!$ok) {
-                        return true;
-                    }
-                    unset($attributes->Attributes[$key]);
-                } elseif ($key == 'security:requirePerm') {
-                    global $loginObject;
-                    $perm = $loginObject->getGroupPerm($att['value'], $loginObject->getMainGroupId(), false, 'false');
-                    if ($perm['value'] != 'true') {
-                        return true;
-                    }
-                    unset($attributes->Attributes[$key]);
-                }
-            }
-
-            return false;
         }
 
         protected function concatAttributesToString($attributes, $isItemNameIncluded = false) {

@@ -23,10 +23,11 @@
 	<reg prefix="lang" class="php.libs.Language" />
 	<reg prefix="p" class="php.libs.Page" />
 	<reg prefix="s" class="php.libs.Sport" />
+	<reg prefix="security" class="php.libs.Security" />
 	<reg prefix="sys" class="php.libs.System" />
-	<reg prefix="u" class="php.libs.User" />
 	<reg prefix="session" class="php.libs.Session" />
 	<reg prefix="template" class="php.libs.Template" />
+	<reg prefix="u" class="php.libs.User" />
 	<reg prefix="ui" class="php.libs.Ui" />
 	<reg prefix="utils" class="php.libs.Utilities" />
 	<reg prefix="val" class="php.libs.Validation" />
