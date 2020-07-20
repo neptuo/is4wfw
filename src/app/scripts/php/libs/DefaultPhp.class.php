@@ -756,7 +756,7 @@
                         if (in_array($attribute->attname, $attributeNames)) {
                             if (!array_key_exists($attribute->attname, $decorators)) {
                                 $decorators[(string)$decorator->function] = [
-                                    "function" => $decorator->function,
+                                    "function" => (string)$decorator->function,
                                     "attributes" => [(string)$attribute->attname => $tagAttributes->Decorators[$prefix][(string)$attribute->attname]],
                                     "modifiesAttributes" => isset($decorator->features->modifiesAttributes),
                                     "conditionsExecution" => isset($decorator->features->conditionsExecution),

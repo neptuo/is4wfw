@@ -243,6 +243,8 @@
                     $call = $this->generateFunctionOutput($prefix, $decorator["function"], $attributes, false);
                     if (!$tagAttributes->HasAttributeModifyingDecorators && $decorator["providesFullTagBody"]) {
                         $tagAttributes->Attributes[DefaultPhp::$FullTagTemplateName] = array("value" => $call . "['" . DefaultPhp::$FullTagTemplateName . "']", "type" => "eval");
+                    } else {
+                        $tagAttributes->Decorators[$prefix][$decorator["function"]]["call"] = $call;
                     }
                 }
             }
@@ -485,15 +487,33 @@
             $this->Code->addTry();
             $this->Code->addLine("global $targetObject;");
 
-            if ($attributes->HasDecorators && $attributes->HasAttributeModifyingDecorators) {
-                foreach ($attributes->Decorators as $decorator) {
-                    if ($decorator->ProvidesFullTagBody) {
-                        $this->Code->addLine('$' . "parameters['" . DefaultPhp::$FullTagTemplateName . "'] = " . '$' . "this->" . $decorator->TemplateFunctionName . "()['" . DefaultPhp::$FullTagTemplateName . "'];");
+            if ($attributes->HasDecorators) {
+                foreach ($attributes->Decorators as $prefix => $decorators) {
+                    foreach ($decorators as $decorator) {
+                        if ($attributes->HasAttributeModifyingDecorators && $decorator->ProvidesFullTagBody) {
+                            $this->Code->addLine('$' . "parameters['" . DefaultPhp::$FullTagTemplateName . "'] = " . '$' . "this->" . $decorator->TemplateFunctionName . "()['" . DefaultPhp::$FullTagTemplateName . "'];");
+                        }
+
+                        if ($decorator["conditionsExecution"]) {
+                            $this->Code->addLine("if (" . $decorator["call"] . "['" . DefaultPhp::$DecoratorExecuteName . "'] === true) {");
+                            $this->Code->addIndent();
+                        }
                     }
                 }
             }
 
             $this->Code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
+
+            if ($attributes->HasDecorators) {
+                foreach ($attributes->Decorators as $prefix => $decorators) {
+                    foreach ($decorators as $decorator) {
+                        if ($decorator["conditionsExecution"]) {
+                            $this->Code->closeBlock();
+                        }
+                    }
+                }
+            }
+
             $this->Code->addCatch(["Exception", "e"]);
             $this->Code->addLine("global $logObject;");
             $this->Code->addLine($logObject . "->exception(" . '$e' . ");");
