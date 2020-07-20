@@ -454,123 +454,100 @@
         }
 
         private function sortAttributesInternal($tagListName, $tagPrefix, $tagName, $atts) {
-            $return = array();
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix]) . "/" . ${$tagPrefix."Object"}->getTagLibXml();
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix]) ."/" . ${$tagPrefix."Object"}->getTagLibXml();
-            }
-            
-            $processedAtts = array();
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = self::getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    foreach ($xml->{$tagListName} as $tag) {
-                        if ($tag->tagname == $tagName) {
-                            for ($i = 0; $i < count($tag->attribute); $i ++) {
-                                $isProcessed = false;
-                                $att = $tag->attribute[$i];
-                                $attName = (string)$att->attname;
-                                $hasDefault = isset($att->attdef);
-                                if ($att->prefix == true) {
-                                    $attPrefix = "$attName-";
-                                    $attributeValue = array();
-                                    foreach ($atts as $usedName => $usedValue) {
-                                        if (parent::startsWith($usedName, $attPrefix)) {
-                                            $strippedName = substr($usedName, strlen($attPrefix));
+            return $this->withXml($tagPrefix, function($xml) use ($tagListName, $tagPrefix, $tagName, $atts) {
+                $processedAtts = array();
+                foreach ($xml->{$tagListName} as $tag) {
+                    if ($tag->tagname == $tagName) {
+                        for ($i = 0; $i < count($tag->attribute); $i ++) {
+                            $isProcessed = false;
+                            $att = $tag->attribute[$i];
+                            $attName = (string)$att->attname;
+                            $hasDefault = isset($att->attdef);
+                            if ($att->prefix == true) {
+                                $attPrefix = "$attName-";
+                                $attributeValue = array();
+                                foreach ($atts as $usedName => $usedValue) {
+                                    if (parent::startsWith($usedName, $attPrefix)) {
+                                        $strippedName = substr($usedName, strlen($attPrefix));
 
-                                            $attribute = $atts[$usedName];
-                                            $processValue = self::processParsedAttributeValue($attribute, $att, $hasDefault);
-                                            if ($processValue != null) {
-                                                $processedAtts[] = $usedName;
-                                                $attributeValue[$strippedName] = $processValue;
-                                                continue;
-                                            }
+                                        $attribute = $atts[$usedName];
+                                        $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
+                                        if ($processValue != null) {
+                                            $processedAtts[] = $usedName;
+                                            $attributeValue[$strippedName] = $processValue;
+                                            continue;
                                         }
                                     }
+                                }
 
-                                    $return[$attName] = array('value' => $attributeValue, 'type' => "eval");
+                                $return[$attName] = array('value' => $attributeValue, 'type' => "eval");
+                                $isProcessed = true;
+                            }
+                            
+                            if (array_key_exists($attName, $atts)) {
+                                $attribute = $atts[$attName];
+                                $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
+                                if ($processValue != null) {
+                                    $processedAtts[] = $attName;
+                                    if (array_key_exists($attName, $return)) {
+                                        $return[$attName]["value"][""] = $processValue;
+                                    } else {
+                                        $return[$attName] = $processValue;
+                                    }
+
                                     $isProcessed = true;
                                 }
-                                
-                                if (array_key_exists($attName, $atts)) {
-                                    $attribute = $atts[$attName];
-                                    $processValue = self::processParsedAttributeValue($attribute, $att, $hasDefault);
-                                    if ($processValue != null) {
-                                        $processedAtts[] = $attName;
-                                        if (array_key_exists($attName, $return)) {
-                                            $return[$attName]["value"][""] = $processValue;
-                                        } else {
-                                            $return[$attName] = $processValue;
-                                        }
+                            }
 
-                                        $isProcessed = true;
-                                    }
-                                }
-
-                                if ($isProcessed) {
-                                    continue;
-                                }
-                                
-                                if ($hasDefault) {
-                                    if ($att->atttype == 'string') {
-                                        $attributeValue = "'" . eval('return "'. $att->attdef.'";') . "'";
-                                    } else {
-                                        $attributeValue = eval('return '. $att->attdef.';');
-                                    }
-                                    
-                                    $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
-                                } else if (strtolower($att->attreq) == "required") {
-                                    $str = "Missing required attribute '$att->attname' on tag '$tagPrefix:$tagName'.";
-                                    trigger_error($str , E_USER_WARNING);
-                                    echo parent::getError($str);
-                                    return false;
+                            if ($isProcessed) {
+                                continue;
+                            }
+                            
+                            if ($hasDefault) {
+                                if ($att->atttype == 'string') {
+                                    $attributeValue = "'" . eval('return "'. $att->attdef.'";') . "'";
                                 } else {
-                                    $return[$attName] = array('value' => false, 'type' => 'raw');
+                                    $attributeValue = eval('return '. $att->attdef.';');
                                 }
-                            }
-                    
-                            if (isset($tag->anyAttribute)) {
-                                $params = array();
-                                foreach ($atts as $usedName => $usedValue) {
-                                    if (!in_array($usedName, $processedAtts)) {
-                                        $processedAtts[] = $usedName;
-                                        $params[$usedName] = $usedValue;
-                                    }
-                                }
-        
-                                $return[DefaultPhp::$ParamsName] = array('value' => $params, 'type' => 'eval');
-                            }
-                            break;
-                        }
-                    }
-
-                    if (count($processedAtts) == count($atts)) {
-                        return $return;
-                    } else {
-                        foreach ($atts as $name => $value) {
-                            if (!in_array($name, $processedAtts)) {
-                                $str = "Used undefined attribute! [$name] on [$tagPrefix:$tagName]";
+                                
+                                $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
+                            } else if (strtolower($att->attreq) == "required") {
+                                $str = "Missing required attribute '$att->attname' on tag '$tagPrefix:$tagName'.";
                                 trigger_error($str , E_USER_WARNING);
                                 echo parent::getError($str);
+                                return false;
+                            } else {
+                                $return[$attName] = array('value' => false, 'type' => 'raw');
                             }
                         }
+                
+                        if (isset($tag->anyAttribute)) {
+                            $params = array();
+                            foreach ($atts as $usedName => $usedValue) {
+                                if (!in_array($usedName, $processedAtts)) {
+                                    $processedAtts[] = $usedName;
+                                    $params[$usedName] = $usedValue;
+                                }
+                            }
+    
+                            $return[DefaultPhp::$ParamsName] = array('value' => $params, 'type' => 'eval');
+                        }
+                        break;
+                    }
+                }
 
-                        return false;
+                if (count($processedAtts) == count($atts)) {
+                    return $return;
+                } else {
+                    foreach ($atts as $name => $value) {
+                        if (!in_array($name, $processedAtts)) {
+                            $this->triggerFail("Used undefined attribute! [$name] on [$tagPrefix:$tagName]");
+                        }
                     }
 
-                } else {
-                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo parent::getError($str);
                     return false;
                 }
-                
-            } else {
-                return false;
-            }
+            });
         }
         
         /**
@@ -775,8 +752,8 @@
             return $this->triggerFail("Tag prefix isn't registered! [".$tagPrefix."]");
         }
 
-        private function triggerFail($message) {
-            trigger_error($message , E_USER_WARNING);
+        private function triggerFail($message, $errorType = E_USER_WARNING) {
+            trigger_error($message, $errorType);
             echo "<h4 class=\"error\">".$message."</h4>";
             return false;
         }
