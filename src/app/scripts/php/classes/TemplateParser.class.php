@@ -197,6 +197,12 @@
                     }
                 }
 
+                if ($attributes->HasDecorators) {
+                    if (!$this->parseDecorators($object[0], $object[1], $attributes)) {
+                        return "";
+                    }
+                }
+
                 if ($functionName != null) {
                     // We need to process php:register to know registered objects.
                     // TODO: To compile templates, we need to "soft evaluate" the and also generate code.
@@ -210,6 +216,38 @@
             }
             
             return '<h4 class="error">Tag "' . $object[0] . ':' . $object[1] . '" is not registered!</h4>';
+        }
+
+        protected function parseDecorators(string $tagPrefix, string $tagName, TemplateAttributeCollection $tagAttributes) {
+            global $phpObject;
+
+            foreach ($tagAttributes->Decorators as $prefix => $attributes) {
+                if ($phpObject->isRegistered($prefix)) {
+                    if (!$phpObject->findDecoratorsForAttributes($prefix, $tagAttributes)) {
+                        return false;
+                    }
+                } else {
+                    return $phpObject->triggerUnregisteredPrefix($prefix);
+                }
+            }
+
+            foreach ($tagAttributes->Decorators as $prefix => $decorators) {
+                foreach ($decorators as $decorator) {
+                    $attributes = new TemplateAttributeCollection();
+                    $attributes->Attributes = $decorator["attributes"];
+
+                    if (!$phpObject->sortDecoratorAttributes($prefix, $decorator["function"], $attributes, $tagPrefix, $tagName)) {
+                        return false;
+                    }
+
+                    $call = $this->generateFunctionOutput($prefix, $decorator["function"], $attributes, false);
+                    if (!$tagAttributes->HasAttributeModifyingDecorators && $decorator["providesFullTagBody"]) {
+                        $tagAttributes->Attributes[DefaultPhp::$FullTagTemplateName] = array("value" => $call . "['" . DefaultPhp::$FullTagTemplateName . "']", "type" => "eval");
+                    }
+                }
+            }
+
+            return true;
         }
 
         /**
@@ -446,6 +484,15 @@
             $this->Code->addMethod($identifier, "private");
             $this->Code->addTry();
             $this->Code->addLine("global $targetObject;");
+
+            if ($attributes->HasDecorators && $attributes->HasAttributeModifyingDecorators) {
+                foreach ($attributes->Decorators as $decorator) {
+                    if ($decorator->ProvidesFullTagBody) {
+                        $this->Code->addLine('$' . "parameters['" . DefaultPhp::$FullTagTemplateName . "'] = " . '$' . "this->" . $decorator->TemplateFunctionName . "()['" . DefaultPhp::$FullTagTemplateName . "'];");
+                    }
+                }
+            }
+
             $this->Code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
             $this->Code->addCatch(["Exception", "e"]);
             $this->Code->addLine("global $logObject;");

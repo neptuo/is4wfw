@@ -454,102 +454,115 @@
             return null;
         }
 
-        private function sortAttributesInternal(string $tagListName, string $tagPrefix, string $tagName, TemplateAttributeCollection $atts): bool {
-            return $this->withXml($tagPrefix, function($xml) use ($tagListName, $tagPrefix, $tagName, $atts) {
-                $processedAtts = array();
-                $return = [];
-                foreach ($xml->{$tagListName} as $tag) {
-                    if ($tag->tagname == $tagName) {
-                        for ($i = 0; $i < count($tag->attribute); $i ++) {
-                            $isProcessed = false;
-                            $att = $tag->attribute[$i];
-                            $attName = (string)$att->attname;
-                            $hasDefault = isset($att->attdef);
-                            if ($att->prefix == true) {
-                                $attPrefix = "$attName-";
-                                $attributeValue = array();
-                                foreach ($atts->Attributes as $usedName => $usedValue) {
-                                    if (parent::startsWith($usedName, $attPrefix)) {
-                                        $strippedName = substr($usedName, strlen($attPrefix));
+        public function sortDecoratorAttributes(string $decoratorPrefix, string $decoratorFunctionName, TemplateAttributeCollection $attributes, string $tagPrefix, string $tagName) {
+            return $this->withXml($decoratorPrefix, function($xml) use ($decoratorFunctionName, $attributes, $tagPrefix, $tagName) {
+                foreach ($xml->decorator as $decorator) {
+                    if ($decorator->function == $decoratorFunctionName) {
+                        return $this->sortAttributesForXmlElement($decorator, $attributes, "Decorator on '$tagPrefix:$tagName'");
+                    }
+                }
+            });
+        }
 
-                                        $attribute = $atts->Attributes[$usedName];
-                                        $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
-                                        if ($processValue != null) {
-                                            $processedAtts[] = $usedName;
-                                            $attributeValue[$strippedName] = $processValue;
-                                            continue;
-                                        }
-                                    }
-                                }
+        private function sortAttributesForXmlElement(SimpleXMLElement $tag, TemplateAttributeCollection $atts, string $nameForErrorReport) {
+            $processedAtts = array();
+            $return = [];
 
-                                $return[$attName] = array('value' => $attributeValue, 'type' => "eval");
-                                $isProcessed = true;
-                            }
-                            
-                            if (array_key_exists($attName, $atts->Attributes)) {
-                                $attribute = $atts->Attributes[$attName];
-                                $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
-                                if ($processValue != null) {
-                                    $processedAtts[] = $attName;
-                                    if (array_key_exists($attName, $return)) {
-                                        $return[$attName]["value"][""] = $processValue;
-                                    } else {
-                                        $return[$attName] = $processValue;
-                                    }
+            for ($i = 0; $i < count($tag->attribute); $i ++) {
+                $isProcessed = false;
+                $att = $tag->attribute[$i];
+                $attName = (string)$att->attname;
+                $hasDefault = isset($att->attdef);
+                if ($att->prefix == true) {
+                    $attPrefix = "$attName-";
+                    $attributeValue = array();
+                    foreach ($atts->Attributes as $usedName => $usedValue) {
+                        if (parent::startsWith($usedName, $attPrefix)) {
+                            $strippedName = substr($usedName, strlen($attPrefix));
 
-                                    $isProcessed = true;
-                                }
-                            }
-
-                            if ($isProcessed) {
+                            $attribute = $atts->Attributes[$usedName];
+                            $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
+                            if ($processValue != null) {
+                                $processedAtts[] = $usedName;
+                                $attributeValue[$strippedName] = $processValue;
                                 continue;
                             }
-                            
-                            if ($hasDefault) {
-                                if ($att->atttype == 'string') {
-                                    $attributeValue = "'" . eval('return "'. $att->attdef.'";') . "'";
-                                } else {
-                                    $attributeValue = eval('return '. $att->attdef.';');
-                                }
-                                
-                                $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
-                            } else if (strtolower($att->attreq) == "required") {
-                                $str = "Missing required attribute '$att->attname' on tag '$tagPrefix:$tagName'.";
-                                trigger_error($str , E_USER_WARNING);
-                                echo parent::getError($str);
-                                return false;
-                            } else {
-                                $return[$attName] = array('value' => false, 'type' => 'raw');
-                            }
                         }
+                    }
+
+                    $return[$attName] = array('value' => $attributeValue, 'type' => "eval");
+                    $isProcessed = true;
+                }
                 
-                        if (isset($tag->anyAttribute)) {
-                            $params = array();
-                            foreach ($atts->Attributes as $usedName => $usedValue) {
-                                if (!in_array($usedName, $processedAtts)) {
-                                    $processedAtts[] = $usedName;
-                                    $params[$usedName] = $usedValue;
-                                }
-                            }
-    
-                            $return[DefaultPhp::$ParamsName] = array('value' => $params, 'type' => 'eval');
+                if (array_key_exists($attName, $atts->Attributes)) {
+                    $attribute = $atts->Attributes[$attName];
+                    $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
+                    if ($processValue != null) {
+                        $processedAtts[] = $attName;
+                        if (array_key_exists($attName, $return)) {
+                            $return[$attName]["value"][""] = $processValue;
+                        } else {
+                            $return[$attName] = $processValue;
                         }
-                        break;
+
+                        $isProcessed = true;
                     }
                 }
 
-                if (count($processedAtts) == count($atts->Attributes)) {
-                    $atts->Attributes = $return;
-                    return true;
+                if ($isProcessed) {
+                    continue;
+                }
+                
+                if ($hasDefault) {
+                    if ($att->atttype == 'string') {
+                        $attributeValue = "'" . eval('return "'. $att->attdef.'";') . "'";
+                    } else {
+                        $attributeValue = eval('return '. $att->attdef.';');
+                    }
+                    
+                    $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
+                } else if (strtolower($att->attreq) == "required") {
+                    return $this->triggerFail("Missing required attribute '$att->attname' on tag '$nameForErrorReport'.");
                 } else {
-                    foreach ($atts->Attributes as $name => $value) {
-                        if (!in_array($name, $processedAtts)) {
-                            $this->triggerFail("Used undefined attribute! [$name] on [$tagPrefix:$tagName]");
-                        }
-                    }
-
-                    return false;
+                    $return[$attName] = array('value' => false, 'type' => 'raw');
                 }
+            }
+    
+            if (isset($tag->anyAttribute)) {
+                $params = array();
+                foreach ($atts->Attributes as $usedName => $usedValue) {
+                    if (!in_array($usedName, $processedAtts)) {
+                        $processedAtts[] = $usedName;
+                        $params[$usedName] = $usedValue;
+                    }
+                }
+
+                $return[DefaultPhp::$ParamsName] = array('value' => $params, 'type' => 'eval');
+            }
+
+            if (count($processedAtts) == count($atts->Attributes)) {
+                $atts->Attributes = $return;
+                return true;
+            } else {
+                foreach ($atts->Attributes as $name => $value) {
+                    if (!in_array($name, $processedAtts)) {
+                        $this->triggerFail("Used undefined attribute! [$name] on [$nameForErrorReport]");
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        private function sortAttributesInternal(string $tagListName, string $tagPrefix, string $tagName, TemplateAttributeCollection $atts): bool {
+            return $this->withXml($tagPrefix, function($xml) use ($tagListName, $tagPrefix, $tagName, $atts) {
+                foreach ($xml->{$tagListName} as $tag) {
+                    if ($tag->tagname == $tagName) {
+                        return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName);
+                    }
+                }
+
+                return false;
             });
         }
         
@@ -722,7 +735,7 @@
                 foreach ($xml->decorator as $decorator) {
                     if (isset($decorator->features->providesFullTagBody)) {
                         foreach ($decorator->attribute as $attribute) {
-                            if (in_array($attribute->name, $attributeNames)) {
+                            if (in_array($attribute->attname, $attributeNames)) {
                                 return true;
                             }
                         }
@@ -730,6 +743,45 @@
                 }
 
                 return false;
+            });
+        }
+
+        public function findDecoratorsForAttributes(string $prefix, TemplateAttributeCollection $tagAttributes) {
+            return $this->withXml($prefix, function($xml) use ($prefix, $tagAttributes) {
+                $decorators = [];
+                $attributeNames = array_keys($tagAttributes->Decorators[$prefix]);
+
+                foreach ($xml->decorator as $decorator) {
+                    foreach ($decorator->attribute as $attribute) {
+                        if (in_array($attribute->attname, $attributeNames)) {
+                            if (!array_key_exists($attribute->attname, $decorators)) {
+                                $decorators[(string)$decorator->function] = [
+                                    "function" => $decorator->function,
+                                    "attributes" => [(string)$attribute->attname => $tagAttributes->Decorators[$prefix][(string)$attribute->attname]],
+                                    "modifiesAttributes" => isset($decorator->features->modifiesAttributes),
+                                    "conditionsExecution" => isset($decorator->features->conditionsExecution),
+                                    "providesFullTagBody" => isset($decorator->features->providesFullTagBody),
+                                ];
+                            } else {
+                                $decorators[$decorator->function]["attributes"][(string)$attribute->attname] = $tagAttributes->Decorators[$prefix][(string)$attribute->attname];
+                            }
+
+                            
+                            unset($attributeNames[array_search((string)$attribute->attname, $attributeNames)]);
+                        }
+                    }
+                }
+
+                if (count($attributeNames) > 0) {
+                    for ($i = 0; $i < count($attributeNames); $i++) { 
+                        $attributeNames[$i] = $prefix . ":" . $attributeNames[$i];
+                    }
+
+                    return $this->triggerFail("Unnable to find decorator for attributes " . implode(", ", $attributeNames) . ".");
+                }
+
+                $tagAttributes->Decorators[$prefix] = $decorators;
+                return true;
             });
         }
         
@@ -750,11 +802,11 @@
             }
         }
 
-        private function triggerUnregisteredPrefix($tagPrefix) {
+        public function triggerUnregisteredPrefix($tagPrefix) {
             return $this->triggerFail("Tag prefix isn't registered! [".$tagPrefix."]");
         }
 
-        private function triggerFail($message, $errorType = E_USER_WARNING) {
+        public function triggerFail($message, $errorType = E_USER_WARNING) {
             trigger_error($message, $errorType);
             echo "<h4 class=\"error\">".$message."</h4>";
             return false;

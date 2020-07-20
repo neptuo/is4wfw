@@ -69,9 +69,9 @@
   <decorator>
     <function>provideBodyById</function>
     <attribute>
-      <name>id</name>
-      <type>number</type>
-      <comment>...</comment>
+      <attname>id</attname>
+      <atttype>number</atttype>
+      <attcomment>...</attcomment>
     </attribute>
     <features>
       <providesFullTagBody />
