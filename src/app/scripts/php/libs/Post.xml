@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Post library</name>
+  <classname>Post</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro práci s POST hodnotami.
+  </comment>
+  <anyProperty>
+    <comment>Vrátí hodnotu POST parametru.</comment>
+  </anyProperty>
+</taglib>
+

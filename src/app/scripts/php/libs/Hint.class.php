@@ -426,6 +426,8 @@
                         .'<option value="php.libs.Login"'.($_SESSION['select-class-path'] == 'php.libs.Login' ? 'selected="selected"' : '').'>php.libs.Login</option>'
                         .'<option value="php.libs.Menu"'.($_SESSION['select-class-path'] == 'php.libs.Menu' ? 'selected="selected"' : '').'>php.libs.Menu</option>'
                         .'<option value="php.libs.Page"'.($_SESSION['select-class-path'] == 'php.libs.Page' ? 'selected="selected"' : '').'>php.libs.Page</option>'
+                        .'<option value="php.libs.Post"'.($_SESSION['select-class-path'] == 'php.libs.Post' ? 'selected="selected"' : '').'>php.libs.Post</option>'
+                        .'<option value="php.libs.QueryString"'.($_SESSION['select-class-path'] == 'php.libs.QueryString' ? 'selected="selected"' : '').'>php.libs.QueryString</option>'
                         .'<option value="php.libs.PageNG"'.($_SESSION['select-class-path'] == 'php.libs.PageNG' ? 'selected="selected"' : '').'>php.libs.PageNG</option>'
                         .'<option value="php.libs.Session"'.($_SESSION['select-class-path'] == 'php.libs.Session' ? 'selected="selected"' : '').'>php.libs.Session</option>'
                         .'<option value="php.libs.Sport"'.($_SESSION['select-class-path'] == 'php.libs.Sport' ? 'selected="selected"' : '').'>php.libs.Sport</option>'

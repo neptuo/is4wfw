@@ -122,10 +122,6 @@
             
             $isFullTag = count($ctag) != 4;
             $attributes = $this->tryParseAttributes($isFullTag ? $ctag[4] : $ctag[3]);
-            if ($attributes === FALSE) {
-                // TODO: Remove as global attribute are deprecated.
-                return '';
-            }
             
             $content = 0;
             if ($isFullTag) {
@@ -281,14 +277,7 @@
             }
 
             // #131 - Apostrophes are later stripped when binding to number attribute.
-            // TODO: To compile templates, process these in a standard way.
-            if ($object[0] == 'query' && strlen($object[1]) > 0){
-                return "'" . addcslashes($_GET[$object[1]], "'") . "'";
-            } elseif($object[0] == 'post' && strlen($object[1]) > 0){
-                return "'" . addcslashes($_POST[$object[1]], "'") . "'";
-            } else {
-                return "'" . addcslashes($cprop[0], "'") . "'";
-            }
+            return "'" . addcslashes($cprop[0], "'") . "'";
         }
         
         /**
