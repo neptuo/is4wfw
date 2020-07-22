@@ -89,6 +89,7 @@
                 $this->Code->closeBlock();
 
                 $code = $this->Code->toString();
+                file_put_contents(CACHE_TEMPLATES_PATH . $className . ".php", "<?php" . PHP_EOL . PHP_EOL . $code . PHP_EOL . PHP_EOL . "?>");
                 eval($code);
                 
                 $result = new $className();
@@ -236,7 +237,7 @@
                         return false;
                     }
 
-                    $call = $this->generateFunctionOutput($prefix, $decorator["function"], $attributes, false);
+                    $call = $this->generateFunctionOutput($prefix, $decorator["function"], $attributes, false, "false");
                     if (!$tagAttributes->HasAttributeModifyingDecorators && $decorator["providesFullTagBody"]) {
                         $tagAttributes->Attributes[DefaultPhp::$FullTagTemplateName] = array("value" => $call . "['" . DefaultPhp::$FullTagTemplateName . "']", "type" => "eval");
                     } else {
@@ -429,7 +430,7 @@
             }
         }
 
-        protected function generateFunctionOutput(string $tagPrefix, string $functionName, TemplateAttributeCollection $attributes, bool $isWrappedAsString = true) : string {
+        protected function generateFunctionOutput(string $tagPrefix, string $functionName, TemplateAttributeCollection $attributes, bool $isWrappedAsString = true, $defaultReturnValue = "''") : string {
             $identifier = $this->generateRandomString();
             $identifier = 'template_' . $tagPrefix . '_' . $functionName . '_' . $identifier;
             $attributesString = $this->concatAttributesToString($attributes->Attributes);
@@ -471,8 +472,8 @@
             $this->Code->addCatch(["Exception", "e"]);
             $this->Code->addLine("global $logObject;");
             $this->Code->addLine($logObject . "->exception(" . '$e' . ");");
-            $this->Code->addLine("return '';");
             $this->Code->closeBlock();
+            $this->Code->addLine("return $defaultReturnValue;");
             $this->Code->closeBlock();
 
             $result = '$this->' . $identifier . "()";

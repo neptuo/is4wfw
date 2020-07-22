@@ -28,7 +28,10 @@
 // </admin:field>
 // <hr />';
 $Content = '
-<web:condition when="15" is="15" template:id="1" />
+<!web:condition when="15" is="15" template:id="1" />
+<view:panel id="p1" security:requirePerm="CMS.Test">
+    Panel.
+</view:panel>
 ';
 
     function measure($func) {
