@@ -7,6 +7,7 @@
 
         public $Attributes = [];
         public $Decorators = [];
+        public $FunctionParameters = [];
     }
 
 ?>

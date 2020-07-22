@@ -71,12 +71,12 @@
     <attribute>
       <attname>id</attname>
       <atttype>number</atttype>
-      <attcomment>...</attcomment>
+      <attcomment>ID šablony.</attcomment>
     </attribute>
     <features>
       <providesFullTagBody />
     </features>
-    <comment>...</comment>
+    <comment>Poskytuje obsah těla pro párový tag ze šablony.</comment>
   </decorator>
 </taglib>
 

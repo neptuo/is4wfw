@@ -237,7 +237,17 @@
                         return false;
                     }
 
-                    $call = $this->generateFunctionOutput($prefix, $decorator["function"], $attributes, false, "false");
+                    $defaultReturnValue = "false";
+                    if ($decorator["modifiesAttributes"]) {
+                        $tagAttributes->HasAttributeModifyingDecorators = true;
+                        $attributes->Attributes["tagPrefix"] = ["value" => "'$tagPrefix'", "type" => "eval"];
+                        $attributes->Attributes["tagName"] = ["value" => "'$tagName'", "type" => "eval"];
+                        $attributes->Attributes[DefaultPhp::$FullTagTemplateName] = ["value" => '$parameters', "type" => "eval"];
+                        $attributes->FunctionParameters[] = "parameters";
+                        $defaultReturnValue = '$parameters';
+                    }
+
+                    $call = $this->generateFunctionOutput($prefix, $decorator["function"], $attributes, false, $defaultReturnValue);
                     if (!$tagAttributes->HasAttributeModifyingDecorators && $decorator["providesFullTagBody"]) {
                         $tagAttributes->Attributes[DefaultPhp::$FullTagTemplateName] = array("value" => $call . "['" . DefaultPhp::$FullTagTemplateName . "']", "type" => "eval");
                     } else {
@@ -403,7 +413,7 @@
 
                 if ($value['type'] == 'raw') {
                     $result .= "'" . $value['value'] . "'";
-                } else if($value['type'] == 'eval') {
+                } else if ($value['type'] == 'eval') {
                     $result .= $this->tryEvaluateAttribute($value['value']);
                 } else {
                     echo '<pre>';
@@ -438,7 +448,7 @@
             $targetObject = '$' . $tagPrefix . 'Object';
             $logObject = '$' . 'log' . 'Object';
             
-            $this->Code->addMethod($identifier, "private");
+            $this->Code->addMethod($identifier, "private", $attributes->FunctionParameters);
             $this->Code->addTry();
             $this->Code->addLine("global $targetObject;");
 

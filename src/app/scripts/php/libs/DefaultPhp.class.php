@@ -795,6 +795,10 @@
             return $return;
         }
 
+        public function provideAttributes($name, $tagPrefix, $tagName, $parameters) {
+            return $parameters;
+        }
+
         public function dispose() {
             foreach ($this->disposables as $tagPrefix) {
                 global ${$tagPrefix."Object"};
@@ -813,6 +817,7 @@
         }
         
         public function cache($cache) {
+
         }
     }
 
