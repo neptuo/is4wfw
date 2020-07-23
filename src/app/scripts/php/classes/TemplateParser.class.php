@@ -478,18 +478,28 @@
             if ($attributes->HasDecorators) {
                 foreach ($attributes->Decorators as $prefix => $decorators) {
                     foreach ($decorators as $decorator) {
-                        if ($attributes->HasAttributeModifyingDecorators && $decorator->ProvidesFullTagBody) {
-                            $this->Code->addLine('$' . "parameters['" . DefaultPhp::$FullTagTemplateName . "'] = " . '$' . "this->" . $decorator->TemplateFunctionName . "()['" . DefaultPhp::$FullTagTemplateName . "'];");
+                        if (strlen($decorator["call"]) == 0) {
+                            continue;
                         }
 
                         if ($decorator["conditionsExecution"]) {
                             $this->Code->addLine("if (" . $decorator["call"] . "['" . DefaultPhp::$DecoratorExecuteName . "'] === true) {");
                             $this->Code->addIndent();
                         }
-
-                        if ($decorator["modifiesAttributes"]) {
-                            $this->Code->addLine('$' . "parameters = " . $decorator["call"] . ";");
+                        
+                        if ($attributes->HasAttributeModifyingDecorators) {
+                            if ($decorator["providesFullTagBody"] && !$decorator["modifiesAttributes"]) {
+                                $this->Code->addLine('$' . "parameters['" . DefaultPhp::$FullTagTemplateName . "'] = " . $decorator["call"] . "['" . DefaultPhp::$FullTagTemplateName . "'];");
+                                continue;
+                            }
+                            
+                            if ($decorator["providesFullTagBody"] || $decorator["modifiesAttributes"]) {
+                                $this->Code->addLine('$' . "parameters = " . $decorator["call"] . ";");
+                                continue;
+                            }
                         }
+
+                        $this->Code->addLine($decorator["call"] . ";");
                     }
                 }
             }

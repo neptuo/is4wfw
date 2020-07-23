@@ -796,8 +796,8 @@
         }
 
         public function provideAttributes($name, $tagPrefix, $tagName, $parameters) {
-            $parameters["params"]["class"] = "form-control";
-            $parameters["params"]["id"] = "test";
+            $parameters["when"] = "1";
+            $parameters["is"] = "1";
             return $parameters;
         }
 

@@ -29,7 +29,7 @@
 // <hr />';
 $Content = '
 <edit:form submit="send">
-    <ui:textbox name="message" php:attributes="bs_textbox" />
+    <web:condition php:attributes="bs_textbox" template:id="1" when="2" is="2" />
 </edit:form>
 ';
 
