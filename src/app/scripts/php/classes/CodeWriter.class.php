@@ -6,12 +6,15 @@
         private $output = "";
         private $indentChar = "    ";
 
-        public function addLine(string $statement) {
-            if (strlen($this->output) > 0) {
-                $this->output .= PHP_EOL;
+        public function addLine(string $statements) {
+            $statements = explode(PHP_EOL, $statements);
+            foreach ($statements as $statement) {
+                if (strlen($this->output) > 0) {
+                    $this->output .= PHP_EOL;
+                }
+                
+                $this->output .= $this->getIndent() . $statement;
             }
-
-            $this->output .= $this->getIndent() . $statement;
         }
 
         public function addClass(string $name, string $base, $interfaces = []) {

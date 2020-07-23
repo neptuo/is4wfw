@@ -403,7 +403,7 @@
             return $attributes;
         }
 
-        protected function concatAttributesToString($attributes, $isItemNameIncluded = false) {
+        protected function concatAttributesToString($attributes, $isItemNameIncluded = false, $isNewLineAfterAttribute = false) {
             $result = "";
             $i = 0;
             foreach ($attributes as $name => $value) {
@@ -424,7 +424,12 @@
 
                 if ($i < (count($attributes) - 1)) {
                     $result .= ", ";
+
+                    if ($isNewLineAfterAttribute) {
+                        $result .= PHP_EOL;
+                    }
                 }
+
                 $i++;
             }
 
@@ -443,7 +448,7 @@
         protected function generateFunctionOutput(string $tagPrefix, string $functionName, TemplateAttributeCollection $attributes, bool $isWrappedAsString = true, $defaultReturnValue = "''") : string {
             $identifier = $this->generateRandomString();
             $identifier = 'template_' . $tagPrefix . '_' . $functionName . '_' . $identifier;
-            $attributesString = $this->concatAttributesToString($attributes->Attributes);
+            
 
             $targetObject = '$' . $tagPrefix . 'Object';
             $logObject = '$' . 'log' . 'Object';
@@ -451,6 +456,24 @@
             $this->Code->addMethod($identifier, "private", $attributes->FunctionParameters);
             $this->Code->addTry();
             $this->Code->addLine("global $targetObject;");
+
+            $attributesString = "";
+            if ($attributes->HasAttributeModifyingDecorators) {
+                $this->Code->addLine('$'. "parameters = [");
+                $this->Code->addIndent();
+                $attributesString = $this->concatAttributesToString($attributes->Attributes, true, true);
+                $this->Code->addLine($attributesString);
+                $this->Code->removeIndent();
+                $this->Code->addLine("];");
+
+                $attributeNames = [];
+                foreach (array_keys($attributes->Attributes) as $name) {
+                    $attributeNames[] = '$parameters["' . $name . '"]';
+                }
+                $attributesString = implode(", ", $attributeNames);
+            } else {
+                $attributesString = $this->concatAttributesToString($attributes->Attributes);
+            }
 
             if ($attributes->HasDecorators) {
                 foreach ($attributes->Decorators as $prefix => $decorators) {
@@ -462,6 +485,10 @@
                         if ($decorator["conditionsExecution"]) {
                             $this->Code->addLine("if (" . $decorator["call"] . "['" . DefaultPhp::$DecoratorExecuteName . "'] === true) {");
                             $this->Code->addIndent();
+                        }
+
+                        if ($decorator["modifiesAttributes"]) {
+                            $this->Code->addLine('$' . "parameters = " . $decorator["call"] . ";");
                         }
                     }
                 }
@@ -486,7 +513,7 @@
             $this->Code->addLine("return $defaultReturnValue;");
             $this->Code->closeBlock();
 
-            $result = '$this->' . $identifier . "()";
+            $result = '$this->' . $identifier . "(" . implode(", ", array_map(function($parameter) { return '$' . $parameter; }, $attributes->FunctionParameters)) . ")";
             if ($isWrappedAsString) {
                 $result = "' . " . $result . " . '";
             }
