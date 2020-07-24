@@ -106,6 +106,25 @@
                     $links .= '</div>';
                 }
 
+                if (count($xml->decorator) > 0) {
+                    $links .= '<div>'.$rb->get('lib.decorators').':';
+                    foreach($xml->decorator as $decorator) {
+                        $obsolete = null;
+                        if (isset($decorator->obsolete)) {
+                            $obsolete = (string)$decorator->obsolete;
+                        }
+                        
+                        $attributeNames = [];
+                        for ($i = 0; $i < count($decorator->attribute); $i ++) {
+                            $attributeNames[] = (string)$decorator->attribute[$i]->attname;
+                        };
+                        $name = implode(", ", $attributeNames);
+                        $identifier = implode("-", $attributeNames);
+                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#decorator-' . $identifier . '">' . $name . '</a> ';
+                    }
+                    $links .= '</div>';
+                }
+
                 $links .= '</div>';
             
                 $return .= ''
@@ -352,6 +371,82 @@
                             . '<h3>' . $rb->get('lib.anyproperties') . '</h3>'
                             . '<p>' . str_replace(PHP_EOL, '<br />', trim($xml->anyProperty->comment)) . '</p>'
                         . '</div>';
+                    }
+                }
+
+                if (count($xml->decorator) > 0) {
+                    $return .= ''    
+                    .'<div class="tag-h2">'
+                        .'<h2>'.$rb->get('lib.decorators').':</h2>'
+                    .'</div>';
+                    
+                    foreach ($xml->decorator as $decorator) {
+                        $attributeNames = [];
+                        $attributes = '';
+                        for ($i = 0; $i < count($decorator->attribute); $i ++) {
+                            $attributeName = $decorator->attribute[$i]->attname;
+                            $attributeNames[] = $attributeName;
+                            $cssClass = null;
+                            $obsolete = null;
+                            if (isset($decorator->attribute[$i]->obsolete)) {
+                                $obsolete = (string)$decorator->attribute[$i]->obsolete;
+                                $cssClass = ' obsolete';
+                            }
+                            $prefix = null;
+                            if ($decorator->attribute[$i]->prefix == 'true') {
+                                $prefix = $rb->get('lib.prefix.yes');
+                                $attributeName = $attributeName . '-*';
+                            } else {
+                                $prefix = $rb->get('lib.prefix.no');
+                            }
+                            $required = null;
+                            if ($decorator->attribute[$i]->attreq == 'required') {
+                                $required = $rb->get('lib.attreq.yes');
+                                $attributeName = '<strong>' . $attributeName . '</strong>';
+                            } else if ($decorator->attribute[$i]->attreq == 'implied') {
+                                $required = $rb->get('lib.attreq.no');
+                            }
+
+                            $attributes .= ''
+                            .'<tr>'
+                                .'<td class="att-name' . $cssClass . '">' . $attributeName . '</td>'
+                                .'<td class="att-req' . $cssClass . '">' . $required . '</td>'
+                                .'<td class="att-prefix' . $cssClass . '">' . $prefix . '</td>'
+                                .'<td class="att-type' . $cssClass . '">' . $decorator->attribute[$i]->atttype . '</td>'
+                                .'<td class="att-def' . $cssClass . '">' . $decorator->attribute[$i]->attdef . '</td>'
+                                .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $decorator->attribute[$i]->attcomment . '</td>'
+                            .'</tr>';
+                        }
+                        
+                        $obsolete = null;
+                        if (isset($decorator->obsolete)) {
+                            $obsolete = (string)$decorator->obsolete;
+                        }
+                        
+                        $return .= ''
+                        .'<div class="lib-tag">'
+                            .'<div class="lib-tag-head">'
+                                .'<h3 id="decorator-' . implode("-", $attributeNames) . '">' . implode(", ", $attributeNames) . '</h3>'
+                                . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
+                                .'<p>' . str_replace(PHP_EOL, '<br />', trim($decorator->comment)) . '</p>'
+                                .'<div class="clear"></div>'
+                            .'</div>'
+                            .'<div class="lib-tag-attrs">'
+                                .((strlen($attributes) > 0) ? ''
+                                    .'<table>'
+                                        .'<tr>'
+                                            .'<th class="att-name">'.$rb->get('lib.attname').'</th>'
+                                            .'<th class="att-req">'.$rb->get('lib.attreq').'</th>'
+                                            .'<th class="att-prefix">'.$rb->get('lib.prefix').'</th>'
+                                            .'<th class="att-type">'.$rb->get('lib.atttype').'</th>'
+                                            .'<th class="att-def">'.$rb->get('lib.attdef').'</th>'
+                                            .'<th class="att-comment">'.$rb->get('lib.attcomment').'</th>'
+                                        .'</tr>'
+                                        .$attributes
+                                    .'</table>'
+                                : '<p>'.$rb->get('lib.noattrs').'</p>')
+                            .'</div>'
+                        .'</div>';
                     }
                 }
 

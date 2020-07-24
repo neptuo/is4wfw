@@ -71,6 +71,7 @@
     <attribute>
       <attname>id</attname>
       <atttype>number</atttype>
+      <attreq>required</attreq>
       <attcomment>ID šablony.</attcomment>
     </attribute>
     <features>

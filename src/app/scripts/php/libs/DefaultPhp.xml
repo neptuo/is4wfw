@@ -70,6 +70,7 @@
     <attribute>
       <attname>attributes</attname>
       <atttype>string</atttype>
+      <attreq>required</attreq>
       <attcomment>Jméno registrované sady atributů</attcomment>
     </attribute>
     <features>
