@@ -332,7 +332,7 @@
             if ($content != null) {
                 $result[DefaultPhp::$FullTagTemplateName] = [
                     'value' => $content, 
-                    'type' => 'raw'
+                    'type' => 'eval'
                 ];
             }
 
