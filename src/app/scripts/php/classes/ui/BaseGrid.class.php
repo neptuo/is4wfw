@@ -50,6 +50,11 @@
 				$this->classes[] = $className;
 			}
 		}
+
+		public function sortByKey($key) {
+			$keys = array_column($this->rows, $key);
+			array_multisort($keys, SORT_ASC, $this->rows);
+		}
 		
 		/**
 		 *

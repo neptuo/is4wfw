@@ -507,19 +507,28 @@
             $rb = self::rb();
             
             $grid = new BaseGrid();
-            $grid->setHeader(array(
+            $grid->setHeader([
                 'prefix' => $rb->get('autoregister.prefix'), 
                 'class' => $rb->get('autoregister.class')
-            ));
+            ]);
+
+            foreach (parent::php()->getDefaultRegistrations() as $prefix => $classPath) {
+                $grid->addRow([
+                    'prefix' => $prefix, 
+                    'class' => $classPath
+                ]);
+            }
             
             $xml = new SimpleXMLElement(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'));
             foreach ($xml->reg as $reg) {
                 $attrs = $reg->attributes();
-                $grid->addRow(array(
+                $grid->addRow([
                     'prefix' => (string)$attrs['prefix'], 
                     'class' => (string)$attrs['class']
-                ));
+                ]);
             }
+
+            $grid->sortByKey("prefix");
             
             $return = ''
             . '<div class="gray-box">'
@@ -532,7 +541,7 @@
             if ($useFrames == "false") {
                 return $return;
             } else {
-                return parent::getFrame($rb->get('autoregister.title').': '.$classPath, $return, "", true);
+                return parent::getFrame($rb->get('autoregister.title'), $return, "", true);
             }
         }
 

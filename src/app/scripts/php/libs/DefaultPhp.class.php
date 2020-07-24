@@ -29,7 +29,7 @@
          *
          *    List of default registered tag libs.
          *
-         */                                     
+         */
         private $_DEFAULT = array(
             "php" => "php.libs", 
             "web" => "php.libs", 
@@ -39,6 +39,20 @@
             "login" => "php.libs", 
             "sys" => "php.libs"
         );
+
+        private $defaultRegistrations = [
+            "php" => "php.libs.DefaultPhp", 
+            "web" => "php.libs.DefaultWeb", 
+            "error" => "php.libs.ErrorHandler", 
+            "log" => "php.libs.Log", 
+            "db" => "php.libs.Database", 
+            "login" => "php.libs.Login", 
+            "sys" => "php.libs.System"
+        ];
+
+        public function getDefaultRegistrations() {
+            return $this->defaultRegistrations;
+        }
     
         /**
          *
