@@ -465,6 +465,53 @@
                 return parent::getFrame($rb->get('lib.title').': '.$classPath, $return, "", true);
             }
         }
+
+        private $libraries = [
+            "php.libs.AdminUi",
+            "php.libs.Article",
+            "php.libs.BootstrapUi",
+            "php.libs.Counter",
+            "php.libs.CustomForm",
+            "php.libs.CustomEntity",
+            "php.libs.CustomEntityAdmin",
+            "php.libs.Database",
+            "php.libs.DefaultPhp",
+            "php.libs.DefaultWeb",
+            "php.libs.Editor",
+            "php.libs.Error",
+            "php.libs.File",
+            "php.libs.FileAdmin",
+            "php.libs.FileUrl",
+            "php.libs.Filter",
+            "php.libs.FontAwesome",
+            "php.libs.Google",
+            "php.libs.Guestbook",
+            "php.libs.Hint",
+            "php.libs.hp.Hotproject",
+            "php.libs.Image",
+            "php.libs.Inquiry",
+            "php.libs.Js",
+            "php.libs.Language",
+            "php.libs.Localization",
+            "php.libs.Log",
+            "php.libs.Login",
+            "php.libs.Menu",
+            "php.libs.Page",
+            "php.libs.Post",
+            "php.libs.QueryString",
+            "php.libs.PageNG",
+            "php.libs.Session",
+            "php.libs.Sport",
+            "php.libs.System",
+            "php.libs.Template",
+            "php.libs.User",
+            "php.libs.Ui",
+            "php.libs.Utilities",
+            "php.libs.Validation",
+            "php.libs.Variable",
+            "php.libs.View",
+            "php.libs.WebProject"
+        ];
             
         /**
          *
@@ -477,64 +524,25 @@
             
             if ($_POST['select-class-path-submit'] == $rb->get('select-class-path.submit')) {
                 $_SESSION['select-class-path'] = $_POST['select-class-path-select'];
-                if($showMsg != 'false') {
-                    $return .= '<h4 class="success">'.$rb->get('select-class-path.success').'</h4>';
-                }
+                parent::redirectToSelf();
             } else {
-                if($_SESSION['select-class-path'] == '') {
+                if ($_SESSION['select-class-path'] == '') {
                     $_SESSION['select-class-path'] = 'php.libs.DefaultWeb';
                 }
             }
+
+            $options = "";
+            foreach ($this->libraries as $library) {
+                $options .= "<option value='$library'" . ($_SESSION['select-class-path'] == $library ? "selected='selected'" : "") . ">$library</option>";
+            }
+
             
             $return .= ''
             .'<div class="select-class-path">'
                 .'<form name="select-class-path" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="auto-submit">'
                     .'<label for="select-class-path-select">'.$rb->get('select-class-path.label').':</label> '
                     .'<select id="select-class-path-select" name="select-class-path-select">'
-                        .'<option value="php.libs.AdminUi"'.($_SESSION['select-class-path'] == 'php.libs.AdminUi' ? 'selected="selected"' : '').'>php.libs.AdminUi</option>'
-                        .'<option value="php.libs.Article"'.($_SESSION['select-class-path'] == 'php.libs.Article' ? 'selected="selected"' : '').'>php.libs.Article</option>'
-                        .'<option value="php.libs.BootstrapUi"'.($_SESSION['select-class-path'] == 'php.libs.BootstrapUi' ? 'selected="selected"' : '').'>php.libs.BootstrapUi</option>'
-                        .'<option value="php.libs.Counter"'.($_SESSION['select-class-path'] == 'php.libs.Counter' ? 'selected="selected"' : '').'>php.libs.Counter</option>'
-                        .'<option value="php.libs.CustomForm"'.($_SESSION['select-class-path'] == 'php.libs.CustomForm' ? 'selected="selected"' : '').'>php.libs.CustomForm</option>'
-                        .'<option value="php.libs.CustomEntity"'.($_SESSION['select-class-path'] == 'php.libs.CustomEntity' ? 'selected="selected"' : '').'>php.libs.CustomEntity</option>'
-                        .'<option value="php.libs.CustomEntityAdmin"'.($_SESSION['select-class-path'] == 'php.libs.CustomEntityAdmin' ? 'selected="selected"' : '').'>php.libs.CustomEntityAdmin</option>'
-                        .'<option value="php.libs.Database"'.($_SESSION['select-class-path'] == 'php.libs.Database' ? 'selected="selected"' : '').'>php.libs.Database</option>'
-                        .'<option value="php.libs.DefaultPhp"'.($_SESSION['select-class-path'] == 'php.libs.DefaultPhp' ? 'selected="selected"' : '').'>php.libs.DefaultPhp</option>'
-                        .'<option value="php.libs.DefaultWeb"'.($_SESSION['select-class-path'] == 'php.libs.DefaultWeb' ? 'selected="selected"' : '').'>php.libs.DefaultWeb</option>'
-                        .'<option value="php.libs.Editor"'.($_SESSION['select-class-path'] == 'php.libs.Editor' ? 'selected="selected"' : '').'>php.libs.Editor</option>'
-                        .'<option value="php.libs.Error"'.($_SESSION['select-class-path'] == 'php.libs.Error' ? 'selected="selected"' : '').'>php.libs.Error</option>'
-                        .'<option value="php.libs.File"'.($_SESSION['select-class-path'] == 'php.libs.File' ? 'selected="selected"' : '').'>php.libs.File</option>'
-                        .'<option value="php.libs.FileAdmin"'.($_SESSION['select-class-path'] == 'php.libs.FileAdmin' ? 'selected="selected"' : '').'>php.libs.FileAdmin</option>'
-                        .'<option value="php.libs.FileUrl"'.($_SESSION['select-class-path'] == 'php.libs.FileUrl' ? 'selected="selected"' : '').'>php.libs.FileUrl</option>'
-                        .'<option value="php.libs.Filter"'.($_SESSION['select-class-path'] == 'php.libs.Filter' ? 'selected="selected"' : '').'>php.libs.Filter</option>'
-                        .'<option value="php.libs.FontAwesome"'.($_SESSION['select-class-path'] == 'php.libs.FontAwesome' ? 'selected="selected"' : '').'>php.libs.FontAwesome</option>'
-                        .'<option value="php.libs.Google"'.($_SESSION['select-class-path'] == 'php.libs.Google' ? 'selected="selected"' : '').'>php.libs.Google</option>'
-                        .'<option value="php.libs.Guestbook"'.($_SESSION['select-class-path'] == 'php.libs.Guestbook' ? 'selected="selected"' : '').'>php.libs.Guestbook</option>'
-                        .'<option value="php.libs.Hint"'.($_SESSION['select-class-path'] == 'php.libs.Hint' ? 'selected="selected"' : '').'>php.libs.Hint</option>'
-                        .'<option value="php.libs.hp.Hotproject"'.($_SESSION['select-class-path'] == 'php.libs.hp.Hotproject' ? 'selected="selected"' : '').'>php.libs.hp.Hotproject</option>'
-                        .'<option value="php.libs.Image"'.($_SESSION['select-class-path'] == 'php.libs.Image' ? 'selected="selected"' : '').'>php.libs.Image</option>'
-                        .'<option value="php.libs.Inquiry"'.($_SESSION['select-class-path'] == 'php.libs.Inquiry' ? 'selected="selected"' : '').'>php.libs.Inquiry</option>'
-                        .'<option value="php.libs.Js"'.($_SESSION['select-class-path'] == 'php.libs.Js' ? 'selected="selected"' : '').'>php.libs.Js</option>'
-                        .'<option value="php.libs.Language"'.($_SESSION['select-class-path'] == 'php.libs.Language' ? 'selected="selected"' : '').'>php.libs.Language</option>'
-                        .'<option value="php.libs.Localization"'.($_SESSION['select-class-path'] == 'php.libs.Localization' ? 'selected="selected"' : '').'>php.libs.Localization</option>'
-                        .'<option value="php.libs.Log"'.($_SESSION['select-class-path'] == 'php.libs.Log' ? 'selected="selected"' : '').'>php.libs.Log</option>'
-                        .'<option value="php.libs.Login"'.($_SESSION['select-class-path'] == 'php.libs.Login' ? 'selected="selected"' : '').'>php.libs.Login</option>'
-                        .'<option value="php.libs.Menu"'.($_SESSION['select-class-path'] == 'php.libs.Menu' ? 'selected="selected"' : '').'>php.libs.Menu</option>'
-                        .'<option value="php.libs.Page"'.($_SESSION['select-class-path'] == 'php.libs.Page' ? 'selected="selected"' : '').'>php.libs.Page</option>'
-                        .'<option value="php.libs.Post"'.($_SESSION['select-class-path'] == 'php.libs.Post' ? 'selected="selected"' : '').'>php.libs.Post</option>'
-                        .'<option value="php.libs.QueryString"'.($_SESSION['select-class-path'] == 'php.libs.QueryString' ? 'selected="selected"' : '').'>php.libs.QueryString</option>'
-                        .'<option value="php.libs.PageNG"'.($_SESSION['select-class-path'] == 'php.libs.PageNG' ? 'selected="selected"' : '').'>php.libs.PageNG</option>'
-                        .'<option value="php.libs.Session"'.($_SESSION['select-class-path'] == 'php.libs.Session' ? 'selected="selected"' : '').'>php.libs.Session</option>'
-                        .'<option value="php.libs.Sport"'.($_SESSION['select-class-path'] == 'php.libs.Sport' ? 'selected="selected"' : '').'>php.libs.Sport</option>'
-                        .'<option value="php.libs.System"'.($_SESSION['select-class-path'] == 'php.libs.System' ? 'selected="selected"' : '').'>php.libs.System</option>'
-                        .'<option value="php.libs.Template"'.($_SESSION['select-class-path'] == 'php.libs.Template' ? 'selected="selected"' : '').'>php.libs.Template</option>'
-                        .'<option value="php.libs.User"'.($_SESSION['select-class-path'] == 'php.libs.User' ? 'selected="selected"' : '').'>php.libs.User</option>'
-                        .'<option value="php.libs.Ui"'.($_SESSION['select-class-path'] == 'php.libs.Ui' ? 'selected="selected"' : '').'>php.libs.Ui</option>'
-                        .'<option value="php.libs.Utilities"'.($_SESSION['select-class-path'] == 'php.libs.Utilities' ? 'selected="selected"' : '').'>php.libs.Utilities</option>'
-                        .'<option value="php.libs.Validation"'.($_SESSION['select-class-path'] == 'php.libs.Validation' ? 'selected="selected"' : '').'>php.libs.Validation</option>'
-                        .'<option value="php.libs.Variable"'.($_SESSION['select-class-path'] == 'php.libs.Variable' ? 'selected="selected"' : '').'>php.libs.Variable</option>'
-                        .'<option value="php.libs.View"'.($_SESSION['select-class-path'] == 'php.libs.View' ? 'selected="selected"' : '').'>php.libs.View</option>'
-                        .'<option value="php.libs.WebProject"'.($_SESSION['select-class-path'] == 'php.libs.WebProject' ? 'selected="selected"' : '').'>php.libs.WebProject</option>'
+                        . $options
                     .'</select> '
                     .'<input type="submit" name="select-class-path-submit" value="'.$rb->get('select-class-path.submit').'" />'
                 .'</form>'
