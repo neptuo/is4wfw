@@ -5,7 +5,7 @@ services:
   web:
     image: nginx:latest
     ports:
-      - "8080:80"
+      - "4242:80"
     volumes:
       - ./src:/src
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
@@ -19,7 +19,7 @@ services:
       dockerfile: docker/php-apache-modrewrite-zip/dockerfile
     environment:
       - IS4WFW_DEVELOPMENT=true
-      - IS4WFW_PORT=8080
+      - IS4WFW_PORT=4242
     expose:
       - "9000"
     volumes:
