@@ -775,13 +775,18 @@
                                     $tagAttributes->HasBodyProvidingDecorators = true;
                                 }
 
-                                $decorators[(string)$decorator->function] = [
-                                    "function" => (string)$decorator->function,
-                                    "attributes" => [(string)$attribute->attname => $tagAttributes->Decorators[$prefix][(string)$attribute->attname]],
-                                    "modifiesAttributes" => $modifiesAttributes,
-                                    "conditionsExecution" => $conditionsExecution,
-                                    "providesFullTagBody" => $providesFullTagBody,
-                                ];
+                                $functionName = (string)$decorator->function;
+                                if (!array_key_exists($functionName, $decorators)) {
+                                    $decorators[$functionName] = [
+                                        "function" => $functionName,
+                                        "attributes" => [(string)$attribute->attname => $tagAttributes->Decorators[$prefix][(string)$attribute->attname]],
+                                        "modifiesAttributes" => $modifiesAttributes,
+                                        "conditionsExecution" => $conditionsExecution,
+                                        "providesFullTagBody" => $providesFullTagBody,
+                                    ];
+                                } else {
+                                    $decorators[$functionName]["attributes"][(string)$attribute->attname] = $tagAttributes->Decorators[$prefix][(string)$attribute->attname];
+                                }
                             } else {
                                 $decorators[$decorator->function]["attributes"][(string)$attribute->attname] = $tagAttributes->Decorators[$prefix][(string)$attribute->attname];
                             }

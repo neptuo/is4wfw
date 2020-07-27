@@ -21,6 +21,7 @@
     $phpObject->register("ui", "php.libs.Ui");
     $phpObject->register("var", "php.libs.Variable");
     $phpObject->register("view", "php.libs.View");
+    $phpObject->register("test", "php.libs.test.TestLibrary");
 
 //     $Content = '<hr />
 // <admin:field label="Entity Name" label-class="w90" style="background: red">
@@ -28,9 +29,7 @@
 // </admin:field>
 // <hr />';
 $Content = '
-<edit:form submit="send">
-    <web:condition php:attributes="bs_textbox" template:id="1" when="2" is="2" />
-</edit:form>
+<web:a pageId="~/index.view" test:a="Hello" test:b="5" />
 ';
 
     function measure($func) {
