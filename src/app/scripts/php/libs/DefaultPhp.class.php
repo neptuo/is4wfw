@@ -535,10 +535,17 @@
                     }
                     
                     $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
-                } else if (strtolower($att->attreq) == "required") {
+                } else if (strtolower($att->attreq) == "required" && !$atts->HasAttributeModifyingDecorators) {
                     return $this->triggerFail("Missing required attribute '$att->attname' on tag '$nameForErrorReport'.");
                 } else {
-                    $return[$attName] = array('value' => false, 'type' => 'raw');
+                    $value = false;
+                    if ($att->atttype == "string") {
+                        $value = "";
+                    } else if ($att->atttype == "number") { 
+                        $value = 0;
+                    }
+
+                    $return[$attName] = array('value' => $value, 'type' => 'raw');
                 }
             }
     
@@ -744,22 +751,6 @@
             return $functionName;
         }
 
-        public function hasFullTagBodyProvider($tagPrefix, $attributeNames) {
-            return $this->withXml($tagPrefix, function($xml) use ($attributeNames) {
-                foreach ($xml->decorator as $decorator) {
-                    if (isset($decorator->features->providesFullTagBody)) {
-                        foreach ($decorator->attribute as $attribute) {
-                            if (in_array($attribute->attname, $attributeNames)) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-
-                return false;
-            });
-        }
-
         public function findDecoratorsForAttributes(string $prefix, TemplateAttributeCollection $tagAttributes) {
             return $this->withXml($prefix, function($xml) use ($prefix, $tagAttributes) {
                 $decorators = [];
@@ -769,12 +760,27 @@
                     foreach ($decorator->attribute as $attribute) {
                         if (in_array($attribute->attname, $attributeNames)) {
                             if (!array_key_exists($attribute->attname, $decorators)) {
+                                $modifiesAttributes = isset($decorator->features->modifiesAttributes);
+                                if ($modifiesAttributes) {
+                                    $tagAttributes->HasAttributeModifyingDecorators = true;
+                                }
+
+                                $conditionsExecution = isset($decorator->features->conditionsExecution);
+                                if ($conditionsExecution) {
+                                    $tagAttributes->HasConditionalDecorators = $conditionsExecution;
+                                }
+
+                                $providesFullTagBody = isset($decorator->features->providesFullTagBody);
+                                if ($providesFullTagBody) {
+                                    $tagAttributes->HasBodyProvidingDecorators = true;
+                                }
+
                                 $decorators[(string)$decorator->function] = [
                                     "function" => (string)$decorator->function,
                                     "attributes" => [(string)$attribute->attname => $tagAttributes->Decorators[$prefix][(string)$attribute->attname]],
-                                    "modifiesAttributes" => isset($decorator->features->modifiesAttributes),
-                                    "conditionsExecution" => isset($decorator->features->conditionsExecution),
-                                    "providesFullTagBody" => isset($decorator->features->providesFullTagBody),
+                                    "modifiesAttributes" => $modifiesAttributes,
+                                    "conditionsExecution" => $conditionsExecution,
+                                    "providesFullTagBody" => $providesFullTagBody,
                                 ];
                             } else {
                                 $decorators[$decorator->function]["attributes"][(string)$attribute->attname] = $tagAttributes->Decorators[$prefix][(string)$attribute->attname];

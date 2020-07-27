@@ -142,9 +142,16 @@
 
             // Now we know the tag is syntactically valid and should be processed.
             if ($phpObject->isRegistered($object[0])) {
+                // Find which decorators are used.
+                if ($attributes->HasDecorators) {
+                    if (!$this->parseDecorators($attributes)) {
+                        return "";
+                    }
+                }
+
                 // Use decorators and content to determine whether the tags is self closing or full.
-                if (!$isFullTag) {
-                    $isFullTag = $attributes->HasBodyProvidingDecorators = $this->hasFullTagBodyProvider($attributes);
+                if (!$isFullTag && $attributes->HasBodyProvidingDecorators) {
+                    $isFullTag = true;
                 }
 
                 $functionName = null;
@@ -195,9 +202,7 @@
                 }
 
                 if ($attributes->HasDecorators) {
-                    if (!$this->parseDecorators($object[0], $object[1], $attributes)) {
-                        return "";
-                    }
+                    $this->generateDecorators($object[0], $object[1], $attributes);
                 }
 
                 if ($functionName != null) {
@@ -215,7 +220,7 @@
             return '<h4 class="error">Tag "' . $object[0] . ':' . $object[1] . '" is not registered!</h4>';
         }
 
-        protected function parseDecorators(string $tagPrefix, string $tagName, TemplateAttributeCollection $tagAttributes) {
+        protected function parseDecorators(TemplateAttributeCollection $tagAttributes) {
             global $phpObject;
 
             foreach ($tagAttributes->Decorators as $prefix => $attributes) {
@@ -228,6 +233,12 @@
                 }
             }
 
+            return true;
+        }
+
+        protected function generateDecorators(string $tagPrefix, string $tagName, TemplateAttributeCollection $tagAttributes) {
+            global $phpObject;
+
             foreach ($tagAttributes->Decorators as $prefix => $decorators) {
                 foreach ($decorators as $decorator) {
                     $attributes = new TemplateAttributeCollection();
@@ -239,7 +250,6 @@
 
                     $defaultReturnValue = "false";
                     if ($decorator["modifiesAttributes"]) {
-                        $tagAttributes->HasAttributeModifyingDecorators = true;
                         $attributes->Attributes["tagPrefix"] = ["value" => "'$tagPrefix'", "type" => "eval"];
                         $attributes->Attributes["tagName"] = ["value" => "'$tagName'", "type" => "eval"];
                         $attributes->Attributes[DefaultPhp::$FullTagTemplateName] = ["value" => '$parameters', "type" => "eval"];
@@ -255,8 +265,6 @@
                     }
                 }
             }
-
-            return true;
         }
 
         /**
@@ -301,20 +309,6 @@
          */
         protected function parseatt($att) {
             $this->Attributes[] = $att[0];
-        }
-
-        private function hasFullTagBodyProvider(TemplateAttributeCollection $attributes) {
-            global $phpObject;
-
-            foreach ($attributes->Decorators as $tagPrefix => $decorators) {
-                if ($phpObject->isRegistered($tagPrefix)) {
-                    if ($phpObject->hasFullTagBodyProvider($tagPrefix, array_keys($decorators))) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
 
         protected function sortAnyTagAttributes(string $tagName, TemplateAttributeCollection $attributes, string $content = null) {
