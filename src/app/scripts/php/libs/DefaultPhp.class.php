@@ -761,16 +761,18 @@
                         if (in_array($attribute->attname, $attributeNames)) {
                             if (!array_key_exists($attribute->attname, $decorators)) {
                                 $modifiesAttributes = isset($decorator->features->modifiesAttributes);
-                                if ($modifiesAttributes) {
+                                $conditionsExecution = isset($decorator->features->conditionsExecution);
+                                $providesFullTagBody = isset($decorator->features->providesFullTagBody);
+
+                                // If the decorator return 2 ways, we wrap it in an array.
+                                if ($modifiesAttributes || $conditionsExecution && $providesFullTagBody) {
                                     $tagAttributes->HasAttributeModifyingDecorators = true;
                                 }
 
-                                $conditionsExecution = isset($decorator->features->conditionsExecution);
                                 if ($conditionsExecution) {
-                                    $tagAttributes->HasConditionalDecorators = $conditionsExecution;
+                                    $tagAttributes->HasConditionalDecorators = true;
                                 }
 
-                                $providesFullTagBody = isset($decorator->features->providesFullTagBody);
                                 if ($providesFullTagBody) {
                                     $tagAttributes->HasBodyProvidingDecorators = true;
                                 }

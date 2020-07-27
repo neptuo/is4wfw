@@ -24,5 +24,57 @@
       <modifiesAttributes />
     </features>
   </decorator>
+  <decorator>
+    <function>provideFullTagBody</function>
+    <attribute>
+      <attname>c</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+    </attribute>
+    <features>
+      <providesFullTagBody />
+    </features>
+  </decorator>
+  <decorator>
+    <function>conditionsExecution</function>
+    <attribute>
+      <attname>if</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>if-is</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+    </attribute>
+    <features>
+      <conditionsExecution />
+    </features>
+  </decorator>
+  <decorator>
+    <function>coolDecorator</function>
+    <attribute>
+      <attname>cool</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+    </attribute>
+    <features>
+      <conditionsExecution />
+      <providesFullTagBody />
+      <modifiesAttributes />
+    </features>
+  </decorator>
+  <decorator>
+    <function>optionalBody</function>
+    <attribute>
+      <attname>optionalBody</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+    </attribute>
+    <features>
+      <conditionsExecution />
+      <providesFullTagBody />
+    </features>
+  </decorator>
 </taglib>
 

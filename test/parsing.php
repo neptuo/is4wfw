@@ -30,6 +30,10 @@
 // <hr />';
 $Content = '
 <web:a pageId="~/index.view" test:a="Hello" test:b="5" />
+<web:a pageId="~/index.view" test:c="Hi" />
+<web:a pageId="~/index.view" test:a="Hello" test:b="5" test:c="Hi" test:if="f" test:if-is="f" />
+<web:a pageId="~/index.view" test:cool="Baf" />
+<web:a pageId="~/index.view" test:optionalBody="test" />
 ';
 
     function measure($func) {
