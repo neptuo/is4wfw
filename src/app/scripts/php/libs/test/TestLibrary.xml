@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Test library</name>
+  <classname>TestLibrary</classname>
+  <classpath>php.libs</classpath>
+  <version>1.00</version>
+  <count>*</count>
+  <comment>
+    Knihovna pro testovací účely.
+  </comment>
+  <disposable />
+  <decorator>
+    <function>provideAttributes</function>
+    <attribute>
+      <attname>a</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+    </attribute>
+    <attribute>
+      <attname>b</attname>
+      <atttype>number</atttype>
+    </attribute>
+    <features>
+      <modifiesAttributes />
+    </features>
+  </decorator>
+</taglib>
+
