@@ -10,6 +10,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultPhp.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultWeb.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateCache.class.php");
 
     // ini_set('pcre.backtrack_limit', 1000000000);
 
@@ -28,7 +29,17 @@
 //     <input type="text" name="entity-name" />
 // </admin:field>
 // <hr />';
-$Content = '
+$keys = ["test", "parsing"];
+
+$cache = new TemplateCache();
+
+if (array_key_exists("clear", $_GET)) {
+    $cache->delete($keys);
+    header("Location: " . $_SERVER['PHP_SELF'], true, 302);
+}
+
+
+$content = '
 <php:register tagPrefix="ce2" classPath="php.libs.CustomEntity" />
 <php:using prefix="test" class="php.libs.test.TestLibrary">
     <web:a pageId="~/index.view" test:a="Hello" test:b="5" />
@@ -47,10 +58,18 @@ $Content = '
 
         echo '<hr />';
         echo 'Duration: ' . ($endTime - $startTime) . 'ms';
+        echo '<hr />';
+        echo '<a href="?clear">Clear template cache</a>';
     }
 
-    function parse($parser, $content, $count, $printOutput = false) {
+    function parse($parser, $cache, $content, $count, $printOutput = false) {
+        global $keys;
+
         for ($i=0; $i < $count; $i++) { 
+            if ($cache->exists($keys)) {
+                $template = $cache->read($keys);
+            }
+
             $result = $parser->parse($content);
 
             if ($printOutput && $i == 0) {
@@ -60,9 +79,10 @@ $Content = '
     }
 
     measure(function() {
-        global $Content;
+        global $content;
         $parser = new TemplateParser();
-        parse($parser, $Content, 1, true);
+        $cache = new TemplateCache();
+        parse($parser, $cache, $content, 1, true);
     });
 
     echo '<hr />';
