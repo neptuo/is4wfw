@@ -21,7 +21,7 @@
     $phpObject->register("ui", "php.libs.Ui");
     $phpObject->register("var", "php.libs.Variable");
     $phpObject->register("view", "php.libs.View");
-    $phpObject->register("test", "php.libs.test.TestLibrary");
+    // $phpObject->register("test", "php.libs.test.TestLibrary");
 
 //     $Content = '<hr />
 // <admin:field label="Entity Name" label-class="w90" style="background: red">
@@ -29,11 +29,15 @@
 // </admin:field>
 // <hr />';
 $Content = '
-<web:a pageId="~/index.view" test:a="Hello" test:b="5" />
-<web:a pageId="~/index.view" test:c="Hi" />
-<web:a pageId="~/index.view" test:a="Hello" test:b="5" test:c="Hi" test:if="f" test:if-is="f" />
-<web:a pageId="~/index.view" test:cool="Baf" />
-<web:a pageId="~/index.view" test:optionalBody="test" />
+<php:register tagPrefix="ce2" classPath="php.libs.CustomEntity" />
+<php:using prefix="test" class="php.libs.test.TestLibrary">
+    <web:a pageId="~/index.view" test:a="Hello" test:b="5" />
+    <web:a pageId="~/index.view" test:c="Hi" />
+    <web:a pageId="~/index.view" test:a="Hello" test:b="5" test:c="Hi" test:if="f" test:if-is="f" />
+    <web:a pageId="~/index.view" test:cool="Baf" />
+    <web:a pageId="~/index.view" test:optionalBody="test" />
+</php:using>
+<php:unregister tagPrefix="ce2" />
 ';
 
     function measure($func) {

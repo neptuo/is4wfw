@@ -16,10 +16,20 @@
     <attribute>
       <attname>tagPrefix</attname>
       <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>
+        Prefix pod kterým bude objekt zaregistrován. 
+        Může obsahovat pouze statické hodnoty (konstanty). Nikdy né proměnné a pod.
+      </attcomment>
     </attribute>
     <attribute>
       <attname>classPath</attname>
       <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>
+        Jméno třídy. 
+        Může obsahovat pouze statické hodnoty (konstanty). Nikdy né proměnné a pod.
+      </attcomment>
     </attribute>
     <comment>
       Zaregistruje tag lib na základě předaných parametrů, kde:

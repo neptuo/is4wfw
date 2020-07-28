@@ -156,7 +156,6 @@
 
                 $functionName = null;
                 if ($isFullTag) {
-                    // TODO: To compile templates, we need to "soft evaluate" the tag and also generate code.
                     if ($object[0] == "php" && $object[1] == "using") {
                         $phpObject->register($attributes->Attributes["prefix"]["value"], $attributes->Attributes["class"]["value"]);
                     }
@@ -164,7 +163,6 @@
                     $template = $this->parseInternal($content, 'parse');
                     $content = "function () { return '". $template . "'; }";
                     
-                    // TODO: To compile templates, we need to "soft evaluate" the tag and also generate code.
                     if ($object[0] == "php" && $object[1] == "using") {
                         $phpObject->unregister($attributes->Attributes["prefix"]["value"]);
                     }
@@ -193,7 +191,6 @@
                         }
                     }
                     
-                    // TODO: To compile templates, we need to "soft evaluate" the tag and also generate code.
                     if ($object[0] == "php" && $object[1] == "register") {
                         $phpObject->register($attributes->Attributes["tagPrefix"]["value"], $attributes->Attributes["classPath"]["value"]);
                     } else if ($object[0] == "php" && $object[1] == "unregister") {
@@ -206,13 +203,6 @@
                 }
 
                 if ($functionName != null) {
-                    // We need to process php:register to know registered objects.
-                    // TODO: To compile templates, we need to "soft evaluate" the and also generate code.
-                    // if ($object[0] == 'php') {
-                    //     eval('$return = ${$object[0]."Object"}->{$functionName}(' . $this->concatAttributesToString($attributes->Attributes) . ');');
-                    //     return "";
-                    // }
-                    
                     return $this->generateFunctionOutput($object[0], $functionName, $attributes);
                 }
             }
