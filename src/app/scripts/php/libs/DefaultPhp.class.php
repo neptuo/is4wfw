@@ -134,7 +134,7 @@
                     require_once(APP_SCRIPTS_PATH . $classPath . ".class.php");
                     
                     if ($this->isCountOfInstances($className, $classDir)) {
-                        $GLOBALS[$tagPrefix."Object"] = new $className($tagPrefix);
+                        $GLOBALS[$tagPrefix . "Object"] = new $className($tagPrefix);
                         if(array_key_exists($classJPath, $this->_CLASSES)) {
                             $this->_CLASSES[$classJPath] ++;
                         } else {

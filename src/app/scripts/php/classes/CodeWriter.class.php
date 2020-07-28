@@ -6,14 +6,18 @@
         private $output = "";
         private $indentChar = "    ";
 
-        public function addLine(string $statements) {
-            $statements = explode(PHP_EOL, $statements);
-            foreach ($statements as $statement) {
+        public function addLine(string $statements, bool $indentLines = false) {
+            if ($indentLines) {
+                $statements = explode(PHP_EOL, $statements);
+                foreach ($statements as $statement) {
+                    $this->addLine($statement, false);
+                }
+            } else {
                 if (strlen($this->output) > 0) {
                     $this->output .= PHP_EOL;
                 }
                 
-                $this->output .= $this->getIndent() . $statement;
+                $this->output .= $this->getIndent() . $statements;
             }
         }
 

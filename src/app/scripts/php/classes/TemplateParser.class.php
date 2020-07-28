@@ -456,7 +456,7 @@
                 $this->Code->addLine('$'. "parameters = [");
                 $this->Code->addIndent();
                 $attributesString = $this->concatAttributesToString($attributes->Attributes, true, true);
-                $this->Code->addLine($attributesString);
+                $this->Code->addLine($attributesString, true);
                 $this->Code->removeIndent();
                 $this->Code->addLine("];");
 
