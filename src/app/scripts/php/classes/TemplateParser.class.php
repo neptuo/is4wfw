@@ -93,7 +93,10 @@
         }
 
         private function getClassName(array $keys) {
-            return "Template_" . implode("_", $keys);
+            $className = "Template_" . implode("_", $keys);
+            $className = str_replace("-", "", $className);
+            $className = str_replace(".", "", $className);
+            return $className;
         }
 
         private function parseInternal(string $content, string $mode, array $keys = null) {
@@ -462,7 +465,8 @@
             
             $this->Code->addMethod($identifier, "private", $attributes->FunctionParameters);
             $this->Code->addTry();
-            $this->Code->addLine("global $targetObject;");
+            $this->Code->addLine("global " . '$' . "phpObject;");
+            $this->Code->addLine("$targetObject = " . '$' . "phpObject->autolib('$tagPrefix');");
 
             $attributesString = "";
             if ($attributes->HasAttributeModifyingDecorators) {
