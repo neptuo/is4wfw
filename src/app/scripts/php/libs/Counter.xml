@@ -36,6 +36,7 @@
     <attribute>
       <attname>template</attname>
       <attreq>implied</attreq>
+      <obsolete>Použijte 'templateId'.</obsolete>
     </attribute>
     <attribute>
       <attname>templateId</attname>

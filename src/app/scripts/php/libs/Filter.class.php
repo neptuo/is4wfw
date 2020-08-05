@@ -36,7 +36,7 @@
 			$this->instances[$name] = $instance;
 			$this->current->push($instance);
 
-			self::parseContent($template);
+			$template();
 			
 			$this->current->pop();
 		}
@@ -48,7 +48,7 @@
 			$instance->joiner = $joiner;
 			$this->current->push($instance);
 			
-			self::parseContent($template);
+			$template();
 
 			$this->current->pop();
 			$sql = $instance->toSql();
@@ -74,7 +74,7 @@
 			$innerColumn = self::formatColumnName($instance, $innerColumn);
 			$instance[] = "$outerColumn = $innerColumn";
 
-			self::parseContent($template);
+			$template();
 
 			$this->current->pop();
 			$sql = $instance->toSql();

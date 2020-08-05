@@ -928,7 +928,7 @@
 
 			$model->render();
             $model->items($data);
-			$result = parent::parseContent($template);
+			$result = $template();
 
 			parent::popListModel();
 			return $result;
@@ -986,7 +986,7 @@
 			if ($model->isLoad()) {
                 if ($isUpdate) {
                     $model->registration();
-                    $this->parseContent($template);
+                    $template();
                     $model->registration(false);
                     
                     $columns = $model->fields(User::$EditIgnoredLoadKeys);
@@ -1009,7 +1009,7 @@
 			}
 
 			if ($model->isSubmit()) {
-                $this->parseContent($template);
+                $template();
 
                 // Unique login.
                 if ($model->hasKey("login")) {
@@ -1117,7 +1117,7 @@
 			}
 			
             if ($model->isSaved()) {
-                parent::parseContent($template);
+                $template();
             }
 			
             if ($model->isRender()) {
@@ -1125,7 +1125,7 @@
 					return parent::getWarning("Such user doesn't exist.");
 				}
 
-				$result = parent::parseContent($template);
+				$result = $template();
 				return $result;
 			}
         }

@@ -193,23 +193,16 @@
 		 */		 		 		 		
 		public function showProjections($templateId) {
 			global $dbObject;
-			global $loginObject;
 			$return = '';
 		
-			$template = $dbObject->fetchAll('SELECT `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'))');
-			if(count($template) > 0) {
-				$templateContent = $template[0]['content'];
-				$projections = $dbObject->fetchAll('SELECT `name`, `subname`, `value` FROM `w_projection` WHERE `visible` = 1 ORDER BY `position`;');
-				foreach($projections as $prj) {
-					$_SESSION['current-projection']['name'] = $prj['name'];
-					$_SESSION['current-projection']['subname'] = $prj['subname'];
-					$_SESSION['current-projection']['value'] = $prj['value'];
-  	      
-	 				$return .= parent::parseContent($templateContent);
-				}
-			} else {
-				trigger_error("Template id is not valid!!", E_USER_WARNING);
-				return;
+			$template = $this->getTemplateById($templateId);
+			$projections = $dbObject->fetchAll('SELECT `name`, `subname`, `value` FROM `w_projection` WHERE `visible` = 1 ORDER BY `position`;');
+			foreach($projections as $prj) {
+				$_SESSION['current-projection']['name'] = $prj['name'];
+				$_SESSION['current-projection']['subname'] = $prj['subname'];
+				$_SESSION['current-projection']['value'] = $prj['value'];
+		
+				$return .= $template();
 			}
 		
 			return $return;
@@ -409,21 +402,15 @@
 			global $loginObject;
 			$return = '';
 		
-			$template = $dbObject->fetchAll('SELECT `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = '.$templateId.' AND `template_right`.`type` = '.WEB_R_READ.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'))');
-			if(count($template) > 0) {
-				$templateContent = $template[0]['content'];
-				$references = $dbObject->fetchAll('SELECT `name`, `subname`, `type` FROM `w_reference` WHERE `visible` = 1 ORDER BY `position`;');
-				foreach($references as $ref) {
-					$_SESSION['current-reference']['name'] = $ref['name'];
-					$_SESSION['current-reference']['subname'] = $ref['subname'];
-					$_SESSION['current-reference']['type'] = $ref['type'];
-					$_SESSION['current-reference']['type-name'] = $ref['type'];
-  	      
-					$return .= parent::parseContent($templateContent);
-				}
-			} else {
-				trigger_error("Template id is not valid!!", E_USER_WARNING);
-				return;
+			$template = $this->getTemplateById($templateId);
+			$references = $dbObject->fetchAll('SELECT `name`, `subname`, `type` FROM `w_reference` WHERE `visible` = 1 ORDER BY `position`;');
+			foreach($references as $ref) {
+				$_SESSION['current-reference']['name'] = $ref['name'];
+				$_SESSION['current-reference']['subname'] = $ref['subname'];
+				$_SESSION['current-reference']['type'] = $ref['type'];
+				$_SESSION['current-reference']['type-name'] = $ref['type'];
+		
+				$return .= $template();
 			}
 		
 			return $return;

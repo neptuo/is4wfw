@@ -72,17 +72,12 @@
                 $id = 1;
             }
             
-            $templateContent = '';
             if ($templateId != false) {
-                $templateContent = parent::getTemplateContent($templateId);
+                $template = $this->getTemplateById($templateId);
             } elseif($template != false) {
-                if (is_file($template) && is_readable($template)) {
-                    $templateContent = file_get_contents($template);
-                } else {
-                    $message = "Template file doesn't exist or is un-readable!";
-                    trigger_error($message, E_USER_WARNING);
-                    return;
-                }
+                $message = "Template file doesn't exist or is un-readable!";
+                trigger_error($message, E_USER_WARNING);
+                return;
             } else {
                 $message = "Template or TemplateId must be set!";
                 trigger_error($message, E_USER_WARNING);
@@ -140,8 +135,7 @@
                 }
             }
             
-            $return .= parent::parseContent($templateContent);
-            
+            $return .= $template();
             return $return;
         }
 

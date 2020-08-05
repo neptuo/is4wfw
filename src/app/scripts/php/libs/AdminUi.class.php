@@ -108,7 +108,7 @@
 					. "<span$labelAttributes>"
 						. $labelText
 					. "</span>"
-					. self::parseContent($template)
+					. $template()
 				. "</label>"
 			."</div>";
 
@@ -139,26 +139,33 @@
 				$this->edit["title"] = "Edit";
 			}
 
-			$result = self::parseContent($template);
+			$result = $template();
 
 			$this->edit = $prev;
 			return $result;
 		}
 
 		public function validation($key) {
-			$template = '
+			$templateContent = '
 			<val:message key="' . $key . '">
 				<span class="red">
 					<strong>!</strong>
 					<web:getProperty name="val:messageText" />.
 				</span>
-			</val:message>';
+			</val:message>
+			';
 
-			return parent::parseContent($template);
+			$keys = ["adminui", "validation", sha1($templateContent)];
+			$template = $this->getParsedTemplate($keys);
+			if ($template == null) {
+				$template = $this->parseTemplate($keys, $templateContent);
+			}
+
+			return $template();
 		}
 
 		public function successMessage() {
-			$template = '
+			$templateContent = '
 			<var:use name="admin-message" scope="temp" />
 			<web:condition when="var:admin-message">
 				<h4 class="success">
@@ -167,7 +174,14 @@
 				</h4>
 			</web:condition>
 			';
-			return parent::parseContent($template);
+			
+			$keys = ["adminui", "successMessage", sha1($templateContent)];
+			$template = $this->getParsedTemplate($keys);
+			if ($template == null) {
+				$template = $this->parseTemplate($keys, $templateContent);
+			}
+
+			return $template();
 		}
 
 		public function isEdit() {

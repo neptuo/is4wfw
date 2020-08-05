@@ -1337,7 +1337,7 @@
                         parent::request()->set('title', $file['title'], 'f:directoryFiles');
                         parent::request()->set('type', $file['type'], 'f:directoryFiles');
                     
-                        $return .= parent::parseContent($template);
+                        $return .= $template();
                     }
                 }
             }

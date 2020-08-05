@@ -478,7 +478,7 @@
 			
 			$model->items($items);
 			$model->render();
-            $result = self::parseContent($template);
+            $result = $template();
 
             self::popListModel();
             return $result;
@@ -712,7 +712,7 @@
 			$model = parent::getEditModel();
 
 			if ($model->isSubmit()) {
-				parent::parseContent($template);
+				$template();
 
 				$hasAccess = true;
 				if(!$this->canUserDir($dirId, WEB_R_WRITE)) {
@@ -749,10 +749,10 @@
 					}
 				});
 			} else if ($model->isRender()) {
-				$result = parent::parseContent($template);
+				$result = $template();
 				return $result;
 			} else {
-				parent::parseContent($template);
+				$template();
 			}
 		}
 
@@ -917,7 +917,7 @@
 		//C-fulltag
 		public function fileDeleter($template, $id) {
 			if (self::deleteFile($id) === true) {
-				parent::parseContent($template);
+				$template();
 			}
 		}
 		

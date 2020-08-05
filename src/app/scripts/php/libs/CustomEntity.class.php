@@ -420,7 +420,7 @@
             // Load data based on fields in template.
             if ($model->isLoad() && $model->metadata("isUpdate")) {
                 $model->registration();
-                self::parseContent($template);
+                $template();
                 $model->registration(false);
 
                 $exists = self::loadModel($tableName, $xml, $keys, $model, $langIds);
@@ -433,7 +433,7 @@
 
             // Submit if model is leased or isSubmit.
             if ($model->isSubmit()) {
-                self::parseContent($template);
+                $template();
             }
 
             // Save if model is leased or isSubmit.
@@ -448,11 +448,11 @@
             // AfterSave if model is leased or isSubmit.
             if ($model->isSaved()) {
                 $model->copyFrom($keys);
-                self::parseContent($template);
+                $template();
             }
 
             if ($model->isRender()) {
-                $result = self::parseContent($template);
+                $result = $template();
                 return $result;
             }
         }
@@ -508,7 +508,7 @@
                 }
             }
 
-            return parent::parseContent($template);
+            return $template();
         }
 
         public function getListData() {
@@ -578,7 +578,7 @@
 
             $model->render();
             $model->items($data);
-            $result .= self::parseContent($template);
+            $result .= $template();
 
             self::popListModel();
             return $result;
@@ -623,7 +623,7 @@
                 self::audit($tableName, "delete", $params);
             }
 
-            self::parseContent($template);
+            $template();
         }
 	}
 

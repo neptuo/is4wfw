@@ -15,6 +15,7 @@
     <attribute>
       <attname>path</attname>
       <attreq>required</attreq>
+      <obsolete>Nedělá nic. Nikdy nedělal.</obsolete>
     </attribute>
     <comment>
       Zpracuje pohled.

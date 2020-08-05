@@ -41,11 +41,11 @@
         /* ===================== LIST =========================================== */
 
         public function listRows($formId, $templateId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = -1, $noDataMessage = false, $params = false) {
-            $templateContent = parent::getTemplateContent($templateId);
-            return self::listRowsFullTag($templateContent, $formId, $rowId, $filter, $sortBy, $desc, $limit, $noDataMessage, $params);
+            $template = parent::getTemplateById($templateId);
+            return self::listRowsFullTag($template, $formId, $rowId, $filter, $sortBy, $desc, $limit, $noDataMessage, $params);
         }
 
-        public function listRowsFullTag($templateContent, $formId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = -1, $noDataMessage = false, $params = false) {
+        public function listRowsFullTag($template, $formId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = -1, $noDataMessage = false, $params = false) {
             $rb = self::rb();
             $return = "";
             $rules = "";
@@ -63,7 +63,7 @@
             }
 
             $isRendered = false;
-            if (self::listFindFieldsInTemplate($formId, $templateContent)) {
+            if (self::listFindFieldsInTemplate($formId, $template)) {
                 $rules = self::listParseFilter($rules, $filter);
                 //print_r($rules);
             
@@ -113,7 +113,7 @@
                         $this->ViewDataRow = $row;
                         self::setRowId($row['id']);
 
-                        $return .= parent::parseContent($templateContent);
+                        $return .= $template();
                         $i++;
                     }
                     
@@ -170,12 +170,12 @@
             return $rules;
         }
 
-        private function listFindFieldsInTemplate($formId, $templateContent) {
+        private function listFindFieldsInTemplate($formId, ParsedTemplate $template) {
             $this->ViewPhase = 1;
             $this->ViewFieldsFound = array();
             $this->ViewFieldsFound[] = array('id', 'number');
 
-            parent::parseContent($templateContent, array('cf:field', 'cf:setFieldAsCustomProperty'));
+            parent::parseContent($template, ['cf:field', 'cf:setFieldAsCustomProperty']);
 
             //print_r($this->ViewFieldsFound);
             $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');
@@ -249,11 +249,11 @@
         /* ===================== FORM =========================================== */
 
         public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false) {
-            $templateContent = parent::getTemplateContent($templateId);
-            return self::formFullTag($templateContent, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject, $emailSender, $emailSenderFieldName, $emailReplyTo, $emailReplyToFieldName, $emailIsHtml);
+            $template = $this->getTemplateById($templateId);
+            return $this->formFullTag($template, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject, $emailSender, $emailSenderFieldName, $emailReplyTo, $emailReplyToFieldName, $emailIsHtml);
         }
 
-        public function formFullTag($templateContent, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false) {
+        public function formFullTag($template, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false) {
             global $webObject;
             $rb = self::rb();
             $return = "";
@@ -283,8 +283,8 @@
                 // Phase 3
                 //print_r($_POST);
                 $this->ValidationError = false;
-                self::processForm($formId, $templateContent);
-                if (!self::validationError($formId, $templateContent)) {
+                $this->processForm($formId, $template);
+                if (!$this->validationError($formId, $template)) {
                     if ($type == 'db') {
                         // Save data
                         $names = "";
@@ -365,12 +365,12 @@
                         }
                     } elseif ($type == 'email') {
                         $content = '';
-                        $templateContent = parent::getTemplateContent($emailTemplateId);
+                        $emailTemplate = parent::getTemplateById($emailTemplateId);
                         $this->ViewDataRow = $this->FormData[$this->FormId];
                         $this->FormPhase = 0;
                         $this->EmailPhase = 1;
 
-                        $content .= parent::parseContent($templateContent);
+                        $content .= $emailTemplate();
 
                         $this->EmailPhase = 0;
 
@@ -420,7 +420,7 @@
             }
 
             //parent::logVar(self::formValidateAgainstTemplate($formId, $templateContent));
-            if ($type == 'db' && self::formValidateAgainstTemplate($formId, $templateContent)) {
+            if ($type == 'db' && $this->formValidateAgainstTemplate($formId, $template)) {
                 if (is_numeric($rowId)) {
                     $names = "";
                     foreach ($this->FormFieldsFound as $value) {
@@ -439,7 +439,7 @@
                     }
                 }
 
-                $return .= self::showForm($formId, $templateContent, $rowId);
+                $return .= $this->showForm($formId, $template, $rowId);
             } else {
                 if ($type == 'email') {
                     $addrs = explode(',', $emailAddresses);
@@ -451,7 +451,7 @@
                     }
                     if ($ok) {
                         // jiny zpusob vyrizovani formulare!!
-                        $return .= self::showForm($formId, $templateContent, $rowId);
+                        $return .= $this->showForm($formId, $template, $rowId);
                         // ...
                     } else {
                         $msg = parent::getError($rb->get('cf.form.error.invalidemailaddress'));
@@ -467,13 +467,13 @@
             return $return;
         }
 
-        private function formValidateAgainstTemplate($formId, $templateContent) {
+        private function formValidateAgainstTemplate($formId, $template) {
             $rb = self::rb();
 
             $this->FormPhase = 1;
             $this->FormFieldsFound = array();
 
-            parent::parseContent($templateContent);
+            $template();
 
             $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');
             if (count($formInfo) == 1) {
@@ -508,7 +508,7 @@
             return false;
         }
 
-        private function showForm($formId, $templateContent, $rowId) {
+        private function showForm($formId, $template, $rowId) {
             global $webObject;
             $return = '';
             $this->FormPhase = 2;
@@ -529,7 +529,7 @@
                 $return .= '<input type="hidden" name="cf_row-id" value="' . $rowId . '" />';
             }
 
-            $fcontent = parent::parseContent($templateContent);
+            $fcontent = $template();
 
             foreach ($this->ResourcesToAdd as $res) {
                 switch ($res[0]) {
@@ -548,13 +548,13 @@
             return $return;
         }
 
-        private function processForm($formId, $templateContent) {
+        private function processForm($formId, $template) {
             $this->FormPhase = 3;
 
             $this->FormId = $formId;
             $this->GeneratedFormId = $_POST['cf_gen-id'];
 
-            parent::parseContent($templateContent);
+            $template();
         }
 
         private function formProcessFileUpload($file, $dirId) {
@@ -572,7 +572,7 @@
             return parent::dao('File')->getLastId();
         }
         
-        private function validationError($formId, $templateContent) {
+        private function validationError($formId, $template) {
             return $this->ValidationError;
         }
 

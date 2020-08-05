@@ -816,7 +816,7 @@
             $return = '';
             $this->register($prefix, $class);
 
-            $return = parent::parseContent($content);
+            $return = $content();
             
             $this->unregister($prefix);
             return $return;

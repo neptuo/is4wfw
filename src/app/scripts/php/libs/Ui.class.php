@@ -64,7 +64,7 @@
 			$where = self::findAttributesByPrefix($params, "filter-");
 			
 			if ($model->isRegistration()) {
-				self::parseContent($template);
+				$template();
 			}
 			
 			if ($model->isRender()) {
@@ -73,7 +73,7 @@
 				foreach ($model->items() as $item) {
 					if (self::isPassedByWhere($item, $where)) {
 						$model->data($item);
-						$result .= self::parseContent($template);
+						$result .= $template();
 						$this->forEachIndex++;
 					}
 				}
@@ -99,7 +99,7 @@
 			$result = "";
 			
 			if ($model->isRegistration()) {
-				self::parseContent($template);
+				$template();
 			}
 			
 			if ($model->isRender()) {
@@ -107,7 +107,7 @@
 				if (count($items) > 0) {
 					$item = $items[$indexGetter($items)];
 					$model->data($item);
-					$result .= self::parseContent($template);
+					$result .= $template();
 				}
 			}
 
@@ -129,24 +129,24 @@
 
 		public function emptyListModel($template, $model) {
 			if ($model->isRegistration()) {
-				self::parseContent($template);
+				$template();
 			}
 			
 			if ($model->isRender()) {
 				if (count($model->items()) == 0) {
-					return self::parseContent($template);
+					return $template();
 				}
 			}
 		}
 
 		public function anyListModel($template, $model) {
 			if ($model->isRegistration()) {
-				self::parseContent($template);
+				$template();
 			}
 			
 			if ($model->isRender()) {
 				if (count($model->items()) > 0) {
-					return self::parseContent($template);
+					return $template();
 				}
 			}
 		}
@@ -155,13 +155,13 @@
 
 		public function countListModel($template, $model) {
 			if ($model->isRegistration()) {
-				self::parseContent($template);
+				$template();
 			}
 			
 			if ($model->isRender()) {
 				$prevCount = $this->countListModel;
 				$this->countListModel = count($model->items());
-				$result = self::parseContent($template);
+				$result = $template();
 				$this->countListModel = $prevCount;
 				return $result;
 			}
@@ -200,7 +200,7 @@
 					}
 					
 					$result .= "<tr>";
-					$result .= parent::parseContent($template);
+					$result .= $template();
 					$result .= "</tr>";
 
 					if ($isWellStructured) {
@@ -216,7 +216,7 @@
 						$model->data($item);
 						
 						$result .= "<tr>";
-						$result .= parent::parseContent($template);
+						$result .= $template();
 						$result .= "</tr>";
 					}
 
@@ -268,7 +268,7 @@
 				return "<th$thAttributes>$header</th>";
 			} else if ($this->gridPhase == "body") {
 				$tdAttributes = parent::joinAttributes($td);
-				return "<td$tdAttributes>" . self::parseContent($template) . "</td>";
+				return "<td$tdAttributes>" . $template() . "</td>";
 			}
 
 			return "";
@@ -282,7 +282,7 @@
 
 		public function form($template, $method = "post", $pageId = null, $params = array()) {
 			if ($this->isInsideForm) {
-				return self::parseContent($template);
+				return $template();
 			} else {
 				$this->isInsideForm = true;
 
@@ -296,7 +296,7 @@
 				$params["action"] = $action;
 				$attributes = self::joinAttributes($params);
 
-				$result = "<form$attributes>" . self::parseContent($template) . "</form>";
+				$result = "<form$attributes>" . $template() . "</form>";
 				$this->isInsideForm = false;
 				return $result;
 			}
@@ -326,7 +326,7 @@
 
 			if ($model->isSubmit()) {
 				$model->request($_POST);
-				self::parseContent($template);
+				$template();
 			}
 
 			if ($model->isSave()) {
@@ -365,7 +365,7 @@
 					$model[$key] = parent::session()->get($key, Session::StorageKey);
 				}
 
-				$result = parent::parseContent($template);
+				$result = $template();
 				return $result;
 			}
 		}
@@ -596,12 +596,12 @@
 			}
 
             if ($model->isSubmit()) {
-				self::parseContent($template);
+				$template();
 				self::ensureModelDefaultValue($model, $name, $format);
             }
 
             if ($model->isRender()) {
-                return self::parseContent($template);
+                return $template();
             }
         }
 
@@ -626,7 +626,7 @@
 		public function dateTimeValue($template, $name, $nameIndex, $format, $default = "") {
 			$model = parent::getEditModel();
             if ($model->isRegistration()) {
-			 	parent::parseContent($template);
+				$template();
 			}
 			
             if ($model->isSubmit()) {
@@ -650,7 +650,7 @@
 				$modelValue = self::formatDateTime($modelValue, $format);
 				$model->set($name, $nameIndex, $modelValue);
 
-				return parent::parseContent($template);
+				return $template();
             }
 		}
 
@@ -702,7 +702,7 @@
 				$langIds = self::ensureLangIds($langIds);
 				foreach ($langIds as $langId) {
 					$this->localizableName = "$name:$langId";
-					self::parseContent($template);
+					$template();
 				}
 			}
 			
@@ -710,7 +710,7 @@
 				$langIds = self::ensureLangIds($langIds);
 				foreach ($langIds as $langId) {
 					$this->localizableName = "$name:$langId";
-					self::parseContent($template);
+					$template();
 				}
             }
 
@@ -724,7 +724,7 @@
 					$this->localizableLangId = $lang["id"];
 					$this->localizableLangName = $lang["name"];
 					$this->localizableLangUrl = $lang["language"];
-					$result .= self::parseContent($template);
+					$result .= $template();
 				}
 
 				return $result;

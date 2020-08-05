@@ -31,15 +31,19 @@
 			throw new Error("Permission denied when reading template id = '" . $data["id"] . "'.");
 		}
 
-		private function includeBy($filter, $template, $params) {
-			$data = $this->findBy($filter);
+		private function includeBy(array $filter, array $keys, ParsedTemplate $contentTemplate, $params) {
+			$template = $this->getParsedTemplate($keys);
+			if ($template == null) {
+				$templateContent = $this->findBy($filter);
+				$template = $this->parseTemplate($keys, $templateContent);
+			}
 
 			$oldContent = parent::request()->get('content', 'template:include');
 			$oldParams = parent::request()->get('params', 'template:include');
 			parent::request()->set('params', $params, 'template:include');
-			parent::request()->set('content', $template, 'template:include');
+			parent::request()->set('content', $contentTemplate, 'template:include');
 
-			$result = parent::parseContent($data);
+			$result = $template();
 			
 			parent::request()->set('params', $oldParams, 'template:include');
 			parent::request()->set('content', $oldContent, 'template:include');
@@ -52,7 +56,7 @@
 		}
 		
 		public function includeWithBodyById($template, $id, $params) {
-			return $this->includeBy(["id" => $id], $template, $params);
+			return $this->includeBy(["id" => $id], ["template", "id", $id], $template, $params);
 		}
 
 		public function includeByIdentifier($identifier, $params) {
@@ -60,13 +64,13 @@
 		}
 
 		public function includeWithBodyByIdentifier($identifier, $template, $params) {
-			return $this->includeBy(["identifier" => $identifier], $template, $params);
+			return $this->includeBy(["identifier" => $identifier], ["template", "identifier", $identifier], $template, $params);
 		}
 
 		public function content() {
-			$content = parent::request()->get('content', 'template:include');
-			if ($content != null) {
-				return $this->parseContent($content);
+			$template = parent::request()->get('content', 'template:include');
+			if ($template != null && is_callable($template)) {
+				return $template();
 			}
 
 			return "";

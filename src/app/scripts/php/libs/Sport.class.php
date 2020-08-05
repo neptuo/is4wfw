@@ -2587,7 +2587,7 @@
             }
             $seasons = $dbObject->fetchAll('SELECT `id`, `start_year`, `end_year` FROM `w_sport_season` where `project_id` = ' . self::getProjectId() . ' ORDER BY `start_year` ' . $sorting . ';');
             if (count($seasons) > 0) {
-                $content = parent::getTemplateContent($templateId);
+                $template = $this->getTemplateById($templateId);
                 $i = 0;
                 $prevId = self::getSeasonId();
                 foreach ($seasons as $season) {
@@ -2595,7 +2595,7 @@
                     parent::request()->set('i', $i, 'sport-data');
                     self::setSeasonId($season['id']);
 
-                    $return .= parent::parseContent($content);
+                    $return .= $template();
                     $i++;
                 }
                 self::setSeasonId($prevId);
@@ -2816,7 +2816,7 @@
             $teams = parent::db()->fetchAll('select distinct `id`, `name`, `url`, `logo` from `w_sport_team` where `project_id` = ' . self::getProjectId() . ' and `season` = ' . $seasonId . ($teamId != '' ? ' and `id` = ' . $teamId : '') . ' order by `' . $sortBy . '` ' . $sorting . ';');
             if (count($teams) > 0) {
                 $i = 0;
-                $content = parent::getTemplateContent($templateId);
+                $template = $this->getTemplateById($templateId);
                 $seasonId = self::getSeasonId();
                 $teamId = self::getTeamId();
                 foreach ($teams as $team) {
@@ -2825,7 +2825,7 @@
                     self::setSeasonId($seasonId);
                     self::setTeamId($team['id']);
 
-                    $return .= parent::parseContent($content);
+                    $return .= $template();
                     $i++;
                 }
                 self::setSeasonId($seasonId);
@@ -2952,11 +2952,12 @@
             $matches = parent::db()->fetchAll($sql);
 
             if (count($matches) > 0) {
-                $content = parent::getTemplateContent($templateId);
+                $template = $this->getTemplateById($templateId);
                 $round = self::getRoundId();
                 $season = self::getSeasonId();
                 $table = self::getTableId();
                 $matchId = self::getMatchId();
+                $i = 0;
                 foreach ($matches as $match) {
                     parent::request()->set('match', $match, 'sport-data');
                     parent::request()->set('i', $i, 'sport-data');
@@ -2969,7 +2970,7 @@
                     self::setHomeTeamId($match['h_team']);
                     self::setAwayTeamId($match['a_team']);
 
-                    $return .= parent::parseContent($content);
+                    $return .= $template();
                     $i++;
                 }
                 self::setRoundId($round);
@@ -3138,7 +3139,7 @@
                     $rounds = parent::db()->fetchAll('select distinct `w_sport_round`.`id`, `name`, `number` from `w_sport_round`' . $joinSql . ' where `w_sport_round`.`project_id` = ' . self::getProjectId() . ' and `season_id` = ' . $seasonId . $teamSql . ' and `visible` = 1'.($startRoundId != "" ? ' and `w_sport_round`.`id` >= '.$startRoundId : '').($maxRoundId != "" ? ' and `w_sport_round`.`id` <= '.$maxRoundId : '').' order by `number` ' . $sorting . ($limit != "" ? ' limit ' . $limit : "") . ';');
                 }
                 if (count($rounds) > 0) {
-                    $templateContent = parent::getTemplateContent($templateId);
+                    $template = $this->getTemplateById($templateId);
                     $i = 1;
                     $lastround = self::getRoundId();
                     $lastseason = self::getSeasonId();
@@ -3147,7 +3148,7 @@
                         parent::request()->set('i', $i, 'sport-data');
                         self::setRoundId($round['id']);
                         self::setSeasonId($seasonId);
-                        $return .= parent::parseContent($templateContent);
+                        $return .= $template();
                         $i++;
                     }
                     self::setRoundId($lastround);
@@ -3239,7 +3240,7 @@
             //echo '"' . $showGolmans . '"<br />';
 
             
-            $templateContent = parent::getTemplateContent($templateId);
+            $template = $this->getTemplateById($templateId);
 
             $oldFields = $this->UsedFields;
             $oldPhase = $this->ViewPhase;
@@ -3265,7 +3266,7 @@
                     self::setTeamId($player['team-id']);
                     self::setPlayerId($player['id']);
                     $_SESSION['sport']['i'] = $i;
-                    $return .= parent::parseContent($templateContent);
+                    $return .= $template();
                     $i++;
                 }
                 self::setTeamId($oldteam);
@@ -3444,7 +3445,7 @@
             $sql = 'select `id`, `name`, `surname`, `url`, `birthyear`, `number`, `position`, `photo`, `season`, `team` from `w_sport_player` where' . $where . ' order by `' . $sortBy . '` ' . $sorting . ';';
             $players = parent::db()->fetchAll($sql);
             if (count($players) > 0) {
-                $templateContent = parent::getTemplateContent($templateId);
+                $template = $this->getTemplateById($templateId);
                 $i = 1;
                 $lastseasonId = self::getSeasonId();
                 $lastplayerId = self::getPlayerId();
@@ -3457,7 +3458,7 @@
                     self::setTeamId($player['team']);
                     self::setPlayerId($player['id']);
 
-                    $return .= parent::parseContent($templateContent);
+                    $return .= $template();
                     $i++;
                 }
                 self::setSeasonId($lastseasonId);
@@ -3584,7 +3585,7 @@
                 $sql = $sqlpart . ' where' . $where . ' order by `' . $sortBy . '` ' . $sorting . ';';
                 $stats = parent::db()->fetchAll($sql);
                 if (count($stats) > 0) {
-                    $templateContent = parent::getTemplateContent($templateId);
+                    $template = $this->getTemplateById($templateId);
                     $i = 1;
                     $lastseasonId = self::getSeasonId();
                     $lastplayerId = self::getPlayerId();
@@ -3599,7 +3600,7 @@
                         self::setPlayerId($stat['pid']);
                         self::setTableId($stat['table_id']);
 
-                        $return .= parent::parseContent($templateContent);
+                        $return .= $template();
                         $i++;
                     }
                     self::setMatchId($lastmatchId);

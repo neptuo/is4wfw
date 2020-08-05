@@ -23,8 +23,8 @@
         private $Header = "";
 
         public function __construct() {
-            self::setTagLibXml("View.xml");
-            self::setLocalizationBundle("view");
+            $this->setTagLibXml("View.xml");
+            $this->setLocalizationBundle("view");
         }
 
         private function getCurrentVirtualUrlWithoutExtension() {
@@ -32,12 +32,23 @@
         }
 
         public function getCurrentVirtualUrl() {
-            return self::getCurrentVirtualUrlWithoutExtension() . ".view";
+            return $this->getCurrentVirtualUrlWithoutExtension() . ".view";
+        }
+
+        private function getVirtualPathKeys($virtualPath) {
+            $withoutView = (strlen($virtualPath) - 5);
+            if (strpos($virtualPath, ".view") == $withoutView) {
+                $virtualPath = substr($virtualPath, 0, $withoutView);
+            }
+
+            $virtualKeys = str_replace("~", "view", $virtualPath);
+            $keys = explode("/", $virtualKeys);
+            return $keys;
         }
 
         /* ======================= TAGS ========================================= */
 
-        public function processView($path) {
+        public function processView() {
             if (array_key_exists('query-list', $_GET)) {
                 parent::db()->getDataAccess()->saveQueries(true);
             }
@@ -51,25 +62,38 @@
 
             $result = "";
             try {
-                $result = parent::parseContent(ViewHelper::getViewContent(self::getCurrentVirtualUrlWithoutExtension()));
+                $virtualPath = $this->getCurrentVirtualUrlWithoutExtension();
+                $keys = $this->getVirtualPathKeys($virtualPath);
+                $template = $this->getParsedTemplate($keys);
+                if ($template == null) {
+                    $template = $this->parseTemplate($keys, ViewHelper::getViewContent($virtualPath));
+                }
+
+                $result = $template();
             } catch (Exception $ex) {
                 echo parent :: getError($ex->getMessage());
             }
 
-            self :: flush($result);
+            $this->flush($result);
         }
 
-        public function useTemplate($content, $src) {
+        public function useTemplate($template, $src) {
             $return = '';
-            $this->CurrentTemplateContent[$this->CurrentTemplatePointer] = $content;
+            $this->CurrentTemplateContent[$this->CurrentTemplatePointer] = $template;
             $this->CurrentTemplatePointer++;
+
+            $keys = $this->getVirtualPathKeys($src);
+            $template = $this->getParsedTemplate($keys);
+            if ($template == null) {
+                $template = $this->parseTemplate($keys, ViewHelper::getViewContent($src));
+            }
             
-            $return = parent::parseContent(ViewHelper::getViewContent($src));
+            $return = $template();
             return $return;
         }
 
-        public function head($content) {
-            $this->Header .= parent::parseContent($content);
+        public function head($template) {
+            $this->Header .= $template();
         }
 
         public function getContent() {
@@ -77,7 +101,7 @@
 
             $this->CurrentTemplatePointer--;
             
-            $return = parent::parseContent($this->CurrentTemplateContent[$this->CurrentTemplatePointer]);
+            $return = $this->CurrentTemplateContent[$this->CurrentTemplatePointer]();
             return $return;
         }
 
@@ -95,7 +119,7 @@
             $this->Title = $title;
         }
 
-        public function showPanel($content, $id = false, $class = false) {
+        public function showPanel($template, $id = false, $class = false) {
             $att = '';
             if ($id != '') {
                 $att .= ' id="' . $id . '"';
@@ -103,7 +127,7 @@
             if ($class != '') {
                 $att .= ' class="' . $class . '"';
             }
-            $return = '<div' . $att . '>' . parent::parseContent($content) . '</div>';
+            $return = '<div' . $att . '>' . $template() . '</div>';
 
             return $return;
         }

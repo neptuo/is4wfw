@@ -97,18 +97,13 @@
 
             $lineInfo = parent::db()->fetchSingle('select `name`, `url` from `article_line` where `id` = ' . $lineId . ';');
 
-            $templateContent = '';
             if ($templateId != false) {
                 // ziskani templatu ...
-                $templateContent = parent::getTemplateContent($templateId);
+                $template = $this->getTemplateById($templateId);
             } elseif ($template != false) {
-                if (is_file($template) && is_readable($template)) {
-                    $templateContent = file_get_contents($template);
-                } else {
-                    $message = "Template file doesn't exist or is un-readable!";
-                    trigger_error($message, E_USER_WARNING);
-                    return;
-                }
+                $message = "Template file doesn't exist or is un-readable!";
+                trigger_error($message, E_USER_WARNING);
+                return;
             } else {
                 $message = "Template or TemplateId must be set!";
                 trigger_error($message, E_USER_WARNING);
@@ -203,7 +198,7 @@
                     parent::request()->set('link', $flink, 'current-article');
                     $_SESSION['current-article']['link'] = $flink;
 
-                    $return .= parent::parseContent($templateContent);
+                    $return .= $template();
                 }
                 if($pageable) {
                     $total = parent::db()->fetchSingle('select count(`article`.`id`) as `id` '.$fromWhere.';');
@@ -347,37 +342,23 @@
             global $dbObject;
             global $loginObject;
 
-            $templateContent = '';
             if ($templateId != false) {
-                // ziskani templatu ...
-                $rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_READ . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '));');
-                if (count($rights) > 0 && $templateId > 0) {
-                    $template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = ' . $templateId . ';');
-                    $templateContent = $template[0]['content'];
-                } else {
-                    $message = "Permission Denied when reading template[templateId = " . $templateId . "]!";
-                    trigger_error($message, E_USER_WARNING);
-                    return;
-                }
+                $template = $this->getTemplateById($templateId);
             } elseif ($template != false) {
-                if (is_file($template) && is_readable($template)) {
-                    $templateContent = file_get_contents($template);
-                } else {
-                    $message = "Template file doesn't exist or is un-readable!";
-                    trigger_error($message, E_USER_WARNING);
-                    return;
-                }
+                $message = "Template file doesn't exist or is un-readable!";
+                trigger_error($message, E_USER_WARNING);
+                return;
             } else {
                 $message = "Template or TemplateId must be set!";
                 trigger_error($message, E_USER_WARNING);
                 return;
             }
 
-            return $this->showDetailFullTag($templateContent, $articleId, $articleLangId, $defaultArticleId, $showError, $lineId, $nextLinkText, $prevLinkText);
+            return $this->showDetailFullTag($template, $articleId, $articleLangId, $defaultArticleId, $showError, $lineId, $nextLinkText, $prevLinkText);
         }
 
         // C-tag
-        public function showDetailFullTag($templateContent, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = 0, $nextLinkText = '', $prevLinkText = '') {
+        public function showDetailFullTag($template, $articleId = false, $articleLangId = false, $defaultArticleId = false, $showError = false, $lineId = 0, $nextLinkText = '', $prevLinkText = '') {
             global $webObject;
             global $dbObject;
             global $loginObject;
@@ -406,7 +387,7 @@
                         if ($showError != 'false') {
                             $message = 'Missing argument [article-id]!';
                             echo '<h4 class="error">' . $message . '</h4>';
-                            trigger_error($messgae, E_USER_WARNING);
+                            trigger_error($message, E_USER_WARNING);
                         }
                         return;
                     }
@@ -414,7 +395,7 @@
                     if ($showError != 'false') {
                         $message = 'Missing argument [article-id]!';
                         echo '<h4 class="error">' . $message . '</h4>';
-                        trigger_error($messgae, E_USER_WARNING);
+                        trigger_error($message, E_USER_WARNING);
                     }
                     return;
                 }
@@ -441,7 +422,7 @@
                 parent::request()->set('head', $article[0]['head'], 'current-article');
                 parent::request()->set('content', $article[0]['content'], 'current-article');
 
-                $return .= parent::parseContent($templateContent);
+                $return .= $template();
                 $return .= self::nextPrevNavigation($articleId, $lineId, $webObject->getPageId(), $nextLinkText, $prevLinkText);
                 
                 self::setArticleDirectoryId($lastDirectoryId);
@@ -551,7 +532,7 @@
 
             $labels = parent::db()->fetchAll('SELECT' . $columnSql . ' FROM `article_label` AS al' . $joinSql . $whereSql . ' ORDER BY ' . $sortBy . ' ' . $sort . ' ' . $limit . ';');
             if (count($labels) > 0) {
-                $templateContent = parent::getTemplateContent($templateId);
+                $template = $this->getTemplateById($templateId);
                 $i = 1;
                 foreach ($labels as $label) {
                     $item = array('id' => $label['id'], 'name' => $label['name'], 'url' => $label['url']);
@@ -566,7 +547,7 @@
                     parent::request()->set('label', $item, 'current-label');
                     self::setIsActiveLabel($label['id'] == $oldLabelId);
                     self::setLabelId($item['id']);
-                    $return .= parent::parseContent($templateContent);
+                    $return .= $template();
                     $i++;
                 }
             } else {

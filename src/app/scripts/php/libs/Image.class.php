@@ -34,7 +34,7 @@
 				parent::request()->set('title', $image['title'], 'g:image');
 				parent::request()->set('type', $image['type'], 'g:image');
 
-				return parent::parseContent($content);
+				return $template();
 			}
 
 			return '';

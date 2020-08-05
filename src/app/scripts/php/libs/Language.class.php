@@ -44,7 +44,7 @@
 
 			$model->render();
             $model->items($data);
-			$result = parent::parseContent($template);
+			$result = $template();
 
 			parent::popListModel();
 			return $result;
@@ -92,7 +92,7 @@
 
 			if ($model->isLoad() && $model->metadata("isUpdate")) {
                 $model->registration();
-                parent::parseContent($template);
+                $template();
 				$model->registration(false);
 				
 				$columns = $model->fields();
@@ -106,7 +106,7 @@
 			}
 
 			if ($model->isSubmit()) {
-				parent::parseContent($template);
+				$template();
 				
 				Validator::required($model, "name");
 				Validator::required($model, "language");
@@ -129,7 +129,7 @@
 			}
 			
             if ($model->isSaved()) {
-                parent::parseContent($template);
+                $template();
             }
 			
             if ($model->isRender()) {
@@ -137,7 +137,7 @@
 					return "<h4 class='warning'>Such language doesn't exist.</h4>";
 				}
 
-				$result = parent::parseContent($template);
+				$result = $template();
 				return $result;
 			}
 		}
@@ -160,7 +160,7 @@
             $sql = parent::sql()->delete(self::TableName, ["id" => $id]);
             parent::dataAccess()->execute($sql);
             
-            parent::parseContent($template);
+            $template();
 		}
 	}
 

@@ -271,7 +271,7 @@
                 "DROP TABLE `$tableName`;", 
                 self::sql()->delete("custom_entity", array("name" => $name))
             );
-            self::parseContent($template);
+            $template();
         }
 
         public function listTables($template) {
@@ -285,7 +285,7 @@
             self::pushListModel($model);
 
             $model->render();
-            $result = self::parseContent($template);
+            $result = $template();
             
             self::popListModel();
             return $result;
@@ -325,7 +325,7 @@
             self::pushListModel($model);
 
             $model->render();
-            $result = self::parseContent($template);
+            $result = $template();
             
             self::popListModel();
             return $result;
@@ -396,7 +396,7 @@
             }
 
             self::executeSql($updateSql, $alterSql);
-            self::parseContent($template);
+            $template();
         }
 
         private $tableLocalizationColumns;

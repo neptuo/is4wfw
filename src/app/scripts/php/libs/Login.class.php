@@ -198,7 +198,7 @@
         public function loginLookless($template, $group, $username, $password) {
             $message = self::loginPrivate($group, $username, $password);
             if ($message === true) {
-                parent::parseContent($template);
+                $template();
             }
         }
 
@@ -272,12 +272,12 @@
             $_SESSION[$sessionId] = '';
             unset($_SESSION[$sessionId]);
 
-            parent::parseContent($template);
+            $template();
         }
 
         public function refresh($template, $group) {
             if (!self::refreshPrivate($group)) {
-                parent::parseContent($template);
+                $template();
             }
         }
         
@@ -308,7 +308,7 @@
 
         public function authorized($template, $all = "", $any = "", $none = "") {
             if ($all == "" && $any == "" && $none == "") {
-                return parent::parseContent($template);
+                return $template();
             }
             
             if ($all != "") {
@@ -319,14 +319,14 @@
                     }
                 }
 
-                return parent::parseContent($template);
+                return $template();
             }
 
             if ($any != "") {
                 $any = explode(",", $any);
                 foreach ($any as $group) {
                     if (self::inGroup($group)) {
-                        return parent::parseContent($template);
+                        return $template();
                     }
                 }
 
@@ -341,7 +341,7 @@
                     }
                 }
                 
-                return parent::parseContent($template);
+                return $template();
             }
         }
 

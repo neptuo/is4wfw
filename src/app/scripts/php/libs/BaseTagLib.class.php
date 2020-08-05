@@ -36,13 +36,6 @@
          *
          */
         private $FirstFrame = true;
-        /**
-         *
-         * 	Use caching for template content
-         * 	REQUEST ...... for caching for single request
-         *
-         */
-        private $CacheTemplatesContent = 'REQUEST';
 
         /**
          *
@@ -64,16 +57,6 @@
          */
         protected function setTagLibXml($xml) {
             $this->TagLibXml = $xml;
-        }
-
-        /**
-         *
-         * 	Setup template content caching.
-         * 	For possible values, see field definition
-         *
-         */
-        protected function setCacheTemplatesContent($val) {
-            $this->CacheTemplatesContent = $val;
         }
 
         /**
@@ -171,14 +154,15 @@
             return strlen($msg) == 0 ? '' : '<h4 class="warning">' . $msg . '</h4>';
         }
 
-        public function getTemplateContent($templateId) {
-            global $webObject;
+        public function getTemplateById($templateId) {
             global $dbObject;
             global $loginObject;
             $templateContent = "";
 
-            if ($this->CacheTemplatesContent == 'REQUEST' && self::request()->exists($templateId, 'templates')) {
-                return self::request()->get($templateId, 'templates');
+            $keys = ["template", $templateId];
+            $template = $this->getParsedTemplate($keys);
+            if ($template != null) {
+                return $template;
             }
 
             $rights = $dbObject->fetchAll('SELECT `value` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template`.`id` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_READ . ' AND `group`.`value` >= ' . $loginObject->getGroupValue() . ';');
@@ -191,11 +175,8 @@
                 return;
             }
 
-            if ($this->CacheTemplatesContent == 'REQUEST') {
-                self::request()->set($templateId, $templateContent, 'templates');
-            }
-
-            return $templateContent;
+            $template = $this->parseTemplate($keys, $templateContent);
+            return $template;
         }
 
         public function autolib($prefix) {
@@ -725,6 +706,8 @@
             return $stack->peek() != null;
         }
         
+        // Obsolete!
+        // TODO: delete, because it can't work correctly.
         public function parseContent($content, $tagsToParse = null) {
             if (is_callable($content)) {
                 return $content();
@@ -735,32 +718,19 @@
             return $return;
         }
 
-        private $parsedTemplates = array();
-
-        public function getParsedTemplate($content, $tagsToParse = null) {
+        public function parseTemplate(array $keys, string $content) {
             if ($content instanceof ParsedTemplate) {
                 return $content;
             }
 
-            if ($tagsToParse == null) {
-                $hash = sha1($content);
-                if (array_key_exists($hash, $this->parsedTemplates)) {
-                    return $this->parsedTemplates[$hash];
-                }
-            }
-
             $parser = $this->createParser();
-            
-            if ($tagsToParse != null) {
-                $parser->setTagsToParse($tagsToParse);
-            }
-            
-            $parsedTemplate = $parser->parse($content);
+            $parsedTemplate = $parser->parse($content, $keys);
+            return $parsedTemplate;
+        }
 
-            if ($tagsToParse == null) {
-                $this->parsedTemplates[$hash] = $parsedTemplate;
-            }
-
+        public function getParsedTemplate(array $keys) {
+            $parser = $this->createParser();
+            $parsedTemplate = $parser->run($keys);
             return $parsedTemplate;
         }
 

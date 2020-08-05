@@ -59,7 +59,7 @@
 
 					$model->render();
 					$model->items($messages);
-					$result = parent::parseContent($template);
+					$result = $template();
 					
 					parent::popListModel();
 					return $result;

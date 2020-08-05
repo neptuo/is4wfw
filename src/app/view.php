@@ -29,7 +29,7 @@
   
 	require_once(APP_SCRIPTS_PHP_PATH . "includes/postinitview.inc.php");
   
-	$vObject->processView($_REQUEST['WEB_PAGE_PATH']);
+	$vObject->processView();
 
 
 ?>

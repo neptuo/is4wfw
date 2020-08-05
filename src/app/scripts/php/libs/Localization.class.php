@@ -22,7 +22,7 @@
 
 		public function useBundle($template, $name, $system = true) {
 			self::setLocalizationBundle($name, $system);
-			return self::parseContent($template);
+			return $template();
 		}
 
 		public function getProperty($name) {
@@ -43,7 +43,7 @@
 			if ($template == null) {
 				self::partialView("localization/edit");
 			} else {
-				parent::parseContent($template);
+				$template();
 			}
 			$listModel->render(false);
 		}
@@ -104,7 +104,7 @@
 				if ($template == null) {
 					parent::partialView("localization/edit");
 				} else {
-					parent::parseContent($template);
+					$template();
 				}
             }
 			
@@ -139,7 +139,7 @@
 				if ($template == null) {
 					$result .= parent::partialView("localization/edit");
 				} else {
-					$result .= parent::parseContent($template);
+					$result .= $template();
 				}
 				$listModel->render(false);
 			}

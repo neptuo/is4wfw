@@ -24,20 +24,20 @@
 
             // Načtení dat formuláře.
             $model->load();
-            parent::parseContent($template);
+            $template();
             $model->load(false);
 
             if (parent::isHttpMethod("POST") && array_key_exists($submit, $_REQUEST)) {
                 // Submit form / bind data into the model.
                 $model->submit();
-                parent::parseContent($template);
+                $template();
                 $model->submit(false);
 
                 if ($model->isValid()) {
                     // Save data in transaction.
                     parent::dataAccess()->transaction(function() use ($model, $template) {
                         $model->save();
-                        parent::parseContent($template);
+                        $template();
                         $model->save(false);
 
                         if ($model->hasException()) {
@@ -47,7 +47,7 @@
 
                     // Process after save redirects.
                     $model->saved(true);
-                    parent::parseContent($template);
+                    $template();
                     $model->saved(false);
                 }
             }
@@ -62,7 +62,7 @@
         public function prefix($template, $name) {
             $model = parent::getEditModel();
             $model->prefix($name);
-            $result = parent::parseContent($template);
+            $result = $template();
             $model->prefix(null);
             return $result;
         }

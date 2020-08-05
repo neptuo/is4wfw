@@ -1683,7 +1683,7 @@
 
             $model->render();
             $model->items($items);
-            $result = self::parseContent($template);
+            $result = $template();
 
             self::popListModel();
             return $result;
@@ -1880,8 +1880,8 @@
         }
 
         public function makeAnchorFullTag($template, $pageId, $languageId = false, $class = "", $activeClass = '', $id = "", $target = "", $rel = "", $type = '', $params = false) {
-            $text = parent::parseContent($template);
-            return self::makeAnchor($pageId, $text, $languageId, $class, $activeClass, $id, $target, $rel, $type, $params);
+            $text = $template();
+            return $this->makeAnchor($pageId, $text, $languageId, $class, $activeClass, $id, $target, $rel, $type, $params);
         }
 
         /**
@@ -2376,9 +2376,8 @@
          * 	C fulltag.
          *
          */
-        public function getWebFrame($content, $title, $open = false) {
-            $return = parent::parseContent($content);
-            $return = parent::getFrame($title, $return, '', $open == 'true' ? true : false);
+        public function getWebFrame($template, $title, $open = false) {
+            $return = parent::getFrame($title, $template(), '', $open == 'true' ? true : false);
             return $return;
         }
 
@@ -2490,7 +2489,7 @@
             return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['id'];
         }
         
-        public function showWhenConditionIsSatified($content, $when, $is, $isInverted) {
+        public function showWhenConditionIsSatified($template, $when, $is, $isInverted) {
             $return = "";
 
             $condition = false;
@@ -2505,7 +2504,7 @@
             }
 
             if ($condition) {
-                $return = self::parseContent($content);
+                $return = $template();
             }
 
             return $return;
@@ -2539,11 +2538,11 @@
             return '<link rel="icon" type="' . $contentType . '" href="' . $url . '" />';
         }
 
-        public function switchCondition($content, $when) {
+        public function switchCondition($template, $when) {
             $result = '';
 
             $index = array_push($this->switchConditionWhenStack, $when) - 1;
-            self::parseContent($content);
+            $template();
             array_pop($this->switchConditionWhenStack);
 
             if (array_key_exists($index, $this->switchConditionCaseStack)) {
@@ -2554,7 +2553,7 @@
             return $result;
         }
 
-        public function switchConditionCase($content, $is = 'x.x-def') {
+        public function switchConditionCase($template, $is = 'x.x-def') {
             $index = count($this->switchConditionWhenStack);
             if ($index == 0) {
                 return '';
@@ -2569,7 +2568,7 @@
             $when = $this->switchConditionWhenStack[$index];
             $condition = $is === 'x.x-def' || $when == $is;
             if ($condition === true) {
-                $this->switchConditionCaseStack[$index] = self::parseContent($content);
+                $this->switchConditionCaseStack[$index] = $template();
             }
 
             return '';
@@ -2588,7 +2587,7 @@
         }
 
         public function lookless($template) {
-            parent::parseContent($template);
+            $template();
             return "";
         }
 

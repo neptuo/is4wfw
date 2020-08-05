@@ -3083,7 +3083,7 @@
             $sql = 'update `content` set ' . $updateContentSql . ' ' . $whereSql . ';';
             $db->execute($sql);
             if ($db->getDataAccess()->getErrorCode() == 0) {
-                $return .= parent::parseContent($template);
+                $return .= $template();
             }
 
             return $return;
@@ -3131,7 +3131,7 @@
 
             foreach ($data as $item) {
                 parent::request()->set('item', $item, 'p:pageList');
-                $return .= parent::parseContent($template);
+                $return .= $template();
             }
 
             parent::request()->set('item', $oldItem, 'p:pageList');

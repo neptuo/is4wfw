@@ -39,7 +39,7 @@
 			}
 
 			$attributes = parent::joinAttributes($params);
-			$content = parent::parseContent($template);
+			$content = $template();
 			return "<div$attributes>$content</div>";
 		}
 
@@ -62,7 +62,7 @@
 			}
 
 			$attributes = parent::joinAttributes($params);
-			$content = parent::parseContent($template);
+			$content = $template();
 			return "<div$attributes>$content</div>";
 		}
 		
@@ -94,7 +94,7 @@
 			}
 			
 			$attributes = parent::joinAttributes($params);
-			$content = parent::parseContent($template);
+			$content = $template();
 			return "<div$attributes>$content</div>";
 		}
 
@@ -138,12 +138,12 @@
 			}
 
 			$attributes = parent::joinAttributes($params);
-			$content = parent::parseContent($template);
+			$content = $template();
 			return "<div$attributes>$headerHtml$content$dismissHtml</div>";
 		}
 
 		public function buttonFullTag($template, $color = "primary", $isOutline = false, $size = "", $isBlock = false, $isActive = false, $params = []) {
-			$content = parent::parseContent($template);
+			$content = $template();
 			return self::button($content, $color, $isOutline, $size, $isBlock, $isActive, $params);
 		}
 
@@ -183,7 +183,7 @@
 
 			$params = self::appendClass($params, "card");
 			$attributes = parent::joinAttributes($params);
-			$content = parent::parseContent($template);
+			$content = $template();
 			return "<div$attributes>$headerHtml<div class='card-body'>$titleHtml$content</div></div>";
 		}
 
@@ -207,7 +207,7 @@
 
 			$params = self::appendClass($params, "form-group");
 			$attributes = parent::joinAttributes($params);
-			$content = parent::parseContent($template);
+			$content = $template();
 			$result = "<div$attributes>$labelHtml$content</div>";
 
 			parent::ui()->popId($labelId);
@@ -233,7 +233,7 @@
 			}
 
 			$attributes = parent::joinAttributes($params);
-			$content = parent::parseContent($template);
+			$content = $template();
 			$result = "<$tag$attributes>$content</$tag>";
 
 			$this->navTag = $oldNavTag;

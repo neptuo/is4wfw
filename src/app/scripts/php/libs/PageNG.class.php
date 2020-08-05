@@ -104,11 +104,11 @@
 			global $dbObject;
 			global $webObject;
 			global $loginObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			$return = '';
 			
-			if(self::getLanguage() != '' && $_SESSION['selected-project'] != '') {
-				$pages = self::getPages($rootPageId, $webProjectId, $langId);
+			if ($this->getLanguage() != '' && $_SESSION['selected-project'] != '') {
+				$pages = $this->getPages($rootPageId, $webProjectId, $langId);
 			} else {
 				$return .= '<h4 class="error">'.$rb->get('pagelist.notsetprojectandlang').'</h4>';
 			}
@@ -116,29 +116,30 @@
 			//unset($_SESSION['pageng']);
 			//print_r($_SESSION['pageng']);
 			
-			if(count($pages > 0)) {
-				$templateContent = $webObject->getTemplateContent($templateId);
+			if (count($pages > 0)) {
+				$template = $this->getTemplateById($templateId);
 				$unset = false;
-				if(!array_key_exists('pageid' ,$_SESSION['pageng'])) {
+				$oldValue = null;
+				if (!array_key_exists('pageid' ,$_SESSION['pageng'])) {
 					$unset = true;
 				} else {
 					$oldValue = $_SESSION['pageng']['pageid'];
 				}
 				foreach($pages as $page) {
-					self::setPageId($page['page_id']);
-					$return .= parent::parseContent($templateContent);
+					$this->setPageId($page['page_id']);
+					$return .= $template();
 				}
 
-				if($unset) {
+				if ($unset) {
 					unset($_SESSION['pageng']['pageid']);
 				} else {
-					$_SESSION['pageng']['pageid'] = $oldvalue;
+					$_SESSION['pageng']['pageid'] = $oldValue;
 				}
 			} else {
-				$return .= $rg->get('pagelist.nopages');
+				$return .= $rb->get('pagelist.nopages');
 			}
 			
-			if($useFrames == "false") {
+			if ($useFrames == "false") {
 				return $return;
 			} else {
 				return parent::getFrame($rb->get('pagelist.title'), $return, "", true);
@@ -206,8 +207,8 @@
 				unset($_SESSION['pageng']['field']);
 			}
 			
-			$templateContent = $webObject->getTemplateContent($templateId);
-			$return .= parent::parseContent($templateContent);
+			$template = $this->getTemplateById($templateId);
+			$return .= $template();
 			
 			$return = ''
 			.'<div class="search-filter">'
