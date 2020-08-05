@@ -82,11 +82,14 @@
 		}
 
 		public function provideBodyById($id) {
-			$template = $this->findBy(["id" => $id]);
+			$keys = ["template", $id];
+			$template = $this->getParsedTemplate($keys);
+			if ($template == null) {
+				$templateContent = $this->findBy(["id" => $id]);
+				$template = $this->parseTemplate($keys, $templateContent);
+			}
 
-			$template = $this->getParsedTemplate($template);
-
-			$parameters[DefaultPhp::$FullTagTemplateName] = function() use($template) { return $template->evaluate(); };
+			$parameters = [DefaultPhp::$FullTagTemplateName => $template];
 			return $parameters;
 		}
 	}

@@ -42,8 +42,8 @@ $content = '
 <php:register tagPrefix="ce2" classPath="php.libs.CustomEntity" />
 <php:using prefix="test" class="php.libs.test.TestLibrary">
     <web:a pageId="~/index.view" test:a="Hello" test:b="5" />
-    <web:a pageId="~/index.view" test:c="Hi" />
-    <web:a pageId="~/index.view" test:a="Hello" test:b="5" test:c="Hi" test:if="f" test:if-is="f" />
+    <web:a pageId="~/index.view" test:attributeAsBody="Hi" />
+    <web:a pageId="~/index.view" test:a="Hello" test:b="5" test:attributeAsBody="Hi" test:if="f" test:if-is="f" />
     <web:a pageId="~/index.view" test:cool="Baf" />
     <web:a pageId="~/index.view" test:optionalBody="test" />
 </php:using>
@@ -69,7 +69,7 @@ $content = '
             }
 
             if ($printOutput && $i == 0) {
-                echo $result->evaluate();
+                echo $result();
             }
         }
     }

@@ -21,18 +21,28 @@
             return $tagParameters;
         }
 
-        public function provideFullTagBody(string $c) {
-            $template = $this->getParsedTemplate($c);
-            return [DefaultPhp::$FullTagTemplateName => function() use ($template) { return $template->evaluate(); }];
+        public function attributeAsBody(string $c) {
+            $keys = ["testlibrary", sha1($c)];
+            $template = $this->getParsedTemplate($keys);
+            if ($template == null) {
+                $template = $this->parseTemplate($keys, $c);
+            }
+
+            return [DefaultPhp::$FullTagTemplateName => $template];
         }
 
         public function conditionsExecution($condition, $value) {
             return [DefaultPhp::$DecoratorExecuteName => $condition == $value];
         }
 
-        public function coolDecorator($cool, $tagPrefix, $tagName, $tagParameters) {
-            $template = $this->getParsedTemplate($cool);
-            $tagParameters[DefaultPhp::$FullTagTemplateName] = function() use ($template) { return $template->evaluate(); };
+        public function coolDecorator(string $cool, string $tagPrefix, string $tagName, array $tagParameters) {
+            $keys = ["testlibrary", sha1($cool)];
+            $template = $this->getParsedTemplate($keys);
+            if ($template == null) {
+                $template = $this->parseTemplate($keys, $cool);
+            }
+            
+            $tagParameters[DefaultPhp::$FullTagTemplateName] = $template;
             $tagParameters[DefaultPhp::$DecoratorExecuteName] = true;
             return $tagParameters;
         }
@@ -40,7 +50,14 @@
         public function optionalBody($path) {
             $tagParameters = [];
             if ($path == "test") {
-                $tagParameters[DefaultPhp::$FullTagTemplateName] = "Test";
+                $templateContent = "Test";
+                $keys = ["testlibrary", sha1($templateContent)];
+                $template = $this->getParsedTemplate($keys);
+                if ($template == null) {
+                    $template = $this->parseTemplate($keys, $templateContent);
+                }
+
+                $tagParameters[DefaultPhp::$FullTagTemplateName] = $template;
                 $tagParameters[DefaultPhp::$DecoratorExecuteName] = true;
             } else {
                 $tagParameters[DefaultPhp::$DecoratorExecuteName] = false;

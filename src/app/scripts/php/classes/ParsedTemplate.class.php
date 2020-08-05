@@ -7,6 +7,10 @@ abstract class ParsedTemplate
     public function __toString() {
         return $this->evaluate();
     }
+    
+    public function __invoke() {
+        return $this->evaluate();
+    }
 }
 
 ?>

@@ -25,9 +25,9 @@
     </features>
   </decorator>
   <decorator>
-    <function>provideFullTagBody</function>
+    <function>attributeAsBody</function>
     <attribute>
-      <attname>c</attname>
+      <attname>attributeAsBody</attname>
       <atttype>string</atttype>
       <attreq>required</attreq>
     </attribute>
