@@ -18,6 +18,12 @@
                             <web:redirectTo pageId="~/in/index.view" />
                         </login:login>
                     </web:condition>
+
+                    <web:condition when="post:login">
+                        <p class="text-danger font-weight-bold">
+                            Wrong combination of username and password.
+                        </p>
+                    </web:condition>
                     
                     <bs:formGroup label="Username">
                         <ui:textbox name="username" class="form-control form-control-sm" autofocus="autofocus" />
