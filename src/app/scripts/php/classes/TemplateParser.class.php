@@ -2,12 +2,14 @@
 
     require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ParsedTemplate.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParserBase.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateAttributeCollection.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateCache.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParserBase.class.php");
 
     class TemplateParser extends TemplateParserBase {
 
         protected $Code = null;
+        protected $TemplateCache = null;
         
         // List of custom tags to parse [[prefix => name]]
         protected $TagsToParse = array();
@@ -28,6 +30,10 @@
         // Regular expression for parsing full tag.     
         protected $FULL_TAG_RE = "#<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)((.*?)(?=\/>)\/>|([^>]*)>((?:[^<]|<(?!/?\\1[^>]*>)|(?R))+)</\\1>)#";
 
+        public function __construct() {
+            $this->TemplateCache = new TemplateCache();
+        }
+
         public function setTagsToParse($tags) {
             $this->TagsToParse = $tags;
         }
@@ -46,14 +52,26 @@
             return $result;
         }
 
+        public function run($keys) {
+            if (!$this->TemplateCache->exists($keys)) {
+                return null;
+            }
+
+            $this->TemplateCache->load($keys);
+            $className = $this->getClassName($keys);
+
+            $result = new $className();
+            return $result;
+        }
+
         /**
          *
          * 	Parse custom tags from Content and save result to Result
          *
          */
-        public function parse($content) {
+        public function parse($content, $keys) {
             $this->Code = new CodeWriter();
-            return $this->parseInternal($content, 'compile');
+            return $this->parseInternal($content, 'compile', $keys);
         }
 
         protected function isSkippedTag($ctag) {
@@ -74,11 +92,15 @@
             return false;
         }
 
-        private function parseInternal($content, $mode) {
+        private function getClassName(array $keys) {
+            return "Template_" . implode("_", $keys);
+        }
+
+        private function parseInternal(string $content, string $mode, array $keys = null) {
             if ($mode == 'parse') {
                 return $this->parseContentInternal($content);
             } else if($mode == 'compile') {
-                $className = "Template_" . $this->generateRandomString();
+                $className = $this->getClassName($keys);
 
                 $this->Code->addClass($className, "ParsedTemplate");
                 
@@ -89,11 +111,12 @@
                 $this->Code->closeBlock();
 
                 $code = $this->Code->toString();
-                file_put_contents(CACHE_TEMPLATES_PATH . $className . ".php", "<?php" . PHP_EOL . PHP_EOL . $code . PHP_EOL . PHP_EOL . "?>");
-                eval($code);
+                $this->TemplateCache->set($keys, $code);
                 
-                $result = new $className();
-                return $result;
+                // eval($code);
+                // $result = new $className();
+                // return $result;
+                return $this->run($keys);
             } else {
                 throw new Exception("Invalid 'mode'.");
             }

@@ -29,7 +29,6 @@
 //     <input type="text" name="entity-name" />
 // </admin:field>
 // <hr />';
-$keys = ["test", "parsing"];
 
 $cache = new TemplateCache();
 
@@ -62,15 +61,12 @@ $content = '
         echo '<a href="?clear">Clear template cache</a>';
     }
 
-    function parse($parser, $cache, $content, $count, $printOutput = false) {
-        global $keys;
-
+    function parse($parser, $keys, $content, $count, $printOutput = false) {
         for ($i=0; $i < $count; $i++) { 
-            if ($cache->exists($keys)) {
-                $template = $cache->read($keys);
+            $result = $parser->run($keys);
+            if ($result == null) {
+                $result = $parser->parse($content, $keys);
             }
-
-            $result = $parser->parse($content);
 
             if ($printOutput && $i == 0) {
                 echo $result->evaluate();
@@ -81,8 +77,7 @@ $content = '
     measure(function() {
         global $content;
         $parser = new TemplateParser();
-        $cache = new TemplateCache();
-        parse($parser, $cache, $content, 1, true);
+        parse($parser, [ "test", "parsing", "1" ], $content, 1, true);
     });
 
     echo '<hr />';
