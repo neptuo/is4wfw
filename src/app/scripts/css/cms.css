@@ -294,10 +294,6 @@ table .template-id {
     color: #777777;
 }
 
-.template-name {
-    width: 200px;
-}
-
 .file-content-in {
     width: 560px;
     overflow: hidden;

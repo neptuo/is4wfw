@@ -2422,31 +2422,38 @@
             if ($_POST['template-search-submit'] == 'Search') {
                 $name = $_POST['template-search-name'];
                 $content = $_POST['template-search-content'];
+                $identifier = $_POST['template-search-identifier'];
 
                 parent::session()->set('name', $name, 'template-search');
                 parent::session()->set('content', $content, 'template-search');
+                parent::session()->set('identifier', $identifier, 'template-search');
             } elseif ($_POST['template-search-clear'] == 'Clear') {
                 parent::session()->delete('name', 'template-search');
                 parent::session()->delete('content', 'template-search');
+                parent::session()->delete('identifier', 'template-search');
             }
 
             if (parent::getUserProperty('Templates.showFilter', 'true') == 'true') {
                 $return .= ''
-                        . '<form name="template-search" method="post" action"' . $_SERVER['REQUEST_URI'] . '">'
-                        . '<div class="gray-box">'
+                . '<form name="template-search" method="post" action"' . $_SERVER['REQUEST_URI'] . '">'
+                    . '<div class="gray-box">'
                         . '<label for="template-search-name" class="w100">Name:</label>'
                         . '<input class="w300" type="text" name="template-search-name" id="template-search-name" value="' . parent::session()->get('name', 'template-search') . '" />'
-                        . '</div>'
-                        . '<div class="gray-box">'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<label for="template-search-identifier" class="w100">Identifier:</label>'
+                        . '<input class="w300" type="text" name="template-search-identifier" id="template-search-identifier" value="' . parent::session()->get('identifier', 'template-search') . '" />'
+                    . '</div>'
+                    . '<div class="gray-box">'
                         . '<label for="template-search-content" class="w100">Content:</label>'
                         . '<input class="w500" type="text" name="template-search-content" id="template-search-content" value="' . parent::session()->get('content', 'template-search') . '" />'
-                        . '</div>'
-                        . '<div class="gray-box">'
+                    . '</div>'
+                    . '<div class="gray-box">'
                         . '<input type="submit" name="template-search-submit" value="Search" /> '
                         . '<input type="submit" name="template-search-clear" value="Clear" />'
-                        . '</div>'
-                        . '</form>'
-                        . '<hr />';
+                    . '</div>'
+                . '</form>'
+                . '<hr />';
             }
 
             // Vyber templatu do kterych smim zapisovat
@@ -2454,23 +2461,28 @@
             if (parent::session()->exists('name', 'template-search')) {
                 $searchPara .= ' and `template`.`name` like "%' . parent::session()->get('name', 'template-search') . '%"';
             }
+            if (parent::session()->exists('identifier', 'template-search')) {
+                $searchPara .= ' and `template`.`identifier` like "%' . parent::session()->get('identifier', 'template-search') . '%"';
+            }
             if (parent::session()->exists('content', 'template-search')) {
                 $searchPara .= ' and `template`.`content` like "%' . parent::session()->get('content', 'template-search') . '%"';
             }
-            $templates = $dbObject->fetchAll('SELECT `template`.`id`, `template`.`name`, `template`.`content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '))' . $searchPara . ' ORDER BY `template`.`id`;');
+            $templates = $dbObject->fetchAll('SELECT `template`.`id`, `template`.`name`, `template`.`identifier`, `template`.`content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '))' . $searchPara . ' ORDER BY `template`.`id`;');
 
             if (count($templates) > 0) {
                 $return .= ''
-                        . '<table class="template-list data-table standart clickable">'
-                        . '<thead>'
+                . '<table class="template-list data-table standart clickable">'
+                    . '<thead>'
                         . '<tr>'
-                        . '<th class="template-id">Id:</th>'
-                        . '<th class="template-name">Name:</th>'
-                        . '<th class="template-content">Content:</th>'
-                        . '<th class="template-edit">Edit:</th>'
+                            . '<th class="template-id">Id:</th>'
+                            . '<th class="template-name w160">Name:</th>'
+                            . '<th class="template-identifier w120">Identifier:</th>'
+                            . '<th class="template-content">Content:</th>'
+                            . '<th class="template-edit">Edit:</th>'
                         . '</tr>'
-                        . '</thead>'
-                        . '<tbody>';
+                    . '</thead>'
+                    . '<tbody>';
+
                 $i = 1;
                 foreach ($templates as $template) {
                     //$template['content'] = str_replace('&amp;web:page', '&web:page', $template['content']);
@@ -2479,25 +2491,26 @@
                     $template['content'] = str_replace(">", "&gt;", $template['content']);
                     $template['content'] = str_replace("<", "&lt;", $template['content']);
                     $return .= ''
-                            . '<tr class="' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
-                            . '<td class="template-id">' . $template['id'] . '</td>'
-                            . '<td class="template-name">' . $template['name'] . '</td>'
-                            . '<td class="template-content" style="overflow:hidden;">'
+                    . '<tr class="' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
+                        . '<td class="template-id">' . $template['id'] . '</td>'
+                        . '<td class="template-name">' . $template['name'] . '</td>'
+                        . '<td class="template-identifier">' . $template['identifier'] . '</td>'
+                        . '<td class="template-content" style="overflow:hidden;">'
                             . '<div class="file-content-in"><div class="foo">' . substr($template['content'], 0, 130) . '</div></div>'
-                            . '</td>'
-                            . '<td class="template-edit">'
+                        . '</td>'
+                        . '<td class="template-edit">'
                             . '<form name="template-edit1" method="post" action="' . $actionUrl . '">'
-                            . '<input type="hidden" name="template-id" value="' . $template['id'] . '" />'
-                            . '<input type="hidden" name="template-edit" value="Edit" />'
-                            . '<input type="image" src="~/images/page_edi.png" name="template-edit" value="Edit" title="Edit template" />'
+                                . '<input type="hidden" name="template-id" value="' . $template['id'] . '" />'
+                                . '<input type="hidden" name="template-edit" value="Edit" />'
+                                . '<input type="image" src="~/images/page_edi.png" name="template-edit" value="Edit" title="Edit template" />'
                             . '</form> '
                             . '<form name="template-edit2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                            . '<input type="hidden" name="template-id" value="' . $template['id'] . '" />'
-                            . '<input type="hidden" name="template-delete" value="Delete" />'
-                            . '<input class="confirm" type="image" src="~/images/page_del.png" name="template-delete" value="Delete" title="Delete template, id(' . $template['id'] . ')" />'
+                                . '<input type="hidden" name="template-id" value="' . $template['id'] . '" />'
+                                . '<input type="hidden" name="template-delete" value="Delete" />'
+                                . '<input class="confirm" type="image" src="~/images/page_del.png" name="template-delete" value="Delete" title="Delete template, id(' . $template['id'] . ')" />'
                             . '</form>'
-                            . '</td>'
-                            . '</tr>';
+                        . '</td>'
+                    . '</tr>';
                     $i++;
                 }
                 $return .= ''
