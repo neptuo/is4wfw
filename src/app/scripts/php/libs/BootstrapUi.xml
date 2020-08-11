@@ -322,4 +322,44 @@
       Vygeneruje obalový tag pro "nav".
     </comment>
   </tag>
+  <tag>
+    <tagname>fieldValidationMessage</tagname>
+    <function>fieldValidationMessage</function>
+    <attribute>
+      <attname>name</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu.</attcomment>
+    </attribute>
+    <comment>
+      Vypíše validační hlášky pro field "name".
+    </comment>
+  </tag>
+  <fulltag>
+    <tagname>fieldValidator</tagname>
+    <function>fieldValidator</function>
+    <attribute>
+      <attname>name</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+      <attcomment>Název fieldu.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>cssClass</attname>
+      <atttype>string</atttype>
+      <attreq>implied</attreq>
+      <attcomment>Výchozí css třída pro editační prvek.</attcomment>
+    </attribute>
+    <comment>
+      Nastavuje vlastnost "fieldValidatorCssClass" podle toho, zda je field s "name" validní.
+      Zároveň zapíše i validační hlášky za obsah šablony.
+    </comment>
+  </fulltag>
+  <property>
+    <propname>fieldValidatorCssClass</propname>
+    <getfunction>getFieldValidatorCssClass</getfunction>
+    <comment>
+      Vrací css třída uvnitř "fieldValidator" doplněnou o informaci, prvek validní.
+    </comment>
+  </property>
 </taglib>

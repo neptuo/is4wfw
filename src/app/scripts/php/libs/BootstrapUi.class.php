@@ -273,6 +273,55 @@
 
 			return $result;
 		}
+
+		private $fieldValidatorCssClass;
+
+		public function fieldValidator(callable $template, string $name, string $cssClass = "") {
+			$model = parent::getEditModel();
+			$isValid = empty($model->validationMessage($name));
+
+			if (!$isValid) {
+				if ($cssClass != "") {
+					$cssClass .= " ";
+				}
+
+				$cssClass .= "is-invalid";
+			}
+
+			$oldValue = $this->fieldValidatorCssClass;
+			$this->fieldValidatorCssClass = $cssClass;
+
+			$result = $template();
+			$result .= $this->fieldValidationMessage($name);
+			
+
+			$this->fieldValidatorCssClass = $oldValue;
+			return $result;
+		}
+
+		public function fieldValidationMessage(string $name) {
+			$templateContent = '
+			<val:message key="' . $name . '">
+				<ui:any items="val:messageList">
+					<div class="invalid-feedback">
+						<web:getProperty name="val:messageText" />.
+					</div>
+				</ui:any>
+			</val:message>
+			';
+
+			$keys = ["adminui", "validation", sha1($templateContent)];
+			$template = $this->getParsedTemplate($keys);
+			if ($template == null) {
+				$template = $this->parseTemplate($keys, $templateContent);
+			}
+
+			return $template();
+		}
+
+		public function getFieldValidatorCssClass() {
+			return $this->fieldValidatorCssClass;
+		}
 	}
 
 ?>
