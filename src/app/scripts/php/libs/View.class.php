@@ -133,6 +133,17 @@
             return $return;
         }
 
+		public function provideBodyByPath($src) {
+			$keys = $this->getVirtualPathKeys($src);
+            $template = $this->getParsedTemplate($keys);
+            if ($template == null) {
+                $template = $this->parseTemplate($keys, ViewHelper::getViewContent($src));
+            }
+
+			$parameters = [DefaultPhp::$FullTagTemplateName => $template];
+			return $parameters;
+		}
+
         /* ============================= FUNCTIONS =========================================== */
 
         private function flush($content) {

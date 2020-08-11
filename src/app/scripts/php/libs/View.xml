@@ -102,5 +102,18 @@
       Panel
     </comment>
   </fulltag>
+  <decorator>
+    <function>provideBodyByPath</function>
+    <attribute>
+      <attname>src</attname>
+      <atttype>string</atttype>
+      <attreq>required</attreq>
+      <attcomment>Virtuální cesta k šabloně.</attcomment>
+    </attribute>
+    <features>
+      <providesFullTagBody />
+    </features>
+    <comment>Poskytuje obsah těla pro párový tag ze šablony.</comment>
+  </decorator>
 </taglib>
 
