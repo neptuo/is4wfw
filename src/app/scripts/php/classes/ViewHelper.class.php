@@ -1,18 +1,23 @@
 <?php
 
+    require_once("ViewMissingException.class.php");
+
     class ViewHelper {
 
-        public static function getViewContent($path) {
-            if (strpos($path, '.view') == '') {
-                $path = ViewHelper::resolveViewPath($path);
-            } elseif (strpos($path, '.php') == '') {
-                $path .= '.php';
+        public static function getViewContent($viewPath) {
+            $serverPath = $viewPath;
+            if (strpos($serverPath, '.view') == '') {
+                $serverPath = ViewHelper::resolveViewPath($serverPath);
+                $viewPath .= ".view";
+            } elseif (strpos($serverPath, '.php') == '') {
+                $serverPath .= '.php';
             }
-            $path = str_replace('~/', APP_ADMIN_PATH . '/', $path);
-            if (file_exists($path)) {
-                return file_get_contents($path);
+
+            $serverPath = str_replace('~/', APP_ADMIN_PATH . '/', $serverPath);
+            if (file_exists($serverPath)) {
+                return file_get_contents($serverPath);
             } else {
-                throw new Exception('View "' . $path . '" doesn\'t exist!');
+                throw new ViewMissingException($viewPath, $serverPath);
             }
         }
 

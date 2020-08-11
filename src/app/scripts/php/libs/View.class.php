@@ -3,6 +3,7 @@
     require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewHelper.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewMissingException.class.php");
 
     /**
      * 
@@ -71,7 +72,7 @@
 
                 $result = $template();
             } catch (Exception $ex) {
-                echo parent :: getError($ex->getMessage());
+                echo parent::getError($ex->getMessage());
             }
 
             $this->flush($result);
