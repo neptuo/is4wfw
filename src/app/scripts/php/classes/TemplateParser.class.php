@@ -186,6 +186,15 @@
                 }
 
                 $functionName = null;
+
+                $isRegisteredTag = $phpObject->isTag($object[0], $object[1], $attributes);
+                $isRegisteredFullTag = $phpObject->isFullTag($object[0], $object[1], $attributes);
+                if (!$isRegisteredTag && $isRegisteredFullTag) {
+                    // Allow full tags to be used without body/template.
+                    $isFullTag = true;
+                    $content = "";
+                }
+
                 if ($isFullTag) {
                     if ($object[0] == "php" && $object[1] == "using") {
                         $phpObject->register($attributes->Attributes["prefix"]["value"], $attributes->Attributes["class"]["value"]);
@@ -198,7 +207,7 @@
                         $phpObject->unregister($attributes->Attributes["prefix"]["value"]);
                     }
                     
-                    if ($phpObject->isFullTag($object[0], $object[1], $attributes)) {
+                    if ($isRegisteredFullTag) {
                         $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
                         if (!$phpObject->sortFullAttributes($object[0], $object[1], $attributes, $content)) {
                             return "";
@@ -210,7 +219,7 @@
                         }
                     }
                 } else {
-                    if ($phpObject->isTag($object[0], $object[1], $attributes)) {
+                    if ($isRegisteredTag) {
                         $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
                         if (!$phpObject->sortAttributes($object[0], $object[1], $attributes)) {
                             return "";
