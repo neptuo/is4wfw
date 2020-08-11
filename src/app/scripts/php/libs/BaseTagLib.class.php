@@ -718,6 +718,19 @@
             return $return;
         }
 
+        public function executeTemplateContent(array $keys, string $content) {
+            if (is_callable($content)) {
+                return $content();
+            }
+
+            $template = $this->getParsedTemplate($keys);
+            if ($template == null) {
+                $template = $this->parseTemplate($keys, $content);
+            }
+
+            return $template();
+        }
+
         public function parseTemplate(array $keys, string $content) {
             if ($content instanceof ParsedTemplate) {
                 return $content;

@@ -456,9 +456,8 @@
         }
 
         private function parseAllPagesTagLib($tl) {
-            //print_r($this->TempLoadedContent);
             foreach ($this->TempLoadedContent as $page) {
-                $this->UrlResolver->parseContentForCustomTags($page[$tl], ["page", $tl, $page["id"]]);
+                $this->executeTemplateContent(["page", $page["id"], $tl], $page[$tl]);
             }
         }
 
@@ -805,9 +804,7 @@
             $this->TempLoadedContent = self::sortPages($dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `title`, `tag_lib_start`, `tag_lib_end`, `head`, `content`, `info`.`timestamp` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`id` IN (" . $str . ") AND `page`.`wp` = " . $this->ProjectId . ";"), $this->PagesId);
             $this->CurrentPageTimestamp = $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['timestamp'];
             if (count($this->TempLoadedContent) == count($this->PagesId)) {
-                foreach ($this->TempLoadedContent as $page) {
-                    self::parseContent($page['tag_lib_start']);
-                }
+                $this->parseAllPagesTagLib("tag_lib_start");
 
                 // Parse domain for setup dynamic properties
                 $temp_req = $phpObject->str_tr($this->ProjectUrl, '.', 1);
@@ -842,9 +839,7 @@
                     $path = $phpObject->str_tr($path[1], '/', 1);
                 }
 
-                foreach ($this->TempLoadedContent as $page) {
-                    self::parseContent($page['tag_lib_end']);
-                }
+                $this->parseAllPagesTagLib("tag_lib_end");
 
                 $this->PageContent = self::getContent();
             } else {
@@ -942,7 +937,7 @@
 
                     if ($ok/* $tmp_path == $path[0] */) {
                         $this->ParsingPages = true;
-                        self::parseContent($return[$i]['tag_lib_start']);
+                        $this->executeTemplateContent(["page", $return[$i]["page_id"], "tag_lib_start"], $return[$i]['tag_lib_start']);
 
                         $this->PagesId[] = $return[$i]['page_id'];
                         // Otestovat!!!!!!!!!
@@ -955,17 +950,17 @@
                         }
                         self::parsePages($path[0] . '/' . $path[1], $return[$i]['page_id']);
 
-                        self::parseContent($return[$i]['tag_lib_end']);
+                        $this->executeTemplateContent(["page", $return[$i]["page_id"], "tag_lib_end"], $return[$i]['tag_lib_end']);
 
                         $this->ParsingPages = false;
                         return;
                     }
                 }
                 for ($i = 0; $i < count($return); $i++) {
-                    $tmp_path = self::parseContent($return[$i]['href']);
+                    $tmp_path = $this->executeTemplateContent(["page", $return[$i]["id"], "href"], $return[$i]['href']);
                     if ($tmp_path == "") {
                         $this->ParsingPages = true;
-                        self::parseContent($return[$i]['tag_lib_start']);
+                        $this->executeTemplateContent(["page", $return[$i]["page_id"], "tag_lib_start"], $return[$i]['tag_lib_start']);
 
                         $this->PagesId[] = $return[$i]['page_id'];
                         // Otestovat!!!!!!!!!
@@ -979,7 +974,7 @@
 
                         self::parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0] . '/' . $path[1], $return[$i]['page_id']);
 
-                        self::parseContent($return[$i]['tag_lib_end']);
+                        $this->executeTemplateContent(["page", $return[$i]["page_id"], "tag_lib_start"], $return[$i]['tag_lib_end']);
 
                         $this->ParsingPages = false;
                         return;
@@ -1522,12 +1517,11 @@
          */
         public function getContent() {
             global $phpObject;
-            global $dbObject;
 
             $path = $phpObject->str_tr($this->Path, '/', 1);
-            $return = $this->TempLoadedContent[$this->PagesIdIndex];
+            $page = $this->TempLoadedContent[$this->PagesIdIndex];
 
-            self::parseContent($return['tag_lib_start']);
+            $this->executeTemplateContent(["page", $page["id"], "tag_lib_start"], $page['tag_lib_start']);
 
             if (count($this->PagesId) > ($this->PagesIdIndex + 1)) {
                 self::setChildPage($this->PagesId[$this->PagesIdIndex + 1]);
@@ -1537,30 +1531,30 @@
 
             $this->CurrentDynamicPath = $path[0];
             
-            $tmp_path = self::parseContent($return['href']);
+            $tmp_path = $this->executeTemplateContent(["page", $page["id"], "href"], $page['href']);
 
             $this->ParentId = $this->PagesId[$this->PagesIdIndex];
             $this->PagesIdIndex++;
 
-            if ($return['in_title'] == 1) {
+            if ($page['in_title'] == 1) {
                 // parse title
-                if (strlen($return['title']) > 0) {
+                if (strlen($page['title']) > 0) {
                     $this->PropertyAttr = '';
                     $this->PropertyUse = 'get';
-                    $this->PageTitle = self::parseContent($return['title']) . " - " . $this->PageTitle;
+                    $this->PageTitle = $this->executeTemplateContent(["page", $page["id"], "title"], $page['title']) . " - " . $this->PageTitle;
                 }
             }
-            if (strlen($return['keywords']) > 0) {
-                $return['keywords'] = self::parseContent($return['keywords']);
+            if (strlen($page['keywords']) > 0) {
+                $page['keywords'] = $this->executeTemplateContent(["page", $page["id"], "keywords"], $page['keywords']);
             }
-            $this->Keywords .= ( (strlen($return['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ',' . $return['keywords'] : $return['keywords']) : '');
+            $this->Keywords .= ( (strlen($page['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ',' . $page['keywords'] : $page['keywords']) : '');
 
             $this->Path = $path[1];
 
-            $this->PageHead .= self::parseContent($return['head']);
-            $pageContent = self::parseContent($return['content']);
+            $this->PageHead .= $this->executeTemplateContent(["page", $page["id"], "head"], $page['head']);
+            $pageContent = $this->executeTemplateContent(["page", $page["id"], "content"], $page['content']);
 
-            self::parseContent($return['tag_lib_end']);
+            $this->executeTemplateContent(["page", $page["id"], "tag_lib_end"], $page['tag_lib_end']);
 
             $this->PagesIdIndex--;
 
@@ -1632,7 +1626,7 @@
 
                     $lnkName = $lnk[$display];
                     if ($display == "title") {
-                        $lnkName = self::parseContent($lnk[$display]);
+                        $lnkName = $this->executeTemplateContent(["page", $lnk["id"], "title"], $lnk["title"]);
                     }
 
                     $content .= ''
@@ -1667,7 +1661,7 @@
 
                 $text = $item[$display];
                 if ($display == "title") {
-                    $text = $this->parseContent($item[$display]);
+                    $text = $this->executeTemplateContent(["page", $item["id"], "title"], $item["title"]);
                 }
                 
                 $url = $this->composeUrl($item["id"], $this->LanguageId, false, true, $copyParameters);
@@ -1906,7 +1900,7 @@
                 $return = $dbObject->fetchAll("SELECT `content` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` WHERE `page`.`id` = " . $pageId . " AND `content`.`language_id` = " . $languageId . ";");
                 if (count($return) == 1) {
                     if (!$notParseCTag) {
-                        return self::parseContent($return[0]['content']);
+                        return $this->executeTemplateContent(["page", $pageId, "content"], $return[0]['content']);
                     } else {
                         return $return[0]['content'];
                     }
@@ -1959,7 +1953,7 @@
                 if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(DefaultWeb::$TemplateRightDesc, $templateId, WEB_R_READ))) {
                     $template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = ' . $dbObject->escape($templateId) . ';');
                     if (count($template) == 1) {
-                        $return = parent::parseContent($template[0]['content']);
+                        $return = $this->executeTemplateContent(["template", $templateId], $template[0]['content']);
                         return $return;
                     }
                 } else {
@@ -2622,7 +2616,7 @@
             // parse title
             $page = $this->TempLoadedContent[$this->PagesIdIndex - 1];
             if (strlen($page['title']) > 0) {
-                return self::parseContent($page['title']);
+                return $this->executeTemplateContent(["page", $page["id"], "title"], $page['title']);
             }
         }
 
@@ -2642,7 +2636,7 @@
             // parse title
             $page = $this->TempLoadedContent[count($this->TempLoadedContent) - 1];
             if (strlen($page['title']) > 0) {
-                return self::parseContent($page['title']);
+                return $this->executeTemplateContent(["page", $page["id"], "title"], $page['title']);
             }
         }
 
