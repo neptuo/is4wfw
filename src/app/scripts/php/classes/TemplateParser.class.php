@@ -189,7 +189,7 @@
 
                 $isRegisteredTag = $phpObject->isTag($object[0], $object[1], $attributes);
                 $isRegisteredFullTag = $phpObject->isFullTag($object[0], $object[1], $attributes);
-                if (!$isRegisteredTag && $isRegisteredFullTag) {
+                if (!$isFullTag && !$isRegisteredTag && $isRegisteredFullTag) {
                     // Allow full tags to be used without body/template.
                     $isFullTag = true;
                     $content = "";
