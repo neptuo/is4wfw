@@ -2560,6 +2560,8 @@
                 $actionUrl = $webObject->composeUrl($submitPageId);
             }
 
+            $entity = null;
+            $hasError = false;
             if ($_POST['template-submit'] == "Save") {
                 $templateId = $_POST['template-id'];
                 $entity = [
@@ -2571,6 +2573,10 @@
                 $templateW = $_POST['template-right-edit-groups-w'];
                 $templateD = $_POST['template-right-edit-groups-d'];
 
+                if ($entity["identifier"] == "") {
+                    $entity["identifier"] = null;
+                }
+
                 // test na prava
                 $tempId = (($_POST['template-id'] != '') ? $_POST['template-id'] : 0);
                 $rights = $dbObject->fetchAll('SELECT `value` FROM `template_right` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = ' . $tempId . ' AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '));');
@@ -2578,62 +2584,74 @@
                     $template = $dbObject->fetchAll('SELECT `id` FROM `template` WHERE `id` = ' . $templateId . ';');
                     if (count($template) == 0) {
                         $sql = parent::sql()->insert("template", $entity);
-                        $dbObject->execute($sql);
-                        $last = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `template`;');
-                        $templateId = $last[0]['id'];
-                        $_POST['template-id'] = $templateId;
-                        if ($showError != 'false') {
-                            $return .= '<h4 class="success">Template added!</h4>';
+                        try {
+                            $dbObject->execute($sql);
+                            $last = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `template`;');
+                            $templateId = $last[0]['id'];
+                            $_POST['template-id'] = $templateId;
+                            if ($showError != 'false') {
+                                $return .= '<h4 class="success">Template added!</h4>';
+                            }
+                        } catch (DataAccessException $e) {
+                            $return .= $this->getError("Error: " . $e->errorMessage . ".");
+                            $hasError = true;
                         }
                     } else {
                         $sql = parent::sql()->update("template", $entity, ["id" => $templateId]);
-                        $dbObject->execute($sql);
-                        if ($showError != 'false') {
-                            $return .= '<h4 class="success">Template updated!</h4>';
-                        }
+                        try {
+                            $dbObject->execute($sql);
+                            if ($showError != 'false') {
+                                $return .= '<h4 class="success">Template updated!</h4>';
+                            }
 
-                        $this->deleteParsedTemplate(["template", $templateId]);
+                            $this->deleteParsedTemplate(["template", $templateId]);
+                        } catch (DataAccessException $e) {
+                            $return .= $this->getError("Error: " . $e->errorMessage . ".");
+                            $hasError = true;
+                        }
                     }
 
-                    if (count($templateR) != 0) {
-                        $dbR = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `template_right`.`tid` = " . $templateId . " AND `type` = " . WEB_R_READ . ";");
-                        foreach ($dbR as $right) {
-                            if (!in_array($right['gid'], $templateR)) {
-                                $dbObject->execute("DELETE FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_READ . ";");
+                    if (!$hasError) {
+                        if (count($templateR) != 0) {
+                            $dbR = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `template_right`.`tid` = " . $templateId . " AND `type` = " . WEB_R_READ . ";");
+                            foreach ($dbR as $right) {
+                                if (!in_array($right['gid'], $templateR)) {
+                                    $dbObject->execute("DELETE FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_READ . ";");
+                                }
+                            }
+                            foreach ($templateR as $right) {
+                                $row = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_READ . " AND `gid` = " . $right . ";");
+                                if (count($row) == 0) {
+                                    $dbObject->execute("INSERT INTO `template_right`(`tid`, `gid`, `type`) VALUES (" . $templateId . ", " . $right . ", " . WEB_R_READ . ");");
+                                }
                             }
                         }
-                        foreach ($templateR as $right) {
-                            $row = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_READ . " AND `gid` = " . $right . ";");
-                            if (count($row) == 0) {
-                                $dbObject->execute("INSERT INTO `template_right`(`tid`, `gid`, `type`) VALUES (" . $templateId . ", " . $right . ", " . WEB_R_READ . ");");
+                        if (count($templateW) != 0) {
+                            $dbR = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `template_right`.`tid` = " . $templateId . " AND `type` = " . WEB_R_WRITE . ";");
+                            foreach ($dbR as $right) {
+                                if (!in_array($right['gid'], $templateW)) {
+                                    $dbObject->execute("DELETE FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_WRITE . ";");
+                                }
+                            }
+                            foreach ($templateW as $right) {
+                                $row = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_WRITE . " AND `gid` = " . $right . ";");
+                                if (count($row) == 0) {
+                                    $dbObject->execute("INSERT INTO `template_right`(`tid`, `gid`, `type`) VALUES (" . $templateId . ", " . $right . ", " . WEB_R_WRITE . ");");
+                                }
                             }
                         }
-                    }
-                    if (count($templateW) != 0) {
-                        $dbR = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `template_right`.`tid` = " . $templateId . " AND `type` = " . WEB_R_WRITE . ";");
-                        foreach ($dbR as $right) {
-                            if (!in_array($right['gid'], $templateW)) {
-                                $dbObject->execute("DELETE FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_WRITE . ";");
+                        if (count($templateD) != 0) {
+                            $dbR = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `template_right`.`tid` = " . $templateId . " AND `type` = " . WEB_R_DELETE . ";");
+                            foreach ($dbR as $right) {
+                                if (!in_array($right['gid'], $templateD)) {
+                                    $dbObject->execute("DELETE FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_DELETE . ";");
+                                }
                             }
-                        }
-                        foreach ($templateW as $right) {
-                            $row = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_WRITE . " AND `gid` = " . $right . ";");
-                            if (count($row) == 0) {
-                                $dbObject->execute("INSERT INTO `template_right`(`tid`, `gid`, `type`) VALUES (" . $templateId . ", " . $right . ", " . WEB_R_WRITE . ");");
-                            }
-                        }
-                    }
-                    if (count($templateD) != 0) {
-                        $dbR = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `template_right`.`tid` = " . $templateId . " AND `type` = " . WEB_R_DELETE . ";");
-                        foreach ($dbR as $right) {
-                            if (!in_array($right['gid'], $templateD)) {
-                                $dbObject->execute("DELETE FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_DELETE . ";");
-                            }
-                        }
-                        foreach ($templateD as $right) {
-                            $row = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_DELETE . " AND `gid` = " . $right . ";");
-                            if (count($row) == 0) {
-                                $dbObject->execute("INSERT INTO `template_right`(`tid`, `gid`, `type`) VALUES (" . $templateId . ", " . $right . ", " . WEB_R_DELETE . ")");
+                            foreach ($templateD as $right) {
+                                $row = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_DELETE . " AND `gid` = " . $right . ";");
+                                if (count($row) == 0) {
+                                    $dbObject->execute("INSERT INTO `template_right`(`tid`, `gid`, `type`) VALUES (" . $templateId . ", " . $right . ", " . WEB_R_DELETE . ")");
+                                }
                             }
                         }
                     }
@@ -2649,8 +2667,12 @@
             }
 
             // Pokud je v postu template-id, vyber template, testuj prava, pokud, testuj prava pro template-id 0
-            $templateId = ((array_key_exists('template-id', $_POST)) ? $_POST['template-id'] : 0);
-            $template = $dbObject->fetchAll('SELECT `template`.`name`, `identifier`, `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
+            if ($entity == null) {
+                $templateId = ((array_key_exists('template-id', $_POST)) ? $_POST['template-id'] : 0);
+                $template = $dbObject->fetchAll('SELECT `template`.`name`, `identifier`, `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
+            } else {
+                $template = [0 => $entity];
+            }
             if (count($template) > 0 || $templateId == 0) {
                 $show = array('read' => true, 'write' => true, 'delete' => false);
                 $groupsR = $dbObject->fetchAll("SELECT `gid` FROM `template_right` WHERE `tid` = " . $templateId . " AND `type` = " . WEB_R_READ . ";");
