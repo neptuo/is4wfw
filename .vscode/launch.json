@@ -11,6 +11,7 @@
             "port": 9000,
             "pathMappings": {
                 "/var/www/html/app": "${workspaceFolder}/src/app",
+                "/var/www/html/cache": "${workspaceFolder}/temp/instance/cache",
                 "/var/www/html/user": "${workspaceFolder}/temp/instance/user",
                 "/var/www/html/test": "${workspaceFolder}/test"
             },
