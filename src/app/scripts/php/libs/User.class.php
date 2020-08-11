@@ -1017,6 +1017,7 @@
 
                 // Unique login.
                 if ($model->hasKey("login")) {
+                    Validator::addRequired($model, "login");
                     $isValid = $this->isUniqueLogin($model["login"], $uid);
                     if (!$isValid) {
                         Validator::addUnique($model, "login");

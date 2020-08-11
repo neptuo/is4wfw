@@ -33,7 +33,7 @@
 			throw new Error("Permission denied when reading template id = '" . $data["id"] . "'.");
 		}
 
-		private function includeBy(array $filter, array $keys, ?ParsedTemplate $contentTemplate, $params) {
+		private function includeBy(array $filter, array $keys, callable $contentTemplate, $params) {
 			$template = $this->getParsedTemplate($keys);
 			if ($template == null) {
 				$templateContent = $this->findBy($filter);
@@ -43,7 +43,7 @@
 			return $this->includeFinal($template, $contentTemplate, $params);
 		}
 
-		private function includeFinal(callable $template, ?ParsedTemplate $contentTemplate, $params) {
+		private function includeFinal(callable $template, callable $contentTemplate, $params) {
 			$oldContent = parent::request()->get('content', 'template:include');
 			$oldParams = parent::request()->get('params', 'template:include');
 			parent::request()->set('params', $params, 'template:include');
