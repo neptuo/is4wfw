@@ -458,7 +458,7 @@
         private function parseAllPagesTagLib($tl) {
             //print_r($this->TempLoadedContent);
             foreach ($this->TempLoadedContent as $page) {
-                $this->UrlResolver->parseContentForCustomTags($page[$tl]);
+                $this->UrlResolver->parseContentForCustomTags($page[$tl], ["page", $tl, $page["id"]]);
             }
         }
 
