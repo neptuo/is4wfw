@@ -132,6 +132,7 @@
             if ($content != "") {
                 $replaced = str_replace("'", "\\'", $content);
                 $processed = preg_replace_callback($this->FULL_TAG_RE, array(&$this, 'parsefulltag'), $replaced);
+                $this->checkPregError("parsefulltag", $replaced);
             }
 
             $this->stopMeasure($content);
