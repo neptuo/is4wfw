@@ -841,7 +841,7 @@
 
         public function triggerFail($message, $errorType = E_USER_WARNING) {
             trigger_error($message, $errorType);
-            echo "<h4 class=\"error\">".$message."</h4>";
+            echo $this->getError($message);
             return false;
         }
         
