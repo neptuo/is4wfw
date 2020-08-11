@@ -1004,6 +1004,10 @@
                         }
                     }
                 } else {
+                    if (array_key_exists("group_ids", $default)) {
+                        $default["group_ids"] = array_map(function($groupId) { return intval($groupId); }, explode(",", $default["group_ids"]));
+                    }
+
                     $model->copyFrom($default);
                 }
 			}
@@ -1079,6 +1083,7 @@
 
                 // Main group id.
                 if (!$model->hasKey("group_id") && !$isUpdate) {
+                    Validator::addRequired($model, "group_id");
                     $model->metadata("isValid", false);
                 }
 
@@ -1098,6 +1103,11 @@
                     }
 
                     if (is_array($groupIds)) {
+                        $groupId = intval($model["group_id"]);
+                        if (!in_array($groupId, $groupIds)) {
+                            $groupIds[] = $groupId;
+                        }
+
                         $currentGroupIds = $this->getUserGroupIds($uid);
                         foreach ($currentGroupIds as $groupId) {
                             if (!in_array($groupId, $groupIds)) {
