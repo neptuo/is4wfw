@@ -179,7 +179,7 @@
                 return true;
             }
             foreach ($pages as $page) {
-                self::parseContentForCustomTags($page['tag_lib_start']);
+                $this->parseContentForCustomTags($page['tag_lib_start'], ["page", "tag_lib_start", $page["id"]]);
 
                 $found = true;
                 $key = 0;
@@ -188,7 +188,7 @@
                     foreach ($hrefs as $key => $href) {
                         $fhref = self::parseSingleUrlPart($href, $pageUrls[$key]);
                         if ($fhref != $pageUrls[$key]) {
-                            self::parseContentForCustomTags($page['tag_lib_end']);
+                            $this->parseContentForCustomTags($page['tag_lib_end'], ["page", "tag_lib_end", $page["id"]]);
                             $found = false;
                             //break;
                         }
@@ -198,13 +198,14 @@
                         $key--;
                     }
                 }
+                
                 if ($found) {
                     //echo 'Page: '.$page['id'].'<br />';
                     $this->PagesId[] = $page['id'];
                     //print_r($this->PagesId);
                     // rekurze
                     if (self::parsePageUrlWithLang(self::subarray($pageUrls, $key + 1), $projectId, $page['id'], $langId)) {
-                        self::parseContentForCustomTags($page['tag_lib_end']);
+                        $this->parseContentForCustomTags($page['tag_lib_end'], ["page", "tag_lib_end", $page["id"]]);
                         return true;
                     } else {
                         //echo 'PagesCount: '.count($this->PagesId).'<br />';
@@ -212,7 +213,7 @@
                     }
                 }
 
-                self::parseContentForCustomTags($page['tag_lib_end']);
+                $this->parseContentForCustomTags($page['tag_lib_end'], ["page", "tag_lib_end", $page["id"]]);
             }
             return false;
         }
@@ -223,8 +224,8 @@
             return preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $part);
         }
 
-        public function parseContentForCustomTags($content) {
-            $this->Parser->parse($content);
+        public function parseContentForCustomTags(string $content, array $keys) {
+            $this->Parser->parse($content, $keys);
         }
 
         private function parsecproperty($cprop) {
