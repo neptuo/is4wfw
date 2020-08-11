@@ -738,6 +738,11 @@
             return new TemplateParser();
         }
 
+        public function deleteParsedTemplate(array $keys) {
+            $parser = $this->createParser();
+            $parser->getCache()->delete($keys);
+        }
+
         protected function formatString($format, $model) {
             foreach ($model as $key => $value) {
                 $source = "{" . $key . "}";

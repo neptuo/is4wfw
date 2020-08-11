@@ -34,6 +34,10 @@
             $this->TemplateCache = new TemplateCache();
         }
 
+        public function getCache() {
+            return $this->TemplateCache;
+        }
+
         public function setTagsToParse($tags) {
             $this->TagsToParse = $tags;
         }
