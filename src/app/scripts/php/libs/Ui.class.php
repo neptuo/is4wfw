@@ -666,13 +666,13 @@
 			return $value;
 		}
 
-		public function formatNumber($value, $thousandsSeparator = "", $decimalSeparator = "", $decimals = "") {
+		public function formatNumber($value, $thousandsSeparator = "", $decimalsSeparator = "", $decimals = "") {
 			if ($thousandsSeparator) {
 				if (!$decimals) {
 					$decimals = 2;
 				}
 
-				$value = number_format($value, $decimals, $decimalSeparator, $thousandsSeparator);
+				$value = number_format($value, $decimals, $decimalsSeparator, $thousandsSeparator);
 			} else if (is_numeric($decimals)) {
 				$value = round($value, $decimals);
 			}

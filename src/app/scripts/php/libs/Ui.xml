@@ -623,7 +623,7 @@
       <attcomment>Pokud je vyplněn, bude použit jako oddělovač tisíců.</attcomment>
     </attribute>
     <attribute>
-      <attname>decimalSeparator</attname>
+      <attname>decimalsSeparator</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Pokud je vyplněn, bude použit jako oddělovač desetinných míst.</attcomment>
