@@ -13,6 +13,8 @@
 	 */
 	class Template extends BaseTagLib {
 
+		private $inline = [];
+
 		public function __construct() {
 			parent::setTagLibXml("Template.xml");
 		}
@@ -38,6 +40,10 @@
 				$template = $this->parseTemplate($keys, $templateContent);
 			}
 
+			return $this->includeFinal($template, $contentTemplate, $params);
+		}
+
+		private function includeFinal(callable $template, ?ParsedTemplate $contentTemplate, $params) {
 			$oldContent = parent::request()->get('content', 'template:include');
 			$oldParams = parent::request()->get('params', 'template:include');
 			parent::request()->set('params', $params, 'template:include');
@@ -60,6 +66,10 @@
 		}
 
 		public function includeByIdentifier($identifier, $params) {
+			if (array_key_exists($identifier, $this->inline)) {
+				return $this->includeFinal($this->inline[$identifier], null, $params);
+			}
+
 			return $this->includeWithBodyByIdentifier($identifier, null, $params);
 		}
 
@@ -82,6 +92,11 @@
 				return $params[$name];
 			}
 
+			return "";
+		}
+
+		public function declareInline(callable $template, string $identifier) {
+			$this->inline[$identifier] = $template;
 			return "";
 		}
 

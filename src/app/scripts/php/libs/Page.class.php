@@ -31,11 +31,10 @@
         public function showEditPage($paramPageId = false, $paramLangId = false) {
             global $dbObject;
             global $loginObject;
-            global $webObject;
             $rb = self::rb();
             $return = '';
             
-            if($paramPageId != 0 && $paramLangId != 0) {
+            if ($paramPageId != 0 && $paramLangId != 0) {
                 $_POST['page-edit'] = $rb->get('page.action.edit');
                 $_POST['page-id']  = $paramPageId;
                 $dataItem = parent::db()->fetchSingle('select `parent_id` from `page` where `id` = '.$paramPageId.';');
@@ -2579,6 +2578,8 @@
                         if ($showError != 'false') {
                             $return .= '<h4 class="success">Template updated!</h4>';
                         }
+
+                        $this->deleteParsedTemplate(["template", $templateId]);
                     }
 
                     if (count($templateR) != 0) {

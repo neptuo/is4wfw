@@ -48,6 +48,20 @@
       Vkládá tělo tagu "template:include" (párové značky).
     </comment>
   </tag>
+  <fulltag>
+    <tagname>declare</tagname>
+    <function>declareInline</function>
+    <attribute>
+      <attname>identifier</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Unikátní identifikátor šablony. Přebíjí uložené šabloné v DB.</attcomment>
+    </attribute>
+    <comment>
+      Definuje šablonu, jako kdyby byla uložení v DB.
+      Přebíjí uložené šabloné v DB.
+    </comment>
+  </fulltag>
   <anyTag>
     <function>includeByIdentifier</function>
     <comment>
