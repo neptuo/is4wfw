@@ -14,7 +14,7 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název jazyku.</comment>
     </attribute>
     <comment>
@@ -28,12 +28,12 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název bundlu, který se má načíst.</comment>
     </attribute>
     <attribute>
       <name>system</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>true</attdef>
       <comment>Zda se jedná o systémový bundle.</comment>
     </attribute>
@@ -47,18 +47,18 @@
     <attribute>
       <name>bundleName</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <name>languageName</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <name>filterKeyPrefix</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</comment>
     </attribute>
     <comment>
@@ -71,18 +71,18 @@
     <attribute>
       <name>bundleName</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <name>languageName</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <name>filterKeyPrefix</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</comment>
     </attribute>
     <comment>

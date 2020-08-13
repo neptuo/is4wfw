@@ -528,7 +528,7 @@
                 }
                 
                 if ($hasDefault) {
-                    if ($att->atttype == 'string') {
+                    if ($att->type == 'string') {
                         $attributeValue = "'" . eval('return "'. $att->attdef.'";') . "'";
                     } else {
                         $attributeValue = eval('return '. $att->attdef.';');
@@ -539,9 +539,9 @@
                     return $this->triggerFail("Missing required attribute '$att->name' on tag '$nameForErrorReport'.");
                 } else {
                     $value = false;
-                    if ($att->atttype == "string") {
+                    if ($att->type == "string") {
                         $value = "";
-                    } else if ($att->atttype == "number") { 
+                    } else if ($att->type == "number") { 
                         $value = 0;
                     }
 
@@ -604,12 +604,12 @@
         protected function getConvertValue($val, $att) {
             $convert = isset($att->attdef);
             
-            if (isset($att->atttype)) {
+            if (isset($att->type)) {
                 if (self::startsWith($val, '$this->template_') && self::endsWith($val, '()')) {
                     return array('value' => $val, 'type' => 'eval');
                 }
 
-                switch ($att->atttype) {
+                switch ($att->type) {
                     case 'string':
                         return array('value' => $val, 'type' => 'raw');
                     case 'number':

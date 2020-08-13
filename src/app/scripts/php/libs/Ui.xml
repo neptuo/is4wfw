@@ -171,13 +171,13 @@
     <attribute>
       <name>trueText</name>
       <comment>Hodnota text sloupce, pokud je "value" true.</comment>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>Yes</attdef>
     </attribute>
     <attribute>
       <name>falseText</name>
       <comment>Hodnota text sloupce, pokud je "value" false.</comment>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef></attdef>
     </attribute>
     <attribute>
@@ -209,7 +209,7 @@
       <name>format</name>
       <required />
       <comment>Formátovací řetězec pro datum (a čas).</comment>
-      <atttype>string</atttype>
+      <type>string</type>
     </attribute>
     <attribute>
       <name>th</name>
@@ -251,7 +251,7 @@
     <function>form</function>
     <attribute>
       <name>method</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>POST</attdef>
       <comment>HTTP metoda, kterou se má formář odeslat.</comment>
     </attribute>
@@ -290,7 +290,7 @@
     </attribute>
     <attribute>
       <name>nameIndex</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <attdef>-1</attdef>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
@@ -311,7 +311,7 @@
     </attribute>
     <attribute>
       <name>emptyText</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Pokud je zadán, obsahuje hodnotu pro nevyplněnou položku.</comment>
     </attribute>
     <anyAttribute />
@@ -364,7 +364,7 @@
     </attribute>
     <attribute>
       <name>nameIndex</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <attdef>-1</attdef>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
@@ -388,7 +388,7 @@
     </attribute>
     <attribute>
       <name>nameIndex</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <attdef>-1</attdef>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
@@ -412,7 +412,7 @@
     </attribute>
     <attribute>
       <name>nameIndex</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <attdef>-1</attdef>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
@@ -436,13 +436,13 @@
     </attribute>
     <attribute>
       <name>nameIndex</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <attdef>-1</attdef>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <name>default</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Výchozí hodnota.</comment>
     </attribute>
@@ -462,7 +462,7 @@
     </attribute>
     <attribute>
       <name>isMulti</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda se umožňuje výběr více souborů najednou.</comment>
     </attribute>
@@ -533,7 +533,7 @@
     </attribute>
     <attribute>
       <name>nameIndex</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <attdef>-1</attdef>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
@@ -574,17 +574,17 @@
     <attribute>
       <name>value</name>
       <required />
-      <atttype>number</atttype>
+      <type>number</type>
       <comment>Číslo.</comment>
     </attribute>
     <attribute>
       <name>thousandsSeparator</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Pokud je vyplněn, bude použit jako oddělovač tisíců.</comment>
     </attribute>
     <attribute>
       <name>decimalsSeparator</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Pokud je vyplněn, bude použit jako oddělovač desetinných míst.</comment>
     </attribute>
     <attribute>

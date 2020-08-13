@@ -13,7 +13,7 @@
     <attribute>
       <name>submit</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název klíče z requestu, který říká že jde o odeslání formuláře.</comment>
     </attribute>
     <anyAttribute>
@@ -29,7 +29,7 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název prefixu, který bude přidán všem klíčům ve formuláři.</comment>
     </attribute>
     <comment>
@@ -42,13 +42,13 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název klíče, který se má nastavit.</comment>
     </attribute>
     <attribute>
       <name>value</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Hodnota klíče.</comment>
     </attribute>
     <comment>Nastaví položku modelu.</comment>

@@ -92,7 +92,7 @@
     <attribute>
       <name>key</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <prefix />
       <comment>Klíč hodnota, které budou předány jako položky nově vytvořené položce v hlavním poli.</comment>
     </attribute>
@@ -110,7 +110,7 @@
     <attribute>
       <name>input</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Hodnota, v níž se mají nahradit nové řádky za "br".</comment>
     </attribute>
     <comment>Nahradí v "input" nové řádky za "br".</comment>
@@ -132,12 +132,12 @@
     <attribute>
       <name>format</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>PHP formát string pro rozparsování "value".</comment>
     </attribute>
     <attribute>
       <name>trimTime</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda se má vynulovat čas.</comment>
     </attribute>

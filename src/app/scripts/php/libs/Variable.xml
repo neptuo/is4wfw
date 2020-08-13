@@ -24,7 +24,7 @@
     </attribute>
     <attribute>
       <name>scope</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>request</attdef>
       <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</comment>
     </attribute>
@@ -48,7 +48,7 @@
     <attribute>
       <name>scope</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>request</attdef>
       <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</comment>
     </attribute>

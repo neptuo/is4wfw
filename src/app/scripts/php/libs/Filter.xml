@@ -14,12 +14,12 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název filtru. Pod tímto názvem je pak možné ho získat pomocí anyProperty.</comment>
     </attribute>
     <attribute>
       <name>alias</name>
-      <atttype>string</atttype>
+      <type>string</type>
     </attribute>
     <comment>Deklaruje filtru s názvem "name".</comment>
   </fulltag>
@@ -39,23 +39,23 @@
     <attribute>
       <name>from</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název název tabulky, na kterou se exists vztahuje.</comment>
     </attribute>
     <attribute>
       <name>alias</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
     </attribute>
     <attribute>
       <name>outerColumn</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
     </attribute>
     <attribute>
       <name>innerColumn</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
     </attribute>
   </fulltag>
   <tag>
@@ -64,12 +64,12 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
       <name>not</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda se má podmínka negovat, tedy "nerovná se".</comment>
     </attribute>
@@ -81,12 +81,12 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
       <name>not</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda se má podmínka negovat, tedy "nerovná se".</comment>
     </attribute>
@@ -98,7 +98,7 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
@@ -108,7 +108,7 @@
     </attribute>
     <attribute>
       <name>not</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda se má podmínka negovat, tedy "nerovná se".</comment>
     </attribute>
@@ -119,7 +119,7 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
@@ -129,7 +129,7 @@
     </attribute>
     <attribute>
       <name>not</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda se má podmínka negovat, tedy "neobsahuje".</comment>
     </attribute>
@@ -140,22 +140,22 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
       <name>startsWith</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Sloupec musí začínat textem.</comment>
     </attribute>
     <attribute>
       <name>endsWith</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Sloupec musí končit textem.</comment>
     </attribute>
     <attribute>
       <name>contains</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Sloupec musí končit textem.</comment>
     </attribute>
   </tag>
@@ -165,18 +165,18 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
       <name>than</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Sloupec musí být větší než.</comment>
     </attribute>
     <attribute>
       <name>orEqual</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
     </attribute>
@@ -187,18 +187,18 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
       <name>than</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Sloupec musí být menší než.</comment>
     </attribute>
     <attribute>
       <name>orEqual</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
     </attribute>

@@ -12,7 +12,7 @@
     <function>listItems</function>
     <attribute>
       <name>filter</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <prefix />
       <comment>Filtry, kterým data musí vyhovovat.</comment>
     </attribute>
@@ -30,7 +30,7 @@
     <function>form</function>
     <attribute>
       <name>id</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <attdef>0</attdef>
       <comment>Id záznamu k editaci. Pokud je 0 (nebo nevyplněno), pak se vytváří nový záznam.</comment>
     </attribute>
@@ -45,7 +45,7 @@
     <attribute>
       <name>id</name>
       <required />
-      <atttype>number</atttype>
+      <type>number</type>
       <attdef>0</attdef>
       <comment>Id záznamu, který se má smazat.</comment>
     </attribute>

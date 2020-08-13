@@ -15,7 +15,7 @@
     <attribute>
       <name>tagPrefix</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>
         Prefix pod kterým bude objekt zaregistrován. 
         Může obsahovat pouze statické hodnoty (konstanty). Nikdy né proměnné a pod.
@@ -24,7 +24,7 @@
     <attribute>
       <name>classPath</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>
         Jméno třídy. 
         Může obsahovat pouze statické hodnoty (konstanty). Nikdy né proměnné a pod.
@@ -78,7 +78,7 @@
     <function>provideAttributes</function>
     <attribute>
       <name>attributes</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <required />
       <comment>Jméno registrované sady atributů</comment>
     </attribute>

@@ -14,7 +14,7 @@
     <attribute>
       <name>key</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Klíč, který má být povinný.</comment>
     </attribute>
     <comment>
@@ -27,13 +27,13 @@
     <attribute>
       <name>identifier</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Systémový identifikátor validační hlášky.</comment>
     </attribute>
     <attribute>
       <name>message</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Přeložená textový hláška.</comment>
     </attribute>
     <comment>
@@ -45,7 +45,7 @@
     <function>message</function>
     <attribute>
       <name>key</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Klíč jehož validační zprávy se mají vypsat.</comment>
     </attribute>
     <comment>

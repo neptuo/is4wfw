@@ -11,7 +11,7 @@
     <function>requireGroup</function>
     <attribute>
       <name>requireGroup</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název skupiny uživatelů.</comment>
     </attribute>
     <features>
@@ -23,7 +23,7 @@
     <function>requirePerm</function>
     <attribute>
       <name>requirePerm</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název oprávnění.</comment>
     </attribute>
     <features>

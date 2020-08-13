@@ -19,7 +19,7 @@
     </attribute>
     <attribute>
       <name>propertiesUrl</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>URL na kterou má vést editace uživatelských vlastností. Pokud není vyplněna, tlačítko se nezobrazí.</comment>
     </attribute>
     <comment>
@@ -122,7 +122,7 @@
     <function>edit</function>
     <attribute>
       <name>uid</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <comment>Id uživatele, který se má editovat.</comment>
     </attribute>
     <attribute>

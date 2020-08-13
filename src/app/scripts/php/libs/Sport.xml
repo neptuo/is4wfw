@@ -425,14 +425,14 @@
     </attribute>
     <attribute>
       <name>onlyPlayed</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>true</attdef>
       <comment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</comment>
       <obsolete>Používat atribut "state".</obsolete>
     </attribute>
     <attribute>
       <name>state</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</comment>
     </attribute>
     <comment>
@@ -482,14 +482,14 @@
     </attribute>
     <attribute>
       <name>onlyPlayed</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>true</attdef>
       <comment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</comment>
       <obsolete>Používat atribut "state".</obsolete>
     </attribute>
     <attribute>
       <name>state</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</comment>
     </attribute>
     <attribute>

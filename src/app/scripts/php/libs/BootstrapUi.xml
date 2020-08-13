@@ -17,7 +17,7 @@
     <function>container</function>
     <attribute>
       <name>fluid</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda se má jednat o fluidní kontejner (na celou šířku).</comment>
     </attribute>
@@ -32,12 +32,12 @@
     <obsolete>Použijte "bs:row".</obsolete>
     <attribute>
       <name>horizontal</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Horizontální zarovnání položek ("left", "center", "right").</comment>
     </attribute>
     <attribute>
       <name>vertical</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Vertikální zarovnání položek ("top", "center", "buttom").</comment>
     </attribute>
     <anyAttribute>
@@ -50,12 +50,12 @@
     <function>row</function>
     <attribute>
       <name>horizontal</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Horizontální zarovnání položek ("left", "center", "right").</comment>
     </attribute>
     <attribute>
       <name>vertical</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Vertikální zarovnání položek ("top", "center", "buttom").</comment>
     </attribute>
     <anyAttribute>
@@ -68,27 +68,27 @@
     <function>column</function>
     <attribute>
       <name>default</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Výchozí šířka (pro všechny velikosti, defakto extra small).</comment>
     </attribute>
     <attribute>
       <name>small</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Šířka small.</comment>
     </attribute>
     <attribute>
       <name>medium</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Šířka medium.</comment>
     </attribute>
     <attribute>
       <name>large</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Šířka large.</comment>
     </attribute>
     <attribute>
       <name>extraLarge</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Šířka extra large.</comment>
     </attribute>
     <anyAttribute>
@@ -101,19 +101,19 @@
     <function>alert</function>
     <attribute>
       <name>header</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <prefix />
       <comment>Nadpis alertu. Výchozí atribut je textem. Atribut "header-tag" slouží pro nastavení tagu (výchozí je "h4"). Ostatní atributy jsou předány tagu.</comment>
     </attribute>
     <attribute>
       <name>color</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>primary</attdef>
       <comment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark").</comment>
     </attribute>
     <attribute>
       <name>isDismissible</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda má jít alert skrýt (tlačítkem "x").</comment>
     </attribute>
@@ -127,36 +127,36 @@
     <function>button</function>
     <attribute>
       <name>text</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <required />
       <comment>Text tlačítka.</comment>
     </attribute>
     <attribute>
       <name>color</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>primary</attdef>
       <comment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark" nebo "link").</comment>
     </attribute>
     <attribute>
       <name>isOutline</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda má jít o "outline" tlačítko.</comment>
     </attribute>
     <attribute>
       <name>size</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Velikost tlačítka ("large" / "lg" nebo "small" / "sm" nebo cokoli).</comment>
     </attribute>
     <attribute>
       <name>isBlock</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda má jít o blokové tlačítko (na celou šířku rodiče).</comment>
     </attribute>
     <attribute>
       <name>isActive</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda má jít o "zaškrtnuté" tlačítko.</comment>
     </attribute>
@@ -170,30 +170,30 @@
     <function>buttonFullTag</function>
     <attribute>
       <name>color</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>primary</attdef>
       <comment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark" nebo "link").</comment>
     </attribute>
     <attribute>
       <name>isOutline</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda má jít o "outline" tlačítko.</comment>
     </attribute>
     <attribute>
       <name>size</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Velikost tlačítka ("large" / "lg" nebo "small" / "sm" nebo cokoli).</comment>
     </attribute>
     <attribute>
       <name>isBlock</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda má jít o blokové tlačítko (na celou šířku rodiče).</comment>
     </attribute>
     <attribute>
       <name>isActive</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda má jít o "zaškrtnuté" tlačítko.</comment>
     </attribute>
@@ -207,13 +207,13 @@
     <function>card</function>
     <attribute>
       <name>header</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <prefix />
       <comment>Nadpis karty. Výchozí atribut je textem. Atribut "header-tag" slouží pro nastavení tagu (výchozí je "div"). Ostatní atributy jsou předány tagu.</comment>
     </attribute>
     <attribute>
       <name>title</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <prefix />
       <comment>Pod nadpis karty (uvnitř těla). Výchozí atribut je textem. Atribut "title-tag" slouží pro nastavení tagu (výchozí je "h5"). Ostatní atributy jsou předány tagu.</comment>
     </attribute>
@@ -227,7 +227,7 @@
     <function>formGroup</function>
     <attribute>
       <name>label</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <prefix />
       <comment>Popisek fieldu. Výchozí atribut je textem. Ostatní atributy jsou předány tagu.</comment>
     </attribute>
@@ -241,18 +241,18 @@
     <function>nav</function>
     <attribute>
       <name>tag</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>ul</attdef>
       <comment>Název obalového tagu ("ul" nebo "nav").</comment>
     </attribute>
     <attribute>
       <name>mode</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Zda se má vykreslit jako obyčejná navigace nebo "pills" nebo "tabs".</comment>
     </attribute>
     <attribute>
       <name>fill</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda se mají položky roztáhnout na celou šířku.</comment>
     </attribute>
@@ -268,32 +268,32 @@
     <function>navItem</function>
     <attribute>
       <name>text</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <required />
       <comment>Popisek odkazu.</comment>
     </attribute>
     <attribute>
       <name>url</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <required />
       <comment>URL odkazu.</comment>
     </attribute>
     <attribute>
       <name>isActive</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda se jedná o vybraný/aktivní položku.</comment>
     </attribute>
     <attribute>
       <name>isDisabled</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Zda má být položka zakázána.</comment>
     </attribute>
     <attribute>
       <name>a</name>
       <prefix />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Seznam atributů předaných vnitřnímu "a".</comment>
     </attribute>
     <anyAttribute>
@@ -308,7 +308,7 @@
     <function>fieldValidationMessage</function>
     <attribute>
       <name>name</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <required />
       <comment>Název fieldu.</comment>
     </attribute>
@@ -321,13 +321,13 @@
     <function>fieldValidator</function>
     <attribute>
       <name>name</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <required />
       <comment>Název fieldu.</comment>
     </attribute>
     <attribute>
       <name>cssClass</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Výchozí css třída pro editační prvek.</comment>
     </attribute>
     <comment>

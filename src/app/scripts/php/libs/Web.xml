@@ -37,13 +37,13 @@
     </attribute>
     <attribute>
       <name>copyParameters</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <attribute>
       <name>display</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>name</attdef>
       <comment>Vlastnost z "info", která se má použít jako text odkazu ("name" nebo "title").</comment>
     </attribute>
@@ -62,13 +62,13 @@
     </attribute>
     <attribute>
       <name>display</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>name</attdef>
       <comment>Vlastnost z "info", která se má použít jako "display" field ("name" nebo "title").</comment>
     </attribute>
     <attribute>
       <name>copyParameters</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
@@ -300,13 +300,13 @@
     </attribute>
     <attribute>
       <name>copyParameters</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <attribute>
       <name>param</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <prefix />
       <comment>Seznam parametrů (klíč=hodnota), které se mají přidat do URL. Mají přednost před hodnotami při "copyParameters".</comment>
     </attribute>
@@ -327,7 +327,7 @@
     </attribute>
     <attribute>
       <name>display</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>language</attdef>
       <comment>Název fieldu z jazyku, který se má použít pro zobrazení.</comment>
     </attribute>
@@ -539,7 +539,7 @@
     <function>switchConditionCase</function>
     <attribute>
       <name>is</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <attdef>x.x-def</attdef>
     </attribute>
     <comment>
@@ -579,13 +579,13 @@
     <attribute>
       <name>url</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Cesta k obrázku.</comment>
     </attribute>
     <attribute>
       <name>contentType</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Content-type pro daný obrázek.</comment>
     </attribute>
     <comment>
@@ -600,7 +600,7 @@
     <attribute>
       <name>isEnabled</name>
       <required />
-      <atttype>bool</atttype>
+      <type>bool</type>
       <comment>Zda má být debug mód zapnutý nebo vypnutý.</comment>
     </attribute>
     <comment>

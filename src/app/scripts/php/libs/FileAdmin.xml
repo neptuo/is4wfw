@@ -32,18 +32,18 @@
     <attribute>
       <name>dirId</name>
       <required />
-	    <atttype>number</atttype>
+	    <type>number</type>
       <comment>Id složky, jejíž obsah se má zobrazit.</comment>
     </attribute>
     <attribute>
       <name>grouped</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>true</attdef>
       <comment>Zda mají složky a soubory být seřazený samostatně (rozdělení do dvou skupin).</comment>
     </attribute>
     <attribute>
       <name>parentName</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Pokud je vyplněný, pak bude v seznamu zahrnut i odkaz na rodičovskou složku.</comment>
     </attribute>
     <comment>
@@ -114,7 +114,7 @@
     </attribute>
     <attribute>
       <name>name</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Pokud je vyplněn, pak umožňuje pojmenovat komponentu a díky tomu je možné mít více upload na jedné stránce.</comment>
     </attribute>
     <attribute>
@@ -127,7 +127,7 @@
     </attribute>
     <attribute>
       <name>isStandalone</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
 	    <attdef>false</attdef>
       <comment>Pokud je nastaven na "true", zobrazí se vždy (tzn. není součástí fa:browser).</comment>
     </attribute>
@@ -141,7 +141,7 @@
     <attribute>
       <name>dirId</name>
       <required />
-	    <atttype>number</atttype>
+	    <type>number</type>
       <comment>Id složky, do které se má uploadovat.</comment>
     </attribute>
     <comment>
@@ -170,7 +170,7 @@
     <attribute>
       <name>id</name>
       <required />
-	    <atttype>number</atttype>
+	    <type>number</type>
       <comment>Id souboru, která se má smazat.</comment>
     </attribute>
     <comment>

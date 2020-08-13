@@ -50,19 +50,19 @@
     <attribute>
       <name>group</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název skupiny, pro kterou se má přihlášení provést.</comment>
     </attribute>
     <attribute>
       <name>username</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Uživatelské jméno.</comment>
     </attribute>
     <attribute>
       <name>password</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Heslo.</comment>
     </attribute>
     <comment>
@@ -153,17 +153,17 @@
     <function>authorized</function>
     <attribute>
       <name>all</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Seznam (čárkou oddělený) skupin, ve kterých musí uživatel být, aby bylo zobrazeno tělo tagu.</comment>
     </attribute>
     <attribute>
       <name>any</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Seznam (čárkou oddělený) skupin, z nichž alespoň v jedné musí uživatel být, aby bylo zobrazeno tělo tagu.</comment>
     </attribute>
     <attribute>
       <name>none</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Seznam (čárkou oddělený) skupin, z nichž v žádné uživatel nesmí být, aby bylo zobrazeno tělo tagu.</comment>
     </attribute>
     <comment>

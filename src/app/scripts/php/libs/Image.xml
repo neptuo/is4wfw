@@ -86,7 +86,7 @@
     <attribute>
       <name>fileId</name>
       <required />
-      <atttype>number</atttype>
+      <type>number</type>
       <comment>ID obrázku.</comment>
     </attribute>
     <comment>

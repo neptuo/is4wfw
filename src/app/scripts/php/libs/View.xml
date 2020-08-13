@@ -103,7 +103,7 @@
     <function>provideBodyByPath</function>
     <attribute>
       <name>src</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <required />
       <comment>Virtuální cesta k šabloně.</comment>
     </attribute>

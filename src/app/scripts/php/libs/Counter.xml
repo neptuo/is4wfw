@@ -13,13 +13,13 @@
     <function>countAccess</function>
     <attribute>
       <name>id</name>
-      <atttype>text</atttype>
+      <type>text</type>
       <attdef>1</attdef>
       <comment>ID počítadla (max 15 znaků).</comment>
     </attribute>
     <attribute>
       <name>every</name>
-      <atttype>text</atttype>
+      <type>text</type>
       <attdef>day</attdef>
       <comment>Po jaké době má být znovu připočítán přístup z jedné ip, možné hodnoty ("every", "minute", "hour", "day", "week").</comment>
     </attribute>
@@ -39,7 +39,7 @@
     </attribute>
     <attribute>
       <name>id</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <comment>Číselné ID počítadla.</comment>
     </attribute>
     <attribute>
@@ -60,7 +60,7 @@
     </attribute>
     <attribute>
       <name>counterId</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <comment>Číselné ID počítadla.</comment>
     </attribute>
     <attribute>
@@ -79,7 +79,7 @@
     </attribute>
     <attribute>
       <name>counterId</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <comment>Číselné ID počítadla.</comment>
     </attribute>
     <attribute>

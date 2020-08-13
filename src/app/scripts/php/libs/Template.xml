@@ -13,7 +13,7 @@
     <attribute>
       <name>id</name>
       <required />
-      <atttype>number</atttype>
+      <type>number</type>
       <comment>ID šablony, která se má vložit.</comment>
     </attribute>
     <anyAttribute />
@@ -29,7 +29,7 @@
     <attribute>
       <name>id</name>
       <required />
-      <atttype>number</atttype>
+      <type>number</type>
       <comment>ID šablony, která se má vložit.</comment>
     </attribute>
     <anyAttribute />
@@ -53,7 +53,7 @@
     <attribute>
       <name>identifier</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Unikátní identifikátor šablony. Přebíjí uložené šabloné v DB.</comment>
     </attribute>
     <comment>
@@ -83,7 +83,7 @@
     <function>provideBodyById</function>
     <attribute>
       <name>id</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <required />
       <comment>ID šablony.</comment>
     </attribute>

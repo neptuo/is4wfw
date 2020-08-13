@@ -17,7 +17,7 @@
     </attribute>
     <attribute>
       <name>deleteIfEmpty</name>
-      <atttype>bool</atttype>
+      <type>bool</type>
       <attdef>false</attdef>
       <comment>
         Pokud "true" a ve vstupu od uživatele přijdou všechny hodnoty prázdné, automaticky editovaný záznam smaže.
@@ -76,42 +76,42 @@
     <attribute>
       <name>name</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název fieldu, který se má nastavovat.</comment>
     </attribute>
     <attribute>
       <name>nameIndex</name>
-      <atttype>number</atttype>
+      <type>number</type>
       <attdef>-1</attdef>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <name>source</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</comment>
     </attribute>
     <attribute>
       <name>keyColumn</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název sloupce, který identifikuje klíč připojovaného záznamu záznamu.</comment>
     </attribute>
     <attribute>
       <name>valueColumn</name>
       <required />
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Název sloupce, kam se uloží hodnota zadaná uživatelem.</comment>
     </attribute>
     <attribute>
       <name>tableName</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <comment>Pokud je source polem, pak je tento atribut povinný a udává název tabulky, kam se záznam založit.</comment>
     </attribute>
     <attribute>
       <name>value</name>
-      <atttype>string</atttype>
+      <type>string</type>
       <prefix />
       <comment>Seznam sloupců s dodatečnými hodnota pro založení záznamu.</comment>
     </attribute>
