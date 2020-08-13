@@ -59,8 +59,8 @@
   </tag>
   <property>
   	<name>classPath</name>
-  	<setfunction>setPropClassPath</setfunction>
-  	<getfunction>getPropClassPath</getfunction>
+  	<setFunction>setPropClassPath</setFunction>
+  	<getFunction>getPropClassPath</getFunction>
     <comment>
       Vlastnost classPath pro výběr knihovny.
     </comment>

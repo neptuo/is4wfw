@@ -732,9 +732,9 @@
                 foreach ($xml->property as $prop) {
                     if ($prop->name == $propName) {
                         if (strtolower($use) == 'set') {
-                            return (string)$prop->setfunction;
+                            return (string)$prop->setFunction;
                         } elseif (strtolower($use) == 'get') {
-                            return (string)$prop->getfunction;
+                            return (string)$prop->getFunction;
                         } else {
                             return false;                        
                         }

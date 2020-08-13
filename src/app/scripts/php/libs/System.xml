@@ -159,15 +159,15 @@
   </tag>
   <property>
   	<name>cmsWindowsStyle</name>
-  	<setfunction>setCmsWindowsStyle</setfunction>
-  	<getfunction>getCmsWindowsStyle</getfunction>
+  	<setFunction>setCmsWindowsStyle</setFunction>
+  	<getFunction>getCmsWindowsStyle</getFunction>
     <comment>
       Vlastnost cmsWindowsStyle, v system.properties s klicem System.cms.windowsstyle.
     </comment>
   </property>
   <property>
   	<name>hasAdminMenu</name>
-  	<getfunction>hasAdminMenu</getfunction>
+  	<getFunction>hasAdminMenu</getFunction>
     <comment>
       Vlastnost, která vrací "true", pokud je definována alespoň jedna položka admin menu.
     </comment>

@@ -390,24 +390,24 @@
   </tag>
   <property>
   	<name>rowId</name>
-  	<setfunction>setRowId</setfunction>
-  	<getfunction>getRowId</getfunction>
+  	<setFunction>setRowId</setFunction>
+  	<getFunction>getRowId</getFunction>
     <comment>
       Vrací id vybraného řádku při procházení seznamu.
     </comment>
   </property>
   <property>
   	<name>custom</name>
-  	<setfunction>setCustom</setfunction>
-  	<getfunction>getCustom</getfunction>
+  	<setFunction>setCustom</setFunction>
+  	<getFunction>getCustom</getFunction>
     <comment>
       Vratí hodnotu custom property
     </comment>
   </property>
   <property>
   	<name>customUrl</name>
-  	<setfunction>setCustomUrl</setfunction>
-  	<getfunction>getCustomUrl</getfunction>
+  	<setFunction>setCustomUrl</setFunction>
+  	<getFunction>getCustomUrl</getFunction>
     <comment>
       Custom url feature. Použít s cf:setupCustomUrl.
     </comment>

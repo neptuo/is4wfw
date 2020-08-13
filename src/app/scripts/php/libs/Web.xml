@@ -616,155 +616,155 @@
   </fulltag>
   <property>
   	<name>currentPage</name>
-  	<getfunction>getCurrentPage</getfunction>
+  	<getFunction>getCurrentPage</getFunction>
     <comment>
       Vrátí ID aktuální stránky. V průběhu renderování
     </comment>
   </property>
   <property>
   	<name>currentPageName</name>
-  	<setfunction>setCurrentPageName</setfunction>
-  	<getfunction>getCurrentPageName</getfunction>
+  	<setFunction>setCurrentPageName</setFunction>
+  	<getFunction>getCurrentPageName</getFunction>
     <comment>
       Vrátí název aktuální stránky. V průběhu renderování
     </comment>
   </property>
   <property>
   	<name>currentPageTitle</name>
-  	<setfunction>setCurrentPageTitle</setfunction>
-  	<getfunction>getCurrentPageTitle</getfunction>
+  	<setFunction>setCurrentPageTitle</setFunction>
+  	<getFunction>getCurrentPageTitle</getFunction>
     <comment>
       Vrátí titulek aktuální stránky. V průběhu renderování
     </comment>
   </property>
   <property>
   	<name>lastPageName</name>
-  	<setfunction>setLastPageName</setfunction>
-  	<getfunction>getLastPageName</getfunction>
+  	<setFunction>setLastPageName</setFunction>
+  	<getFunction>getLastPageName</getFunction>
     <comment>
       Vrátí název poslední stránky, která se má renderovat (té, co již neobsahuje web:content)
     </comment>
   </property>
   <property>
   	<name>lastPageTitle</name>
-  	<setfunction>setLastPageTitle</setfunction>
-  	<getfunction>getLastPageTitle</getfunction>
+  	<setFunction>setLastPageTitle</setFunction>
+  	<getFunction>getLastPageTitle</getFunction>
     <comment>
       Vrátí titulek poslední stránky, která se má renderovat (té, co již neobsahuje web:content)
     </comment>
   </property>
   <property>
   	<name>childPage</name>
-  	<setfunction>setChildPage</setfunction>
-  	<getfunction>getChildPage</getfunction>
+  	<setFunction>setChildPage</setFunction>
+  	<getFunction>getChildPage</getFunction>
     <comment>
       Vrátí ID další vykreslované stránky. Pokud bude PAGES={1,2,3,4}, a aktuálně se bude vykreslovat stránka ID=3, pak property web:childPage bude mít hodnotu 4.
     </comment>
   </property>
   <property>
   	<name>currentTime</name>
-  	<setfunction>setCurrentTime</setfunction>
-  	<getfunction>getCurrentTime</getfunction>
+  	<setFunction>setCurrentTime</setFunction>
+  	<getFunction>getCurrentTime</getFunction>
     <comment>
       Vrátí aktuální čas (timestamp)
     </comment>
   </property>
   <property>
   	<name>todayTimestamp</name>
-  	<getfunction>getTodayTimestamp</getfunction>
+  	<getFunction>getTodayTimestamp</getFunction>
     <comment>
       Vrátí timestamp pro půlnoc dnešního dne.
     </comment>
   </property>
   <property>
   	<name>randNum</name>
-  	<setfunction>setRandomNumber</setfunction>
-  	<getfunction>getRandomNumber</getfunction>
+  	<setFunction>setRandomNumber</setFunction>
+  	<getFunction>getRandomNumber</getFunction>
     <comment>
       Vrácí / Nastavuje náhodné číslo v session, pro nastavení lépe použít web:genRandNum
     </comment>
   </property>
   <property>
   	<name>currentHost</name>
-  	<getfunction>getHttpHost</getfunction>
+  	<getFunction>getHttpHost</getFunction>
     <comment>
       Vrácí doménu aktuálního requestu (hlavička host).
     </comment>
   </property>
   <property>
   	<name>currentPath</name>
-  	<getfunction>getRequestPath</getfunction>
+  	<getFunction>getRequestPath</getFunction>
     <comment>
       Vrácí path aktuálního requestu.
     </comment>
   </property>
   <property>
   	<name>currentProjectId</name>
-  	<getfunction>getProjectId</getfunction>
+  	<getFunction>getProjectId</getFunction>
     <comment>
       Vrácí ID aktuálního projektu.
     </comment>
   </property>
   <property>
   	<name>currentLanguageId</name>
-  	<getfunction>getLanguageId</getfunction>
+  	<getFunction>getLanguageId</getFunction>
     <comment>
       Vrácí ID jazyku aktuálně zpracovávané stránky/requestu.
     </comment>
   </property>
   <property>
   	<name>isInsideForm</name>
-  	<setfunction>setIsInsideForm</setfunction>
-  	<getfunction>getIsInsideForm</getfunction>
+  	<setFunction>setIsInsideForm</setFunction>
+  	<getFunction>getIsInsideForm</getFunction>
     <comment>
       Vrácí / Nastavuje zda se aktuálně nacházíme uvnitř formuláře (při generování obsahu, například uvnitř šablony a pod).
     </comment>
   </property>
   <property>
   	<name>lastPageId</name>
-  	<getfunction>getLastPageId</getfunction>
+  	<getFunction>getLastPageId</getFunction>
     <comment>
       Vrácí id aktuální stránky (té poslední pro aktuální request).
     </comment>
   </property>
   <property>
   	<name>debug</name>
-  	<getfunction>getDebugMode</getfunction>
+  	<getFunction>getDebugMode</getFunction>
     <comment>
       Vrací "true" pokud je zapnutý debug mód.
     </comment>
   </property>
   <property>
   	<name>menu</name>
-  	<getfunction>getMenuData</getfunction>
+  	<getFunction>getMenuData</getFunction>
     <comment>
       Vrací list model uvnitř "web:menu".
     </comment>
   </property>
   <property>
   	<name>menuItemDisplay</name>
-  	<getfunction>getMenuItemDisplay</getfunction>
+  	<getFunction>getMenuItemDisplay</getFunction>
     <comment>
       Vrací "display" text pro položku uvnitř "web:menu".
     </comment>
   </property>
   <property>
   	<name>menuItemUrl</name>
-  	<getfunction>getMenuItemUrl</getfunction>
+  	<getFunction>getMenuItemUrl</getFunction>
     <comment>
       Vrací URL pro položku uvnitř "web:menu".
     </comment>
   </property>
   <property>
   	<name>menuItemActive</name>
-  	<getfunction>getMenuItemActive</getfunction>
+  	<getFunction>getMenuItemActive</getFunction>
     <comment>
       Vrací "true" pokud je položka uvnitř "web:menu" aktuální.
     </comment>
   </property>
   <property>
   	<name>menuItemIcon</name>
-  	<getfunction>getMenuItemIcon</getfunction>
+  	<getFunction>getMenuItemIcon</getFunction>
     <comment>
       Vrací ikonu pro položku uvnitř "web:menu".
     </comment>

@@ -496,24 +496,24 @@
   </tag>
   <property>
   	<name>language</name>
-  	<setfunction>setLanguage</setfunction>
-  	<getfunction>getLanguage</getfunction>
+  	<setFunction>setLanguage</setFunction>
+  	<getFunction>getLanguage</getFunction>
     <comment>
       Aktuálně vybraný jazyk.
     </comment>
   </property>
   <property>
   	<name>pageId</name>
-  	<setfunction>setPageId</setfunction>
-  	<getfunction>getPageId</getfunction>
+  	<setFunction>setPageId</setFunction>
+  	<getFunction>getPageId</getFunction>
     <comment>
       Aktuálně vybraná stránka ve filtru.
     </comment>
   </property>
   <property>
   	<name>actionPageId</name>
-  	<setfunction>setActionPageId</setfunction>
-  	<getfunction>getActionPageId</getfunction>
+  	<setFunction>setActionPageId</setFunction>
+  	<getFunction>getActionPageId</getFunction>
     <comment>
       Aktuálně vybraná stránka z odeslané akce.
     </comment>

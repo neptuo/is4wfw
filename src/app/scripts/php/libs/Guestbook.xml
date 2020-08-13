@@ -70,8 +70,8 @@
   </tag>
   <property>
   	<name>id</name>
-  	<setfunction>setGuestbookId</setfunction>
-  	<getfunction>getGuestbookId</getfunction>
+  	<setFunction>setGuestbookId</setFunction>
+  	<getFunction>getGuestbookId</getFunction>
     <comment>
       Vrací id vybrané knihy.
     </comment>

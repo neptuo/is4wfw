@@ -80,8 +80,8 @@
   
   <property>
   	<name>currentId</name>
-  	<setfunction>setCurrentInquiryId</setfunction>
-  	<getfunction>getCurrentInquiryId</getfunction>
+  	<setFunction>setCurrentInquiryId</setFunction>
+  	<getFunction>getCurrentInquiryId</getFunction>
     <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
     <comment>
       Vratí hodnotu vybrané ankety
@@ -89,8 +89,8 @@
   </property>
   <property>
   	<name>currentId2</name>
-  	<setfunction>setCurrentInquiryId2</setfunction>
-  	<getfunction>getCurrentInquiryId2</getfunction>
+  	<setFunction>setCurrentInquiryId2</setFunction>
+  	<getFunction>getCurrentInquiryId2</getFunction>
     <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
     <comment>
       Vratí hodnotu vybrané ankety 2

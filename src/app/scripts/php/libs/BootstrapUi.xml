@@ -337,7 +337,7 @@
   </fulltag>
   <property>
     <name>fieldValidatorCssClass</name>
-    <getfunction>getFieldValidatorCssClass</getfunction>
+    <getFunction>getFieldValidatorCssClass</getFunction>
     <comment>
       Vrací css třída uvnitř "fieldValidator" doplněnou o informaci, prvek validní.
     </comment>

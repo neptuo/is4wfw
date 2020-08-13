@@ -258,40 +258,40 @@
   </tag>
   <property>
   	<name>fileId</name>
-  	<setfunction>setFileId</setfunction>
-  	<getfunction>getFileId</getfunction>
+  	<setFunction>setFileId</setFunction>
+  	<getFunction>getFileId</getFunction>
     <comment>
       Vlastnost aktuálního souboru.
     </comment>
   </property>
   <property>
   	<name>fileUrl</name>
-  	<setfunction>setFileUrl</setfunction>
-  	<getfunction>getFileUrl</getfunction>
+  	<setFunction>setFileUrl</setFunction>
+  	<getFunction>getFileUrl</getFunction>
     <comment>
       Vrací nebo nastavuje URL aktuálního souboru.
     </comment>
   </property>
   <property>
   	<name>dirId</name>
-  	<setfunction>setDirectoryId</setfunction>
-  	<getfunction>getDirectoryId</getfunction>
+  	<setFunction>setDirectoryId</setFunction>
+  	<getFunction>getDirectoryId</getFunction>
     <comment>
       Vlastnost aktuálního adresáře, používá pro uchování hodnoty $_REQUEST['dir-id']. Očekává id adresáře.
     </comment>
   </property>
   <property>
   	<name>dirUrl</name>
-  	<setfunction>setDirectoryIdFromUrl</setfunction>
-  	<getfunction>getDirectoryUrl</getfunction>
+  	<setFunction>setDirectoryIdFromUrl</setFunction>
+  	<getFunction>getDirectoryUrl</getFunction>
     <comment>
       Vlastnost aktuálního adresáře, používá pro uchování hodnoty $_REQUEST['dir-id']. Očekává url adresáře
     </comment>
   </property>
   <property>
   	<name>dirName</name>
-  	<setfunction>setDirectoryName</setfunction>
-  	<getfunction>getDirectoryName</getfunction>
+  	<setFunction>setDirectoryName</setFunction>
+  	<getFunction>getDirectoryName</getFunction>
     <comment>
       Vrátí název aktuálního adresáře
     </comment>

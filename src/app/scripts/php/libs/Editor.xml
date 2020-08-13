@@ -55,27 +55,27 @@
   </tag>
   <property>
   	<name>registration</name>
-  	<getfunction>isRegistration</getfunction>
+  	<getFunction>isRegistration</getFunction>
     <comment>Vrací "true", pokud se právě jedná o fázi registrování položek.</comment>
   </property>
   <property>
   	<name>load</name>
-  	<getfunction>isLoad</getfunction>
+  	<getFunction>isLoad</getFunction>
     <comment>Vrací "true", pokud se právě jedná o fázi načítání dat.</comment>
   </property>
   <property>
   	<name>submit</name>
-  	<getfunction>isSubmit</getfunction>
+  	<getFunction>isSubmit</getFunction>
     <comment>Vrací "true", pokud se právě jedná o fázi odeslání formuláře.</comment>
   </property>
   <property>
   	<name>save</name>
-  	<getfunction>isSave</getfunction>
+  	<getFunction>isSave</getFunction>
     <comment>Vrací "true", pokud se právě jedná o fázi pro uložení dat do uložiště.</comment>
   </property>
   <property>
   	<name>saved</name>
-  	<getfunction>isSaved</getfunction>
+  	<getFunction>isSaved</getFunction>
     <comment>Vrací "true", pokud se právě jedná o fázi po uložení formuláře.</comment>
   </property>
   <anyProperty>

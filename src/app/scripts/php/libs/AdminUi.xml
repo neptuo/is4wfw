@@ -191,28 +191,28 @@
   </tag>
   <property>
     <name>edit</name>
-    <getfunction>isEdit</getfunction>
+    <getFunction>isEdit</getFunction>
     <comment>
       Vrací true/false pokud se nacházíme v editačním módu (nebo při založení objektu).
     </comment>
   </property>
   <property>
     <name>new</name>
-    <getfunction>isNew</getfunction>
+    <getFunction>isNew</getFunction>
     <comment>
       Vrací true/false pokud se nacházíme v módu pro založení objektu.
     </comment>
   </property>
   <property>
     <name>editId</name>
-    <getfunction>getEditId</getfunction>
+    <getFunction>getEditId</getFunction>
     <comment>
       Vrací id pro editační mód.
     </comment>
   </property>
   <property>
     <name>editTitle</name>
-    <getfunction>getEditTitle</getfunction>
+    <getFunction>getEditTitle</getFunction>
     <comment>
       Vrací titulek pro editační mód.
     </comment>

@@ -476,96 +476,96 @@
   </tag>
   <property>
   	<name>url</name>
-  	<setfunction>setUrl</setfunction>
-  	<getfunction>getUrl</getfunction>
+  	<setFunction>setUrl</setFunction>
+  	<getFunction>getUrl</getFunction>
     <comment>
       Vrací / Nastavuje url článku
     </comment>
   </property>
   <property>
   	<name>languageId</name>
-  	<setfunction>setArticleLanguageId</setfunction>
-  	<getfunction>getArticleLanguageId</getfunction>
+  	<setFunction>setArticleLanguageId</setFunction>
+  	<getFunction>getArticleLanguageId</getFunction>
     <comment>
       Vrací / Nastavuje id jazyku článku
     </comment>
   </property>
   <property>
   	<name>id</name>
-  	<setfunction>setArticleId</setfunction>
-  	<getfunction>getArticleId</getfunction>
+  	<setFunction>setArticleId</setFunction>
+  	<getFunction>getArticleId</getFunction>
     <comment>
       Vrací / Nastavuje id článku
     </comment>
   </property>
   <property>
   	<name>isActive</name>
-  	<setfunction>setIsActiveArticle</setfunction>
-  	<getfunction>getIsActiveArticle</getfunction>
+  	<setFunction>setIsActiveArticle</setFunction>
+  	<getFunction>getIsActiveArticle</getFunction>
     <comment>
       Vrací / Nastavuje zda aktuální článek je shodný si aktuální a:id pro daný request.
     </comment>
   </property>
   <property>
   	<name>directoryId</name>
-  	<setfunction>setArticleDirectoryId</setfunction>
-  	<getfunction>getArticleDirectoryId</getfunction>
+  	<setFunction>setArticleDirectoryId</setFunction>
+  	<getFunction>getArticleDirectoryId</getFunction>
     <comment>
       Vrací / Nastavuje id složky pro soubory článku
     </comment>
   </property>
   <property>
   	<name>lineUrl</name>
-  	<setfunction>setLineUrl</setfunction>
-  	<getfunction>getLineUrl</getfunction>
+  	<setFunction>setLineUrl</setFunction>
+  	<getFunction>getLineUrl</getFunction>
     <comment>
       Vrací / Nastavuje url řady článků
     </comment>
   </property>
   <property>
   	<name>labelId</name>
-  	<setfunction>setLabelId</setfunction>
-  	<getfunction>getLabelId</getfunction>
+  	<setFunction>setLabelId</setFunction>
+  	<getFunction>getLabelId</getFunction>
     <comment>
       Vrací / Nastavuje id štítku
     </comment>
   </property>
   <property>
   	<name>labelUrl</name>
-  	<setfunction>setLabelUrl</setfunction>
-  	<getfunction>getLabelUrl</getfunction>
+  	<setFunction>setLabelUrl</setFunction>
+  	<getFunction>getLabelUrl</getFunction>
     <comment>
       Vrací / Nastavuje url štítku
     </comment>
   </property>
   <property>
   	<name>labelIsActive</name>
-  	<setfunction>setIsActiveLabel</setfunction>
-  	<getfunction>getIsActiveLabel</getfunction>
+  	<setFunction>setIsActiveLabel</setFunction>
+  	<getFunction>getIsActiveLabel</getFunction>
     <comment>
       Vrací / Nastavuje zda aktuální štítek (uvnitř a:labels) je shodný si aktuální a:labelId pro daný request.
     </comment>
   </property>
   <property>
   	<name>hasHead</name>
-  	<setfunction>setHasHead</setfunction>
-  	<getfunction>getHasHead</getfunction>
+  	<setFunction>setHasHead</setFunction>
+  	<getFunction>getHasHead</getFunction>
     <comment>
       Vrací / Nastavuje, zda článek má vyplněnou hlavičku (strlen > 0)
     </comment>
   </property>
   <property>
   	<name>hasContent</name>
-  	<setfunction>setHasContent</setfunction>
-  	<getfunction>getHasContent</getfunction>
+  	<setFunction>setHasContent</setFunction>
+  	<getFunction>getHasContent</getFunction>
     <comment>
       Vrací / Nastavuje, zda článek má vyplněný obsah (strlen > 0)
     </comment>
   </property>
   <property>
   	<name>isExternalUrl</name>
-  	<setfunction>setIsExternalUrl</setfunction>
-  	<getfunction>getIsExternalUrl</getfunction>
+  	<setFunction>setIsExternalUrl</setFunction>
+  	<getFunction>getIsExternalUrl</getFunction>
     <comment>
       Vrací / Nastavuje, zda URL článku odkazuje na externí web.
     </comment>

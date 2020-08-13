@@ -91,14 +91,14 @@
   </fulltag>
   <property>
     <name>editItems</name>
-    <getfunction>getEditItems</getfunction>
+    <getFunction>getEditItems</getFunction>
     <comment>
       Vrací seznam položek uvnitř "loc:edit" ("index").
     </comment>
   </property>
   <property>
     <name>editItemIndex</name>
-    <getfunction>getEditItemIndex</getfunction>
+    <getFunction>getEditItemIndex</getFunction>
     <comment>
       Vrací index aktuální položky při průchodu přes "loc:editItems".
     </comment>

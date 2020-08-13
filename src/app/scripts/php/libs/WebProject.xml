@@ -53,8 +53,8 @@
   </tag>
   <property>
   	<name>selectedProject</name>
-  	<setfunction>setSelectedProject</setfunction>
-  	<getfunction>getSelectedProject</getfunction>
+  	<setFunction>setSelectedProject</setFunction>
+  	<getFunction>getSelectedProject</getFunction>
     <comment>
       Aktuálně vybraný projekt.
     </comment>

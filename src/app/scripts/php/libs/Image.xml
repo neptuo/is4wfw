@@ -96,37 +96,37 @@
   
   <property>
   	<name>name</name>
-  	<getfunction>imageName</getfunction>
+  	<getFunction>imageName</getFunction>
     <comment>
       Vrací název obrázku uvnitř img:directory.
     </comment>
   </property>
   <property>
   	<name>title</name>
-  	<getfunction>imageTitle</getfunction>
+  	<getFunction>imageTitle</getFunction>
     <comment>
       Vrací titulek obrázku uvnitř img:directory.
     </comment>
   </property>
   <property>
   	<name>type</name>
-  	<getfunction>imageType</getfunction>
+  	<getFunction>imageType</getFunction>
     <comment>
       Vrací číselný typ obrázku uvnitř img:directory.
     </comment>
   </property>
   <property>
   	<name>fileId</name>
-  	<setfunction>setFileId</setfunction>
-  	<getfunction>getFileId</getfunction>
+  	<setFunction>setFileId</setFunction>
+  	<getFunction>getFileId</getFunction>
     <comment>
       Vlastnost ID aktuálního souboru.
     </comment>
   </property>
   <property>
   	<name>fileUrl</name>
-  	<setfunction>setFileUrl</setfunction>
-  	<getfunction>getFileUrl</getfunction>
+  	<setFunction>setFileUrl</setFunction>
+  	<getFunction>getFileUrl</getFunction>
     <comment>
       Vlastnost URL aktuálního souboru.
     </comment>

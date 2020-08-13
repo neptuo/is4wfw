@@ -55,35 +55,35 @@
   </fulltag>
   <property>
     <name>list</name>
-    <getfunction>getListItems</getfunction>
+    <getFunction>getListItems</getFunction>
     <comment>
         Vrací seznam jazyků uvnitř "lang:list".
     </comment>
   </property>
   <property>
     <name>id</name>
-    <getfunction>getListItemId</getfunction>
+    <getFunction>getListItemId</getFunction>
     <comment>
         Vrací id aktuálního jazyku uvnitř "lang:list".
     </comment>
   </property>
   <property>
     <name>name</name>
-    <getfunction>getListItemName</getfunction>
+    <getFunction>getListItemName</getFunction>
     <comment>
         Vrací název aktuálního jazyku uvnitř "lang:list".
     </comment>
   </property>
   <property>
     <name>natural_name</name>
-    <getfunction>getListItemNaturalName</getfunction>
+    <getFunction>getListItemNaturalName</getFunction>
     <comment>
         Vrací natural název aktuálního jazyku uvnitř "lang:list".
     </comment>
   </property>
   <property>
     <name>url</name>
-    <getfunction>getListItemUrl</getfunction>
+    <getFunction>getListItemUrl</getFunction>
     <comment>
         Vrací url aktuálního jazyku uvnitř "lang:list".
     </comment>

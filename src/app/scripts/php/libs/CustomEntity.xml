@@ -162,7 +162,7 @@
   </fulltag>
   <property>
     <name>list</name>
-    <getfunction>getListData</getfunction>
+    <getFunction>getListData</getFunction>
     <comment>
       Vrací list model uvnitř "ce:list".
     </comment>

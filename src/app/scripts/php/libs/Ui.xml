@@ -23,7 +23,7 @@
   </fulltag>
   <property>
     <name>forEachIndex</name>
-    <getfunction>getForEachIndex</getfunction>
+    <getFunction>getForEachIndex</getFunction>
     <comment>
       Vrací aktuální index při průchodu v "ui:forEach".
     </comment>
@@ -102,7 +102,7 @@
   </fulltag>
   <property>
     <name>count</name>
-    <getfunction>getCountListModel</getfunction>
+    <getFunction>getCountListModel</getFunction>
     <comment>
       Vrací počet položek uvnitř tagu "ui:count".
     </comment>
@@ -615,35 +615,35 @@
   </fulltag>
   <property>
     <name>localizableName</name>
-    <getfunction>getLocalizableName</getfunction>
+    <getFunction>getLocalizableName</getFunction>
     <comment>
       Vrací název fieldu uvnitř "ui:localizable".
     </comment>
   </property>
   <property>
     <name>localizableLangId</name>
-    <getfunction>getLocalizableLangId</getfunction>
+    <getFunction>getLocalizableLangId</getFunction>
     <comment>
       Vrací id jazyku uvnitř "ui:localizable".
     </comment>
   </property>
   <property>
     <name>localizableLangName</name>
-    <getfunction>getLocalizableLangName</getfunction>
+    <getFunction>getLocalizableLangName</getFunction>
     <comment>
       Vrací název jazyku uvnitř "ui:localizable".
     </comment>
   </property>
   <property>
     <name>localizableLangUrl</name>
-    <getfunction>getLocalizableLangUrl</getfunction>
+    <getFunction>getLocalizableLangUrl</getFunction>
     <comment>
       Vrací URL token jazyku uvnitř "ui:localizable".
     </comment>
   </property>
   <property>
     <name>id</name>
-    <getfunction>peekId</getfunction>
+    <getFunction>peekId</getFunction>
     <comment>
       Vrací aktuální "id" pro ui prvek.
     </comment>

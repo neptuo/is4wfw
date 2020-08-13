@@ -138,57 +138,57 @@
   </fulltag>
   <property>
     <name>list</name>
-    <getfunction>getListItems</getfunction>
+    <getFunction>getListItems</getFunction>
     <comment>
       Vrací seznam uživatelů uvnitř "u:list".
     </comment>
   </property>
   <property>
     <name>uid</name>
-    <getfunction>getListItemUid</getfunction>
+    <getFunction>getListItemUid</getFunction>
     <comment>
       Vrací id aktuálního uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
     <name>name</name>
-    <getfunction>getListItemName</getfunction>
+    <getFunction>getListItemName</getFunction>
     <comment>
       Vrací jméno aktuálního uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
     <name>surname</name>
-    <getfunction>getListItemSurname</getfunction>
+    <getFunction>getListItemSurname</getFunction>
     <comment>
       Vrací id přijmení uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
     <name>login</name>
-    <getfunction>getListItemLogin</getfunction>
+    <getFunction>getListItemLogin</getFunction>
     <comment>
       Vrací login aktuálního uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
     <name>enable</name>
-    <getfunction>getListItemEnable</getfunction>
+    <getFunction>getListItemEnable</getFunction>
     <comment>
       Vrací true/false zda je aktuální uživatel uvnitř "u:list" povolený.
     </comment>
   </property>
   <property>
     <name>roleIds</name>
-    <getfunction>getListItemRoleIds</getfunction>
+    <getFunction>getListItemRoleIds</getFunction>
     <comment>
       Vrací seznam id rolí aktuálního uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
   	<name>userId</name>
-  	<setfunction>setUserId</setfunction>
-  	<getfunction>getUserId</getfunction>
+  	<setFunction>setUserId</setFunction>
+  	<getFunction>getUserId</getFunction>
     <comment>
       Uchovává hodnotu Id aktuálního uživatele.
     </comment>
