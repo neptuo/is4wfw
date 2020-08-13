@@ -3,7 +3,6 @@
   <name>Test library</name>
   <classname>TestLibrary</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro testovací účely.

@@ -3,7 +3,6 @@
   <name>Cookie library</name>
   <classname>Cookie</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro ukládání a načítání hodnot z/do Cookie.

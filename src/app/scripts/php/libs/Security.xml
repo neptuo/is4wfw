@@ -3,7 +3,6 @@
   <name>Security library</name>
   <classname>Security</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro kontrolu oprávnění uživatelů.

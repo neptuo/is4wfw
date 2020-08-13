@@ -3,7 +3,6 @@
   <name>Custom entity.</name>
   <classname>CustomEntity</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro práci s uživatelskými entitami.

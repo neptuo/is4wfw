@@ -4,7 +4,6 @@
   <name>PageNG Lib</name>
   <classname>PageNG</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Třída pro správu obsahu jednotlivých stránek.

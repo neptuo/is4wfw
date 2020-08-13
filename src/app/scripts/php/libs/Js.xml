@@ -4,7 +4,6 @@
   <name>Js Lib</name>
   <classname>Js</classname>
   <classpath>php.libs</classpath>
-  <version>1.03</version>
   <count>*</count>
   <comment>
     Třída pro systémové javascripty.

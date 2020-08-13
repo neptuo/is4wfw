@@ -3,7 +3,6 @@
   <name>Various utilities</name>
   <classname>Variable</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna obshaující různé pomocné metody.

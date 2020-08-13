@@ -3,7 +3,6 @@
   <name>Editors library</name>
   <classname>Editor</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro realizaci edit formuláře bez pevné struktury. Tedy uživatelsky definovaného.

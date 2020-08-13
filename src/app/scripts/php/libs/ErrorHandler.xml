@@ -4,7 +4,6 @@
   <name>Error handle lib</name>
   <classname>ErrorHandler</classname>
   <classpath>php.libs</classpath>
-  <version>1.01</version>
   <count>*</count>
   <comment>
     Jednoduchá třída pro správu erorů. Jedna instance je také default objekt.

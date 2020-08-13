@@ -4,7 +4,6 @@
   <name>Web library</name>
   <classname>Web</classname>
   <classpath>php.libs</classpath>
-  <version>1.87</version>
   <count>1</count>
   <comment>
     Základní třída aplikace.

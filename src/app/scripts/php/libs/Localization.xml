@@ -3,7 +3,6 @@
   <name>Localization bundle library</name>
   <classname>Localization</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro správu a práci s lokalizačními bundly.

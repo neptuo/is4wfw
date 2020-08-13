@@ -3,7 +3,6 @@
   <name>Session library</name>
   <classname>Session</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro ukládání a načítání hodnot z/do Session.

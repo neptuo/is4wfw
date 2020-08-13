@@ -130,8 +130,8 @@
                 $return .= ''
                 .'<div class="hint-lib">'
                     .'<div class="lib-head">'
-                        .'<h1>'.$xml->name.' ( '.$xml->classpath.'.'.$xml->classname.' )</h1>'
-                        .'<strong class="version">'.$rb->get('lib.version').': '.$xml->version.', '.$rb->get('lib.count-of-instances').': '.$xml->count.'</strong>'
+                        .'<h1>'.$xml->name.' ('.$xml->classpath.'.'.$xml->classname.')</h1>'
+                        .'<strong class="version">'.$rb->get('lib.count-of-instances').': '.$xml->count.'</strong>'
                     .'</div>'
                     .'<div class="clear"></div>'
                     .$links;
@@ -476,7 +476,7 @@
             "php.libs.CustomEntityAdmin",
             "php.libs.Database",
             "php.libs.Editor",
-            "php.libs.Error",
+            "php.libs.ErrorHandler",
             "php.libs.File",
             "php.libs.FileAdmin",
             "php.libs.FileUrl",

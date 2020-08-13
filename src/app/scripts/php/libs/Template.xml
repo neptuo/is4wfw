@@ -3,7 +3,6 @@
   <name>Template library</name>
   <classname>Template</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro vkládání šablon do stránek.

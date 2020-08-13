@@ -3,7 +3,6 @@
   <name>Bootstrap UI controls.</name>
   <classname>BootstrapUi</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro generování prvků uživatelského rozhraní za použítí Bootstrap 4.

@@ -4,7 +4,6 @@
   <name>Form lib</name>
   <classname>Form</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Formuláře

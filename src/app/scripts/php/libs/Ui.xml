@@ -3,7 +3,6 @@
   <name>UI controls.</name>
   <classname>Ui</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     Knihovna pro generování prvků uživatelského rozhraní.

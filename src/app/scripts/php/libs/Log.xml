@@ -4,7 +4,6 @@
   <name>Log lib</name>
   <classname>Log</classname>
   <classpath>php.libs</classpath>
-  <version>1.03</version>
   <count>*</count>
   <comment>
     Logovací třída.

@@ -4,7 +4,6 @@
   <name>Hint Lib</name>
   <classname>Hint</classname>
   <classpath>php.libs</classpath>
-  <version>1.01</version>
   <count>*</count>
   <comment>
     Třída nápovědy pro custom tagy.

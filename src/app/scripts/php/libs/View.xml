@@ -4,7 +4,6 @@
   <name>View Lib</name>
   <classname>View</classname>
   <classpath>php.libs</classpath>
-  <version>1.00</version>
   <count>*</count>
   <comment>
     "View"

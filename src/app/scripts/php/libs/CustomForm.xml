@@ -4,7 +4,6 @@
   <name>Custom Form Lib</name>
   <classname>CustomForm</classname>
   <classpath>php.libs</classpath>
-  <version>1.05</version>
   <count>*</count>
   <comment>
     Knihovna pro tvorbu formulářů

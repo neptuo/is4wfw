@@ -28,7 +28,7 @@
          *
          */              
         public function __construct() {
-            parent::setTagLibXml("Error.xml");
+            parent::setTagLibXml("ErrorHandler.xml");
             //error_reporting(0);
         }
 

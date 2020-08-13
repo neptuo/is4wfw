@@ -4,7 +4,6 @@
   <name>Php lib</name>
   <classname>PhpRuntime</classname>
   <classpath>php.libs</classpath>
-  <version>1.15</version>
   <count>1</count>
   <comment>
     Defaultní třída pro registrování a rušení c tag libs.

@@ -4,7 +4,6 @@
   <name>User management lib</name>
   <classname>User</classname>
   <classpath>php.libs</classpath>
-  <version>1.16</version>
   <count>*</count>
   <comment>
     Třída pro správu uživatelských účtů.

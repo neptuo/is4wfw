@@ -4,7 +4,6 @@
   <name>Counter Lib</name>
   <classname>Counter</classname>
   <classpath>php.libs</classpath>
-  <version>1.11</version>
   <count>*</count>
   <comment>
     Třída pro počítající uživatelské přístupy.

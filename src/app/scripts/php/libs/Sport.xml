@@ -4,7 +4,6 @@
   <name>Sport Lib</name>
   <classname>Sport</classname>
   <classpath>php.libs</classpath>
-  <version>2.14</version>
   <count>*</count>
   <comment>
     Třída pro "sport".

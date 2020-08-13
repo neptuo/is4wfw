@@ -4,7 +4,6 @@
   <name>WebProject Lib</name>
   <classname>WebProject</classname>
   <classpath>php.libs</classpath>
-  <version>1.07</version>
   <count>*</count>
   <comment>
     Třída pro správu webových projektů. 

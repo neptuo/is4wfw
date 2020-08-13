@@ -4,7 +4,6 @@
   <name>Database lib</name>
   <classname>Database</classname>
   <classpath>php.libs</classpath>
-  <version>1.08</version>
   <count>*</count>
   <comment>
     Třída pro práci s databází.

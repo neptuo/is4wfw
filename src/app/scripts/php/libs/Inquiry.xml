@@ -4,7 +4,6 @@
   <name>Inquiry Lib</name>
   <classname>Inquiry</classname>
   <classpath>php.libs</classpath>
-  <version>1.01</version>
   <count>*</count>
   <comment>
     Knihovna pro tvorbu anket a dotazníků
