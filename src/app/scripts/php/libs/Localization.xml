@@ -15,7 +15,7 @@
       <attname>name</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název jazyku.</attcomment>
+      <comment>Název jazyku.</comment>
     </attribute>
     <comment>
       Nastaví aktuálně používaný jazyk pro všechny (ještě nenačtené) bundly.
@@ -29,13 +29,13 @@
       <attname>name</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název bundlu, který se má načíst.</attcomment>
+      <comment>Název bundlu, který se má načíst.</comment>
     </attribute>
     <attribute>
       <attname>system</attname>
       <atttype>bool</atttype>
       <attdef>true</attdef>
-      <attcomment>Zda se jedná o systémový bundle.</attcomment>
+      <comment>Zda se jedná o systémový bundle.</comment>
     </attribute>
     <comment>
       Načte bundle podle "name". Uvnitř šablony je možné s ním pracovat.
@@ -48,18 +48,18 @@
       <attname>bundleName</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
+      <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <attname>languageName</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
+      <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <attname>filterKeyPrefix</attname>
       <atttype>string</atttype>
-      <attcomment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</attcomment>
+      <comment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</comment>
     </attribute>
     <comment>
       Zobrazí editační formulář pro uživatelský bundle.
@@ -72,18 +72,18 @@
       <attname>bundleName</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
+      <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <attname>languageName</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
+      <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <attname>filterKeyPrefix</attname>
       <atttype>string</atttype>
-      <attcomment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</attcomment>
+      <comment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</comment>
     </attribute>
     <comment>
       Zobrazí editační formulář pro uživatelský bundle.

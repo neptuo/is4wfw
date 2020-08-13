@@ -427,13 +427,13 @@
       <attname>onlyPlayed</attname>
       <atttype>bool</atttype>
       <attdef>true</attdef>
-      <attcomment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</attcomment>
+      <comment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</comment>
       <obsolete>Používat atribut "state".</obsolete>
     </attribute>
     <attribute>
       <attname>state</attname>
       <atttype>string</atttype>
-      <attcomment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</attcomment>
+      <comment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</comment>
     </attribute>
     <comment>
       Výpis zápasů, sorting má hodnotu DESC nebo ASC.
@@ -484,13 +484,13 @@
       <attname>onlyPlayed</attname>
       <atttype>bool</atttype>
       <attdef>true</attdef>
-      <attcomment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</attcomment>
+      <comment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</comment>
       <obsolete>Používat atribut "state".</obsolete>
     </attribute>
     <attribute>
       <attname>state</attname>
       <atttype>string</atttype>
-      <attcomment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</attcomment>
+      <comment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</comment>
     </attribute>
     <attribute>
       <attname>startId</attname>
@@ -511,7 +511,7 @@
     <attribute>
       <attname>field</attname>
       <required />
-      <attcomment>id, name, number, (row, i)</attcomment>
+      <comment>id, name, number, (row, i)</comment>
     </attribute>
     <attribute>
       <attname>roundId</attname>

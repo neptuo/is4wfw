@@ -105,7 +105,7 @@
       <attname>src</attname>
       <atttype>string</atttype>
       <required />
-      <attcomment>Virtuální cesta k šabloně.</attcomment>
+      <comment>Virtuální cesta k šabloně.</comment>
     </attribute>
     <features>
       <providesFullTagBody />

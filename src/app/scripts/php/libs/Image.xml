@@ -87,7 +87,7 @@
       <attname>fileId</attname>
       <required />
       <atttype>number</atttype>
-      <attcomment>ID obrázku.</attcomment>
+      <comment>ID obrázku.</comment>
     </attribute>
     <comment>
       Vloží stránky link tag pro definici favicony.

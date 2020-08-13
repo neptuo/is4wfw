@@ -13,25 +13,25 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
+      <comment>Název entity, pro kterou se má vygenerovat formulář.</comment>
     </attribute>
     <attribute>
       <attname>deleteIfEmpty</attname>
       <atttype>bool</atttype>
       <attdef>false</attdef>
-      <attcomment>
+      <comment>
         Pokud "true" a ve vstupu od uživatele přijdou všechny hodnoty prázdné, automaticky editovaný záznam smaže.
         Prázdné hodnoty se hledají pouze v aktuálně načtených fieldech.
-      </attcomment>
+      </comment>
     </attribute>
     <attribute>
       <attname>langIds</attname>
-      <attcomment>Id jazyků, pro které mají zpracovávat lokalizované pole.</attcomment>
+      <comment>Id jazyků, pro které mají zpracovávat lokalizované pole.</comment>
     </attribute>
     <attribute>
       <attname>key</attname>
       <prefix />
-      <attcomment>Primární klíče pro editaci záznamu. Klíčem je název sloupce.</attcomment>
+      <comment>Primární klíče pro editaci záznamu. Klíčem je název sloupce.</comment>
     </attribute>
     <comment>
       Vygeneruje formulář pro přidání/úpravu záznamu v uživatelské entitě.
@@ -44,7 +44,7 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název sloupce, který se má zaregistrovat do dotazu.</attcomment>
+      <comment>Název sloupce, který se má zaregistrovat do dotazu.</comment>
     </attribute>
     <comment>
       Zaregistruje do dotazu sloupec podle "name" i přesto, že se pomocí custom property nikde nevypisuje.
@@ -57,17 +57,17 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název sloupce, pro který se má vytvořit.</attcomment>
+      <comment>Název sloupce, pro který se má vytvořit.</comment>
     </attribute>
     <attribute>
       <attname>parentDirId</attname>
       <required />
-      <attcomment>Id rodičovské složky, ve které má být vytvořena nová.</attcomment>
+      <comment>Id rodičovské složky, ve které má být vytvořena nová.</comment>
     </attribute>
     <attribute>
       <attname>nameFormat</attname>
       <required />
-      <attcomment>Formátovací řetězec pro název nové složky. Např.: "{id} - {name}".</attcomment>
+      <comment>Formátovací řetězec pro název nové složky. Např.: "{id} - {name}".</comment>
     </attribute>
   </tag>
   <fulltag>
@@ -77,43 +77,43 @@
       <attname>name</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název fieldu, který se má nastavovat.</attcomment>
+      <comment>Název fieldu, který se má nastavovat.</comment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
       <atttype>number</atttype>
       <attdef>-1</attdef>
       <atttype>string</atttype>
-      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+      <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <attname>source</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</attcomment>
+      <comment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</comment>
     </attribute>
     <attribute>
       <attname>keyColumn</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název sloupce, který identifikuje klíč připojovaného záznamu záznamu.</attcomment>
+      <comment>Název sloupce, který identifikuje klíč připojovaného záznamu záznamu.</comment>
     </attribute>
     <attribute>
       <attname>valueColumn</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název sloupce, kam se uloží hodnota zadaná uživatelem.</attcomment>
+      <comment>Název sloupce, kam se uloží hodnota zadaná uživatelem.</comment>
     </attribute>
     <attribute>
       <attname>tableName</attname>
       <atttype>string</atttype>
-      <attcomment>Pokud je source polem, pak je tento atribut povinný a udává název tabulky, kam se záznam založit.</attcomment>
+      <comment>Pokud je source polem, pak je tento atribut povinný a udává název tabulky, kam se záznam založit.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
       <atttype>string</atttype>
       <prefix />
-      <attcomment>Seznam sloupců s dodatečnými hodnota pro založení záznamu.</attcomment>
+      <comment>Seznam sloupců s dodatečnými hodnota pro založení záznamu.</comment>
     </attribute>
     <comment>
       Typické použití: Automatické založené položky pro SingleReference, kdy pomocí select2 (nebo jiné) uživatel zadal položku, která v číselníkové tabulky ještě není.
@@ -125,17 +125,17 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název entity, která se má vypsat.</attcomment>
+      <comment>Název entity, která se má vypsat.</comment>
     </attribute>
     <attribute>
       <attname>filter</attname>
       <prefix />
-      <attcomment>Filtry, kterým data musí vyhovovat.</attcomment>
+      <comment>Filtry, kterým data musí vyhovovat.</comment>
     </attribute>
     <attribute>
       <attname>orderBy</attname>
       <prefix />
-      <attcomment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</attcomment>
+      <comment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</comment>
     </attribute>
     <comment>
       Vypíše seznam dat z entity "name".
@@ -149,7 +149,7 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
+      <comment>Název entity, pro kterou se má vygenerovat formulář.</comment>
     </attribute>
     <anyAttribute>
       <comment>

@@ -47,7 +47,7 @@
       <attname>placement</attname>
       <attdef>head</attdef>
       <atttype>string</atttype>
-      <attcomment>Umístění skriptu: "head" do hlavičky stránky; "tail" na konec těla.</attcomment>
+      <comment>Umístění skriptu: "head" do hlavičky stránky; "tail" na konec těla.</comment>
     </attribute>
     <comment>
       Vloží do stránky skript z těla do systémového místa pro vkládání skriptů.
@@ -80,7 +80,7 @@
       <attname>version</attname>
       <atttype>string</atttype>
       <attdef>3.5.1</attdef>
-      <attcomment>Verze jQuery: 1.4.2 (retro) nebo 3.5.1.</attcomment>
+      <comment>Verze jQuery: 1.4.2 (retro) nebo 3.5.1.</comment>
     </attribute>
     <comment>
       Vloží do stránky jQuery, pokud ještě nebylo vloženo jiné. První jQuery vždy vyhrává.
@@ -122,17 +122,17 @@
     <function>tinyMce</function>
     <attribute>
       <attname>ids</attname>
-      <attcomment>Pokud je vyplněný, zaregistruje i inicializační skripty pro převedení těchto textareí na wysiwyg editory.</attcomment>
+      <comment>Pokud je vyplněný, zaregistruje i inicializační skripty pro převedení těchto textareí na wysiwyg editory.</comment>
     </attribute>
     <attribute>
       <attname>language</attname>
-      <attcomment>Umožňuje nastavit jazyk pro editor, podporované hodnoty jsou "en" a "cs".</attcomment>
+      <comment>Umožňuje nastavit jazyk pro editor, podporované hodnoty jsou "en" a "cs".</comment>
     </attribute>
     <attribute>
       <attname>jQuery</attname>
       <atttype>bool</atttype>
       <attdef>true</attdef>
-      <attcomment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</attcomment>
+      <comment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</comment>
     </attribute>
     <comment>Vloží do stránky skripty pro tiny-mce.</comment>
   </tag>
@@ -141,13 +141,13 @@
     <function>select2</function>
     <attribute>
       <attname>selector</attname>
-      <attcomment>jQuery selector na elementy, které se mají transformovat na select2.</attcomment>
+      <comment>jQuery selector na elementy, které se mají transformovat na select2.</comment>
     </attribute>
     <attribute>
       <attname>tags</attname>
       <atttype>bool</atttype>
       <attdef>true</attdef>
-      <attcomment>Pokud je "true", bude mít možnost uživatel zakládat nové položky.</attcomment>
+      <comment>Pokud je "true", bude mít možnost uživatel zakládat nové položky.</comment>
     </attribute>
     <comment>
       Vloží do stránky skripty a styly pro select2 (v4.0.11) a inicializuje vybrané elementy podle "selector".
@@ -159,28 +159,28 @@
     <function>bootstrapDatePicker</function>
     <attribute>
       <attname>selector</attname>
-      <attcomment>jQuery selector na elementy, které se mají transformovat na datepicker.</attcomment>
+      <comment>jQuery selector na elementy, které se mají transformovat na datepicker.</comment>
     </attribute>
     <attribute>
       <attname>format</attname>
       <atttype>string</atttype>
-      <attcomment>Formátovací řetězec pro datum.</attcomment>
+      <comment>Formátovací řetězec pro datum.</comment>
     </attribute>
     <attribute>
       <attname>language</attname>
       <atttype>string</atttype>
-      <attcomment>Jazyková mutace kalendáře, která se má vložit.</attcomment>
+      <comment>Jazyková mutace kalendáře, která se má vložit.</comment>
     </attribute>
     <attribute>
       <attname>autoclose</attname>
       <atttype>bool</atttype>
       <attdef>false</attdef>
-      <attcomment>Zda se má kalenář zavřít po vybrání datumu.</attcomment>
+      <comment>Zda se má kalenář zavřít po vybrání datumu.</comment>
     </attribute>
     <attribute>
       <attname>orientation</attname>
       <atttype>string</atttype>
-      <attcomment>Směr, kterým se má date picker otevírat (výchozí "auto", možné hodnoty "left", "top", "right", "bottom"). Možné oddělovat mezerami.</attcomment>
+      <comment>Směr, kterým se má date picker otevírat (výchozí "auto", možné hodnoty "left", "top", "right", "bottom"). Možné oddělovat mezerami.</comment>
     </attribute>
     <comment>
       Vloží do stránky skripty a styly pro bootstrap-datepicker (v1.9).
@@ -193,33 +193,33 @@
     <attribute>
       <attname>selector</attname>
       <required />
-      <attcomment>jQuery kompatibilní selector k elementu, jehož obsah se má nahrazovat.</attcomment>
+      <comment>jQuery kompatibilní selector k elementu, jehož obsah se má nahrazovat.</comment>
     </attribute>
     <attribute>
       <attname>parentPageId</attname>
-      <attcomment>Pokud je vyplněný, jedná se o ID stránky, která má být jako první vynechaná z výstupu (typicky ID šablony webu - 'Template').</attcomment>
+      <comment>Pokud je vyplněný, jedná se o ID stránky, která má být jako první vynechaná z výstupu (typicky ID šablony webu - 'Template').</comment>
     </attribute>
     <attribute>
       <attname>onLoading</attname>
-      <attcomment>Název javascriptové funkce, která se má spustit ve chvíli, kdy se spustí načítání obsahu.</attcomment>
+      <comment>Název javascriptové funkce, která se má spustit ve chvíli, kdy se spustí načítání obsahu.</comment>
     </attribute>
     <attribute>
       <attname>onCompleted</attname>
-      <attcomment>Název javascriptové funkce, která se má spustit ve chvíli, kdy se úspěšně dokončí načítání obsahu.</attcomment>
+      <comment>Název javascriptové funkce, která se má spustit ve chvíli, kdy se úspěšně dokončí načítání obsahu.</comment>
     </attribute>
     <attribute>
       <attname>onFailed</attname>
-      <attcomment>Název javascriptové funkce, která se má spustit ve chvíli, kdy načítání obsahu skončilo chybou.</attcomment>
+      <comment>Název javascriptové funkce, která se má spustit ve chvíli, kdy načítání obsahu skončilo chybou.</comment>
     </attribute>
     <attribute>
       <attname>varName</attname>
-      <attcomment>Název javascriptové proměnné uvnitř window, do které se má předat instance třídy Ajax.</attcomment>
+      <comment>Název javascriptové proměnné uvnitř window, do které se má předat instance třídy Ajax.</comment>
     </attribute>
     <attribute>
       <attname>jQuery</attname>
       <atttype>bool</atttype>
       <attdef>true</attdef>
-      <attcomment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</attcomment>
+      <comment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</comment>
     </attribute>
     <comment>
       Převede web do ajaxového formátu.
@@ -233,7 +233,7 @@
       <attname>jQuery</attname>
       <atttype>bool</atttype>
       <attdef>true</attdef>
-      <attcomment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</attcomment>
+      <comment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</comment>
     </attribute>
   </tag>
 </taglib>

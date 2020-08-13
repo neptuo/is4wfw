@@ -14,12 +14,12 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název (property), pod kterým má být URL dostupná.</attcomment>
+      <comment>Název (property), pod kterým má být URL dostupná.</comment>
     </attribute>
     <attribute>
       <attname>id</attname>
       <required />
-      <attcomment>ID souboru, jehož URL se má složit.</attcomment>
+      <comment>ID souboru, jehož URL se má složit.</comment>
     </attribute>
     <comment>
       Nastaví URL k souboru do proměnné s názvem 'name'.

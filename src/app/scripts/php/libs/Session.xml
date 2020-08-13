@@ -15,12 +15,12 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název proměnné, která se má nastavit.</attcomment>
+      <comment>Název proměnné, která se má nastavit.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
       <required />
-      <attcomment>Nová hodnota proměnné.</attcomment>
+      <comment>Nová hodnota proměnné.</comment>
     </attribute>
     <comment>
       Nastaví hodnotu proměnné s názvem "name" do Session.

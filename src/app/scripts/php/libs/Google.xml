@@ -13,7 +13,7 @@
     <attribute>
       <attname>id</attname>
       <required />
-      <attcomment>Kód z Google Analytics (UA-...-..).</attcomment>
+      <comment>Kód z Google Analytics (UA-...-..).</comment>
     </attribute>
     <comment>
       Vloží script tag pro sledování statistik návštěvnosti.

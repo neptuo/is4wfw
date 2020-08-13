@@ -15,13 +15,13 @@
       <attname>id</attname>
       <atttype>text</atttype>
       <attdef>1</attdef>
-      <attcomment>ID počítadla (max 15 znaků).</attcomment>
+      <comment>ID počítadla (max 15 znaků).</comment>
     </attribute>
     <attribute>
       <attname>every</attname>
       <atttype>text</atttype>
       <attdef>day</attdef>
-      <attcomment>Po jaké době má být znovu připočítán přístup z jedné ip, možné hodnoty ("every", "minute", "hour", "day", "week").</attcomment>
+      <comment>Po jaké době má být znovu připočítán přístup z jedné ip, možné hodnoty ("every", "minute", "hour", "day", "week").</comment>
     </attribute>
     <comment>
       Počítá uživatelské přístupy na stránku, kde je použit.
@@ -40,7 +40,7 @@
     <attribute>
       <attname>id</attname>
       <atttype>number</atttype>
-      <attcomment>Číselné ID počítadla.</attcomment>
+      <comment>Číselné ID počítadla.</comment>
     </attribute>
     <attribute>
       <attname>valueLength</attname>
@@ -61,7 +61,7 @@
     <attribute>
       <attname>counterId</attname>
       <atttype>number</atttype>
-      <attcomment>Číselné ID počítadla.</attcomment>
+      <comment>Číselné ID počítadla.</comment>
     </attribute>
     <attribute>
       <attname>every</attname>
@@ -80,7 +80,7 @@
     <attribute>
       <attname>counterId</attname>
       <atttype>number</atttype>
-      <attcomment>Číselné ID počítadla.</attcomment>
+      <comment>Číselné ID počítadla.</comment>
     </attribute>
     <attribute>
       <attname>every</attname>

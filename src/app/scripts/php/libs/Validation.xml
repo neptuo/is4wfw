@@ -15,7 +15,7 @@
       <attname>key</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Klíč, který má být povinný.</attcomment>
+      <comment>Klíč, který má být povinný.</comment>
     </attribute>
     <comment>
       Nastaví required validátor pro klíč "key".
@@ -28,13 +28,13 @@
       <attname>identifier</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Systémový identifikátor validační hlášky.</attcomment>
+      <comment>Systémový identifikátor validační hlášky.</comment>
     </attribute>
     <attribute>
       <attname>message</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Přeložená textový hláška.</attcomment>
+      <comment>Přeložená textový hláška.</comment>
     </attribute>
     <comment>
       Nastaví textovou hlášku pro daný systémový identifikátor hlášky.
@@ -46,7 +46,7 @@
     <attribute>
       <attname>key</attname>
       <atttype>string</atttype>
-      <attcomment>Klíč jehož validační zprávy se mají vypsat.</attcomment>
+      <comment>Klíč jehož validační zprávy se mají vypsat.</comment>
     </attribute>
     <comment>
       Umožní šablonově vypsat všechny validační zprávy pro daný klíč "key" (pokud je vyplněný, jinak vypisuje vše).

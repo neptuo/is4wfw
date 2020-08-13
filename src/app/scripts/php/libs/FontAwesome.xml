@@ -19,22 +19,22 @@
       <attname>name</attname>
       <atttype>string</atttype>
       <required />
-      <attcomment>Identifikátor ikony (automaticky se přidá "fa-" prefix).</attcomment>
+      <comment>Identifikátor ikony (automaticky se přidá "fa-" prefix).</comment>
     </attribute>
     <attribute>
       <attname>prefix</attname>
       <atttype>string</atttype>
       <attdef>fa</attdef>
-      <attcomment>Prefix / styl ikony (fa, fas, atd).</attcomment>
+      <comment>Prefix / styl ikony (fa, fas, atd).</comment>
     </attribute>
     <attribute>
       <attname>tag</attname>
       <atttype>string</atttype>
       <attdef>span</attdef>
-      <attcomment>HTML tag, který se má použít.</attcomment>
+      <comment>HTML tag, který se má použít.</comment>
     </attribute>
     <anyAttribute>
-      <attcomment>Všechny atributy jsou předány obalovému tagu.</attcomment>
+      <comment>Všechny atributy jsou předány obalovému tagu.</comment>
     </anyAttribute>
     <comment>Vrací HTML tag s ikonou.</comment>
   </tag>

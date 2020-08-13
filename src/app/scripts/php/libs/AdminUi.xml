@@ -15,7 +15,7 @@
       <attname>message</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Hláška po úspěšném dokončení akce.</attcomment>
+      <comment>Hláška po úspěšném dokončení akce.</comment>
     </attribute>
     <comment>
       Nastaví dočasnou hlášku po úspěšném dokončení akce.
@@ -28,12 +28,12 @@
       <attname>hiddenField</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název a hodnota hidden inputu, kterým se pozná odeslání formuláře.</attcomment>
+      <comment>Název a hodnota hidden inputu, kterým se pozná odeslání formuláře.</comment>
     </attribute>
     <attribute>
       <attname>confirmValue</attname>
       <atttype>string</atttype>
-      <attcomment>Hodnota z mazaného objektu, která se doplní do potvrzovacího dialogu.</attcomment>
+      <comment>Hodnota z mazaného objektu, která se doplní do potvrzovacího dialogu.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -49,25 +49,25 @@
       <attname>pageId</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Id stránky, kam má odkaz vést.</attcomment>
+      <comment>Id stránky, kam má odkaz vést.</comment>
     </attribute>
     <attribute>
       <attname>text</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Text odkazu.</attcomment>
+      <comment>Text odkazu.</comment>
     </attribute>
     <attribute>
       <attname>paramName</attname>
       <atttype>string</atttype>
       <attdef>id</attdef>
-      <attcomment>Název id parametru, který bude mít hodnotu "new".</attcomment>
+      <comment>Název id parametru, který bude mít hodnotu "new".</comment>
     </attribute>
     <attribute>
       <attname>param</attname>
       <atttype>string</atttype>
       <prefix />
-      <attcomment>Seznam parametrů předaných do odkazu.</attcomment>
+      <comment>Seznam parametrů předaných do odkazu.</comment>
     </attribute>
     <comment>
       Vykreslí odkaz pro založení objektu (link s třídou button).
@@ -80,30 +80,30 @@
       <attname>saveName</attname>
       <atttype>string</atttype>
       <attdef>save</attdef>
-      <attcomment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</attcomment>
+      <comment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</comment>
     </attribute>
     <attribute>
       <attname>saveParam</attname>
       <atttype>string</atttype>
       <prefix />
-      <attcomment>Seznam parametrů předaných při přesměrování pro "Save".</attcomment>
+      <comment>Seznam parametrů předaných při přesměrování pro "Save".</comment>
     </attribute>
     <attribute>
       <attname>closePageId</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Id stránky, kam má vést odkaz pro zavření.</attcomment>
+      <comment>Id stránky, kam má vést odkaz pro zavření.</comment>
     </attribute>
     <attribute>
       <attname>closeParam</attname>
       <atttype>string</atttype>
       <prefix />
-      <attcomment>Seznam parametrů, které se předají "Close" odkazu.</attcomment>
+      <comment>Seznam parametrů, které se předají "Close" odkazu.</comment>
     </attribute>
     <attribute>
       <attname>message</attname>
       <atttype>string</atttype>
-      <attcomment>Temp message po úspěšném uložení.</attcomment>
+      <comment>Temp message po úspěšném uložení.</comment>
     </attribute>
     <comment>
       Vykreslí tlačítka ("Save", "Save and Close", "Close").
@@ -117,25 +117,25 @@
       <attname>saveName</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</attcomment>
+      <comment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</comment>
     </attribute>
     <attribute>
       <attname>saveParam</attname>
       <atttype>string</atttype>
       <prefix />
-      <attcomment>Seznam parametrů předaných při přesměrování pro "Save".</attcomment>
+      <comment>Seznam parametrů předaných při přesměrování pro "Save".</comment>
     </attribute>
     <attribute>
       <attname>closePageId</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Id stránky, kam má vést odkaz pro zavření.</attcomment>
+      <comment>Id stránky, kam má vést odkaz pro zavření.</comment>
     </attribute>
     <attribute>
       <attname>closeParam</attname>
       <atttype>string</atttype>
       <prefix />
-      <attcomment>Seznam parametrů, které se předají "Close" odkazu.</attcomment>
+      <comment>Seznam parametrů, které se předají "Close" odkazu.</comment>
     </attribute>
     <comment>
       Pokud byl odeslán formulář pro tlačítko "saveName" pomocí "admin:saveButtons", provede přesměrování podle "Save" nebo "Save and Close".
@@ -149,7 +149,7 @@
       <required />
       <atttype>string</atttype>
       <prefix />
-      <attcomment>Popisek (dvojtečka je přidána automaticky). Všechny prefix jsou použity jako HTML atributy elementu label.</attcomment>
+      <comment>Popisek (dvojtečka je přidána automaticky). Všechny prefix jsou použity jako HTML atributy elementu label.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -164,7 +164,7 @@
       <attname>id</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Hodnota id, podle které se má rozhodovat.</attcomment>
+      <comment>Hodnota id, podle které se má rozhodovat.</comment>
     </attribute>
     <comment>
       Inicializuje proměnné "admin:edit" (true/false) a "admin:editTitle" (titulek "Create"/"Edit").
@@ -176,7 +176,7 @@
     <attribute>
       <attname>key</attname>
       <atttype>string</atttype>
-      <attcomment>Klíč, jejíž validační hlášky se mají zobrazit.</attcomment>
+      <comment>Klíč, jejíž validační hlášky se mají zobrazit.</comment>
     </attribute>
     <comment>
       Zobrazí standartním způsobem validační hlášky.

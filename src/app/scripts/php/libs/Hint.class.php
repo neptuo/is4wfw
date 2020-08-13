@@ -174,7 +174,7 @@
                                 .'<td class="att-prefix' . $cssClass . '">' . $prefix . '</td>'
                                 .'<td class="att-type' . $cssClass . '">' . $tag->attribute[$i]->atttype . '</td>'
                                 .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->attdef . '</td>'
-                                .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->attcomment . '</td>'
+                                .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->comment . '</td>'
                             .'</tr>';
                         }
                         
@@ -182,7 +182,7 @@
                             $attributes .= ''
                             .'<tr>'
                                 .'<td colspan="5">'.$rb->get('lib.attparams').'</td>'
-                                .'<td class="att-comment">' . $tag->anyAttribute->attcomment . '</td>'
+                                .'<td class="att-comment">' . $tag->anyAttribute->comment . '</td>'
                             .'</tr>';
                         }
                         
@@ -277,7 +277,7 @@
                                 .'<td class="att-prefix' . $cssClass . '">' . $prefix . '</td>'
                                 .'<td class="att-type' . $cssClass . '">' . $tag->attribute[$i]->atttype . '</td>'
                                 .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->attdef . '</td>'
-                                .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->attcomment . '</td>'
+                                .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->comment . '</td>'
                             .'</tr>';
                         }
 
@@ -414,7 +414,7 @@
                                 .'<td class="att-prefix' . $cssClass . '">' . $prefix . '</td>'
                                 .'<td class="att-type' . $cssClass . '">' . $decorator->attribute[$i]->atttype . '</td>'
                                 .'<td class="att-def' . $cssClass . '">' . $decorator->attribute[$i]->attdef . '</td>'
-                                .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $decorator->attribute[$i]->attcomment . '</td>'
+                                .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $decorator->attribute[$i]->comment . '</td>'
                             .'</tr>';
                         }
                         

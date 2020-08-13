@@ -26,7 +26,7 @@
     </attribute>
     <attribute>
       <attname>classes</attname>
-      <attcomment>Css třída přidaná divu pro každé menu (kořenový div a pro každé pod menu).</attcomment>
+      <comment>Css třída přidaná divu pro každé menu (kořenový div a pro každé pod menu).</comment>
     </attribute>
     <attribute>
       <attname>rel</attname>
@@ -39,13 +39,13 @@
       <attname>copyParameters</attname>
       <atttype>bool</atttype>
       <attdef>false</attdef>
-      <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
+      <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <attribute>
       <attname>display</attname>
       <atttype>string</atttype>
       <attdef>name</attdef>
-      <attcomment>Vlastnost z "info", která se má použít jako text odkazu ("name" nebo "title").</attcomment>
+      <comment>Vlastnost z "info", která se má použít jako text odkazu ("name" nebo "title").</comment>
     </attribute>
     <comment>
       Vygeneruje menu stránek, kde: "parentId" je id kořenové stránky menu,
@@ -58,19 +58,19 @@
     <attribute>
       <attname>parentId</attname>
       <required />
-      <attcomment>Id nadřazené stránky.</attcomment>
+      <comment>Id nadřazené stránky.</comment>
     </attribute>
     <attribute>
       <attname>display</attname>
       <atttype>string</atttype>
       <attdef>name</attdef>
-      <attcomment>Vlastnost z "info", která se má použít jako "display" field ("name" nebo "title").</attcomment>
+      <comment>Vlastnost z "info", která se má použít jako "display" field ("name" nebo "title").</comment>
     </attribute>
     <attribute>
       <attname>copyParameters</attname>
       <atttype>bool</atttype>
       <attdef>false</attdef>
-      <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
+      <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <comment>
       Vykreslí menu. 
@@ -296,19 +296,19 @@
     </attribute>
     <attribute>
       <attname>ip</attname>
-      <attcomment>Klientská IP adresa (seznam čárkou odělených).</attcomment>
+      <comment>Klientská IP adresa (seznam čárkou odělených).</comment>
     </attribute>
     <attribute>
       <attname>copyParameters</attname>
       <atttype>bool</atttype>
       <attdef>false</attdef>
-      <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
+      <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <attribute>
       <attname>param</attname>
       <atttype>string</atttype>
       <prefix />
-      <attcomment>Seznam parametrů (klíč=hodnota), které se mají přidat do URL. Mají přednost před hodnotami při "copyParameters".</attcomment>
+      <comment>Seznam parametrů (klíč=hodnota), které se mají přidat do URL. Mají přednost před hodnotami při "copyParameters".</comment>
     </attribute>
     <comment>
       Přesměruje uživatele na danou stranku, pokud je zadán 'browser', přesměruje pouze uživatele
@@ -329,7 +329,7 @@
       <attname>display</attname>
       <atttype>string</atttype>
       <attdef>language</attdef>
-      <attcomment>Název fieldu z jazyku, který se má použít pro zobrazení.</attcomment>
+      <comment>Název fieldu z jazyku, který se má použít pro zobrazení.</comment>
     </attribute>
     <comment>
       Zobrazí odkazy na jednotlivé jazykové verze. Pokud je "homePage" true, pak 
@@ -580,13 +580,13 @@
       <attname>url</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Cesta k obrázku.</attcomment>
+      <comment>Cesta k obrázku.</comment>
     </attribute>
     <attribute>
       <attname>contentType</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Content-type pro daný obrázek.</attcomment>
+      <comment>Content-type pro daný obrázek.</comment>
     </attribute>
     <comment>
       Vloží stránky link tag pro definici favicony.
@@ -601,7 +601,7 @@
       <attname>isEnabled</attname>
       <required />
       <atttype>bool</atttype>
-      <attcomment>Zda má být debug mód zapnutý nebo vypnutý.</attcomment>
+      <comment>Zda má být debug mód zapnutý nebo vypnutý.</comment>
     </attribute>
     <comment>
       Umožňuje přepnout debug mód.

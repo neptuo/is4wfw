@@ -14,7 +14,7 @@
       <attname>id</attname>
       <required />
       <atttype>number</atttype>
-      <attcomment>ID šablony, která se má vložit.</attcomment>
+      <comment>ID šablony, která se má vložit.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -30,7 +30,7 @@
       <attname>id</attname>
       <required />
       <atttype>number</atttype>
-      <attcomment>ID šablony, která se má vložit.</attcomment>
+      <comment>ID šablony, která se má vložit.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -54,7 +54,7 @@
       <attname>identifier</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Unikátní identifikátor šablony. Přebíjí uložené šabloné v DB.</attcomment>
+      <comment>Unikátní identifikátor šablony. Přebíjí uložené šabloné v DB.</comment>
     </attribute>
     <comment>
       Definuje šablonu, jako kdyby byla uložení v DB.
@@ -85,7 +85,7 @@
       <attname>id</attname>
       <atttype>number</atttype>
       <required />
-      <attcomment>ID šablony.</attcomment>
+      <comment>ID šablony.</comment>
     </attribute>
     <features>
       <providesFullTagBody />

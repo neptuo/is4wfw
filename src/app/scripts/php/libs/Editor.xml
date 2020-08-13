@@ -14,10 +14,10 @@
       <attname>submit</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název klíče z requestu, který říká že jde o odeslání formuláře.</attcomment>
+      <comment>Název klíče z requestu, který říká že jde o odeslání formuláře.</comment>
     </attribute>
     <anyAttribute>
-      <attcomment>Všechny další atributy jsou předány "form" tagu.</attcomment>
+      <comment>Všechny další atributy jsou předány "form" tagu.</comment>
     </anyAttribute>
     <comment>
       Vytvoří formulář a zaregistruje edit model.
@@ -30,7 +30,7 @@
       <attname>name</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název prefixu, který bude přidán všem klíčům ve formuláři.</attcomment>
+      <comment>Název prefixu, který bude přidán všem klíčům ve formuláři.</comment>
     </attribute>
     <comment>
       Nastaví do edit modelu prefix tak, aby se formulářové prvky nepřekrývaly, ale názvy fieldů v edit modelech zůstaly stejné.
@@ -43,13 +43,13 @@
       <attname>name</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název klíče, který se má nastavit.</attcomment>
+      <comment>Název klíče, který se má nastavit.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Hodnota klíče.</attcomment>
+      <comment>Hodnota klíče.</comment>
     </attribute>
     <comment>Nastaví položku modelu.</comment>
   </tag>

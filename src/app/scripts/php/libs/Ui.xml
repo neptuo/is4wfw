@@ -13,7 +13,7 @@
     <attribute>
       <attname>items</attname>
       <required />
-      <attcomment>Pole položek, které se mají enumerovat.</attcomment>
+      <comment>Pole položek, které se mají enumerovat.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -34,7 +34,7 @@
     <attribute>
       <attname>items</attname>
       <required />
-      <attcomment>Pole položek, ze kterého se má vzít první.</attcomment>
+      <comment>Pole položek, ze kterého se má vzít první.</comment>
     </attribute>
     <comment>
       Pro první položku z "items" vygeneruje obsah šablony.
@@ -46,7 +46,7 @@
     <attribute>
       <attname>items</attname>
       <required />
-      <attcomment>Pole položek, ze kterého se má vzít poslední.</attcomment>
+      <comment>Pole položek, ze kterého se má vzít poslední.</comment>
     </attribute>
     <comment>
       Pro poslední položku z "items" vygeneruje obsah šablony.
@@ -58,7 +58,7 @@
     <attribute>
       <attname>items</attname>
       <required />
-      <attcomment>Pole položek.</attcomment>
+      <comment>Pole položek.</comment>
     </attribute>
     <comment>
       Vypíše šablonu, pokud "items" obsahují nějaká data.
@@ -70,7 +70,7 @@
     <attribute>
       <attname>items</attname>
       <required />
-      <attcomment>Pole položek.</attcomment>
+      <comment>Pole položek.</comment>
     </attribute>
     <comment>
       Vypíše šablonu, pokud "items" neobsahují žádná data.
@@ -82,7 +82,7 @@
     <attribute>
       <attname>items</attname>
       <required />
-      <attcomment>Pole položek.</attcomment>
+      <comment>Pole položek.</comment>
     </attribute>
     <comment>
       Vrací počet položek v parametru "items".
@@ -94,7 +94,7 @@
     <attribute>
       <attname>items</attname>
       <required />
-      <attcomment>Pole položek.</attcomment>
+      <comment>Pole položek.</comment>
     </attribute>
     <comment>
       Uvnitř šablony je dostupná property "ui:count".
@@ -113,17 +113,17 @@
     <attribute>
       <attname>items</attname>
       <required />
-      <attcomment>Pole položek.</attcomment>
+      <comment>Pole položek.</comment>
     </attribute>
     <attribute>
       <attname>thead</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "thead".</attcomment>
+      <comment>Seznam atributů pro "thead".</comment>
     </attribute>
     <attribute>
       <attname>tbody</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "tbody".</attcomment>
+      <comment>Seznam atributů pro "tbody".</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -137,21 +137,21 @@
     <function>gridColumn</function>
     <attribute>
       <attname>header</attname>
-      <attcomment>Nadpis sloupce v gridu.</attcomment>
+      <comment>Nadpis sloupce v gridu.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
+      <comment>Hodnota sloupce v gridu (typicky custom property).</comment>
     </attribute>
     <attribute>
       <attname>th</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "th".</attcomment>
+      <comment>Seznam atributů pro "th".</comment>
     </attribute>
     <attribute>
       <attname>td</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "td".</attcomment>
+      <comment>Seznam atributů pro "td".</comment>
     </attribute>
     <comment>
       Základ sloupec pro "ui:grid".
@@ -162,33 +162,33 @@
     <function>gridColumnBoolean</function>
     <attribute>
       <attname>header</attname>
-      <attcomment>Nadpis sloupce v gridu.</attcomment>
+      <comment>Nadpis sloupce v gridu.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
+      <comment>Hodnota sloupce v gridu (typicky custom property).</comment>
     </attribute>
     <attribute>
       <attname>trueText</attname>
-      <attcomment>Hodnota text sloupce, pokud je "value" true.</attcomment>
+      <comment>Hodnota text sloupce, pokud je "value" true.</comment>
       <atttype>string</atttype>
       <attdef>Yes</attdef>
     </attribute>
     <attribute>
       <attname>falseText</attname>
-      <attcomment>Hodnota text sloupce, pokud je "value" false.</attcomment>
+      <comment>Hodnota text sloupce, pokud je "value" false.</comment>
       <atttype>string</atttype>
       <attdef></attdef>
     </attribute>
     <attribute>
       <attname>th</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "th".</attcomment>
+      <comment>Seznam atributů pro "th".</comment>
     </attribute>
     <attribute>
       <attname>td</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "td".</attcomment>
+      <comment>Seznam atributů pro "td".</comment>
     </attribute>
     <comment>
       Boolový sloupec pro "ui:grid".
@@ -199,27 +199,27 @@
     <function>gridColumnDateTime</function>
     <attribute>
       <attname>header</attname>
-      <attcomment>Nadpis sloupce v gridu.</attcomment>
+      <comment>Nadpis sloupce v gridu.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
+      <comment>Hodnota sloupce v gridu (typicky custom property).</comment>
     </attribute>
     <attribute>
       <attname>format</attname>
       <required />
-      <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
+      <comment>Formátovací řetězec pro datum (a čas).</comment>
       <atttype>string</atttype>
     </attribute>
     <attribute>
       <attname>th</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "th".</attcomment>
+      <comment>Seznam atributů pro "th".</comment>
     </attribute>
     <attribute>
       <attname>td</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "td".</attcomment>
+      <comment>Seznam atributů pro "td".</comment>
     </attribute>
     <comment>
       Datumový sloupec pro "ui:grid".
@@ -230,17 +230,17 @@
     <function>gridColumnTemplate</function>
     <attribute>
       <attname>header</attname>
-      <attcomment>Nadpis sloupce v gridu.</attcomment>
+      <comment>Nadpis sloupce v gridu.</comment>
     </attribute>
     <attribute>
       <attname>th</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "th".</attcomment>
+      <comment>Seznam atributů pro "th".</comment>
     </attribute>
     <attribute>
       <attname>td</attname>
       <prefix />
-      <attcomment>Seznam atributů pro "td".</attcomment>
+      <comment>Seznam atributů pro "td".</comment>
     </attribute>
     <comment>
       Sloupec pro "ui:grid", který má hodnotu definovanou šablonou.
@@ -253,14 +253,14 @@
       <attname>method</attname>
       <atttype>string</atttype>
       <attdef>POST</attdef>
-      <attcomment>HTTP metoda, kterou se má formář odeslat.</attcomment>
+      <comment>HTTP metoda, kterou se má formář odeslat.</comment>
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attcomment>URL, na kterou se má přesměrovat při odeslání formuláře.</attcomment>
+      <comment>URL, na kterou se má přesměrovat při odeslání formuláře.</comment>
     </attribute>
     <anyAttribute>
-      <attcomment>Všechny další atributy jsou předány "form" tagu.</attcomment>
+      <comment>Všechny další atributy jsou předány "form" tagu.</comment>
     </anyAttribute>
     <comment>
       Vygeneruje formulář.
@@ -272,7 +272,7 @@
     <function>filter</function>
     <attribute>
       <attname>session</attname>
-      <attcomment>Čárkou oddělený seznam parametrů, které mají jít z/do session místo z/do QueryString.</attcomment>
+      <comment>Čárkou oddělený seznam parametrů, které mají jít z/do session místo z/do QueryString.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -286,33 +286,33 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, který se má nastavovat.</attcomment>
+      <comment>Název fieldu, který se má nastavovat.</comment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
       <atttype>number</atttype>
       <attdef>-1</attdef>
-      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+      <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <attname>source</attname>
       <required />
-      <attcomment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</attcomment>
+      <comment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</comment>
     </attribute>
     <attribute>
       <attname>display</attname>
       <required />
-      <attcomment>Název sloupce, který se má zobrazit.</attcomment>
+      <comment>Název sloupce, který se má zobrazit.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
       <required />
-      <attcomment>Název název sloupce, který se má použit jako hodnota.</attcomment>
+      <comment>Název název sloupce, který se má použit jako hodnota.</comment>
     </attribute>
     <attribute>
       <attname>emptyText</attname>
       <atttype>string</atttype>
-      <attcomment>Pokud je zadán, obsahuje hodnotu pro nevyplněnou položku.</attcomment>
+      <comment>Pokud je zadán, obsahuje hodnotu pro nevyplněnou položku.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -326,27 +326,27 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, který se má nastavovat.</attcomment>
+      <comment>Název fieldu, který se má nastavovat.</comment>
     </attribute>
     <attribute>
       <attname>source</attname>
       <required />
-      <attcomment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</attcomment>
+      <comment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</comment>
     </attribute>
     <attribute>
       <attname>display</attname>
       <required />
-      <attcomment>Název sloupce, který se má zobrazit.</attcomment>
+      <comment>Název sloupce, který se má zobrazit.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
       <required />
-      <attcomment>Název název sloupce, který se má použit jako hodnota.</attcomment>
+      <comment>Název název sloupce, který se má použit jako hodnota.</comment>
     </attribute>
     <attribute>
       <attname>repeat</attname>
       <attdef>vertical</attdef>
-      <attcomment>Směr, jakým se mají checkboxy opakovat ("horizontal" nebo "vertical").</attcomment>
+      <comment>Směr, jakým se mají checkboxy opakovat ("horizontal" nebo "vertical").</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -360,17 +360,17 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+      <comment>Název fieldu, která se má nastavovat.</comment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
       <atttype>number</atttype>
       <attdef>-1</attdef>
-      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+      <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attcomment>Výchozí hodnota.</attcomment>
+      <comment>Výchozí hodnota.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -384,17 +384,17 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+      <comment>Název fieldu, která se má nastavovat.</comment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
       <atttype>number</atttype>
       <attdef>-1</attdef>
-      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+      <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attcomment>Výchozí hodnota.</attcomment>
+      <comment>Výchozí hodnota.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -408,17 +408,17 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+      <comment>Název fieldu, která se má nastavovat.</comment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
       <atttype>number</atttype>
       <attdef>-1</attdef>
-      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+      <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attcomment>Výchozí hodnota.</attcomment>
+      <comment>Výchozí hodnota.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -432,19 +432,19 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+      <comment>Název fieldu, která se má nastavovat.</comment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
       <atttype>number</atttype>
       <attdef>-1</attdef>
-      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+      <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <attname>default</attname>
       <atttype>bool</atttype>
       <attdef>false</attdef>
-      <attcomment>Výchozí hodnota.</attcomment>
+      <comment>Výchozí hodnota.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -458,13 +458,13 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, která se má nastavovat.</attcomment>
+      <comment>Název fieldu, která se má nastavovat.</comment>
     </attribute>
     <attribute>
       <attname>isMulti</attname>
       <atttype>bool</atttype>
       <attdef>false</attdef>
-      <attcomment>Zda se umožňuje výběr více souborů najednou.</attcomment>
+      <comment>Zda se umožňuje výběr více souborů najednou.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -478,12 +478,12 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+      <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
     </attribute>
     <attribute>
       <attname>format</attname>
       <required />
-      <attcomment>Formátovací řetězec, který se má použít pokud vnitřní objekt neposkytne hodnotu. Např.: "{id} - {name}".</attcomment>
+      <comment>Formátovací řetězec, který se má použít pokud vnitřní objekt neposkytne hodnotu. Např.: "{id} - {name}".</comment>
     </attribute>
     <comment>
       Obaluje libovolný editační tag a pokud neposkytne hodnotu fieldu "name", tak použije "format" pro nastavení hodnoty.
@@ -495,12 +495,12 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+      <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
     </attribute>
     <attribute>
       <attname>format</attname>
       <required />
-      <attcomment>Formátovací řetězec, který se použije pro poskytnutí hodnoty. Např.: "{id} - {name}".</attcomment>
+      <comment>Formátovací řetězec, který se použije pro poskytnutí hodnoty. Např.: "{id} - {name}".</comment>
     </attribute>
     <comment>
       Nastavuje hodnotu fieldu "name" na hodnotu podle "format".
@@ -512,12 +512,12 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+      <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
       <required />
-      <attcomment>Hodnota, která se použije při každém odeslání formuláře.</attcomment>
+      <comment>Hodnota, která se použije při každém odeslání formuláře.</comment>
     </attribute>
     <comment>
       Nastavuje hodnotu fieldu "name" na hodnotu "value", při každém odeslání formuláře.
@@ -529,22 +529,22 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+      <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
       <atttype>number</atttype>
       <attdef>-1</attdef>
-      <attcomment>Index, pokud je "name" typu pole.</attcomment>
+      <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <attname>format</attname>
       <required />
-      <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
+      <comment>Formátovací řetězec pro datum (a čas).</comment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attcomment>Výchozí hodnota.</attcomment>
+      <comment>Výchozí hodnota.</comment>
     </attribute>
     <comment>
       Obaluje libovolný editační tag a formátuje hodnotu timestampu v něm uloženou do zadaného "format".
@@ -557,12 +557,12 @@
     <attribute>
       <attname>value</attname>
       <required />
-      <attcomment>Hodnota časového razítka.</attcomment>
+      <comment>Hodnota časového razítka.</comment>
     </attribute>
     <attribute>
       <attname>format</attname>
       <required />
-      <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
+      <comment>Formátovací řetězec pro datum (a čas).</comment>
     </attribute>
     <comment>
       Vypíše hodnota časového razítka z "value" ve formátu "format".
@@ -575,21 +575,21 @@
       <attname>value</attname>
       <required />
       <atttype>number</atttype>
-      <attcomment>Číslo.</attcomment>
+      <comment>Číslo.</comment>
     </attribute>
     <attribute>
       <attname>thousandsSeparator</attname>
       <atttype>string</atttype>
-      <attcomment>Pokud je vyplněn, bude použit jako oddělovač tisíců.</attcomment>
+      <comment>Pokud je vyplněn, bude použit jako oddělovač tisíců.</comment>
     </attribute>
     <attribute>
       <attname>decimalsSeparator</attname>
       <atttype>string</atttype>
-      <attcomment>Pokud je vyplněn, bude použit jako oddělovač desetinných míst.</attcomment>
+      <comment>Pokud je vyplněn, bude použit jako oddělovač desetinných míst.</comment>
     </attribute>
     <attribute>
       <attname>decimals</attname>
-      <attcomment>Pokud je vyplněn, udává počet desetinných míst; nevyplněno znamená nechat původní.</attcomment>
+      <comment>Pokud je vyplněn, udává počet desetinných míst; nevyplněno znamená nechat původní.</comment>
     </attribute>
     <comment>
       Vypíše formátované číslo.
@@ -602,11 +602,11 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
+      <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
     </attribute>
     <attribute>
       <attname>langIds</attname>
-      <attcomment>Podmnožina jazyků, které se mají zobrazit.</attcomment>
+      <comment>Podmnožina jazyků, které se mají zobrazit.</comment>
     </attribute>
     <comment>
       Pro každý jazyk vygeneruje obsah šablony.

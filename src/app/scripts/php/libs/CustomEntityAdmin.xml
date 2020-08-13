@@ -20,7 +20,7 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název entity, do které se má přidat sloupec.</attcomment>
+      <comment>Název entity, do které se má přidat sloupec.</comment>
     </attribute>
     <comment>
       Generátor pro přidání sloupce do tabulky uživatelské entity.
@@ -46,7 +46,7 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název entity, pro kterou se mají zobrazit sloupce.</attcomment>
+      <comment>Název entity, pro kterou se mají zobrazit sloupce.</comment>
     </attribute>
     <comment>
       Vypíše seznam sloupců vybrané uživatelké entity.
@@ -66,7 +66,7 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název entity, která se má odstranit.</attcomment>
+      <comment>Název entity, která se má odstranit.</comment>
     </attribute>
     <comment>
       Odstraní uživatelkou entitu.
@@ -79,12 +79,12 @@
     <attribute>
       <attname>tableName</attname>
       <required />
-      <attcomment>Název entity, ze které se má sloupec odstranit.</attcomment>
+      <comment>Název entity, ze které se má sloupec odstranit.</comment>
     </attribute>
     <attribute>
       <attname>columnName</attname>
       <required />
-      <attcomment>Název sloupce, který se má odstranit.</attcomment>
+      <comment>Název sloupce, který se má odstranit.</comment>
     </attribute>
     <comment>
       Odstraní sloupec z uživatelké entity.
@@ -96,7 +96,7 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název entity, ke které má definovat lokalizační tabulka.</attcomment>
+      <comment>Název entity, ke které má definovat lokalizační tabulka.</comment>
     </attribute>
     <comment>
       Umožňuje generovat nebo upravovat lokalizační tabulku pro entitu v "name";

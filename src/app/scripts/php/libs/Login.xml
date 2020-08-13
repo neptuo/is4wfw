@@ -51,19 +51,19 @@
       <attname>group</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název skupiny, pro kterou se má přihlášení provést.</attcomment>
+      <comment>Název skupiny, pro kterou se má přihlášení provést.</comment>
     </attribute>
     <attribute>
       <attname>username</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Uživatelské jméno.</attcomment>
+      <comment>Uživatelské jméno.</comment>
     </attribute>
     <attribute>
       <attname>password</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Heslo.</attcomment>
+      <comment>Heslo.</comment>
     </attribute>
     <comment>
       Provede přihlášení uživatele "username" do skupiny "group", pokud je "password" správné.
@@ -93,7 +93,7 @@
     <attribute>
       <attname>group</attname>
       <required />
-      <attcomment>Název skupiny, pro kterou se má odhlášení provést.</attcomment>
+      <comment>Název skupiny, pro kterou se má odhlášení provést.</comment>
     </attribute>
     <comment>
       Provede odhlášení uživatele ze skupiny "group".
@@ -107,7 +107,7 @@
     <attribute>
       <attname>group</attname>
       <required />
-      <attcomment>Název skupiny, pro kterou se má obnovení provést.</attcomment>
+      <comment>Název skupiny, pro kterou se má obnovení provést.</comment>
     </attribute>
     <comment>
       Provede obnovu přihlašovacího tiketu.
@@ -120,7 +120,7 @@
     <attribute>
       <attname>field</attname>
       <attype>string</attype>
-      <attcomment>Umožňuje vypsat jen jeden field z infomací o uživateli ("name", "surname", group", "username", "login" - username + domain)</attcomment>
+      <comment>Umožňuje vypsat jen jeden field z infomací o uživateli ("name", "surname", group", "username", "login" - username + domain)</comment>
     </attribute>
     <comment>
       Zobrazí informace o přihlášeném uživateli (jméno, login, skupinu).
@@ -154,17 +154,17 @@
     <attribute>
       <attname>all</attname>
       <atttype>string</atttype>
-      <attcomment>Seznam (čárkou oddělený) skupin, ve kterých musí uživatel být, aby bylo zobrazeno tělo tagu.</attcomment>
+      <comment>Seznam (čárkou oddělený) skupin, ve kterých musí uživatel být, aby bylo zobrazeno tělo tagu.</comment>
     </attribute>
     <attribute>
       <attname>any</attname>
       <atttype>string</atttype>
-      <attcomment>Seznam (čárkou oddělený) skupin, z nichž alespoň v jedné musí uživatel být, aby bylo zobrazeno tělo tagu.</attcomment>
+      <comment>Seznam (čárkou oddělený) skupin, z nichž alespoň v jedné musí uživatel být, aby bylo zobrazeno tělo tagu.</comment>
     </attribute>
     <attribute>
       <attname>none</attname>
       <atttype>string</atttype>
-      <attcomment>Seznam (čárkou oddělený) skupin, z nichž v žádné uživatel nesmí být, aby bylo zobrazeno tělo tagu.</attcomment>
+      <comment>Seznam (čárkou oddělený) skupin, z nichž v žádné uživatel nesmí být, aby bylo zobrazeno tělo tagu.</comment>
     </attribute>
     <comment>
       Podmíněné zobrazení části stránky.

@@ -14,12 +14,12 @@
       <attname>filter</attname>
       <atttype>string</atttype>
       <prefix />
-      <attcomment>Filtry, kterým data musí vyhovovat.</attcomment>
+      <comment>Filtry, kterým data musí vyhovovat.</comment>
     </attribute>
     <attribute>
       <attname>orderBy</attname>
       <prefix />
-      <attcomment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</attcomment>
+      <comment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</comment>
     </attribute>
     <comment>
       Vypíše seznam jazyků.
@@ -32,7 +32,7 @@
       <attname>id</attname>
       <atttype>number</atttype>
       <attdef>0</attdef>
-      <attcomment>Id záznamu k editaci. Pokud je 0 (nebo nevyplněno), pak se vytváří nový záznam.</attcomment>
+      <comment>Id záznamu k editaci. Pokud je 0 (nebo nevyplněno), pak se vytváří nový záznam.</comment>
     </attribute>
     <comment>
       Vykreslí editační formulář.
@@ -47,7 +47,7 @@
       <required />
       <atttype>number</atttype>
       <attdef>0</attdef>
-      <attcomment>Id záznamu, který se má smazat.</attcomment>
+      <comment>Id záznamu, který se má smazat.</comment>
     </attribute>
     <comment>
       Smaže jazyk s "id".

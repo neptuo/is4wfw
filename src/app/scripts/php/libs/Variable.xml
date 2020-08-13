@@ -15,22 +15,22 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název proměnné, která se má nastavit.</attcomment>
+      <comment>Název proměnné, která se má nastavit.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
       <required />
-      <attcomment>Nová hodnota proměnné.</attcomment>
+      <comment>Nová hodnota proměnné.</comment>
     </attribute>
     <attribute>
       <attname>scope</attname>
       <atttype>string</atttype>
       <attdef>request</attdef>
-      <attcomment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</attcomment>
+      <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</comment>
     </attribute>
     <attribute>
       <attname>select</attname>
-      <attcomment>Pokud je "value" pole, pak použije hodnotu proměnné pro transformaci tohoto pole a z každé položky vybere daný klíč, výsledné pole pak nastaví jako hodnotu proměnné (obdoba LINQ select).</attcomment>
+      <comment>Pokud je "value" pole, pak použije hodnotu proměnné pro transformaci tohoto pole a z každé položky vybere daný klíč, výsledné pole pak nastaví jako hodnotu proměnné (obdoba LINQ select).</comment>
     </attribute>
     <comment>
       Nastaví hodnotu proměnné s názvem 'name'.
@@ -43,14 +43,14 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název proměnné, jejíž scope se má nastavit.</attcomment>
+      <comment>Název proměnné, jejíž scope se má nastavit.</comment>
     </attribute>
     <attribute>
       <attname>scope</attname>
       <required />
       <atttype>string</atttype>
       <attdef>request</attdef>
-      <attcomment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</attcomment>
+      <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</comment>
     </attribute>
     <comment>
       Řekne o proměnné, že patří do daného scope. Pokud se bude proměnná v rámci request ještě číst, bude se číst z tohoto scope.
@@ -63,7 +63,7 @@
     <attribute>
       <attname>name</attname>
       <required />
-      <attcomment>Název proměnné, která se má zrušit.</attcomment>
+      <comment>Název proměnné, která se má zrušit.</comment>
     </attribute>
     <comment>
       Smaže hodnotu proměnné.

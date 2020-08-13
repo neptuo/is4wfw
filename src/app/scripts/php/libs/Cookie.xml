@@ -16,41 +16,41 @@
       <attname>name</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Název proměnné, která se má nastavit.</attcomment>
+      <comment>Název proměnné, která se má nastavit.</comment>
     </attribute>
     <attribute>
       <attname>value</attname>
       <required />
       <atttype>string</atttype>
-      <attcomment>Nová hodnota proměnné.</attcomment>
+      <comment>Nová hodnota proměnné.</comment>
     </attribute>
     <attribute>
       <attname>expire</attname>
       <atttype>number</atttype>
       <attdef>0</attdef>
-      <attcomment>Počet sekund, po jejichž vypršení sušenka expiruje. 0 reprezentuje session cookie.</attcomment>
+      <comment>Počet sekund, po jejichž vypršení sušenka expiruje. 0 reprezentuje session cookie.</comment>
     </attribute>
     <attribute>
       <attname>path</attname>
       <atttype>string</atttype>
-      <attcomment>URL cesta, pro kterou má být sušenka platná (výchozí je "/").</attcomment>
+      <comment>URL cesta, pro kterou má být sušenka platná (výchozí je "/").</comment>
     </attribute>
     <attribute>
       <attname>domain</attname>
       <atttype>string</atttype>
-      <attcomment>Doména, pro kterou má být sušenka platná (výchozí je "/").</attcomment>
+      <comment>Doména, pro kterou má být sušenka platná (výchozí je "/").</comment>
     </attribute>
     <attribute>
       <attname>isSecure</attname>
       <atttype>bool</atttype>
       <attdef>false</attdef>
-      <attcomment>Zda se má sušenka posílat pouze po HTTPS.</attcomment>
+      <comment>Zda se má sušenka posílat pouze po HTTPS.</comment>
     </attribute>
     <attribute>
       <attname>isHttpOnly</attname>
       <atttype>bool</atttype>
       <attdef>false</attdef>
-      <attcomment>Zda má být sušenka dostupná pro server (výchozí je false, tedy je dostupná i pro javascript).</attcomment>
+      <comment>Zda má být sušenka dostupná pro server (výchozí je false, tedy je dostupná i pro javascript).</comment>
     </attribute>
     <comment>
       Nastaví hodnotu proměnné s názvem "name" do Session.

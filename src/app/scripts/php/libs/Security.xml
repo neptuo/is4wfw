@@ -12,7 +12,7 @@
     <attribute>
       <attname>requireGroup</attname>
       <atttype>string</atttype>
-      <attcomment>Název skupiny uživatelů.</attcomment>
+      <comment>Název skupiny uživatelů.</comment>
     </attribute>
     <features>
       <conditionsExecution />
@@ -24,7 +24,7 @@
     <attribute>
       <attname>requirePerm</attname>
       <atttype>string</atttype>
-      <attcomment>Název oprávnění.</attcomment>
+      <comment>Název oprávnění.</comment>
     </attribute>
     <features>
       <conditionsExecution />

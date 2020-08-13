@@ -120,21 +120,21 @@
     <attribute>
       <attname>templateId</attname>
       <required />
-      <attcomment>ID šablony s definicí obsahu formuláře.</attcomment>
+      <comment>ID šablony s definicí obsahu formuláře.</comment>
     </attribute>
     <attribute>
       <attname>type</attname>
       <required />
-      <attcomment>Typu atributu (db | email). Všechny atributy začínající na 'email' jsou validní jen pokud je typ formuláře 'email'.</attcomment>
+      <comment>Typu atributu (db | email). Všechny atributy začínající na 'email' jsou validní jen pokud je typ formuláře 'email'.</comment>
     </attribute>
     <attribute>
       <attname>pageId</attname>
       <required />
-      <attcomment>ID stránky, kam bude uživatel přesměrován po úspěšném odeslání a zpracování formuláře.</attcomment>
+      <comment>ID stránky, kam bude uživatel přesměrován po úspěšném odeslání a zpracování formuláře.</comment>
     </attribute>
     <attribute>
       <attname>rowId</attname>
-      <attcomment>V případě, že type je 'db', definuje ID řádku, který se má editovat.</attcomment>
+      <comment>V případě, že type je 'db', definuje ID řádku, který se má editovat.</comment>
     </attribute>
     <attribute>
       <attname>emailTemplateId</attname>
@@ -147,24 +147,24 @@
     </attribute>
     <attribute>
       <attname>emailSender</attname>
-      <attcomment>Umožňuje definovat emailovou adresu odesilate.</attcomment>
+      <comment>Umožňuje definovat emailovou adresu odesilate.</comment>
     </attribute>
     <attribute>
       <attname>emailSenderFieldName</attname>
-      <attcomment>Umožňuje definovat emailovou adresu odesilate z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailSender', jinak se použije právě 'emailSender'.</attcomment>
+      <comment>Umožňuje definovat emailovou adresu odesilate z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailSender', jinak se použije právě 'emailSender'.</comment>
     </attribute>
     <attribute>
       <attname>emailReplyTo</attname>
-      <attcomment>Umožňuje definovat emailovou adresu, kterou se má odpovědět.</attcomment>
+      <comment>Umožňuje definovat emailovou adresu, kterou se má odpovědět.</comment>
     </attribute>
     <attribute>
       <attname>emailReplyToFieldName</attname>
-      <attcomment>Umožňuje definovat emailovou adresu, kterou se má odpovědět, z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailReplyTo', jinak se použije právě 'emailReplyTo'.</attcomment>
+      <comment>Umožňuje definovat emailovou adresu, kterou se má odpovědět, z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailReplyTo', jinak se použije právě 'emailReplyTo'.</comment>
     </attribute>
     <attribute>
       <attname>emailIsHtml</attname>
       <attdef>false</attdef>
-      <attcomment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</attcomment>
+      <comment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</comment>
     </attribute>
     <comment>
       Zobrazí formulář, "formId" je identifikátor formuláře, "rowId" slouží pro editaci již existujícího záznamu.
@@ -182,16 +182,16 @@
     <attribute>
       <attname>type</attname>
       <required />
-      <attcomment>Typu atributu (db | email). Všechny atributy začínající na 'email' jsou validní jen pokud je typ formuláře 'email'.</attcomment>
+      <comment>Typu atributu (db | email). Všechny atributy začínající na 'email' jsou validní jen pokud je typ formuláře 'email'.</comment>
     </attribute>
     <attribute>
       <attname>pageId</attname>
       <required />
-      <attcomment>ID stránky, kam bude uživatel přesměrován po úspěšném odeslání a zpracování formuláře.</attcomment>
+      <comment>ID stránky, kam bude uživatel přesměrován po úspěšném odeslání a zpracování formuláře.</comment>
     </attribute>
     <attribute>
       <attname>rowId</attname>
-      <attcomment>V případě, že type je 'db', definuje ID řádku, který se má editovat.</attcomment>
+      <comment>V případě, že type je 'db', definuje ID řádku, který se má editovat.</comment>
     </attribute>
     <attribute>
       <attname>emailTemplateId</attname>
@@ -204,24 +204,24 @@
     </attribute>
     <attribute>
       <attname>emailSender</attname>
-      <attcomment>Umožňuje definovat emailovou adresu odesilate.</attcomment>
+      <comment>Umožňuje definovat emailovou adresu odesilate.</comment>
     </attribute>
     <attribute>
       <attname>emailSenderFieldName</attname>
-      <attcomment>Umožňuje definovat emailovou adresu odesilate z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailSender', jinak se použije právě 'emailSender'.</attcomment>
+      <comment>Umožňuje definovat emailovou adresu odesilate z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailSender', jinak se použije právě 'emailSender'.</comment>
     </attribute>
     <attribute>
       <attname>emailReplyTo</attname>
-      <attcomment>Umožňuje definovat emailovou adresu, kterou se má odpovědět.</attcomment>
+      <comment>Umožňuje definovat emailovou adresu, kterou se má odpovědět.</comment>
     </attribute>
     <attribute>
       <attname>emailReplyToFieldName</attname>
-      <attcomment>Umožňuje definovat emailovou adresu, kterou se má odpovědět, z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailReplyTo', jinak se použije právě 'emailReplyTo'.</attcomment>
+      <comment>Umožňuje definovat emailovou adresu, kterou se má odpovědět, z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailReplyTo', jinak se použije právě 'emailReplyTo'.</comment>
     </attribute>
     <attribute>
       <attname>emailIsHtml</attname>
       <attdef>false</attdef>
-      <attcomment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</attcomment>
+      <comment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</comment>
     </attribute>
     <comment>
       Zobrazí formulář, "formId" je identifikátor formuláře, tělo značky je formulářem, 
