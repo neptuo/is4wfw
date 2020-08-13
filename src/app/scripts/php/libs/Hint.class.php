@@ -153,7 +153,7 @@
                                 $cssClass = ' obsolete';
                             }
                             $prefix = null;
-                            if ($tag->attribute[$i]->prefix == 'true') {
+                            if (isset($tag->attribute[$i]->prefix)) {
                                 $prefix = $rb->get('lib.prefix.yes');
                                 $attributeName = $attributeName . '-*';
                             } else {
@@ -256,7 +256,7 @@
                                 $cssClass = ' obsolete';
                             }
                             $prefix = null;
-                            if ($tag->attribute[$i]->prefix == 'true') {
+                            if (isset($tag->attribute[$i]->prefix)) {
                                 $prefix = $rb->get('lib.prefix.yes');
                                 $attributeName = $attributeName . '-*';
                             } else {
@@ -393,7 +393,7 @@
                                 $cssClass = ' obsolete';
                             }
                             $prefix = null;
-                            if ($decorator->attribute[$i]->prefix == 'true') {
+                            if (isset($decorator->attribute[$i]->prefix)) {
                                 $prefix = $rb->get('lib.prefix.yes');
                                 $attributeName = $attributeName . '-*';
                             } else {

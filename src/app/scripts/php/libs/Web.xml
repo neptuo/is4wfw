@@ -347,7 +347,7 @@
       <attname>param</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam parametrů (klíč=hodnota), které se mají přidat do URL. Mají přednost před hodnotami při "copyParameters".</attcomment>
     </attribute>
     <comment>

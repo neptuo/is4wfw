@@ -487,7 +487,7 @@
                 $att = $tag->attribute[$i];
                 $attName = (string)$att->attname;
                 $hasDefault = isset($att->attdef);
-                if ($att->prefix == true) {
+                if (isset($att->prefix)) {
                     $attPrefix = "$attName-";
                     $attributeValue = array();
                     foreach ($atts->Attributes as $usedName => $usedValue) {

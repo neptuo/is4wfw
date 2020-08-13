@@ -69,7 +69,7 @@
       <attname>param</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam parametrů předaných do odkazu.</attcomment>
     </attribute>
     <comment>
@@ -90,7 +90,7 @@
       <attname>saveParam</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam parametrů předaných při přesměrování pro "Save".</attcomment>
     </attribute>
     <attribute>
@@ -103,7 +103,7 @@
       <attname>closeParam</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam parametrů, které se předají "Close" odkazu.</attcomment>
     </attribute>
     <attribute>
@@ -130,7 +130,7 @@
       <attname>saveParam</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam parametrů předaných při přesměrování pro "Save".</attcomment>
     </attribute>
     <attribute>
@@ -143,7 +143,7 @@
       <attname>closeParam</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam parametrů, které se předají "Close" odkazu.</attcomment>
     </attribute>
     <comment>
@@ -157,7 +157,7 @@
       <attname>label</attname>
       <attreq>required</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Popisek (dvojtečka je přidána automaticky). Všechny prefix jsou použity jako HTML atributy elementu label.</attcomment>
     </attribute>
     <anyAttribute />

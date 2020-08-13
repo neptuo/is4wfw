@@ -106,7 +106,7 @@
       <attname>key</attname>
       <attreq>required</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Klíč hodnota, které budou předány jako položky nově vytvořené položce v hlavním poli.</attcomment>
     </attribute>
     <comment>Přidá do pole v propertě "output" (z této knihovny) položku. Pokud pole ještě neexistuje, vytvořího</comment>

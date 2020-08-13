@@ -116,13 +116,13 @@
     <attribute>
       <attname>filter</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam filtračních parametrů.</attcomment>
     </attribute>
     <attribute>
       <attname>orderBy</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</attcomment>
     </attribute>
     <comment>
@@ -141,7 +141,7 @@
     <attribute>
       <attname>default</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Výchozí hodnoty fieldů při zakládání uživatele.</attcomment>
     </attribute>
     <comment>

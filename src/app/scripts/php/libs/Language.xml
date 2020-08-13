@@ -14,13 +14,13 @@
       <attname>filter</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Filtry, kterým data musí vyhovovat.</attcomment>
     </attribute>
     <attribute>
       <attname>orderBy</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</attcomment>
     </attribute>
     <comment>

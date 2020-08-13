@@ -33,7 +33,7 @@
     <attribute>
       <attname>key</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Primární klíče pro editaci záznamu. Klíčem je název sloupce.</attcomment>
     </attribute>
     <comment>
@@ -118,7 +118,7 @@
       <attname>value</attname>
       <attreq>implied</attreq>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam sloupců s dodatečnými hodnota pro založení záznamu.</attcomment>
     </attribute>
     <comment>
@@ -136,13 +136,13 @@
     <attribute>
       <attname>filter</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Filtry, kterým data musí vyhovovat.</attcomment>
     </attribute>
     <attribute>
       <attname>orderBy</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</attcomment>
     </attribute>
     <comment>

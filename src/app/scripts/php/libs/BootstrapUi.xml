@@ -102,7 +102,7 @@
     <attribute>
       <attname>header</attname>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Nadpis alertu. Výchozí atribut je textem. Atribut "header-tag" slouží pro nastavení tagu (výchozí je "h4"). Ostatní atributy jsou předány tagu.</attcomment>
     </attribute>
     <attribute>
@@ -220,13 +220,13 @@
     <attribute>
       <attname>header</attname>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Nadpis karty. Výchozí atribut je textem. Atribut "header-tag" slouží pro nastavení tagu (výchozí je "div"). Ostatní atributy jsou předány tagu.</attcomment>
     </attribute>
     <attribute>
       <attname>title</attname>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Pod nadpis karty (uvnitř těla). Výchozí atribut je textem. Atribut "title-tag" slouží pro nastavení tagu (výchozí je "h5"). Ostatní atributy jsou předány tagu.</attcomment>
     </attribute>
     <anyAttribute>
@@ -240,7 +240,7 @@
     <attribute>
       <attname>label</attname>
       <atttype>string</atttype>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Popisek fieldu. Výchozí atribut je textem. Ostatní atributy jsou předány tagu.</attcomment>
     </attribute>
     <anyAttribute>
@@ -309,7 +309,7 @@
     </attribute>
     <attribute>
       <attname>a</attname>
-      <prefix>true</prefix>
+      <prefix />
       <atttype>string</atttype>
       <attreq>implied</attreq>
       <attcomment>Seznam atributů předaných vnitřnímu "a".</attcomment>

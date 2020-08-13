@@ -118,13 +118,13 @@
     <attribute>
       <attname>thead</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "thead".</attcomment>
     </attribute>
     <attribute>
       <attname>tbody</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "tbody".</attcomment>
     </attribute>
     <anyAttribute />
@@ -150,13 +150,13 @@
     <attribute>
       <attname>th</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "th".</attcomment>
     </attribute>
     <attribute>
       <attname>td</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "td".</attcomment>
     </attribute>
     <comment>
@@ -193,13 +193,13 @@
     <attribute>
       <attname>th</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "th".</attcomment>
     </attribute>
     <attribute>
       <attname>td</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "td".</attcomment>
     </attribute>
     <comment>
@@ -228,13 +228,13 @@
     <attribute>
       <attname>th</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "th".</attcomment>
     </attribute>
     <attribute>
       <attname>td</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "td".</attcomment>
     </attribute>
     <comment>
@@ -252,13 +252,13 @@
     <attribute>
       <attname>th</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "th".</attcomment>
     </attribute>
     <attribute>
       <attname>td</attname>
       <attreq>implied</attreq>
-      <prefix>true</prefix>
+      <prefix />
       <attcomment>Seznam atributů pro "td".</attcomment>
     </attribute>
     <comment>
