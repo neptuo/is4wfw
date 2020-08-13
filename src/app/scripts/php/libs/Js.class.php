@@ -57,8 +57,12 @@
 			}
         }
 
-        public function addScriptInline(callable $template, string $placement = "head") {
-            $content = $template();
+        public function addScriptInline($template, string $placement = "head") {
+            if (is_string($template)) {
+                $content = $template;
+            } else {
+                $content = $template();
+            }
             $script = parent::web()->formatScriptInline($content);
             parent::web()->addScript($script, $placement);
         }
