@@ -8,7 +8,7 @@
     Knihovna pro lepší zobrazování galerií.
   </comment>
   <fulltag>
-    <tagname>directory</tagname>
+    <name>directory</name>
     <function>directoryList</function>
     <attribute>
       <attname>id</attname>
@@ -37,7 +37,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>file</tagname>
+    <name>file</name>
     <function>file</function>
     <attribute>
       <attname>id</attname>
@@ -52,7 +52,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>url</tagname>
+    <name>url</name>
     <function>imageUrl</function>
     <attribute>
       <attname>width</attname>
@@ -67,28 +67,28 @@
     </comment>
   </tag>
   <tag>
-    <tagname>name</tagname>
+    <name>name</name>
     <function>imageName</function>
     <comment>
       Vrací název obrázku uvnitř img:directory.
     </comment>
   </tag>
   <tag>
-    <tagname>title</tagname>
+    <name>title</name>
     <function>imageTitle</function>
     <comment>
       Vrací titulek obrázku uvnitř img:directory.
     </comment>
   </tag>
   <tag>
-    <tagname>type</tagname>
+    <name>type</name>
     <function>imageType</function>
     <comment>
       Vrací číselný typ obrázku uvnitř img:directory.
     </comment>
   </tag>
   <tag>
-    <tagname>favicon</tagname>
+    <name>favicon</name>
     <function>getFavicon</function>
     <attribute>
       <attname>fileId</attname>

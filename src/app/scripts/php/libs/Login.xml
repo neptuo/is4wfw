@@ -10,7 +10,7 @@
     Za logovaný uživatel smí být max 15min bez aktivity, poté je automaticky ohlášen.
   </comment>
   <tag>
-    <tagname>init</tagname>
+    <name>init</name>
     <function>initLogin</function>
     <attribute>
       <attname>group</attname>
@@ -21,7 +21,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>form</tagname>
+    <name>form</name>
     <function>showLoginForm</function>
     <attribute>
       <attname>group</attname>
@@ -46,7 +46,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>login</tagname>
+    <name>login</name>
     <function>loginLookless</function>
     <lookless>true</lookless>
     <attribute>
@@ -73,7 +73,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>logout</tagname>
+    <name>logout</name>
     <function>showLogoutForm</function>
     <attribute>
       <attname>group</attname>
@@ -89,7 +89,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>logout</tagname>
+    <name>logout</name>
     <function>logout</function>
     <lookless>true</lookless>
     <attribute>
@@ -103,7 +103,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>refresh</tagname>
+    <name>refresh</name>
     <function>refresh</function>
     <lookless>true</lookless>
     <attribute>
@@ -117,7 +117,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>info</tagname>
+    <name>info</name>
     <function>loggedUserInfo</function>
     <attribute>
       <attname>field</attname>
@@ -130,7 +130,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>redirectWhenLogged</tagname>
+    <name>redirectWhenLogged</name>
     <function>redirectWhenLogged</function>
     <attribute>
       <attname>pageId</attname>
@@ -141,7 +141,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>redirectWhenNotLogged</tagname>
+    <name>redirectWhenNotLogged</name>
     <function>redirectWhenNotLogged</function>
     <attribute>
       <attname>pageId</attname>
@@ -152,7 +152,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>authorized</tagname>
+    <name>authorized</name>
     <function>authorized</function>
     <attribute>
       <attname>all</attname>

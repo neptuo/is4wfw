@@ -9,7 +9,7 @@
     Třída pro správu webového frameworku.
   </comment>
   <tag>
-    <tagname>manageProperties</tagname>
+    <name>manageProperties</name>
     <function>manageProperties</function>
     <attribute>
       <attname>userId</attname>
@@ -29,7 +29,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>manageNotes</tagname>
+    <name>manageNotes</name>
     <function>manageNotes</function>
     <attribute>
       <attname>useFrames</attname>
@@ -44,7 +44,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>printNotes</tagname>
+    <name>printNotes</name>
     <function>printNotes</function>
     <attribute>
       <attname>useFrames</attname>
@@ -59,7 +59,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editAdminMenu</tagname>
+    <name>editAdminMenu</name>
     <function>editAdminMenu</function>
     <attribute>
       <attname>useFrames</attname>
@@ -74,7 +74,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>adminMenu</tagname>
+    <name>adminMenu</name>
     <function>adminMenu</function>
     <attribute>
       <attname>url</attname>
@@ -89,14 +89,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>adminMenuItem</tagname>
+    <name>adminMenuItem</name>
     <function>adminMenuItem</function>
     <comment>
       Zobrazí iframe s obsahem.
     </comment>
   </tag>
   <tag>
-    <tagname>editConnection</tagname>
+    <name>editConnection</name>
     <function>editConnection</function>
     <attribute>
       <attname>useFrames</attname>
@@ -111,7 +111,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>listConnections</tagname>
+    <name>listConnections</name>
     <function>listCOnnections</function>
     <attribute>
       <attname>useFrames</attname>
@@ -126,7 +126,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>manageRoleCache</tagname>
+    <name>manageRoleCache</name>
     <function>manageRoleCache</function>
     <attribute>
       <attname>buttonOnly</attname>
@@ -143,14 +143,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>versionList</tagname>
+    <name>versionList</name>
     <function>versionList</function>
     <comment>
       Zobrazí verzí frameworku, na které je možné aktualizovat.
     </comment>
   </tag>
   <tag>
-    <tagname>repositoryLink</tagname>
+    <name>repositoryLink</name>
     <function>repositoryLink</function>
     <attribute>
       <attname>text</attname>
@@ -163,7 +163,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>repositoryIssueCreateLink</tagname>
+    <name>repositoryIssueCreateLink</name>
     <function>repositoryIssueCreateLink</function>
     <attribute>
       <attname>text</attname>

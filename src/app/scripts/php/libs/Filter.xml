@@ -8,7 +8,7 @@
     Knihovna pro tvorbu pokročilých SQL filtrů.
   </comment>
   <fulltag>
-    <tagname>declare</tagname>
+    <name>declare</name>
     <function>declareInstance</function>
     <lookless>true</lookless>
     <attribute>
@@ -25,17 +25,17 @@
     <comment>Deklaruje filtru s názvem "name".</comment>
   </fulltag>
   <fulltag>
-    <tagname>and</tagname>
+    <name>and</name>
     <function>operatorAnd</function>
     <comment>Všechny vnitřní podmínky budou spojeny pomocí "AND".</comment>
   </fulltag>
   <fulltag>
-    <tagname>or</tagname>
+    <name>or</name>
     <function>operatorOr</function>
     <comment>Všechny vnitřní podmínky budou spojeny pomocí "OR".</comment>
   </fulltag>
   <fulltag>
-    <tagname>exists</tagname>
+    <name>exists</name>
     <function>exists</function>
     <attribute>
       <attname>from</attname>
@@ -60,7 +60,7 @@
     </attribute>
   </fulltag>
   <tag>
-    <tagname>empty</tagname>
+    <name>empty</name>
     <function>emptyValue</function>
     <attribute>
       <attname>name</attname>
@@ -78,7 +78,7 @@
     <comment>Sloupec v "name" musí/nesmí odpovídat ''.</comment>
   </tag>
   <tag>
-    <tagname>null</tagname>
+    <name>null</name>
     <function>nullValue</function>
     <attribute>
       <attname>name</attname>
@@ -96,7 +96,7 @@
     <comment>Sloupec v "name" musí/nesmí odpovídat 'null'.</comment>
   </tag>
   <tag>
-    <tagname>equals</tagname>
+    <name>equals</name>
     <function>equals</function>
     <attribute>
       <attname>name</attname>
@@ -118,7 +118,7 @@
     </attribute>
   </tag>
   <tag>
-    <tagname>in</tagname>
+    <name>in</name>
     <function>in</function>
     <attribute>
       <attname>name</attname>
@@ -140,7 +140,7 @@
     </attribute>
   </tag>
   <tag>
-    <tagname>like</tagname>
+    <name>like</name>
     <function>like</function>
     <attribute>
       <attname>name</attname>
@@ -168,7 +168,7 @@
     </attribute>
   </tag>
   <tag>
-    <tagname>greater</tagname>
+    <name>greater</name>
     <function>greater</function>
     <attribute>
       <attname>name</attname>
@@ -191,7 +191,7 @@
     </attribute>
   </tag>
   <tag>
-    <tagname>lower</tagname>
+    <name>lower</name>
     <function>lower</function>
     <attribute>
       <attname>name</attname>

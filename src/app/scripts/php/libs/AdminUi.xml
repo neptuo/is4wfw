@@ -8,7 +8,7 @@
     Knihovna pro generování prvků uživatelského rozhraní kompatibilních s administrační částí aplikace.
   </comment>
   <tag>
-    <tagname>setSuccessMessage</tagname>
+    <name>setSuccessMessage</name>
     <function>setSuccessMessage</function>
     <lookless>true</lookless>
     <attribute>
@@ -22,7 +22,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>deleteButton</tagname>
+    <name>deleteButton</name>
     <function>deleteButton</function>
     <attribute>
       <attname>hiddenField</attname>
@@ -44,7 +44,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>newButton</tagname>
+    <name>newButton</name>
     <function>newButton</function>
     <attribute>
       <attname>pageId</attname>
@@ -77,7 +77,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>saveButtons</tagname>
+    <name>saveButtons</name>
     <function>saveButtons</function>
     <attribute>
       <attname>saveName</attname>
@@ -118,7 +118,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>redirectAfterSave</tagname>
+    <name>redirectAfterSave</name>
     <function>redirectAfterSave</function>
     <attribute>
       <attname>saveName</attname>
@@ -151,7 +151,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>field</tagname>
+    <name>field</name>
     <function>field</function>
     <attribute>
       <attname>label</attname>
@@ -167,7 +167,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>edit</tagname>
+    <name>edit</name>
     <function>edit</function>
     <attribute>
       <attname>id</attname>
@@ -180,7 +180,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>validation</tagname>
+    <name>validation</name>
     <function>validation</function>
     <attribute>
       <attname>key</attname>
@@ -193,7 +193,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>successMessage</tagname>
+    <name>successMessage</name>
     <function>successMessage</function>
     <comment>
       Zobrazí "success" hlášku, pokud při předchozím requestu došlo k uložení objektu (a hláška byla nastavena).

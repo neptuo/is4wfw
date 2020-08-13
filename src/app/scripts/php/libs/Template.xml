@@ -8,7 +8,7 @@
     Knihovna pro vkládání šablon do stránek.
   </comment>
   <tag>
-    <tagname>include</tagname>
+    <name>include</name>
     <function>includeById</function>
     <attribute>
       <attname>id</attname>
@@ -24,7 +24,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>include</tagname>
+    <name>include</name>
     <function>includeWithBodyById</function>
     <attribute>
       <attname>id</attname>
@@ -41,14 +41,14 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>content</tagname>
+    <name>content</name>
     <function>content</function>
     <comment>
       Vkládá tělo tagu "template:include" (párové značky).
     </comment>
   </tag>
   <fulltag>
-    <tagname>declare</tagname>
+    <name>declare</name>
     <function>declareInline</function>
     <attribute>
       <attname>identifier</attname>

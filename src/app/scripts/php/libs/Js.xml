@@ -9,7 +9,7 @@
     Třída pro systémové javascripty.
   </comment>
   <tag>
-    <tagname>resources</tagname>
+    <name>resources</name>
     <function>addResourcesToPage</function>
     <attribute>
       <attname>names</attname>
@@ -30,7 +30,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>script</tagname>
+    <name>script</name>
     <function>addScript</function>
     <attribute>
       <attname>path</attname>
@@ -42,7 +42,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>script</tagname>
+    <name>script</name>
     <function>addScriptInline</function>
     <attribute>
       <attname>placement</attname>
@@ -57,7 +57,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>style</tagname>
+    <name>style</name>
     <function>addStyle</function>
     <attribute>
       <attname>path</attname>
@@ -69,14 +69,14 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>style</tagname>
+    <name>style</name>
     <function>addStyleInline</function>
     <comment>
       Vloží do stránky style z těla do systémového místa pro vkládání stylů.
     </comment>
   </fulltag>
   <tag>
-    <tagname>jQuery</tagname>
+    <name>jQuery</name>
     <function>addjQuery</function>
     <attribute>
       <attname>version</attname>
@@ -90,7 +90,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>cmsResources</tagname>
+    <name>cmsResources</name>
     <function>getCmsResources</function>
     <attribute>
       <attname>useWindows</attname>
@@ -101,7 +101,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>ajaxWeb</tagname>
+    <name>ajaxWeb</name>
     <function>getAjaxWeb</function>
     <attribute>
       <attname>webContentRootElId</attname>
@@ -122,7 +122,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>tinyMce</tagname>
+    <name>tinyMce</name>
     <function>tinyMce</function>
     <attribute>
       <attname>ids</attname>
@@ -144,7 +144,7 @@
     <comment>Vloží do stránky skripty pro tiny-mce.</comment>
   </tag>
   <tag>
-    <tagname>select2</tagname>
+    <name>select2</name>
     <function>select2</function>
     <attribute>
       <attname>selector</attname>
@@ -164,7 +164,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>bootstrapDatePicker</tagname>
+    <name>bootstrapDatePicker</name>
     <function>bootstrapDatePicker</function>
     <attribute>
       <attname>selector</attname>
@@ -202,7 +202,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>ajax</tagname>
+    <name>ajax</name>
     <function>ajax</function>
     <attribute>
       <attname>selector</attname>
@@ -247,7 +247,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>dataDuplicators</tagname>
+    <name>dataDuplicators</name>
     <function>dataDuplicators</function>
     <attribute>
       <attname>jQuery</attname>

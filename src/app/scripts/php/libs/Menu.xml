@@ -9,7 +9,7 @@
     "Menu"
   </comment>
   <tag>
-    <tagname>xmlMenu</tagname>
+    <name>xmlMenu</name>
     <function>showXmlMenu</function>
     <attribute>
       <attname>file</attname>

@@ -9,7 +9,7 @@
     Knihovna pro tvorbu formulářů
   </comment>
   <tag>
-    <tagname>list</tagname>
+    <name>list</name>
     <function>listRows</function>
     <attribute>
       <attname>formId</attname>
@@ -54,7 +54,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>list</tagname>
+    <name>list</name>
     <function>listRowsFullTag</function>
     <attribute>
       <attname>formId</attname>
@@ -95,7 +95,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>count</tagname>
+    <name>count</name>
     <function>countRows</function>
     <attribute>
       <attname>formId</attname>
@@ -108,7 +108,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>setupCustomUrl</tagname>
+    <name>setupCustomUrl</name>
     <function>setupCustomUrl</function>
     <attribute>
       <attname>formId</attname>
@@ -123,7 +123,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>form</tagname>
+    <name>form</name>
     <function>form</function>
     <attribute>
       <attname>formId</attname>
@@ -194,7 +194,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>form</tagname>
+    <name>form</name>
     <function>formFullTag</function>
     <attribute>
       <attname>formId</attname>
@@ -261,7 +261,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>formValidation</tagname>
+    <name>formValidation</name>
     <function>formValidationTag</function>
     <attribute>
       <attname>errorMessage</attname>
@@ -272,7 +272,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>field</tagname>
+    <name>field</name>
     <function>field</function>
     <attribute>
       <attname>name</attname>
@@ -362,7 +362,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>button</tagname>
+    <name>button</name>
     <function>button</function>
     <attribute>
       <attname>type</attname>
@@ -381,7 +381,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>specialfield</tagname>
+    <name>specialfield</name>
     <function>specialfield</function>
     <attribute>
       <attname>type</attname>
@@ -392,7 +392,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>setCustomProperty</tagname>
+    <name>setCustomProperty</name>
     <function>setCustomProperty</function>
     <attribute>
       <attname>value</attname>
@@ -403,7 +403,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>setFieldAsCustomProperty</tagname>
+    <name>setFieldAsCustomProperty</name>
     <function>setFieldAsCustomProperty</function>
     <attribute>
       <attname>fieldName</attname>
@@ -419,7 +419,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>formList</tagname>
+    <name>formList</name>
     <function>formList</function>
     <attribute>
       <attname>userFrames</attname>
@@ -430,7 +430,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>formCreator</tagname>
+    <name>formCreator</name>
     <function>formCreator</function>
     <attribute>
       <attname>userFrames</attname>

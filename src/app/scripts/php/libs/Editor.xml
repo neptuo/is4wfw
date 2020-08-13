@@ -8,7 +8,7 @@
     Knihovna pro realizaci edit formuláře bez pevné struktury. Tedy uživatelsky definovaného.
   </comment>
   <fulltag>
-    <tagname>form</tagname>
+    <name>form</name>
     <function>form</function>
     <attribute>
       <attname>submit</attname>
@@ -24,7 +24,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>prefix</tagname>
+    <name>prefix</name>
     <function>prefix</function>
     <attribute>
       <attname>name</attname>
@@ -37,7 +37,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>set</tagname>
+    <name>set</name>
     <function>setValue</function>
     <attribute>
       <attname>name</attname>

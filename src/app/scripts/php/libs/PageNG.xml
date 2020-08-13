@@ -9,7 +9,7 @@
     Třída pro správu obsahu jednotlivých stránek.
   </comment>
   <tag>
-    <tagname>selectLanguage</tagname>
+    <name>selectLanguage</name>
     <function>selectLanguage</function>
     <attribute>
       <attname>useFrames</attname>
@@ -24,7 +24,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>listPages</tagname>
+    <name>listPages</name>
     <function>listPages</function>
     <attribute>
       <attname>templateId</attname>
@@ -55,7 +55,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>searchFilter</tagname>
+    <name>searchFilter</name>
     <function>searchFilter</function>
     <attribute>
       <attname>templateId</attname>
@@ -74,14 +74,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>detailBefore</tagname>
+    <name>detailBefore</name>
     <function>pageDetailBeforeForm</function>
     <comment>
       Nastaví proměnné pro starý detail form podle requestu. Umístit před detail form.
     </comment>
   </tag>
   <tag>
-    <tagname>detailAfter</tagname>
+    <name>detailAfter</name>
     <function>pageDetailAfterForm</function>
     <attribute>
       <attname>backPageId</attname>
@@ -92,7 +92,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>name</tagname>
+    <name>name</name>
     <function>pageName</function>
     <attribute>
       <attname>type</attname>
@@ -116,7 +116,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>pageurl</tagname>
+    <name>pageurl</name>
     <function>pageUrl</function>
     <attribute>
       <attname>type</attname>
@@ -140,7 +140,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>id</tagname>
+    <name>id</name>
     <function>pageId</function>
     <attribute>
       <attname>type</attname>
@@ -164,7 +164,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>keywords</tagname>
+    <name>keywords</name>
     <function>pageKeywords</function>
     <attribute>
       <attname>type</attname>
@@ -188,7 +188,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>timestamp</tagname>
+    <name>timestamp</name>
     <function>pageTimestamp</function>
     <attribute>
       <attname>type</attname>
@@ -217,7 +217,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>cachetime</tagname>
+    <name>cachetime</name>
     <function>pageCachetime</function>
     <attribute>
       <attname>type</attname>
@@ -246,7 +246,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>tlstart</tagname>
+    <name>tlstart</name>
     <function>pageTagLibStart</function>
     <attribute>
       <attname>type</attname>
@@ -270,7 +270,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>tlend</tagname>
+    <name>tlend</name>
     <function>pageTagLibEnd</function>
     <attribute>
       <attname>type</attname>
@@ -294,7 +294,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>head</tagname>
+    <name>head</name>
     <function>pageHead</function>
     <attribute>
       <attname>type</attname>
@@ -318,7 +318,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>content</tagname>
+    <name>content</name>
     <function>pageContent</function>
     <attribute>
       <attname>type</attname>
@@ -342,7 +342,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>inTitle</tagname>
+    <name>inTitle</name>
     <function>pageInTitle</function>
     <attribute>
       <attname>type</attname>
@@ -366,7 +366,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>inMenu</tagname>
+    <name>inMenu</name>
     <function>pageInMenu</function>
     <attribute>
       <attname>type</attname>
@@ -390,7 +390,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>isVisible</tagname>
+    <name>isVisible</name>
     <function>pageIsVisible</function>
     <attribute>
       <attname>type</attname>
@@ -414,7 +414,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>rightRead</tagname>
+    <name>rightRead</name>
     <function>pageRightRead</function>
     <attribute>
       <attname>type</attname>
@@ -439,7 +439,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>rightWrite</tagname>
+    <name>rightWrite</name>
     <function>pageRightWrite</function>
     <attribute>
       <attname>type</attname>
@@ -464,7 +464,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>rightDelete</tagname>
+    <name>rightDelete</name>
     <function>pageRightDelete</function>
     <attribute>
       <attname>type</attname>
@@ -489,7 +489,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>actionEdit</tagname>
+    <name>actionEdit</name>
     <function>pageActionEdit</function>
     <attribute>
       <attname>pageId</attname>
@@ -512,7 +512,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>actionDelete</tagname>
+    <name>actionDelete</name>
     <function>pageActionDelete</function>
     <attribute>
       <attname>pageId</attname>
@@ -531,7 +531,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>actionAddsub</tagname>
+    <name>actionAddsub</name>
     <function>pageActionAddsub</function>
     <attribute>
       <attname>parentPageId</attname>

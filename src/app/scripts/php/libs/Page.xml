@@ -9,7 +9,7 @@
     Třída pro správu obsahu jednotlivých stránek.
   </comment>
   <tag>
-    <tagname>showEditPage</tagname>
+    <name>showEditPage</name>
     <function>showEditPage</function>
     <attribute>
       <attname>pageId</attname>
@@ -26,7 +26,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showList</tagname>
+    <name>showList</name>
     <function>showPages</function>
     <attribute>
       <attname>editable</attname>
@@ -37,7 +37,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>pageProperties</tagname>
+    <name>pageProperties</name>
     <function>managePageProperties</function>
     <attribute>
       <attname>useFrames</attname>
@@ -49,7 +49,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showFiles</tagname>
+    <name>showFiles</name>
     <function>showPageFiles</function>
     <attribute>
       <attname>editable</attname>
@@ -60,42 +60,42 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showEditFile</tagname>
+    <name>showEditFile</name>
     <function>showEditPageFile</function>
     <comment>
       Zobrazí formulář pro editaci vzbraného souboru.
     </comment>
   </tag>
   <tag>
-    <tagname>clearUrlCache</tagname>
+    <name>clearUrlCache</name>
     <function>clearUrlCache</function>
     <comment>
       Vyprázdní url cache.
     </comment>
   </tag>
   <tag>
-    <tagname>manageUrlCache</tagname>
+    <name>manageUrlCache</name>
     <function>manageUrlCache</function>
     <comment>
       Práce s url cachí.
     </comment>
   </tag>
   <tag>
-    <tagname>updateKeywords</tagname>
+    <name>updateKeywords</name>
     <function>updateKeywords</function>
     <comment>
       Spravuje keywords pro celé webové aplikace.
     </comment>
   </tag>
   <tag>
-    <tagname>updateRobots</tagname>
+    <name>updateRobots</name>
     <function>updateRobots</function>
     <comment>
       Spravuje robots.txt
     </comment>
   </tag>
   <tag>
-    <tagname>showLanguages</tagname>
+    <name>showLanguages</name>
     <function>showLanguages</function>
     <attribute>
       <attname>editable</attname>
@@ -107,7 +107,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showTemplates</tagname>
+    <name>showTemplates</name>
     <function>showTemplates</function>
     <attribute>
       <attname>detailPageId</attname>
@@ -126,7 +126,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editTemplate</tagname>
+    <name>editTemplate</name>
     <function>showEditTemplateForm</function>
     <attribute>
       <attname>submitPageId</attname>
@@ -145,7 +145,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showEmbeddedResources</tagname>
+    <name>showEmbeddedResources</name>
     <function>showEmbeddedResources</function>
     <attribute>
       <attname>useFrames</attname>
@@ -156,7 +156,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editEmbeddedResource</tagname>
+    <name>editEmbeddedResource</name>
     <function>showEditEmbeddedResourceFrom</function>
     <attribute>
       <attname>useFrames</attname>
@@ -167,7 +167,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showWebForwards</tagname>
+    <name>showWebForwards</name>
     <function>showWebForwards</function>
     <attribute>
       <attname>useFrames</attname>
@@ -178,7 +178,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editWebForward</tagname>
+    <name>editWebForward</name>
     <function>showEditWebForwardFrom</function>
     <attribute>
       <attname>useFrames</attname>
@@ -189,7 +189,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>savePage</tagname>
+    <name>savePage</name>
     <function>savePage</function>
     <lookless>true</lookless>
     <attribute>
@@ -209,7 +209,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>pageList</tagname>
+    <name>pageList</name>
     <function>getPageList</function>
     <attribute>
       <attname>webProjectId</attname>
@@ -233,7 +233,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>page</tagname>
+    <name>page</name>
     <function>getPageValue</function>
     <attribute>
       <attname>type</attname>

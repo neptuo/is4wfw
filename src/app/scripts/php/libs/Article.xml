@@ -9,7 +9,7 @@
     Třída pro články.
   </comment>
   <tag>
-    <tagname>showLine</tagname>
+    <name>showLine</name>
     <function>showLine</function>
     <attribute>
       <attname>lineId</attname>
@@ -79,7 +79,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showRss</tagname>
+    <name>showRss</name>
     <function>showRssLine</function>
     <attribute>
       <attname>lineId</attname>
@@ -106,7 +106,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showDetail</tagname>
+    <name>showDetail</name>
     <function>showDetail</function>
     <attribute>
       <attname>template</attname>
@@ -153,7 +153,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>detail</tagname>
+    <name>detail</name>
     <function>showDetailFullTag</function>
     <attribute>
       <attname>id</attname>
@@ -191,7 +191,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>labels</tagname>
+    <name>labels</name>
     <function>showLabels</function>
     <attribute>
       <attname>templateId</attname>
@@ -232,7 +232,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>label</tagname>
+    <name>label</name>
     <function>showLabel</function>
     <attribute>
       <attname>type</attname>
@@ -249,14 +249,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>compose</tagname>
+    <name>compose</name>
     <function>composeUrl</function>
     <comment>
       Pro dynamický překlad adres. Zadanou cestu bude hledat mezi články (ve tvaru id-cokoli).
     </comment>
   </tag>
   <tag>
-    <tagname>showManagement</tagname>
+    <name>showManagement</name>
     <function>showManagement</function>
     <attribute>
       <attname>lineId</attname>
@@ -300,7 +300,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>createArticle</tagname>
+    <name>createArticle</name>
     <function>createArticle</function>
     <attribute>
       <attname>lineId</attname>
@@ -327,7 +327,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>setLine</tagname>
+    <name>setLine</name>
     <function>setLine</function>
     <attribute>
       <attname>method</attname>
@@ -353,7 +353,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showLines</tagname>
+    <name>showLines</name>
     <function>showLines</function>
     <attribute>
       <attname>editable</attname>
@@ -376,7 +376,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showLabels</tagname>
+    <name>showLabels</name>
     <function>showEditLabels</function>
     <attribute>
       <attname>useFrames</attname>
@@ -387,7 +387,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showLabelEdit</tagname>
+    <name>showLabelEdit</name>
     <function>showEditLabelForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -398,7 +398,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>createLine</tagname>
+    <name>createLine</name>
     <function>createLine</function>
     <attribute>
       <attname>detailPageId</attname>
@@ -413,7 +413,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editArticle</tagname>
+    <name>editArticle</name>
     <function>showEditForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -456,7 +456,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editLine</tagname>
+    <name>editLine</name>
     <function>showEditLineForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -471,14 +471,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>id</tagname>
+    <name>id</name>
     <function>showId</function>
     <comment>
       Zobrazí id.
     </comment>
   </tag>
   <tag>
-    <tagname>date</tagname>
+    <name>date</name>
     <function>showDate</function>
     <attribute>
       <attname>format</attname>
@@ -493,7 +493,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>time</tagname>
+    <name>time</name>
     <function>showTime</function>
     <attribute>
       <attname>format</attname>
@@ -504,49 +504,49 @@
     </comment>
   </tag>
   <tag>
-    <tagname>name</tagname>
+    <name>name</name>
     <function>showName</function>
     <comment>
       Zobrazí název.
     </comment>
   </tag>
   <tag>
-    <tagname>keywords</tagname>
+    <name>keywords</name>
     <function>showKeywords</function>
     <comment>
       Zobrazí klíčová slova.
     </comment>
   </tag>
   <tag>
-    <tagname>author</tagname>
+    <name>author</name>
     <function>showAuthor</function>
     <comment>
       Zobrazí autora.
     </comment>
   </tag>
   <tag>
-    <tagname>head</tagname>
+    <name>head</name>
     <function>showHead</function>
     <comment>
       Zobrazí hlavičku.
     </comment>
   </tag>
   <tag>
-    <tagname>content</tagname>
+    <name>content</name>
     <function>showContent</function>
     <comment>
       Zobrazí obsah.
     </comment>
   </tag>
   <tag>
-    <tagname>link</tagname>
+    <name>link</name>
     <function>showLink</function>
     <comment>
       Zobrazí odkaz.
     </comment>
   </tag>
   <tag>
-    <tagname>visible</tagname>
+    <name>visible</name>
     <function>showVisible</function>
     <comment>
       Zobrazí "zobrazitelnost" článku.

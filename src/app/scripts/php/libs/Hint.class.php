@@ -57,7 +57,7 @@
                         if (isset($tag->obsolete)) {
                             $obsolete = (string)$tag->obsolete;
                         }
-                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#tag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#tag-'.$tag->name.'">'.$tag->name.'</a> ';
                     }
 
                     if (isset($xml->anyTag)) {
@@ -79,7 +79,7 @@
                         if (isset($tag->obsolete)) {
                             $obsolete = (string)$tag->obsolete;
                         }
-                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#fulltag-'.$tag->tagname.'">'.$tag->tagname.'</a> ';
+                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#fulltag-'.$tag->name.'">'.$tag->name.'</a> ';
                     }
 
                     if (isset($xml->anyFulltag)) {
@@ -194,7 +194,7 @@
                         $return .= ''
                         .'<div class="lib-tag">'
                             .'<div class="lib-tag-head">'
-                                .'<h3 id="tag-'.$tag->tagname.'">'.$tag->tagname.'</h3>'
+                                .'<h3 id="tag-'.$tag->name.'">'.$tag->name.'</h3>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
                                 .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
                                 . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
@@ -297,7 +297,7 @@
                         $return .= ''
                         .'<div class="lib-tag">'
                             .'<div class="lib-tag-head">'
-                                .'<h3 id="fulltag-'.$tag->tagname.'">'.$tag->tagname.'</h3>'
+                                .'<h3 id="fulltag-'.$tag->name.'">'.$tag->name.'</h3>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
                                 .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
                                 . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')

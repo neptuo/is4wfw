@@ -9,7 +9,7 @@
     Vždy pracuje uvnitř aktuálního prefixu EditModelu.
   </comment>
   <tag>
-    <tagname>required</tagname>
+    <name>required</name>
     <function>required</function>
     <attribute>
       <attname>key</attname>
@@ -22,7 +22,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>translate</tagname>
+    <name>translate</name>
     <function>translate</function>
     <attribute>
       <attname>identifier</attname>
@@ -41,7 +41,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>message</tagname>
+    <name>message</name>
     <function>message</function>
     <attribute>
       <attname>key</attname>

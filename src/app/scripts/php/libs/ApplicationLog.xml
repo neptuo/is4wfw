@@ -9,7 +9,7 @@
     Třída pro správu logu.
   </comment>
   <tag>
-    <tagname>list</tagname>
+    <name>list</name>
     <function>listLogs</function>
     <attribute>
       <attname>useFrames</attname>
@@ -24,7 +24,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>log</tagname>
+    <name>log</name>
     <function>showLog</function>
     <attribute>
       <attname>useFrames</attname>

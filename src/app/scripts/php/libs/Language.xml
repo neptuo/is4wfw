@@ -8,7 +8,7 @@
     Knihovna pro jazyků.
   </comment>
   <fulltag>
-    <tagname>list</tagname>
+    <name>list</name>
     <function>listItems</function>
     <attribute>
       <attname>filter</attname>
@@ -28,7 +28,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>form</tagname>
+    <name>form</name>
     <function>form</function>
     <attribute>
       <attname>id</attname>
@@ -42,7 +42,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>deleter</tagname>
+    <name>deleter</name>
     <function>deleter</function>
     <lookless>true</lookless>
     <attribute>

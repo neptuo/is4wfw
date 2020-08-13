@@ -8,7 +8,7 @@
     Knihovna pro Google API.
   </comment>
   <tag>
-    <tagname>analytics</tagname>
+    <name>analytics</name>
     <function>analytics</function>
     <attribute>
       <attname>id</attname>

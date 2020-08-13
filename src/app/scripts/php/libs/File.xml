@@ -9,7 +9,7 @@
     Třída pro správu souborů.
   </comment>
   <tag>
-    <tagname>showDirectory</tagname>
+    <name>showDirectory</name>
     <function>showDirectory</function>
     <attribute>
       <attname>dirId</attname>
@@ -55,7 +55,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showNewDirectoryForm</tagname>
+    <name>showNewDirectoryForm</name>
     <function>showNewDirectoryForm</function>
     <attribute>
       <attname>dirId</attname>
@@ -74,7 +74,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showUploadForm</tagname>
+    <name>showUploadForm</name>
     <function>showUploadForm</function>
     <attribute>
       <attname>dirId</attname>
@@ -93,7 +93,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>get</tagname>
+    <name>get</name>
     <function>getFile</function>
     <attribute>
       <attname>fileId</attname>
@@ -104,14 +104,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>compose</tagname>
+    <name>compose</name>
     <function>composeUrl</function>
     <comment>
       Pro dynamický překlad adres. Zadanou cestu bude hledat mezi soubory (ve tvaru id-name).
     </comment>
   </tag>
   <tag>
-    <tagname>gallery</tagname>
+    <name>gallery</name>
     <function>galleryFromDirectory</function>
     <obsolete>Spíš používat novou implementaci v knihovně 'php.libs.Image'.</obsolete>
     <attribute>
@@ -227,7 +227,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>galleryDetail</tagname>
+    <name>galleryDetail</name>
     <function>galleryDetail</function>
     <attribute>
       <attname>fileId</attname>
@@ -247,7 +247,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>directoryFiles</tagname>
+    <name>directoryFiles</name>
     <function>getFilesFromDirectory</function>
     <attribute>
       <attname>id</attname>
@@ -277,28 +277,28 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>url</tagname>
+    <name>url</name>
     <function>fileUrl</function>
     <comment>
       Vrací URL pro stažení souboru uvnitř f:directoryFiles.
     </comment>
   </tag>
   <tag>
-    <tagname>name</tagname>
+    <name>name</name>
     <function>fileName</function>
     <comment>
       Vrací název souboru uvnitř f:directoryFiles.
     </comment>
   </tag>
   <tag>
-    <tagname>title</tagname>
+    <name>title</name>
     <function>fileTitle</function>
     <comment>
       Vrací titulek souboru uvnitř f:directoryFiles.
     </comment>
   </tag>
   <tag>
-    <tagname>type</tagname>
+    <name>type</name>
     <function>fileType</function>
     <comment>
       Vrací číselný typ souboru uvnitř f:directoryFiles.

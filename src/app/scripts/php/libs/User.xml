@@ -9,7 +9,7 @@
     Třída pro správu uživatelských účtů.
   </comment>
   <tag>
-    <tagname>management</tagname>
+    <name>management</name>
     <function>showUserManagement</function>
     <attribute>
       <attname>userId</attname>
@@ -30,7 +30,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>newGroup</tagname>
+    <name>newGroup</name>
     <function>addNewGroup</function>
     <attribute>
       <attname>useFrames</attname>
@@ -41,7 +41,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>deleteGroup</tagname>
+    <name>deleteGroup</name>
     <function>deleteGroup</function>
     <attribute>
       <attname>useFrames</attname>
@@ -52,7 +52,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editGroupPerms</tagname>
+    <name>editGroupPerms</name>
     <function>editGroupPerms</function>
     <attribute>
       <attname>useFrames</attname>
@@ -63,7 +63,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showLog</tagname>
+    <name>showLog</name>
     <function>showUserLog</function>
     <attribute>
       <attname>useFrames</attname>
@@ -74,7 +74,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>truncateLog</tagname>
+    <name>truncateLog</name>
     <function>truncateUserLog</function>
     <attribute>
       <attname>useFrames</attname>
@@ -85,7 +85,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>register</tagname>
+    <name>register</name>
     <function>registerUser</function>
     <attribute>
       <attname>groups</attname>
@@ -104,14 +104,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>changePassword</tagname>
+    <name>changePassword</name>
     <function>changePassword</function>
     <comment>
       Formulář pro změnu hesla aktuálního uživatele.
     </comment>
   </tag>
   <fulltag>
-    <tagname>list</tagname>
+    <name>list</name>
     <function>listItems</function>
     <attribute>
       <attname>filter</attname>
@@ -130,7 +130,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>edit</tagname>
+    <name>edit</name>
     <function>edit</function>
     <attribute>
       <attname>uid</attname>

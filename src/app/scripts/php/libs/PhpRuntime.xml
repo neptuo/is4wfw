@@ -10,7 +10,7 @@
     Max jedna instance.
   </comment>
   <tag>
-    <tagname>register</tagname>
+    <name>register</name>
     <function>register</function>
     <attribute>
       <attname>tagPrefix</attname>
@@ -37,7 +37,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>unregister</tagname>
+    <name>unregister</name>
     <function>unregister</function>
     <attribute>
       <attname>tagPrefix</attname>
@@ -48,7 +48,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>cache</tagname>
+    <name>cache</name>
     <function>cache</function>
     <obsolete>Eh...</obsolete>
     <attribute>
@@ -60,7 +60,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>using</tagname>
+    <name>using</name>
     <function>usingObject</function>
     <attribute>
       <attname>prefix</attname>

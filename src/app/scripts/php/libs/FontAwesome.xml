@@ -8,12 +8,12 @@
     Knihovna pro generování FontAwesome ikon.
   </comment>
   <tag>
-    <tagname>resources</tagname>
+    <name>resources</name>
     <function>resources</function>
     <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá.</comment>
   </tag>
   <tag>
-    <tagname>icon</tagname>
+    <name>icon</name>
     <function>icon</function>
     <attribute>
       <attname>name</attname>

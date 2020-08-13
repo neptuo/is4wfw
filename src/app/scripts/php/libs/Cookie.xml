@@ -9,7 +9,7 @@
     Je kompatibilní s knihovnou Variable v módu Cookie.
   </comment>
   <tag>
-    <tagname>declare</tagname>
+    <name>declare</name>
     <function>setValue</function>
     <lookless>true</lookless>
     <attribute>

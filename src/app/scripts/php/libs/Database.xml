@@ -11,7 +11,7 @@
     Po vytvoření nové instance se sama připojí k db užítím defaultních hodnot.
   </comment>
   <tag>
-    <tagname>fetch</tagname>
+    <name>fetch</name>
     <function>fetch</function>
     <attribute>
       <attname>query</attname>
@@ -29,7 +29,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>useConnection</tagname>
+    <name>useConnection</name>
     <function>useConnection</function>
     <attribute>
       <attname>name</attname>

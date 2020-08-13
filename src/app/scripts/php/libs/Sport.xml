@@ -9,14 +9,14 @@
     Třída pro "sport".
   </comment>
   <tag>
-    <tagname>setFromRequest</tagname>
+    <name>setFromRequest</name>
     <function>setFromRequest</function>
     <comment>
       Nastaví proměnné z requestu pro použití v knihovně.
     </comment>
   </tag>
   <tag>
-    <tagname>selectSeason</tagname>
+    <name>selectSeason</name>
     <function>selectSeason</function>
     <attribute>
       <attname>useFrames</attname>
@@ -31,7 +31,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>selectTable</tagname>
+    <name>selectTable</name>
     <function>selectTable</function>
     <attribute>
       <attname>useFrames</attname>
@@ -46,7 +46,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>selectTeam</tagname>
+    <name>selectTeam</name>
     <function>selectTeam</function>
     <attribute>
       <attname>useFrames</attname>
@@ -61,7 +61,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>selectProject</tagname>
+    <name>selectProject</name>
     <function>selectProject</function>
     <attribute>
       <attname>useFrames</attname>
@@ -76,7 +76,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editProjects</tagname>
+    <name>editProjects</name>
     <function>showEditProjects</function>
     <attribute>
       <attname>pageId</attname>
@@ -95,7 +95,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editProjectForm</tagname>
+    <name>editProjectForm</name>
     <function>showEditProjectForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -110,7 +110,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editSeasons</tagname>
+    <name>editSeasons</name>
     <function>showEditSeasons</function>
     <attribute>
       <attname>pageId</attname>
@@ -129,7 +129,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editSeasonForm</tagname>
+    <name>editSeasonForm</name>
     <function>showEditSeasonForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -144,7 +144,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editTeams</tagname>
+    <name>editTeams</name>
     <function>showEditTeams</function>
     <attribute>
       <attname>pageId</attname>
@@ -163,7 +163,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editTeamForm</tagname>
+    <name>editTeamForm</name>
     <function>showEditTeamForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -178,7 +178,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>copyTeamTableStats</tagname>
+    <name>copyTeamTableStats</name>
     <function>showCopyTeamTableStatsForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -189,7 +189,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editPlayers</tagname>
+    <name>editPlayers</name>
     <function>showEditPlayers</function>
     <attribute>
       <attname>pageId</attname>
@@ -208,7 +208,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editPlayerForm</tagname>
+    <name>editPlayerForm</name>
     <function>showEditPlayerForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -223,7 +223,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editTables</tagname>
+    <name>editTables</name>
     <function>showEditTables</function>
     <attribute>
       <attname>pageId</attname>
@@ -242,7 +242,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editRounds</tagname>
+    <name>editRounds</name>
     <function>showEditRounds</function>
     <attribute>
       <attname>pageId</attname>
@@ -261,7 +261,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editRoundForm</tagname>
+    <name>editRoundForm</name>
     <function>showEditRoundForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -276,7 +276,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editTableForm</tagname>
+    <name>editTableForm</name>
     <function>showEditTableForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -291,7 +291,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editMatches</tagname>
+    <name>editMatches</name>
     <function>showEditMatches</function>
     <attribute>
       <attname>pageId</attname>
@@ -310,7 +310,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editMatchForm</tagname>
+    <name>editMatchForm</name>
     <function>showEditMatchForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -325,7 +325,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editStatsForm</tagname>
+    <name>editStatsForm</name>
     <function>showEditStatsForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -340,7 +340,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>seasons</tagname>
+    <name>seasons</name>
     <function>showSeasons</function>
     <attribute>
       <attname>templateId</attname>
@@ -359,7 +359,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>season</tagname>
+    <name>season</name>
     <function>showSeason</function>
     <attribute>
       <attname>field</attname>
@@ -374,7 +374,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>table</tagname>
+    <name>table</name>
     <function>showTable</function>
     <attribute>
       <attname>seasonId</attname>
@@ -406,7 +406,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>teams</tagname>
+    <name>teams</name>
     <function>showTeams</function>
     <attribute>
       <attname>templateId</attname>
@@ -437,7 +437,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>team</tagname>
+    <name>team</name>
     <function>showTeam</function>
     <attribute>
       <attname>field</attname>
@@ -456,7 +456,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>matches</tagname>
+    <name>matches</name>
     <function>showMatches</function>
     <attribute>
       <attname>templateId</attname>
@@ -505,7 +505,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>match</tagname>
+    <name>match</name>
     <function>showMatch</function>
     <attribute>
       <attname>field</attname>
@@ -528,7 +528,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>rounds</tagname>
+    <name>rounds</name>
     <function>showRounds</function>
     <attribute>
       <attname>templateId</attname>
@@ -581,7 +581,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>round</tagname>
+    <name>round</name>
     <function>showRound</function>
     <attribute>
       <attname>field</attname>
@@ -597,7 +597,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>players</tagname>
+    <name>players</name>
     <function>showPlayers</function>
     <attribute>
       <attname>templateId</attname>
@@ -667,7 +667,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>player</tagname>
+    <name>player</name>
     <function>showPlayer</function>
     <attribute>
       <attname>field</attname>
@@ -698,7 +698,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>playersng</tagname>
+    <name>playersng</name>
     <function>showPlayersNG</function>
     <attribute>
       <attname>templateId</attname>
@@ -749,7 +749,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>playerng</tagname>
+    <name>playerng</name>
     <function>showPlayerNG</function>
     <attribute>
       <attname>field</attname>
@@ -764,7 +764,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>playersstatsng</tagname>
+    <name>playersstatsng</name>
     <function>showPlayersStatsNG</function>
     <attribute>
       <attname>templateId</attname>
@@ -815,7 +815,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>playerstatsng</tagname>
+    <name>playerstatsng</name>
     <function>showPlayerStatsNG</function>
     <attribute>
       <attname>field</attname>
@@ -826,7 +826,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>playerSearch</tagname>
+    <name>playerSearch</name>
     <function>showPlayerSearchForm</function>
     <attribute>
       <attname>pageId</attname>

@@ -8,12 +8,12 @@
     Knihovna pro generování prvků uživatelského rozhraní za použítí Bootstrap 4.
   </comment>
   <tag>
-    <tagname>resources</tagname>
+    <name>resources</name>
     <function>resources</function>
     <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá.</comment>
   </tag>
   <fulltag>
-    <tagname>container</tagname>
+    <name>container</name>
     <function>container</function>
     <attribute>
       <attname>fluid</attname>
@@ -27,7 +27,7 @@
     <comment>Vykresluje obalový div pro grid (div class="row").</comment>
   </fulltag>
   <fulltag>
-    <tagname>grid</tagname>
+    <name>grid</name>
     <function>row</function>
     <obsolete>Použijte "bs:row".</obsolete>
     <attribute>
@@ -46,7 +46,7 @@
     <comment>Vykresluje obalový div pro grid (div class="row").</comment>
   </fulltag>
   <fulltag>
-    <tagname>row</tagname>
+    <name>row</name>
     <function>row</function>
     <attribute>
       <attname>horizontal</attname>
@@ -64,7 +64,7 @@
     <comment>Vykresluje obalový div pro grid (div class="row").</comment>
   </fulltag>
   <fulltag>
-    <tagname>column</tagname>
+    <name>column</name>
     <function>column</function>
     <attribute>
       <attname>default</attname>
@@ -97,7 +97,7 @@
     <comment>Vykresluje obalový div pro sloupec gridu (div class="col-*").</comment>
   </fulltag>
   <fulltag>
-    <tagname>alert</tagname>
+    <name>alert</name>
     <function>alert</function>
     <attribute>
       <attname>header</attname>
@@ -125,7 +125,7 @@
     <comment>Vykresluje komponentu "alert".</comment>
   </fulltag>
   <tag>
-    <tagname>button</tagname>
+    <name>button</name>
     <function>button</function>
     <attribute>
       <attname>text</attname>
@@ -173,7 +173,7 @@
     <comment>Vykresluje komponentu tlačítka (s textovým popisem).</comment>
   </tag>
   <fulltag>
-    <tagname>button</tagname>
+    <name>button</name>
     <function>buttonFullTag</function>
     <attribute>
       <attname>color</attname>
@@ -215,7 +215,7 @@
     <comment>Vykresluje komponentu tlačítka.</comment>
   </fulltag>
   <fulltag>
-    <tagname>card</tagname>
+    <name>card</name>
     <function>card</function>
     <attribute>
       <attname>header</attname>
@@ -235,7 +235,7 @@
     <comment>Vykresluje komponentu "card". Tělo automaticky obaluje do div class="card-body".</comment>
   </fulltag>
   <fulltag>
-    <tagname>formGroup</tagname>
+    <name>formGroup</name>
     <function>formGroup</function>
     <attribute>
       <attname>label</attname>
@@ -249,7 +249,7 @@
     <comment>Vykresluje komponentu "form-group". Pokud není zadán "label-for", pak se ho pokusí vygenerovat na "ui" komponenty by ho měly použit.</comment>
   </fulltag>
   <fulltag>
-    <tagname>nav</tagname>
+    <name>nav</name>
     <function>nav</function>
     <attribute>
       <attname>tag</attname>
@@ -279,7 +279,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>navItem</tagname>
+    <name>navItem</name>
     <function>navItem</function>
     <attribute>
       <attname>text</attname>
@@ -322,7 +322,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>fieldValidationMessage</tagname>
+    <name>fieldValidationMessage</name>
     <function>fieldValidationMessage</function>
     <attribute>
       <attname>name</attname>
@@ -335,7 +335,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>fieldValidator</tagname>
+    <name>fieldValidator</name>
     <function>fieldValidator</function>
     <attribute>
       <attname>name</attname>

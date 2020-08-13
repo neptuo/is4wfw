@@ -9,7 +9,7 @@
   </comment>
   <disposable />
   <tag>
-    <tagname>declare</tagname>
+    <name>declare</name>
     <function>setValue</function>
     <lookless>true</lookless>
     <attribute>
@@ -39,7 +39,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>use</tagname>
+    <name>use</name>
     <function>setScope</function>
     <lookless>true</lookless>
     <attribute>
@@ -59,7 +59,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>clear</tagname>
+    <name>clear</name>
     <function>removeValue</function>
     <lookless>true</lookless>
     <attribute>

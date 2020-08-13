@@ -8,7 +8,7 @@
     Knihovna pro správu a práci s lokalizačními bundly.
   </comment>
   <tag>
-    <tagname>setLanguage</tagname>
+    <name>setLanguage</name>
     <function>setLanguage</function>
     <lookless>true</lookless>
     <attribute>
@@ -22,7 +22,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>use</tagname>
+    <name>use</name>
     <function>useBundle</function>
     <lookless>true</lookless>
     <attribute>
@@ -43,7 +43,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>edit</tagname>
+    <name>edit</name>
     <function>edit</function>
     <attribute>
       <attname>bundleName</attname>
@@ -68,7 +68,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>edit</tagname>
+    <name>edit</name>
     <function>editFullTag</function>
     <attribute>
       <attname>bundleName</attname>

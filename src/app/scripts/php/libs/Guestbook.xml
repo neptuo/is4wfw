@@ -9,7 +9,7 @@
     Uživatelská kniha návštěv.
   </comment>
   <tag>
-    <tagname>input</tagname>
+    <name>input</name>
     <function>showForm</function>
     <attribute>
       <attname>guestbookId</attname>
@@ -31,7 +31,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>show</tagname>
+    <name>show</name>
     <function>showGuestbook</function>
     <attribute>
       <attname>guestbookId</attname>
@@ -60,7 +60,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>listAll</tagname>
+    <name>listAll</name>
     <function>showListOfGuestbooks</function>
     <attribute>
       <attname>useFrame</attname>
@@ -71,7 +71,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>setIdFromList</tagname>
+    <name>setIdFromList</name>
     <function>setIdFromList</function>
     <comment>
       Nastaví id knihy z get proměnné z listAll

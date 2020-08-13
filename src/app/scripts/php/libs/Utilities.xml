@@ -8,7 +8,7 @@
     Knihovna obshaující různé pomocné metody.
   </comment>
   <tag>
-    <tagname>concat</tagname>
+    <name>concat</name>
     <function>concatValues</function>
     <lookless>true</lookless>
     <attribute>
@@ -94,7 +94,7 @@
     <comment>Spojí hodnoty všech atributů 'value1-5' do jednoho řetězce a tuto hodnotu nastaví do proměnné 'output' v této knihovně.</comment>
   </tag>
   <tag>
-    <tagname>arrayItem</tagname>
+    <name>arrayItem</name>
     <function>addToArray</function>
     <lookless>true</lookless>
     <attribute>
@@ -112,7 +112,7 @@
     <comment>Přidá do pole v propertě "output" (z této knihovny) položku. Pokud pole ještě neexistuje, vytvořího</comment>
   </tag>
   <tag>
-    <tagname>replaceHtmlNewLines</tagname>
+    <name>replaceHtmlNewLines</name>
     <function>replaceHtmlNewLines</function>
     <lookless>true</lookless>
     <attribute>
@@ -129,7 +129,7 @@
     <comment>Nahradí v "input" nové řádky za "br".</comment>
   </tag>
   <tag>
-    <tagname>dateTimeToTimestamp</tagname>
+    <name>dateTimeToTimestamp</name>
     <function>dateTimeToTimestamp</function>
     <lookless>true</lookless>
     <attribute>
@@ -158,7 +158,7 @@
     <comment>Vrátí timestamp pro zadaný datum (a čas) dle zadaného formátu.</comment>
   </tag>
   <tag>
-    <tagname>clear</tagname>
+    <name>clear</name>
     <function>clear</function>
     <lookless>true</lookless>
     <attribute>

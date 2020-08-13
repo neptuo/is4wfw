@@ -8,7 +8,7 @@
     Knihovna pro generování prvků uživatelského rozhraní.
   </comment>
   <fulltag>
-    <tagname>forEach</tagname>
+    <name>forEach</name>
     <function>forEachListModel</function>
     <attribute>
       <attname>items</attname>
@@ -29,7 +29,7 @@
     </comment>
   </property>
   <fulltag>
-    <tagname>first</tagname>
+    <name>first</name>
     <function>firstListModel</function>
     <attribute>
       <attname>items</attname>
@@ -41,7 +41,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>last</tagname>
+    <name>last</name>
     <function>lastListModel</function>
     <attribute>
       <attname>items</attname>
@@ -53,7 +53,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>any</tagname>
+    <name>any</name>
     <function>anyListModel</function>
     <attribute>
       <attname>items</attname>
@@ -65,7 +65,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>empty</tagname>
+    <name>empty</name>
     <function>emptyListModel</function>
     <attribute>
       <attname>items</attname>
@@ -77,7 +77,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>count</tagname>
+    <name>count</name>
     <function>countListModelSelfClosing</function>
     <attribute>
       <attname>items</attname>
@@ -89,7 +89,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>count</tagname>
+    <name>count</name>
     <function>countListModel</function>
     <attribute>
       <attname>items</attname>
@@ -108,7 +108,7 @@
     </comment>
   </property>
   <fulltag>
-    <tagname>grid</tagname>
+    <name>grid</name>
     <function>grid</function>
     <attribute>
       <attname>items</attname>
@@ -135,7 +135,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>column</tagname>
+    <name>column</name>
     <function>gridColumn</function>
     <attribute>
       <attname>header</attname>
@@ -164,7 +164,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>columnBoolean</tagname>
+    <name>columnBoolean</name>
     <function>gridColumnBoolean</function>
     <attribute>
       <attname>header</attname>
@@ -207,7 +207,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>columnDateTime</tagname>
+    <name>columnDateTime</name>
     <function>gridColumnDateTime</function>
     <attribute>
       <attname>header</attname>
@@ -242,7 +242,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>columnTemplate</tagname>
+    <name>columnTemplate</name>
     <function>gridColumnTemplate</function>
     <attribute>
       <attname>header</attname>
@@ -266,7 +266,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>form</tagname>
+    <name>form</name>
     <function>form</function>
     <attribute>
       <attname>method</attname>
@@ -289,7 +289,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>filter</tagname>
+    <name>filter</name>
     <function>filter</function>
     <attribute>
       <attname>session</attname>
@@ -303,7 +303,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>dropdownlist</tagname>
+    <name>dropdownlist</name>
     <function>dropdownlist</function>
     <attribute>
       <attname>name</attname>
@@ -345,7 +345,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>checkboxlist</tagname>
+    <name>checkboxlist</name>
     <function>checkboxlist</function>
     <attribute>
       <attname>name</attname>
@@ -380,7 +380,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>textbox</tagname>
+    <name>textbox</name>
     <function>textbox</function>
     <attribute>
       <attname>name</attname>
@@ -406,7 +406,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>passwordbox</tagname>
+    <name>passwordbox</name>
     <function>passwordbox</function>
     <attribute>
       <attname>name</attname>
@@ -432,7 +432,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>textarea</tagname>
+    <name>textarea</name>
     <function>textarea</function>
     <attribute>
       <attname>name</attname>
@@ -458,7 +458,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>checkbox</tagname>
+    <name>checkbox</name>
     <function>checkbox</function>
     <attribute>
       <attname>name</attname>
@@ -486,7 +486,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>filebox</tagname>
+    <name>filebox</name>
     <function>filebox</function>
     <attribute>
       <attname>name</attname>
@@ -507,7 +507,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>defaultValue</tagname>
+    <name>defaultValue</name>
     <function>defaultValue</function>
     <attribute>
       <attname>name</attname>
@@ -524,7 +524,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>defaultValue</tagname>
+    <name>defaultValue</name>
     <function>defaultValueWithoutEditor</function>
     <attribute>
       <attname>name</attname>
@@ -541,7 +541,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>constant</tagname>
+    <name>constant</name>
     <function>constantValue</function>
     <attribute>
       <attname>name</attname>
@@ -558,7 +558,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>dateTimeValue</tagname>
+    <name>dateTimeValue</name>
     <function>dateTimeValue</function>
     <attribute>
       <attname>name</attname>
@@ -588,7 +588,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>dateTimeValue</tagname>
+    <name>dateTimeValue</name>
     <function>formatDateTime</function>
     <attribute>
       <attname>value</attname>
@@ -605,7 +605,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>numberValue</tagname>
+    <name>numberValue</name>
     <function>formatNumber</function>
     <attribute>
       <attname>value</attname>
@@ -636,7 +636,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>localizable</tagname>
+    <name>localizable</name>
     <function>localizable</function>
     <attribute>
       <attname>name</attname>

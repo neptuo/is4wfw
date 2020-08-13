@@ -8,7 +8,7 @@
     Knihovna pro správu souborového systému, náhrada za admin funkce z File class.
   </comment>
   <tag>
-    <tagname>browser</tagname>
+    <name>browser</name>
     <function>fileBrowser</function>
     <attribute>
       <attname>dirId</attname>
@@ -30,7 +30,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>browser</tagname>
+    <name>browser</name>
     <function>fileBrowserWithTemplate</function>
     <attribute>
       <attname>dirId</attname>
@@ -107,7 +107,7 @@
     </comment>
   </property>
   <tag>
-    <tagname>upload</tagname>
+    <name>upload</name>
     <function>fileUpload</function>
     <attribute>
       <attname>dirId</attname>
@@ -147,7 +147,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>upload</tagname>
+    <name>upload</name>
     <function>uploadFormTag</function>
     <attribute>
       <attname>dirId</attname>
@@ -160,7 +160,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>directoryEditor</tagname>
+    <name>directoryEditor</name>
     <function>directoryEditor</function>
     <attribute>
       <attname>useRights</attname>
@@ -177,7 +177,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>fileDeleter</tagname>
+    <name>fileDeleter</name>
     <function>fileDeleter</function>
     <lookless>true</lookless>
     <attribute>

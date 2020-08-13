@@ -323,7 +323,7 @@
         public function isTag($tagPrefix, $tagName, $atts) {
             return $this->withXml($tagPrefix, function($xml) use ($tagName) {
                 foreach ($xml->tag as $tag) {
-                    if ($tag->tagname == $tagName) {
+                    if ($tag->name == $tagName) {
                         return true;
                     }
                 }
@@ -336,7 +336,7 @@
             return $this->withXml($tagPrefix, function($xml) use ($tagName) {
                 if (isset($xml->anyTag)) {
                     foreach ($xml->tag as $tag) {
-                        if ($tag->tagname == $tagName) {
+                        if ($tag->name == $tagName) {
                             return false;
                         }
                     }
@@ -361,7 +361,7 @@
         public function isFullTag($tagPrefix, $tagName, $atts) {
             return $this->withXml($tagPrefix, function($xml) use ($tagName) {
                 foreach ($xml->fulltag as $tag) {
-                    if ($tag->tagname == $tagName) {
+                    if ($tag->name == $tagName) {
                         return true;
                     }
                 }
@@ -374,7 +374,7 @@
             return $this->withXml($tagPrefix, function($xml) use ($tagName) {
                 if (isset($xml->anyFulltag)) {
                     foreach ($xml->fulltag as $tag) {
-                        if ($tag->tagname == $tagName) {
+                        if ($tag->name == $tagName) {
                             return false;
                         }
                     }
@@ -578,7 +578,7 @@
         private function sortAttributesInternal(string $tagListName, string $tagPrefix, string $tagName, TemplateAttributeCollection $atts): bool {
             return $this->withXml($tagPrefix, function($xml) use ($tagListName, $tagPrefix, $tagName, $atts) {
                 foreach ($xml->{$tagListName} as $tag) {
-                    if ($tag->tagname == $tagName) {
+                    if ($tag->name == $tagName) {
                         return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName);
                     }
                 }
@@ -672,7 +672,7 @@
         public function getFuncToTag(string $tagPrefix, string $tagName) : string {
             $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $tagName) {
                 foreach ($xml->tag as $tag) {
-                    if ($tag->tagname == $tagName) {
+                    if ($tag->name == $tagName) {
                         return (string)$tag->function;
                     }
                 }
@@ -701,7 +701,7 @@
         public function getFuncToFullTag(string $tagPrefix, string $tagName) : string {
             $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $tagName) {
                 foreach ($xml->fulltag as $tag) {
-                    if ($tag->tagname == $tagName) {
+                    if ($tag->name == $tagName) {
                         return (string)$tag->function;
                     }
                 }

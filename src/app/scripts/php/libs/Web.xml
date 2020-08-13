@@ -9,14 +9,14 @@
     Základní třída aplikace.
   </comment>
   <tag>
-    <tagname>content</tagname>
+    <name>content</name>
     <function>getContent</function>
     <comment>
       Zobrazí obsah podstránky.
     </comment>
   </tag>
   <tag>
-    <tagname>menu</tagname>
+    <name>menu</name>
     <function>getMenu</function>
     <attribute>
       <attname>parentId</attname>
@@ -60,7 +60,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>menu</tagname>
+    <name>menu</name>
     <function>getMenuWithTemplate</function>
     <attribute>
       <attname>parentId</attname>
@@ -87,7 +87,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>crumbMenu</tagname>
+    <name>crumbMenu</name>
     <function>getCrumbMenu</function>
     <attribute>
       <attname>delimeter</attname>
@@ -99,7 +99,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>cache</tagname>
+    <name>cache</name>
     <function>cache</function>
     <attribute>
       <attname>allow</attname>
@@ -114,7 +114,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>inc</tagname>
+    <name>inc</name>
     <function>includePage</function>
     <attribute>
       <attname>pageId</attname>
@@ -144,7 +144,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>incTemplate</tagname>
+    <name>incTemplate</name>
     <function>includeTemplate</function>
     <obsolete>Použijte knihovnu "template".</obsolete>
     <attribute>
@@ -168,7 +168,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>url</tagname>
+    <name>url</name>
     <function>getPageUrl</function>
     <attribute>
       <attname>pageId</attname>
@@ -192,7 +192,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>a</tagname>
+    <name>a</name>
     <function>makeAnchor</function>
     <attribute>
       <attname>pageId</attname>
@@ -240,7 +240,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>a</tagname>
+    <name>a</name>
     <function>makeAnchorFullTag</function>
     <attribute>
       <attname>pageId</attname>
@@ -284,14 +284,14 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>composeTextFileUrl</tagname>
+    <name>composeTextFileUrl</name>
     <function>composeTextFileUrl</function>
     <comment>
       Pro dynamický překlad adres u 'text file'.
     </comment>
   </tag>
   <tag>
-    <tagname>textFile</tagname>
+    <name>textFile</name>
     <function>getTextFile</function>
     <attribute>
       <attname>type</attname>
@@ -306,7 +306,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>redirect</tagname>
+    <name>redirect</name>
     <function>redirect</function>
     <attribute>
       <attname>path</attname>
@@ -317,7 +317,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>redirectTo</tagname>
+    <name>redirectTo</name>
     <function>redirectTo</function>
     <attribute>
       <attname>pageId</attname>
@@ -356,11 +356,11 @@
     </comment>
   </tag>
   <tag>
-    <tagname>redirectToSelf</tagname>
+    <name>redirectToSelf</name>
     <function>redirectToSelf</function>
   </tag>
   <tag>
-    <tagname>lang</tagname>
+    <name>lang</name>
     <function>getLanguages</function>
     <attribute>
       <attname>homePage</attname>
@@ -380,7 +380,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>redirectToRightLangVersion</tagname>
+    <name>redirectToRightLangVersion</name>
     <function>redirectToRightLangVersion</function>
     <attribute>
       <attname>default</attname>
@@ -396,7 +396,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>pair</tagname>
+    <name>pair</name>
     <function>makePair</function>
     <attribute>
       <attname>property</attname>
@@ -411,35 +411,35 @@
     </comment>
   </tag>
   <tag>
-    <tagname>time</tagname>
+    <name>time</name>
     <function>showTimestamp</function>
     <comment>
       Zobrazí aktuální timestamp.
     </comment>
   </tag>
   <tag>
-    <tagname>version</tagname>
+    <name>version</name>
     <function>getVersion</function>
     <comment>
       Zobrazí verzi aplikace.
     </comment>
   </tag>
   <tag>
-    <tagname>cmsVersion</tagname>
+    <name>cmsVersion</name>
     <function>getCmsVersion</function>
     <comment>
       Zobrazí verzi CMS.
     </comment>
   </tag>
   <tag>
-    <tagname>dbVersion</tagname>
+    <name>dbVersion</name>
     <function>getDatabaseVersion</function>
     <comment>
       Zobrazí verzi databáze.
     </comment>
   </tag>
   <tag>
-    <tagname>yearsFrom</tagname>
+    <name>yearsFrom</name>
     <function>getYearsFrom</function>
     <attribute>
       <attname>year</attname>
@@ -450,14 +450,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>lastPageUpdate</tagname>
+    <name>lastPageUpdate</name>
     <function>getLastPageUpdate</function>
     <comment>
       Zobrazí čas a datum poslední úpravy stránky.
     </comment>
   </tag>
   <tag>
-    <tagname>systemPropertyValue</tagname>
+    <name>systemPropertyValue</name>
     <function>getSystemPropertyValue</function>
     <attribute>
       <attname>name</attname>
@@ -468,7 +468,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>getProperty</tagname>
+    <name>getProperty</name>
     <function>getProperty</function>
     <attribute>
       <attname>name</attname>
@@ -479,7 +479,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>setProperty</tagname>
+    <name>setProperty</name>
     <function>setProperty</function>
     <attribute>
       <attname>prefix</attname>
@@ -498,7 +498,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>frame</tagname>
+    <name>frame</name>
     <function>getWebFrame</function>
     <attribute>
       <attname>title</attname>
@@ -513,7 +513,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>genRandNum</tagname>
+    <name>genRandNum</name>
     <function>generateRandomNumber</function>
     <attribute>
       <attname>min</attname>
@@ -528,7 +528,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>static</tagname>
+    <name>static</name>
     <function>showStaticText</function>
     <attribute>
       <attname>value</attname>
@@ -543,14 +543,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>plain</tagname>
+    <name>plain</name>
     <function>plainFunction</function>
     <comment>
       Testovací tag.
     </comment>
   </tag>
   <fulltag>
-    <tagname>condition</tagname>
+    <name>condition</name>
     <function>showWhenConditionIsSatified</function>
     <attribute>
       <attname>when</attname>
@@ -573,7 +573,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>switch</tagname>
+    <name>switch</name>
     <function>switchCondition</function>
     <attribute>
       <attname>when</attname>
@@ -584,7 +584,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>case</tagname>
+    <name>case</name>
     <function>switchConditionCase</function>
     <attribute>
       <attname>is</attname>
@@ -597,7 +597,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>doctype</tagname>
+    <name>doctype</name>
     <function>setDoctype</function>
     <attribute>
       <attname>type</attname>
@@ -609,7 +609,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>flush</tagname>
+    <name>flush</name>
     <function>setFlushOptions</function>
     <attribute>
       <attname>template</attname>
@@ -626,7 +626,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>favicon</tagname>
+    <name>favicon</name>
     <function>getFavicon</function>
     <attribute>
       <attname>url</attname>
@@ -646,7 +646,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>debug</tagname>
+    <name>debug</name>
     <function>debugMode</function>
     <lookless>true</lookless>
     <attribute>
@@ -661,7 +661,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>lookless</tagname>
+    <name>lookless</name>
     <function>lookless</function>
     <comment>Zpracuje tělo, ale kompletně ignoruje jeho výstup.</comment>
   </fulltag>

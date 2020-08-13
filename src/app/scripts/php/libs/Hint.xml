@@ -9,7 +9,7 @@
     Třída nápovědy pro custom tagy.
   </comment>
   <tag>
-    <tagname>lib</tagname>
+    <name>lib</name>
     <function>showHintForLib</function>
     <attribute>
       <attname>classPath</attname>
@@ -28,7 +28,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>selectLib</tagname>
+    <name>selectLib</name>
     <function>selectClassPath</function>
     <attribute>
       <attname>useFrames</attname>
@@ -43,7 +43,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>propertyList</tagname>
+    <name>propertyList</name>
     <function>getPropertyList</function>
     <attribute>
       <attname>useFrames</attname>
@@ -54,7 +54,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>autoRegistered</tagname>
+    <name>autoRegistered</name>
     <function>getAutoRegistered</function>
     <attribute>
       <attname>useFrames</attname>

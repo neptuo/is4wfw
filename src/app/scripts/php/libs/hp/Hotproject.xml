@@ -9,7 +9,7 @@
     Třída pro Hotproject.
   </comment>
   <tag>
-    <tagname>projectionEdit</tagname>
+    <name>projectionEdit</name>
     <function>showProjectionEdit</function>
     <attribute>
       <attname>useFrames</attname>
@@ -20,7 +20,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>projectionForm</tagname>
+    <name>projectionForm</name>
     <function>showProjectionForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -35,7 +35,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>projections</tagname>
+    <name>projections</name>
     <function>showProjections</function>
     <attribute>
       <attname>templateId</attname>
@@ -46,7 +46,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>projection</tagname>
+    <name>projection</name>
     <function>showProjectionDetail</function>
     <attribute>
       <attname>type</attname>
@@ -57,7 +57,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>referenceEdit</tagname>
+    <name>referenceEdit</name>
     <function>showReferencenEdit</function>
     <attribute>
       <attname>useFrames</attname>
@@ -68,7 +68,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>referenceForm</tagname>
+    <name>referenceForm</name>
     <function>showReferenceForm</function>
     <attribute>
       <attname>useFrames</attname>
@@ -83,7 +83,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>references</tagname>
+    <name>references</name>
     <function>showReferences</function>
     <attribute>
       <attname>templateId</attname>
@@ -94,7 +94,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>reference</tagname>
+    <name>reference</name>
     <function>showreferenceDetail</function>
     <attribute>
       <attname>type</attname>

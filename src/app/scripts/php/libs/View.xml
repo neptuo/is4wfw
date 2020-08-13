@@ -9,7 +9,7 @@
     "View"
   </comment>
   <tag>
-    <tagname>process</tagname>
+    <name>process</name>
     <function>processView</function>
     <attribute>
       <attname>path</attname>
@@ -21,14 +21,14 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>head</tagname>
+    <name>head</name>
     <function>head</function>
     <comment>
       Přidá svůj obsah do hlavičky stránky.
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>template</tagname>
+    <name>template</name>
     <function>useTemplate</function>
     <attribute>
       <attname>src</attname>
@@ -39,14 +39,14 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>content</tagname>
+    <name>content</name>
     <function>getContent</function>
     <comment>
       Placeholder pro obsah
     </comment>
   </tag>
   <tag>
-    <tagname>header</tagname>
+    <name>header</name>
     <function>addHeader</function>
     <attribute>
       <attname>name</attname>
@@ -61,7 +61,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>resource</tagname>
+    <name>resource</name>
     <function>addResource</function>
     <attribute>
       <attname>type</attname>
@@ -76,7 +76,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>title</tagname>
+    <name>title</name>
     <function>setTitle</function>
     <attribute>
       <attname>value</attname>
@@ -87,7 +87,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>panel</tagname>
+    <name>panel</name>
     <function>showPanel</function>
     <attribute>
       <attname>id</attname>

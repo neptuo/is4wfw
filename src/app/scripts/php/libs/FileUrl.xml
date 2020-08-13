@@ -8,7 +8,7 @@
     Knihovna pro generování odkazů na soubory pomocí property.
   </comment>
   <tag>
-    <tagname>declare</tagname>
+    <name>declare</name>
     <function>setValue</function>
     <lookless>true</lookless>
     <attribute>

@@ -8,7 +8,7 @@
     Knihovna pro práci s uživatelskými entitami.
   </comment>
   <fulltag>
-    <tagname>form</tagname>
+    <name>form</name>
     <function>form</function>
     <attribute>
       <attname>name</attname>
@@ -42,7 +42,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>register</tagname>
+    <name>register</name>
     <function>register</function>
     <attribute>
       <attname>name</attname>
@@ -55,7 +55,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>emptyDirectory</tagname>
+    <name>emptyDirectory</name>
     <function>emptyDirectory</function>
     <attribute>
       <attname>name</attname>
@@ -74,7 +74,7 @@
     </attribute>
   </tag>
   <fulltag>
-    <tagname>createIfEmpty</tagname>
+    <name>createIfEmpty</name>
     <function>createIfEmpty</function>
     <attribute>
       <attname>name</attname>
@@ -126,7 +126,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>list</tagname>
+    <name>list</name>
     <function>getList</function>
     <attribute>
       <attname>name</attname>
@@ -151,7 +151,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>deleter</tagname>
+    <name>deleter</name>
     <function>deleter</function>
     <lookless>true</lookless>
     <attribute>

@@ -9,7 +9,7 @@
     Jednoduchá třída pro správu erorů. Jedna instance je také default objekt.
   </comment>
   <tag>
-    <tagname>add</tagname>
+    <name>add</name>
     <function>add</function>
     <attribute>
       <attname>msg</attname>
@@ -20,7 +20,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>show</tagname>
+    <name>show</name>
     <function>show</function>
     <comment>
       Vypíše všechny erory z listu.

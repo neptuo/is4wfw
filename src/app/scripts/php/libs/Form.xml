@@ -9,21 +9,21 @@
     Formuláře
   </comment>
   <tag>
-    <tagname>form1</tagname>
+    <name>form1</name>
     <function>orderForm1</function>
     <comment>
       Objednávkový formulář 1.
     </comment>
   </tag>
   <tag>
-    <tagname>form2</tagname>
+    <name>form2</name>
     <function>orderForm2</function>
     <comment>
       Objednávkový formulář 2.
     </comment>
   </tag>
   <tag>
-    <tagname>order1</tagname>
+    <name>order1</name>
     <function>showOrder1</function>
     <attribute>
       <attname>detailPageId</attname>
@@ -34,7 +34,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>order2</tagname>
+    <name>order2</name>
     <function>showOrder2</function>
     <attribute>
       <attname>detailPageId</attname>
@@ -45,14 +45,14 @@
     </comment>
   </tag>
   <tag>
-    <tagname>order1Detail</tagname>
+    <name>order1Detail</name>
     <function>showOrder1Detail</function>
     <comment>
       Detail: Objednávky 1.
     </comment>
   </tag>
   <tag>
-    <tagname>order2Detail</tagname>
+    <name>order2Detail</name>
     <function>showOrder2Detail</function>
     <comment>
       Detail: Objednávky 2.

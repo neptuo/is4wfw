@@ -8,14 +8,14 @@
     Knihovna pro generování uživatelských entit.
   </comment>
   <tag>
-    <tagname>tableCreator</tagname>
+    <name>tableCreator</name>
     <function>tableCreator</function>
     <comment>
       Generátor základu tabulky uživatelských entit.
     </comment>
   </tag>
   <tag>
-    <tagname>tableColumnCreator</tagname>
+    <name>tableColumnCreator</name>
     <function>tableColumnCreator</function>
     <attribute>
       <attname>name</attname>
@@ -27,7 +27,7 @@
     </comment>
   </tag>
   <fulltag>
-    <tagname>listTables</tagname>
+    <name>listTables</name>
     <function>listTables</function>
     <comment>
       Vypíše seznam všech uživatelských entity.
@@ -41,7 +41,7 @@
     </comment>
   </property>
   <fulltag>
-    <tagname>listTableColumns</tagname>
+    <name>listTableColumns</name>
     <function>listTableColumns</function>
     <attribute>
       <attname>name</attname>
@@ -60,7 +60,7 @@
     </comment>
   </property>
   <fulltag>
-    <tagname>tableDeleter</tagname>
+    <name>tableDeleter</name>
     <function>tableDeleter</function>
     <lookless>true</lookless>
     <attribute>
@@ -73,7 +73,7 @@
     </comment>
   </fulltag>
   <fulltag>
-    <tagname>tableColumnDeleter</tagname>
+    <name>tableColumnDeleter</name>
     <function>tableColumnDeleter</function>
     <lookless>true</lookless>
     <attribute>
@@ -91,7 +91,7 @@
     </comment>
   </fulltag>
   <tag>
-    <tagname>tableLocalizationEditor</tagname>
+    <name>tableLocalizationEditor</name>
     <function>tableLocalizationEditor</function>
     <attribute>
       <attname>name</attname>

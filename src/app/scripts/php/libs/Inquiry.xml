@@ -9,7 +9,7 @@
     Knihovna pro tvorbu anket a dotazníků
   </comment>
   <tag>
-    <tagname>list</tagname>
+    <name>list</name>
     <function>getInquiries</function>
     <attribute>
       <attname>useFrames</attname>
@@ -20,7 +20,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>edit</tagname>
+    <name>edit</name>
     <function>editInquiry</function>
     <attribute>
       <attname>useFrames</attname>
@@ -31,7 +31,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>listAnswers</tagname>
+    <name>listAnswers</name>
     <function>getAnswers</function>
     <attribute>
       <attname>useFrames</attname>
@@ -42,7 +42,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>editAnswer</tagname>
+    <name>editAnswer</name>
     <function>editAnswer</function>
     <attribute>
       <attname>useFrames</attname>
@@ -53,7 +53,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>setCurrentId</tagname>
+    <name>setCurrentId</name>
     <function>setCurrentId</function>
     <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
     <attribute>
@@ -74,7 +74,7 @@
   </tag>
   
   <tag>
-    <tagname>view</tagname>
+    <name>view</name>
     <function>renderView</function>
     <attribute>
       <attname>inquiryId</attname>

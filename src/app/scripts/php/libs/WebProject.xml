@@ -10,7 +10,7 @@
 		System property "WebProject.defaultProjectId" může uchovávat id projekt zobrazeného po přihlášení
   </comment>
   <tag>
-    <tagname>selectProject</tagname>
+    <name>selectProject</name>
     <function>selectProject</function>
     <attribute>
       <attname>label</attname>
@@ -30,7 +30,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showProjects</tagname>
+    <name>showProjects</name>
     <function>showProjects</function>
     <attribute>
       <attname>detailPageId</attname>
@@ -47,7 +47,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>showEditForm</tagname>
+    <name>showEditForm</name>
     <function>showEditForm</function>
     <attribute>
       <attname>showNotSelectedError</attname>

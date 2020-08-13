@@ -9,7 +9,7 @@
     Třída pro počítající uživatelské přístupy.
   </comment>
   <tag>
-    <tagname>access</tagname>
+    <name>access</name>
     <function>countAccess</function>
     <attribute>
       <attname>id</attname>
@@ -30,7 +30,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>show</tagname>
+    <name>show</name>
     <function>showTable</function>
     <attribute>
       <attname>template</attname>
@@ -58,7 +58,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>redirectWhenTimeLimitExceeded</tagname>
+    <name>redirectWhenTimeLimitExceeded</name>
     <function>redirectWhenTimeLimitExceeded</function>
     <attribute>
       <attname>pageId</attname>
@@ -79,7 +79,7 @@
     </comment>
   </tag>
   <tag>
-    <tagname>redirectWhenTimeLimitNotExceeded</tagname>
+    <name>redirectWhenTimeLimitNotExceeded</name>
     <function>redirectWhenTimeLimitNotExceeded</function>
     <attribute>
       <attname>pageId</attname>
@@ -100,70 +100,70 @@
     </comment>
   </tag>
   <tag>
-    <tagname>all</tagname>
+    <name>all</name>
     <function>showAll</function>
     <comment>
       Zobrazí všechny přístupy.
     </comment>
   </tag>
   <tag>
-    <tagname>visitors</tagname>
+    <name>visitors</name>
     <function>showVisitors</function>
     <comment>
       Zobrazí všechny návštěvníky.
     </comment>
   </tag>
   <tag>
-    <tagname>visitorsWeek</tagname>
+    <name>visitorsWeek</name>
     <function>showVisitorsWeek</function>
     <comment>
       Zobrazí všechny návštěvníky za tento týden.
     </comment>
   </tag>
   <tag>
-    <tagname>visitorsToday</tagname>
+    <name>visitorsToday</name>
     <function>showVisitorsToday</function>
     <comment>
       Zobrazí všechny návštěvníky za dnes.
     </comment>
   </tag>
   <tag>
-    <tagname>visitorsHour</tagname>
+    <name>visitorsHour</name>
     <function>showVisitorsHour</function>
     <comment>
       Zobrazí všechny návštěvníky za poslední hodinu.
     </comment>
   </tag>
   <tag>
-    <tagname>visitorsOnline</tagname>
+    <name>visitorsOnline</name>
     <function>showVisitorsOnline</function>
     <comment>
       Zobrazí všechny návštěvníky on line.
     </comment>
   </tag>
   <tag>
-    <tagname>user</tagname>
+    <name>user</name>
     <function>showUser</function>
     <comment>
       Zobrazí všechny od aktuálního užívatele.
     </comment>
   </tag>
   <tag>
-    <tagname>userWeek</tagname>
+    <name>userWeek</name>
     <function>showUserWeek</function>
     <comment>
       Zobrazí všechny od aktuálního užívatele za poslední týden.
     </comment>
   </tag>
   <tag>
-    <tagname>userToday</tagname>
+    <name>userToday</name>
     <function>showUserToday</function>
     <comment>
       Zobrazí všechny od aktuálního užívatele dnes.
     </comment>
   </tag>
   <tag>
-    <tagname>userHour</tagname>
+    <name>userHour</name>
     <function>showUserHour</function>
     <comment>
       Zobrazí všechny od aktuálního užívatele za poslední hodinu.

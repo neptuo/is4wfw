@@ -9,7 +9,7 @@
     Logovací třída.
   </comment>
   <tag>
-    <tagname>write</tagname>
+    <name>write</name>
     <function>write</function>
     <attribute>
       <attname>msg</attname>
