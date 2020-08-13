@@ -280,7 +280,7 @@
 
 		private $isInsideForm = false;
 
-		public function form($template, $method = "post", $pageId = null, $params = array()) {
+		public function form(callable $template, $method = "post", $pageId = null, $params = array()) {
 			if ($this->isInsideForm) {
 				return $template();
 			} else {

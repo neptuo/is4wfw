@@ -26,7 +26,7 @@
 				$template .= parent::ui()->inputHidden($hiddenName, $hiddenValue);
 			}
 
-			return parent::ui()->form($template);
+			return parent::ui()->form(function() use ($template) { return $template; });
 		}
 
 		public function newButton($pageId, $text, $paramName = "id", $param = array()) {
