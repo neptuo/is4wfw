@@ -668,7 +668,9 @@
 
 		public function formatNumber($value, $thousandsSeparator = "", $decimalsSeparator = "", $decimals = "") {
 			if ($thousandsSeparator) {
-				if (!$decimals) {
+				if ($decimals == "0") {
+					$decimals = 0;
+				} else if (!$decimals) {
 					$decimals = 2;
 				}
 
