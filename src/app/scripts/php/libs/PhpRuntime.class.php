@@ -605,7 +605,7 @@
             $convert = isset($att->attdef);
             
             if (isset($att->atttype)) {
-                if (self::startsWith($val, 'template_') && self::endsWith($val, '()')) {
+                if (self::startsWith($val, '$this->template_') && self::endsWith($val, '()')) {
                     return array('value' => $val, 'type' => 'eval');
                 }
 
