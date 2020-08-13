@@ -175,7 +175,7 @@
   <fulltag>
     <name>savePage</name>
     <function>savePage</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>pageId</name>
       <required />

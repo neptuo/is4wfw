@@ -10,7 +10,7 @@
   <tag>
     <name>setLanguage</name>
     <function>setLanguage</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>name</name>
       <required />
@@ -24,7 +24,7 @@
   <fulltag>
     <name>use</name>
     <function>useBundle</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>name</name>
       <required />

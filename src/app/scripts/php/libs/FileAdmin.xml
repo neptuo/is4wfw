@@ -166,7 +166,7 @@
   <fulltag>
     <name>fileDeleter</name>
     <function>fileDeleter</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>id</name>
       <required />

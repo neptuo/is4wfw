@@ -596,7 +596,7 @@
   <tag>
     <name>debug</name>
     <function>debugMode</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>isEnabled</name>
       <required />
@@ -611,6 +611,7 @@
   <fulltag>
     <name>lookless</name>
     <function>lookless</function>
+    <lookless />
     <comment>Zpracuje tělo, ale kompletně ignoruje jeho výstup.</comment>
   </fulltag>
   <property>

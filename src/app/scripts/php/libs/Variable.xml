@@ -11,7 +11,7 @@
   <tag>
     <name>declare</name>
     <function>setValue</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>name</name>
       <required />
@@ -39,7 +39,7 @@
   <tag>
     <name>use</name>
     <function>setScope</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>name</name>
       <required />
@@ -59,7 +59,7 @@
   <tag>
     <name>clear</name>
     <function>removeValue</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>name</name>
       <required />

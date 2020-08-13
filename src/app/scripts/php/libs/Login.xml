@@ -46,7 +46,7 @@
   <fulltag>
     <name>login</name>
     <function>loginLookless</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>group</name>
       <required />
@@ -89,7 +89,7 @@
   <fulltag>
     <name>logout</name>
     <function>logout</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>group</name>
       <required />
@@ -103,7 +103,7 @@
   <fulltag>
     <name>refresh</name>
     <function>refresh</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>group</name>
       <required />
@@ -119,7 +119,7 @@
     <function>loggedUserInfo</function>
     <attribute>
       <name>field</name>
-      <attype>string</attype>
+      <type>string</type>
       <comment>Umožňuje vypsat jen jeden field z infomací o uživateli ("name", "surname", group", "username", "login" - username + domain)</comment>
     </attribute>
     <comment>

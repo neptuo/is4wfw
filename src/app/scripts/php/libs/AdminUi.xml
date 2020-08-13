@@ -10,7 +10,7 @@
   <tag>
     <name>setSuccessMessage</name>
     <function>setSuccessMessage</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>message</name>
       <required />

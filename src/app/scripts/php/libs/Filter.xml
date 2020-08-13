@@ -10,7 +10,7 @@
   <fulltag>
     <name>declare</name>
     <function>declareInstance</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>name</name>
       <required />

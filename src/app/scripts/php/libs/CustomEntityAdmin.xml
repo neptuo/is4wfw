@@ -62,7 +62,7 @@
   <fulltag>
     <name>tableDeleter</name>
     <function>tableDeleter</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>name</name>
       <required />
@@ -75,7 +75,7 @@
   <fulltag>
     <name>tableColumnDeleter</name>
     <function>tableColumnDeleter</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>tableName</name>
       <required />

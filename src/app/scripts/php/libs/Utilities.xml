@@ -10,7 +10,7 @@
   <tag>
     <name>concat</name>
     <function>concatValues</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>output</name>
       <required />
@@ -83,7 +83,7 @@
   <tag>
     <name>arrayItem</name>
     <function>addToArray</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>output</name>
       <required />
@@ -101,7 +101,7 @@
   <tag>
     <name>replaceHtmlNewLines</name>
     <function>replaceHtmlNewLines</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>output</name>
       <required />
@@ -118,7 +118,7 @@
   <tag>
     <name>dateTimeToTimestamp</name>
     <function>dateTimeToTimestamp</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>output</name>
       <required />
@@ -146,7 +146,7 @@
   <tag>
     <name>clear</name>
     <function>clear</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>output</name>
       <required />

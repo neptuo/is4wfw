@@ -41,7 +41,7 @@
   <fulltag>
     <name>deleter</name>
     <function>deleter</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>id</name>
       <required />
