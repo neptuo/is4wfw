@@ -1,7 +1,7 @@
 <?php
 
 	require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
-	require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultPhp.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "libs/PhpRuntime.class.php");
 
 	/**
 	 * 
@@ -28,11 +28,11 @@
                 $template = $this->parseTemplate($keys, $c);
             }
 
-            return [DefaultPhp::$FullTagTemplateName => $template];
+            return [PhpRuntime::$FullTagTemplateName => $template];
         }
 
         public function conditionsExecution($condition, $value) {
-            return [DefaultPhp::$DecoratorExecuteName => $condition == $value];
+            return [PhpRuntime::$DecoratorExecuteName => $condition == $value];
         }
 
         public function coolDecorator(string $cool, string $tagPrefix, string $tagName, array $tagParameters) {
@@ -42,8 +42,8 @@
                 $template = $this->parseTemplate($keys, $cool);
             }
             
-            $tagParameters[DefaultPhp::$FullTagTemplateName] = $template;
-            $tagParameters[DefaultPhp::$DecoratorExecuteName] = true;
+            $tagParameters[PhpRuntime::$FullTagTemplateName] = $template;
+            $tagParameters[PhpRuntime::$DecoratorExecuteName] = true;
             return $tagParameters;
         }
 
@@ -57,10 +57,10 @@
                     $template = $this->parseTemplate($keys, $templateContent);
                 }
 
-                $tagParameters[DefaultPhp::$FullTagTemplateName] = $template;
-                $tagParameters[DefaultPhp::$DecoratorExecuteName] = true;
+                $tagParameters[PhpRuntime::$FullTagTemplateName] = $template;
+                $tagParameters[PhpRuntime::$DecoratorExecuteName] = true;
             } else {
-                $tagParameters[DefaultPhp::$DecoratorExecuteName] = false;
+                $tagParameters[PhpRuntime::$DecoratorExecuteName] = false;
             }
 
             return $tagParameters;

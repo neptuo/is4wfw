@@ -1,7 +1,7 @@
 <?php
 
 	require_once("BaseTagLib.class.php");
-	require_once("DefaultPhp.class.php");
+	require_once("PhpRuntime.class.php");
 
 	/**
 	 * 
@@ -21,7 +21,7 @@
 			$login = $this->login();
 			$perm = $login->getGroupPerm($name, $login->getMainGroupId(), false, 'false');
 			$hasPerm = $perm['value'] == 'true';
-			return [DefaultPhp::$DecoratorExecuteName => $hasPerm];
+			return [PhpRuntime::$DecoratorExecuteName => $hasPerm];
 		}
 		
 		public function requireGroup($name) {
@@ -34,7 +34,7 @@
 				}
 			}
 			
-			return [DefaultPhp::$DecoratorExecuteName => $hasGroup];
+			return [PhpRuntime::$DecoratorExecuteName => $hasGroup];
 		}
 	}
 

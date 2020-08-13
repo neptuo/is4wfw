@@ -57,7 +57,7 @@
 			}
         }
 
-        public function addScriptInline($template, $placement = "head") {
+        public function addScriptInline(callable $template, string $placement = "head") {
             $content = $template();
             $script = parent::web()->formatScriptInline($content);
             parent::web()->addScript($script, $placement);
@@ -70,7 +70,7 @@
 			}
 		}
 
-        public function addStyleInline($template) {
+        public function addStyleInline(callable $template) {
             $content = $template();
             $style = parent::web()->formatStyleInline($content);
             parent::web()->addStyle($style);

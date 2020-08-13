@@ -282,14 +282,14 @@
                     if ($decorator["modifiesAttributes"]) {
                         $attributes->Attributes["tagPrefix"] = ["value" => "'$tagPrefix'", "type" => "eval"];
                         $attributes->Attributes["tagName"] = ["value" => "'$tagName'", "type" => "eval"];
-                        $attributes->Attributes[DefaultPhp::$FullTagTemplateName] = ["value" => '$parameters', "type" => "eval"];
+                        $attributes->Attributes[PhpRuntime::$FullTagTemplateName] = ["value" => '$parameters', "type" => "eval"];
                         $attributes->FunctionParameters[] = "parameters";
                         $defaultReturnValue = '$parameters';
                     }
 
                     $call = $this->generateFunctionOutput($prefix, $decorator["function"], $attributes, false, $defaultReturnValue);
                     if (!$tagAttributes->HasAttributeModifyingDecorators && $decorator["providesFullTagBody"]) {
-                        $tagAttributes->Attributes[DefaultPhp::$FullTagTemplateName] = array("value" => $call . "['" . DefaultPhp::$FullTagTemplateName . "']", "type" => "eval");
+                        $tagAttributes->Attributes[PhpRuntime::$FullTagTemplateName] = array("value" => $call . "['" . PhpRuntime::$FullTagTemplateName . "']", "type" => "eval");
                     } else {
                         $tagAttributes->Decorators[$prefix][$decorator["function"]]["call"] = $call;
                     }
@@ -354,13 +354,13 @@
             ];
 
             if ($content != null) {
-                $result[DefaultPhp::$FullTagTemplateName] = [
+                $result[PhpRuntime::$FullTagTemplateName] = [
                     'value' => $content, 
                     'type' => 'eval'
                 ];
             }
 
-            $result[DefaultPhp::$ParamsName] = [
+            $result[PhpRuntime::$ParamsName] = [
                 "value" => $params, 
                 "type" => "eval"
             ];
@@ -511,14 +511,14 @@
                         
                         if ($attributes->HasAttributeModifyingDecorators) {
                             if ($decorator["conditionsExecution"] && !$decorator["modifiesAttributes"] && !$decorator["providesFullTagBody"]) {
-                                $this->Code->addLine($returnParametersName . "['" . DefaultPhp::$DecoratorExecuteName . "'] = " . $decorator["call"] . "['" . DefaultPhp::$DecoratorExecuteName . "'];");
-                                $this->Code->addLine("if (" . $returnParametersName . "['" . DefaultPhp::$DecoratorExecuteName . "'] === true) {");
+                                $this->Code->addLine($returnParametersName . "['" . PhpRuntime::$DecoratorExecuteName . "'] = " . $decorator["call"] . "['" . PhpRuntime::$DecoratorExecuteName . "'];");
+                                $this->Code->addLine("if (" . $returnParametersName . "['" . PhpRuntime::$DecoratorExecuteName . "'] === true) {");
                                 $this->Code->addIndent();
                                 continue;
                             }
 
                             if ($decorator["providesFullTagBody"] && !$decorator["modifiesAttributes"] && !$decorator["conditionsExecution"]) {
-                                $this->Code->addLine($returnParametersName. "['" . DefaultPhp::$FullTagTemplateName . "'] = " . $decorator["call"] . "['" . DefaultPhp::$FullTagTemplateName . "'];");
+                                $this->Code->addLine($returnParametersName. "['" . PhpRuntime::$FullTagTemplateName . "'] = " . $decorator["call"] . "['" . PhpRuntime::$FullTagTemplateName . "'];");
                                 continue;
                             }
                             
@@ -530,7 +530,7 @@
                                 $this->Code->addLine($returnParametersName . " = " . $decorator["call"] . ";");
 
                                 if ($decorator["conditionsExecution"]) {
-                                    $this->Code->addLine("if (" . $returnParametersName . "['" . DefaultPhp::$DecoratorExecuteName . "'] === true) {");
+                                    $this->Code->addLine("if (" . $returnParametersName . "['" . PhpRuntime::$DecoratorExecuteName . "'] === true) {");
                                     $this->Code->addIndent();
                                 }
 
@@ -539,7 +539,7 @@
                         }
                         
                         if ($decorator["conditionsExecution"]) {
-                            $this->Code->addLine("if (" . $decorator["call"] . "['" . DefaultPhp::$DecoratorExecuteName . "'] === true) {");
+                            $this->Code->addLine("if (" . $decorator["call"] . "['" . PhpRuntime::$DecoratorExecuteName . "'] === true) {");
                             $this->Code->addIndent();
                             continue;
                         }

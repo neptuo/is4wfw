@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <taglib>
-  <name>Default php lib</name>
-  <classname>DefaultPhp</classname>
+  <name>Php lib</name>
+  <classname>PhpRuntime</classname>
   <classpath>php.libs</classpath>
   <version>1.15</version>
   <count>1</count>

@@ -108,7 +108,7 @@
 				$template = $this->parseTemplate($keys, $templateContent);
 			}
 
-			$parameters = [DefaultPhp::$FullTagTemplateName => $template];
+			$parameters = [PhpRuntime::$FullTagTemplateName => $template];
 			return $parameters;
 		}
 	}

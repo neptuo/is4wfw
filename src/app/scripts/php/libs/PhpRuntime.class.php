@@ -10,7 +10,7 @@
 
     /**
      *
-     *    DefaultPhpClass is for registrating & unregistrating tag-libs.
+     *    PhpRuntime class is for registrating & unregistrating tag-libs.
      *    Default object.            
      *    
      *    @objectname phpObject
@@ -19,7 +19,7 @@
      *    @timestamp    2012-01-17
      *
      */                
-    class DefaultPhp extends BaseTagLib {
+    class PhpRuntime extends BaseTagLib {
         
         public static $ParamsName = 'params';
         public static $FullTagTemplateName = 'full:content';
@@ -41,7 +41,7 @@
         );
 
         private $defaultRegistrations = [
-            "php" => "php.libs.DefaultPhp", 
+            "php" => "php.libs.PhpRuntime", 
             "web" => "php.libs.Web", 
             "error" => "php.libs.ErrorHandler", 
             "log" => "php.libs.Log", 
@@ -69,7 +69,7 @@
          *
          */                                     
         private $_CLASSES = array(
-            "php.libs.DefaultPhp" => 1, 
+            "php.libs.PhpRuntime" => 1, 
             "php.libs.Web" => 1, 
             "php.libs.ErrorHandler" => 1, 
             "php.libs.Log" => 1, 
@@ -86,7 +86,7 @@
          *
          */                                                
         public function __construct() {
-            parent::setTagLibXml("DefaultPhp.xml");
+            $this->setTagLibXml("PhpRuntime.xml");
             
             // Init defalt objects (php, error, log)
             $GLOBALS['errorObject'] = new ErrorHandler();
@@ -558,7 +558,7 @@
                     }
                 }
 
-                $return[DefaultPhp::$ParamsName] = array('value' => $params, 'type' => 'eval');
+                $return[PhpRuntime::$ParamsName] = array('value' => $params, 'type' => 'eval');
             }
 
             if (count($processedAtts) == count($atts->Attributes)) {
@@ -658,7 +658,7 @@
                 return false;
             }
 
-            $attributes->Attributes = array_merge(array(DefaultPhp::$FullTagTemplateName => array('value' => $content, 'type' => 'eval')), $attributes->Attributes);
+            $attributes->Attributes = array_merge(array(PhpRuntime::$FullTagTemplateName => array('value' => $content, 'type' => 'eval')), $attributes->Attributes);
             return true;
         }
         

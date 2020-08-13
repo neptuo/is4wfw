@@ -15,13 +15,13 @@
 
 	require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
-	require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultPhp.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "libs/PhpRuntime.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "libs/Web.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewHelper.class.php");
   
 	session_start();
   
-	$phpObject = new DefaultPhp();
+	$phpObject = new PhpRuntime();
 	$webObject = new Web();
   
 	$phpObject->register('v', 'php.libs.View');
