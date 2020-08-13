@@ -33,7 +33,7 @@
     </attribute>
     <attribute>
       <name>limit</name>
-      <attdef>-1</attdef>
+      <default>-1</default>
     </attribute>
     <attribute>
       <name>noDataMessage</name>
@@ -68,7 +68,7 @@
     </attribute>
     <attribute>
       <name>limit</name>
-      <attdef>-1</attdef>
+      <default>-1</default>
     </attribute>
     <attribute>
       <name>noDataMessage</name>
@@ -163,7 +163,7 @@
     </attribute>
     <attribute>
       <name>emailIsHtml</name>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</comment>
     </attribute>
     <comment>
@@ -220,7 +220,7 @@
     </attribute>
     <attribute>
       <name>emailIsHtml</name>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</comment>
     </attribute>
     <comment>

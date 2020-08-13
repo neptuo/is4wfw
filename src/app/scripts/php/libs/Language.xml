@@ -31,7 +31,7 @@
     <attribute>
       <name>id</name>
       <type>number</type>
-      <attdef>0</attdef>
+      <default>0</default>
       <comment>Id záznamu k editaci. Pokud je 0 (nebo nevyplněno), pak se vytváří nový záznam.</comment>
     </attribute>
     <comment>
@@ -46,7 +46,7 @@
       <name>id</name>
       <required />
       <type>number</type>
-      <attdef>0</attdef>
+      <default>0</default>
       <comment>Id záznamu, který se má smazat.</comment>
     </attribute>
     <comment>

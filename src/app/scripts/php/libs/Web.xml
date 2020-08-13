@@ -38,13 +38,13 @@
     <attribute>
       <name>copyParameters</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <attribute>
       <name>display</name>
       <type>string</type>
-      <attdef>name</attdef>
+      <default>name</default>
       <comment>Vlastnost z "info", která se má použít jako text odkazu ("name" nebo "title").</comment>
     </attribute>
     <comment>
@@ -63,13 +63,13 @@
     <attribute>
       <name>display</name>
       <type>string</type>
-      <attdef>name</attdef>
+      <default>name</default>
       <comment>Vlastnost z "info", která se má použít jako "display" field ("name" nebo "title").</comment>
     </attribute>
     <attribute>
       <name>copyParameters</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <comment>
@@ -301,7 +301,7 @@
     <attribute>
       <name>copyParameters</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <attribute>
@@ -328,7 +328,7 @@
     <attribute>
       <name>display</name>
       <type>string</type>
-      <attdef>language</attdef>
+      <default>language</default>
       <comment>Název fieldu z jazyku, který se má použít pro zobrazení.</comment>
     </attribute>
     <comment>
@@ -511,11 +511,11 @@
     </attribute>
     <attribute>
       <name>is</name>
-      <attdef>true</attdef>
+      <default>true</default>
     </attribute>
     <attribute>
       <name>isInverted</name>
-      <attdef>false</attdef>
+      <default>false</default>
     </attribute>
     <comment>
       Zobrazí svůj obsah pokud je atribut "condition" hodnoty true (bool nebo string).
@@ -540,7 +540,7 @@
     <attribute>
       <name>is</name>
       <type>string</type>
-      <attdef>x.x-def</attdef>
+      <default>x.x-def</default>
     </attribute>
     <comment>
       Použitelný uvnitř web:switch. Definuje jeden test na porovnávanou hodnotu. Pokud atribut "is" není definován, jedná se o 'default' case.

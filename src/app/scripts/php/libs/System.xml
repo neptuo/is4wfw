@@ -116,11 +116,11 @@
     <function>manageRoleCache</function>
     <attribute>
       <name>buttonOnly</name>
-	    <attdef>false</attdef>
+	    <default>false</default>
     </attribute>
     <attribute>
       <name>useFrames</name>
-	    <attdef>true</attdef>
+	    <default>true</default>
     </attribute>
     <comment>
       Zobrazí správu role-cache.
@@ -139,7 +139,7 @@
     <attribute>
       <name>text</name>
       <type>string</type>
-      <attdef>GitHub</attdef>
+      <default>GitHub</default>
     </attribute>
     <comment>
       Zobrazí odkaz do repositáře s projektem (zdrojové kódy).
@@ -151,7 +151,7 @@
     <attribute>
       <name>text</name>
       <type>string</type>
-      <attdef>Report</attdef>
+      <default>Report</default>
     </attribute>
     <comment>
       Zobrazí odkaz pro založení hlášení o chybě.

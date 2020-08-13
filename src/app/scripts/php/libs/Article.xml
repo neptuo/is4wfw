@@ -54,7 +54,7 @@
     </attribute>
     <attribute>
       <name>pageable</name>
-      <attdef>false</attdef>
+      <default>false</default>
     </attribute>
     <comment>
       Vypíše všechny všechny články z řady. Pokud je zadáno pageId, je to stránka,
@@ -112,7 +112,7 @@
     </attribute>
     <attribute>
       <name>lineId</name>
-      <attdef>0</attdef>
+      <default>0</default>
     </attribute>
     <attribute>
       <name>nextLinkText</name>
@@ -143,7 +143,7 @@
     </attribute>
     <attribute>
       <name>lineId</name>
-      <attdef>0</attdef>
+      <default>0</default>
     </attribute>
     <attribute>
       <name>nextLinkText</name>
@@ -237,7 +237,7 @@
     </attribute>
     <attribute>
       <name>pageable</name>
-	    <attdef>false</attdef>
+	    <default>false</default>
     </attribute>
     <attribute>
       <name>customFormId</name>

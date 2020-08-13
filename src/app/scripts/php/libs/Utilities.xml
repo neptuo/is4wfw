@@ -138,7 +138,7 @@
     <attribute>
       <name>trimTime</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se má vynulovat čas.</comment>
     </attribute>
     <comment>Vrátí timestamp pro zadaný datum (a čas) dle zadaného formátu.</comment>

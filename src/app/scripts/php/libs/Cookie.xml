@@ -27,7 +27,7 @@
     <attribute>
       <name>expire</name>
       <type>number</type>
-      <attdef>0</attdef>
+      <default>0</default>
       <comment>Počet sekund, po jejichž vypršení sušenka expiruje. 0 reprezentuje session cookie.</comment>
     </attribute>
     <attribute>
@@ -43,13 +43,13 @@
     <attribute>
       <name>isSecure</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se má sušenka posílat pouze po HTTPS.</comment>
     </attribute>
     <attribute>
       <name>isHttpOnly</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda má být sušenka dostupná pro server (výchozí je false, tedy je dostupná i pro javascript).</comment>
     </attribute>
     <comment>

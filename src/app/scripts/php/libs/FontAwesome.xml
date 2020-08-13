@@ -24,13 +24,13 @@
     <attribute>
       <name>prefix</name>
       <type>string</type>
-      <attdef>fa</attdef>
+      <default>fa</default>
       <comment>Prefix / styl ikony (fa, fas, atd).</comment>
     </attribute>
     <attribute>
       <name>tag</name>
       <type>string</type>
-      <attdef>span</attdef>
+      <default>span</default>
       <comment>HTML tag, který se má použít.</comment>
     </attribute>
     <anyAttribute>

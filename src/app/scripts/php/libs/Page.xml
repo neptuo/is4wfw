@@ -13,11 +13,11 @@
     <function>showEditPage</function>
     <attribute>
       <name>pageId</name>
-      <attdef>0</attdef>
+      <default>0</default>
     </attribute>
     <attribute>
       <name>langId</name>
-      <attdef>0</attdef>
+      <default>0</default>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci vybrané stránky.
@@ -38,7 +38,7 @@
     <function>managePageProperties</function>
     <attribute>
       <name>useFrames</name>
-      <attdef>true</attdef>
+      <default>true</default>
     </attribute>
     <comment>
       Zobrazí správu výchozích vlastností stránky.

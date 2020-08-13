@@ -346,7 +346,7 @@
     </attribute>
     <attribute>
       <name>thenByFix</name>
-	  <attdef>false</attdef>
+	  <default>false</default>
     </attribute>
     <comment>
       Výpis tabulky.
@@ -426,7 +426,7 @@
     <attribute>
       <name>onlyPlayed</name>
       <type>bool</type>
-      <attdef>true</attdef>
+      <default>true</default>
       <comment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</comment>
       <obsolete>Používat atribut "state".</obsolete>
     </attribute>
@@ -483,7 +483,7 @@
     <attribute>
       <name>onlyPlayed</name>
       <type>bool</type>
-      <attdef>true</attdef>
+      <default>true</default>
       <comment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</comment>
       <obsolete>Používat atribut "state".</obsolete>
     </attribute>

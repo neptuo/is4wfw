@@ -18,7 +18,7 @@
     <attribute>
       <name>deleteIfEmpty</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>
         Pokud "true" a ve vstupu od uživatele přijdou všechny hodnoty prázdné, automaticky editovaný záznam smaže.
         Prázdné hodnoty se hledají pouze v aktuálně načtených fieldech.
@@ -82,7 +82,7 @@
     <attribute>
       <name>nameIndex</name>
       <type>number</type>
-      <attdef>-1</attdef>
+      <default>-1</default>
       <type>string</type>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>

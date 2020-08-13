@@ -12,15 +12,15 @@
     <function>fileBrowser</function>
     <attribute>
       <name>dirId</name>
-	    <attdef>0</attdef>
+	    <default>0</default>
     </attribute>
     <attribute>
       <name>browsable</name>
-	    <attdef>true</attdef>
+	    <default>true</default>
     </attribute>
     <attribute>
       <name>useFrames</name>
-	    <attdef>true</attdef>
+	    <default>true</default>
     </attribute>
     <comment>
       Zobrazí browser souborovým systémem
@@ -38,7 +38,7 @@
     <attribute>
       <name>grouped</name>
       <type>bool</type>
-      <attdef>true</attdef>
+      <default>true</default>
       <comment>Zda mají složky a soubory být seřazený samostatně (rozdělení do dvou skupin).</comment>
     </attribute>
     <attribute>
@@ -106,7 +106,7 @@
     <function>fileUpload</function>
     <attribute>
       <name>dirId</name>
-	    <attdef>0</attdef>
+	    <default>0</default>
     </attribute>
     <attribute>
       <name>pageId</name>
@@ -119,16 +119,16 @@
     </attribute>
     <attribute>
       <name>useRights</name>
-	    <attdef>true</attdef>
+	    <default>true</default>
     </attribute>
     <attribute>
       <name>useFrames</name>
-	    <attdef>true</attdef>
+	    <default>true</default>
     </attribute>
     <attribute>
       <name>isStandalone</name>
       <type>bool</type>
-	    <attdef>false</attdef>
+	    <default>false</default>
       <comment>Pokud je nastaven na "true", zobrazí se vždy (tzn. není součástí fa:browser).</comment>
     </attribute>
     <comment>
@@ -153,11 +153,11 @@
     <function>directoryEditor</function>
     <attribute>
       <name>useRights</name>
-	    <attdef>true</attdef>
+	    <default>true</default>
     </attribute>
     <attribute>
       <name>useFrames</name>
-	    <attdef>true</attdef>
+	    <default>true</default>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci složky

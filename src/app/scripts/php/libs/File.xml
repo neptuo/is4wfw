@@ -28,18 +28,18 @@
     </attribute>
     <attribute>
       <name>browsable</name>
-	  <attdef>true</attdef>
+	  <default>true</default>
     </attribute>
     <attribute>
       <name>parentName</name>
     </attribute>
     <attribute>
       <name>nameWithExtension</name>
-	  <attdef>false</attdef>
+	  <default>false</default>
     </attribute>
     <attribute>
       <name>fileNameHeader</name>
-	  <attdef>false</attdef>
+	  <default>false</default>
     </attribute>
     <comment>
       Zobrazí kompletní obsah adresáře z FS. "showParent" zobrazuje odkaz na rodičovský adresář (default true), "showTitleInsteadOfName" zobrazí popis(pokud není prázdný) místo názvu souboru.

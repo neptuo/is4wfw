@@ -14,13 +14,13 @@
     <attribute>
       <name>id</name>
       <type>text</type>
-      <attdef>1</attdef>
+      <default>1</default>
       <comment>ID počítadla (max 15 znaků).</comment>
     </attribute>
     <attribute>
       <name>every</name>
       <type>text</type>
-      <attdef>day</attdef>
+      <default>day</default>
       <comment>Po jaké době má být znovu připočítán přístup z jedné ip, možné hodnoty ("every", "minute", "hour", "day", "week").</comment>
     </attribute>
     <comment>

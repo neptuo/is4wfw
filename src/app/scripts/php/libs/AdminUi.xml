@@ -60,7 +60,7 @@
     <attribute>
       <name>paramName</name>
       <type>string</type>
-      <attdef>id</attdef>
+      <default>id</default>
       <comment>Název id parametru, který bude mít hodnotu "new".</comment>
     </attribute>
     <attribute>
@@ -79,7 +79,7 @@
     <attribute>
       <name>saveName</name>
       <type>string</type>
-      <attdef>save</attdef>
+      <default>save</default>
       <comment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</comment>
     </attribute>
     <attribute>

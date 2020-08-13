@@ -18,7 +18,7 @@
     <attribute>
       <name>fluid</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se má jednat o fluidní kontejner (na celou šířku).</comment>
     </attribute>
     <anyAttribute>
@@ -108,13 +108,13 @@
     <attribute>
       <name>color</name>
       <type>string</type>
-      <attdef>primary</attdef>
+      <default>primary</default>
       <comment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark").</comment>
     </attribute>
     <attribute>
       <name>isDismissible</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda má jít alert skrýt (tlačítkem "x").</comment>
     </attribute>
     <anyAttribute>
@@ -134,13 +134,13 @@
     <attribute>
       <name>color</name>
       <type>string</type>
-      <attdef>primary</attdef>
+      <default>primary</default>
       <comment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark" nebo "link").</comment>
     </attribute>
     <attribute>
       <name>isOutline</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda má jít o "outline" tlačítko.</comment>
     </attribute>
     <attribute>
@@ -151,13 +151,13 @@
     <attribute>
       <name>isBlock</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda má jít o blokové tlačítko (na celou šířku rodiče).</comment>
     </attribute>
     <attribute>
       <name>isActive</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda má jít o "zaškrtnuté" tlačítko.</comment>
     </attribute>
     <anyAttribute>
@@ -171,13 +171,13 @@
     <attribute>
       <name>color</name>
       <type>string</type>
-      <attdef>primary</attdef>
+      <default>primary</default>
       <comment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark" nebo "link").</comment>
     </attribute>
     <attribute>
       <name>isOutline</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda má jít o "outline" tlačítko.</comment>
     </attribute>
     <attribute>
@@ -188,13 +188,13 @@
     <attribute>
       <name>isBlock</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda má jít o blokové tlačítko (na celou šířku rodiče).</comment>
     </attribute>
     <attribute>
       <name>isActive</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda má jít o "zaškrtnuté" tlačítko.</comment>
     </attribute>
     <anyAttribute>
@@ -242,7 +242,7 @@
     <attribute>
       <name>tag</name>
       <type>string</type>
-      <attdef>ul</attdef>
+      <default>ul</default>
       <comment>Název obalového tagu ("ul" nebo "nav").</comment>
     </attribute>
     <attribute>
@@ -253,7 +253,7 @@
     <attribute>
       <name>fill</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se mají položky roztáhnout na celou šířku.</comment>
     </attribute>
     <anyAttribute>
@@ -281,13 +281,13 @@
     <attribute>
       <name>isActive</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se jedná o vybraný/aktivní položku.</comment>
     </attribute>
     <attribute>
       <name>isDisabled</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda má být položka zakázána.</comment>
     </attribute>
     <attribute>

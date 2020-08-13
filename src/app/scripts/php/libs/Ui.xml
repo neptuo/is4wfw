@@ -172,13 +172,13 @@
       <name>trueText</name>
       <comment>Hodnota text sloupce, pokud je "value" true.</comment>
       <type>string</type>
-      <attdef>Yes</attdef>
+      <default>Yes</default>
     </attribute>
     <attribute>
       <name>falseText</name>
       <comment>Hodnota text sloupce, pokud je "value" false.</comment>
       <type>string</type>
-      <attdef></attdef>
+      <default></default>
     </attribute>
     <attribute>
       <name>th</name>
@@ -252,7 +252,7 @@
     <attribute>
       <name>method</name>
       <type>string</type>
-      <attdef>POST</attdef>
+      <default>POST</default>
       <comment>HTTP metoda, kterou se má formář odeslat.</comment>
     </attribute>
     <attribute>
@@ -291,7 +291,7 @@
     <attribute>
       <name>nameIndex</name>
       <type>number</type>
-      <attdef>-1</attdef>
+      <default>-1</default>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
@@ -345,7 +345,7 @@
     </attribute>
     <attribute>
       <name>repeat</name>
-      <attdef>vertical</attdef>
+      <default>vertical</default>
       <comment>Směr, jakým se mají checkboxy opakovat ("horizontal" nebo "vertical").</comment>
     </attribute>
     <anyAttribute />
@@ -365,7 +365,7 @@
     <attribute>
       <name>nameIndex</name>
       <type>number</type>
-      <attdef>-1</attdef>
+      <default>-1</default>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
@@ -389,7 +389,7 @@
     <attribute>
       <name>nameIndex</name>
       <type>number</type>
-      <attdef>-1</attdef>
+      <default>-1</default>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
@@ -413,7 +413,7 @@
     <attribute>
       <name>nameIndex</name>
       <type>number</type>
-      <attdef>-1</attdef>
+      <default>-1</default>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
@@ -437,13 +437,13 @@
     <attribute>
       <name>nameIndex</name>
       <type>number</type>
-      <attdef>-1</attdef>
+      <default>-1</default>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>
       <name>default</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Výchozí hodnota.</comment>
     </attribute>
     <anyAttribute />
@@ -463,7 +463,7 @@
     <attribute>
       <name>isMulti</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se umožňuje výběr více souborů najednou.</comment>
     </attribute>
     <anyAttribute />
@@ -534,7 +534,7 @@
     <attribute>
       <name>nameIndex</name>
       <type>number</type>
-      <attdef>-1</attdef>
+      <default>-1</default>
       <comment>Index, pokud je "name" typu pole.</comment>
     </attribute>
     <attribute>

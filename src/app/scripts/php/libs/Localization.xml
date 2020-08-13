@@ -34,7 +34,7 @@
     <attribute>
       <name>system</name>
       <type>bool</type>
-      <attdef>true</attdef>
+      <default>true</default>
       <comment>Zda se jedná o systémový bundle.</comment>
     </attribute>
     <comment>

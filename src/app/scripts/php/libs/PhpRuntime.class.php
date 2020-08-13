@@ -486,7 +486,7 @@
                 $isProcessed = false;
                 $att = $tag->attribute[$i];
                 $attName = (string)$att->name;
-                $hasDefault = isset($att->attdef);
+                $hasDefault = isset($att->default);
                 if (isset($att->prefix)) {
                     $attPrefix = "$attName-";
                     $attributeValue = array();
@@ -529,9 +529,9 @@
                 
                 if ($hasDefault) {
                     if ($att->type == 'string') {
-                        $attributeValue = "'" . eval('return "'. $att->attdef.'";') . "'";
+                        $attributeValue = "'" . eval('return "'. $att->default.'";') . "'";
                     } else {
-                        $attributeValue = eval('return '. $att->attdef.';');
+                        $attributeValue = eval('return '. $att->default.';');
                     }
                     
                     $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
@@ -602,7 +602,7 @@
         }
         
         protected function getConvertValue($val, $att) {
-            $convert = isset($att->attdef);
+            $convert = isset($att->default);
             
             if (isset($att->type)) {
                 if (self::startsWith($val, '$this->template_') && self::endsWith($val, '()')) {

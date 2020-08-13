@@ -14,7 +14,7 @@
     <function>selectProject</function>
     <attribute>
       <name>label</name>
-	    <attdef>false</attdef>
+	    <default>false</default>
     </attribute>
     <attribute>
       <name>useFrames</name>

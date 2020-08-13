@@ -70,7 +70,7 @@
     <attribute>
       <name>not</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se má podmínka negovat, tedy "nerovná se".</comment>
     </attribute>
     <comment>Sloupec v "name" musí/nesmí odpovídat ''.</comment>
@@ -87,7 +87,7 @@
     <attribute>
       <name>not</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se má podmínka negovat, tedy "nerovná se".</comment>
     </attribute>
     <comment>Sloupec v "name" musí/nesmí odpovídat 'null'.</comment>
@@ -109,7 +109,7 @@
     <attribute>
       <name>not</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se má podmínka negovat, tedy "nerovná se".</comment>
     </attribute>
   </tag>
@@ -130,7 +130,7 @@
     <attribute>
       <name>not</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda se má podmínka negovat, tedy "neobsahuje".</comment>
     </attribute>
   </tag>
@@ -177,7 +177,7 @@
     <attribute>
       <name>orEqual</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
     </attribute>
   </tag>
@@ -199,7 +199,7 @@
     <attribute>
       <name>orEqual</name>
       <type>bool</type>
-      <attdef>false</attdef>
+      <default>false</default>
       <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
     </attribute>
   </tag>

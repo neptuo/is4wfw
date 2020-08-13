@@ -173,7 +173,7 @@
                                 .'<td class="att-req' . $cssClass . '">' . $required . '</td>'
                                 .'<td class="att-prefix' . $cssClass . '">' . $prefix . '</td>'
                                 .'<td class="att-type' . $cssClass . '">' . $tag->attribute[$i]->type . '</td>'
-                                .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->attdef . '</td>'
+                                .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->default . '</td>'
                                 .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->comment . '</td>'
                             .'</tr>';
                         }
@@ -276,7 +276,7 @@
                                 .'<td class="att-req' . $cssClass . '">' . $required . '</td>'
                                 .'<td class="att-prefix' . $cssClass . '">' . $prefix . '</td>'
                                 .'<td class="att-type' . $cssClass . '">' . $tag->attribute[$i]->type . '</td>'
-                                .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->attdef . '</td>'
+                                .'<td class="att-def' . $cssClass . '">' . $tag->attribute[$i]->default . '</td>'
                                 .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $tag->attribute[$i]->comment . '</td>'
                             .'</tr>';
                         }
@@ -413,7 +413,7 @@
                                 .'<td class="att-req' . $cssClass . '">' . $required . '</td>'
                                 .'<td class="att-prefix' . $cssClass . '">' . $prefix . '</td>'
                                 .'<td class="att-type' . $cssClass . '">' . $decorator->attribute[$i]->type . '</td>'
-                                .'<td class="att-def' . $cssClass . '">' . $decorator->attribute[$i]->attdef . '</td>'
+                                .'<td class="att-def' . $cssClass . '">' . $decorator->attribute[$i]->default . '</td>'
                                 .'<td class="att-comment">' . (($obsolete != null) ? '<span><strong>Obsolete:</strong> ' . $obsolete . '</span> ' : '') . $decorator->attribute[$i]->comment . '</td>'
                             .'</tr>';
                         }
