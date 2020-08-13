@@ -24,7 +24,7 @@
      *  @timestamp  2012-01-21
      *
      */
-    class DefaultWeb extends BaseTagLib {
+    class Web extends BaseTagLib {
 
         /**
          *
@@ -191,7 +191,7 @@
          *
          */
         public function __construct() {
-            self::setTagLibXml("DefaultWeb.xml");
+            $this->setTagLibXml("Web.xml");
 
             $this->PageTitle = $_SERVER['HTTP_HOST'];
             $this->ServerName = $_SERVER['SERVER_NAME'];
@@ -999,11 +999,11 @@
             } else if ($allow == "false") {
                 $this->IsCached = 0;
             } else {
-                trigger_error("Passed value [allow] is not valid in cache [DefaultWeb]!", E_USER_WARNING);
+                trigger_error("Passed value [allow] is not valid in cache [Web]!", E_USER_WARNING);
                 return;
             }
             if (!is_numeric($time)) {
-                trigger_error("Passed value [time] is not valid in cache [DefaultWeb]!", E_USER_WARNING);
+                trigger_error("Passed value [time] is not valid in cache [Web]!", E_USER_WARNING);
                 return;
             }
 
@@ -1102,7 +1102,7 @@
         public function flush($path = null) {
             $_SESSION['last-request']['pages-id'] = $this->PagesId;
 
-            if (!RoleHelper::canUser(DefaultWeb::$PageRightDesc, $this->PagesId, WEB_R_READ)) {
+            if (!RoleHelper::canUser(Web::$PageRightDesc, $this->PagesId, WEB_R_READ)) {
                 self::generateErrorPage('403');
             }
 
@@ -1950,7 +1950,7 @@
             }
 
             if (($whenLogged == true && $loginObject->isLogged() == true) || ($whenNotLogged == true && $loginObject->isLogged() == false) || ($whenLogged == false && $whenNotLogged == false && $browser == false) || $incForBrowser) {
-                if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(DefaultWeb::$TemplateRightDesc, $templateId, WEB_R_READ))) {
+                if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(Web::$TemplateRightDesc, $templateId, WEB_R_READ))) {
                     $template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = ' . $dbObject->escape($templateId) . ';');
                     if (count($template) == 1) {
                         $return = $this->executeTemplateContent(["template", $templateId], $template[0]['content']);

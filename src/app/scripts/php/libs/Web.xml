@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <taglib>
-  <name>Default web lib</name>
-  <classname>DefaultWeb</classname>
+  <name>Web library</name>
+  <classname>Web</classname>
   <classpath>php.libs</classpath>
   <version>1.87</version>
   <count>1</count>

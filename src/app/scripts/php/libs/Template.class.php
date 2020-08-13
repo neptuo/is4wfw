@@ -26,7 +26,7 @@
 				throw new Error("Missing template filterd by '" . http_build_query($filter) . "'.");
 			}
 
-			if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(DefaultWeb::$TemplateRightDesc, $data["id"], WEB_R_READ))) {
+			if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(Web::$TemplateRightDesc, $data["id"], WEB_R_READ))) {
 				return $data["content"];
 			}
 

@@ -476,7 +476,6 @@
             "php.libs.CustomEntityAdmin",
             "php.libs.Database",
             "php.libs.DefaultPhp",
-            "php.libs.DefaultWeb",
             "php.libs.Editor",
             "php.libs.Error",
             "php.libs.File",
@@ -510,6 +509,7 @@
             "php.libs.Validation",
             "php.libs.Variable",
             "php.libs.View",
+            "php.libs.Web",
             "php.libs.WebProject"
         ];
             
@@ -527,7 +527,7 @@
                 parent::redirectToSelf();
             } else {
                 if ($_SESSION['select-class-path'] == '') {
-                    $_SESSION['select-class-path'] = 'php.libs.DefaultWeb';
+                    $_SESSION['select-class-path'] = 'php.libs.Web';
                 }
             }
 

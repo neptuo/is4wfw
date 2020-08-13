@@ -8,14 +8,14 @@
     require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultPhp.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultWeb.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "libs/Web.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateCache.class.php");
 
     // ini_set('pcre.backtrack_limit', 1000000000);
 
     $phpObject = new DefaultPhp();
-    $webObject = new DefaultWeb();
+    $webObject = new Web();
     
     $phpObject->register("cetype", "php.libs.CustomEntity");
     $phpObject->register("template", "php.libs.Template");

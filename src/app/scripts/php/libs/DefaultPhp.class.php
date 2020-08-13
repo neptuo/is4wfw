@@ -42,7 +42,7 @@
 
         private $defaultRegistrations = [
             "php" => "php.libs.DefaultPhp", 
-            "web" => "php.libs.DefaultWeb", 
+            "web" => "php.libs.Web", 
             "error" => "php.libs.ErrorHandler", 
             "log" => "php.libs.Log", 
             "db" => "php.libs.Database", 
@@ -70,7 +70,7 @@
          */                                     
         private $_CLASSES = array(
             "php.libs.DefaultPhp" => 1, 
-            "php.libs.DefaultWeb" => 1, 
+            "php.libs.Web" => 1, 
             "php.libs.ErrorHandler" => 1, 
             "php.libs.Log" => 1, 
             "php.libs.Database" => 1,

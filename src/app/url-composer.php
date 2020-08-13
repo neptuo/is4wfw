@@ -6,12 +6,12 @@
 	require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
   	require_once(APP_SCRIPTS_PHP_PATH . "libs/Database.class.php");
-  	require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultWeb.class.php");
+  	require_once(APP_SCRIPTS_PHP_PATH . "libs/Web.class.php");
   	require_once(APP_SCRIPTS_PHP_PATH . "libs/DefaultPhp.class.php");
 
 	if (array_key_exists('page-id', $_REQUEST) && array_key_exists('page-id', $_REQUEST)) {
 		$dbObject = new Database();
-		$webObject = new DefaultWeb();
+		$webObject = new Web();
 		$phpObject = new DefaultPhp();
 		
 		echo $webObject->composeUrl($_REQUEST['page-id'], $_REQUEST['lang-id'], true);
