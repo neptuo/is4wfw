@@ -37,7 +37,6 @@
       <attreq>required</attreq>
       <attcomment>Pole položek, ze kterého se má vzít první.</attcomment>
     </attribute>
-    <anyAttribute />
     <comment>
       Pro první položku z "items" vygeneruje obsah šablony.
     </comment>
@@ -50,7 +49,6 @@
       <attreq>required</attreq>
       <attcomment>Pole položek, ze kterého se má vzít poslední.</attcomment>
     </attribute>
-    <anyAttribute />
     <comment>
       Pro poslední položku z "items" vygeneruje obsah šablony.
     </comment>
