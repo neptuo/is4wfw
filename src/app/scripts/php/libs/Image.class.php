@@ -25,7 +25,7 @@
 			return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(FileAdmin::$FileRightDesc, $objectId, $rightType));
 		}
 
-		private function renderImage($content, $image) {
+		private function renderImage($template, $image) {
 			if ($this->canUserFile($image['id'], WEB_R_READ)) {
 				$this->setFileId($image['id']);
 				$this->setFileUrl($image['url']);
@@ -41,7 +41,7 @@
 		}
 		
 		//C-tag
-		public function directoryList($content, $id, $pageIndex = false, $limit = false, $noDataMessage = false, $noDataImageId = false) {
+		public function directoryList($template, $id, $pageIndex = false, $limit = false, $noDataMessage = false, $noDataImageId = false) {
 			$images = parent::dao('File')->getImagesFromDirectory($id, $pageIndex, $limit);
 			$return = '';
 
@@ -49,7 +49,7 @@
 				if($noDataImageId != '') {
 					$image = parent::dao('File')->get($noDataImageId);
 					if (count($image) != 0) {
-						$return .= self::renderImage($content, $image);
+						$return .= $this->renderImage($template, $image);
 					} else {
 						$return .= $noDataMessage;
 					}
@@ -58,7 +58,7 @@
 				}
 			} else {
 				foreach($images as $image) {
-					$return .= self::renderImage($content, $image);
+					$return .= $this->renderImage($template, $image);
 				}
 			}
 
@@ -66,14 +66,14 @@
 		}
 		
 		//C-tag
-		public function file($content, $id, $noDataMessage = false) {
+		public function file($template, $id, $noDataMessage = false) {
 			$image = parent::dao('File')->get($id);
 			$return = '';
 
 			if(count($image) == 0) {
 				$return .= $noDataMessage;
 			} else {
-				$return .= self::renderImage($content, $image);
+				$return .= $this->renderImage($template, $image);
 			}
 
 			return $return;
@@ -90,7 +90,7 @@
 				$size = '&height='.$height;
 			}
 
-			return "~/file.php?rid=" .self::getFileId(). $size;
+			return "~/file.php?rid=" . $this->getFileId() . $size;
 		}
 
 		//C-Tag
@@ -113,7 +113,7 @@
 				$image = parent::dao('File')->get($fileId);
 				$url = "~/file.php?rid=" . $fileId;
 				$contentType = FileAdmin::$FileMimeTypes[$image['type']];
-				return self::web()->getFavicon($url, $contentType);
+				return $this->web()->getFavicon($url, $contentType);
 			}
 
 			return '';
