@@ -12,7 +12,7 @@
     <function>includeById</function>
     <attribute>
       <attname>id</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>number</atttype>
       <attcomment>ID šablony, která se má vložit.</attcomment>
     </attribute>
@@ -28,7 +28,7 @@
     <function>includeWithBodyById</function>
     <attribute>
       <attname>id</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>number</atttype>
       <attcomment>ID šablony, která se má vložit.</attcomment>
     </attribute>
@@ -52,7 +52,7 @@
     <function>declareInline</function>
     <attribute>
       <attname>identifier</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Unikátní identifikátor šablony. Přebíjí uložené šabloné v DB.</attcomment>
     </attribute>
@@ -84,7 +84,7 @@
     <attribute>
       <attname>id</attname>
       <atttype>number</atttype>
-      <attreq>required</attreq>
+      <required />
       <attcomment>ID šablony.</attcomment>
     </attribute>
     <features>

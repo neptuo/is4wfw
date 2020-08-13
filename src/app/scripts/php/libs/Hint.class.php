@@ -160,10 +160,10 @@
                                 $prefix = $rb->get('lib.prefix.no');
                             }
                             $required = null;
-                            if ($tag->attribute[$i]->attreq == 'required') {
+                            if (isset($tag->attribute[$i]->required)) {
                                 $required = $rb->get('lib.attreq.yes');
                                 $attributeName = '<strong>' . $attributeName . '</strong>';
-                            } else if ($tag->attribute[$i]->attreq == 'implied') {
+                            } else {
                                 $required = $rb->get('lib.attreq.no');
                             }
 
@@ -263,10 +263,10 @@
                                 $prefix = $rb->get('lib.prefix.no');
                             }
                             $required = null;
-                            if ($tag->attribute[$i]->attreq == 'required') {
+                            if (isset($tag->attribute[$i]->required)) {
                                 $required = $rb->get('lib.attreq.yes');
                                 $attributeName = '<strong>' . $attributeName . '</strong>';
-                            } else if ($tag->attribute[$i]->attreq == 'implied') {
+                            } else {
                                 $required = $rb->get('lib.attreq.no');
                             }
 
@@ -400,10 +400,10 @@
                                 $prefix = $rb->get('lib.prefix.no');
                             }
                             $required = null;
-                            if ($decorator->attribute[$i]->attreq == 'required') {
+                            if (isset($decorator->attribute[$i]->required)) {
                                 $required = $rb->get('lib.attreq.yes');
                                 $attributeName = '<strong>' . $attributeName . '</strong>';
-                            } else if ($decorator->attribute[$i]->attreq == 'implied') {
+                            } else {
                                 $required = $rb->get('lib.attreq.no');
                             }
 

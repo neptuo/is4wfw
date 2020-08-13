@@ -20,11 +20,9 @@
     <function>selectSeason</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výber sezóny.
@@ -35,11 +33,9 @@
     <function>selectTable</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výber tabluky.
@@ -50,11 +46,9 @@
     <function>selectTeam</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výber týmu.
@@ -65,11 +59,9 @@
     <function>selectProject</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výber projektu, ukládá se do property sport:projectId
@@ -80,15 +72,12 @@
     <function>showEditProjects</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis projektů.
@@ -99,11 +88,9 @@
     <function>showEditProjectForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace projektu
@@ -114,15 +101,12 @@
     <function>showEditSeasons</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis sezón.
@@ -133,11 +117,9 @@
     <function>showEditSeasonForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace sezóny.
@@ -148,15 +130,12 @@
     <function>showEditTeams</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis týmů.
@@ -167,11 +146,9 @@
     <function>showEditTeamForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace týmu.
@@ -182,7 +159,6 @@
     <function>showCopyTeamTableStatsForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zkopíruje výsledky týmu z tabulky do jiné tabulky.
@@ -193,15 +169,12 @@
     <function>showEditPlayers</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis hráčů.
@@ -212,11 +185,9 @@
     <function>showEditPlayerForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace hráče.
@@ -227,15 +198,12 @@
     <function>showEditTables</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis tabulek.
@@ -246,15 +214,12 @@
     <function>showEditRounds</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis kol.
@@ -265,11 +230,9 @@
     <function>showEditRoundForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace kola.
@@ -280,11 +243,9 @@
     <function>showEditTableForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace hráče.
@@ -295,15 +256,12 @@
     <function>showEditMatches</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis zápasů pro editaci.
@@ -314,11 +272,9 @@
     <function>showEditMatchForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace zápasu.
@@ -329,11 +285,9 @@
     <function>showEditStatsForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace statistik k zápasu.
@@ -344,15 +298,15 @@
     <function>showSeasons</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>sorting</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Výpis sezón, sorting má hodnotu DESC nebo ASC, "noDataMessage" je text vypsaný v případě žádných dat.
@@ -363,11 +317,10 @@
     <function>showSeason</function>
     <attribute>
       <attname>field</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis sezóny. "field" jedna z hodnot: row, i, id, start_year, end_year
@@ -378,27 +331,21 @@
     <function>showTable</function>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>tableId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>editable</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>thenByFix</attname>
-      <attreq>implied</attreq>
 	  <attdef>false</attdef>
     </attribute>
     <comment>
@@ -410,27 +357,24 @@
     <function>showTeams</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>teamId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sortBy</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sorting</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       List týmů ze sezóny. sortBy může být jeden z fieldů z sport:team field. sorting pak asc nebo desc.
@@ -441,15 +385,13 @@
     <function>showTeam</function>
     <attribute>
       <attname>field</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>teamId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis týmu. Atribut match se používá při zobrazení v zápase, kde nabývá hodnot "home" nebo "away"
@@ -460,35 +402,29 @@
     <function>showMatches</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>sorting</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>matchId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>round</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>teamId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>onlyPlayed</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>true</attdef>
       <attcomment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</attcomment>
@@ -496,7 +432,6 @@
     </attribute>
     <attribute>
       <attname>state</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</attcomment>
     </attribute>
@@ -509,19 +444,16 @@
     <function>showMatch</function>
     <attribute>
       <attname>field</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>matchId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>scope</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>errMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis zápasu. Atribut scope může mít hodnotu "session" pro políčko "round", jinak nemá vliv.
@@ -532,27 +464,24 @@
     <function>showRounds</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>sorting</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>teamId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>onlyPlayed</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>true</attdef>
       <attcomment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</attcomment>
@@ -560,21 +489,17 @@
     </attribute>
     <attribute>
       <attname>state</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</attcomment>
     </attribute>
     <attribute>
       <attname>startId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>maxId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>limit</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis kol, sorting má hodnotu DESC nebo ASC. startId je minimalni id kola, které bude vypsáno. maxId je nejvyšší id kola, které bude vypsáno.
@@ -585,12 +510,11 @@
     <function>showRound</function>
     <attribute>
       <attname>field</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>id, name, number, (row, i)</attcomment>
     </attribute>
     <attribute>
       <attname>roundId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Detail kola.
@@ -601,59 +525,48 @@
     <function>showPlayers</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>sorting</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>sortBy</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>playerId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>tableId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>teamId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>fromMatchId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>only</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>scope</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showGolmans</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>limit</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>offset</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis hráčů, sorting má hodnotu DESC nebo ASC, sortBy je název položky, 
@@ -671,27 +584,22 @@
     <function>showPlayer</function>
     <attribute>
       <attname>field</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>playerId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>tableId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>teamId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>errMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis detailu hráče.
@@ -702,47 +610,38 @@
     <function>showPlayersNG</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>tableId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>matchId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>playerId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>teamId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>includeOnLoan</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>positions</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sortBy</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sorting</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Players NG
@@ -753,11 +652,10 @@
     <function>showPlayerNG</function>
     <attribute>
       <attname>field</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>playerId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Player NG
@@ -768,47 +666,39 @@
     <function>showPlayersStatsNG</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>seasonId</attname>
-      <attreq>impled</attreq>
     </attribute>
     <attribute>
       <attname>tableId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>playerId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>matchId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sortBy</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sorting</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>positions</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>partWhere</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Players Stats NG
@@ -819,7 +709,7 @@
     <function>showPlayerStatsNG</function>
     <attribute>
       <attname>field</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Player Stats NG
@@ -830,15 +720,12 @@
     <function>showPlayerSearchForm</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí vyhledávací formulář pro hráče, aplikuje se na sport:editPlayers, sport:players.

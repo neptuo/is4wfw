@@ -14,12 +14,12 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název proměnné, která se má nastavit.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Nová hodnota proměnné.</attcomment>
     </attribute>
     <comment>

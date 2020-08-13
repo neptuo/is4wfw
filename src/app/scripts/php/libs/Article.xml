@@ -13,60 +13,47 @@
     <function>showLine</function>
     <attribute>
       <attname>lineId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>template</attname>
-      <attreq>implied</attreq>
       <obsolete>Použijte 'templateId'.</obsolete>
     </attribute>
     <attribute>
       <attname>templateId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>pageLangId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>articleLangId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>method</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sortBy</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sort</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>limit</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>visible</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>labelIds</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>pageable</attname>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
     </attribute>
     <comment>
@@ -83,23 +70,19 @@
     <function>showRssLine</function>
     <attribute>
       <attname>lineId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>articleLangId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>pageLangId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>method</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí řadu článků jako RSS dokument.
@@ -110,41 +93,32 @@
     <function>showDetail</function>
     <attribute>
       <attname>template</attname>
-      <attreq>implied</attreq>
       <obsolete>Použijte 'templateId'.</obsolete>
     </attribute>
     <attribute>
       <attname>templateId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>articleId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>articleLangId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>defaultArticleId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showError</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>lineId</attname>
-      <attreq>implied</attreq>
       <attdef>0</attdef>
     </attribute>
     <attribute>
       <attname>nextLinkText</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>prevLinkText</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí detail článku do templatu (atribut template, templateId). Parametr 'articleId' může být také zadán jako
@@ -157,32 +131,25 @@
     <function>showDetailFullTag</function>
     <attribute>
       <attname>id</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>articleLangId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>defaultArticleId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showError</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>lineId</attname>
-      <attreq>implied</attreq>
       <attdef>0</attdef>
     </attribute>
     <attribute>
       <attname>nextLinkText</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>prevLinkText</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí detail článku dle obsahu svého těla. Parametr 'id' může být také zadán jako
@@ -195,35 +162,28 @@
     <function>showLabels</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>articleId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>lineId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>languageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sortBy</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>sort</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>limit</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí seznam štítků, pokud je vyplněno lineId nebo articleId, pak jen štítky vstahující se ke článku nebo řadě.
@@ -236,11 +196,10 @@
     <function>showLabel</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>labelId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí fíld štítku. Type může být: name, url, a id.
@@ -260,36 +219,28 @@
     <function>showManagement</function>
     <attribute>
       <attname>lineId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>detailPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>method</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>newArticleButton</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>labelFilter</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>pageable</attname>
-      <attreq>implied</attreq>
 	    <attdef>false</attdef>
     </attribute>
     <attribute>
       <attname>customFormId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Správa článků. Argument 'lineId' může být předán přes _REQUEST['line-id'] nebo _SESSION['article-line-id'].
@@ -304,23 +255,18 @@
     <function>createArticle</function>
     <attribute>
       <attname>lineId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>detailPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>method</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showError</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Form pro vytvoření nového článku.
@@ -331,19 +277,15 @@
     <function>setLine</function>
     <attribute>
       <attname>method</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>hideWhenOnlyOne</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showError</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro nastavení line-id. Argument 'method' (get | post | session) určuje
@@ -357,19 +299,15 @@
     <function>showLines</function>
     <attribute>
       <attname>editable</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>detailPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>newLineButton</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vypíše všechny řady článků. Pokud je 'editable' "true", pak se zobrazí editační formuláře. 
@@ -380,7 +318,6 @@
     <function>showEditLabels</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí seznam štítků
@@ -391,7 +328,6 @@
     <function>showEditLabelForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci štítku
@@ -402,11 +338,9 @@
     <function>createLine</function>
     <attribute>
       <attname>detailPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro přidání řady článků. 
@@ -417,31 +351,24 @@
     <function>showEditForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>submitPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>backPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>lineId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>customFormId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>customFormTemplateId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>supportedLanguageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci článku. 
@@ -460,11 +387,9 @@
     <function>showEditLineForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>submitPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci řady článků. 
@@ -482,11 +407,9 @@
     <function>showDate</function>
     <attribute>
       <attname>format</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>type</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí datum. "format" je formát. Pokud je "type" = "datetime", vypise field "datetime", tedy nastavitelne datum
@@ -497,7 +420,6 @@
     <function>showTime</function>
     <attribute>
       <attname>format</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí čas. "format" je formát.

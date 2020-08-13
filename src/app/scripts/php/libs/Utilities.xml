@@ -13,82 +13,69 @@
     <lookless>true</lookless>
     <attribute>
       <attname>output</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název property z této knihovny, do níž bude uložen výstup.</attcomment>
     </attribute>
     <attribute>
       <attname>value1</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>První hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value2</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Druhá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value3</attname>
-      <attreq>implied</attreq>
       <attcomment>Třetí hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value4</attname>
-      <attreq>implied</attreq>
       <attcomment>Čtvrtá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value5</attname>
-      <attreq>implied</attreq>
       <attcomment>Pátá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value6</attname>
-      <attreq>implied</attreq>
       <attcomment>Šestá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value7</attname>
-      <attreq>implied</attreq>
       <attcomment>Sedmá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value8</attname>
-      <attreq>implied</attreq>
       <attcomment>Osmá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value9</attname>
-      <attreq>implied</attreq>
       <attcomment>Devátá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value10</attname>
-      <attreq>implied</attreq>
       <attcomment>Desátá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value11</attname>
-      <attreq>implied</attreq>
       <attcomment>Jedenáctá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value12</attname>
-      <attreq>implied</attreq>
       <attcomment>Dvanáctá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value13</attname>
-      <attreq>implied</attreq>
       <attcomment>Třináctá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value14</attname>
-      <attreq>implied</attreq>
       <attcomment>Čtrnáctá hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value15</attname>
-      <attreq>implied</attreq>
       <attcomment>Pátnáctá hodnota.</attcomment>
     </attribute>
     <comment>Spojí hodnoty všech atributů 'value1-5' do jednoho řetězce a tuto hodnotu nastaví do proměnné 'output' v této knihovně.</comment>
@@ -99,12 +86,12 @@
     <lookless>true</lookless>
     <attribute>
       <attname>output</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název property z této knihovny, do níž bude uložen výstup.</attcomment>
     </attribute>
     <attribute>
       <attname>key</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <prefix />
       <attcomment>Klíč hodnota, které budou předány jako položky nově vytvořené položce v hlavním poli.</attcomment>
@@ -117,12 +104,12 @@
     <lookless>true</lookless>
     <attribute>
       <attname>output</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název property z této knihovny, do níž bude uložen výstup.</attcomment>
     </attribute>
     <attribute>
       <attname>input</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Hodnota, v níž se mají nahradit nové řádky za "br".</attcomment>
     </attribute>
@@ -134,23 +121,22 @@
     <lookless>true</lookless>
     <attribute>
       <attname>output</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název property z této knihovny, do níž bude uložen výstup.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Hodnota k rozparsování.</attcomment>
     </attribute>
     <attribute>
       <attname>format</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>PHP formát string pro rozparsování "value".</attcomment>
     </attribute>
     <attribute>
       <attname>trimTime</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda se má vynulovat čas.</attcomment>
@@ -163,7 +149,7 @@
     <lookless>true</lookless>
     <attribute>
       <attname>output</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název property z této knihovny, která má být vymazána.</attcomment>
     </attribute>
     <comment>Smaže dříve vytvořenou propety.</comment>

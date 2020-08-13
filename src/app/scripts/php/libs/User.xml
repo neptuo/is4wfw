@@ -13,15 +13,12 @@
     <function>showUserManagement</function>
     <attribute>
       <attname>userId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>defaultMainGroupId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>propertiesUrl</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>URL na kterou má vést editace uživatelských vlastností. Pokud není vyplněna, tlačítko se nezobrazí.</attcomment>
     </attribute>
@@ -34,7 +31,6 @@
     <function>addNewGroup</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Přidání nové uživatelské skupiny.
@@ -45,7 +41,6 @@
     <function>deleteGroup</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Mazání uživatelských skupin.
@@ -56,7 +51,6 @@
     <function>editGroupPerms</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace práv skupiny.
@@ -67,7 +61,6 @@
     <function>showUserLog</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpisu logu uživatelů.
@@ -78,7 +71,6 @@
     <function>truncateUserLog</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Smaže log uživatelů.
@@ -89,15 +81,13 @@
     <function>registerUser</function>
     <attribute>
       <attname>groups</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>disableUser</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       "Registrační formulář", groups je čárkou oddělený seznam rolí (první se uloží jako uživatelova hlavní!).
@@ -115,13 +105,11 @@
     <function>listItems</function>
     <attribute>
       <attname>filter</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam filtračních parametrů.</attcomment>
     </attribute>
     <attribute>
       <attname>orderBy</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</attcomment>
     </attribute>
@@ -134,13 +122,11 @@
     <function>edit</function>
     <attribute>
       <attname>uid</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attcomment>Id uživatele, který se má editovat.</attcomment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Výchozí hodnoty fieldů při zakládání uživatele.</attcomment>
     </attribute>

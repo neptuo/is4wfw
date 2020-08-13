@@ -535,7 +535,7 @@
                     }
                     
                     $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
-                } else if (strtolower($att->attreq) == "required" && !$atts->HasAttributeModifyingDecorators) {
+                } else if (isset($att->required) && !$atts->HasAttributeModifyingDecorators) {
                     return $this->triggerFail("Missing required attribute '$att->attname' on tag '$nameForErrorReport'.");
                 } else {
                     $value = false;

@@ -13,7 +13,7 @@
     <attribute>
       <attname>a</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>b</attname>
@@ -28,7 +28,7 @@
     <attribute>
       <attname>attributeAsBody</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <features>
       <providesFullTagBody />
@@ -39,12 +39,11 @@
     <attribute>
       <attname>if</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>if-is</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
     </attribute>
     <features>
       <conditionsExecution />
@@ -55,7 +54,7 @@
     <attribute>
       <attname>cool</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <features>
       <conditionsExecution />
@@ -68,7 +67,7 @@
     <attribute>
       <attname>optionalBody</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <features>
       <conditionsExecution />

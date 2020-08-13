@@ -13,7 +13,6 @@
     <function>getInquiries</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí seznam anket k editaci
@@ -24,7 +23,6 @@
     <function>editInquiry</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí editaci ankety
@@ -35,7 +33,6 @@
     <function>getAnswers</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí seznam odpovědí k editaci
@@ -46,7 +43,6 @@
     <function>editAnswer</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí editaci odpovědí
@@ -58,15 +54,12 @@
     <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
     <attribute>
       <attname>label</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>label2</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí výběr aktuální ankety
@@ -78,7 +71,7 @@
     <function>renderView</function>
     <attribute>
       <attname>inquiryId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Zobrazí anketu

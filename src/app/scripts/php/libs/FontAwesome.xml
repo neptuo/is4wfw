@@ -18,20 +18,18 @@
     <attribute>
       <attname>name</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Identifikátor ikony (automaticky se přidá "fa-" prefix).</attcomment>
     </attribute>
     <attribute>
       <attname>prefix</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attdef>fa</attdef>
       <attcomment>Prefix / styl ikony (fa, fas, atd).</attcomment>
     </attribute>
     <attribute>
       <attname>tag</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attdef>span</attdef>
       <attcomment>HTML tag, který se má použít.</attcomment>
     </attribute>

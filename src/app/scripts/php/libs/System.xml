@@ -13,15 +13,12 @@
     <function>manageProperties</function>
     <attribute>
       <attname>userId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro nastavení uživatelsky závislých systémových proměnných.
@@ -33,11 +30,9 @@
     <function>manageNotes</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci uživatelských poznámek.
@@ -48,11 +43,9 @@
     <function>printNotes</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí uživatelské poznámky.
@@ -63,11 +56,9 @@
     <function>editAdminMenu</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí editaci Admin menu.
@@ -78,11 +69,10 @@
     <function>adminMenu</function>
     <attribute>
       <attname>url</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>classes</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí Admin menu.
@@ -100,11 +90,9 @@
     <function>editConnection</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí editaci připojení k db.
@@ -115,11 +103,9 @@
     <function>listCOnnections</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí výpis připojení k db.
@@ -130,12 +116,10 @@
     <function>manageRoleCache</function>
     <attribute>
       <attname>buttonOnly</attname>
-      <attreq>implied</attreq>
 	    <attdef>false</attdef>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
 	    <attdef>true</attdef>
     </attribute>
     <comment>
@@ -154,7 +138,6 @@
     <function>repositoryLink</function>
     <attribute>
       <attname>text</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>GitHub</attdef>
     </attribute>
@@ -167,7 +150,6 @@
     <function>repositoryIssueCreateLink</function>
     <attribute>
       <attname>text</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>Report</attdef>
     </attribute>

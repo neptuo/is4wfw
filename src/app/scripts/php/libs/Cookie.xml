@@ -14,45 +14,40 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název proměnné, která se má nastavit.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Nová hodnota proměnné.</attcomment>
     </attribute>
     <attribute>
       <attname>expire</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>0</attdef>
       <attcomment>Počet sekund, po jejichž vypršení sušenka expiruje. 0 reprezentuje session cookie.</attcomment>
     </attribute>
     <attribute>
       <attname>path</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>URL cesta, pro kterou má být sušenka platná (výchozí je "/").</attcomment>
     </attribute>
     <attribute>
       <attname>domain</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Doména, pro kterou má být sušenka platná (výchozí je "/").</attcomment>
     </attribute>
     <attribute>
       <attname>isSecure</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda se má sušenka posílat pouze po HTTPS.</attcomment>
     </attribute>
     <attribute>
       <attname>isHttpOnly</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda má být sušenka dostupná pro server (výchozí je false, tedy je dostupná i pro javascript).</attcomment>

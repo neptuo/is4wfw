@@ -15,11 +15,10 @@
     <function>fetch</function>
     <attribute>
       <attname>query</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>template</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrátí data vrácená databází po provedení dotazu zadaného v "query".
@@ -33,7 +32,7 @@
     <function>useConnection</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Pokusí se použít spojení do databáze pro zadaný název. Slouží pro obsah 

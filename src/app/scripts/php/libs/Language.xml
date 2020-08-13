@@ -12,14 +12,12 @@
     <function>listItems</function>
     <attribute>
       <attname>filter</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <prefix />
       <attcomment>Filtry, kterým data musí vyhovovat.</attcomment>
     </attribute>
     <attribute>
       <attname>orderBy</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</attcomment>
     </attribute>
@@ -32,7 +30,6 @@
     <function>form</function>
     <attribute>
       <attname>id</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>0</attdef>
       <attcomment>Id záznamu k editaci. Pokud je 0 (nebo nevyplněno), pak se vytváří nový záznam.</attcomment>
@@ -47,7 +44,7 @@
     <lookless>true</lookless>
     <attribute>
       <attname>id</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>number</atttype>
       <attdef>0</attdef>
       <attcomment>Id záznamu, který se má smazat.</attcomment>

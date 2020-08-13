@@ -14,7 +14,7 @@
     <function>initLogin</function>
     <attribute>
       <attname>group</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Inicializuje login.
@@ -25,19 +25,17 @@
     <function>showLoginForm</function>
     <attribute>
       <attname>group</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>autoLoginUserName</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>autoLoginPassword</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro přihlášení a po jeho odeslání se pokusí uživatele 
@@ -51,19 +49,19 @@
     <lookless>true</lookless>
     <attribute>
       <attname>group</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název skupiny, pro kterou se má přihlášení provést.</attcomment>
     </attribute>
     <attribute>
       <attname>username</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Uživatelské jméno.</attcomment>
     </attribute>
     <attribute>
       <attname>password</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Heslo.</attcomment>
     </attribute>
@@ -77,11 +75,11 @@
     <function>showLogoutForm</function>
     <attribute>
       <attname>group</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Zobrazí formulář pro ohlášení uživatele ze skupin 'group'. Dále také kontroluje zda přihlášení uživatele
@@ -94,7 +92,7 @@
     <lookless>true</lookless>
     <attribute>
       <attname>group</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název skupiny, pro kterou se má odhlášení provést.</attcomment>
     </attribute>
     <comment>
@@ -108,7 +106,7 @@
     <lookless>true</lookless>
     <attribute>
       <attname>group</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název skupiny, pro kterou se má obnovení provést.</attcomment>
     </attribute>
     <comment>
@@ -122,7 +120,6 @@
     <attribute>
       <attname>field</attname>
       <attype>string</attype>
-      <attreq>implied</attreq>
       <attcomment>Umožňuje vypsat jen jeden field z infomací o uživateli ("name", "surname", group", "username", "login" - username + domain)</attcomment>
     </attribute>
     <comment>
@@ -134,7 +131,7 @@
     <function>redirectWhenLogged</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Přesměruje užívatele pokud je přihlášen na stránku "pageId".
@@ -145,7 +142,7 @@
     <function>redirectWhenNotLogged</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Přesměruje užívatele pokud není přihlášen na stránku "pageId".
@@ -156,19 +153,16 @@
     <function>authorized</function>
     <attribute>
       <attname>all</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Seznam (čárkou oddělený) skupin, ve kterých musí uživatel být, aby bylo zobrazeno tělo tagu.</attcomment>
     </attribute>
     <attribute>
       <attname>any</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Seznam (čárkou oddělený) skupin, z nichž alespoň v jedné musí uživatel být, aby bylo zobrazeno tělo tagu.</attcomment>
     </attribute>
     <attribute>
       <attname>none</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Seznam (čárkou oddělený) skupin, z nichž v žádné uživatel nesmí být, aby bylo zobrazeno tělo tagu.</attcomment>
     </attribute>

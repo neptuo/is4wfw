@@ -13,12 +13,10 @@
     <function>showEditPage</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
       <attdef>0</attdef>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
       <attdef>0</attdef>
     </attribute>
     <comment>
@@ -30,7 +28,6 @@
     <function>showPages</function>
     <attribute>
       <attname>editable</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí kompletní administrační výpis stránek. Navazující prvek pro editaci je <strong>showEditPage</strong>.
@@ -41,7 +38,6 @@
     <function>managePageProperties</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
       <attdef>true</attdef>
     </attribute>
     <comment>
@@ -53,7 +49,6 @@
     <function>showPageFiles</function>
     <attribute>
       <attname>editable</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí kompletní administrační výpis souborů .Navazující prvek pro editaci je <strong>showEditPage</strong>.
@@ -99,7 +94,6 @@
     <function>showLanguages</function>
     <attribute>
       <attname>editable</attname>
-      <attreq>implied</attreq>
     </attribute>
     <obsolete>Nahrazeno knihovnou "language".</obsolete>
     <comment>
@@ -111,15 +105,12 @@
     <function>showTemplates</function>
     <attribute>
       <attname>detailPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showError</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí výpis templatů.
@@ -130,15 +121,12 @@
     <function>showEditTemplateForm</function>
     <attribute>
       <attname>submitPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showError</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí editaci jednotlivého templatu.
@@ -149,7 +137,6 @@
     <function>showEmbeddedResources</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí výpis "EmbeddedResource"
@@ -160,7 +147,6 @@
     <function>showEditEmbeddedResourceFrom</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí editaci "EmbeddedResource"
@@ -171,7 +157,6 @@
     <function>showWebForwards</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí výpis "WebForwards"
@@ -182,7 +167,6 @@
     <function>showEditWebForwardFrom</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí editaci "WebForward"
@@ -194,11 +178,11 @@
     <lookless>true</lookless>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>languageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <anyAttribute />
     <comment>
@@ -213,15 +197,12 @@
     <function>getPageList</function>
     <attribute>
       <attname>webProjectId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>languageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <anyAttribute />
     <comment>
@@ -237,7 +218,7 @@
     <function>getPageValue</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
   </tag>
 </taglib>

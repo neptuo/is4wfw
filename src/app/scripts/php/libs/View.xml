@@ -13,7 +13,7 @@
     <function>processView</function>
     <attribute>
       <attname>path</attname>
-      <attreq>required</attreq>
+      <required />
       <obsolete>Nedělá nic. Nikdy nedělal.</obsolete>
     </attribute>
     <comment>
@@ -32,7 +32,7 @@
     <function>useTemplate</function>
     <attribute>
       <attname>src</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Šablona.
@@ -50,11 +50,11 @@
     <function>addHeader</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Přidá hlavičku.
@@ -65,11 +65,11 @@
     <function>addResource</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>src</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Přidá javascript/styl.
@@ -80,7 +80,7 @@
     <function>setTitle</function>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Nastaví titulek.
@@ -91,11 +91,9 @@
     <function>showPanel</function>
     <attribute>
       <attname>id</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>class</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Panel
@@ -106,7 +104,7 @@
     <attribute>
       <attname>src</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Virtuální cesta k šabloně.</attcomment>
     </attribute>
     <features>

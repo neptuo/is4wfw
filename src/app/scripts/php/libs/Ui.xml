@@ -12,7 +12,7 @@
     <function>forEachListModel</function>
     <attribute>
       <attname>items</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Pole položek, které se mají enumerovat.</attcomment>
     </attribute>
     <anyAttribute />
@@ -33,7 +33,7 @@
     <function>firstListModel</function>
     <attribute>
       <attname>items</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Pole položek, ze kterého se má vzít první.</attcomment>
     </attribute>
     <comment>
@@ -45,7 +45,7 @@
     <function>lastListModel</function>
     <attribute>
       <attname>items</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Pole položek, ze kterého se má vzít poslední.</attcomment>
     </attribute>
     <comment>
@@ -57,7 +57,7 @@
     <function>anyListModel</function>
     <attribute>
       <attname>items</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Pole položek.</attcomment>
     </attribute>
     <comment>
@@ -69,7 +69,7 @@
     <function>emptyListModel</function>
     <attribute>
       <attname>items</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Pole položek.</attcomment>
     </attribute>
     <comment>
@@ -81,7 +81,7 @@
     <function>countListModelSelfClosing</function>
     <attribute>
       <attname>items</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Pole položek.</attcomment>
     </attribute>
     <comment>
@@ -93,7 +93,7 @@
     <function>countListModel</function>
     <attribute>
       <attname>items</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Pole položek.</attcomment>
     </attribute>
     <comment>
@@ -112,18 +112,16 @@
     <function>grid</function>
     <attribute>
       <attname>items</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Pole položek.</attcomment>
     </attribute>
     <attribute>
       <attname>thead</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "thead".</attcomment>
     </attribute>
     <attribute>
       <attname>tbody</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "tbody".</attcomment>
     </attribute>
@@ -139,23 +137,19 @@
     <function>gridColumn</function>
     <attribute>
       <attname>header</attname>
-      <attreq>implied</attreq>
       <attcomment>Nadpis sloupce v gridu.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>implied</attreq>
       <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
     </attribute>
     <attribute>
       <attname>th</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "th".</attcomment>
     </attribute>
     <attribute>
       <attname>td</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "td".</attcomment>
     </attribute>
@@ -168,37 +162,31 @@
     <function>gridColumnBoolean</function>
     <attribute>
       <attname>header</attname>
-      <attreq>implied</attreq>
       <attcomment>Nadpis sloupce v gridu.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>implied</attreq>
       <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
     </attribute>
     <attribute>
       <attname>trueText</attname>
-      <attreq>implied</attreq>
       <attcomment>Hodnota text sloupce, pokud je "value" true.</attcomment>
       <atttype>string</atttype>
       <attdef>Yes</attdef>
     </attribute>
     <attribute>
       <attname>falseText</attname>
-      <attreq>implied</attreq>
       <attcomment>Hodnota text sloupce, pokud je "value" false.</attcomment>
       <atttype>string</atttype>
       <attdef></attdef>
     </attribute>
     <attribute>
       <attname>th</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "th".</attcomment>
     </attribute>
     <attribute>
       <attname>td</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "td".</attcomment>
     </attribute>
@@ -211,29 +199,25 @@
     <function>gridColumnDateTime</function>
     <attribute>
       <attname>header</attname>
-      <attreq>implied</attreq>
       <attcomment>Nadpis sloupce v gridu.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>implied</attreq>
       <attcomment>Hodnota sloupce v gridu (typicky custom property).</attcomment>
     </attribute>
     <attribute>
       <attname>format</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
       <atttype>string</atttype>
     </attribute>
     <attribute>
       <attname>th</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "th".</attcomment>
     </attribute>
     <attribute>
       <attname>td</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "td".</attcomment>
     </attribute>
@@ -246,18 +230,15 @@
     <function>gridColumnTemplate</function>
     <attribute>
       <attname>header</attname>
-      <attreq>implied</attreq>
       <attcomment>Nadpis sloupce v gridu.</attcomment>
     </attribute>
     <attribute>
       <attname>th</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "th".</attcomment>
     </attribute>
     <attribute>
       <attname>td</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Seznam atributů pro "td".</attcomment>
     </attribute>
@@ -270,14 +251,12 @@
     <function>form</function>
     <attribute>
       <attname>method</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>POST</attdef>
       <attcomment>HTTP metoda, kterou se má formář odeslat.</attcomment>
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
       <attcomment>URL, na kterou se má přesměrovat při odeslání formuláře.</attcomment>
     </attribute>
     <anyAttribute>
@@ -293,7 +272,6 @@
     <function>filter</function>
     <attribute>
       <attname>session</attname>
-      <attreq>implied</attreq>
       <attcomment>Čárkou oddělený seznam parametrů, které mají jít z/do session místo z/do QueryString.</attcomment>
     </attribute>
     <anyAttribute />
@@ -307,34 +285,32 @@
     <function>dropdownlist</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, který se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>-1</attdef>
       <attcomment>Index, pokud je "name" typu pole.</attcomment>
     </attribute>
     <attribute>
       <attname>source</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</attcomment>
     </attribute>
     <attribute>
       <attname>display</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název sloupce, který se má zobrazit.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název název sloupce, který se má použit jako hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>emptyText</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Pokud je zadán, obsahuje hodnotu pro nevyplněnou položku.</attcomment>
     </attribute>
@@ -349,27 +325,26 @@
     <function>checkboxlist</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, který se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>source</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</attcomment>
     </attribute>
     <attribute>
       <attname>display</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název sloupce, který se má zobrazit.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název název sloupce, který se má použit jako hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>repeat</attname>
-      <attreq>implied</attreq>
       <attdef>vertical</attdef>
       <attcomment>Směr, jakým se mají checkboxy opakovat ("horizontal" nebo "vertical").</attcomment>
     </attribute>
@@ -384,19 +359,17 @@
     <function>textbox</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>-1</attdef>
       <attcomment>Index, pokud je "name" typu pole.</attcomment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attreq>implied</attreq>
       <attcomment>Výchozí hodnota.</attcomment>
     </attribute>
     <anyAttribute />
@@ -410,19 +383,17 @@
     <function>passwordbox</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>-1</attdef>
       <attcomment>Index, pokud je "name" typu pole.</attcomment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attreq>implied</attreq>
       <attcomment>Výchozí hodnota.</attcomment>
     </attribute>
     <anyAttribute />
@@ -436,19 +407,17 @@
     <function>textarea</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>-1</attdef>
       <attcomment>Index, pokud je "name" typu pole.</attcomment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attreq>implied</attreq>
       <attcomment>Výchozí hodnota.</attcomment>
     </attribute>
     <anyAttribute />
@@ -462,19 +431,17 @@
     <function>checkbox</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>-1</attdef>
       <attcomment>Index, pokud je "name" typu pole.</attcomment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Výchozí hodnota.</attcomment>
@@ -490,12 +457,11 @@
     <function>filebox</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, která se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>isMulti</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda se umožňuje výběr více souborů najednou.</attcomment>
@@ -511,12 +477,12 @@
     <function>defaultValue</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>format</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Formátovací řetězec, který se má použít pokud vnitřní objekt neposkytne hodnotu. Např.: "{id} - {name}".</attcomment>
     </attribute>
     <comment>
@@ -528,12 +494,12 @@
     <function>defaultValueWithoutEditor</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>format</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Formátovací řetězec, který se použije pro poskytnutí hodnoty. Např.: "{id} - {name}".</attcomment>
     </attribute>
     <comment>
@@ -545,12 +511,12 @@
     <function>constantValue</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Hodnota, která se použije při každém odeslání formuláře.</attcomment>
     </attribute>
     <comment>
@@ -562,24 +528,22 @@
     <function>dateTimeValue</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>-1</attdef>
       <attcomment>Index, pokud je "name" typu pole.</attcomment>
     </attribute>
     <attribute>
       <attname>format</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
     </attribute>
     <attribute>
       <attname>default</attname>
-      <attreq>implied</attreq>
       <attcomment>Výchozí hodnota.</attcomment>
     </attribute>
     <comment>
@@ -592,12 +556,12 @@
     <function>formatDateTime</function>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Hodnota časového razítka.</attcomment>
     </attribute>
     <attribute>
       <attname>format</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Formátovací řetězec pro datum (a čas).</attcomment>
     </attribute>
     <comment>
@@ -609,25 +573,22 @@
     <function>formatNumber</function>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>number</atttype>
       <attcomment>Číslo.</attcomment>
     </attribute>
     <attribute>
       <attname>thousandsSeparator</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Pokud je vyplněn, bude použit jako oddělovač tisíců.</attcomment>
     </attribute>
     <attribute>
       <attname>decimalsSeparator</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Pokud je vyplněn, bude použit jako oddělovač desetinných míst.</attcomment>
     </attribute>
     <attribute>
       <attname>decimals</attname>
-      <attreq>implied</attreq>
       <attcomment>Pokud je vyplněn, udává počet desetinných míst; nevyplněno znamená nechat původní.</attcomment>
     </attribute>
     <comment>
@@ -640,12 +601,11 @@
     <function>localizable</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu, do kterého se má vložit hodnota.</attcomment>
     </attribute>
     <attribute>
       <attname>langIds</attname>
-      <attreq>implied</attreq>
       <attcomment>Podmnožina jazyků, které se mají zobrazit.</attcomment>
     </attribute>
     <comment>

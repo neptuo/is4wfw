@@ -13,11 +13,9 @@
     <function>selectLanguage</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro výběr jazykové verze.
@@ -28,27 +26,25 @@
     <function>listPages</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>rootPageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>webProjectId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí všechny stránky, ke kterým má uživatel právo zápis.
@@ -59,15 +55,13 @@
     <function>searchFilter</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí filtr pro vyhledávání stránek
@@ -85,7 +79,6 @@
     <function>pageDetailAfterForm</function>
     <attribute>
       <attname>backPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Nastaví proměnné pro starý detail form podle requestu. Umístit před detail form.
@@ -96,19 +89,16 @@
     <function>pageName</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Název stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -120,19 +110,16 @@
     <function>pageUrl</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Url stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -144,19 +131,16 @@
     <function>pageId</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Id stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -168,19 +152,16 @@
     <function>pageKeywords</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Klíčová slova stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -192,23 +173,19 @@
     <function>pageTimestamp</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>format</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Čas změny stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -221,23 +198,19 @@
     <function>pageCachetime</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>verbous</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Doba cache stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -250,19 +223,16 @@
     <function>pageTagLibStart</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Tag Lib Start stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -274,19 +244,16 @@
     <function>pageTagLibEnd</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Tag Lib End stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -298,19 +265,16 @@
     <function>pageHead</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Hlavčka stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -322,19 +286,16 @@
     <function>pageContent</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Obsah stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -346,19 +307,16 @@
     <function>pageInTitle</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrátí zda je stránka v "title", pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -370,19 +328,16 @@
     <function>pageInMenu</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrátí zda je stránka v menu, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -394,19 +349,16 @@
     <function>pageIsVisible</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ignore</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrátí zda je stránka viditelná na webu, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -418,19 +370,16 @@
     <function>pageRightRead</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>verbous</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrátí práva pro čtení stránky, pokud je nastaven na "value", vrátí pouze id skupin.
@@ -443,19 +392,16 @@
     <function>pageRightWrite</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>verbous</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrátí práva pro zápis do stránky, pokud je nastaven na "value", vrátí pouze id skupin.
@@ -468,19 +414,16 @@
     <function>pageRightDelete</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>verbous</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrátí práva pro smazání stránky, pokud je nastaven na "value", vrátí pouze id skupin.
@@ -493,19 +436,18 @@
     <function>pageActionEdit</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>detailPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro odeslání žádosti na editaci stránky. "type" je "image" nebo "button".
@@ -516,15 +458,15 @@
     <function>pageActionDelete</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Zobrazí formulář pro odeslání žádosti na smazání stránky. "type" je "image" nebo "button".
@@ -535,19 +477,18 @@
     <function>pageActionAddsub</function>
     <attribute>
       <attname>parentPageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>detailPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí formulář pro odeslání žádosti na přidání pod stránky stránky. "type" je "image" nebo "button".

@@ -13,14 +13,12 @@
     <function>countAccess</function>
     <attribute>
       <attname>id</attname>
-      <attreq>implied</attreq>
       <atttype>text</atttype>
       <attdef>1</attdef>
       <attcomment>ID počítadla (max 15 znaků).</attcomment>
     </attribute>
     <attribute>
       <attname>every</attname>
-      <attreq>implied</attreq>
       <atttype>text</atttype>
       <attdef>day</attdef>
       <attcomment>Po jaké době má být znovu připočítán přístup z jedné ip, možné hodnoty ("every", "minute", "hour", "day", "week").</attcomment>
@@ -34,22 +32,18 @@
     <function>showTable</function>
     <attribute>
       <attname>template</attname>
-      <attreq>implied</attreq>
       <obsolete>Použijte 'templateId'.</obsolete>
     </attribute>
     <attribute>
       <attname>templateId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>id</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attcomment>Číselné ID počítadla.</attcomment>
     </attribute>
     <attribute>
       <attname>valueLength</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Počítá uživatelské přístupy.
@@ -62,17 +56,15 @@
     <function>redirectWhenTimeLimitExceeded</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>counterId</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attcomment>Číselné ID počítadla.</attcomment>
     </attribute>
     <attribute>
       <attname>every</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Přesměruje na pageId pokud vypršel časový limit v every.
@@ -83,17 +75,15 @@
     <function>redirectWhenTimeLimitNotExceeded</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>counterId</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attcomment>Číselné ID počítadla.</attcomment>
     </attribute>
     <attribute>
       <attname>every</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Přesměruje na pageId pokud nevypršel časový limit v every.

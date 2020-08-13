@@ -14,7 +14,7 @@
     <function>register</function>
     <attribute>
       <attname>tagPrefix</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>
         Prefix pod kterým bude objekt zaregistrován. 
@@ -23,7 +23,7 @@
     </attribute>
     <attribute>
       <attname>classPath</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>
         Jméno třídy. 
@@ -41,7 +41,7 @@
     <function>unregister</function>
     <attribute>
       <attname>tagPrefix</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Zruší zaregistrovaný objekt specifikovaný tagPrefixem. Defaultní objekty nelze zrušit!
@@ -53,7 +53,7 @@
     <obsolete>Eh...</obsolete>
     <attribute>
       <attname>allow</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Nastaví cachování v aplikaci.
@@ -64,11 +64,11 @@
     <function>usingObject</function>
     <attribute>
       <attname>prefix</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>class</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Zaregistruje tag lib, který je možný používat v těle tagu, za ukončovací značkou ho zase zruší.
@@ -79,7 +79,7 @@
     <attribute>
       <attname>attributes</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Jméno registrované sady atributů</attcomment>
     </attribute>
     <features>

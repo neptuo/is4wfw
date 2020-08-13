@@ -27,7 +27,6 @@
     <function>showOrder1</function>
     <attribute>
       <attname>detailPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis: Objednávkový formulář 1.
@@ -38,7 +37,6 @@
     <function>showOrder2</function>
     <attribute>
       <attname>detailPageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Výpis: Objednávkový formulář 2.

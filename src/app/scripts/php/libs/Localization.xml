@@ -13,7 +13,7 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název jazyku.</attcomment>
     </attribute>
@@ -27,13 +27,12 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název bundlu, který se má načíst.</attcomment>
     </attribute>
     <attribute>
       <attname>system</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>true</attdef>
       <attcomment>Zda se jedná o systémový bundle.</attcomment>
@@ -47,19 +46,18 @@
     <function>edit</function>
     <attribute>
       <attname>bundleName</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
     </attribute>
     <attribute>
       <attname>languageName</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
     </attribute>
     <attribute>
       <attname>filterKeyPrefix</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</attcomment>
     </attribute>
@@ -72,19 +70,18 @@
     <function>editFullTag</function>
     <attribute>
       <attname>bundleName</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
     </attribute>
     <attribute>
       <attname>languageName</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název uživatelského bundlu, který se má editovat.</attcomment>
     </attribute>
     <attribute>
       <attname>filterKeyPrefix</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</attcomment>
     </attribute>

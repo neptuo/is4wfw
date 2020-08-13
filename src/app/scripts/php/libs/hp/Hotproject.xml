@@ -13,7 +13,6 @@
     <function>showProjectionEdit</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí výpis projekcí.	
@@ -24,11 +23,9 @@
     <function>showProjectionForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showErrors</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace projekce.	
@@ -39,7 +36,7 @@
     <function>showProjections</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Výpis projekcí.	
@@ -50,7 +47,7 @@
     <function>showProjectionDetail</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Výpis časti detailu projekce, type může být (name | subname | value).	
@@ -61,7 +58,6 @@
     <function>showReferencenEdit</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí výpis referencí.	
@@ -72,11 +68,9 @@
     <function>showReferenceForm</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showErrors</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Editace reference.	
@@ -87,7 +81,7 @@
     <function>showReferences</function>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Výpis referencí.	
@@ -98,7 +92,7 @@
     <function>showreferenceDetail</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Výpis časti detailu reference, type může být (name | subname | type | type-name).	

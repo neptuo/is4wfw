@@ -13,11 +13,9 @@
     <function>listLogs</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí seznam logu.
@@ -28,11 +26,9 @@
     <function>showLog</function>
     <attribute>
       <attname>useFrames</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>showMsg</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí log.

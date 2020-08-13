@@ -12,7 +12,7 @@
     <function>analytics</function>
     <attribute>
       <attname>id</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Kód z Google Analytics (UA-...-..).</attcomment>
     </attribute>
     <comment>

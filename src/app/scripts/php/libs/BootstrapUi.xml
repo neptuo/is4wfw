@@ -108,14 +108,12 @@
     <attribute>
       <attname>color</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attdef>primary</attdef>
       <attcomment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark").</attcomment>
     </attribute>
     <attribute>
       <attname>isDismissible</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda má jít alert skrýt (tlačítkem "x").</attcomment>
     </attribute>
@@ -130,40 +128,35 @@
     <attribute>
       <attname>text</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Text tlačítka.</attcomment>
     </attribute>
     <attribute>
       <attname>color</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attdef>primary</attdef>
       <attcomment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark" nebo "link").</attcomment>
     </attribute>
     <attribute>
       <attname>isOutline</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda má jít o "outline" tlačítko.</attcomment>
     </attribute>
     <attribute>
       <attname>size</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attcomment>Velikost tlačítka ("large" / "lg" nebo "small" / "sm" nebo cokoli).</attcomment>
     </attribute>
     <attribute>
       <attname>isBlock</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda má jít o blokové tlačítko (na celou šířku rodiče).</attcomment>
     </attribute>
     <attribute>
       <attname>isActive</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda má jít o "zaškrtnuté" tlačítko.</attcomment>
     </attribute>
@@ -178,34 +171,29 @@
     <attribute>
       <attname>color</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attdef>primary</attdef>
       <attcomment>Barva ("primary", "secondary", "success", "danger", "warning", "info", "light", "dark" nebo "link").</attcomment>
     </attribute>
     <attribute>
       <attname>isOutline</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda má jít o "outline" tlačítko.</attcomment>
     </attribute>
     <attribute>
       <attname>size</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attcomment>Velikost tlačítka ("large" / "lg" nebo "small" / "sm" nebo cokoli).</attcomment>
     </attribute>
     <attribute>
       <attname>isBlock</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda má jít o blokové tlačítko (na celou šířku rodiče).</attcomment>
     </attribute>
     <attribute>
       <attname>isActive</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda má jít o "zaškrtnuté" tlačítko.</attcomment>
     </attribute>
@@ -254,20 +242,17 @@
     <attribute>
       <attname>tag</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attdef>ul</attdef>
       <attcomment>Název obalového tagu ("ul" nebo "nav").</attcomment>
     </attribute>
     <attribute>
       <attname>mode</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attcomment>Zda se má vykreslit jako obyčejná navigace nebo "pills" nebo "tabs".</attcomment>
     </attribute>
     <attribute>
       <attname>fill</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda se mají položky roztáhnout na celou šířku.</attcomment>
     </attribute>
@@ -284,26 +269,24 @@
     <attribute>
       <attname>text</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Popisek odkazu.</attcomment>
     </attribute>
     <attribute>
       <attname>url</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
       <attcomment>URL odkazu.</attcomment>
     </attribute>
     <attribute>
       <attname>isActive</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda se jedná o vybraný/aktivní položku.</attcomment>
     </attribute>
     <attribute>
       <attname>isDisabled</attname>
       <atttype>bool</atttype>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
       <attcomment>Zda má být položka zakázána.</attcomment>
     </attribute>
@@ -311,7 +294,6 @@
       <attname>a</attname>
       <prefix />
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attcomment>Seznam atributů předaných vnitřnímu "a".</attcomment>
     </attribute>
     <anyAttribute>
@@ -327,7 +309,7 @@
     <attribute>
       <attname>name</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu.</attcomment>
     </attribute>
     <comment>
@@ -340,13 +322,12 @@
     <attribute>
       <attname>name</attname>
       <atttype>string</atttype>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název fieldu.</attcomment>
     </attribute>
     <attribute>
       <attname>cssClass</attname>
       <atttype>string</atttype>
-      <attreq>implied</attreq>
       <attcomment>Výchozí css třída pro editační prvek.</attcomment>
     </attribute>
     <comment>

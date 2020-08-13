@@ -13,12 +13,12 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název (property), pod kterým má být URL dostupná.</attcomment>
     </attribute>
     <attribute>
       <attname>id</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>ID souboru, jehož URL se má složit.</attcomment>
     </attribute>
     <comment>

@@ -14,24 +14,22 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název proměnné, která se má nastavit.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Nová hodnota proměnné.</attcomment>
     </attribute>
     <attribute>
       <attname>scope</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>request</attdef>
       <attcomment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</attcomment>
     </attribute>
     <attribute>
       <attname>select</attname>
-      <attreq>implied</attreq>
       <attcomment>Pokud je "value" pole, pak použije hodnotu proměnné pro transformaci tohoto pole a z každé položky vybere daný klíč, výsledné pole pak nastaví jako hodnotu proměnné (obdoba LINQ select).</attcomment>
     </attribute>
     <comment>
@@ -44,12 +42,12 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název proměnné, jejíž scope se má nastavit.</attcomment>
     </attribute>
     <attribute>
       <attname>scope</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attdef>request</attdef>
       <attcomment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</attcomment>
@@ -64,7 +62,7 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název proměnné, která se má zrušit.</attcomment>
     </attribute>
     <comment>

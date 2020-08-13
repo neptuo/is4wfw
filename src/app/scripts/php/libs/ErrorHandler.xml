@@ -13,7 +13,7 @@
     <function>add</function>
     <attribute>
       <attname>msg</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Přidá eror do eror listu. Zpráva eror je zadána pro povinného atributu "msg".

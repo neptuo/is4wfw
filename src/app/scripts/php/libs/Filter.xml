@@ -13,13 +13,12 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název filtru. Pod tímto názvem je pak možné ho získat pomocí anyProperty.</attcomment>
     </attribute>
     <attribute>
       <attname>alias</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
     </attribute>
     <comment>Deklaruje filtru s názvem "name".</comment>
@@ -39,23 +38,23 @@
     <function>exists</function>
     <attribute>
       <attname>from</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název název tabulky, na kterou se exists vztahuje.</attcomment>
     </attribute>
     <attribute>
       <attname>alias</attname>
-      <attreq>requierd</attreq>
+      <required />
       <atttype>string</atttype>
     </attribute>
     <attribute>
       <attname>outerColumn</attname>
-      <attreq>requierd</attreq>
+      <required />
       <atttype>string</atttype>
     </attribute>
     <attribute>
       <attname>innerColumn</attname>
-      <attreq>requierd</attreq>
+      <required />
       <atttype>string</atttype>
     </attribute>
   </fulltag>
@@ -64,13 +63,12 @@
     <function>emptyValue</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
     </attribute>
     <attribute>
       <attname>not</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda se má podmínka negovat, tedy "nerovná se".</attcomment>
@@ -82,13 +80,12 @@
     <function>nullValue</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
     </attribute>
     <attribute>
       <attname>not</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda se má podmínka negovat, tedy "nerovná se".</attcomment>
@@ -100,18 +97,17 @@
     <function>equals</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Hodnota pro filtr.</attcomment>
     </attribute>
     <attribute>
       <attname>not</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda se má podmínka negovat, tedy "nerovná se".</attcomment>
@@ -122,18 +118,17 @@
     <function>in</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
     </attribute>
     <attribute>
       <attname>values</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Hodnoty pro filtr (string nebo pole).</attcomment>
     </attribute>
     <attribute>
       <attname>not</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda se má podmínka negovat, tedy "neobsahuje".</attcomment>
@@ -144,25 +139,22 @@
     <function>like</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
     </attribute>
     <attribute>
       <attname>startsWith</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Sloupec musí začínat textem.</attcomment>
     </attribute>
     <attribute>
       <attname>endsWith</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Sloupec musí končit textem.</attcomment>
     </attribute>
     <attribute>
       <attname>contains</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Sloupec musí končit textem.</attcomment>
     </attribute>
@@ -172,19 +164,18 @@
     <function>greater</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
     </attribute>
     <attribute>
       <attname>than</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Sloupec musí být větší než.</attcomment>
     </attribute>
     <attribute>
       <attname>orEqual</attname>
-      <attreq>impleid</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda stejná hodnota má být zahrnuta ve výsledku.</attcomment>
@@ -195,19 +186,18 @@
     <function>lower</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název sloupce, pro který bude filtr platit.</attcomment>
     </attribute>
     <attribute>
       <attname>than</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Sloupec musí být menší než.</attcomment>
     </attribute>
     <attribute>
       <attname>orEqual</attname>
-      <attreq>impleid</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Zda stejná hodnota má být zahrnuta ve výsledku.</attcomment>

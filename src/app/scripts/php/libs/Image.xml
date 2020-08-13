@@ -12,23 +12,19 @@
     <function>directoryList</function>
     <attribute>
       <attname>id</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageIndex</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>limit</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>noDataImageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí seznam obrázků ze složky "id" dle šablony ze svého těla.
@@ -41,11 +37,10 @@
     <function>file</function>
     <attribute>
       <attname>id</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>noDataMessage</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí obrázek podle "id" dle šablony ze svého těla.
@@ -56,11 +51,9 @@
     <function>imageUrl</function>
     <attribute>
       <attname>width</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>height</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrací URL pro obrázek uvnitř img:directory.
@@ -92,7 +85,7 @@
     <function>getFavicon</function>
     <attribute>
       <attname>fileId</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>number</atttype>
       <attcomment>ID obrázku.</attcomment>
     </attribute>

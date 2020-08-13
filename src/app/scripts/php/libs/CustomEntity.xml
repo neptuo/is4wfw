@@ -12,12 +12,11 @@
     <function>form</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
     </attribute>
     <attribute>
       <attname>deleteIfEmpty</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>
@@ -27,12 +26,10 @@
     </attribute>
     <attribute>
       <attname>langIds</attname>
-      <attreq>implied</attreq>
       <attcomment>Id jazyků, pro které mají zpracovávat lokalizované pole.</attcomment>
     </attribute>
     <attribute>
       <attname>key</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Primární klíče pro editaci záznamu. Klíčem je název sloupce.</attcomment>
     </attribute>
@@ -46,7 +43,7 @@
     <function>register</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název sloupce, který se má zaregistrovat do dotazu.</attcomment>
     </attribute>
     <comment>
@@ -59,17 +56,17 @@
     <function>emptyDirectory</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název sloupce, pro který se má vytvořit.</attcomment>
     </attribute>
     <attribute>
       <attname>parentDirId</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Id rodičovské složky, ve které má být vytvořena nová.</attcomment>
     </attribute>
     <attribute>
       <attname>nameFormat</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Formátovací řetězec pro název nové složky. Např.: "{id} - {name}".</attcomment>
     </attribute>
   </tag>
@@ -78,13 +75,12 @@
     <function>createIfEmpty</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název fieldu, který se má nastavovat.</attcomment>
     </attribute>
     <attribute>
       <attname>nameIndex</attname>
-      <attreq>implied</attreq>
       <atttype>number</atttype>
       <attdef>-1</attdef>
       <atttype>string</atttype>
@@ -92,31 +88,29 @@
     </attribute>
     <attribute>
       <attname>source</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název entity, ze které se mají čerpat data, nebo pole záznamů.</attcomment>
     </attribute>
     <attribute>
       <attname>keyColumn</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název sloupce, který identifikuje klíč připojovaného záznamu záznamu.</attcomment>
     </attribute>
     <attribute>
       <attname>valueColumn</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název sloupce, kam se uloží hodnota zadaná uživatelem.</attcomment>
     </attribute>
     <attribute>
       <attname>tableName</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Pokud je source polem, pak je tento atribut povinný a udává název tabulky, kam se záznam založit.</attcomment>
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <prefix />
       <attcomment>Seznam sloupců s dodatečnými hodnota pro založení záznamu.</attcomment>
@@ -130,18 +124,16 @@
     <function>getList</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název entity, která se má vypsat.</attcomment>
     </attribute>
     <attribute>
       <attname>filter</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Filtry, kterým data musí vyhovovat.</attcomment>
     </attribute>
     <attribute>
       <attname>orderBy</attname>
-      <attreq>implied</attreq>
       <prefix />
       <attcomment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</attcomment>
     </attribute>
@@ -156,7 +148,7 @@
     <lookless>true</lookless>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Název entity, pro kterou se má vygenerovat formulář.</attcomment>
     </attribute>
     <anyAttribute>

@@ -20,36 +20,29 @@
     <function>getMenu</function>
     <attribute>
       <attname>parentId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>inner</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>classes</attname>
-      <attreq>implied</attreq>
       <attcomment>Css třída přidaná divu pro každé menu (kořenový div a pro každé pod menu).</attcomment>
     </attribute>
     <attribute>
       <attname>rel</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>template</attname>
-      <attreq>implied</attreq>
       <obsolete>Již se nepoužívá (vnitřně není ani implementováno).</obsolete>
     </attribute>
     <attribute>
       <attname>copyParameters</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
     </attribute>
     <attribute>
       <attname>display</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>name</attdef>
       <attcomment>Vlastnost z "info", která se má použít jako text odkazu ("name" nebo "title").</attcomment>
@@ -64,19 +57,17 @@
     <function>getMenuWithTemplate</function>
     <attribute>
       <attname>parentId</attname>
-      <attreq>required</attreq>
+      <required />
       <attcomment>Id nadřazené stránky.</attcomment>
     </attribute>
     <attribute>
       <attname>display</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>name</attdef>
       <attcomment>Vlastnost z "info", která se má použít jako "display" field ("name" nebo "title").</attcomment>
     </attribute>
     <attribute>
       <attname>copyParameters</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
@@ -91,7 +82,7 @@
     <function>getCrumbMenu</function>
     <attribute>
       <attname>delimeter</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Vygeneruje drobečkovou nápovědu. Atribute 'delimenter' obsahuje znaky, 
@@ -103,11 +94,11 @@
     <function>cache</function>
     <attribute>
       <attname>allow</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>time</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Nastaví cachování v aplikaci.
@@ -118,23 +109,19 @@
     <function>includePage</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>languageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>notParseCTag</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>whenLogged</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>whenNotLogged</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vloží do stránky další stránku specifikovanou v "pageId". Pokud je nastaveno
@@ -149,19 +136,16 @@
     <obsolete>Použijte knihovnu "template".</obsolete>
     <attribute>
       <attname>templateId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>whenLogged</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>whenNotLogged</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>browser</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vloží do stránky template.  
@@ -172,15 +156,13 @@
     <function>getPageUrl</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>languageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>isAbsolute</attname>
-      <attreq>implied</attreq>
     </attribute>
     <anyAttribute />
     <comment>
@@ -196,39 +178,31 @@
     <function>makeAnchor</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>text</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>languageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>class</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>activeClass</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>id</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>target</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>rel</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>type</attname>
-      <attreq>implied</attreq>
     </attribute>
     <anyAttribute />
     <comment>
@@ -244,35 +218,28 @@
     <function>makeAnchorFullTag</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>languageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>class</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>activeClass</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>id</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>target</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>rel</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>type</attname>
-      <attreq>implied</attreq>
     </attribute>
     <anyAttribute />
     <comment>
@@ -295,11 +262,10 @@
     <function>getTextFile</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>fileId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Vrací 'text file' v binární podobě.
@@ -310,7 +276,6 @@
     <function>redirect</function>
     <attribute>
       <attname>path</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Přesměruje užívatele na externí odkaz.
@@ -321,31 +286,26 @@
     <function>redirectTo</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>langId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>browser</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>ip</attname>
-      <attreq>implied</attreq>
       <attcomment>Klientská IP adresa (seznam čárkou odělených).</attcomment>
     </attribute>
     <attribute>
       <attname>copyParameters</attname>
-      <attreq>implied</attreq>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <attcomment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</attcomment>
     </attribute>
     <attribute>
       <attname>param</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <prefix />
       <attcomment>Seznam parametrů (klíč=hodnota), které se mají přidat do URL. Mají přednost před hodnotami při "copyParameters".</attcomment>
@@ -364,11 +324,9 @@
     <function>getLanguages</function>
     <attribute>
       <attname>homePage</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>display</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>language</attdef>
       <attcomment>Název fieldu z jazyku, který se má použít pro zobrazení.</attcomment>
@@ -384,11 +342,10 @@
     <function>redirectToRightLangVersion</function>
     <attribute>
       <attname>default</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>pageId</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Přesměruje uživatele na jeho jazykovou verzi, pokud neexistuje použije tu 
@@ -400,11 +357,10 @@
     <function>makePair</function>
     <attribute>
       <attname>property</attname>
-      <attreq>requierd</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>scope</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Nastaví podle UID PROPERTY v příslušném SCOPE (get, post, session, request).
@@ -443,7 +399,7 @@
     <function>getYearsFrom</function>
     <attribute>
       <attname>year</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Zobrazí rozmezí zadaného roku a letošního roku.
@@ -461,7 +417,7 @@
     <function>getSystemPropertyValue</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Vrátí hodnotu systémové proměnné.
@@ -472,7 +428,7 @@
     <function>getProperty</function>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Vrátí hodnotu dané proměnné.
@@ -483,15 +439,15 @@
     <function>setProperty</function>
     <attribute>
       <attname>prefix</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>name</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Nastaví hodnotu dané proměnné.
@@ -502,11 +458,10 @@
     <function>getWebFrame</function>
     <attribute>
       <attname>title</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>open</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Zobrazí rámec jako je používaný v RS.
@@ -517,11 +472,9 @@
     <function>generateRandomNumber</function>
     <attribute>
       <attname>min</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>max</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Nastaví session hodnotu na náhodné číslo [mezi min a max pokud jsou zadané].
@@ -532,11 +485,11 @@
     <function>showStaticText</function>
     <attribute>
       <attname>value</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>lang</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Zobrazí text (value) pokud se jedná o danou jazykovou verzi (this->LanguageName == lang)
@@ -554,16 +507,14 @@
     <function>showWhenConditionIsSatified</function>
     <attribute>
       <attname>when</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <attribute>
       <attname>is</attname>
-      <attreq>implied</attreq>
       <attdef>true</attdef>
     </attribute>
     <attribute>
       <attname>isInverted</attname>
-      <attreq>implied</attreq>
       <attdef>false</attdef>
     </attribute>
     <comment>
@@ -577,7 +528,7 @@
     <function>switchCondition</function>
     <attribute>
       <attname>when</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Umožňuje v těle definovat několik příkazů web:cache, ze kterých je vybrán maximálně jeden, který odpovídá hodnotě atributu "when".
@@ -588,7 +539,6 @@
     <function>switchConditionCase</function>
     <attribute>
       <attname>is</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>x.x-def</attdef>
     </attribute>
@@ -601,7 +551,7 @@
     <function>setDoctype</function>
     <attribute>
       <attname>type</attname>
-      <attreq>required</attreq>
+      <required />
     </attribute>
     <comment>
       Nastaví doctype, který se pro stránku použije.
@@ -613,11 +563,9 @@
     <function>setFlushOptions</function>
     <attribute>
       <attname>template</attname>
-      <attreq>implied</attreq>
     </attribute>
     <attribute>
       <attname>contentType</attname>
-      <attreq>implied</attreq>
     </attribute>
     <comment>
       Nastaví vlastnosti výstupu.
@@ -630,13 +578,13 @@
     <function>getFavicon</function>
     <attribute>
       <attname>url</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Cesta k obrázku.</attcomment>
     </attribute>
     <attribute>
       <attname>contentType</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Content-type pro daný obrázek.</attcomment>
     </attribute>
@@ -651,7 +599,7 @@
     <lookless>true</lookless>
     <attribute>
       <attname>isEnabled</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>bool</atttype>
       <attcomment>Zda má být debug mód zapnutý nebo vypnutý.</attcomment>
     </attribute>

@@ -13,7 +13,7 @@
     <lookless>true</lookless>
     <attribute>
       <attname>message</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Hláška po úspěšném dokončení akce.</attcomment>
     </attribute>
@@ -26,13 +26,12 @@
     <function>deleteButton</function>
     <attribute>
       <attname>hiddenField</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název a hodnota hidden inputu, kterým se pozná odeslání formuláře.</attcomment>
     </attribute>
     <attribute>
       <attname>confirmValue</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Hodnota z mazaného objektu, která se doplní do potvrzovacího dialogu.</attcomment>
     </attribute>
@@ -48,26 +47,24 @@
     <function>newButton</function>
     <attribute>
       <attname>pageId</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Id stránky, kam má odkaz vést.</attcomment>
     </attribute>
     <attribute>
       <attname>text</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Text odkazu.</attcomment>
     </attribute>
     <attribute>
       <attname>paramName</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>id</attdef>
       <attcomment>Název id parametru, který bude mít hodnotu "new".</attcomment>
     </attribute>
     <attribute>
       <attname>param</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <prefix />
       <attcomment>Seznam parametrů předaných do odkazu.</attcomment>
@@ -81,34 +78,30 @@
     <function>saveButtons</function>
     <attribute>
       <attname>saveName</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attdef>save</attdef>
       <attcomment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</attcomment>
     </attribute>
     <attribute>
       <attname>saveParam</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <prefix />
       <attcomment>Seznam parametrů předaných při přesměrování pro "Save".</attcomment>
     </attribute>
     <attribute>
       <attname>closePageId</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Id stránky, kam má vést odkaz pro zavření.</attcomment>
     </attribute>
     <attribute>
       <attname>closeParam</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <prefix />
       <attcomment>Seznam parametrů, které se předají "Close" odkazu.</attcomment>
     </attribute>
     <attribute>
       <attname>message</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Temp message po úspěšném uložení.</attcomment>
     </attribute>
@@ -122,26 +115,24 @@
     <function>redirectAfterSave</function>
     <attribute>
       <attname>saveName</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</attcomment>
     </attribute>
     <attribute>
       <attname>saveParam</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <prefix />
       <attcomment>Seznam parametrů předaných při přesměrování pro "Save".</attcomment>
     </attribute>
     <attribute>
       <attname>closePageId</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Id stránky, kam má vést odkaz pro zavření.</attcomment>
     </attribute>
     <attribute>
       <attname>closeParam</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <prefix />
       <attcomment>Seznam parametrů, které se předají "Close" odkazu.</attcomment>
@@ -155,7 +146,7 @@
     <function>field</function>
     <attribute>
       <attname>label</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <prefix />
       <attcomment>Popisek (dvojtečka je přidána automaticky). Všechny prefix jsou použity jako HTML atributy elementu label.</attcomment>
@@ -171,7 +162,7 @@
     <function>edit</function>
     <attribute>
       <attname>id</attname>
-      <attreq>required</attreq>
+      <required />
       <atttype>string</atttype>
       <attcomment>Hodnota id, podle které se má rozhodovat.</attcomment>
     </attribute>
@@ -184,7 +175,6 @@
     <function>validation</function>
     <attribute>
       <attname>key</attname>
-      <attreq>implied</attreq>
       <atttype>string</atttype>
       <attcomment>Klíč, jejíž validační hlášky se mají zobrazit.</attcomment>
     </attribute>
