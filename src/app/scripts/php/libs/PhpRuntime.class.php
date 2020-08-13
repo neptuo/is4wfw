@@ -398,7 +398,7 @@
         public function isProperty($tagPrefix, $propName) {
             return $this->withXml($tagPrefix, function($xml) use ($propName) {
                 foreach ($xml->property as $prop) {
-                    if ($prop->propname == $propName) {
+                    if ($prop->name == $propName) {
                         return true;
                     }
                 }
@@ -730,7 +730,7 @@
         public function getFuncToProperty(string $tagPrefix, string $propName, string $use) : string {
             $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $propName, $use) {
                 foreach ($xml->property as $prop) {
-                    if ($prop->propname == $propName) {
+                    if ($prop->name == $propName) {
                         if (strtolower($use) == 'set') {
                             return (string)$prop->setfunction;
                         } elseif (strtolower($use) == 'get') {

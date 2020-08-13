@@ -846,7 +846,7 @@
     </comment>
   </tag>
   <property>
-  	<propname>projectId</propname>
+  	<name>projectId</name>
   	<setfunction>setProjectId</setfunction>
   	<getfunction>getProjectId</getfunction>
     <comment>
@@ -854,7 +854,7 @@
     </comment>
   </property>
   <property>
-  	<propname>seasonId</propname>
+  	<name>seasonId</name>
   	<setfunction>setSeasonId</setfunction>
   	<getfunction>getSeasonId</getfunction>
     <comment>
@@ -862,7 +862,7 @@
     </comment>
   </property>
   <property>
-  	<propname>teamId</propname>
+  	<name>teamId</name>
   	<setfunction>setTeamId</setfunction>
   	<getfunction>getTeamId</getfunction>
     <comment>
@@ -870,7 +870,7 @@
     </comment>
   </property>
   <property>
-  	<propname>homeTeamId</propname>
+  	<name>homeTeamId</name>
   	<setfunction>setHomeTeamId</setfunction>
   	<getfunction>getHomeTeamId</getfunction>
     <comment>
@@ -878,7 +878,7 @@
     </comment>
   </property>
   <property>
-  	<propname>awayTeamId</propname>
+  	<name>awayTeamId</name>
   	<setfunction>setAwayTeamId</setfunction>
   	<getfunction>getAwayTeamId</getfunction>
     <comment>
@@ -886,7 +886,7 @@
     </comment>
   </property>
   <property>
-  	<propname>playerId</propname>
+  	<name>playerId</name>
   	<setfunction>setPlayerId</setfunction>
   	<getfunction>getPlayerId</getfunction>
     <comment>
@@ -894,7 +894,7 @@
     </comment>
   </property>
   <property>
-  	<propname>matchId</propname>
+  	<name>matchId</name>
   	<setfunction>setMatchId</setfunction>
   	<getfunction>getMatchId</getfunction>
     <comment>
@@ -902,7 +902,7 @@
     </comment>
   </property>
   <property>
-  	<propname>roundId</propname>
+  	<name>roundId</name>
   	<setfunction>setRoundId</setfunction>
   	<getfunction>getRoundId</getfunction>
     <comment>
@@ -910,7 +910,7 @@
     </comment>
   </property>
   <property>
-  	<propname>projectUrl</propname>
+  	<name>projectUrl</name>
   	<setfunction>setProjectUrl</setfunction>
   	<getfunction>getProjectUrl</getfunction>
     <comment>
@@ -918,7 +918,7 @@
     </comment>
   </property>
   <property>
-  	<propname>seasonUrl</propname>
+  	<name>seasonUrl</name>
   	<setfunction>setseasonUrl</setfunction>
   	<getfunction>getseasonUrl</getfunction>
     <comment>
@@ -926,7 +926,7 @@
     </comment>
   </property>
   <property>
-  	<propname>teamUrl</propname>
+  	<name>teamUrl</name>
   	<setfunction>setteamUrl</setfunction>
   	<getfunction>getteamUrl</getfunction>
     <comment>
@@ -934,7 +934,7 @@
     </comment>
   </property>
   <property>
-  	<propname>playerUrl</propname>
+  	<name>playerUrl</name>
   	<setfunction>setplayerUrl</setfunction>
   	<getfunction>getplayerUrl</getfunction>
     <comment>

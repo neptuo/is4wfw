@@ -151,56 +151,56 @@
     </comment>
   </fulltag>
   <property>
-    <propname>list</propname>
+    <name>list</name>
     <getfunction>getListItems</getfunction>
     <comment>
       Vrací seznam uživatelů uvnitř "u:list".
     </comment>
   </property>
   <property>
-    <propname>uid</propname>
+    <name>uid</name>
     <getfunction>getListItemUid</getfunction>
     <comment>
       Vrací id aktuálního uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
-    <propname>name</propname>
+    <name>name</name>
     <getfunction>getListItemName</getfunction>
     <comment>
       Vrací jméno aktuálního uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
-    <propname>surname</propname>
+    <name>surname</name>
     <getfunction>getListItemSurname</getfunction>
     <comment>
       Vrací id přijmení uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
-    <propname>login</propname>
+    <name>login</name>
     <getfunction>getListItemLogin</getfunction>
     <comment>
       Vrací login aktuálního uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
-    <propname>enable</propname>
+    <name>enable</name>
     <getfunction>getListItemEnable</getfunction>
     <comment>
       Vrací true/false zda je aktuální uživatel uvnitř "u:list" povolený.
     </comment>
   </property>
   <property>
-    <propname>roleIds</propname>
+    <name>roleIds</name>
     <getfunction>getListItemRoleIds</getfunction>
     <comment>
       Vrací seznam id rolí aktuálního uživatel uvnitř "u:list".
     </comment>
   </property>
   <property>
-  	<propname>userId</propname>
+  	<name>userId</name>
   	<setfunction>setUserId</setfunction>
   	<getfunction>getUserId</getfunction>
     <comment>

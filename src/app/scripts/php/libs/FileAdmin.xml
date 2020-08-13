@@ -58,49 +58,49 @@
     </comment>
   </fulltag>
   <property>
-    <propname>browserList</propname>
+    <name>browserList</name>
     <getfunction>getFileBrowserListData</getfunction>
     <comment>
       Vrací list model uvnitř párového "fa:browser".
     </comment>
   </property>
   <property>
-    <propname>browserId</propname>
+    <name>browserId</name>
     <getfunction>getFileBrowserItemId</getfunction>
     <comment>
       Vrací id položky uvnitř párového "fa:browser".
     </comment>
   </property>
   <property>
-    <propname>browserName</propname>
+    <name>browserName</name>
     <getfunction>getFileBrowserItemName</getfunction>
     <comment>
       Vrací název položky uvnitř párového "fa:browser".
     </comment>
   </property>
   <property>
-    <propname>browserType</propname>
+    <name>browserType</name>
     <getfunction>getFileBrowserItemType</getfunction>
     <comment>
       Vrací typ (číselný) položky uvnitř párového "fa:browser".
     </comment>
   </property>
   <property>
-    <propname>browserExtension</propname>
+    <name>browserExtension</name>
     <getfunction>getFileBrowserItemExtension</getfunction>
     <comment>
       Vrací koncovku souboru uvnitř párového "fa:browser".
     </comment>
   </property>
   <property>
-    <propname>browserTitle</propname>
+    <name>browserTitle</name>
     <getfunction>getFileBrowserItemTitle</getfunction>
     <comment>
       Vrací popisek položky uvnitř párového "fa:browser".
     </comment>
   </property>
   <property>
-    <propname>browserTimestamp</propname>
+    <name>browserTimestamp</name>
     <getfunction>getFileBrowserItemTimestamp</getfunction>
     <comment>
       Vrací časové razítko poslední změny položky uvnitř párového "fa:browser".

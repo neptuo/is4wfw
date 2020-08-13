@@ -34,7 +34,7 @@
     </comment>
   </fulltag>
   <property>
-    <propname>listTables</propname>
+    <name>listTables</name>
     <getfunction>getListTables</getfunction>
     <comment>
       Vrací seznam tabulek uvnitř "ced:listTables".
@@ -53,7 +53,7 @@
     </comment>
   </fulltag>
   <property>
-    <propname>listTableColumns</propname>
+    <name>listTableColumns</name>
     <getfunction>getListTableColumns</getfunction>
     <comment>
       Vrací seznam tabulek uvnitř "ced:listTableColumns".
@@ -103,77 +103,77 @@
     </comment>
   </tag>
   <property>
-    <propname>tableColumnTypes</propname>
+    <name>tableColumnTypes</name>
     <getfunction>getTableColumnTypes</getfunction>
     <comment>
         Vrací pole podporovaných typů sloupců pro table / column creator ('key', 'name', 'db').
     </comment>
   </property>
   <property>
-    <propname>tableEngines</propname>
+    <name>tableEngines</name>
     <getfunction>getTableEngines</getfunction>
     <comment>
         Vrací pole podporovaných DB engine ('key', 'name').
     </comment>
   </property>
   <property>
-    <propname>tableName</propname>
+    <name>tableName</name>
     <getfunction>getTableName</getfunction>
     <comment>
         Vrací název aktuální tabulky při průchodu přes "ced:listTables".
     </comment>
   </property>
   <property>
-    <propname>tableDescription</propname>
+    <name>tableDescription</name>
     <getfunction>getTableDescription</getfunction>
     <comment>
         Vrací popisek aktuální tabulky při průchodu přes "ced:listTables".
     </comment>
   </property>
   <property>
-    <propname>tableAuditLog</propname>
+    <name>tableAuditLog</name>
     <getfunction>getTableAuditLog</getfunction>
     <comment>
       Vrací zda se generuje audit log pro aktuální tabulku při průchodu přes "ce:listTables".
     </comment>
   </property>
   <property>
-    <propname>tableColumnName</propname>
+    <name>tableColumnName</name>
     <getfunction>getTableColumnName</getfunction>
     <comment>
         Vrací název aktuálního sloupce při průchodu přes "ced:listTableColumns".
     </comment>
   </property>
   <property>
-    <propname>tableColumnType</propname>
+    <name>tableColumnType</name>
     <getfunction>getTableColumnType</getfunction>
     <comment>
         Vrací typ aktuálního sloupce při průchodu přes "ced:listTableColumns".
     </comment>
   </property>
   <property>
-    <propname>tableColumnPrimaryKey</propname>
+    <name>tableColumnPrimaryKey</name>
     <getfunction>getTableColumnPrimaryKey</getfunction>
     <comment>
         Vrací zda je primární klíčem aktuální sloupec při průchodu přes "ced:listTableColumns".
     </comment>
   </property>
   <property>
-    <propname>tableColumnRequired</propname>
+    <name>tableColumnRequired</name>
     <getfunction>getTableColumnRequired</getfunction>
     <comment>
         Vrací zda je povinný aktuální sloupec při průchodu přes "ced:listTableColumns".
     </comment>
   </property>
   <property>
-    <propname>tableLocalizationColumns</propname>
+    <name>tableLocalizationColumns</name>
     <getfunction>getTableLocalizationColumns</getfunction>
     <comment>
         Vrací seznam názvů sloupců, které je možné lokalizovat (uvnitř "ced:tableLocalizationEditor").
     </comment>
   </property>
   <property>
-    <propname>tableColumnUnique</propname>
+    <name>tableColumnUnique</name>
     <getfunction>getTableColumnUnique</getfunction>
     <comment>
         Vrací zda hodnoty aktuálního sloupce při průchodu přes "ce:listTableColumns" jsou unikátní.

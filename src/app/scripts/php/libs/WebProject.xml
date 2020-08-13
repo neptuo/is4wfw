@@ -58,7 +58,7 @@
     </comment>
   </tag>
   <property>
-  	<propname>selectedProject</propname>
+  	<name>selectedProject</name>
   	<setfunction>setSelectedProject</setfunction>
   	<getfunction>getSelectedProject</getfunction>
     <comment>

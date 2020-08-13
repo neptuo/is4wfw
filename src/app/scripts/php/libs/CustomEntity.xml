@@ -169,7 +169,7 @@
     </comment>
   </fulltag>
   <property>
-    <propname>list</propname>
+    <name>list</name>
     <getfunction>getListData</getfunction>
     <comment>
       Vrací list model uvnitř "ce:list".

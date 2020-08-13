@@ -178,14 +178,14 @@
     </comment>
   </fulltag>
   <property>
-  	<propname>loggedUserId</propname>
+  	<name>loggedUserId</name>
   	<getfunction>getUserId</getfunction>
     <comment>
       Vrací id aktuálního uživatele.
     </comment>
   </property>
   <property>
-  	<propname>isLogged</propname>
+  	<name>isLogged</name>
   	<getfunction>isLogged</getfunction>
     <comment>
       Vrací "true" pokud je uživatel přihlášen.

@@ -200,28 +200,28 @@
     </comment>
   </tag>
   <property>
-    <propname>edit</propname>
+    <name>edit</name>
     <getfunction>isEdit</getfunction>
     <comment>
       Vrací true/false pokud se nacházíme v editačním módu (nebo při založení objektu).
     </comment>
   </property>
   <property>
-    <propname>new</propname>
+    <name>new</name>
     <getfunction>isNew</getfunction>
     <comment>
       Vrací true/false pokud se nacházíme v módu pro založení objektu.
     </comment>
   </property>
   <property>
-    <propname>editId</propname>
+    <name>editId</name>
     <getfunction>getEditId</getfunction>
     <comment>
       Vrací id pro editační mód.
     </comment>
   </property>
   <property>
-    <propname>editTitle</propname>
+    <name>editTitle</name>
     <getfunction>getEditTitle</getfunction>
     <comment>
       Vrací titulek pro editační mód.

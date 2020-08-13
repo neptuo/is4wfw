@@ -102,28 +102,28 @@
   </tag>
   
   <property>
-  	<propname>name</propname>
+  	<name>name</name>
   	<getfunction>imageName</getfunction>
     <comment>
       Vrací název obrázku uvnitř img:directory.
     </comment>
   </property>
   <property>
-  	<propname>title</propname>
+  	<name>title</name>
   	<getfunction>imageTitle</getfunction>
     <comment>
       Vrací titulek obrázku uvnitř img:directory.
     </comment>
   </property>
   <property>
-  	<propname>type</propname>
+  	<name>type</name>
   	<getfunction>imageType</getfunction>
     <comment>
       Vrací číselný typ obrázku uvnitř img:directory.
     </comment>
   </property>
   <property>
-  	<propname>fileId</propname>
+  	<name>fileId</name>
   	<setfunction>setFileId</setfunction>
   	<getfunction>getFileId</getfunction>
     <comment>
@@ -131,7 +131,7 @@
     </comment>
   </property>
   <property>
-  	<propname>fileUrl</propname>
+  	<name>fileUrl</name>
   	<setfunction>setFileUrl</setfunction>
   	<getfunction>getFileUrl</getfunction>
     <comment>

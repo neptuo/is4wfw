@@ -86,7 +86,7 @@
   </tag>
   
   <property>
-  	<propname>currentId</propname>
+  	<name>currentId</name>
   	<setfunction>setCurrentInquiryId</setfunction>
   	<getfunction>getCurrentInquiryId</getfunction>
     <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
@@ -95,7 +95,7 @@
     </comment>
   </property>
   <property>
-  	<propname>currentId2</propname>
+  	<name>currentId2</name>
   	<setfunction>setCurrentInquiryId2</setfunction>
   	<getfunction>getCurrentInquiryId2</getfunction>
     <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>

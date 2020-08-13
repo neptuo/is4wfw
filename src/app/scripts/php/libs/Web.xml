@@ -666,14 +666,14 @@
     <comment>Zpracuje tělo, ale kompletně ignoruje jeho výstup.</comment>
   </fulltag>
   <property>
-  	<propname>currentPage</propname>
+  	<name>currentPage</name>
   	<getfunction>getCurrentPage</getfunction>
     <comment>
       Vrátí ID aktuální stránky. V průběhu renderování
     </comment>
   </property>
   <property>
-  	<propname>currentPageName</propname>
+  	<name>currentPageName</name>
   	<setfunction>setCurrentPageName</setfunction>
   	<getfunction>getCurrentPageName</getfunction>
     <comment>
@@ -681,7 +681,7 @@
     </comment>
   </property>
   <property>
-  	<propname>currentPageTitle</propname>
+  	<name>currentPageTitle</name>
   	<setfunction>setCurrentPageTitle</setfunction>
   	<getfunction>getCurrentPageTitle</getfunction>
     <comment>
@@ -689,7 +689,7 @@
     </comment>
   </property>
   <property>
-  	<propname>lastPageName</propname>
+  	<name>lastPageName</name>
   	<setfunction>setLastPageName</setfunction>
   	<getfunction>getLastPageName</getfunction>
     <comment>
@@ -697,7 +697,7 @@
     </comment>
   </property>
   <property>
-  	<propname>lastPageTitle</propname>
+  	<name>lastPageTitle</name>
   	<setfunction>setLastPageTitle</setfunction>
   	<getfunction>getLastPageTitle</getfunction>
     <comment>
@@ -705,7 +705,7 @@
     </comment>
   </property>
   <property>
-  	<propname>childPage</propname>
+  	<name>childPage</name>
   	<setfunction>setChildPage</setfunction>
   	<getfunction>getChildPage</getfunction>
     <comment>
@@ -713,7 +713,7 @@
     </comment>
   </property>
   <property>
-  	<propname>currentTime</propname>
+  	<name>currentTime</name>
   	<setfunction>setCurrentTime</setfunction>
   	<getfunction>getCurrentTime</getfunction>
     <comment>
@@ -721,14 +721,14 @@
     </comment>
   </property>
   <property>
-  	<propname>todayTimestamp</propname>
+  	<name>todayTimestamp</name>
   	<getfunction>getTodayTimestamp</getfunction>
     <comment>
       Vrátí timestamp pro půlnoc dnešního dne.
     </comment>
   </property>
   <property>
-  	<propname>randNum</propname>
+  	<name>randNum</name>
   	<setfunction>setRandomNumber</setfunction>
   	<getfunction>getRandomNumber</getfunction>
     <comment>
@@ -736,35 +736,35 @@
     </comment>
   </property>
   <property>
-  	<propname>currentHost</propname>
+  	<name>currentHost</name>
   	<getfunction>getHttpHost</getfunction>
     <comment>
       Vrácí doménu aktuálního requestu (hlavička host).
     </comment>
   </property>
   <property>
-  	<propname>currentPath</propname>
+  	<name>currentPath</name>
   	<getfunction>getRequestPath</getfunction>
     <comment>
       Vrácí path aktuálního requestu.
     </comment>
   </property>
   <property>
-  	<propname>currentProjectId</propname>
+  	<name>currentProjectId</name>
   	<getfunction>getProjectId</getfunction>
     <comment>
       Vrácí ID aktuálního projektu.
     </comment>
   </property>
   <property>
-  	<propname>currentLanguageId</propname>
+  	<name>currentLanguageId</name>
   	<getfunction>getLanguageId</getfunction>
     <comment>
       Vrácí ID jazyku aktuálně zpracovávané stránky/requestu.
     </comment>
   </property>
   <property>
-  	<propname>isInsideForm</propname>
+  	<name>isInsideForm</name>
   	<setfunction>setIsInsideForm</setfunction>
   	<getfunction>getIsInsideForm</getfunction>
     <comment>
@@ -772,49 +772,49 @@
     </comment>
   </property>
   <property>
-  	<propname>lastPageId</propname>
+  	<name>lastPageId</name>
   	<getfunction>getLastPageId</getfunction>
     <comment>
       Vrácí id aktuální stránky (té poslední pro aktuální request).
     </comment>
   </property>
   <property>
-  	<propname>debug</propname>
+  	<name>debug</name>
   	<getfunction>getDebugMode</getfunction>
     <comment>
       Vrací "true" pokud je zapnutý debug mód.
     </comment>
   </property>
   <property>
-  	<propname>menu</propname>
+  	<name>menu</name>
   	<getfunction>getMenuData</getfunction>
     <comment>
       Vrací list model uvnitř "web:menu".
     </comment>
   </property>
   <property>
-  	<propname>menuItemDisplay</propname>
+  	<name>menuItemDisplay</name>
   	<getfunction>getMenuItemDisplay</getfunction>
     <comment>
       Vrací "display" text pro položku uvnitř "web:menu".
     </comment>
   </property>
   <property>
-  	<propname>menuItemUrl</propname>
+  	<name>menuItemUrl</name>
   	<getfunction>getMenuItemUrl</getfunction>
     <comment>
       Vrací URL pro položku uvnitř "web:menu".
     </comment>
   </property>
   <property>
-  	<propname>menuItemActive</propname>
+  	<name>menuItemActive</name>
   	<getfunction>getMenuItemActive</getfunction>
     <comment>
       Vrací "true" pokud je položka uvnitř "web:menu" aktuální.
     </comment>
   </property>
   <property>
-  	<propname>menuItemIcon</propname>
+  	<name>menuItemIcon</name>
   	<getfunction>getMenuItemIcon</getfunction>
     <comment>
       Vrací ikonu pro položku uvnitř "web:menu".

@@ -65,7 +65,7 @@
     </comment>
   </tag>
   <property>
-  	<propname>classPath</propname>
+  	<name>classPath</name>
   	<setfunction>setPropClassPath</setfunction>
   	<getfunction>getPropClassPath</getfunction>
     <comment>

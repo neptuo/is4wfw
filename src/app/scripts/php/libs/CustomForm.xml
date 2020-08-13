@@ -441,7 +441,7 @@
     </comment>
   </tag>
   <property>
-  	<propname>rowId</propname>
+  	<name>rowId</name>
   	<setfunction>setRowId</setfunction>
   	<getfunction>getRowId</getfunction>
     <comment>
@@ -449,7 +449,7 @@
     </comment>
   </property>
   <property>
-  	<propname>custom</propname>
+  	<name>custom</name>
   	<setfunction>setCustom</setfunction>
   	<getfunction>getCustom</getfunction>
     <comment>
@@ -457,7 +457,7 @@
     </comment>
   </property>
   <property>
-  	<propname>customUrl</propname>
+  	<name>customUrl</name>
   	<setfunction>setCustomUrl</setfunction>
   	<getfunction>getCustomUrl</getfunction>
     <comment>

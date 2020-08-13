@@ -305,7 +305,7 @@
     </comment>
   </tag>
   <property>
-  	<propname>fileId</propname>
+  	<name>fileId</name>
   	<setfunction>setFileId</setfunction>
   	<getfunction>getFileId</getfunction>
     <comment>
@@ -313,7 +313,7 @@
     </comment>
   </property>
   <property>
-  	<propname>fileUrl</propname>
+  	<name>fileUrl</name>
   	<setfunction>setFileUrl</setfunction>
   	<getfunction>getFileUrl</getfunction>
     <comment>
@@ -321,7 +321,7 @@
     </comment>
   </property>
   <property>
-  	<propname>dirId</propname>
+  	<name>dirId</name>
   	<setfunction>setDirectoryId</setfunction>
   	<getfunction>getDirectoryId</getfunction>
     <comment>
@@ -329,7 +329,7 @@
     </comment>
   </property>
   <property>
-  	<propname>dirUrl</propname>
+  	<name>dirUrl</name>
   	<setfunction>setDirectoryIdFromUrl</setfunction>
   	<getfunction>getDirectoryUrl</getfunction>
     <comment>
@@ -337,7 +337,7 @@
     </comment>
   </property>
   <property>
-  	<propname>dirName</propname>
+  	<name>dirName</name>
   	<setfunction>setDirectoryName</setfunction>
   	<getfunction>getDirectoryName</getfunction>
     <comment>

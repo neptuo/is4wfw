@@ -54,14 +54,14 @@
     </comment>
   </fulltag>
   <property>
-    <propname>messageList</propname>
+    <name>messageList</name>
     <getfunction>getMessageList</getfunction>
     <comment>
         Vrací seznam zpráv uvnitř "val:message".
     </comment>
   </property>
   <property>
-    <propname>messageKey</propname>
+    <name>messageKey</name>
     <getfunction>getMessageKey</getfunction>
     <comment>
         Vrací čárkou oddělené klíče (= názvy fieldů) validačních hlášek uvnitř "val:message".
@@ -69,7 +69,7 @@
     </comment>
   </property>
   <property>
-    <propname>messageIdentifier</propname>
+    <name>messageIdentifier</name>
     <getfunction>getMessageIdentifier</getfunction>
     <comment>
         Vrací čárkou oddělené identifikátory hlášek uvnitř "val:message".
@@ -77,7 +77,7 @@
     </comment>
   </property>
   <property>
-    <propname>messageText</propname>
+    <name>messageText</name>
     <getfunction>getMessageText</getfunction>
     <comment>
         Vrací čárkou oddělené textové hlášky uvnitř "val:message".

@@ -93,14 +93,14 @@
     </comment>
   </fulltag>
   <property>
-    <propname>editItems</propname>
+    <name>editItems</name>
     <getfunction>getEditItems</getfunction>
     <comment>
       Vrací seznam položek uvnitř "loc:edit" ("index").
     </comment>
   </property>
   <property>
-    <propname>editItemIndex</propname>
+    <name>editItemIndex</name>
     <getfunction>getEditItemIndex</getfunction>
     <comment>
       Vrací index aktuální položky při průchodu přes "loc:editItems".

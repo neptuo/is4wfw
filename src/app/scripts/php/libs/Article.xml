@@ -553,7 +553,7 @@
     </comment>
   </tag>
   <property>
-  	<propname>url</propname>
+  	<name>url</name>
   	<setfunction>setUrl</setfunction>
   	<getfunction>getUrl</getfunction>
     <comment>
@@ -561,7 +561,7 @@
     </comment>
   </property>
   <property>
-  	<propname>languageId</propname>
+  	<name>languageId</name>
   	<setfunction>setArticleLanguageId</setfunction>
   	<getfunction>getArticleLanguageId</getfunction>
     <comment>
@@ -569,7 +569,7 @@
     </comment>
   </property>
   <property>
-  	<propname>id</propname>
+  	<name>id</name>
   	<setfunction>setArticleId</setfunction>
   	<getfunction>getArticleId</getfunction>
     <comment>
@@ -577,7 +577,7 @@
     </comment>
   </property>
   <property>
-  	<propname>isActive</propname>
+  	<name>isActive</name>
   	<setfunction>setIsActiveArticle</setfunction>
   	<getfunction>getIsActiveArticle</getfunction>
     <comment>
@@ -585,7 +585,7 @@
     </comment>
   </property>
   <property>
-  	<propname>directoryId</propname>
+  	<name>directoryId</name>
   	<setfunction>setArticleDirectoryId</setfunction>
   	<getfunction>getArticleDirectoryId</getfunction>
     <comment>
@@ -593,7 +593,7 @@
     </comment>
   </property>
   <property>
-  	<propname>lineUrl</propname>
+  	<name>lineUrl</name>
   	<setfunction>setLineUrl</setfunction>
   	<getfunction>getLineUrl</getfunction>
     <comment>
@@ -601,7 +601,7 @@
     </comment>
   </property>
   <property>
-  	<propname>labelId</propname>
+  	<name>labelId</name>
   	<setfunction>setLabelId</setfunction>
   	<getfunction>getLabelId</getfunction>
     <comment>
@@ -609,7 +609,7 @@
     </comment>
   </property>
   <property>
-  	<propname>labelUrl</propname>
+  	<name>labelUrl</name>
   	<setfunction>setLabelUrl</setfunction>
   	<getfunction>getLabelUrl</getfunction>
     <comment>
@@ -617,7 +617,7 @@
     </comment>
   </property>
   <property>
-  	<propname>labelIsActive</propname>
+  	<name>labelIsActive</name>
   	<setfunction>setIsActiveLabel</setfunction>
   	<getfunction>getIsActiveLabel</getfunction>
     <comment>
@@ -625,7 +625,7 @@
     </comment>
   </property>
   <property>
-  	<propname>hasHead</propname>
+  	<name>hasHead</name>
   	<setfunction>setHasHead</setfunction>
   	<getfunction>getHasHead</getfunction>
     <comment>
@@ -633,7 +633,7 @@
     </comment>
   </property>
   <property>
-  	<propname>hasContent</propname>
+  	<name>hasContent</name>
   	<setfunction>setHasContent</setfunction>
   	<getfunction>getHasContent</getfunction>
     <comment>
@@ -641,7 +641,7 @@
     </comment>
   </property>
   <property>
-  	<propname>isExternalUrl</propname>
+  	<name>isExternalUrl</name>
   	<setfunction>setIsExternalUrl</setfunction>
   	<getfunction>getIsExternalUrl</getfunction>
     <comment>

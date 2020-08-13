@@ -78,7 +78,7 @@
     </comment>
   </tag>
   <property>
-  	<propname>id</propname>
+  	<name>id</name>
   	<setfunction>setGuestbookId</setfunction>
   	<getfunction>getGuestbookId</getfunction>
     <comment>

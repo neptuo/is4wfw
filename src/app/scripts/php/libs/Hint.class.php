@@ -101,7 +101,7 @@
                         if (isset($prop->obsolete)) {
                             $obsolete = (string)$prop->obsolete;
                         }
-                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#property-'.$prop->propname.'">'.$prop->propname.'</a> ';
+                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#property-'.$prop->name.'">'.$prop->name.'</a> ';
                     }
                     $links .= '</div>';
                 }
@@ -357,7 +357,7 @@
                         $return .= ''
                         .'<div class="lib-tag">'
                             .'<div class="lib-tag-head">'
-                                .'<h3 id="property-'.$prop->propname.'">'.$prop->propname.'</h3>'
+                                .'<h3 id="property-'.$prop->name.'">'.$prop->name.'</h3>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
                                 .'<p>' . str_replace(PHP_EOL, '<br />', trim($prop->comment)) . '</p>'
                                 .'<div class="clear"></div>'
