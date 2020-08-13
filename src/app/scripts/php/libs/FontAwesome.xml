@@ -16,19 +16,19 @@
     <name>icon</name>
     <function>icon</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <atttype>string</atttype>
       <required />
       <comment>Identifikátor ikony (automaticky se přidá "fa-" prefix).</comment>
     </attribute>
     <attribute>
-      <attname>prefix</attname>
+      <name>prefix</name>
       <atttype>string</atttype>
       <attdef>fa</attdef>
       <comment>Prefix / styl ikony (fa, fas, atd).</comment>
     </attribute>
     <attribute>
-      <attname>tag</attname>
+      <name>tag</name>
       <atttype>string</atttype>
       <attdef>span</attdef>
       <comment>HTML tag, který se má použít.</comment>

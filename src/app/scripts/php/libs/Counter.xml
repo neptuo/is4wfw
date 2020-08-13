@@ -12,13 +12,13 @@
     <name>access</name>
     <function>countAccess</function>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
       <atttype>text</atttype>
       <attdef>1</attdef>
       <comment>ID počítadla (max 15 znaků).</comment>
     </attribute>
     <attribute>
-      <attname>every</attname>
+      <name>every</name>
       <atttype>text</atttype>
       <attdef>day</attdef>
       <comment>Po jaké době má být znovu připočítán přístup z jedné ip, možné hodnoty ("every", "minute", "hour", "day", "week").</comment>
@@ -31,19 +31,19 @@
     <name>show</name>
     <function>showTable</function>
     <attribute>
-      <attname>template</attname>
+      <name>template</name>
       <obsolete>Použijte 'templateId'.</obsolete>
     </attribute>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
     </attribute>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
       <atttype>number</atttype>
       <comment>Číselné ID počítadla.</comment>
     </attribute>
     <attribute>
-      <attname>valueLength</attname>
+      <name>valueLength</name>
     </attribute>
     <comment>
       Počítá uživatelské přístupy.
@@ -55,16 +55,16 @@
     <name>redirectWhenTimeLimitExceeded</name>
     <function>redirectWhenTimeLimitExceeded</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>counterId</attname>
+      <name>counterId</name>
       <atttype>number</atttype>
       <comment>Číselné ID počítadla.</comment>
     </attribute>
     <attribute>
-      <attname>every</attname>
+      <name>every</name>
     </attribute>
     <comment>
       Přesměruje na pageId pokud vypršel časový limit v every.
@@ -74,16 +74,16 @@
     <name>redirectWhenTimeLimitNotExceeded</name>
     <function>redirectWhenTimeLimitNotExceeded</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>counterId</attname>
+      <name>counterId</name>
       <atttype>number</atttype>
       <comment>Číselné ID počítadla.</comment>
     </attribute>
     <attribute>
-      <attname>every</attname>
+      <name>every</name>
     </attribute>
     <comment>
       Přesměruje na pageId pokud nevypršel časový limit v every.

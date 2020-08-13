@@ -12,10 +12,10 @@
     <name>selectLanguage</name>
     <function>selectLanguage</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí formulář pro výběr jazykové verze.
@@ -25,26 +25,26 @@
     <name>listPages</name>
     <function>listPages</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>rootPageId</attname>
+      <name>rootPageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>webProjectId</attname>
+      <name>webProjectId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí všechny stránky, ke kterým má uživatel právo zápis.
@@ -54,14 +54,14 @@
     <name>searchFilter</name>
     <function>searchFilter</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí filtr pro vyhledávání stránek
@@ -78,7 +78,7 @@
     <name>detailAfter</name>
     <function>pageDetailAfterForm</function>
     <attribute>
-      <attname>backPageId</attname>
+      <name>backPageId</name>
     </attribute>
     <comment>
       Nastaví proměnné pro starý detail form podle requestu. Umístit před detail form.
@@ -88,17 +88,17 @@
     <name>name</name>
     <function>pageName</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Název stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -109,17 +109,17 @@
     <name>pageurl</name>
     <function>pageUrl</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Url stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -130,17 +130,17 @@
     <name>id</name>
     <function>pageId</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Id stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -151,17 +151,17 @@
     <name>keywords</name>
     <function>pageKeywords</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Klíčová slova stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -172,20 +172,20 @@
     <name>timestamp</name>
     <function>pageTimestamp</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <attribute>
-      <attname>format</attname>
+      <name>format</name>
     </attribute>
     <comment>
       Čas změny stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -197,20 +197,20 @@
     <name>cachetime</name>
     <function>pageCachetime</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <attribute>
-      <attname>verbous</attname>
+      <name>verbous</name>
     </attribute>
     <comment>
       Doba cache stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -222,17 +222,17 @@
     <name>tlstart</name>
     <function>pageTagLibStart</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Tag Lib Start stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -243,17 +243,17 @@
     <name>tlend</name>
     <function>pageTagLibEnd</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Tag Lib End stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -264,17 +264,17 @@
     <name>head</name>
     <function>pageHead</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Hlavčka stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -285,17 +285,17 @@
     <name>content</name>
     <function>pageContent</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Obsah stránky, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -306,17 +306,17 @@
     <name>inTitle</name>
     <function>pageInTitle</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Vrátí zda je stránka v "title", pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -327,17 +327,17 @@
     <name>inMenu</name>
     <function>pageInMenu</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Vrátí zda je stránka v menu, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -348,17 +348,17 @@
     <name>isVisible</name>
     <function>pageIsVisible</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>ignore</attname>
+      <name>ignore</name>
     </attribute>
     <comment>
       Vrátí zda je stránka viditelná na webu, pokud je "type" nastaven na "input", zobrazí input[type=text] i s labelem, pokud je nastaven na "value", zobrazí pouze hodnotu.
@@ -369,17 +369,17 @@
     <name>rightRead</name>
     <function>pageRightRead</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>verbous</attname>
+      <name>verbous</name>
     </attribute>
     <comment>
       Vrátí práva pro čtení stránky, pokud je nastaven na "value", vrátí pouze id skupin.
@@ -391,17 +391,17 @@
     <name>rightWrite</name>
     <function>pageRightWrite</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>verbous</attname>
+      <name>verbous</name>
     </attribute>
     <comment>
       Vrátí práva pro zápis do stránky, pokud je nastaven na "value", vrátí pouze id skupin.
@@ -413,17 +413,17 @@
     <name>rightDelete</name>
     <function>pageRightDelete</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>verbous</attname>
+      <name>verbous</name>
     </attribute>
     <comment>
       Vrátí práva pro smazání stránky, pokud je nastaven na "value", vrátí pouze id skupin.
@@ -435,19 +435,19 @@
     <name>actionEdit</name>
     <function>pageActionEdit</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>detailPageId</attname>
+      <name>detailPageId</name>
     </attribute>
     <comment>
       Zobrazí formulář pro odeslání žádosti na editaci stránky. "type" je "image" nebo "button".
@@ -457,15 +457,15 @@
     <name>actionDelete</name>
     <function>pageActionDelete</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <comment>
@@ -476,19 +476,19 @@
     <name>actionAddsub</name>
     <function>pageActionAddsub</function>
     <attribute>
-      <attname>parentPageId</attname>
+      <name>parentPageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>detailPageId</attname>
+      <name>detailPageId</name>
     </attribute>
     <comment>
       Zobrazí formulář pro odeslání žádosti na přidání pod stránky stránky. "type" je "image" nebo "button".

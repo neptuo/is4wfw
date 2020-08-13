@@ -18,7 +18,7 @@
     <name>tableColumnCreator</name>
     <function>tableColumnCreator</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <comment>Název entity, do které se má přidat sloupec.</comment>
     </attribute>
@@ -44,7 +44,7 @@
     <name>listTableColumns</name>
     <function>listTableColumns</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <comment>Název entity, pro kterou se mají zobrazit sloupce.</comment>
     </attribute>
@@ -64,7 +64,7 @@
     <function>tableDeleter</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <comment>Název entity, která se má odstranit.</comment>
     </attribute>
@@ -77,12 +77,12 @@
     <function>tableColumnDeleter</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>tableName</attname>
+      <name>tableName</name>
       <required />
       <comment>Název entity, ze které se má sloupec odstranit.</comment>
     </attribute>
     <attribute>
-      <attname>columnName</attname>
+      <name>columnName</name>
       <required />
       <comment>Název sloupce, který se má odstranit.</comment>
     </attribute>
@@ -94,7 +94,7 @@
     <name>tableLocalizationEditor</name>
     <function>tableLocalizationEditor</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <comment>Název entity, ke které má definovat lokalizační tabulka.</comment>
     </attribute>

@@ -13,41 +13,41 @@
     <function>setValue</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <atttype>string</atttype>
       <comment>Název proměnné, která se má nastavit.</comment>
     </attribute>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
       <atttype>string</atttype>
       <comment>Nová hodnota proměnné.</comment>
     </attribute>
     <attribute>
-      <attname>expire</attname>
+      <name>expire</name>
       <atttype>number</atttype>
       <attdef>0</attdef>
       <comment>Počet sekund, po jejichž vypršení sušenka expiruje. 0 reprezentuje session cookie.</comment>
     </attribute>
     <attribute>
-      <attname>path</attname>
+      <name>path</name>
       <atttype>string</atttype>
       <comment>URL cesta, pro kterou má být sušenka platná (výchozí je "/").</comment>
     </attribute>
     <attribute>
-      <attname>domain</attname>
+      <name>domain</name>
       <atttype>string</atttype>
       <comment>Doména, pro kterou má být sušenka platná (výchozí je "/").</comment>
     </attribute>
     <attribute>
-      <attname>isSecure</attname>
+      <name>isSecure</name>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <comment>Zda se má sušenka posílat pouze po HTTPS.</comment>
     </attribute>
     <attribute>
-      <attname>isHttpOnly</attname>
+      <name>isHttpOnly</name>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <comment>Zda má být sušenka dostupná pro server (výchozí je false, tedy je dostupná i pro javascript).</comment>

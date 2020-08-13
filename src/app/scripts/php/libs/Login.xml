@@ -13,7 +13,7 @@
     <name>init</name>
     <function>initLogin</function>
     <attribute>
-      <attname>group</attname>
+      <name>group</name>
       <required />
     </attribute>
     <comment>
@@ -24,18 +24,18 @@
     <name>form</name>
     <function>showLoginForm</function>
     <attribute>
-      <attname>group</attname>
+      <name>group</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>autoLoginUserName</attname>
+      <name>autoLoginUserName</name>
     </attribute>
     <attribute>
-      <attname>autoLoginPassword</attname>
+      <name>autoLoginPassword</name>
     </attribute>
     <comment>
       Zobrazí formulář pro přihlášení a po jeho odeslání se pokusí uživatele 
@@ -48,19 +48,19 @@
     <function>loginLookless</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>group</attname>
+      <name>group</name>
       <required />
       <atttype>string</atttype>
       <comment>Název skupiny, pro kterou se má přihlášení provést.</comment>
     </attribute>
     <attribute>
-      <attname>username</attname>
+      <name>username</name>
       <required />
       <atttype>string</atttype>
       <comment>Uživatelské jméno.</comment>
     </attribute>
     <attribute>
-      <attname>password</attname>
+      <name>password</name>
       <required />
       <atttype>string</atttype>
       <comment>Heslo.</comment>
@@ -74,11 +74,11 @@
     <name>logout</name>
     <function>showLogoutForm</function>
     <attribute>
-      <attname>group</attname>
+      <name>group</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <comment>
@@ -91,7 +91,7 @@
     <function>logout</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>group</attname>
+      <name>group</name>
       <required />
       <comment>Název skupiny, pro kterou se má odhlášení provést.</comment>
     </attribute>
@@ -105,7 +105,7 @@
     <function>refresh</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>group</attname>
+      <name>group</name>
       <required />
       <comment>Název skupiny, pro kterou se má obnovení provést.</comment>
     </attribute>
@@ -118,7 +118,7 @@
     <name>info</name>
     <function>loggedUserInfo</function>
     <attribute>
-      <attname>field</attname>
+      <name>field</name>
       <attype>string</attype>
       <comment>Umožňuje vypsat jen jeden field z infomací o uživateli ("name", "surname", group", "username", "login" - username + domain)</comment>
     </attribute>
@@ -130,7 +130,7 @@
     <name>redirectWhenLogged</name>
     <function>redirectWhenLogged</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <comment>
@@ -141,7 +141,7 @@
     <name>redirectWhenNotLogged</name>
     <function>redirectWhenNotLogged</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <comment>
@@ -152,17 +152,17 @@
     <name>authorized</name>
     <function>authorized</function>
     <attribute>
-      <attname>all</attname>
+      <name>all</name>
       <atttype>string</atttype>
       <comment>Seznam (čárkou oddělený) skupin, ve kterých musí uživatel být, aby bylo zobrazeno tělo tagu.</comment>
     </attribute>
     <attribute>
-      <attname>any</attname>
+      <name>any</name>
       <atttype>string</atttype>
       <comment>Seznam (čárkou oddělený) skupin, z nichž alespoň v jedné musí uživatel být, aby bylo zobrazeno tělo tagu.</comment>
     </attribute>
     <attribute>
-      <attname>none</attname>
+      <name>none</name>
       <atttype>string</atttype>
       <comment>Seznam (čárkou oddělený) skupin, z nichž v žádné uživatel nesmí být, aby bylo zobrazeno tělo tagu.</comment>
     </attribute>

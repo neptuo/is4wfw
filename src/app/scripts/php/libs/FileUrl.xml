@@ -12,12 +12,12 @@
     <function>setValue</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <comment>Název (property), pod kterým má být URL dostupná.</comment>
     </attribute>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
       <required />
       <comment>ID souboru, jehož URL se má složit.</comment>
     </attribute>

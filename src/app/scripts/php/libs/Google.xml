@@ -11,7 +11,7 @@
     <name>analytics</name>
     <function>analytics</function>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
       <required />
       <comment>Kód z Google Analytics (UA-...-..).</comment>
     </attribute>

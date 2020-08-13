@@ -14,11 +14,11 @@
     <name>fetch</name>
     <function>fetch</function>
     <attribute>
-      <attname>query</attname>
+      <name>query</name>
       <required />
     </attribute>
     <attribute>
-      <attname>template</attname>
+      <name>template</name>
     </attribute>
     <comment>
       Vrátí data vrácená databází po provedení dotazu zadaného v "query".
@@ -31,7 +31,7 @@
     <name>useConnection</name>
     <function>useConnection</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
     </attribute>
     <comment>

@@ -12,7 +12,7 @@
     <name>add</name>
     <function>add</function>
     <attribute>
-      <attname>msg</attname>
+      <name>msg</name>
       <required />
     </attribute>
     <comment>

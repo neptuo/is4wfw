@@ -11,7 +11,7 @@
     <name>form</name>
     <function>form</function>
     <attribute>
-      <attname>submit</attname>
+      <name>submit</name>
       <required />
       <atttype>string</atttype>
       <comment>Název klíče z requestu, který říká že jde o odeslání formuláře.</comment>
@@ -27,7 +27,7 @@
     <name>prefix</name>
     <function>prefix</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <atttype>string</atttype>
       <comment>Název prefixu, který bude přidán všem klíčům ve formuláři.</comment>
@@ -40,13 +40,13 @@
     <name>set</name>
     <function>setValue</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <atttype>string</atttype>
       <comment>Název klíče, který se má nastavit.</comment>
     </attribute>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
       <atttype>string</atttype>
       <comment>Hodnota klíče.</comment>

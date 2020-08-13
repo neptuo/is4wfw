@@ -19,10 +19,10 @@
     <name>selectSeason</name>
     <function>selectSeason</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výber sezóny.
@@ -32,10 +32,10 @@
     <name>selectTable</name>
     <function>selectTable</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výber tabluky.
@@ -45,10 +45,10 @@
     <name>selectTeam</name>
     <function>selectTeam</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výber týmu.
@@ -58,10 +58,10 @@
     <name>selectProject</name>
     <function>selectProject</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výber projektu, ukládá se do property sport:projectId
@@ -71,13 +71,13 @@
     <name>editProjects</name>
     <function>showEditProjects</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výpis projektů.
@@ -87,10 +87,10 @@
     <name>editProjectForm</name>
     <function>showEditProjectForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Editace projektu
@@ -100,13 +100,13 @@
     <name>editSeasons</name>
     <function>showEditSeasons</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výpis sezón.
@@ -116,10 +116,10 @@
     <name>editSeasonForm</name>
     <function>showEditSeasonForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Editace sezóny.
@@ -129,13 +129,13 @@
     <name>editTeams</name>
     <function>showEditTeams</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výpis týmů.
@@ -145,10 +145,10 @@
     <name>editTeamForm</name>
     <function>showEditTeamForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Editace týmu.
@@ -158,7 +158,7 @@
     <name>copyTeamTableStats</name>
     <function>showCopyTeamTableStatsForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zkopíruje výsledky týmu z tabulky do jiné tabulky.
@@ -168,13 +168,13 @@
     <name>editPlayers</name>
     <function>showEditPlayers</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výpis hráčů.
@@ -184,10 +184,10 @@
     <name>editPlayerForm</name>
     <function>showEditPlayerForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Editace hráče.
@@ -197,13 +197,13 @@
     <name>editTables</name>
     <function>showEditTables</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výpis tabulek.
@@ -213,13 +213,13 @@
     <name>editRounds</name>
     <function>showEditRounds</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výpis kol.
@@ -229,10 +229,10 @@
     <name>editRoundForm</name>
     <function>showEditRoundForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Editace kola.
@@ -242,10 +242,10 @@
     <name>editTableForm</name>
     <function>showEditTableForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Editace hráče.
@@ -255,13 +255,13 @@
     <name>editMatches</name>
     <function>showEditMatches</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Výpis zápasů pro editaci.
@@ -271,10 +271,10 @@
     <name>editMatchForm</name>
     <function>showEditMatchForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Editace zápasu.
@@ -284,10 +284,10 @@
     <name>editStatsForm</name>
     <function>showEditStatsForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Editace statistik k zápasu.
@@ -297,15 +297,15 @@
     <name>seasons</name>
     <function>showSeasons</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>sorting</attname>
+      <name>sorting</name>
       <required />
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
       <required />
     </attribute>
     <comment>
@@ -316,11 +316,11 @@
     <name>season</name>
     <function>showSeason</function>
     <attribute>
-      <attname>field</attname>
+      <name>field</name>
       <required />
     </attribute>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
     </attribute>
     <comment>
       Výpis sezóny. "field" jedna z hodnot: row, i, id, start_year, end_year
@@ -330,22 +330,22 @@
     <name>table</name>
     <function>showTable</function>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
     </attribute>
     <attribute>
-      <attname>tableId</attname>
+      <name>tableId</name>
     </attribute>
     <attribute>
-      <attname>editable</attname>
+      <name>editable</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <attribute>
-      <attname>thenByFix</attname>
+      <name>thenByFix</name>
 	  <attdef>false</attdef>
     </attribute>
     <comment>
@@ -356,25 +356,25 @@
     <name>teams</name>
     <function>showTeams</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
       <required />
     </attribute>
     <attribute>
-      <attname>teamId</attname>
+      <name>teamId</name>
     </attribute>
     <attribute>
-      <attname>sortBy</attname>
+      <name>sortBy</name>
     </attribute>
     <attribute>
-      <attname>sorting</attname>
+      <name>sorting</name>
     </attribute>
     <comment>
       List týmů ze sezóny. sortBy může být jeden z fieldů z sport:team field. sorting pak asc nebo desc.
@@ -384,14 +384,14 @@
     <name>team</name>
     <function>showTeam</function>
     <attribute>
-      <attname>field</attname>
+      <name>field</name>
       <required />
     </attribute>
     <attribute>
-      <attname>teamId</attname>
+      <name>teamId</name>
     </attribute>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
     </attribute>
     <comment>
       Výpis týmu. Atribut match se používá při zobrazení v zápase, kde nabývá hodnot "home" nebo "away"
@@ -401,37 +401,37 @@
     <name>matches</name>
     <function>showMatches</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
       <required />
     </attribute>
     <attribute>
-      <attname>sorting</attname>
+      <name>sorting</name>
     </attribute>
     <attribute>
-      <attname>matchId</attname>
+      <name>matchId</name>
     </attribute>
     <attribute>
-      <attname>round</attname>
+      <name>round</name>
     </attribute>
     <attribute>
-      <attname>teamId</attname>
+      <name>teamId</name>
     </attribute>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
     </attribute>
     <attribute>
-      <attname>onlyPlayed</attname>
+      <name>onlyPlayed</name>
       <atttype>bool</atttype>
       <attdef>true</attdef>
       <comment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</comment>
       <obsolete>Používat atribut "state".</obsolete>
     </attribute>
     <attribute>
-      <attname>state</attname>
+      <name>state</name>
       <atttype>string</atttype>
       <comment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</comment>
     </attribute>
@@ -443,17 +443,17 @@
     <name>match</name>
     <function>showMatch</function>
     <attribute>
-      <attname>field</attname>
+      <name>field</name>
       <required />
     </attribute>
     <attribute>
-      <attname>matchId</attname>
+      <name>matchId</name>
     </attribute>
     <attribute>
-      <attname>scope</attname>
+      <name>scope</name>
     </attribute>
     <attribute>
-      <attname>errMsg</attname>
+      <name>errMsg</name>
     </attribute>
     <comment>
       Výpis zápasu. Atribut scope může mít hodnotu "session" pro políčko "round", jinak nemá vliv.
@@ -463,43 +463,43 @@
     <name>rounds</name>
     <function>showRounds</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>sorting</attname>
+      <name>sorting</name>
       <required />
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
       <required />
     </attribute>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
     </attribute>
     <attribute>
-      <attname>teamId</attname>
+      <name>teamId</name>
     </attribute>
     <attribute>
-      <attname>onlyPlayed</attname>
+      <name>onlyPlayed</name>
       <atttype>bool</atttype>
       <attdef>true</attdef>
       <comment>Zda zobrazovat jen již odehrané zápasy. Výchozí hodnota je 'true'.</comment>
       <obsolete>Používat atribut "state".</obsolete>
     </attribute>
     <attribute>
-      <attname>state</attname>
+      <name>state</name>
       <atttype>string</atttype>
       <comment>Stav zápasů: all - všechny, played - pouze odehrané, notplayed - pouze neodehrané. Pokud je nastaven, pak se ignoruje atribut "onlyPlayed".</comment>
     </attribute>
     <attribute>
-      <attname>startId</attname>
+      <name>startId</name>
     </attribute>
     <attribute>
-      <attname>maxId</attname>
+      <name>maxId</name>
     </attribute>
     <attribute>
-      <attname>limit</attname>
+      <name>limit</name>
     </attribute>
     <comment>
       Výpis kol, sorting má hodnotu DESC nebo ASC. startId je minimalni id kola, které bude vypsáno. maxId je nejvyšší id kola, které bude vypsáno.
@@ -509,12 +509,12 @@
     <name>round</name>
     <function>showRound</function>
     <attribute>
-      <attname>field</attname>
+      <name>field</name>
       <required />
       <comment>id, name, number, (row, i)</comment>
     </attribute>
     <attribute>
-      <attname>roundId</attname>
+      <name>roundId</name>
     </attribute>
     <comment>
       Detail kola.
@@ -524,49 +524,49 @@
     <name>players</name>
     <function>showPlayers</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>sorting</attname>
+      <name>sorting</name>
       <required />
     </attribute>
     <attribute>
-      <attname>sortBy</attname>
+      <name>sortBy</name>
       <required />
     </attribute>
     <attribute>
-      <attname>playerId</attname>
+      <name>playerId</name>
     </attribute>
     <attribute>
-      <attname>tableId</attname>
+      <name>tableId</name>
     </attribute>
     <attribute>
-      <attname>teamId</attname>
+      <name>teamId</name>
     </attribute>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
     </attribute>
     <attribute>
-      <attname>fromMatchId</attname>
+      <name>fromMatchId</name>
     </attribute>
     <attribute>
-      <attname>only</attname>
+      <name>only</name>
     </attribute>
     <attribute>
-      <attname>scope</attname>
+      <name>scope</name>
     </attribute>
     <attribute>
-      <attname>showGolmans</attname>
+      <name>showGolmans</name>
     </attribute>
     <attribute>
-      <attname>limit</attname>
+      <name>limit</name>
     </attribute>
     <attribute>
-      <attname>offset</attname>
+      <name>offset</name>
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
     </attribute>
     <comment>
       Výpis hráčů, sorting má hodnotu DESC nebo ASC, sortBy je název položky, 
@@ -583,23 +583,23 @@
     <name>player</name>
     <function>showPlayer</function>
     <attribute>
-      <attname>field</attname>
+      <name>field</name>
       <required />
     </attribute>
     <attribute>
-      <attname>playerId</attname>
+      <name>playerId</name>
     </attribute>
     <attribute>
-      <attname>tableId</attname>
+      <name>tableId</name>
     </attribute>
     <attribute>
-      <attname>teamId</attname>
+      <name>teamId</name>
     </attribute>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
     </attribute>
     <attribute>
-      <attname>errMsg</attname>
+      <name>errMsg</name>
     </attribute>
     <comment>
       Výpis detailu hráče.
@@ -609,39 +609,39 @@
     <name>playersng</name>
     <function>showPlayersNG</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
       <required />
     </attribute>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
     </attribute>
     <attribute>
-      <attname>tableId</attname>
+      <name>tableId</name>
     </attribute>
     <attribute>
-      <attname>matchId</attname>
+      <name>matchId</name>
     </attribute>
     <attribute>
-      <attname>playerId</attname>
+      <name>playerId</name>
     </attribute>
     <attribute>
-      <attname>teamId</attname>
+      <name>teamId</name>
     </attribute>
     <attribute>
-      <attname>includeOnLoan</attname>
+      <name>includeOnLoan</name>
     </attribute>
     <attribute>
-      <attname>positions</attname>
+      <name>positions</name>
     </attribute>
     <attribute>
-      <attname>sortBy</attname>
+      <name>sortBy</name>
     </attribute>
     <attribute>
-      <attname>sorting</attname>
+      <name>sorting</name>
     </attribute>
     <comment>
       Players NG
@@ -651,11 +651,11 @@
     <name>playerng</name>
     <function>showPlayerNG</function>
     <attribute>
-      <attname>field</attname>
+      <name>field</name>
       <required />
     </attribute>
     <attribute>
-      <attname>playerId</attname>
+      <name>playerId</name>
     </attribute>
     <comment>
       Player NG
@@ -665,40 +665,40 @@
     <name>playersstatsng</name>
     <function>showPlayersStatsNG</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
       <required />
     </attribute>
     <attribute>
-      <attname>seasonId</attname>
+      <name>seasonId</name>
     </attribute>
     <attribute>
-      <attname>tableId</attname>
+      <name>tableId</name>
     </attribute>
     <attribute>
-      <attname>playerId</attname>
+      <name>playerId</name>
     </attribute>
     <attribute>
-      <attname>matchId</attname>
+      <name>matchId</name>
     </attribute>
     <attribute>
-      <attname>sortBy</attname>
+      <name>sortBy</name>
     </attribute>
     <attribute>
-      <attname>sorting</attname>
+      <name>sorting</name>
     </attribute>
     <attribute>
-      <attname>positions</attname>
+      <name>positions</name>
     </attribute>
     <attribute>
-      <attname>partWhere</attname>
+      <name>partWhere</name>
     </attribute>
     <comment>
       Players Stats NG
@@ -708,7 +708,7 @@
     <name>playerstatsng</name>
     <function>showPlayerStatsNG</function>
     <attribute>
-      <attname>field</attname>
+      <name>field</name>
       <required />
     </attribute>
     <comment>
@@ -719,13 +719,13 @@
     <name>playerSearch</name>
     <function>showPlayerSearchForm</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí vyhledávací formulář pro hráče, aplikuje se na sport:editPlayers, sport:players.

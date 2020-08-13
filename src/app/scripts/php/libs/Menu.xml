@@ -12,7 +12,7 @@
     <name>xmlMenu</name>
     <function>showXmlMenu</function>
     <attribute>
-      <attname>file</attname>
+      <name>file</name>
       <required />
     </attribute>
     <comment>

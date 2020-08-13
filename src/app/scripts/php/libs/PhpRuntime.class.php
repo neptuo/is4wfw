@@ -485,7 +485,7 @@
             for ($i = 0; $i < count($tag->attribute); $i ++) {
                 $isProcessed = false;
                 $att = $tag->attribute[$i];
-                $attName = (string)$att->attname;
+                $attName = (string)$att->name;
                 $hasDefault = isset($att->attdef);
                 if (isset($att->prefix)) {
                     $attPrefix = "$attName-";
@@ -536,7 +536,7 @@
                     
                     $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
                 } else if (isset($att->required) && !$atts->HasAttributeModifyingDecorators) {
-                    return $this->triggerFail("Missing required attribute '$att->attname' on tag '$nameForErrorReport'.");
+                    return $this->triggerFail("Missing required attribute '$att->name' on tag '$nameForErrorReport'.");
                 } else {
                     $value = false;
                     if ($att->atttype == "string") {
@@ -758,8 +758,8 @@
 
                 foreach ($xml->decorator as $decorator) {
                     foreach ($decorator->attribute as $attribute) {
-                        if (in_array($attribute->attname, $attributeNames)) {
-                            if (!array_key_exists($attribute->attname, $decorators)) {
+                        if (in_array($attribute->name, $attributeNames)) {
+                            if (!array_key_exists($attribute->name, $decorators)) {
                                 $modifiesAttributes = isset($decorator->features->modifiesAttributes);
                                 $conditionsExecution = isset($decorator->features->conditionsExecution);
                                 $providesFullTagBody = isset($decorator->features->providesFullTagBody);
@@ -781,20 +781,20 @@
                                 if (!array_key_exists($functionName, $decorators)) {
                                     $decorators[$functionName] = [
                                         "function" => $functionName,
-                                        "attributes" => [(string)$attribute->attname => $tagAttributes->Decorators[$prefix][(string)$attribute->attname]],
+                                        "attributes" => [(string)$attribute->name => $tagAttributes->Decorators[$prefix][(string)$attribute->name]],
                                         "modifiesAttributes" => $modifiesAttributes,
                                         "conditionsExecution" => $conditionsExecution,
                                         "providesFullTagBody" => $providesFullTagBody,
                                     ];
                                 } else {
-                                    $decorators[$functionName]["attributes"][(string)$attribute->attname] = $tagAttributes->Decorators[$prefix][(string)$attribute->attname];
+                                    $decorators[$functionName]["attributes"][(string)$attribute->name] = $tagAttributes->Decorators[$prefix][(string)$attribute->name];
                                 }
                             } else {
-                                $decorators[$decorator->function]["attributes"][(string)$attribute->attname] = $tagAttributes->Decorators[$prefix][(string)$attribute->attname];
+                                $decorators[$decorator->function]["attributes"][(string)$attribute->name] = $tagAttributes->Decorators[$prefix][(string)$attribute->name];
                             }
 
                             
-                            unset($attributeNames[array_search((string)$attribute->attname, $attributeNames)]);
+                            unset($attributeNames[array_search((string)$attribute->name, $attributeNames)]);
                         }
                     }
                 }

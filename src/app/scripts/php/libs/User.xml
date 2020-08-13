@@ -12,13 +12,13 @@
     <name>management</name>
     <function>showUserManagement</function>
     <attribute>
-      <attname>userId</attname>
+      <name>userId</name>
     </attribute>
     <attribute>
-      <attname>defaultMainGroupId</attname>
+      <name>defaultMainGroupId</name>
     </attribute>
     <attribute>
-      <attname>propertiesUrl</attname>
+      <name>propertiesUrl</name>
       <atttype>string</atttype>
       <comment>URL na kterou má vést editace uživatelských vlastností. Pokud není vyplněna, tlačítko se nezobrazí.</comment>
     </attribute>
@@ -30,7 +30,7 @@
     <name>newGroup</name>
     <function>addNewGroup</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Přidání nové uživatelské skupiny.
@@ -40,7 +40,7 @@
     <name>deleteGroup</name>
     <function>deleteGroup</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Mazání uživatelských skupin.
@@ -50,7 +50,7 @@
     <name>editGroupPerms</name>
     <function>editGroupPerms</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Editace práv skupiny.
@@ -60,7 +60,7 @@
     <name>showLog</name>
     <function>showUserLog</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Výpisu logu uživatelů.
@@ -70,7 +70,7 @@
     <name>truncateLog</name>
     <function>truncateUserLog</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Smaže log uživatelů.
@@ -80,14 +80,14 @@
     <name>register</name>
     <function>registerUser</function>
     <attribute>
-      <attname>groups</attname>
+      <name>groups</name>
       <required />
     </attribute>
     <attribute>
-      <attname>disableUser</attname>
+      <name>disableUser</name>
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <comment>
       "Registrační formulář", groups je čárkou oddělený seznam rolí (první se uloží jako uživatelova hlavní!).
@@ -104,12 +104,12 @@
     <name>list</name>
     <function>listItems</function>
     <attribute>
-      <attname>filter</attname>
+      <name>filter</name>
       <prefix />
       <comment>Seznam filtračních parametrů.</comment>
     </attribute>
     <attribute>
-      <attname>orderBy</attname>
+      <name>orderBy</name>
       <prefix />
       <comment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</comment>
     </attribute>
@@ -121,12 +121,12 @@
     <name>edit</name>
     <function>edit</function>
     <attribute>
-      <attname>uid</attname>
+      <name>uid</name>
       <atttype>number</atttype>
       <comment>Id uživatele, který se má editovat.</comment>
     </attribute>
     <attribute>
-      <attname>default</attname>
+      <name>default</name>
       <prefix />
       <comment>Výchozí hodnoty fieldů při zakládání uživatele.</comment>
     </attribute>

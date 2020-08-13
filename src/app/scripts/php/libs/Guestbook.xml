@@ -12,13 +12,13 @@
     <name>input</name>
     <function>showForm</function>
     <attribute>
-      <attname>guestbookId</attname>
+      <name>guestbookId</name>
     </attribute>
     <attribute>
-      <attname>parentId</attname>
+      <name>parentId</name>
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <comment>
       Zobrazí formulář pro vložení nového příspěvku. Kde guestbookId je Id návštěvní knihy 
@@ -31,19 +31,19 @@
     <name>show</name>
     <function>showGuestbook</function>
     <attribute>
-      <attname>guestbookId</attname>
+      <name>guestbookId</name>
     </attribute>
     <attribute>
-      <attname>editable</attname>
+      <name>editable</name>
     </attribute>
     <attribute>
-      <attname>answer</attname>
+      <name>answer</name>
     </attribute>
     <attribute>
-      <attname>answerPageId</attname>
+      <name>answerPageId</name>
     </attribute>
     <attribute>
-      <attname>useFrame</attname>
+      <name>useFrame</name>
     </attribute>
     <comment>
       Vypíše všechny příspěvky z knihy (guestbookId). Pokud je editable true, rozbrazí ikonky pro editaci.
@@ -55,7 +55,7 @@
     <name>listAll</name>
     <function>showListOfGuestbooks</function>
     <attribute>
-      <attname>useFrame</attname>
+      <name>useFrame</name>
     </attribute>
     <comment>
       Vypíše seznam všech knih.

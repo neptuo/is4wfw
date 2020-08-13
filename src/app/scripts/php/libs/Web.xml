@@ -19,30 +19,30 @@
     <name>menu</name>
     <function>getMenu</function>
     <attribute>
-      <attname>parentId</attname>
+      <name>parentId</name>
     </attribute>
     <attribute>
-      <attname>inner</attname>
+      <name>inner</name>
     </attribute>
     <attribute>
-      <attname>classes</attname>
+      <name>classes</name>
       <comment>Css třída přidaná divu pro každé menu (kořenový div a pro každé pod menu).</comment>
     </attribute>
     <attribute>
-      <attname>rel</attname>
+      <name>rel</name>
     </attribute>
     <attribute>
-      <attname>template</attname>
+      <name>template</name>
       <obsolete>Již se nepoužívá (vnitřně není ani implementováno).</obsolete>
     </attribute>
     <attribute>
-      <attname>copyParameters</attname>
+      <name>copyParameters</name>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <attribute>
-      <attname>display</attname>
+      <name>display</name>
       <atttype>string</atttype>
       <attdef>name</attdef>
       <comment>Vlastnost z "info", která se má použít jako text odkazu ("name" nebo "title").</comment>
@@ -56,18 +56,18 @@
     <name>menu</name>
     <function>getMenuWithTemplate</function>
     <attribute>
-      <attname>parentId</attname>
+      <name>parentId</name>
       <required />
       <comment>Id nadřazené stránky.</comment>
     </attribute>
     <attribute>
-      <attname>display</attname>
+      <name>display</name>
       <atttype>string</atttype>
       <attdef>name</attdef>
       <comment>Vlastnost z "info", která se má použít jako "display" field ("name" nebo "title").</comment>
     </attribute>
     <attribute>
-      <attname>copyParameters</attname>
+      <name>copyParameters</name>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
@@ -81,7 +81,7 @@
     <name>crumbMenu</name>
     <function>getCrumbMenu</function>
     <attribute>
-      <attname>delimeter</attname>
+      <name>delimeter</name>
       <required />
     </attribute>
     <comment>
@@ -93,11 +93,11 @@
     <name>cache</name>
     <function>cache</function>
     <attribute>
-      <attname>allow</attname>
+      <name>allow</name>
       <required />
     </attribute>
     <attribute>
-      <attname>time</attname>
+      <name>time</name>
       <required />
     </attribute>
     <comment>
@@ -108,20 +108,20 @@
     <name>inc</name>
     <function>includePage</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>languageId</attname>
+      <name>languageId</name>
     </attribute>
     <attribute>
-      <attname>notParseCTag</attname>
+      <name>notParseCTag</name>
     </attribute>
     <attribute>
-      <attname>whenLogged</attname>
+      <name>whenLogged</name>
     </attribute>
     <attribute>
-      <attname>whenNotLogged</attname>
+      <name>whenNotLogged</name>
     </attribute>
     <comment>
       Vloží do stránky další stránku specifikovanou v "pageId". Pokud je nastaveno
@@ -135,17 +135,17 @@
     <function>includeTemplate</function>
     <obsolete>Použijte knihovnu "template".</obsolete>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>whenLogged</attname>
+      <name>whenLogged</name>
     </attribute>
     <attribute>
-      <attname>whenNotLogged</attname>
+      <name>whenNotLogged</name>
     </attribute>
     <attribute>
-      <attname>browser</attname>
+      <name>browser</name>
     </attribute>
     <comment>
       Vloží do stránky template.  
@@ -155,14 +155,14 @@
     <name>url</name>
     <function>getPageUrl</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>languageId</attname>
+      <name>languageId</name>
     </attribute>
     <attribute>
-      <attname>isAbsolute</attname>
+      <name>isAbsolute</name>
     </attribute>
     <anyAttribute />
     <comment>
@@ -177,32 +177,32 @@
     <name>a</name>
     <function>makeAnchor</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>text</attname>
+      <name>text</name>
     </attribute>
     <attribute>
-      <attname>languageId</attname>
+      <name>languageId</name>
     </attribute>
     <attribute>
-      <attname>class</attname>
+      <name>class</name>
     </attribute>
     <attribute>
-      <attname>activeClass</attname>
+      <name>activeClass</name>
     </attribute>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
     </attribute>
     <attribute>
-      <attname>target</attname>
+      <name>target</name>
     </attribute>
     <attribute>
-      <attname>rel</attname>
+      <name>rel</name>
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
     </attribute>
     <anyAttribute />
     <comment>
@@ -217,29 +217,29 @@
     <name>a</name>
     <function>makeAnchorFullTag</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>languageId</attname>
+      <name>languageId</name>
     </attribute>
     <attribute>
-      <attname>class</attname>
+      <name>class</name>
     </attribute>
     <attribute>
-      <attname>activeClass</attname>
+      <name>activeClass</name>
     </attribute>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
     </attribute>
     <attribute>
-      <attname>target</attname>
+      <name>target</name>
     </attribute>
     <attribute>
-      <attname>rel</attname>
+      <name>rel</name>
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
     </attribute>
     <anyAttribute />
     <comment>
@@ -261,11 +261,11 @@
     <name>textFile</name>
     <function>getTextFile</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>fileId</attname>
+      <name>fileId</name>
     </attribute>
     <comment>
       Vrací 'text file' v binární podobě.
@@ -275,7 +275,7 @@
     <name>redirect</name>
     <function>redirect</function>
     <attribute>
-      <attname>path</attname>
+      <name>path</name>
     </attribute>
     <comment>
       Přesměruje užívatele na externí odkaz.
@@ -285,27 +285,27 @@
     <name>redirectTo</name>
     <function>redirectTo</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>browser</attname>
+      <name>browser</name>
     </attribute>
     <attribute>
-      <attname>ip</attname>
+      <name>ip</name>
       <comment>Klientská IP adresa (seznam čárkou odělených).</comment>
     </attribute>
     <attribute>
-      <attname>copyParameters</attname>
+      <name>copyParameters</name>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <comment>Pokud je "true", přidá do URL všechny aktuální parametry z query.</comment>
     </attribute>
     <attribute>
-      <attname>param</attname>
+      <name>param</name>
       <atttype>string</atttype>
       <prefix />
       <comment>Seznam parametrů (klíč=hodnota), které se mají přidat do URL. Mají přednost před hodnotami při "copyParameters".</comment>
@@ -323,10 +323,10 @@
     <name>lang</name>
     <function>getLanguages</function>
     <attribute>
-      <attname>homePage</attname>
+      <name>homePage</name>
     </attribute>
     <attribute>
-      <attname>display</attname>
+      <name>display</name>
       <atttype>string</atttype>
       <attdef>language</attdef>
       <comment>Název fieldu z jazyku, který se má použít pro zobrazení.</comment>
@@ -341,11 +341,11 @@
     <name>redirectToRightLangVersion</name>
     <function>redirectToRightLangVersion</function>
     <attribute>
-      <attname>default</attname>
+      <name>default</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <comment>
       Přesměruje uživatele na jeho jazykovou verzi, pokud neexistuje použije tu 
@@ -356,11 +356,11 @@
     <name>pair</name>
     <function>makePair</function>
     <attribute>
-      <attname>property</attname>
+      <name>property</name>
       <required />
     </attribute>
     <attribute>
-      <attname>scope</attname>
+      <name>scope</name>
     </attribute>
     <comment>
       Nastaví podle UID PROPERTY v příslušném SCOPE (get, post, session, request).
@@ -398,7 +398,7 @@
     <name>yearsFrom</name>
     <function>getYearsFrom</function>
     <attribute>
-      <attname>year</attname>
+      <name>year</name>
       <required />
     </attribute>
     <comment>
@@ -416,7 +416,7 @@
     <name>systemPropertyValue</name>
     <function>getSystemPropertyValue</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
     </attribute>
     <comment>
@@ -427,7 +427,7 @@
     <name>getProperty</name>
     <function>getProperty</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
     </attribute>
     <comment>
@@ -438,15 +438,15 @@
     <name>setProperty</name>
     <function>setProperty</function>
     <attribute>
-      <attname>prefix</attname>
+      <name>prefix</name>
       <required />
     </attribute>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
     </attribute>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
     </attribute>
     <comment>
@@ -457,11 +457,11 @@
     <name>frame</name>
     <function>getWebFrame</function>
     <attribute>
-      <attname>title</attname>
+      <name>title</name>
       <required />
     </attribute>
     <attribute>
-      <attname>open</attname>
+      <name>open</name>
     </attribute>
     <comment>
       Zobrazí rámec jako je používaný v RS.
@@ -471,10 +471,10 @@
     <name>genRandNum</name>
     <function>generateRandomNumber</function>
     <attribute>
-      <attname>min</attname>
+      <name>min</name>
     </attribute>
     <attribute>
-      <attname>max</attname>
+      <name>max</name>
     </attribute>
     <comment>
       Nastaví session hodnotu na náhodné číslo [mezi min a max pokud jsou zadané].
@@ -484,11 +484,11 @@
     <name>static</name>
     <function>showStaticText</function>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
     </attribute>
     <attribute>
-      <attname>lang</attname>
+      <name>lang</name>
       <required />
     </attribute>
     <comment>
@@ -506,15 +506,15 @@
     <name>condition</name>
     <function>showWhenConditionIsSatified</function>
     <attribute>
-      <attname>when</attname>
+      <name>when</name>
       <required />
     </attribute>
     <attribute>
-      <attname>is</attname>
+      <name>is</name>
       <attdef>true</attdef>
     </attribute>
     <attribute>
-      <attname>isInverted</attname>
+      <name>isInverted</name>
       <attdef>false</attdef>
     </attribute>
     <comment>
@@ -527,7 +527,7 @@
     <name>switch</name>
     <function>switchCondition</function>
     <attribute>
-      <attname>when</attname>
+      <name>when</name>
       <required />
     </attribute>
     <comment>
@@ -538,7 +538,7 @@
     <name>case</name>
     <function>switchConditionCase</function>
     <attribute>
-      <attname>is</attname>
+      <name>is</name>
       <atttype>string</atttype>
       <attdef>x.x-def</attdef>
     </attribute>
@@ -550,7 +550,7 @@
     <name>doctype</name>
     <function>setDoctype</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <comment>
@@ -562,10 +562,10 @@
     <name>flush</name>
     <function>setFlushOptions</function>
     <attribute>
-      <attname>template</attname>
+      <name>template</name>
     </attribute>
     <attribute>
-      <attname>contentType</attname>
+      <name>contentType</name>
     </attribute>
     <comment>
       Nastaví vlastnosti výstupu.
@@ -577,13 +577,13 @@
     <name>favicon</name>
     <function>getFavicon</function>
     <attribute>
-      <attname>url</attname>
+      <name>url</name>
       <required />
       <atttype>string</atttype>
       <comment>Cesta k obrázku.</comment>
     </attribute>
     <attribute>
-      <attname>contentType</attname>
+      <name>contentType</name>
       <required />
       <atttype>string</atttype>
       <comment>Content-type pro daný obrázek.</comment>
@@ -598,7 +598,7 @@
     <function>debugMode</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>isEnabled</attname>
+      <name>isEnabled</name>
       <required />
       <atttype>bool</atttype>
       <comment>Zda má být debug mód zapnutý nebo vypnutý.</comment>

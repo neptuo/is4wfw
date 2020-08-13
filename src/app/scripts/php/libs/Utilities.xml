@@ -12,70 +12,70 @@
     <function>concatValues</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>output</attname>
+      <name>output</name>
       <required />
       <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
     </attribute>
     <attribute>
-      <attname>value1</attname>
+      <name>value1</name>
       <required />
       <comment>První hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value2</attname>
+      <name>value2</name>
       <required />
       <comment>Druhá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value3</attname>
+      <name>value3</name>
       <comment>Třetí hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value4</attname>
+      <name>value4</name>
       <comment>Čtvrtá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value5</attname>
+      <name>value5</name>
       <comment>Pátá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value6</attname>
+      <name>value6</name>
       <comment>Šestá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value7</attname>
+      <name>value7</name>
       <comment>Sedmá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value8</attname>
+      <name>value8</name>
       <comment>Osmá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value9</attname>
+      <name>value9</name>
       <comment>Devátá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value10</attname>
+      <name>value10</name>
       <comment>Desátá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value11</attname>
+      <name>value11</name>
       <comment>Jedenáctá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value12</attname>
+      <name>value12</name>
       <comment>Dvanáctá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value13</attname>
+      <name>value13</name>
       <comment>Třináctá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value14</attname>
+      <name>value14</name>
       <comment>Čtrnáctá hodnota.</comment>
     </attribute>
     <attribute>
-      <attname>value15</attname>
+      <name>value15</name>
       <comment>Pátnáctá hodnota.</comment>
     </attribute>
     <comment>Spojí hodnoty všech atributů 'value1-5' do jednoho řetězce a tuto hodnotu nastaví do proměnné 'output' v této knihovně.</comment>
@@ -85,12 +85,12 @@
     <function>addToArray</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>output</attname>
+      <name>output</name>
       <required />
       <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
     </attribute>
     <attribute>
-      <attname>key</attname>
+      <name>key</name>
       <required />
       <atttype>string</atttype>
       <prefix />
@@ -103,12 +103,12 @@
     <function>replaceHtmlNewLines</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>output</attname>
+      <name>output</name>
       <required />
       <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
     </attribute>
     <attribute>
-      <attname>input</attname>
+      <name>input</name>
       <required />
       <atttype>string</atttype>
       <comment>Hodnota, v níž se mají nahradit nové řádky za "br".</comment>
@@ -120,23 +120,23 @@
     <function>dateTimeToTimestamp</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>output</attname>
+      <name>output</name>
       <required />
       <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
     </attribute>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
       <comment>Hodnota k rozparsování.</comment>
     </attribute>
     <attribute>
-      <attname>format</attname>
+      <name>format</name>
       <required />
       <atttype>string</atttype>
       <comment>PHP formát string pro rozparsování "value".</comment>
     </attribute>
     <attribute>
-      <attname>trimTime</attname>
+      <name>trimTime</name>
       <atttype>bool</atttype>
       <attdef>false</attdef>
       <comment>Zda se má vynulovat čas.</comment>
@@ -148,7 +148,7 @@
     <function>clear</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>output</attname>
+      <name>output</name>
       <required />
       <comment>Název property z této knihovny, která má být vymazána.</comment>
     </attribute>

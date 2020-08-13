@@ -10,7 +10,7 @@
   <decorator>
     <function>requireGroup</function>
     <attribute>
-      <attname>requireGroup</attname>
+      <name>requireGroup</name>
       <atttype>string</atttype>
       <comment>Název skupiny uživatelů.</comment>
     </attribute>
@@ -22,7 +22,7 @@
   <decorator>
     <function>requirePerm</function>
     <attribute>
-      <attname>requirePerm</attname>
+      <name>requirePerm</name>
       <atttype>string</atttype>
       <comment>Název oprávnění.</comment>
     </attribute>

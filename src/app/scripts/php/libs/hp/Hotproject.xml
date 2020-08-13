@@ -12,7 +12,7 @@
     <name>projectionEdit</name>
     <function>showProjectionEdit</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí výpis projekcí.	
@@ -22,10 +22,10 @@
     <name>projectionForm</name>
     <function>showProjectionForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showErrors</attname>
+      <name>showErrors</name>
     </attribute>
     <comment>
       Editace projekce.	
@@ -35,7 +35,7 @@
     <name>projections</name>
     <function>showProjections</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <comment>
@@ -46,7 +46,7 @@
     <name>projection</name>
     <function>showProjectionDetail</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <comment>
@@ -57,7 +57,7 @@
     <name>referenceEdit</name>
     <function>showReferencenEdit</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí výpis referencí.	
@@ -67,10 +67,10 @@
     <name>referenceForm</name>
     <function>showReferenceForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showErrors</attname>
+      <name>showErrors</name>
     </attribute>
     <comment>
       Editace reference.	
@@ -80,7 +80,7 @@
     <name>references</name>
     <function>showReferences</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <comment>
@@ -91,7 +91,7 @@
     <name>reference</name>
     <function>showreferenceDetail</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <comment>

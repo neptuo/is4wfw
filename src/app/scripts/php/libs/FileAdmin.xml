@@ -11,15 +11,15 @@
     <name>browser</name>
     <function>fileBrowser</function>
     <attribute>
-      <attname>dirId</attname>
+      <name>dirId</name>
 	    <attdef>0</attdef>
     </attribute>
     <attribute>
-      <attname>browsable</attname>
+      <name>browsable</name>
 	    <attdef>true</attdef>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
 	    <attdef>true</attdef>
     </attribute>
     <comment>
@@ -30,19 +30,19 @@
     <name>browser</name>
     <function>fileBrowserWithTemplate</function>
     <attribute>
-      <attname>dirId</attname>
+      <name>dirId</name>
       <required />
 	    <atttype>number</atttype>
       <comment>Id složky, jejíž obsah se má zobrazit.</comment>
     </attribute>
     <attribute>
-      <attname>grouped</attname>
+      <name>grouped</name>
       <atttype>bool</atttype>
       <attdef>true</attdef>
       <comment>Zda mají složky a soubory být seřazený samostatně (rozdělení do dvou skupin).</comment>
     </attribute>
     <attribute>
-      <attname>parentName</attname>
+      <name>parentName</name>
       <atttype>string</atttype>
       <comment>Pokud je vyplněný, pak bude v seznamu zahrnut i odkaz na rodičovskou složku.</comment>
     </attribute>
@@ -105,28 +105,28 @@
     <name>upload</name>
     <function>fileUpload</function>
     <attribute>
-      <attname>dirId</attname>
+      <name>dirId</name>
 	    <attdef>0</attdef>
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <comment>Stránka, kam se má uživatel přesměrovat po úspěšném nahrátí souboru.</comment>
     </attribute>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <atttype>string</atttype>
       <comment>Pokud je vyplněn, pak umožňuje pojmenovat komponentu a díky tomu je možné mít více upload na jedné stránce.</comment>
     </attribute>
     <attribute>
-      <attname>useRights</attname>
+      <name>useRights</name>
 	    <attdef>true</attdef>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
 	    <attdef>true</attdef>
     </attribute>
     <attribute>
-      <attname>isStandalone</attname>
+      <name>isStandalone</name>
       <atttype>bool</atttype>
 	    <attdef>false</attdef>
       <comment>Pokud je nastaven na "true", zobrazí se vždy (tzn. není součástí fa:browser).</comment>
@@ -139,7 +139,7 @@
     <name>upload</name>
     <function>uploadFormTag</function>
     <attribute>
-      <attname>dirId</attname>
+      <name>dirId</name>
       <required />
 	    <atttype>number</atttype>
       <comment>Id složky, do které se má uploadovat.</comment>
@@ -152,11 +152,11 @@
     <name>directoryEditor</name>
     <function>directoryEditor</function>
     <attribute>
-      <attname>useRights</attname>
+      <name>useRights</name>
 	    <attdef>true</attdef>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
 	    <attdef>true</attdef>
     </attribute>
     <comment>
@@ -168,7 +168,7 @@
     <function>fileDeleter</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
       <required />
 	    <atttype>number</atttype>
       <comment>Id souboru, která se má smazat.</comment>

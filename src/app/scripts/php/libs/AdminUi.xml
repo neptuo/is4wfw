@@ -12,7 +12,7 @@
     <function>setSuccessMessage</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>message</attname>
+      <name>message</name>
       <required />
       <atttype>string</atttype>
       <comment>Hláška po úspěšném dokončení akce.</comment>
@@ -25,13 +25,13 @@
     <name>deleteButton</name>
     <function>deleteButton</function>
     <attribute>
-      <attname>hiddenField</attname>
+      <name>hiddenField</name>
       <required />
       <atttype>string</atttype>
       <comment>Název a hodnota hidden inputu, kterým se pozná odeslání formuláře.</comment>
     </attribute>
     <attribute>
-      <attname>confirmValue</attname>
+      <name>confirmValue</name>
       <atttype>string</atttype>
       <comment>Hodnota z mazaného objektu, která se doplní do potvrzovacího dialogu.</comment>
     </attribute>
@@ -46,25 +46,25 @@
     <name>newButton</name>
     <function>newButton</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
       <atttype>string</atttype>
       <comment>Id stránky, kam má odkaz vést.</comment>
     </attribute>
     <attribute>
-      <attname>text</attname>
+      <name>text</name>
       <required />
       <atttype>string</atttype>
       <comment>Text odkazu.</comment>
     </attribute>
     <attribute>
-      <attname>paramName</attname>
+      <name>paramName</name>
       <atttype>string</atttype>
       <attdef>id</attdef>
       <comment>Název id parametru, který bude mít hodnotu "new".</comment>
     </attribute>
     <attribute>
-      <attname>param</attname>
+      <name>param</name>
       <atttype>string</atttype>
       <prefix />
       <comment>Seznam parametrů předaných do odkazu.</comment>
@@ -77,31 +77,31 @@
     <name>saveButtons</name>
     <function>saveButtons</function>
     <attribute>
-      <attname>saveName</attname>
+      <name>saveName</name>
       <atttype>string</atttype>
       <attdef>save</attdef>
       <comment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</comment>
     </attribute>
     <attribute>
-      <attname>saveParam</attname>
+      <name>saveParam</name>
       <atttype>string</atttype>
       <prefix />
       <comment>Seznam parametrů předaných při přesměrování pro "Save".</comment>
     </attribute>
     <attribute>
-      <attname>closePageId</attname>
+      <name>closePageId</name>
       <required />
       <atttype>string</atttype>
       <comment>Id stránky, kam má vést odkaz pro zavření.</comment>
     </attribute>
     <attribute>
-      <attname>closeParam</attname>
+      <name>closeParam</name>
       <atttype>string</atttype>
       <prefix />
       <comment>Seznam parametrů, které se předají "Close" odkazu.</comment>
     </attribute>
     <attribute>
-      <attname>message</attname>
+      <name>message</name>
       <atttype>string</atttype>
       <comment>Temp message po úspěšném uložení.</comment>
     </attribute>
@@ -114,25 +114,25 @@
     <name>redirectAfterSave</name>
     <function>redirectAfterSave</function>
     <attribute>
-      <attname>saveName</attname>
+      <name>saveName</name>
       <required />
       <atttype>string</atttype>
       <comment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</comment>
     </attribute>
     <attribute>
-      <attname>saveParam</attname>
+      <name>saveParam</name>
       <atttype>string</atttype>
       <prefix />
       <comment>Seznam parametrů předaných při přesměrování pro "Save".</comment>
     </attribute>
     <attribute>
-      <attname>closePageId</attname>
+      <name>closePageId</name>
       <required />
       <atttype>string</atttype>
       <comment>Id stránky, kam má vést odkaz pro zavření.</comment>
     </attribute>
     <attribute>
-      <attname>closeParam</attname>
+      <name>closeParam</name>
       <atttype>string</atttype>
       <prefix />
       <comment>Seznam parametrů, které se předají "Close" odkazu.</comment>
@@ -145,7 +145,7 @@
     <name>field</name>
     <function>field</function>
     <attribute>
-      <attname>label</attname>
+      <name>label</name>
       <required />
       <atttype>string</atttype>
       <prefix />
@@ -161,7 +161,7 @@
     <name>edit</name>
     <function>edit</function>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
       <required />
       <atttype>string</atttype>
       <comment>Hodnota id, podle které se má rozhodovat.</comment>
@@ -174,7 +174,7 @@
     <name>validation</name>
     <function>validation</function>
     <attribute>
-      <attname>key</attname>
+      <name>key</name>
       <atttype>string</atttype>
       <comment>Klíč, jejíž validační hlášky se mají zobrazit.</comment>
     </attribute>

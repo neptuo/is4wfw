@@ -13,23 +13,23 @@
     <function>setValue</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <comment>Název proměnné, která se má nastavit.</comment>
     </attribute>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
       <comment>Nová hodnota proměnné.</comment>
     </attribute>
     <attribute>
-      <attname>scope</attname>
+      <name>scope</name>
       <atttype>string</atttype>
       <attdef>request</attdef>
       <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</comment>
     </attribute>
     <attribute>
-      <attname>select</attname>
+      <name>select</name>
       <comment>Pokud je "value" pole, pak použije hodnotu proměnné pro transformaci tohoto pole a z každé položky vybere daný klíč, výsledné pole pak nastaví jako hodnotu proměnné (obdoba LINQ select).</comment>
     </attribute>
     <comment>
@@ -41,12 +41,12 @@
     <function>setScope</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <comment>Název proměnné, jejíž scope se má nastavit.</comment>
     </attribute>
     <attribute>
-      <attname>scope</attname>
+      <name>scope</name>
       <required />
       <atttype>string</atttype>
       <attdef>request</attdef>
@@ -61,7 +61,7 @@
     <function>removeValue</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <comment>Název proměnné, která se má zrušit.</comment>
     </attribute>

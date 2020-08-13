@@ -13,14 +13,14 @@
     <name>selectProject</name>
     <function>selectProject</function>
     <attribute>
-      <attname>label</attname>
+      <name>label</name>
 	    <attdef>false</attdef>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí formulář pro výběr projektu.
@@ -30,10 +30,10 @@
     <name>showProjects</name>
     <function>showProjects</function>
     <attribute>
-      <attname>detailPageId</attname>
+      <name>detailPageId</name>
     </attribute>
     <attribute>
-      <attname>editable</attname>
+      <name>editable</name>
     </attribute>
     <comment>
       Zobrazí výpis všech formulářú.
@@ -45,7 +45,7 @@
     <name>showEditForm</name>
     <function>showEditForm</function>
     <attribute>
-      <attname>showNotSelectedError</attname>
+      <name>showNotSelectedError</name>
     </attribute>
     <comment>
       Zobrazí formulář pro úpravu nebo vytvoření projektu.

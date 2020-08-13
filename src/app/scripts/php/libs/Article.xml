@@ -12,48 +12,48 @@
     <name>showLine</name>
     <function>showLine</function>
     <attribute>
-      <attname>lineId</attname>
+      <name>lineId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>template</attname>
+      <name>template</name>
       <obsolete>Použijte 'templateId'.</obsolete>
     </attribute>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>pageLangId</attname>
+      <name>pageLangId</name>
     </attribute>
     <attribute>
-      <attname>articleLangId</attname>
+      <name>articleLangId</name>
     </attribute>
     <attribute>
-      <attname>method</attname>
+      <name>method</name>
     </attribute>
     <attribute>
-      <attname>sortBy</attname>
+      <name>sortBy</name>
     </attribute>
     <attribute>
-      <attname>sort</attname>
+      <name>sort</name>
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
     </attribute>
     <attribute>
-      <attname>limit</attname>
+      <name>limit</name>
     </attribute>
     <attribute>
-      <attname>visible</attname>
+      <name>visible</name>
     </attribute>
     <attribute>
-      <attname>labelIds</attname>
+      <name>labelIds</name>
     </attribute>
     <attribute>
-      <attname>pageable</attname>
+      <name>pageable</name>
       <attdef>false</attdef>
     </attribute>
     <comment>
@@ -69,20 +69,20 @@
     <name>showRss</name>
     <function>showRssLine</function>
     <attribute>
-      <attname>lineId</attname>
+      <name>lineId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>articleLangId</attname>
+      <name>articleLangId</name>
     </attribute>
     <attribute>
-      <attname>pageLangId</attname>
+      <name>pageLangId</name>
     </attribute>
     <attribute>
-      <attname>method</attname>
+      <name>method</name>
     </attribute>
     <comment>
       Zobrazí řadu článků jako RSS dokument.
@@ -92,33 +92,33 @@
     <name>showDetail</name>
     <function>showDetail</function>
     <attribute>
-      <attname>template</attname>
+      <name>template</name>
       <obsolete>Použijte 'templateId'.</obsolete>
     </attribute>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
     </attribute>
     <attribute>
-      <attname>articleId</attname>
+      <name>articleId</name>
     </attribute>
     <attribute>
-      <attname>articleLangId</attname>
+      <name>articleLangId</name>
     </attribute>
     <attribute>
-      <attname>defaultArticleId</attname>
+      <name>defaultArticleId</name>
     </attribute>
     <attribute>
-      <attname>showError</attname>
+      <name>showError</name>
     </attribute>
     <attribute>
-      <attname>lineId</attname>
+      <name>lineId</name>
       <attdef>0</attdef>
     </attribute>
     <attribute>
-      <attname>nextLinkText</attname>
+      <name>nextLinkText</name>
     </attribute>
     <attribute>
-      <attname>prevLinkText</attname>
+      <name>prevLinkText</name>
     </attribute>
     <comment>
       Zobrazí detail článku do templatu (atribut template, templateId). Parametr 'articleId' může být také zadán jako
@@ -130,26 +130,26 @@
     <name>detail</name>
     <function>showDetailFullTag</function>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
     </attribute>
     <attribute>
-      <attname>articleLangId</attname>
+      <name>articleLangId</name>
     </attribute>
     <attribute>
-      <attname>defaultArticleId</attname>
+      <name>defaultArticleId</name>
     </attribute>
     <attribute>
-      <attname>showError</attname>
+      <name>showError</name>
     </attribute>
     <attribute>
-      <attname>lineId</attname>
+      <name>lineId</name>
       <attdef>0</attdef>
     </attribute>
     <attribute>
-      <attname>nextLinkText</attname>
+      <name>nextLinkText</name>
     </attribute>
     <attribute>
-      <attname>prevLinkText</attname>
+      <name>prevLinkText</name>
     </attribute>
     <comment>
       Zobrazí detail článku dle obsahu svého těla. Parametr 'id' může být také zadán jako
@@ -161,29 +161,29 @@
     <name>labels</name>
     <function>showLabels</function>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>articleId</attname>
+      <name>articleId</name>
     </attribute>
     <attribute>
-      <attname>lineId</attname>
+      <name>lineId</name>
     </attribute>
     <attribute>
-      <attname>languageId</attname>
+      <name>languageId</name>
     </attribute>
     <attribute>
-      <attname>sortBy</attname>
+      <name>sortBy</name>
     </attribute>
     <attribute>
-      <attname>sort</attname>
+      <name>sort</name>
     </attribute>
     <attribute>
-      <attname>limit</attname>
+      <name>limit</name>
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
     </attribute>
     <comment>
       Zobrazí seznam štítků, pokud je vyplněno lineId nebo articleId, pak jen štítky vstahující se ke článku nebo řadě.
@@ -195,11 +195,11 @@
     <name>label</name>
     <function>showLabel</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>labelId</attname>
+      <name>labelId</name>
     </attribute>
     <comment>
       Zobrazí fíld štítku. Type může být: name, url, a id.
@@ -218,29 +218,29 @@
     <name>showManagement</name>
     <function>showManagement</function>
     <attribute>
-      <attname>lineId</attname>
+      <name>lineId</name>
     </attribute>
     <attribute>
-      <attname>detailPageId</attname>
+      <name>detailPageId</name>
     </attribute>
     <attribute>
-      <attname>method</attname>
+      <name>method</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>newArticleButton</attname>
+      <name>newArticleButton</name>
     </attribute>
     <attribute>
-      <attname>labelFilter</attname>
+      <name>labelFilter</name>
     </attribute>
     <attribute>
-      <attname>pageable</attname>
+      <name>pageable</name>
 	    <attdef>false</attdef>
     </attribute>
     <attribute>
-      <attname>customFormId</attname>
+      <name>customFormId</name>
     </attribute>
     <comment>
       Správa článků. Argument 'lineId' může být předán přes _REQUEST['line-id'] nebo _SESSION['article-line-id'].
@@ -254,19 +254,19 @@
     <name>createArticle</name>
     <function>createArticle</function>
     <attribute>
-      <attname>lineId</attname>
+      <name>lineId</name>
     </attribute>
     <attribute>
-      <attname>detailPageId</attname>
+      <name>detailPageId</name>
     </attribute>
     <attribute>
-      <attname>method</attname>
+      <name>method</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showError</attname>
+      <name>showError</name>
     </attribute>
     <comment>
       Form pro vytvoření nového článku.
@@ -276,16 +276,16 @@
     <name>setLine</name>
     <function>setLine</function>
     <attribute>
-      <attname>method</attname>
+      <name>method</name>
     </attribute>
     <attribute>
-      <attname>hideWhenOnlyOne</attname>
+      <name>hideWhenOnlyOne</name>
     </attribute>
     <attribute>
-      <attname>showError</attname>
+      <name>showError</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí formulář pro nastavení line-id. Argument 'method' (get | post | session) určuje
@@ -298,16 +298,16 @@
     <name>showLines</name>
     <function>showLines</function>
     <attribute>
-      <attname>editable</attname>
+      <name>editable</name>
     </attribute>
     <attribute>
-      <attname>detailPageId</attname>
+      <name>detailPageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>newLineButton</attname>
+      <name>newLineButton</name>
     </attribute>
     <comment>
       Vypíše všechny řady článků. Pokud je 'editable' "true", pak se zobrazí editační formuláře. 
@@ -317,7 +317,7 @@
     <name>showLabels</name>
     <function>showEditLabels</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí seznam štítků
@@ -327,7 +327,7 @@
     <name>showLabelEdit</name>
     <function>showEditLabelForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci štítku
@@ -337,10 +337,10 @@
     <name>createLine</name>
     <function>createLine</function>
     <attribute>
-      <attname>detailPageId</attname>
+      <name>detailPageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí formulář pro přidání řady článků. 
@@ -350,25 +350,25 @@
     <name>editArticle</name>
     <function>showEditForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>submitPageId</attname>
+      <name>submitPageId</name>
     </attribute>
     <attribute>
-      <attname>backPageId</attname>
+      <name>backPageId</name>
     </attribute>
     <attribute>
-      <attname>lineId</attname>
+      <name>lineId</name>
     </attribute>
     <attribute>
-      <attname>customFormId</attname>
+      <name>customFormId</name>
     </attribute>
     <attribute>
-      <attname>customFormTemplateId</attname>
+      <name>customFormTemplateId</name>
     </attribute>
     <attribute>
-      <attname>supportedLanguageId</attname>
+      <name>supportedLanguageId</name>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci článku. 
@@ -386,10 +386,10 @@
     <name>editLine</name>
     <function>showEditLineForm</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>submitPageId</attname>
+      <name>submitPageId</name>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci řady článků. 
@@ -406,10 +406,10 @@
     <name>date</name>
     <function>showDate</function>
     <attribute>
-      <attname>format</attname>
+      <name>format</name>
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
     </attribute>
     <comment>
       Zobrazí datum. "format" je formát. Pokud je "type" = "datetime", vypise field "datetime", tedy nastavitelne datum
@@ -419,7 +419,7 @@
     <name>time</name>
     <function>showTime</function>
     <attribute>
-      <attname>format</attname>
+      <name>format</name>
     </attribute>
     <comment>
       Zobrazí čas. "format" je formát.

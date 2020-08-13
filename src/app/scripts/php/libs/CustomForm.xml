@@ -12,31 +12,31 @@
     <name>list</name>
     <function>listRows</function>
     <attribute>
-      <attname>formId</attname>
+      <name>formId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>rowId</attname>
+      <name>rowId</name>
     </attribute>
     <attribute>
-      <attname>filter</attname>
+      <name>filter</name>
     </attribute>
     <attribute>
-      <attname>sortBy</attname>
+      <name>sortBy</name>
     </attribute>
     <attribute>
-      <attname>desc</attname>
+      <name>desc</name>
     </attribute>
     <attribute>
-      <attname>limit</attname>
+      <name>limit</name>
       <attdef>-1</attdef>
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
     </attribute>
     <anyAttribute />
     <comment>
@@ -51,27 +51,27 @@
     <name>list</name>
     <function>listRowsFullTag</function>
     <attribute>
-      <attname>formId</attname>
+      <name>formId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>rowId</attname>
+      <name>rowId</name>
     </attribute>
     <attribute>
-      <attname>filter</attname>
+      <name>filter</name>
     </attribute>
     <attribute>
-      <attname>sortBy</attname>
+      <name>sortBy</name>
     </attribute>
     <attribute>
-      <attname>desc</attname>
+      <name>desc</name>
     </attribute>
     <attribute>
-      <attname>limit</attname>
+      <name>limit</name>
       <attdef>-1</attdef>
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
     </attribute>
     <anyAttribute />
     <comment>
@@ -86,7 +86,7 @@
     <name>count</name>
     <function>countRows</function>
     <attribute>
-      <attname>formId</attname>
+      <name>formId</name>
       <required />
     </attribute>
     <anyAttribute />
@@ -99,11 +99,11 @@
     <name>setupCustomUrl</name>
     <function>setupCustomUrl</function>
     <attribute>
-      <attname>formId</attname>
+      <name>formId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>fieldName</attname>
+      <name>fieldName</name>
       <required />
     </attribute>
     <comment>
@@ -114,55 +114,55 @@
     <name>form</name>
     <function>form</function>
     <attribute>
-      <attname>formId</attname>
+      <name>formId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>templateId</attname>
+      <name>templateId</name>
       <required />
       <comment>ID šablony s definicí obsahu formuláře.</comment>
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
       <comment>Typu atributu (db | email). Všechny atributy začínající na 'email' jsou validní jen pokud je typ formuláře 'email'.</comment>
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
       <comment>ID stránky, kam bude uživatel přesměrován po úspěšném odeslání a zpracování formuláře.</comment>
     </attribute>
     <attribute>
-      <attname>rowId</attname>
+      <name>rowId</name>
       <comment>V případě, že type je 'db', definuje ID řádku, který se má editovat.</comment>
     </attribute>
     <attribute>
-      <attname>emailTemplateId</attname>
+      <name>emailTemplateId</name>
     </attribute>
     <attribute>
-      <attname>emailAddresses</attname>
+      <name>emailAddresses</name>
     </attribute>
     <attribute>
-      <attname>emailSubject</attname>
+      <name>emailSubject</name>
     </attribute>
     <attribute>
-      <attname>emailSender</attname>
+      <name>emailSender</name>
       <comment>Umožňuje definovat emailovou adresu odesilate.</comment>
     </attribute>
     <attribute>
-      <attname>emailSenderFieldName</attname>
+      <name>emailSenderFieldName</name>
       <comment>Umožňuje definovat emailovou adresu odesilate z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailSender', jinak se použije právě 'emailSender'.</comment>
     </attribute>
     <attribute>
-      <attname>emailReplyTo</attname>
+      <name>emailReplyTo</name>
       <comment>Umožňuje definovat emailovou adresu, kterou se má odpovědět.</comment>
     </attribute>
     <attribute>
-      <attname>emailReplyToFieldName</attname>
+      <name>emailReplyToFieldName</name>
       <comment>Umožňuje definovat emailovou adresu, kterou se má odpovědět, z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailReplyTo', jinak se použije právě 'emailReplyTo'.</comment>
     </attribute>
     <attribute>
-      <attname>emailIsHtml</attname>
+      <name>emailIsHtml</name>
       <attdef>false</attdef>
       <comment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</comment>
     </attribute>
@@ -176,50 +176,50 @@
     <name>form</name>
     <function>formFullTag</function>
     <attribute>
-      <attname>formId</attname>
+      <name>formId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
       <comment>Typu atributu (db | email). Všechny atributy začínající na 'email' jsou validní jen pokud je typ formuláře 'email'.</comment>
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
       <comment>ID stránky, kam bude uživatel přesměrován po úspěšném odeslání a zpracování formuláře.</comment>
     </attribute>
     <attribute>
-      <attname>rowId</attname>
+      <name>rowId</name>
       <comment>V případě, že type je 'db', definuje ID řádku, který se má editovat.</comment>
     </attribute>
     <attribute>
-      <attname>emailTemplateId</attname>
+      <name>emailTemplateId</name>
     </attribute>
     <attribute>
-      <attname>emailAddresses</attname>
+      <name>emailAddresses</name>
     </attribute>
     <attribute>
-      <attname>emailSubject</attname>
+      <name>emailSubject</name>
     </attribute>
     <attribute>
-      <attname>emailSender</attname>
+      <name>emailSender</name>
       <comment>Umožňuje definovat emailovou adresu odesilate.</comment>
     </attribute>
     <attribute>
-      <attname>emailSenderFieldName</attname>
+      <name>emailSenderFieldName</name>
       <comment>Umožňuje definovat emailovou adresu odesilate z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailSender', jinak se použije právě 'emailSender'.</comment>
     </attribute>
     <attribute>
-      <attname>emailReplyTo</attname>
+      <name>emailReplyTo</name>
       <comment>Umožňuje definovat emailovou adresu, kterou se má odpovědět.</comment>
     </attribute>
     <attribute>
-      <attname>emailReplyToFieldName</attname>
+      <name>emailReplyToFieldName</name>
       <comment>Umožňuje definovat emailovou adresu, kterou se má odpovědět, z formulářového pole. Pokud je správně vyplněno, má přednost před 'emailReplyTo', jinak se použije právě 'emailReplyTo'.</comment>
     </attribute>
     <attribute>
-      <attname>emailIsHtml</attname>
+      <name>emailIsHtml</name>
       <attdef>false</attdef>
       <comment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</comment>
     </attribute>
@@ -234,7 +234,7 @@
     <name>formValidation</name>
     <function>formValidationTag</function>
     <attribute>
-      <attname>errorMessage</attname>
+      <name>errorMessage</name>
       <required />
     </attribute>
     <comment>
@@ -245,53 +245,53 @@
     <name>field</name>
     <function>field</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
     </attribute>
     <attribute>
-      <attname>viewType</attname>
+      <name>viewType</name>
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
     </attribute>
     <attribute>
-      <attname>required</attname>
+      <name>required</name>
     </attribute>
     <attribute>
-      <attname>validation</attname>
+      <name>validation</name>
     </attribute>
     <attribute>
-      <attname>elementId</attname>
+      <name>elementId</name>
     </attribute>
     <attribute>
-      <attname>transformation</attname>
+      <name>transformation</name>
     </attribute>
     <attribute>
-      <attname>default</attname>
+      <name>default</name>
     </attribute>
     <attribute>
-      <attname>errorMessage</attname>
+      <name>errorMessage</name>
     </attribute>
     <attribute>
-      <attname>requiredValue</attname>
+      <name>requiredValue</name>
     </attribute>
     <attribute>
-      <attname>transient</attname>
+      <name>transient</name>
     </attribute>
     <attribute>
-      <attname>data</attname>
+      <name>data</name>
     </attribute>
     <attribute>
-      <attname>cssClass</attname>
+      <name>cssClass</name>
     </attribute>
     <attribute>
-      <attname>dirId</attname>
+      <name>dirId</name>
     </attribute>
     <attribute>
-      <attname>referenceFormId</attname>
+      <name>referenceFormId</name>
     </attribute>
     <attribute>
-      <attname>referenceCaptionField</attname>
+      <name>referenceCaptionField</name>
     </attribute>
     <comment>
       Zobrazí jedno pole z formuláře s daným "name", "viewType" udává zda zobrazit
@@ -320,15 +320,15 @@
     <name>button</name>
     <function>button</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
     </attribute>
     <attribute>
-      <attname>elementId</attname>
+      <name>elementId</name>
     </attribute>
     <comment>
       Zobrazí odesílací tlačítko, "type" je typ (submit|clear|delete), "value" je zobrazený text na tlačítku, "elementId" nastavuje id html elementu
@@ -338,7 +338,7 @@
     <name>specialfield</name>
     <function>specialfield</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
     </attribute>
     <comment>
       Speciální fíld, type: (idleeven)
@@ -348,7 +348,7 @@
     <name>setCustomProperty</name>
     <function>setCustomProperty</function>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
     </attribute>
     <comment>
       Nastaví custom property na zadanou hodnotu.
@@ -358,10 +358,10 @@
     <name>setFieldAsCustomProperty</name>
     <function>setFieldAsCustomProperty</function>
     <attribute>
-      <attname>fieldName</attname>
+      <name>fieldName</name>
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
     </attribute>
     <comment>
       Nastaví custom property na hodnotu fieldu.
@@ -372,7 +372,7 @@
     <name>formList</name>
     <function>formList</function>
     <attribute>
-      <attname>userFrames</attname>
+      <name>userFrames</name>
     </attribute>
     <comment>
     	Zobrazí seznam všech uživatelských formulářu s možností smazání.
@@ -382,7 +382,7 @@
     <name>formCreator</name>
     <function>formCreator</function>
     <attribute>
-      <attname>userFrames</attname>
+      <name>userFrames</name>
     </attribute>
     <comment>
     	Zobrazí formulář pro vytvoření uživatelského formuláře.

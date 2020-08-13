@@ -12,7 +12,7 @@
     <name>process</name>
     <function>processView</function>
     <attribute>
-      <attname>path</attname>
+      <name>path</name>
       <required />
       <obsolete>Nedělá nic. Nikdy nedělal.</obsolete>
     </attribute>
@@ -31,7 +31,7 @@
     <name>template</name>
     <function>useTemplate</function>
     <attribute>
-      <attname>src</attname>
+      <name>src</name>
       <required />
     </attribute>
     <comment>
@@ -49,11 +49,11 @@
     <name>header</name>
     <function>addHeader</function>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
     </attribute>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
     </attribute>
     <comment>
@@ -64,11 +64,11 @@
     <name>resource</name>
     <function>addResource</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
     <attribute>
-      <attname>src</attname>
+      <name>src</name>
       <required />
     </attribute>
     <comment>
@@ -79,7 +79,7 @@
     <name>title</name>
     <function>setTitle</function>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
     </attribute>
     <comment>
@@ -90,10 +90,10 @@
     <name>panel</name>
     <function>showPanel</function>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
     </attribute>
     <attribute>
-      <attname>class</attname>
+      <name>class</name>
     </attribute>
     <comment>
       Panel
@@ -102,7 +102,7 @@
   <decorator>
     <function>provideBodyByPath</function>
     <attribute>
-      <attname>src</attname>
+      <name>src</name>
       <atttype>string</atttype>
       <required />
       <comment>Virtuální cesta k šabloně.</comment>

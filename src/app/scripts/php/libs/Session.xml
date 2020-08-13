@@ -13,12 +13,12 @@
     <function>setValue</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <comment>Název proměnné, která se má nastavit.</comment>
     </attribute>
     <attribute>
-      <attname>value</attname>
+      <name>value</name>
       <required />
       <comment>Nová hodnota proměnné.</comment>
     </attribute>

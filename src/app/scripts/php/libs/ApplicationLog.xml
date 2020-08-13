@@ -12,10 +12,10 @@
     <name>list</name>
     <function>listLogs</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí seznam logu.
@@ -25,10 +25,10 @@
     <name>log</name>
     <function>showLog</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí log.

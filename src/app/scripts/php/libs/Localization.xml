@@ -12,7 +12,7 @@
     <function>setLanguage</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <atttype>string</atttype>
       <comment>Název jazyku.</comment>
@@ -26,13 +26,13 @@
     <function>useBundle</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>name</attname>
+      <name>name</name>
       <required />
       <atttype>string</atttype>
       <comment>Název bundlu, který se má načíst.</comment>
     </attribute>
     <attribute>
-      <attname>system</attname>
+      <name>system</name>
       <atttype>bool</atttype>
       <attdef>true</attdef>
       <comment>Zda se jedná o systémový bundle.</comment>
@@ -45,19 +45,19 @@
     <name>edit</name>
     <function>edit</function>
     <attribute>
-      <attname>bundleName</attname>
+      <name>bundleName</name>
       <required />
       <atttype>string</atttype>
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
-      <attname>languageName</attname>
+      <name>languageName</name>
       <required />
       <atttype>string</atttype>
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
-      <attname>filterKeyPrefix</attname>
+      <name>filterKeyPrefix</name>
       <atttype>string</atttype>
       <comment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</comment>
     </attribute>
@@ -69,19 +69,19 @@
     <name>edit</name>
     <function>editFullTag</function>
     <attribute>
-      <attname>bundleName</attname>
+      <name>bundleName</name>
       <required />
       <atttype>string</atttype>
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
-      <attname>languageName</attname>
+      <name>languageName</name>
       <required />
       <atttype>string</atttype>
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
-      <attname>filterKeyPrefix</attname>
+      <name>filterKeyPrefix</name>
       <atttype>string</atttype>
       <comment>Seznam čárkou oddělených prefixů klíčů, které mají být editovány.</comment>
     </attribute>

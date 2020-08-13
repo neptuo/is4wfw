@@ -12,11 +12,11 @@
     <name>showEditPage</name>
     <function>showEditPage</function>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <attdef>0</attdef>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
       <attdef>0</attdef>
     </attribute>
     <comment>
@@ -27,7 +27,7 @@
     <name>showList</name>
     <function>showPages</function>
     <attribute>
-      <attname>editable</attname>
+      <name>editable</name>
     </attribute>
     <comment>
       Zobrazí kompletní administrační výpis stránek. Navazující prvek pro editaci je <strong>showEditPage</strong>.
@@ -37,7 +37,7 @@
     <name>pageProperties</name>
     <function>managePageProperties</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
       <attdef>true</attdef>
     </attribute>
     <comment>
@@ -48,7 +48,7 @@
     <name>showFiles</name>
     <function>showPageFiles</function>
     <attribute>
-      <attname>editable</attname>
+      <name>editable</name>
     </attribute>
     <comment>
       Zobrazí kompletní administrační výpis souborů .Navazující prvek pro editaci je <strong>showEditPage</strong>.
@@ -93,7 +93,7 @@
     <name>showLanguages</name>
     <function>showLanguages</function>
     <attribute>
-      <attname>editable</attname>
+      <name>editable</name>
     </attribute>
     <obsolete>Nahrazeno knihovnou "language".</obsolete>
     <comment>
@@ -104,13 +104,13 @@
     <name>showTemplates</name>
     <function>showTemplates</function>
     <attribute>
-      <attname>detailPageId</attname>
+      <name>detailPageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showError</attname>
+      <name>showError</name>
     </attribute>
     <comment>
       Zobrazí výpis templatů.
@@ -120,13 +120,13 @@
     <name>editTemplate</name>
     <function>showEditTemplateForm</function>
     <attribute>
-      <attname>submitPageId</attname>
+      <name>submitPageId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showError</attname>
+      <name>showError</name>
     </attribute>
     <comment>
       Zobrazí editaci jednotlivého templatu.
@@ -136,7 +136,7 @@
     <name>showEmbeddedResources</name>
     <function>showEmbeddedResources</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí výpis "EmbeddedResource"
@@ -146,7 +146,7 @@
     <name>editEmbeddedResource</name>
     <function>showEditEmbeddedResourceFrom</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí editaci "EmbeddedResource"
@@ -156,7 +156,7 @@
     <name>showWebForwards</name>
     <function>showWebForwards</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí výpis "WebForwards"
@@ -166,7 +166,7 @@
     <name>editWebForward</name>
     <function>showEditWebForwardFrom</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí editaci "WebForward"
@@ -177,11 +177,11 @@
     <function>savePage</function>
     <lookless>true</lookless>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
       <required />
     </attribute>
     <attribute>
-      <attname>languageId</attname>
+      <name>languageId</name>
       <required />
     </attribute>
     <anyAttribute />
@@ -196,13 +196,13 @@
     <name>pageList</name>
     <function>getPageList</function>
     <attribute>
-      <attname>webProjectId</attname>
+      <name>webProjectId</name>
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>languageId</attname>
+      <name>languageId</name>
     </attribute>
     <anyAttribute />
     <comment>
@@ -217,7 +217,7 @@
     <name>page</name>
     <function>getPageValue</function>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
       <required />
     </attribute>
   </tag>

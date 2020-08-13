@@ -11,12 +11,12 @@
   <decorator>
     <function>provideAttributes</function>
     <attribute>
-      <attname>a</attname>
+      <name>a</name>
       <atttype>string</atttype>
       <required />
     </attribute>
     <attribute>
-      <attname>b</attname>
+      <name>b</name>
       <atttype>number</atttype>
     </attribute>
     <features>
@@ -26,7 +26,7 @@
   <decorator>
     <function>attributeAsBody</function>
     <attribute>
-      <attname>attributeAsBody</attname>
+      <name>attributeAsBody</name>
       <atttype>string</atttype>
       <required />
     </attribute>
@@ -37,12 +37,12 @@
   <decorator>
     <function>conditionsExecution</function>
     <attribute>
-      <attname>if</attname>
+      <name>if</name>
       <atttype>string</atttype>
       <required />
     </attribute>
     <attribute>
-      <attname>if-is</attname>
+      <name>if-is</name>
       <atttype>string</atttype>
     </attribute>
     <features>
@@ -52,7 +52,7 @@
   <decorator>
     <function>coolDecorator</function>
     <attribute>
-      <attname>cool</attname>
+      <name>cool</name>
       <atttype>string</atttype>
       <required />
     </attribute>
@@ -65,7 +65,7 @@
   <decorator>
     <function>optionalBody</function>
     <attribute>
-      <attname>optionalBody</attname>
+      <name>optionalBody</name>
       <atttype>string</atttype>
       <required />
     </attribute>

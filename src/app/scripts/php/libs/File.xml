@@ -12,33 +12,33 @@
     <name>showDirectory</name>
     <function>showDirectory</function>
     <attribute>
-      <attname>dirId</attname>
+      <name>dirId</name>
     </attribute>
     <attribute>
-      <attname>editable</attname>
+      <name>editable</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showParent</attname>
+      <name>showParent</name>
     </attribute>
     <attribute>
-      <attname>showTitleInsteadOfName</attname>
+      <name>showTitleInsteadOfName</name>
     </attribute>
     <attribute>
-      <attname>browsable</attname>
+      <name>browsable</name>
 	  <attdef>true</attdef>
     </attribute>
     <attribute>
-      <attname>parentName</attname>
+      <name>parentName</name>
     </attribute>
     <attribute>
-      <attname>nameWithExtension</attname>
+      <name>nameWithExtension</name>
 	  <attdef>false</attdef>
     </attribute>
     <attribute>
-      <attname>fileNameHeader</attname>
+      <name>fileNameHeader</name>
 	  <attdef>false</attdef>
     </attribute>
     <comment>
@@ -49,13 +49,13 @@
     <name>showNewDirectoryForm</name>
     <function>showNewDirectoryForm</function>
     <attribute>
-      <attname>dirId</attname>
+      <name>dirId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
 	<attribute>
-	  <attname>useRights</attname>
+	  <name>useRights</name>
 	</attribute>
     <comment>
       Zobrazí formulář pro přidání adresáře.
@@ -65,13 +65,13 @@
     <name>showUploadForm</name>
     <function>showUploadForm</function>
     <attribute>
-      <attname>dirId</attname>
+      <name>dirId</name>
     </attribute>
     <attribute>
-      <attname>useRights</attname>
+      <name>useRights</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí formulář pro upload souborů.
@@ -81,7 +81,7 @@
     <name>get</name>
     <function>getFile</function>
     <attribute>
-      <attname>fileId</attname>
+      <name>fileId</name>
     </attribute>
     <comment>
       Vrátí binární podobu souboru (ke stažení).
@@ -99,79 +99,79 @@
     <function>galleryFromDirectory</function>
     <obsolete>Spíš používat novou implementaci v knihovně 'php.libs.Image'.</obsolete>
     <attribute>
-      <attname>method</attname>
+      <name>method</name>
     </attribute>
     <attribute>
-      <attname>pageId</attname>
+      <name>pageId</name>
     </attribute>
     <attribute>
-      <attname>langId</attname>
+      <name>langId</name>
     </attribute>
     <attribute>
-      <attname>dirId</attname>
+      <name>dirId</name>
     </attribute>
     <attribute>
-      <attname>defaultDirId</attname>
+      <name>defaultDirId</name>
     </attribute>
     <attribute>
-      <attname>showSubDirs</attname>
+      <name>showSubDirs</name>
     </attribute>
     <attribute>
-      <attname>showNames</attname>
+      <name>showNames</name>
     </attribute>
     <attribute>
-      <attname>showTitles</attname>
+      <name>showTitles</name>
     </attribute>
     <attribute>
-      <attname>limit</attname>
+      <name>limit</name>
     </attribute>
     <attribute>
-      <attname>detailWidth</attname>
+      <name>detailWidth</name>
     </attribute>
     <attribute>
-      <attname>detailHeight</attname>
+      <name>detailHeight</name>
     </attribute>
     <attribute>
-      <attname>lightbox</attname>
+      <name>lightbox</name>
     </attribute>
     <attribute>
-      <attname>lightWidth</attname>
+      <name>lightWidth</name>
     </attribute>
     <attribute>
-      <attname>lightHeight</attname>
+      <name>lightHeight</name>
     </attribute>
     <attribute>
-      <attname>lightTitle</attname>
+      <name>lightTitle</name>
     </attribute>
     <attribute>
-      <attname>lightId</attname>
+      <name>lightId</name>
     </attribute>
     <attribute>
-      <attname>useDirectLink</attname>
+      <name>useDirectLink</name>
     </attribute>
     <attribute>
-      <attname>recursively</attname>
+      <name>recursively</name>
     </attribute>
     <attribute>
-      <attname>dirDateFormat</attname>
+      <name>dirDateFormat</name>
     </attribute>
     <attribute>
-      <attname>orderFilesBy</attname>
+      <name>orderFilesBy</name>
     </attribute>
     <attribute>
-      <attname>orderDirsBy</attname>
+      <name>orderDirsBy</name>
     </attribute>
     <attribute>
-      <attname>desc</attname>
+      <name>desc</name>
     </attribute>
     <attribute>
-      <attname>filesBeforeFolders</attname>
+      <name>filesBeforeFolders</name>
     </attribute>
     <attribute>
-      <attname>dirPageSize</attname>
+      <name>dirPageSize</name>
     </attribute>
     <attribute>
-      <attname>filePageSize</attname>
+      <name>filePageSize</name>
     </attribute>
     <comment>
       Vrátí všechny obrázky z daného adresáře(přímo v tagu nebo v $_REQUEST['dir-id']). 
@@ -189,13 +189,13 @@
     <name>galleryDetail</name>
     <function>galleryDetail</function>
     <attribute>
-      <attname>fileId</attname>
+      <name>fileId</name>
     </attribute>
     <attribute>
-      <attname>showName</attname>
+      <name>showName</name>
     </attribute>
     <attribute>
-      <attname>showTitle</attname>
+      <name>showTitle</name>
     </attribute>
     <comment>
       Vrátí detajl z galerie. FileId musí být zadáno přímo v tagu, v _REQUEST nebo v objektu třídy File
@@ -206,20 +206,20 @@
     <name>directoryFiles</name>
     <function>getFilesFromDirectory</function>
     <attribute>
-      <attname>id</attname>
+      <name>id</name>
       <required />
     </attribute>
     <attribute>
-      <attname>type</attname>
+      <name>type</name>
     </attribute>
     <attribute>
-      <attname>pageIndex</attname>
+      <name>pageIndex</name>
     </attribute>
     <attribute>
-      <attname>limit</attname>
+      <name>limit</name>
     </attribute>
     <attribute>
-      <attname>noDataMessage</attname>
+      <name>noDataMessage</name>
     </attribute>
     <comment>
       Do šablony ze svého těla vykreslí obsah složky. 

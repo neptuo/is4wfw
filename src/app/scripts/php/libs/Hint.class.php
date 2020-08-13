@@ -116,7 +116,7 @@
                         
                         $attributeNames = [];
                         for ($i = 0; $i < count($decorator->attribute); $i ++) {
-                            $attributeNames[] = (string)$decorator->attribute[$i]->attname;
+                            $attributeNames[] = (string)$decorator->attribute[$i]->name;
                         };
                         $name = implode(", ", $attributeNames);
                         $identifier = implode("-", $attributeNames);
@@ -145,7 +145,7 @@
                     foreach ($xml->tag as $tag) {
                         $attributes = '';
                         for ($i = 0; $i < count($tag->attribute); $i ++) {
-                            $attributeName = $tag->attribute[$i]->attname;
+                            $attributeName = $tag->attribute[$i]->name;
                             $cssClass = null;
                             $obsolete = null;
                             if (isset($tag->attribute[$i]->obsolete)) {
@@ -248,7 +248,7 @@
                     foreach ($xml->fulltag as $tag) {
                         $attributes = '';
                         for ($i = 0; $i < count($tag->attribute); $i ++) {
-                            $attributeName = $tag->attribute[$i]->attname;
+                            $attributeName = $tag->attribute[$i]->name;
                             $cssClass = null;
                             $obsolete = null;
                             if (isset($tag->attribute[$i]->obsolete)) {
@@ -384,7 +384,7 @@
                         $attributeNames = [];
                         $attributes = '';
                         for ($i = 0; $i < count($decorator->attribute); $i ++) {
-                            $attributeName = $decorator->attribute[$i]->attname;
+                            $attributeName = $decorator->attribute[$i]->name;
                             $attributeNames[] = $attributeName;
                             $cssClass = null;
                             $obsolete = null;

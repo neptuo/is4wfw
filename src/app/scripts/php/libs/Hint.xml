@@ -12,13 +12,13 @@
     <name>lib</name>
     <function>showHintForLib</function>
     <attribute>
-      <attname>classPath</attname>
+      <name>classPath</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí nápovědu pro vybranou knihovnu.
@@ -28,10 +28,10 @@
     <name>selectLib</name>
     <function>selectClassPath</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí formulář pro výběr knihovny.
@@ -41,7 +41,7 @@
     <name>propertyList</name>
     <function>getPropertyList</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí seznam vlastnotí uživatelského rozhraní
@@ -51,7 +51,7 @@
     <name>autoRegistered</name>
     <function>getAutoRegistered</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <comment>
       Zobrazí seznam automaticky vytvářených knihoven a jejich mapování na prefixy.

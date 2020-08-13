@@ -12,13 +12,13 @@
     <name>manageProperties</name>
     <function>manageProperties</function>
     <attribute>
-      <attname>userId</attname>
+      <name>userId</name>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí formulář pro nastavení uživatelsky závislých systémových proměnných.
@@ -29,10 +29,10 @@
     <name>manageNotes</name>
     <function>manageNotes</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí formulář pro editaci uživatelských poznámek.
@@ -42,10 +42,10 @@
     <name>printNotes</name>
     <function>printNotes</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí uživatelské poznámky.
@@ -55,10 +55,10 @@
     <name>editAdminMenu</name>
     <function>editAdminMenu</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí editaci Admin menu.
@@ -68,11 +68,11 @@
     <name>adminMenu</name>
     <function>adminMenu</function>
     <attribute>
-      <attname>url</attname>
+      <name>url</name>
       <required />
     </attribute>
     <attribute>
-      <attname>classes</attname>
+      <name>classes</name>
     </attribute>
     <comment>
       Zobrazí Admin menu.
@@ -89,10 +89,10 @@
     <name>editConnection</name>
     <function>editConnection</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí editaci připojení k db.
@@ -102,10 +102,10 @@
     <name>listConnections</name>
     <function>listCOnnections</function>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
     </attribute>
     <attribute>
-      <attname>showMsg</attname>
+      <name>showMsg</name>
     </attribute>
     <comment>
       Zobrazí výpis připojení k db.
@@ -115,11 +115,11 @@
     <name>manageRoleCache</name>
     <function>manageRoleCache</function>
     <attribute>
-      <attname>buttonOnly</attname>
+      <name>buttonOnly</name>
 	    <attdef>false</attdef>
     </attribute>
     <attribute>
-      <attname>useFrames</attname>
+      <name>useFrames</name>
 	    <attdef>true</attdef>
     </attribute>
     <comment>
@@ -137,7 +137,7 @@
     <name>repositoryLink</name>
     <function>repositoryLink</function>
     <attribute>
-      <attname>text</attname>
+      <name>text</name>
       <atttype>string</atttype>
       <attdef>GitHub</attdef>
     </attribute>
@@ -149,7 +149,7 @@
     <name>repositoryIssueCreateLink</name>
     <function>repositoryIssueCreateLink</function>
     <attribute>
-      <attname>text</attname>
+      <name>text</name>
       <atttype>string</atttype>
       <attdef>Report</attdef>
     </attribute>
