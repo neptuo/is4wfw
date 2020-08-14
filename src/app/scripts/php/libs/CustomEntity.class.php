@@ -523,7 +523,7 @@
             self::pushListModel($model);
 
             $model->registration();
-            self::parseContent($template, array($this->tagPrefix . ":register"));
+            $template();
             $model->registration(false);
             
             $result = "";
