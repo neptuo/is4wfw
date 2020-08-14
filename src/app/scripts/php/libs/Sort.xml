@@ -41,6 +41,27 @@
       Nastaví hodnotu klíče/fieldu na směr v "direction".
     </comment>
   </tag>
+  <tag>
+    <name>default</name>
+    <function>setDefault</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název klíče/fieldu.</comment>
+    </attribute>
+    <attribute>
+      <name>direction</name>
+      <type>string</type>
+      <default>asc</default>
+      <comment>Směr řazení.</comment>
+    </attribute>
+    <comment>
+      Nastaví hodnotu klíče/fieldu na směr v "direction" pokud pro tento klíč ještě není řazení nastaveno.
+      Hodí jako fallback, nakonec, pokud náhodou žádné předchozí řazení nebyla nastanove nebo aby bylo řazení vždy deterministické (pokud se např předtím řadí podle něčeho s duplicami).
+    </comment>
+  </tag>
   <anyProperty>
     <comment>Vrátí definici.</comment>
   </anyProperty>

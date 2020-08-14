@@ -44,6 +44,13 @@
 			}
 		}
 
+		public function setDefault($name, $direction = "asc") {
+			$this->ensureCurrent();
+			if (!array_key_exists($name, $this->definitions[$this->current])) {
+				$this->setValue($name, $direction);
+			}
+		}
+
 		public function getProperty($name) {
 			if (array_key_exists($name, $this->definitions)) {
 				return $this->definitions[$name];
