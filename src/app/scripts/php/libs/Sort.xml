@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Sort definition library</name>
+  <classname>Sort</classname>
+  <classpath>php.libs</classpath>
+  <count>*</count>
+  <comment>
+    Knihovna pro vytváření "orderBy" parametru různými způsoby.
+  </comment>
+  <tag>
+    <name>declare</name>
+    <function>createDefinition</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název definice.</comment>
+    </attribute>
+    <comment>
+      Vytvoří definici.
+    </comment>
+  </tag>
+  <anyProperty>
+    <comment>Vrátí definici.</comment>
+  </anyProperty>
+</taglib>
+

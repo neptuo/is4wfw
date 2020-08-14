@@ -26,6 +26,7 @@
 	<reg prefix="query" class="php.libs.QueryString" />
 	<reg prefix="s" class="php.libs.Sport" />
 	<reg prefix="security" class="php.libs.Security" />
+	<reg prefix="sort" class="php.libs.Sort" />
 	<reg prefix="sys" class="php.libs.System" />
 	<reg prefix="session" class="php.libs.Session" />
 	<reg prefix="template" class="php.libs.Template" />

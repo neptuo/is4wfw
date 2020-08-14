@@ -500,6 +500,7 @@
             "php.libs.QueryString",
             "php.libs.PageNG",
             "php.libs.Session",
+            "php.libs.Sort",
             "php.libs.Sport",
             "php.libs.System",
             "php.libs.Template",
