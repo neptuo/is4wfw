@@ -127,7 +127,7 @@
 				$pairs = explode(PHP_EOL, $content);
 
 				foreach ($pairs as $pair) {
-					$pair = trim($pair);
+					$pair = $pair;
 					if (strlen($pair) > 0) {
 						$thing = explode('=' ,$pair);
 						$this->Items[$thing[0]] = $thing[1];
