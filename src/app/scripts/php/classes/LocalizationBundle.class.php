@@ -130,6 +130,9 @@
 					$pair = $pair;
 					if (strlen($pair) > 0) {
 						$thing = explode('=' ,$pair);
+						if (strpos($thing[1], "\r") == strlen($thing[1]) - 1) {
+							$thing[1] = substr($thing[1], 0, strlen($thing[1]) - 1);
+						}
 						$this->Items[$thing[0]] = $thing[1];
 					}
 				}
