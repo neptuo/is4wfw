@@ -113,6 +113,13 @@
                             $deleteSql = parent::sql()->delete("content", $contentFilter);
                             parent::dataAccess()->execute($deleteSql);
                         } else {
+                            $this->deleteParsedTemplate(["page", $pageId, "content"]);
+                            $this->deleteParsedTemplate(["page", $pageId, "head"]);
+                            $this->deleteParsedTemplate(["page", $pageId, "href"]);
+                            $this->deleteParsedTemplate(["page", $pageId, "tag_lib_start"]);
+                            $this->deleteParsedTemplate(["page", $pageId, "tag_lib_end"]);
+                            $this->deleteParsedTemplate(["page", $pageId, "title"]);
+
                             $hasContent = parent::dataAccess()->fetchSingle(parent::sql()->count("content", $contentFilter))["count"] != 0;
                             $contentValues = array("tag_lib_start" => $tlStart, "tag_lib_end" => $tlEnd, "head" => $head, "content" => $content);
                             if ($hasContent) {
