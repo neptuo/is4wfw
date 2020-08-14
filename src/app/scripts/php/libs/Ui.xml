@@ -597,6 +597,40 @@
     </comment>
   </tag>
   <fulltag>
+    <name>numberValue</name>
+    <function>formatNumberEditor</function>
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
+    </attribute>
+    <attribute>
+      <name>nameIndex</name>
+      <type>number</type>
+      <default>-1</default>
+      <comment>Index, pokud je "name" typu pole.</comment>
+    </attribute>
+    <attribute>
+      <name>thousandsSeparator</name>
+      <type>string</type>
+      <comment>Pokud je vyplněn, bude použit jako oddělovač tisíců.</comment>
+    </attribute>
+    <attribute>
+      <name>decimalsSeparator</name>
+      <type>string</type>
+      <comment>Pokud je vyplněn, bude použit jako oddělovač desetinných míst.</comment>
+    </attribute>
+    <attribute>
+      <name>decimals</name>
+      <comment>Pokud je vyplněn, udává počet desetinných míst; nevyplněno znamená nechat původní.</comment>
+    </attribute>
+    <comment>
+      Obaluje libovolný editační tag a formátuje číselnou hodnotu.
+      Očekává, že form tag poskytuje timestamp a vnitřní editační tag string dle "format".
+      Pokud je použit "throusandsSeparator", vždy se zaokrouhluje (výchozí dvě desetinná místa).
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>localizable</name>
     <function>localizable</function>
     <attribute>

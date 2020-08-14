@@ -665,7 +665,6 @@
 
 			return $value;
 		}
-
 		public function formatNumber($value, $thousandsSeparator = "", $decimalsSeparator = "", $decimals = "") {
 			if ($thousandsSeparator) {
 				if ($decimals == "0") {
@@ -680,6 +679,27 @@
 			}
 
 			return $value;
+		}
+
+		public function formatNumberEditor($template, $name, $nameIndex, $thousandsSeparator = "", $decimalsSeparator = "", $decimals = "") {
+			$model = parent::getEditModel();
+            if ($model->isRegistration()) {
+				$template();
+			}
+			
+            if ($model->isSubmit()) {
+				$modelValue = $model->request($name, $nameIndex);
+				$modelValue = str_replace($thousandsSeparator, "", $modelValue);
+				$modelValue = str_replace($decimalsSeparator, ".", $modelValue);
+				$model->set($name, $nameIndex, $modelValue);
+            }
+
+            if ($model->isRender()) {
+				$modelValue = $model->get($name, $nameIndex);
+				$modelValue = $this->formatNumber($modelValue, $thousandsSeparator, $decimalsSeparator, $decimals);
+				$model->set($name, $nameIndex, $modelValue);
+				return $template();
+            }
 		}
 
 		private $localizableName;
