@@ -394,17 +394,15 @@
             return $parser->parse();
         }
 
-        private static $partialViews = array();
-
         public function partialView($path) {
-            if (array_key_exists($path, self::$partialViews)) {
-                $content = self::$partialViews[$path];
-            } else {
+            $keys = array_merge(["partialviews"], explode("/", $path));
+            $template = $this->getParsedTemplate($keys);
+            if ($template == null) {
                 $content = file_get_contents(APP_SCRIPTS_PATH . 'views/templates/'.$path.'.view.php');
-                self::$partialViews[$path] = $content;
+                $template = $this->parseTemplate($keys, $content);
             }
 
-            return self::parseContent($content);
+            return $template();
         }
         
         private $daos = array();

@@ -41,7 +41,7 @@
 			$listModel->items($listItems);
 			$listModel->render();
 			if ($template == null) {
-				self::partialView("localization/edit");
+				$this->partialView("localization/edit");
 			} else {
 				$template();
 			}
@@ -102,7 +102,7 @@
 			
             if ($editModel->isSaved()) {
 				if ($template == null) {
-					parent::partialView("localization/edit");
+					$this->partialView("localization/edit");
 				} else {
 					$template();
 				}
@@ -137,7 +137,7 @@
 				
 				$listModel->render();
 				if ($template == null) {
-					$result .= parent::partialView("localization/edit");
+					$result .= $this->partialView("localization/edit");
 				} else {
 					$result .= $template();
 				}

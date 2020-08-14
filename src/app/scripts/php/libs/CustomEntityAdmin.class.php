@@ -251,7 +251,7 @@
             $model = self::getEditModel();
 
             if ($model->isSubmit()) {
-                self::partialView("customentities/tableCreator");
+                $this->partialView("customentities/tableCreator");
             }
 
             if ($model->isSave()) {
@@ -259,7 +259,7 @@
             }
 
             if ($model->isRender()) {
-                $result = self::partialView("customentities/tableCreator");
+                $result = $this->partialView("customentities/tableCreator");
                 return $result;
             }
         }
@@ -361,7 +361,7 @@
             $tableName = parent::ensureTableName($name, $model);
 
             if ($model->isSubmit()) {
-                self::partialView("customentities/tableColumnCreator");
+                $this->partialView("customentities/tableColumnCreator");
             }
 
             if ($model->isSave()) {
@@ -369,7 +369,7 @@
             }
 
             if ($model->isRender()) {
-                $result = self::partialView("customentities/tableColumnCreator");
+                $result = $this->partialView("customentities/tableColumnCreator");
                 return $result;
             }
         }
@@ -450,7 +450,7 @@
             }
 
             if ($model->isSubmit()) {
-                self::partialView("customentities/tableLocalizationEditor");
+                $this->partialView("customentities/tableLocalizationEditor");
             }
 
             if ($model->isSave()) {
@@ -490,7 +490,7 @@
             
             if ($model->isRender()) {
                 $this->tableLocalizationColumns = self::getLocalizableColumns($xml);
-                $result = self::partialView("customentities/tableLocalizationEditor");
+                $result = $this->partialView("customentities/tableLocalizationEditor");
                 $this->tableLocalizableColumns = null;
                 return $result;
             }
