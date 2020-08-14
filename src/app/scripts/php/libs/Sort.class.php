@@ -14,14 +14,34 @@
 	class Sort extends BaseTagLib {
 
 		private $definitions = [];
+		private $current;
 
 		public function __construct() {
 			parent::setTagLibXml("Sort.xml");
 		}
+
+		private function ensureCurrent() {
+			if (!array_key_exists($this->current, $this->definitions)) {
+				throw new Exception("Missing declaration for '$this->current'.");
+			}
+		}
 		
-		public function createDefinition($name) {
+		public function createDefinition($template, $name) {
 			$this->definitions[$name] = [];
+
+			$oldCurrent = $this->current;
+			$this->current = $name;
+			$template();
+			$this->current = $oldCurrent;
+
 			return '';
+		}
+
+		public function setValue($name, $direction = "asc") {
+			$this->ensureCurrent();
+			if (trim($name) != "") {
+				$this->definitions[$this->current][$name] = $direction;
+			}
 		}
 
 		public function getProperty($name) {

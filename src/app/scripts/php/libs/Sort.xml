@@ -7,17 +7,38 @@
   <comment>
     Knihovna pro vytváření "orderBy" parametru různými způsoby.
   </comment>
-  <tag>
+  <fulltag>
     <name>declare</name>
     <function>createDefinition</function>
     <lookless />
     <attribute>
       <name>name</name>
+      <type>string</type>
       <required />
       <comment>Název definice.</comment>
     </attribute>
     <comment>
       Vytvoří definici.
+    </comment>
+  </fulltag>
+  <tag>
+    <name>set</name>
+    <function>setValue</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název klíče/fieldu.</comment>
+    </attribute>
+    <attribute>
+      <name>direction</name>
+      <type>string</type>
+      <default>asc</default>
+      <comment>Směr řazení.</comment>
+    </attribute>
+    <comment>
+      Nastaví hodnotu klíče/fieldu na směr v "direction".
     </comment>
   </tag>
   <anyProperty>
