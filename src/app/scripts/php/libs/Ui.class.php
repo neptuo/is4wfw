@@ -341,7 +341,7 @@
 						if (in_array($key, $session)) {
 							parent::session()->set($key, $value, Session::StorageKey);
 						} else {
-							$url = self::addUrlParameter($url, $key, $value);
+							$url = UrlUtils::addParameter($url, $key, $value);
 						}
 					} else {
 						if (in_array($key, $session)) {

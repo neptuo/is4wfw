@@ -283,12 +283,6 @@
             }
         }
 
-        protected function escapeHtmlEntities($value) {
-            $escapeChars = array("&" => "&amp;", '>' => '&gt;', '<' => '&lt;', '"' => '&quot;', "~" => "&#126;");
-            $value = strtr($value, $escapeChars);
-            return $value;
-        }
-
         public function getGroupPerm($name, $groupId, $inherited, $default = '') {
             //echo 'Name: '.$name.', GroupID: '.$groupId.', Inherited: '.($inherited ? 'true' : 'false').', Default: "'.$default.'"<br />';
             if ($groupId != 0) {
@@ -403,39 +397,6 @@
             $this->web()->PageLog .= "<pre>" . $message . "</pre>";
         }
 
-        protected function addUrlParameter($url, $name, $value = '') {
-            $pair = ($value != '') ? $name . '=' . $value : $name;
-        
-            $queryIndex = strpos($url, '?');
-            if ($queryIndex == '') {
-                $url .= '?' . $pair;
-            } else {
-                if (strpos($url, $name, $queryIndex) == '') {
-                    $url .= '&' . $pair;
-                } else {
-                    $query = substr($url, $queryIndex + 1);
-                    $query = explode('&', $query);
-                    $url = substr($url, 0, $queryIndex);
-                    $isFirst = true;
-                    foreach ($query as $item) {
-                        $keyvalue = explode('=', $item);
-                        if ($keyvalue[0] == $name) {
-                            $item = $pair;
-                        }
-        
-                        if ($isFirst) {
-                            $url .= '?' . $item;
-                            $isFirst = false;
-                        } else {
-                            $url .= '&' . $item;
-                        }
-                    }
-                }
-            }
-
-            return $url;
-        }
-
         protected function removeUrlParameter($url, $name) {
             $queryIndex = strpos($url, '?');
             if ($queryIndex == '') {
@@ -468,7 +429,7 @@
         protected function addUrlQueryString($url) {
             foreach ($_GET as $key => $value) {
                 if($key != 'WEB_PAGE_PATH') {
-                    $url = $this->addUrlParameter($url, $key, $value);
+                    $url = UrlUtils::addParameter($url, $key, $value);
                 }
             }
 

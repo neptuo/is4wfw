@@ -1436,22 +1436,22 @@
 
         public function addSpecialParams($url) {
             if (array_key_exists('mem-stats', $_GET)) {
-                $url = self::addUrlParameter($url, 'mem-stats', '');
+                $url = UrlUtils::addParameter($url, 'mem-stats', '');
             }
             if (array_key_exists('duration-stats', $_GET)) {
-                $url = self::addUrlParameter($url, 'duration-stats', '');
+                $url = UrlUtils::addParameter($url, 'duration-stats', '');
             }
             if (array_key_exists('query-stats', $_GET)) {
-                $url = self::addUrlParameter($url, 'query-stats', '');
+                $url = UrlUtils::addParameter($url, 'query-stats', '');
             }
             if (array_key_exists('query-list', $_GET)) {
-                $url = self::addUrlParameter($url, 'query-list', '');
+                $url = UrlUtils::addParameter($url, 'query-list', '');
             }
             if (array_key_exists('parser-stats', $_GET)) {
-                $url = self::addUrlParameter($url, 'parser-stats', '');
+                $url = UrlUtils::addParameter($url, 'parser-stats', '');
             }
             if (array_key_exists('auto-login-ignore', $_GET)) {
-                $url = self::addUrlParameter($url, 'auto-login-ignore', '');
+                $url = UrlUtils::addParameter($url, 'auto-login-ignore', '');
             }
             return $url;
         }
@@ -1792,7 +1792,7 @@
                         $key = substr($key, 6);
                     }
 
-                    $url = parent::addUrlParameter($url, $key, $value);
+                    $url = UrlUtils::addParameter($url, $key, $value);
                 }
 
                 return $url;
@@ -1843,7 +1843,7 @@
                         $key = substr($key, 6);
                     }
 
-                    $url = parent::addUrlParameter($url, $key, $value);
+                    $url = UrlUtils::addParameter($url, $key, $value);
                 }
 
                 $return = $type == 'button' ? '<button' : '<a href="' . $url . '"';
@@ -2038,7 +2038,7 @@
 
             if (count($param) > 0) {
                 foreach ($param as $key => $value) {
-                    $href = parent::addUrlParameter($href, $key, $value);
+                    $href = UrlUtils::addParameter($href, $key, $value);
                 }
             }
 

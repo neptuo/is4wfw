@@ -241,7 +241,7 @@
             $url = parent::web()->composeUrl($pageId, $pageLangId);
             for($i = 0; $i < $pages; $i ++) {
                 if($i != 0) {
-                    $return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . parent::addUrlParameter($url, 'article-page', $i + 1) . '">['.($i + 1).']</a> ';
+                    $return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . UrlUtils::addParameter($url, 'article-page', $i + 1) . '">['.($i + 1).']</a> ';
                 } else {
                     $return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . parent::removeUrlParameter($url, 'article-page') . '">['.($i + 1).']</a> ';
                 }
@@ -666,12 +666,12 @@
             }
             
             if ($_POST['article-edit'] == $rb->get('articles.edit')) {
-                $url = parent::addUrlParameter($actionUrl, 'article-id', $_POST['article-id']);
-                $url = parent::addUrlParameter($url, 'language-id', $_POST['language-id']);
+                $url = UrlUtils::addParameter($actionUrl, 'article-id', $_POST['article-id']);
+                $url = UrlUtils::addParameter($url, 'language-id', $_POST['language-id']);
                 parent::web()->redirectTo($url);
             } elseif($_POST['article-add-lang'] == $rb->get('articles.addlang')) {
-                $url = parent::addUrlParameter($actionUrl, 'article-id', $_POST['article-id']);
-                $url = parent::addUrlParameter($url, 'line-id', $_POST['line-id']);
+                $url = UrlUtils::addParameter($actionUrl, 'article-id', $_POST['article-id']);
+                $url = UrlUtils::addParameter($url, 'line-id', $_POST['line-id']);
                 parent::web()->redirectTo($url);
             }
 
@@ -986,7 +986,7 @@
                     }
 
             if($_POST['article-new'] == $rb->get('articles.newcap')) {
-                $url = parent::addUrlParameter($actionUrl, 'line-id', $lineId);
+                $url = UrlUtils::addParameter($actionUrl, 'line-id', $lineId);
                 parent::web()->redirectTo($url);
                 return;
             }
@@ -1395,8 +1395,8 @@
                 parent::web()->redirectTo($url);
             } else if($isRedirectRequired) {
                 $url = $_SERVER['REQUEST_URI'];
-                $url = parent::addUrlParameter($url, 'article-id', $article['id']);
-                $url = parent::addUrlParameter($url, 'language-id', $ac['language_id']);
+                $url = UrlUtils::addParameter($url, 'article-id', $article['id']);
+                $url = UrlUtils::addParameter($url, 'language-id', $ac['language_id']);
                 $url = parent::removeUrlParameter($url, 'line-id');
                 
                 parent::web()->redirectTo($url);
@@ -1484,8 +1484,8 @@
 
             if ($submitPageId != false) {
                 $actionUrl = $webObject->composeUrl($submitPageId);
-                $actionUrl = parent::addUrlParameter($actionUrl, 'article-id', $article['article_id']);
-                $actionUrl = parent::addUrlParameter($actionUrl, 'language-id', $article['language_id']);
+                $actionUrl = UrlUtils::addParameter($actionUrl, 'article-id', $article['article_id']);
+                $actionUrl = UrlUtils::addParameter($actionUrl, 'language-id', $article['language_id']);
             }
 
             $labelList = '';
