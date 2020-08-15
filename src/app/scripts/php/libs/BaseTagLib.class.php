@@ -88,7 +88,7 @@
             $name = StringUtils::explode($name, ':');
             $name = $name[0];
             //$name = strtr($name, $escapeChars);
-            $name = self::convertToUrlValid($name);
+            $name = UrlUtils::toValidUrl($name);
 
             $value = self::system()->getPropertyValue($name);
             $closed = false;
@@ -250,28 +250,6 @@
         public function query() {
             global $queryStorage;
             return $queryStorage;
-        }
-
-        public function convertToUrlValid($value, $allowSlash = true) {
-            $value = str_replace(' - ', '-', $value);
-
-            $escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n", "Ě" => "E", "É" => "E", "Ř" => "R", "Ť" => "T", "Ý" => "Y", "Ú" => "U", "Ů" => "U", "Í" => "I", "Ó" => "O", "Á" => "A", "Š" => "S", "Ď" => "D", "Ž" => "Z", "Č" => "C", "Ň" => "N", " " => '-', "\"" => '-', "'" => '-', "(" => '-', ")" => '-', "[" => '-', "]" => '-', "{" => '-', "}" => '-', '&' => '-');
-            
-            if(strpos($value, "http") !== 0) {
-                $escapeChars["."] = "-";
-            }
-            
-            $value = strtr($value, $escapeChars);
-            
-            if(!$allowSlash) {
-                $value = strtr($value, array("/" => "-"));
-            }
-            
-            return $value;
-        }
-
-        protected function convertToValidUrl($value) {
-            return self::convertToUrlValid($value);
         }
 
         protected function getUserProperty($name, $default = -1) {

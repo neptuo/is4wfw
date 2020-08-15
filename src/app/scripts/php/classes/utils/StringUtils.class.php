@@ -44,7 +44,7 @@
             return $length === 0 || (substr($haystack, -$length) === $needle);
         }
 
-        public function join($base, $item, $separator = ", ") {
+        public static function join($base, $item, $separator = ", ") {
             if (strlen($base) > 0) {
                 $base .= $separator;
             }

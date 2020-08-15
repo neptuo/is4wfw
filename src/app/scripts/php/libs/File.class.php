@@ -283,7 +283,7 @@
                 $directoryName = $_POST['directory-name'];
                 $directoryUrl = $_POST['directory-url'];
                 if($directoryUrl == "") {
-                    $directoryUrl = strtolower(parent::convertToUrlValid($directoryName));
+                    $directoryUrl = strtolower(UrlUtils::toValidUrl($directoryName));
                 }
                 $read = $_POST['directory-right-edit-groups-r'];
                 $write = $_POST['directory-right-edit-groups-w'];

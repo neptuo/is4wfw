@@ -335,7 +335,7 @@
                         }, 
                         "hasColumn" => true,
                         "isLocalizable" => true,
-                        "fromUser" => function($value) { return self::convertToValidUrl($value); },
+                        "fromUser" => function($value) { return UrlUtils::toValidUrl($value); },
                         "fromDb" => function($value) { return $value; }
                     ),
                     array(

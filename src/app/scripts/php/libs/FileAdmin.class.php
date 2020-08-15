@@ -310,7 +310,7 @@
 							'type' => self::getWebFileType($info['basename']), 
 							'dir_id' => $rootId, 
 							'timestamp' => time(), 
-							'url' => parent::convertToUrlValid($info['filename'])
+							'url' => UrlUtils::toValidUrl($info['filename'])
 						);
 						
 						if(parent::dao('File')->insert($dataItem) != 0) {
@@ -334,7 +334,7 @@
 					
 						$dataItem = array(
 							'name' => $entry, 
-							'url' => strtolower(parent::convertToUrlValid($entry)), 
+							'url' => strtolower(UrlUtils::toValidUrl($entry)), 
 							'parent_id' => $rootId, 
 							'timestamp' => time()
 						);
@@ -529,7 +529,7 @@
 			$new = $dataItem['id'] == '';
 			
 			if($dataItem['url'] == '') {
-				$dataItem['url'] = strtolower(parent::convertToUrlValid($dataItem['name']));
+				$dataItem['url'] = strtolower(UrlUtils::toValidUrl($dataItem['name']));
 			}
 			
 			if($fileTmpName == '') {
@@ -776,7 +776,7 @@
 				"title" => $name,
 				"type" => $this->getWebFileType($file->Name),
 				'timestamp' => time(), 
-				'url' => parent::convertToUrlValid($name),
+				'url' => UrlUtils::toValidUrl($name),
 				"dir_id" => $dirId
 			];
 			return $dataItem;
@@ -802,7 +802,7 @@
 			$new = $dataItem['id'] == '';
 			
 			if($dataItem['url'] == '') {
-				$dataItem['url'] = strtolower(parent::convertToUrlValid($dataItem['name']));
+				$dataItem['url'] = strtolower(UrlUtils::toValidUrl($dataItem['name']));
 			}
 			
 			if($new) {

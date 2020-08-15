@@ -336,7 +336,7 @@
             if ($_POST['project-submit'] == $rb->get('project.submit')) {
                 $projectId = $_POST['project-id'];
                 $name = $_POST['project-name'];
-                $url = parent::convertToUrlValid($_POST['project-url']);
+                $url = UrlUtils::toValidUrl($_POST['project-url']);
 
 
                 if ($projectId == '') {
@@ -746,9 +746,9 @@
                     $logo = $_POST['team-edit-logo'];
                     $season = $_POST['team-edit-season'];
                     $tables = $_POST['tables-list'];
-                    $url = trim(parent::convertToUrlValid($_POST['team-edit-url']));
+                    $url = trim(UrlUtils::toValidUrl($_POST['team-edit-url']));
                     if ($url == '') {
-                        $url = strtolower(parent::convertToUrlValid($name));
+                        $url = strtolower(UrlUtils::toValidUrl($name));
                     }
                     $urls = parent::db()->fetchAll('select `url` from `w_sport_team` where `url` = "' . $url . '" and `project_id` = ' . self::getProjectId() . ($teamId != '' ? ' and `id` != ' . $teamId : '') . ';');
                     if ($name != '' && count($urls) == 0) {
@@ -1169,7 +1169,7 @@
 
                     $player['name'] = $_POST['player-edit-name'];
                     $player['surname'] = $_POST['player-edit-surname'];
-                    $player['url'] = parent::convertToValidUrl($_POST['player-edit-url']);
+                    $player['url'] = UrlUtils::toValidUrl($_POST['player-edit-url']);
                     $player['birthyear'] = $_POST['player-edit-birthyear'];
                     $player['number'] = $_POST['player-edit-number'];
                     $player['position'] = $_POST['player-edit-position'];
@@ -1180,7 +1180,7 @@
                     $updateType = $_POST['update-type'];
 
                     if ($player['url'] == '') {
-                        $player['url'] = strtolower(parent::convertToValidUrl($player['name'] . '-' . $player['surname']));
+                        $player['url'] = strtolower(UrlUtils::toValidUrl($player['name'] . '-' . $player['surname']));
                     }
 
                     if (strlen(trim($player['name'])) == 0) {

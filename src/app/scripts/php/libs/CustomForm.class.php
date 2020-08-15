@@ -1441,7 +1441,7 @@
                 $sql = 'select `id`, `'.$fieldName.'` from `cf_'.$formId.'`';
                 $data = parent::db()->fetchAll($sql);
                 foreach($data as $item) {
-                    if(parent::convertToUrlValid($item[$fieldName]) == $value) {
+                    if(UrlUtils::toValidUrl($item[$fieldName]) == $value) {
                         self::setRowId($item['id']);
                         return $value;
                     }
@@ -1453,7 +1453,7 @@
         
         public function getCustomUrl() {
             $fieldName = parent::request()->get('customurl-fieldname', 'cf');
-            return parent::convertToUrlValid($this->ViewDataRow[$fieldName]);
+            return UrlUtils::toValidUrl($this->ViewDataRow[$fieldName]);
         }
     }
 
