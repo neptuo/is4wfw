@@ -27,7 +27,7 @@
 		}
 		
 		public function createDefinition($template, $name) {
-			$this->definitions[$name] = [];
+			$this->definitions[$name] = new SortModel();
 
 			$oldCurrent = $this->current;
 			$this->current = $name;

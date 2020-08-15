@@ -517,7 +517,6 @@
 
         public function getList($template, $name, $filter = array(), $orderBy = array()) {
             $tableName = self::ensureTableName($name);
-            $orderBy = parent::removeKeysWithEmptyValues($orderBy);
 
             $model = new ListModel();
             self::pushListModel($model);
@@ -534,6 +533,12 @@
                 $filter = $filter->toSql();
             } else {
                 $filter = parent::removeKeysWithEmptyValues($filter);
+            }
+            
+            if ($this->isSortModel($orderBy)) {
+                $orderBy = $orderBy[""];
+            } else {
+                $orderBy = parent::removeKeysWithEmptyValues($orderBy);
             }
 
             $fields = $model->fields();

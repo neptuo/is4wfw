@@ -30,6 +30,11 @@
                 $filter = $filter[""];
                 $tableName = $filter->wrapTableName($tableName);
                 $filter = $filter->toSql();
+			}
+			
+			$orderBy = parent::removeKeysWithEmptyValues($orderBy);
+            if ($this->isSortModel($orderBy)) {
+                $orderBy = $orderBy[""];
             }
 			
 			$model = new ListModel();

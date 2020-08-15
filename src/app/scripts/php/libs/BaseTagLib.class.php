@@ -7,8 +7,10 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ExtensionParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParser.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ParsedTemplate.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/EditModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/FilterModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/SortModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/MissingEditModelException.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
@@ -799,6 +801,10 @@
 
         protected function isFilterModel($filter) {
             return count($filter) == 1 && array_key_exists("", $filter) && ($filter[""] instanceof FilterModel);
+        }
+
+        protected function isSortModel($sort) {
+            return count($sort) == 1 && array_key_exists("", $sort) && ($sort[""] instanceof SortModel);
         }
 
         protected function unsetKeys($array, $toRemove) {

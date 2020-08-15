@@ -85,10 +85,6 @@
         private function orderBy($orderBy) {
             $result = "";
 
-            if (count($orderBy) == 1 && array_key_exists("", $orderBy)) {
-                $orderBy = $orderBy[""];
-            }
-
             foreach ($orderBy as $field => $value) {
                 $value = ($value == "desc" || $value == "DESC") ? "DESC" : "ASC";
                 $result = self::joinString($result, "`$field` $value", ", ");
