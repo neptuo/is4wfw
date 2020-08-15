@@ -562,12 +562,12 @@
                     }
 
                     if (($type != "undefined" && (count($sql_return) == 1) || $type != "Edit")) {
-                        $sql_return[0]['tag_lib_start'] = parent::escapeHtmlEntities($sql_return[0]['tag_lib_start']);
-                        $sql_return[0]['tag_lib_end'] = parent::escapeHtmlEntities($sql_return[0]['tag_lib_end']);
-                        $sql_return[0]['head'] = parent::escapeHtmlEntities($sql_return[0]['head']);
-                        $sql_return[0]['content'] = parent::escapeHtmlEntities($sql_return[0]['content']);
-                        $sql_return[0]['title'] = parent::escapeHtmlEntities($sql_return[0]['title']);
-                        $sql_return[0]['keywords'] = parent::escapeHtmlEntities($sql_return[0]['keywords']);
+                        $sql_return[0]['tag_lib_start'] = StringUtils::escapeHtmlEntities($sql_return[0]['tag_lib_start']);
+                        $sql_return[0]['tag_lib_end'] = StringUtils::escapeHtmlEntities($sql_return[0]['tag_lib_end']);
+                        $sql_return[0]['head'] = StringUtils::escapeHtmlEntities($sql_return[0]['head']);
+                        $sql_return[0]['content'] = StringUtils::escapeHtmlEntities($sql_return[0]['content']);
+                        $sql_return[0]['title'] = StringUtils::escapeHtmlEntities($sql_return[0]['title']);
+                        $sql_return[0]['keywords'] = StringUtils::escapeHtmlEntities($sql_return[0]['keywords']);
 
                         $returnTmp .= ''
                         . '<form name="page-edit-detail" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'

@@ -27,6 +27,12 @@
             }
         }
 
+        public static function escapeHtmlEntities($value) {
+            $escapeChars = array("&" => "&amp;", '>' => '&gt;', '<' => '&lt;', '"' => '&quot;', "~" => "&#126;");
+            $value = strtr($value, $escapeChars);
+            return $value;
+        }
+
     }
 
 ?>
