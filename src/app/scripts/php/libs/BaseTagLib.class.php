@@ -63,17 +63,6 @@
 
         /**
          *
-         *  Returns web file extenstions.
-         *  
-         *  @return    web file extenstions          
-         *
-         */
-        public function getFileEx() {
-            return FileAdmin::$FileExtensions;
-        }
-
-        /**
-         *
          *  Generates frame.
          *  
          *  @param    label     frame label
