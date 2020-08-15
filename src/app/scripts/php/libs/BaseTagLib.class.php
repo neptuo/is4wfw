@@ -403,11 +403,6 @@
             return $actionUrl;
         }
 
-        protected function removeQueryString($url) {
-            $queryIndex = strpos($url, '?');
-            return substr($url, 0, $queryIndex);
-        }
-
         public function redirectToSelf() {
             self::redirectToUrl($_SERVER['REQUEST_URI']);
         }

@@ -73,6 +73,11 @@
 
             return $url;
         }
+
+        public static function removeQueryString($url) {
+            $queryIndex = strpos($url, '?');
+            return substr($url, 0, $queryIndex);
+        }
         
     }
 
