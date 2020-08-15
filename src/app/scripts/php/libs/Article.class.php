@@ -1388,7 +1388,7 @@
 
             if ($isClosing) {
                 $url = $webObject->composeUrl($backPageId);
-                $url = parent::addUrlQueryString($url);
+                $url = UrlUtils::addCurrentQueryString($url);
                 $url = UrlUtils::removeParameter($url, 'article-id');
                 $url = UrlUtils::removeParameter($url, 'language-id');
 

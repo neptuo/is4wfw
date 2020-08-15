@@ -64,6 +64,16 @@
             return $url;
         }
         
+        public static function addCurrentQueryString($url) {
+            foreach ($_GET as $key => $value) {
+                if ($key != 'WEB_PAGE_PATH') {
+                    $url = UrlUtils::addParameter($url, $key, $value);
+                }
+            }
+
+            return $url;
+        }
+        
     }
 
 ?>

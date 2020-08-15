@@ -396,20 +396,10 @@
             $message = str_replace(">", "&gt;", $message);
             $this->web()->PageLog .= "<pre>" . $message . "</pre>";
         }
-        
-        protected function addUrlQueryString($url) {
-            foreach ($_GET as $key => $value) {
-                if($key != 'WEB_PAGE_PATH') {
-                    $url = UrlUtils::addParameter($url, $key, $value);
-                }
-            }
-
-            return $url;
-        }
 
         public function redirectUrlWithQueryString() {
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $actionUrl = $this->addUrlQueryString($actionUrl);
+            $actionUrl = UrlUtils::addCurrentQueryString($actionUrl);
             return $actionUrl;
         }
 

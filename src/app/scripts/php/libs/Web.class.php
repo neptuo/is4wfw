@@ -1350,7 +1350,7 @@
                             $url = $return[0]['href'] . $this->CurrentPath;
                             $this->CurrentPath = "";
                             if ($copyParameters) {
-                                $url = parent::addUrlQueryString($url);
+                                $url = UrlUtils::addCurrentQueryString($url);
                             }
                             return self::addSpecialParams($url);
                         }
@@ -1387,7 +1387,7 @@
                 // Dosestav url z dat v urlResolveru
                 $url = self::composeUrlProjectPart($tmpPath, $this->UrlResolver->getWebProject(), $absolutePath);
                 if ($copyParameters) {
-                    $url = parent::addUrlQueryString($url);
+                    $url = UrlUtils::addCurrentQueryString($url);
                 }
                 return self::addSpecialParams($url);
             } else {
@@ -1396,7 +1396,7 @@
                 if ($project['alias'] != array()) {
                     $url = self::composeUrlProjectPart($tmpPath, $project, true);
                     if ($copyParameters) {
-                        $url = parent::addUrlQueryString($url);
+                        $url = UrlUtils::addCurrentQueryString($url);
                     }
                     return self::addSpecialParams($url);
                 } else {
@@ -2033,7 +2033,7 @@
             }
 
             if ($copyParameters) {
-                $href = parent::addUrlQueryString($href);
+                $href = UrlUtils::addCurrentQueryString($href);
             }
 
             if (count($param) > 0) {
