@@ -87,7 +87,7 @@
 
 		public function field($template, $label, $params = array()) {
 			$labelText = $label[""];
-			if (!parent::endsWith($labelText, ":")) {
+			if (!StringUtils::endsWith($labelText, ":")) {
 				$labelText .= ":";
 			}
 

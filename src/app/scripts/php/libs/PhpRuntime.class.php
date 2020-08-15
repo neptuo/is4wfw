@@ -570,7 +570,7 @@
             $convert = isset($att->default);
             
             if (isset($att->type)) {
-                if (StringUtils::startsWith($val, '$this->template_') && self::endsWith($val, '()')) {
+                if (StringUtils::startsWith($val, '$this->template_') && StringUtils::endsWith($val, '()')) {
                     return array('value' => $val, 'type' => 'eval');
                 }
 

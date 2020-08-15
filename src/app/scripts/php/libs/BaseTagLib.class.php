@@ -457,14 +457,6 @@
             return false;
         }
 
-        public function endsWith($haystack, $needle)
-        {
-            $length = strlen($needle);
-
-            return $length === 0 || 
-            (substr($haystack, -$length) === $needle);
-        }
-
         public function joinString($base, $item, $separator = ", ") {
             if (strlen($base) > 0) {
                 $base .= $separator;
