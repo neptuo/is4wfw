@@ -34,7 +34,7 @@
 	</admin:edit>
 
 	<web:frame title="List">
-			<admin:successMessage />
+		<admin:successMessage />
 		<lang:list>
 			<ui:empty items="lang:list">
 				<h4 class="warning">No Languages</h4>
