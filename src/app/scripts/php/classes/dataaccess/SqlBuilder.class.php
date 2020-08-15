@@ -1,18 +1,12 @@
 <?php
 
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/StringUtils.class.php");
+
     class SqlBuilder {
         private $dataAccess;
 
         public function __construct($dataAccess) {
             $this->dataAccess = $dataAccess;
-        }
-        
-        private function joinString($base, $item, $separator = ", ") {
-            if (strlen($base) > 0) {
-                $base .= $separator;
-            }
-
-            return $base . $item;
         }
 
         private function field($tableAlias, $field) {
@@ -49,7 +43,7 @@
                     $valueString = "";
                     foreach ($value as $item) {
                         if (!empty($item)) {
-                            $valueString = self::joinString($valueString, self::escape($item));
+                            $valueString = StringUtils::join($valueString, self::escape($item));
                         }
                     }
 
@@ -67,7 +61,7 @@
                 }
 
                 if ($assignValue != null) {
-                    $result = self::joinString($result, "$name$assignValue", " " . $operator);
+                    $result = StringUtils::join($result, "$name$assignValue", " " . $operator);
                 }
             }
 
@@ -87,7 +81,7 @@
 
             foreach ($orderBy as $field => $value) {
                 $value = ($value == "desc" || $value == "DESC") ? "DESC" : "ASC";
-                $result = self::joinString($result, "`$field` $value", ", ");
+                $result = StringUtils::join($result, "`$field` $value", ", ");
             }
 
             return $result;
@@ -105,8 +99,8 @@
             $columns = "";
             $values = "";
             foreach ($item as $field => $value) {
-                $columns = self::joinString($columns, "`$field`");
-                $values = self::joinString($values, self::escape($value));
+                $columns = StringUtils::join($columns, "`$field`");
+                $values = StringUtils::join($values, self::escape($value));
             }
 
             $sql = "INSERT INTO `$tableName`($columns) VALUES ($values);";
@@ -120,7 +114,7 @@
             $values = "";
             foreach ($item as $field => $value) {
                 $value = self::escape($value);
-                $values = self::joinString($values, "`$field` = $value");
+                $values = StringUtils::join($values, "`$field` = $value");
             }
 
             $sql = "UPDATE `$tableName` SET $values$condition;";
@@ -160,7 +154,7 @@
             $hasWildcard = $wildcardIndex !== false;
             if ($hasWildcard) {
                 $field = self::field($alias, "*");
-                $columns = self::joinString($columns, $field);
+                $columns = StringUtils::join($columns, $field);
                 unset($fields[$wildcardIndex]);
             }
 
@@ -185,11 +179,11 @@
                         $field = self::field($fieldTableAlias, $column) . " AS `$as`";
                     }
 
-                    $columns = self::joinString($columns, $field);
+                    $columns = StringUtils::join($columns, $field);
                 }
                 else if (!$hasWildcard) {
                     $field = self::field($fieldTableAlias, $field);
-                    $columns = self::joinString($columns, $field);
+                    $columns = StringUtils::join($columns, $field);
                 }
             }
 

@@ -126,7 +126,7 @@
 				$valueString = "";
 				foreach ($values as $item) {
 					if (!empty($item)) {
-						$valueString = parent::joinString($valueString, parent::sql()->escape($item));
+						$valueString = StringUtils::join($valueString, parent::sql()->escape($item));
 					}
 				}
 				

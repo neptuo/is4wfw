@@ -44,13 +44,13 @@
                 if ($column->primaryKey == true) {
                     $columnName = (string)$column->name;
                     $dbType = self::getTableColumnTypes($column, "db");
-                    $columns = self::joinString($columns, "`$columnName` $dbType NOT NULL");
+                    $columns = StringUtils::join($columns, "`$columnName` $dbType NOT NULL");
 
                     if ($column->identity == true) {
                         $columns .= " AUTO_INCREMENT";
                     }
 
-                    $primary = self::joinString($primary, "`$columnName`");
+                    $primary = StringUtils::join($primary, "`$columnName`");
                 }
             }
 
@@ -504,8 +504,8 @@
                 if ($column->primaryKey == true) {
                     $columnName = (string)$column->name;
                     $columnType = self::getTableColumnTypes($column, "db");
-                    $columns = self::joinString($columns, "`$columnName` $columnType NOT NULL");
-                    $primary = self::joinString($primary, "`$columnName`");
+                    $columns = StringUtils::join($columns, "`$columnName` $columnType NOT NULL");
+                    $primary = StringUtils::join($primary, "`$columnName`");
                 }
             }
 

@@ -13,7 +13,7 @@
             $result = "";
             $joiner = " " . $this->joiner . " ";
             foreach ($this as $value) {
-                $result = self::joinString($result, $value, $joiner);
+                $result = StringUtils::join($result, $value, $joiner);
             }
 
             if ($result === "") {
@@ -21,14 +21,6 @@
             }
 
             return "($result)";
-        }
-
-        private function joinString($base, $item, $separator = ", ") {
-            if (strlen($base) > 0) {
-                $base .= $separator;
-            }
-
-            return $base . $item;
         }
 
         public function wrapTableName($tableName) {
