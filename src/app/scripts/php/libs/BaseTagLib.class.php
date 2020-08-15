@@ -457,12 +457,6 @@
             return false;
         }
 
-        public function startsWith($haystack, $needle)
-        {
-            $length = strlen($needle);
-            return (substr($haystack, 0, $length) === $needle);
-        }
-
         public function endsWith($haystack, $needle)
         {
             $length = strlen($needle);
@@ -652,7 +646,7 @@
         protected function findAttributesByPrefix($params, $prefix) {
             $result = array();
             foreach ($params as $key => $value) {
-                if (self::startsWith($key, $prefix) && !empty($value)) {
+                if (StringUtils::startsWith($key, $prefix) && !empty($value)) {
                     $result[substr($key, strlen($prefix))] = $value;
                 }
             }

@@ -118,7 +118,7 @@
 					$content = htmlspecialchars($content);
 					$content = str_replace(PHP_EOL, "<br />", $content);
 					$content = preg_replace("([0-9][0-9]:[0-9][0-9]:[0-9][0-9])", "<br /><strong>$0</strong><br />", $content);
-					if (parent::startsWith($content, "<br />")) {
+					if (StringUtils::startsWith($content, "<br />")) {
 						$content = substr($content, 6);
 					}
 

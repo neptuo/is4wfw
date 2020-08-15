@@ -10,7 +10,7 @@
 
         protected function ensureTableName($name, $model = null) {
             if ($model == null || !$model->hasMetadataKey("tableName")) {
-                if (!self::startsWith($name, self::TablePrefix)) {
+                if (!StringUtils::startsWith($name, self::TablePrefix)) {
                     $tableName = self::TablePrefix . $name;
                     $sql = parent::sql()->select("custom_entity", array("name"), array("name" => $name));
                     $table = self::dataAccess()->fetchAll($sql);
@@ -33,7 +33,7 @@
         
         protected function ensureTableLocalizationName($name, $model = null) {
             if ($model == null || !$model->hasMetadataKey("tableLocalizationName")) {
-                if (!self::startsWith($name, self::TableLocalizationPrefix)) {
+                if (!StringUtils::startsWith($name, self::TableLocalizationPrefix)) {
                     $tableName = self::TableLocalizationPrefix . $name;
                 } else {
                     $tableName = $name;
@@ -196,7 +196,7 @@
         }
 
         protected function audit(String $tableName, String $operationType, Array $keys, Array $values = array()) {
-            if (parent::startsWith($tableName, self::TablePrefix)) {
+            if (StringUtils::startsWith($tableName, self::TablePrefix)) {
                 $tableName = substr($tableName, strlen(self::TablePrefix));
             }
 

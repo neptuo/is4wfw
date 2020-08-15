@@ -158,7 +158,7 @@
 			}
 
 			for ($i=0; $i < count($filter); $i++) { 
-				if (parent::startsWith($key, $filter[$i])) {
+				if (StringUtils::startsWith($key, $filter[$i])) {
 					return true;
 				}
 			}

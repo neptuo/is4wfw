@@ -456,7 +456,7 @@
                     $attPrefix = "$attName-";
                     $attributeValue = array();
                     foreach ($atts->Attributes as $usedName => $usedValue) {
-                        if (parent::startsWith($usedName, $attPrefix)) {
+                        if (StringUtils::startsWith($usedName, $attPrefix)) {
                             $strippedName = substr($usedName, strlen($attPrefix));
 
                             $attribute = $atts->Attributes[$usedName];
@@ -570,7 +570,7 @@
             $convert = isset($att->default);
             
             if (isset($att->type)) {
-                if (self::startsWith($val, '$this->template_') && self::endsWith($val, '()')) {
+                if (StringUtils::startsWith($val, '$this->template_') && self::endsWith($val, '()')) {
                     return array('value' => $val, 'type' => 'eval');
                 }
 
