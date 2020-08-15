@@ -119,7 +119,7 @@
             $classJPath = $classPath;
             if (!array_key_exists($tagPrefix, $this->_REGISTERED) && !array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 if ($this->checkIfClassExists($tagPrefix, $classPath)) {
-                    $classArray = $this->str_tr($classPath, '.');
+                    $classArray = StringUtils::explode($classPath, '.');
                     $classDir = "";
                     for ($i = 0; $i < count($classArray) - 1; $i ++) {
                         $classDir .= $classArray[$i];
@@ -220,41 +220,6 @@
         private function parseClassPath($classPath) {
             $classPath = str_replace(".", "/", $classPath);
             return $classPath;
-        }
-        
-        /**
-         *
-         *    Cut string into array by d.
-         *    
-         *    @param    s string
-         *    @param    d delimeter
-         *    @param    c count         
-         *    @return array parsed string into array                                         
-         *
-         */
-        public function str_tr($s, $d, $c = 1000000){
-            if(strlen($d) == 1) {
-                $res = array();
-                $t = "";
-                for($i = 0; $i < strlen($s); $i ++) {
-                    if($s[$i] == $d && ($i < (strlen($s) - 1) && $i > 0)) {
-                        if($c > 0) {
-                            $res[] = $t;
-                            $t = "";
-                            $c --;
-                        } else {
-                            $t .= $s[$i];
-                        }
-                    } elseif($s[$i] != $d) {
-                        $t .= $s[$i];
-                    }
-                }
-                $res[] = $t;
-                $t = "";
-                return $res;
-            } else {
-                return $s;
-            }
         }
         
         /**

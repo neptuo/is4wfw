@@ -2,6 +2,7 @@
 
     require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/StringUtils.class.php");
 
     /**
      *
@@ -50,8 +51,8 @@
                     continue;
                 }
 
-                $projDoms = parent::str_tr($url['domain_url'], '.');
-                $reqDoms = parent::str_tr($domainUrl, '.');
+                $projDoms = StringUtils::explode($url['domain_url'], '.');
+                $reqDoms = StringUtils::explode($domainUrl, '.');
                 if (count($projDoms) != count($reqDoms)) {
                     continue;
                 } else {
@@ -79,8 +80,8 @@
                 if ($url['root_url'] == '' && $rootUrl == '') {
                     $selected2[] = $url;
                 } elseif ($rootUrl != '') {
-                    $projRoots = parent::str_tr($url['root_url'], '/');
-                    $reqRoots = parent::str_tr($rootUrl, '/');
+                    $projRoots = StringUtils::explode($url['root_url'], '/');
+                    $reqRoots = StringUtils::explode($rootUrl, '/');
                     if (count($projRoots) != count($reqRoots)) {
                         continue;
                     } else {
@@ -103,7 +104,7 @@
             }
             
             // Virtual url
-            $pageUrls = parent::str_tr($pageUrl, '/');
+            $pageUrls = StringUtils::explode($pageUrl, '/');
             foreach ($selected2 as $url) {
                 if ($url['virtual_url'] == '') {
                     // prejit na parsovani url stranek
@@ -115,7 +116,7 @@
                         continue;
                     }
                 } else {
-                    $virUrls = parent::str_tr($url['virtual_url'], '/');
+                    $virUrls = StringUtils::explode($url['virtual_url'], '/');
                     if (count($virUrls) > count($pageUrls)) {
                         continue;
                     } else {
@@ -184,7 +185,7 @@
                 $found = true;
                 $key = 0;
                 if ($page['href'] != '') {
-                    $hrefs = parent::str_tr($page['href'], '/');
+                    $hrefs = StringUtils::explode($page['href'], '/');
                     foreach ($hrefs as $key => $href) {
                         $fhref = self::parseSingleUrlPart($href, $pageUrls[$key]);
                         if ($fhref != $pageUrls[$key]) {

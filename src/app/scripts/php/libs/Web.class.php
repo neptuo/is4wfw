@@ -372,7 +372,7 @@
         }
 
         private function parsePagesId($item) {
-            return parent::str_tr($item, '-');
+            return StringUtils::explode($item, '-');
         }
 
         private function pagesIdAsString($delim = ', ') {
@@ -405,20 +405,20 @@
             $webProject = $this->UrlResolver->getWebProject();
             $lang = $this->UrlResolver->getLanguage();
 
-            $reqDoms = parent::str_tr($domainUrl, '.');
-            $prjDoms = parent::str_tr($webProject['alias']['domain_url'], '.');
+            $reqDoms = StringUtils::explode($domainUrl, '.');
+            $prjDoms = StringUtils::explode($webProject['alias']['domain_url'], '.');
             foreach ($prjDoms as $key => $part) {
                 $this->UrlResolver->parseSingleUrlPart($part, $reqDoms[$key]);
             }
 
-            $reqRoots = parent::str_tr($rootUrl, '/');
-            $prjRoots = parent::str_tr($webProject['alias']['root_url'], '/');
+            $reqRoots = StringUtils::explode($rootUrl, '/');
+            $prjRoots = StringUtils::explode($webProject['alias']['root_url'], '/');
             foreach ($prjRoots as $key => $part) {
                 $this->UrlResolver->parseSingleUrlPart($part, $reqRoots[$key]);
             }
 
             //echo $virtualUrl;
-            $reqVirs = parent::str_tr($virtualUrl, '/');
+            $reqVirs = StringUtils::explode($virtualUrl, '/');
             $prjVirs = self::prepareVirtualPathAsArray($webProject, $lang);
             self::parseAllPagesTagLib('tag_lib_start');
             foreach ($prjVirs as $key => $prj) {
@@ -442,13 +442,13 @@
             $pages = array();
             foreach ($this->TempLoadedContent as $page) {
                 if ($page['href'] != '') {
-                    $pages = array_merge($pages, parent::str_tr($page['href'], '/'));
+                    $pages = array_merge($pages, StringUtils::explode($page['href'], '/'));
                 }
             }
             if (strlen($lang['language']) > 0) {
                 $pages = array_merge(array($lang['language']), $pages);
             }
-            $virUrl = parent::str_tr($webProject['alias']['virtual_url'], '/');
+            $virUrl = StringUtils::explode($webProject['alias']['virtual_url'], '/');
             if(count($virUrl) == 1 && $virUrl[0] == '') {
                 return $pages;
             }
@@ -572,31 +572,31 @@
                 foreach ($dbProject as $i => $project) {
                     $ok = true;
                     $prj_add_url = '';
-                    $parsed_url = $phpObject->str_tr($project['url'], '/', 1);
+                    $parsed_url = StringUtils::explode($project['url'], '/', 1);
                     $project['url'] = $parsed_url[0];
-                    $temp_url = $phpObject->str_tr($project['url'], '.');
-                    $temp_req = $phpObject->str_tr($domainUrl, '.', 1);
+                    $temp_url = StringUtils::explode($project['url'], '.');
+                    $temp_req = StringUtils::explode($domainUrl, '.', 1);
                     for ($j = 0; $j < count($temp_url); $j++) {
                         $this->PropertyAttr = $temp_req[0];
                         $this->PropertyUse = 'set';
                         $temp_url_rrc = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $temp_url[$j]);
                         if ($temp_url_rrc == $temp_req[0]) {
-                            $temp_req = $phpObject->str_tr($temp_req[1], '.', 1);
+                            $temp_req = StringUtils::explode($temp_req[1], '.', 1);
                         } else {
                             $ok = false;
                         }
                     }
 
-                    $path = $phpObject->str_tr($this->Path, '/', 1);
+                    $path = StringUtils::explode($this->Path, '/', 1);
                     if ($ok && $parsed_url[1] != '') {
-                        $temp_path = $phpObject->str_tr($parsed_url[1], '/');
+                        $temp_path = StringUtils::explode($parsed_url[1], '/');
                         for ($j = 0; $j < count($temp_path); $j++) {
                             $this->PropertyAttr = $path[0];
                             $this->PropertyUse = 'set';
                             $temp_path_rrc = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $temp_path[$j]);
                             if ($temp_path_rrc == $path[0]) {
                                 $prj_add_url .= '/' . $temp_path_rrc;
-                                $path = $phpObject->str_tr($path[1], '/', 1);
+                                $path = StringUtils::explode($path[1], '/', 1);
                             } else {
                                 $ok = false;
                                 break;
@@ -623,11 +623,11 @@
                     foreach ($dbProject as $i => $project) {
                         $ok = true;
                         $prj_add_url = '';
-                        $parsed_url = $phpObject->str_tr($project['url'], '/', 1);
+                        $parsed_url = StringUtils::explode($project['url'], '/', 1);
                         $project['url'] = $parsed_url[0];
                         echo $project['url'] . '<br />';
-                        $temp_url = $phpObject->str_tr($project['url'], '.');
-                        $temp_req = $phpObject->str_tr($domainUrl, '.', 1);
+                        $temp_url = StringUtils::explode($project['url'], '.');
+                        $temp_req = StringUtils::explode($domainUrl, '.', 1);
                         for ($j = 0; $j < count($temp_url); $j++) {
                             $this->PropertyAttr = $temp_req[0];
                             $this->PropertyUse = 'set';
@@ -635,7 +635,7 @@
                             echo $temp_url_rrc . " == " . $temp_req[0] . "<br />";
                             if ($temp_url_rrc == $temp_req[0]) {
                                 $ok = true;
-                                $temp_req = $phpObject->str_tr($temp_req[1], '.', 1);
+                                $temp_req = StringUtils::explode($temp_req[1], '.', 1);
                             } else {
                                 $ok = false;
                                 break;
@@ -644,9 +644,9 @@
                         echo "<br /><br />";
 
                         echo $this->Path . '<br />';
-                        $path = $phpObject->str_tr($this->Path, '/', 1);
+                        $path = StringUtils::explode($this->Path, '/', 1);
                         if ($ok && $parsed_url[1] != '') {
-                            $temp_path = $phpObject->str_tr($parsed_url[1], '/');
+                            $temp_path = StringUtils::explode($parsed_url[1], '/');
                             for ($j = 0; $j < count($temp_path); $j++) {
                                 $this->PropertyAttr = $path[0];
                                 $this->PropertyUse = 'set';
@@ -654,7 +654,7 @@
                                 echo $temp_path_rrc . " == " . $path[0] . '<br />';
                                 if ($temp_path_rrc == $path[0]) {
                                     $prj_add_url .= '/' . $temp_path_rrc;
-                                    $path = $phpObject->str_tr($path[1], '/', 1);
+                                    $path = StringUtils::explode($path[1], '/', 1);
                                 } else {
                                     $ok = false;
                                     break;
@@ -738,14 +738,14 @@
                 $name = $dbObject->fetchAll("select `language` from `language` where `id` = " . $this->LanguageId . ";");
                 $this->LanguageName = $name[0]['language'];
 
-                $path = $phpObject->str_tr($this->Path, '/', 1);
+                $path = StringUtils::explode($this->Path, '/', 1);
                 if ($ok && $parsed_url[1] != '') {
-                    $temp_path = $phpObject->str_tr($parsed_url[1], '/');
+                    $temp_path = StringUtils::explode($parsed_url[1], '/');
                     for ($j = 0; $j < count($temp_path); $j++) {
                         $this->PropertyAttr = $path[0];
                         $this->PropertyUse = 'set';
                         $temp_path_rrc = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $temp_path[$j]);
-                        $path = $phpObject->str_tr($path[1], '/', 1);
+                        $path = StringUtils::explode($path[1], '/', 1);
                     }
                 }
 
@@ -758,7 +758,7 @@
                     self::tryToComprimeContent(file_get_contents($this->CacheInfo['path']));
                 } else {
                     $pages = $ucache[0]['page-ids'];
-                    $this->PagesId = $phpObject->str_tr($pages, '-');
+                    $this->PagesId = StringUtils::explode($pages, '-');
                 }
             }
 
@@ -807,17 +807,17 @@
                 $this->parseAllPagesTagLib("tag_lib_start");
 
                 // Parse domain for setup dynamic properties
-                $temp_req = $phpObject->str_tr($this->ProjectUrl, '.', 1);
+                $temp_req = StringUtils::explode($this->ProjectUrl, '.', 1);
                 $prj_add_url = '';
-                $parsed_url = $phpObject->str_tr($this->ProjectUrlDef, '/', 1);
+                $parsed_url = StringUtils::explode($this->ProjectUrlDef, '/', 1);
                 $project['url'] = $parsed_url[0];
-                $temp_url = $phpObject->str_tr($project['url'], '.');
+                $temp_url = StringUtils::explode($project['url'], '.');
                 for ($j = 0; $j < count($temp_url); $j++) {
                     $this->PropertyAttr = $temp_req[0];
                     $this->PropertyUse = 'set';
                     $temp_url_rrc = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $temp_url[$j]);
                     if ($temp_url_rrc == $temp_req[0]) {
-                        $temp_req = $phpObject->str_tr($temp_req[1], '.', 1);
+                        $temp_req = StringUtils::explode($temp_req[1], '.', 1);
                     } else {
                         $ok = false;
                     }
@@ -825,18 +825,18 @@
 
                 // Kvuli jazyku s neprazdnou url!!!
                 if ($this->LanguageId != 1) {
-                    $this->Url = $phpObject->str_tr($this->Url, '/', 1);
+                    $this->Url = StringUtils::explode($this->Url, '/', 1);
                     $this->Url = $this->Url[1];
                 }
 
                 // Parse url for setup dynamic properties
-                $path = $phpObject->str_tr($this->Url, '/', 1);
-                $temp_path = $phpObject->str_tr($this->UrlDef, '/');
+                $path = StringUtils::explode($this->Url, '/', 1);
+                $temp_path = StringUtils::explode($this->UrlDef, '/');
                 for ($j = 0; $j < count($temp_path); $j++) {
                     $this->PropertyAttr = $path[0];
                     $this->PropertyUse = 'set';
                     $temp_path_rrc = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $temp_path[$j]);
-                    $path = $phpObject->str_tr($path[1], '/', 1);
+                    $path = StringUtils::explode($path[1], '/', 1);
                 }
 
                 $this->parseAllPagesTagLib("tag_lib_end");
@@ -888,7 +888,7 @@
             global $dbObject;
             global $loginObject;
 
-            $path = $phpObject->str_tr($path, '/', 1);
+            $path = StringUtils::explode($path, '/', 1);
             $return = $dbObject->fetchAll("SELECT `info`.`page_id`, `info`.`href` , `info`.`cachetime`, `content`.`tag_lib_start`, `content`.`tag_lib_end` FROM `info` LEFT JOIN `page` ON `info`.`page_id` = `page`.`id` LEFT JOIN `content` ON `info`.`page_id` = `content`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `page`.`parent_id` = " . $parentId . " AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`wp` = " . $this->ProjectId . " ORDER BY `info`.`href` DESC;");
             //echo $path[0];
 
@@ -913,7 +913,7 @@
                 $pathCache = $path;
                 for ($i = 0; $i < count($return); $i++) {
                     $ok = true;
-                    $temp_path = $phpObject->str_tr($return[$i]['href'], '/');
+                    $temp_path = StringUtils::explode($return[$i]['href'], '/');
                     for ($j = 0; $j < count($temp_path); $j++) {
                         $this->PropertyAttr = $path[0];
                         $this->PropertyUse = 'set';
@@ -927,7 +927,7 @@
                                 }
                             }
                             //echo ' ( '.$path[1].' ) ';
-                            $path = $phpObject->str_tr($path[1], '/', 1);
+                            $path = StringUtils::explode($path[1], '/', 1);
                         } else {
                             $path = $pathCache;
                             $ok = false;
@@ -1518,7 +1518,7 @@
         public function getContent() {
             global $phpObject;
 
-            $path = $phpObject->str_tr($this->Path, '/', 1);
+            $path = StringUtils::explode($this->Path, '/', 1);
             $page = $this->TempLoadedContent[$this->PagesIdIndex];
 
             $this->executeTemplateContent(["page", $page["id"], "tag_lib_start"], $page['tag_lib_start']);
@@ -2024,7 +2024,7 @@
                 }
             }
             if (strlen($ip) > 0) {
-                $ips = $phpObject->str_tr($ip, ',');
+                $ips = StringUtils::explode($ip, ',');
                 if (in_array($_SERVER['REMOTE_ADDR'], $ips)) {
                     $redirect = true;
                 } else {
@@ -2108,7 +2108,7 @@
             global $dbObject;
             $cdp = self::getCurrentDynamicPath();
 
-            $id = $phpObject->str_tr($cdp, "-", 1);
+            $id = StringUtils::explode($cdp, "-", 1);
 
             $file = $dbObject->fetchAll("SELECT `id` FROM `page_file` WHERE `id` = " . $id[0] . ";");
             if (count($file)) {

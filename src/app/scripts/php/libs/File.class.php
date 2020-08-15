@@ -1054,7 +1054,7 @@
             global $dbObject;
             $cdp = $webObject->getCurrentDynamicPath();
             
-            $id = $phpObject->str_tr($cdp, "-", 1);
+            $id = StringUtils::explode($cdp, "-", 1);
             
             $file = $dbObject->fetchAll("SELECT `name` FROM `file` WHERE `id` = ".$id[0].";");
             if(count($file) == 1 && ($cdp == $id[0] || $cdp == $id[0]."-".$file[0]['name'])) {

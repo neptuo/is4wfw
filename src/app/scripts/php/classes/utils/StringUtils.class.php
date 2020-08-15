@@ -2,6 +2,31 @@
 
     class StringUtils {
 
+        public static function explode($s, $d, $c = 1000000) {
+            if (strlen($d) == 1) {
+                $res = array();
+                $t = "";
+                for ($i = 0; $i < strlen($s); $i++) {
+                    if ($s[$i] == $d && ($i < (strlen($s) - 1) && $i > 0)) {
+                        if ($c > 0) {
+                            $res[] = $t;
+                            $t = "";
+                            $c--;
+                        } else {
+                            $t .= $s[$i];
+                        }
+                    } elseif ($s[$i] != $d) {
+                        $t .= $s[$i];
+                    }
+                }
+                $res[] = $t;
+                $t = "";
+                return $res;
+            } else {
+                return $s;
+            }
+        }
+
     }
 
 ?>

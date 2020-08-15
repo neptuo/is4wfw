@@ -36,7 +36,7 @@
             $rb = self::rb();
             $return = '';
             
-            $cpArray = $phpObject->str_tr($classPath, '.');
+            $cpArray = StringUtils::explode($classPath, '.');
             $xmlPath = APP_SCRIPTS_PATH;
             for ($i = 0; $i < count($cpArray); $i ++) {
                 if($i < count($cpArray) - 1) {

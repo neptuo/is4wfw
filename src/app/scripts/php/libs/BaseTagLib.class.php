@@ -85,7 +85,7 @@
 
             //$escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n");
             $name = 'Frame.' . strtolower(str_replace(' ', '', $label));
-            $name = $phpObject->str_tr($name, ':');
+            $name = StringUtils::explode($name, ':');
             $name = $name[0];
             //$name = strtr($name, $escapeChars);
             $name = self::convertToUrlValid($name);
@@ -308,31 +308,6 @@
             }
 
             return array('value' => $default);
-        }
-
-        public function str_tr($s, $d, $c = 1000000) {
-            if (strlen($d) == 1) {
-                $res = array();
-                $t = "";
-                for ($i = 0; $i < strlen($s); $i++) {
-                    if ($s[$i] == $d && ($i < (strlen($s) - 1) && $i > 0)) {
-                        if ($c > 0) {
-                            $res[] = $t;
-                            $t = "";
-                            $c--;
-                        } else {
-                            $t .= $s[$i];
-                        }
-                    } elseif ($s[$i] != $d) {
-                        $t .= $s[$i];
-                    }
-                }
-                $res[] = $t;
-                $t = "";
-                return $res;
-            } else {
-                return $s;
-            }
         }
         
         public function getSystemProperty($name) {

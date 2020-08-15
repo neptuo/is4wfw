@@ -603,7 +603,7 @@
             global $dbObject;
             $cdp = $webObject->getCurrentDynamicPath();
 
-            $id = $phpObject->str_tr($cdp, "-", 1);
+            $id = StringUtils::explode($cdp, "-", 1);
 
             $file = $dbObject->fetchAll("SELECT `name` FROM `article_content` WHERE `article_id` = " . $id[0] . " AND `language_id` = " . $webObject->LanguageId . ";");
             if (count($file) == 1 && $cdp == $id[0]) {

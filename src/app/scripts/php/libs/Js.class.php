@@ -198,7 +198,7 @@
                 $type = "js";
             }
 
-            $namesAsArray = $phpObject->str_tr($names, ',');
+            $namesAsArray = StringUtils::explode($names, ',');
             foreach ($namesAsArray as $name) {
                 $path = $type == "js" ? "js/" . trim($name) . ".js" : "css/" . trim($name) . ".css";
                 $filePath = "scripts/" . $path;
@@ -224,7 +224,7 @@
             $this->addScript('~/js/initTiny.js');
 
             $script = "";
-            $ids = parent::php()->str_tr($ids, ',');
+            $ids = StringUtils::explode($ids, ',');
             if (count($ids) > 0) {
                 foreach ($ids as $id) {
                     $arguments = '"' . $id . '"';
