@@ -14,6 +14,9 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/MissingEditModelException.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/ArrayUtils.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/StringUtils.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/UrlUtils.class.php");
 
     /**
      *
