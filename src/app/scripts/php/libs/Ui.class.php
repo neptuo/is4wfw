@@ -347,7 +347,7 @@
 						if (in_array($key, $session)) {
 							parent::session()->delete($key, Session::StorageKey);
 						} else {
-							$url = self::removeUrlParameter($url, $key);
+							$url = UrlUtils::removeParameter($url, $key);
 						}
 					}
 				}

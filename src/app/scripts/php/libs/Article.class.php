@@ -243,7 +243,7 @@
                 if($i != 0) {
                     $return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . UrlUtils::addParameter($url, 'article-page', $i + 1) . '">['.($i + 1).']</a> ';
                 } else {
-                    $return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . parent::removeUrlParameter($url, 'article-page') . '">['.($i + 1).']</a> ';
+                    $return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . UrlUtils::removeParameter($url, 'article-page') . '">['.($i + 1).']</a> ';
                 }
             }
             
@@ -1389,15 +1389,15 @@
             if ($isClosing) {
                 $url = $webObject->composeUrl($backPageId);
                 $url = parent::addUrlQueryString($url);
-                $url = parent::removeUrlParameter($url, 'article-id');
-                $url = parent::removeUrlParameter($url, 'language-id');
+                $url = UrlUtils::removeParameter($url, 'article-id');
+                $url = UrlUtils::removeParameter($url, 'language-id');
 
                 parent::web()->redirectTo($url);
             } else if($isRedirectRequired) {
                 $url = $_SERVER['REQUEST_URI'];
                 $url = UrlUtils::addParameter($url, 'article-id', $article['id']);
                 $url = UrlUtils::addParameter($url, 'language-id', $ac['language_id']);
-                $url = parent::removeUrlParameter($url, 'line-id');
+                $url = UrlUtils::removeParameter($url, 'line-id');
                 
                 parent::web()->redirectTo($url);
                 return;
