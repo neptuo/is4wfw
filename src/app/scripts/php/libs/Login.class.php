@@ -292,7 +292,7 @@
                 }
 
                 if ($_POST['logout'] == "Log out" || ($this->Logtime + 60 * $sessionTime ) < time()) {
-                    self::logout("", $group);
+                    $this->logout(function() { }, $group);
                     return false;
                     parent::web()->redirectTo($pageId);
                 } else {
