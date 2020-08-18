@@ -16,6 +16,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/ArrayUtils.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/FileUtils.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/HttpUtils.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/StringUtils.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/UrlUtils.class.php");
 
@@ -436,19 +437,6 @@
                 . '<div style="color: red; font-weight: bold;">' . $title . ':</div>'
                 . '<div style="color: black;">' . $content . '</div>'
             . '</div>';
-        }
-
-
-        public function isHttpMethod($method) {
-            return $_SERVER['REQUEST_METHOD'] == $method;
-        }
-
-        public function isPost() {
-            return self::isHttpMethod("POST");
-        }
-
-        public function isGet() {
-            return self::isHttpMethod("GET");
         }
 
         private static $editModel;

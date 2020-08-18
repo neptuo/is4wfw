@@ -27,7 +27,7 @@
             $template();
             $model->load(false);
 
-            if (parent::isHttpMethod("POST") && array_key_exists($submit, $_REQUEST)) {
+            if (HttpUtils::isPost() && array_key_exists($submit, $_REQUEST)) {
                 // Submit form / bind data into the model.
                 $model->submit();
                 $template();
