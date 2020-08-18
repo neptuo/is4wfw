@@ -889,7 +889,7 @@
 					}
 
 					if ($type == 'full') {
-						self::removeDirectory(APP_PATH);
+						FileUtils::removeDirectory(APP_PATH);
 					}
 					
 					if (self::zipExtract($targetFileName, $targetPath)) {
@@ -903,7 +903,7 @@
 					} else {
 						unlink($targetFileName);
 						if ($type == 'full') {
-							self::removeDirectory(APP_PATH);
+							FileUtils::removeDirectory(APP_PATH);
 							self::zipExtract($currentFileName, $targetPath);
 						}
 

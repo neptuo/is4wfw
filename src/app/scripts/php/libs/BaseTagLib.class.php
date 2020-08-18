@@ -15,6 +15,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/ArrayUtils.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/FileUtils.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/StringUtils.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/UrlUtils.class.php");
 
@@ -407,20 +408,6 @@
             }
 
             return $this->requestHeaders;
-        }
-
-        public function removeDirectory($dir) {
-            $files = array_diff(scandir($dir), array('.','..'));
-            foreach ($files as $file) {
-                $itemPath = $dir . "/" . $file;
-                if (is_dir($itemPath)) {
-                    self::removeDirectory($itemPath);
-                } else {
-                    unlink($itemPath); 
-                }
-            } 
-
-            return rmdir($dir); 
         }
 
         public function zipExtract($zipFileName, $targetPath) {
