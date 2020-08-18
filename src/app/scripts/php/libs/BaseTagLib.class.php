@@ -580,15 +580,6 @@
             $parser->getCache()->delete($keys);
         }
 
-        protected function formatString($format, $model) {
-            foreach ($model as $key => $value) {
-                $source = "{" . $key . "}";
-                $format = str_replace($source, $value, $format);
-            }
-
-            return $format;
-        }
-
         protected function findAttributesByPrefix($params, $prefix) {
             $result = array();
             foreach ($params as $key => $value) {

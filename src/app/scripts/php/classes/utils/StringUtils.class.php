@@ -52,6 +52,15 @@
             return $base . $item;
         }
 
+        public static function format($format, $model) {
+            foreach ($model as $key => $value) {
+                $source = "{" . $key . "}";
+                $format = str_replace($source, $value, $format);
+            }
+
+            return $format;
+        }
+
     }
 
 ?>

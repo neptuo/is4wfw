@@ -585,7 +585,7 @@
 		private function ensureModelDefaultValue($model, $name, $format) {
 			$value = $model[$name];
             if (empty($value)) {
-                $model[$name] = function() use ($model, $format) { return self::formatString($format, $model); };
+                $model[$name] = function() use ($model, $format) { return StringUtils::format($format, $model); };
             }
 		}
 
