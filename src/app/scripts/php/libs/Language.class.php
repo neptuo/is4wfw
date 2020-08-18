@@ -25,14 +25,14 @@
 		public function listItems($template, $filter = [], $orderBy = []) {
 			$tableName = self::TableName;
 
-			$filter = parent::removeKeysWithEmptyValues($filter);
+			$filter = ArrayUtils::removeKeysWithEmptyValues($filter);
             if (parent::isFilterModel($filter)) {
                 $filter = $filter[""];
                 $tableName = $filter->wrapTableName($tableName);
                 $filter = $filter->toSql();
 			}
 			
-			$orderBy = parent::removeKeysWithEmptyValues($orderBy);
+			$orderBy = ArrayUtils::removeKeysWithEmptyValues($orderBy);
             if ($this->isSortModel($orderBy)) {
                 $orderBy = $orderBy[""];
             }

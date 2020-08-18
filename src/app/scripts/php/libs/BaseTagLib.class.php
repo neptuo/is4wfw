@@ -603,16 +603,6 @@
 
 			return $attributes;
         }
-        
-        protected function removeKeysWithEmptyValues($array) {
-            foreach ($array as $key => $value) {
-                if (is_null($value) || $value == '') {
-                    unset($array[$key]);
-                }
-            }
-
-            return $array;
-        }
 
         protected function isFilterModel($filter) {
             return count($filter) == 1 && array_key_exists("", $filter) && ($filter[""] instanceof FilterModel);

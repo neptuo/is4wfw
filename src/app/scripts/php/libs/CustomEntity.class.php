@@ -411,7 +411,7 @@
             $tableLocalizationName = self::ensureTableLocalizationName($name, $model);
             $xml = parent::getDefinition($name, $model);
             $langIds = explode(",", $langIds);
-            $keys = parent::removeKeysWithEmptyValues($keys);
+            $keys = ArrayUtils::removeKeysWithEmptyValues($keys);
 
             if (!$model->hasMetadataKey("isUpdate")) {
                 $model->metadata("isUpdate", count($keys) > 0);
@@ -532,13 +532,13 @@
                 $tableName = $filter->wrapTableName($tableName);
                 $filter = $filter->toSql();
             } else {
-                $filter = parent::removeKeysWithEmptyValues($filter);
+                $filter = ArrayUtils::removeKeysWithEmptyValues($filter);
             }
             
             if ($this->isSortModel($orderBy)) {
                 $orderBy = $orderBy[""];
             } else {
-                $orderBy = parent::removeKeysWithEmptyValues($orderBy);
+                $orderBy = ArrayUtils::removeKeysWithEmptyValues($orderBy);
             }
 
             $fields = $model->fields();
