@@ -1,6 +1,7 @@
 <?php
 
 require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/ArrayUtils.class.php");
 
 class RoleCacheHelper extends BaseTagLib {
 	
@@ -265,7 +266,7 @@ class RoleHelper {
 		$result = $instance->db()->getDataAccess()->fetchAll($sql);
 		$result = array_column($result, 'object_id');
 
-		return $instance->array_equal($ids, $result);
+		return ArrayUtils::isEqual($ids, $result);
 	}
 	
 	/* ================== HTML ======================================================== */
