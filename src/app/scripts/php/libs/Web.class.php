@@ -456,8 +456,13 @@
         }
 
         private function parseAllPagesTagLib($tl) {
+            $langId = $this->LanguageId;
+            if ($langId == 0) {
+                $langId = $this->UrlResolver->getLanguage()["id"];
+            }
+
             foreach ($this->TempLoadedContent as $page) {
-                $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, $tl), $page[$tl]);
+                $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $langId, $tl), $page[$tl]);
             }
         }
 

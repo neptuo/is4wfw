@@ -1,10 +1,16 @@
 <?php
 
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/FileUtils.class.php");
+
     class TemplateCache {
 
-        private function getPath(array $keys) {
+        private function getPath(array $keys, bool $isFile = true) {
             $subPath = implode("/", $keys);
-            $path = CACHE_TEMPLATES_PATH . $subPath . ".php";
+            $path = CACHE_TEMPLATES_PATH . $subPath;
+            if ($isFile) {
+                $path .=  ".php";
+            }
+
             return $path;
         }
 
@@ -20,9 +26,13 @@
             return file_exists($path);
         }
         
-        public function delete(array $keys) {
-            $path = $this->getPath($keys);
-            unlink($path);
+        public function delete(array $keys, bool $isRecursive = false) {
+            $path = $this->getPath($keys, !$isRecursive);
+            if ($isRecursive) {
+                FileUtils::removeDirectory($path);
+            } else {
+                unlink($path);
+            }
         }
         
         public function set(array $keys, string $content) {

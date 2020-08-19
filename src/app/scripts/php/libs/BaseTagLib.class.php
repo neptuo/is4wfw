@@ -564,9 +564,9 @@
             return new TemplateParser();
         }
 
-        public function deleteParsedTemplate(array $keys) {
+        public function deleteParsedTemplate(array $keys, bool $isRecursive = false) {
             $parser = $this->createParser();
-            $parser->getCache()->delete($keys);
+            $parser->getCache()->delete($keys, $isRecursive);
         }
 
         protected function findAttributesByPrefix($params, $prefix) {
