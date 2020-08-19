@@ -303,6 +303,40 @@
       Vygeneruje obalový tag pro "nav".
     </comment>
   </tag>
+  <fulltag>
+    <name>navItem</name>
+    <function>navItemFullTag</function>
+    <attribute>
+      <name>url</name>
+      <type>string</type>
+      <required />
+      <comment>URL odkazu.</comment>
+    </attribute>
+    <attribute>
+      <name>isActive</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda se jedná o vybraný/aktivní položku.</comment>
+    </attribute>
+    <attribute>
+      <name>isDisabled</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda má být položka zakázána.</comment>
+    </attribute>
+    <attribute>
+      <name>a</name>
+      <prefix />
+      <type>string</type>
+      <comment>Seznam atributů předaných vnitřnímu "a".</comment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému "li".</comment>
+    </anyAttribute>
+    <comment>
+      Vygeneruje obalový tag pro "nav".
+    </comment>
+  </fulltag>
   <tag>
     <name>fieldValidationMessage</name>
     <function>fieldValidationMessage</function>

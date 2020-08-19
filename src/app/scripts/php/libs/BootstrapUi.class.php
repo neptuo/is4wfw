@@ -241,9 +241,13 @@
 		}
 
 		public function navItem($text, $url, $isActive = false, $isDisabled = false, $aParams = array(), $params = array()) {
-			$params = self::appendClass($params, "nav-item");
+			return $this->navItemFullTag(function() use($text) { return $text; }, $url, $isActive, $isDisabled, $aParams, $params);
+		}
+
+		public function navItemFullTag($template, $url, $isActive = false, $isDisabled = false, $aParams = array(), $params = array()) {
+			$params = $this->appendClass($params, "nav-item");
 			if ($isActive) {
-				$params = self::appendClass($params, "active");
+				$params = $this->appendClass($params, "active");
 			}
 
 			$attributes = parent::joinAttributes($params);
@@ -253,9 +257,9 @@
 				$linkClass .= " disabled";
 			}
 
-			$aParams = self::appendClass($aParams, $linkClass);
+			$aParams = $this->appendClass($aParams, $linkClass);
 			if ($isActive) {
-				$aParams = self::appendClass($aParams, "active");
+				$aParams = $this->appendClass($aParams, "active");
 			}
 
 			$aAttributes = parent::joinAttributes($aParams);
@@ -265,6 +269,7 @@
 				$result .= "<li$attributes>";
 			}
 
+			$text = $template();
 			$result .=  "<a href='$url'$aAttributes>$text</a>";
 
 			if ($this->navTag == "ul") {
