@@ -1,6 +1,8 @@
 <?php
 
-	require_once("BaseTagLib.class.php");
+use Mpdf\Tag\P;
+
+require_once("BaseTagLib.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
 
 	/**
@@ -19,11 +21,15 @@
 			parent::setTagLibXml("Template.xml");
 		}
 
+		private function throwNotFound($filter) {
+			throw new Error("Missing template filterd by '" . http_build_query($filter) . "'.");;
+		}
+
 		private function findBy($filter) {
 			$sql = parent::sql()->select("template", ["id", "content"], $filter);
 			$data = parent::db()->fetchSingle($sql);
 			if (empty($data)) {
-				throw new Error("Missing template filterd by '" . http_build_query($filter) . "'.");
+				$this->throwNotFound($filter);
 			}
 
 			if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(Web::$TemplateRightDesc, $data["id"], WEB_R_READ))) {
@@ -62,7 +68,7 @@
 		}
 		
 		public function includeWithBodyById(?callable $template, $id, $params) {
-			return $this->includeBy(["id" => $id], ["template", "id", $id], $template, $params);
+			return $this->includeBy(["id" => $id], TemplateCacheKeys::template($id), $template, $params);
 		}
 
 		public function includeByIdentifier($identifier, $params) {
@@ -74,7 +80,14 @@
 		}
 
 		public function includeWithBodyByIdentifier($identifier, $template, $params) {
-			return $this->includeBy(["identifier" => $identifier], ["template", "identifier", $identifier], $template, $params);
+			$filter = ["identifier" => $identifier];
+			$sql = $this->sql()->select("template", ["id"], $filter);
+			$entity = $this->dataAccess()->fetchSingle($sql);
+			if (empty($entity)) {
+				$this->throwNotFound($filter);
+			}
+			
+			return $this->includeBy(["identifier" => $identifier], TemplateCacheKeys::template($entity["id"]), $template, $params);
 		}
 
 		public function content() {
@@ -101,7 +114,7 @@
 		}
 
 		public function provideBodyById($id) {
-			$keys = ["template", $id];
+			$keys = TemplateCacheKeys::template($id);
 			$template = $this->getParsedTemplate($keys);
 			if ($template == null) {
 				$templateContent = $this->findBy(["id" => $id]);

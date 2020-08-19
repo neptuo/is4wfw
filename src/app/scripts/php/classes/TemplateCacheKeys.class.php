@@ -10,6 +10,10 @@
             return ["page", $pageId, $langId];
         }
 
+        public static function template(int $templateId) {
+            return ["template", $templateId];
+        }
+
     }
 
 ?>

@@ -1958,7 +1958,7 @@
                 if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(Web::$TemplateRightDesc, $templateId, WEB_R_READ))) {
                     $template = $dbObject->fetchAll('SELECT `content` FROM `template` WHERE `id` = ' . $dbObject->escape($templateId) . ';');
                     if (count($template) == 1) {
-                        $return = $this->executeTemplateContent(["template", $templateId], $template[0]['content']);
+                        $return = $this->executeTemplateContent(TemplateCacheKeys::template($templateId), $template[0]['content']);
                         return $return;
                     }
                 } else {

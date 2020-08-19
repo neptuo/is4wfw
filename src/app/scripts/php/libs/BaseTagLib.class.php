@@ -156,7 +156,7 @@
             global $loginObject;
             $templateContent = "";
 
-            $keys = ["template", $templateId];
+            $keys = TemplateCacheKeys::template($templateId);
             $template = $this->getParsedTemplate($keys);
             if ($template != null) {
                 return $template;

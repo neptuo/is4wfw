@@ -2607,7 +2607,7 @@
                                 $return .= '<h4 class="success">Template updated!</h4>';
                             }
 
-                            $this->deleteParsedTemplate(["template", $templateId]);
+                            $this->deleteParsedTemplate(TemplateCacheKeys::template($templateId));
                         } catch (DataAccessException $e) {
                             $return .= $this->getError("Error: " . $e->errorMessage . ".");
                             $hasError = true;
