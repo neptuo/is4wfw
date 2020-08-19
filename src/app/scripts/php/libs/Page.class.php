@@ -8,6 +8,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/WebForwardManager.class.php");
     require_once("System.class.php");
 
+
     /**
      * 
      *  Class updating web pages.     

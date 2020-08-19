@@ -2,6 +2,7 @@
 
     require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParser.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateCacheKeys.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/StringUtils.class.php");
 
     /**
@@ -180,7 +181,7 @@
                 return true;
             }
             foreach ($pages as $page) {
-                $this->parseContentForCustomTags(["page", $page["id"], "tag_lib_start"], $page['tag_lib_start']);
+                $this->parseContentForCustomTags(TemplateCacheKeys::page($page["id"], $langId, "tag_lib_start"), $page['tag_lib_start']);
 
                 $found = true;
                 $key = 0;
@@ -189,7 +190,7 @@
                     foreach ($hrefs as $key => $href) {
                         $fhref = self::parseSingleUrlPart($href, $pageUrls[$key]);
                         if ($fhref != $pageUrls[$key]) {
-                            $this->parseContentForCustomTags(["page", $page["id"], "tag_lib_end"], $page['tag_lib_end']);
+                            $this->parseContentForCustomTags(TemplateCacheKeys::page($page["id"], $langId, "tag_lib_end"), $page['tag_lib_end']);
                             $found = false;
                             //break;
                         }
@@ -206,7 +207,7 @@
                     //print_r($this->PagesId);
                     // rekurze
                     if (self::parsePageUrlWithLang(self::subarray($pageUrls, $key + 1), $projectId, $page['id'], $langId)) {
-                        $this->parseContentForCustomTags(["page", $page["id"], "tag_lib_end"], $page['tag_lib_end']);
+                        $this->parseContentForCustomTags(TemplateCacheKeys::page($page["id"], $langId, "tag_lib_end"), $page['tag_lib_end']);
                         return true;
                     } else {
                         //echo 'PagesCount: '.count($this->PagesId).'<br />';
@@ -214,7 +215,7 @@
                     }
                 }
 
-                $this->parseContentForCustomTags(["page", $page["id"], "tag_lib_end"], $page['tag_lib_end']);
+                $this->parseContentForCustomTags(TemplateCacheKeys::page($page["id"], $langId, "tag_lib_end"), $page['tag_lib_end']);
             }
             return false;
         }

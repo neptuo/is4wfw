@@ -457,7 +457,7 @@
 
         private function parseAllPagesTagLib($tl) {
             foreach ($this->TempLoadedContent as $page) {
-                $this->executeTemplateContent(["page", $page["id"], $tl], $page[$tl]);
+                $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, $tl), $page[$tl]);
             }
         }
 
@@ -937,7 +937,7 @@
 
                     if ($ok/* $tmp_path == $path[0] */) {
                         $this->ParsingPages = true;
-                        $this->executeTemplateContent(["page", $return[$i]["page_id"], "tag_lib_start"], $return[$i]['tag_lib_start']);
+                        $this->executeTemplateContent(TemplateCacheKeys::page($return[$i]["page_id"], $this->LanguageId, "tag_lib_start"), $return[$i]['tag_lib_start']);
 
                         $this->PagesId[] = $return[$i]['page_id'];
                         // Otestovat!!!!!!!!!
@@ -950,17 +950,17 @@
                         }
                         self::parsePages($path[0] . '/' . $path[1], $return[$i]['page_id']);
 
-                        $this->executeTemplateContent(["page", $return[$i]["page_id"], "tag_lib_end"], $return[$i]['tag_lib_end']);
+                        $this->executeTemplateContent(TemplateCacheKeys::page($return[$i]["page_id"], $this->LanguageId, "tag_lib_end"), $return[$i]['tag_lib_end']);
 
                         $this->ParsingPages = false;
                         return;
                     }
                 }
                 for ($i = 0; $i < count($return); $i++) {
-                    $tmp_path = $this->executeTemplateContent(["page", $return[$i]["id"], "href"], $return[$i]['href']);
+                    $tmp_path = $this->executeTemplateContent(TemplateCacheKeys::page($return[$i]["page_id"], $this->LanguageId, "href"), $return[$i]['href']);
                     if ($tmp_path == "") {
                         $this->ParsingPages = true;
-                        $this->executeTemplateContent(["page", $return[$i]["page_id"], "tag_lib_start"], $return[$i]['tag_lib_start']);
+                        $this->executeTemplateContent(TemplateCacheKeys::page($return[$i]["page_id"], $this->LanguageId, "tag_lib_start"), $return[$i]['tag_lib_start']);
 
                         $this->PagesId[] = $return[$i]['page_id'];
                         // Otestovat!!!!!!!!!
@@ -974,7 +974,7 @@
 
                         self::parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0] . '/' . $path[1], $return[$i]['page_id']);
 
-                        $this->executeTemplateContent(["page", $return[$i]["page_id"], "tag_lib_start"], $return[$i]['tag_lib_end']);
+                        $this->executeTemplateContent(TemplateCacheKeys::page($return[$i]["page_id"], $this->LanguageId, "tag_lib_start"), $return[$i]['tag_lib_end']);
 
                         $this->ParsingPages = false;
                         return;
@@ -1521,7 +1521,7 @@
             $path = StringUtils::explode($this->Path, '/', 1);
             $page = $this->TempLoadedContent[$this->PagesIdIndex];
 
-            $this->executeTemplateContent(["page", $page["id"], "tag_lib_start"], $page['tag_lib_start']);
+            $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "tag_lib_start"), $page['tag_lib_start']);
 
             if (count($this->PagesId) > ($this->PagesIdIndex + 1)) {
                 self::setChildPage($this->PagesId[$this->PagesIdIndex + 1]);
@@ -1531,7 +1531,7 @@
 
             $this->CurrentDynamicPath = $path[0];
             
-            $tmp_path = $this->executeTemplateContent(["page", $page["id"], "href"], $page['href']);
+            $tmp_path = $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "href"), $page['href']);
 
             $this->ParentId = $this->PagesId[$this->PagesIdIndex];
             $this->PagesIdIndex++;
@@ -1541,20 +1541,20 @@
                 if (strlen($page['title']) > 0) {
                     $this->PropertyAttr = '';
                     $this->PropertyUse = 'get';
-                    $this->PageTitle = $this->executeTemplateContent(["page", $page["id"], "title"], $page['title']) . " - " . $this->PageTitle;
+                    $this->PageTitle = $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "title"), $page['title']) . " - " . $this->PageTitle;
                 }
             }
             if (strlen($page['keywords']) > 0) {
-                $page['keywords'] = $this->executeTemplateContent(["page", $page["id"], "keywords"], $page['keywords']);
+                $page['keywords'] = $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "keywords"), $page['keywords']);
             }
             $this->Keywords .= ( (strlen($page['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ',' . $page['keywords'] : $page['keywords']) : '');
 
             $this->Path = $path[1];
 
-            $this->PageHead .= $this->executeTemplateContent(["page", $page["id"], "head"], $page['head']);
-            $pageContent = $this->executeTemplateContent(["page", $page["id"], "content"], $page['content']);
+            $this->PageHead .= $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "head"), $page['head']);
+            $pageContent = $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "content"), $page['content']);
 
-            $this->executeTemplateContent(["page", $page["id"], "tag_lib_end"], $page['tag_lib_end']);
+            $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "tag_lib_end"), $page['tag_lib_end']);
 
             $this->PagesIdIndex--;
 
@@ -1626,7 +1626,7 @@
 
                     $lnkName = $lnk[$display];
                     if ($display == "title") {
-                        $lnkName = $this->executeTemplateContent(["page", $lnk["id"], "title"], $lnk["title"]);
+                        $lnkName = $this->executeTemplateContent(TemplateCacheKeys::page($lnk["id"], $this->LanguageId, "title"), $lnk["title"]);
                     }
 
                     $content .= ''
@@ -1661,7 +1661,7 @@
 
                 $text = $item[$display];
                 if ($display == "title") {
-                    $text = $this->executeTemplateContent(["page", $item["id"], "title"], $item["title"]);
+                    $text = $this->executeTemplateContent(TemplateCacheKeys::page($item["id"], $this->LanguageId, "title"), $item["title"]);
                 }
                 
                 $url = $this->composeUrl($item["id"], $this->LanguageId, false, true, $copyParameters);
@@ -1900,7 +1900,7 @@
                 $return = $dbObject->fetchAll("SELECT `content` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` WHERE `page`.`id` = " . $pageId . " AND `content`.`language_id` = " . $languageId . ";");
                 if (count($return) == 1) {
                     if (!$notParseCTag) {
-                        return $this->executeTemplateContent(["page", $pageId, "content"], $return[0]['content']);
+                        return $this->executeTemplateContent(TemplateCacheKeys::page($pageId, $this->LanguageId, "content"), $return[0]['content']);
                     } else {
                         return $return[0]['content'];
                     }
@@ -2616,7 +2616,7 @@
             // parse title
             $page = $this->TempLoadedContent[$this->PagesIdIndex - 1];
             if (strlen($page['title']) > 0) {
-                return $this->executeTemplateContent(["page", $page["id"], "title"], $page['title']);
+                return $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "title"), $page['title']);
             }
         }
 
@@ -2636,7 +2636,7 @@
             // parse title
             $page = $this->TempLoadedContent[count($this->TempLoadedContent) - 1];
             if (strlen($page['title']) > 0) {
-                return $this->executeTemplateContent(["page", $page["id"], "title"], $page['title']);
+                return $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "title"), $page['title']);
             }
         }
 
