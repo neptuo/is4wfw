@@ -522,7 +522,7 @@
             self::pushListModel($model);
 
             $model->registration();
-            $template();
+            $template([$this->tagPrefix => "register"]);
             $model->registration(false);
             
             $result = "";

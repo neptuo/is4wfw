@@ -14,6 +14,8 @@
      */
     class CustomForm extends BaseTagLib {
 
+        private $tagPregix;
+
         private $FunctionRegex = '#([a-zA-Z0-9]+)\(([^)]*)\)#';
         private $EmailRegex = '/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i';
         private $CreatorError = "";
@@ -31,11 +33,10 @@
         private $EmailPhase = 0;
         private $AdditionalKeys = array();
 
-        public function __construct() {
-            global $webObject;
-
+        public function __construct($tagPrefix) {
             parent::setTagLibXml("CustomForm.xml");
             parent::setLocalizationBundle("customform");
+            $this->tagPrefix = $tagPrefix;
         }
 
         /* ===================== LIST =========================================== */
@@ -175,7 +176,7 @@
             $this->ViewFieldsFound = array();
             $this->ViewFieldsFound[] = array('id', 'number');
 
-            $template();
+            $template([$this->tagPrefix => ["field", "setFieldAsCustomProperty"]]);
 
             //print_r($this->ViewFieldsFound);
             $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');

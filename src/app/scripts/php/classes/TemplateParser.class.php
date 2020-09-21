@@ -112,7 +112,7 @@
                 $this->Code->addClass($className, "ParsedTemplate");
                 
                 $processed = $this->parseContentInternal($content);
-                $this->Code->addMethod("evaluate");
+                $this->Code->addMethod("evaluateInternal", "protected");
                 $this->Code->addLine("return '". $processed . "';");
                 $this->Code->closeBlock();
                 $this->Code->closeBlock();
