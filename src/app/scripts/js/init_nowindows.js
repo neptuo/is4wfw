@@ -1042,12 +1042,18 @@ function initClickableGrid() {
 			if ($buttonEdit.length != 0) {
 				$button = $buttonEdit[0];
 			} else {
+				$target = $tr.find(".clickable-target");
 				$buttons = $tr.find('input[type=image]');
 				$button = $buttons.filter('[src$=edi.png]');
-				if ($button.length == 0) {
+				$checkbox = $tr.find('input[type=checkbox]');
+				if ($target.length > 0) {
+					$button = $target[0];
+				} else if ($button.length > 0) {
+					$button = $button[0];
+				} else if ($buttons.length > 0) {
 					$button = $buttons[0];
 				} else {
-					$button = $button[0];
+					$button = $checkbox[0];
 				}
 			}
 

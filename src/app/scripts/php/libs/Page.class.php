@@ -1308,7 +1308,7 @@
                 if (count($files) != 0) {
                     $returnTmp .= ''
                     . '<form name="files-to-remove" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                        . '<table class="page-file-list">'
+                        . '<table class="standart clickable">'
                             . '<tr class="file-tr">'
                                 . '<th colspan="5" class="file-head-th">' . $rb->get('pagelist.field.addedfiles') . ':</th>'
                             . '</tr>';
@@ -1319,16 +1319,13 @@
                         $returnTmp .= ''
                         . '<tr class="file-tr ' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
                             . '<td>'
-                                . Order::upForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], $rb->get('pagelist.action.addedfiles.moveup'), $additional)
-                                . Order::downForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], $rb->get('pagelist.action.addedfiles.movedown'), $additional)
+                                . '<input id="remove-text-files-files-' . $file['id'] . '" type="checkbox" class="clickable-target" name="files[' . $file['id'] . ']" />'
+                            . '</td>'
+                            . '<td class="file-id">'
+                                . $file['id']
                             . '</td>'
                             . '<td class="file-name">'
-                                . '<label for="remove-text-files-files-' . $file['id'] . '">' . $file['name'] . '</label>'
-                            . '</td>'
-                            . '<td class="file-content">'
-                                . '<label for="remove-text-files-files-' . $file['id'] . '">'
-                                    . '<div class="file-content-in"><div class="foo">' . substr($file['content'], 0, 130) . '</div></div>'
-                                . '</label>'
+                            . '<label for="remove-text-files-files-' . $file['id'] . '">' . $file['name'] . '</label>'
                             . '</td>'
                             . '<td class="file-type">'
                                 . '<label for="remove-text-files-files-' . $file['id'] . '">'
@@ -1336,7 +1333,8 @@
                                 . '</label>'
                             . '</td>'
                             . '<td>'
-                                . '<input id="remove-text-files-files-' . $file['id'] . '" type="checkbox" name="files[' . $file['id'] . ']" />'
+                                . Order::upForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], $rb->get('pagelist.action.addedfiles.moveup'), $additional)
+                                . Order::downForm($_SERVER['REQUEST_URI'], 'text-file', $file['id'], $rb->get('pagelist.action.addedfiles.movedown'), $additional)
                             . '</td>'
                         . '</tr>';
                         $i++;
@@ -1361,26 +1359,27 @@
                 if (count($files) != 0) {
                     $returnTmp = ''
                             . '<form name="files-to-add" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                            . '<table class="page-file-list">'
+                            . '<table class="standart clickable">'
                             . '<tr class="file-tr">'
                             . '<th colspan="4" class="file-head-th">' . $rb->get('pagelist.field.filestoadd') . '</th>'
                             . '</tr>';
                     $i = 1;
                     foreach ($files as $file) {
-                        $returnTmp .= '<tr class="file-tr ' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
-                                . '<td class="file-name">'
-                                . '<label for="add-text-files-files-' . $file['id'] . '">' . $file['name'] . '</label>'
-                                . '</td>'
-                                . '<td class="file-content">'
-                                . '<div class="file-content-in"><div class="foo">' . '<label for="add-text-files-files-' . $file['id'] . '">' . substr($file['content'], 0, 130) . '</label>' . '</div></div>'
-                                . '</td>'
-                                . '<td class="file-type">'
-                                . '<label for="add-text-files-files-' . $file['id'] . '">' . $filesEx[$file['type']] . '</label>'
-                                . '</td>'
-                                . '<td>'
+                        $returnTmp .= ''
+                        . '<tr class="file-tr ' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
+                            . '<td>'
                                 . '<input id="add-text-files-files-' . $file['id'] . '" type="checkbox" name="files[' . $file['id'] . ']" />'
-                                . '</td>'
-                                . '</tr>';
+                            . '</td>'
+                            . '<td class="file-id">'
+                                . $file['id']
+                            . '</td>'
+                            . '<td class="file-name">'
+                                . '<label for="add-text-files-files-' . $file['id'] . '">' . $file['name'] . '</label>'
+                            . '</td>'
+                            . '<td class="file-type">'
+                                . '<label for="add-text-files-files-' . $file['id'] . '">' . $filesEx[$file['type']] . '</label>'
+                            . '</td>'
+                        . '</tr>';
                         $i++;
                     }
                     $returnTmp .= '</table>'
