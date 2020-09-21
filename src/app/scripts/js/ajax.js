@@ -204,7 +204,13 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
         html = html.replace(/\?__TEMPLATE=xml/g, '').replace(/\&__TEMPLATE=xml/g, '');
 
         var oldContent = $(this.Selector);
-        var newContent = $(html).find(this.Selector);
+        
+        var newHtml = $(html);
+        var newContent = newHtml.filter(this.Selector);
+        if (newContent.length == 0) {
+            newContent = newHtml.find(this.Selector);
+        }
+
         if (newContent.length == 1) {
             oldContent.replaceWith(newContent);
             this.Initialize(newContent);
