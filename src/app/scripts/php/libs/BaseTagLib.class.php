@@ -430,7 +430,7 @@
 
         public function debugFrame($title, $content, $contentTag = null) {
             if ($contentTag !== null && $contentTag !== '') {
-                $content = '<' . $contentTag . '>' . $content . '</' . $contentTag . '>';
+                $content = '<' . $contentTag . ' style="white-space: pre;">' . $content . '</' . $contentTag . '>';
             }
 
             return ''

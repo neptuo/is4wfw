@@ -120,9 +120,6 @@
                 $code = $this->Code->toString();
                 $this->TemplateCache->set($keys, $code);
                 
-                // eval($code);
-                // $result = new $className();
-                // return $result;
                 return $this->run($keys);
             } else {
                 throw new Exception("Invalid 'mode'.");
@@ -195,13 +192,14 @@
                     $content = "";
                 }
 
+                $hasBodyTemplate = false;
+                $uniqueIdentifier = $this->generateRandomString();
                 if ($isFullTag) {
                     if ($object[0] == "php" && $object[1] == "using") {
                         $phpObject->register($attributes->Attributes["prefix"]["value"], $attributes->Attributes["class"]["value"]);
                     }
 
                     $template = $this->parseInternal($content, 'parse');
-                    $content = "function () { return '". $template . "'; }";
                     
                     if ($object[0] == "php" && $object[1] == "using") {
                         $phpObject->unregister($attributes->Attributes["prefix"]["value"]);
@@ -209,11 +207,27 @@
                     
                     if ($isRegisteredFullTag) {
                         $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
+
+                        $templateMethodName = 'template_' . $object[0] . '_' . $functionName . '_' . $uniqueIdentifier . '_body';
+                        $this->Code->addMethod($templateMethodName, "public");
+                        $this->Code->addLine("return '". $template . "';");
+                        $this->Code->closeBlock();
+                        $content = "function() { return " . '$' . "this->$templateMethodName(); }";
+                        $hasBodyTemplate = true;
+                        
                         if (!$phpObject->sortFullAttributes($object[0], $object[1], $attributes, $content)) {
                             return "";
                         }
                     } else if ($phpObject->isAnyFullTag($object[0], $object[1])) {
                         $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
+                        
+                        $templateMethodName = 'template_' . $object[0] . '_' . $functionName . '_' . $uniqueIdentifier . '_body';
+                        $this->Code->addMethod($templateMethodName, "public");
+                        $this->Code->addLine("return '". $template . "';");
+                        $this->Code->closeBlock();
+                        $content = "function() { return " . '$' . "this->$templateMethodName(); }";
+                        $hasBodyTemplate = true;
+
                         if (!$this->sortAnyTagAttributes($object[1], $attributes, $content)) {
                             return "";
                         }
@@ -243,7 +257,7 @@
                 }
 
                 if ($functionName != null) {
-                    return $this->generateFunctionOutput($object[0], $functionName, $attributes);
+                    return $this->generateFunctionOutput($uniqueIdentifier, $object[0], $object[1], $hasBodyTemplate, $functionName, $attributes);
                 }
             }
             
@@ -287,7 +301,8 @@
                         $defaultReturnValue = '$parameters';
                     }
 
-                    $call = $this->generateFunctionOutput($prefix, $decorator["function"], $attributes, false, $defaultReturnValue);
+                    $identifier = $this->generateRandomString();
+                    $call = $this->generateFunctionOutput($identifier, $prefix, null, false, $decorator["function"], $attributes, false, $defaultReturnValue);
                     if (!$tagAttributes->HasAttributeModifyingDecorators && $decorator["providesFullTagBody"]) {
                         $tagAttributes->Attributes[PhpRuntime::$FullTagTemplateName] = array("value" => $call . "['" . PhpRuntime::$FullTagTemplateName . "']", "type" => "eval");
                     } else {
@@ -315,13 +330,15 @@
                     $functionName = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
 
                     $attributes = new TemplateAttributeCollection();
-                    return $this->generateFunctionOutput($object[0], $functionName, $attributes, false);
+                    $identifier = $this->generateRandomString();
+                    return $this->generateFunctionOutput($identifier, $object[0], null, false, $functionName, $attributes, false);
                 } else if($phpObject->isAnyProperty($object[0])) {
                     $functionName = 'getProperty';
                     
                     $attributes = new TemplateAttributeCollection();
                     $attributes->Attributes[] = array('value' => $object[1], 'type' => 'raw');
-                    return $this->generateFunctionOutput($object[0], $functionName, $attributes, false);
+                    $identifier = $this->generateRandomString();
+                    return $this->generateFunctionOutput($identifier, $object[0], null, false, $functionName, $attributes, false);
                 }
             }
 
@@ -469,10 +486,8 @@
             }
         }
 
-        protected function generateFunctionOutput(string $tagPrefix, string $functionName, TemplateAttributeCollection $attributes, bool $isWrappedAsString = true, $defaultReturnValue = "''") : string {
-            $identifier = $this->generateRandomString();
+        protected function generateFunctionOutput(string $identifier, string $tagPrefix, ?string $tagName, bool $hasBodyTemplate, string $functionName, TemplateAttributeCollection $attributes, bool $isWrappedAsString = true, $defaultReturnValue = "''") : string {
             $identifier = 'template_' . $tagPrefix . '_' . $functionName . '_' . $identifier;
-            
 
             $targetObject = '$' . $tagPrefix . 'Object';
             $logObject = '$' . 'log' . 'Object';
@@ -498,6 +513,11 @@
                 $attributesString = implode(", ", $attributeNames);
             } else {
                 $attributesString = $this->concatAttributesToString($attributes->Attributes);
+            }
+
+            if ($tagName != null) {
+                $this->Code->addLine("if (" . '$' . "this->isTagProcessed('$tagPrefix', '$tagName')) {");
+                $this->Code->addIndent();
             }
 
             if ($attributes->HasDecorators) {
@@ -558,6 +578,34 @@
                             $this->Code->closeBlock();
                         }
                     }
+                }
+            }
+
+            if ($tagName != null) {
+                $this->Code->closeBlock();
+                if ($hasBodyTemplate) {
+                    $this->Code->addLine("else {");
+                    $this->Code->addIndent();
+
+                    if ($attributes->HasAttributeModifyingDecorators) {
+                        $this->Code->addLine($returnParametersName. "['" . PhpRuntime::$FullTagTemplateName . "']();");
+                    } else {
+                        $isContentProcessed = false;
+                        if ($attributes->HasDecorators) {
+                            foreach ($attributes->Decorators as $prefix => $decorators) {
+                                if ($decorator["providesFullTagBody"]) {
+                                    $this->Code->addLine($attributes->Attributes[PhpRuntime::$FullTagTemplateName]["value"] . "();");
+                                    $isContentProcessed = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!$isContentProcessed) {
+                            $this->Code->addLine('$'. "this->" . $identifier . "_body();");
+                        }
+                    }
+                    $this->Code->closeBlock();
                 }
             }
 
