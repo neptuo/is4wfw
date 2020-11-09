@@ -52,6 +52,6 @@ services:
       - MYSQL_ROOT_PASSWORD=1234
       - MYSQL_USER=phpwfw
       - MYSQL_PASSWORD=1234
-    command: --sql_mode=""
+    command: --sql_mode="" --lower_case_table_names=1
     volumes:
       - "./temp/mysql:/var/lib/mysql"
