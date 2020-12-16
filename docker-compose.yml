@@ -5,7 +5,7 @@ services:
   web:
     image: nginx:latest
     ports:
-      - "8080:80"
+      - "4242:80"
     volumes:
       - ./src:/src
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
@@ -19,7 +19,7 @@ services:
       dockerfile: docker/php-apache-modrewrite-zip/dockerfile
     environment:
       - IS4WFW_DEVELOPMENT=true
-      - IS4WFW_PORT=8080
+      - IS4WFW_PORT=4242
     expose:
       - "9000"
     volumes:
@@ -39,7 +39,7 @@ services:
     environment:
       - PMA_USER=root
       - PMA_PASSWORD=1234
-      - PMA_ABSOLUTE_URI=http://localhost:8080/phpmyadmin
+      - PMA_ABSOLUTE_URI=http://localhost:4242/phpmyadmin
     links:
       - mysql:db
         
@@ -54,4 +54,4 @@ services:
       - MYSQL_PASSWORD=1234
     command: --sql_mode=""
     volumes:
-      - "./temp/mysql:/var/lib/mysql"
+      - "./temp/mysql-new2:/var/lib/mysql"
