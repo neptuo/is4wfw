@@ -9,10 +9,14 @@
 	class CustomEntity extends CustomEntityBase {
 
         private $tagPrefix;
+        private $urlProperties;
+        private $urlResolvers;
 
 		public function __construct($tagPrefix) {
             parent::setTagLibXml("CustomEntity.xml");
             $this->tagPrefix = $tagPrefix;
+            $this->urlProperties = [];
+            $this->urlResolvers = [];
         }
 
         private function parseUserValue($column, $value) {
@@ -610,9 +614,41 @@
                 
                 return $model[$name];
             }
+
+            if (array_key_exists($name, $this->urlProperties)) {
+                return $this->urlProperties[$name];
+            }
             
             return null;
-		}
+        }
+        
+        public function setProperty($name, $value) {
+            if (array_key_exists($name, $this->urlResolvers)) {
+                $resolver = $this->urlResolvers[$name];
+
+                $tableName = $this->ensureTableName($resolver["name"]);
+
+                $filter = $resolver["filter"];
+                if (parent::isFilterModel($filter)) {
+                    $filter = $filter[""];
+                    $filter[$resolver["columnName"]] = $value;
+                    $tableName = $filter->wrapTableName($tableName);
+                    $filter = $filter->toSql();
+                } else {
+                    $filter[$resolver["columnName"]] = $value;
+                    $filter = parent::removeKeysWithEmptyValues($filter);
+                }
+
+                $sql = parent::sql()->count($tableName, $filter);
+                $data = parent::db()->fetchSingle($sql);
+                if (empty($data) || $data["count"] != 1) {
+                    return "x.x---y\\r";
+                }
+            }
+
+            $this->urlProperties[$name] = $value;
+            return $value;
+        }
         
         public function deleter($template, $name, $params = array()) {
             $tableName = self::ensureTableName($name);
@@ -626,6 +662,15 @@
             }
 
             self::parseContent($template);
+        }
+
+        public function urlResolver($propertyName, $name, $columnName, $filter = array()) {
+            $this->urlResolvers[$propertyName] = [
+                "name" => $name,
+                "columnName" => $columnName,
+                "filter" => $filter
+            ];
+            return;
         }
 	}
 

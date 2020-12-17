@@ -169,6 +169,38 @@
       Smaže všechny záznamy z entity podle "params".
     </comment>
   </fulltag>
+  <tag>
+    <tagname>urlResolver</tagname>
+    <function>urlResolver</function>
+    <lookless>true</lookless>
+    <attribute>
+      <attname>propertyName</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název property, která je v URL definici.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>name</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název entity, pro kterou se má ověřit hodnota v URL.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>columnName</attname>
+      <attreq>required</attreq>
+      <atttype>string</atttype>
+      <attcomment>Název sloupce, se kterým se bude porovnávat hodnota v URL.</attcomment>
+    </attribute>
+    <attribute>
+      <attname>filter</attname>
+      <attreq>implied</attreq>
+      <prefix>true</prefix>
+      <attcomment>Filtry, kterým data musí vyhovovat.</attcomment>
+    </attribute>
+    <comment>
+      Zaregistruje pravidlo, podle kterého je následně možné vyhodnotit property v definici URL.
+    </comment>
+  </tag>
   <property>
     <propname>list</propname>
     <getfunction>getListData</getfunction>
