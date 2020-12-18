@@ -399,6 +399,7 @@
                         .'<option value="php.libs.AdminUi"'.($_SESSION['select-class-path'] == 'php.libs.AdminUi' ? 'selected="selected"' : '').'>php.libs.AdminUi</option>'
                         .'<option value="php.libs.Article"'.($_SESSION['select-class-path'] == 'php.libs.Article' ? 'selected="selected"' : '').'>php.libs.Article</option>'
                         .'<option value="php.libs.BootstrapUi"'.($_SESSION['select-class-path'] == 'php.libs.BootstrapUi' ? 'selected="selected"' : '').'>php.libs.BootstrapUi</option>'
+                        .'<option value="php.libs.Cookie"'.($_SESSION['select-class-path'] == 'php.libs.Cookie' ? 'selected="selected"' : '').'>php.libs.Cookie</option>'
                         .'<option value="php.libs.Counter"'.($_SESSION['select-class-path'] == 'php.libs.Counter' ? 'selected="selected"' : '').'>php.libs.Counter</option>'
                         .'<option value="php.libs.CustomForm"'.($_SESSION['select-class-path'] == 'php.libs.CustomForm' ? 'selected="selected"' : '').'>php.libs.CustomForm</option>'
                         .'<option value="php.libs.CustomEntity"'.($_SESSION['select-class-path'] == 'php.libs.CustomEntity' ? 'selected="selected"' : '').'>php.libs.CustomEntity</option>'
