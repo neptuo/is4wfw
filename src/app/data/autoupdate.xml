@@ -72,4 +72,5 @@
     <script build="347">ALTER TABLE `language` MODIFY COLUMN `id` INT NOT NULL AUTO_INCREMENT;</script>
     <script build="348">ALTER TABLE `info` ADD `icon` TINYTEXT NULL AFTER `keywords`;</script>
     <script build="349">ALTER TABLE `template` ADD `identifier` VARCHAR(30) NULL AFTER `name`, ADD UNIQUE `template_identifier` (`identifier`);</script>
+    <script build="350">ALTER TABLE `user_log` ADD `token` TINYTEXT NULL AFTER `used_group`;</script>
 </autoupdate>

@@ -89,6 +89,10 @@
          */
         private $IsLogged = false;
 
+        private $Token = "";
+
+        private $cookieName;
+
         /**
          *
          *  Initialize object.
@@ -106,29 +110,43 @@
          *  C tag.
          *
          */
-        public function initLogin($group) {
-            if (!self::isLogged()) {
-                global $dbObject;
+        public function initLogin($group, $cookieName = "") {
+            if (!$this->isLogged()) {
+                $db = parent::db();
                 $this->SessionId = $_SESSION[$group . '_session_id'];
+                if (!empty($cookieName)) {
+                    $this->cookieName = $cookieName;
+                }
+
+                $data = null;
                 if (is_numeric($this->SessionId)) {
-                    $return = $dbObject->fetchAll("SELECT `user`.`uid`, `user`.`group_id`, `user`.`login`, `user`.`name`, `user`.`surname`, `user_log`.`timestamp` FROM `user` LEFT JOIN `user_log` ON `user`.`uid` = `user_log`.`user_id` WHERE `user_log`.`session_id` = " . $this->SessionId . ";");
-                    if (count($return) == 1) {
-                        $groups = $dbObject->fetchAll("SELECT `group`.`gid`, `group`.`name`, `group`.`value` FROM `user_in_group` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE `uid` = " . $return[0]['uid'] . " ORDER BY `group`.`value`;");
-                        $groupMinValue = $dbObject->fetchAll("SELECT MIN(`group`.`value`) AS `value` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `uid` = " . $return[0]['uid'] . ";");
-                        $this->UsedGroup['name'] = $group;
-                        //$this->Groups = array();
-                        foreach ($groups as $group) {
-                            $this->Groups[] = $group;
+                    $data = $db->fetchSingle("SELECT `user`.`uid`, `user`.`group_id`, `user`.`login`, `user`.`name`, `user`.`surname`, `user_log`.`timestamp`, `user_log`.`token` FROM `user` LEFT JOIN `user_log` ON `user`.`uid` = `user_log`.`user_id` WHERE `user_log`.`session_id` = " . $db->escape($this->SessionId) . " AND `user_log`.`logout_timestamp` = 0;");
+                } else if(!empty($this->cookieName)) {
+                    $tokenValue = $_COOKIE[$this->cookieName];
+                    if (!empty($tokenValue)) {
+                        $data = $db->fetchSingle("SELECT `user`.`uid`, `user`.`group_id`, `user`.`login`, `user`.`name`, `user`.`surname`, `user_log`.`timestamp`, `user_log`.`token`, `user_log`.`session_id` FROM `user` LEFT JOIN `user_log` ON `user`.`uid` = `user_log`.`user_id` WHERE `user_log`.`token` = '" . $db->escape($tokenValue) . "' AND `user_log`.`logout_timestamp` = 0;");
+                        if ($data != null && !empty($data)) {
+                            $this->SessionId = $_SESSION[$group . '_session_id'] = $data["session_id"];
                         }
-                        $this->GroupValue = $groupMinValue[0]['value'];
-                        $this->UserLogin = $return[0]['login'];
-                        $this->UserName = $return[0]['name'];
-                        $this->UserSurname = $return[0]['surname'];
-                        $this->UserId = $return[0]['uid'];
-                        $this->Logtime = $return[0]['timestamp'];
-                        $this->IsLogged = true;
-                        $this->UserGroup = $return[0]['group_id'];
                     }
+                }
+
+                if ($data != null && !empty($data)) {
+                    $groups = $db->fetchAll("SELECT `group`.`gid`, `group`.`name`, `group`.`value` FROM `user_in_group` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE `uid` = " . $data['uid'] . " ORDER BY `group`.`value`;");
+                    $groupMinValue = $db->fetchSingle("SELECT MIN(`group`.`value`) AS `value` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `uid` = " . $data['uid'] . ";");
+                    $this->UsedGroup['name'] = $group;
+                    foreach ($groups as $group) {
+                        $this->Groups[] = $group;
+                    }
+                    $this->GroupValue = $groupMinValue['value'];
+                    $this->UserLogin = $data['login'];
+                    $this->UserName = $data['name'];
+                    $this->UserSurname = $data['surname'];
+                    $this->UserId = $data['uid'];
+                    $this->Logtime = $data['timestamp'];
+                    $this->IsLogged = true;
+                    $this->UserGroup = $data['group_id'];
+                    $this->Token = $data['token'];
                 }
             }
         }
@@ -195,8 +213,12 @@
             }
         }
 
-        public function loginLookless($template, $group, $username, $password) {
-            $message = self::loginPrivate($group, $username, $password);
+        public function loginLookless($template, $group, $username, $password, $cookieName = "") {
+            if (!empty($cookieName)) {
+                $this->cookieName = $cookieName;
+            }
+
+            $message = $this->loginPrivate($group, $username, $password);
             if ($message === true) {
                 parent::parseContent($template);
             }
@@ -212,19 +234,31 @@
             $return = $db->fetchAll('SELECT `user`.`uid`, `user`.`name`, `user`.`surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` WHERE `user`.`login` = "' . $db->escape($username) . '" AND `user`.`password` = "' . $db->escape($password) . '" AND `user_in_group`.`gid` = ' . $group_id . ' AND `enable` = 1;');
             if (count($return) == 1) {
                 $uid = $return[0]['uid'];
+                $this->UserId = $uid;
                 $this->UserLogin = $username;
                 $this->UserName = $return[0]['name'];
                 $this->UserSurame = $return[0]['surname'];
 
                 $sessionId = rand(100000, 2000000);
+                $token = sha1($sessionId);
                 $timestamp = time();
-                $userLogSql = parent::sql()->insert("user_log", array("user_id" => $uid, "session_id" => $sessionId, "timestamp" => $timestamp, "login_timestamp" => $timestamp, "used_group" => $group));
+                $userLogData = array("user_id" => $uid, "session_id" => $sessionId, "timestamp" => $timestamp, "login_timestamp" => $timestamp, "used_group" => $group);
+                if (!empty($this->cookieName)) {
+                    $userLogData["token"] = $token;
+                }
+
+                $userLogSql = parent::sql()->insert("user_log", $userLogData);
                 $db->execute($userLogSql);
                 $return = $db->fetchAll(parent::sql()->select("user_log", array("id", "session_id"), array("user_id" => $uid, "session_id" => $sessionId)));
                 if (count($return) == 1) {
                     $this->LogId = $return[0]['id'];
                     $this->SessionId = $return[0]['session_id'];
                     $_SESSION[$group . '_session_id'] = $return[0]['session_id'];
+                    if (!empty($this->cookieName)) {
+                        $sessionTimeout = $this->getSessionTimeout();
+                        $this->setAuthCookie($token, 60 * $sessionTimeout);
+                    }
+
                     $this->LoggedIn = true;
 
                     return true;
@@ -236,6 +270,10 @@
             }
 
             return false;
+        }
+
+        private function setAuthCookie($token, $sessionTimeout) {
+            setcookie($this->cookieName, $token, time() + $sessionTimeout, "", "", false, true);
         }
 
         /**
@@ -272,6 +310,11 @@
             $_SESSION[$sessionId] = '';
             unset($_SESSION[$sessionId]);
 
+            if (!empty($this->cookieName)) {
+                unset($this->cookieName);
+    			$this->setAuthCookie("", -3600);
+            }
+
             parent::parseContent($template);
         }
 
@@ -280,25 +323,36 @@
                 parent::parseContent($template);
             }
         }
+
+        private function getSessionTimeout() {
+            require_once('System.class.php');
+            $name = 'Login.session';
+            $sessionTime = parent::system()->getPropertyValue($name);
+
+            if ($sessionTime < 0) {
+                $sessionTime = 15;
+            }
+
+            return $sessionTime;
+        }
         
         public function refreshPrivate($group) {
-            if (self::isLogged()) {
-                require_once('System.class.php');
-                $name = 'Login.session';
-                $sessionTime = parent::system()->getPropertyValue($name);
+            if ($this->isLogged()) {
+                $sessionTimeout = $this->getSessionTimeout();
 
-                if ($sessionTime < 0) {
-                    $sessionTime = 15;
-                }
-
-                if ($_POST['logout'] == "Log out" || ($this->Logtime + 60 * $sessionTime ) < time()) {
-                    self::logout("", $group);
+                if ($_POST['logout'] == "Log out" || ($this->Logtime + 60 * $sessionTimeout) < time()) {
+                    $this->logout("", $group);
                     return false;
-                    parent::web()->redirectTo($pageId);
                 } else {
+                    $prevTimestamp = $this->Logtime;
                     $this->Logtime = time();
                     $sql = parent::sql()->update("user_log", array("timestamp" => $this->Logtime), array("session_id" => $this->SessionId));
                     parent::db()->execute($sql);
+
+                    if (!empty($this->cookieName)) {
+                        $this->setAuthCookie($this->Token, 60 * $sessionTimeout);
+                    }
+
                     return true;
                 }
             } else {
