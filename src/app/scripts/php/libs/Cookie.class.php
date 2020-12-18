@@ -18,7 +18,7 @@
 		
 		public function setValue($name, $value, $expire = 0, $path = "", $domain = "", $isSecure = false, $isHttpOnly = false) {
 			if ($value != "") {
-				$result = setcookie($name, $value, $expire, $path, $domain, $isSecure, $isHttpOnly);
+				$result = setcookie($name, $value, time() + $expire, $path, $domain, $isSecure, $isHttpOnly);
 			} else {
 				unset($_COOKIE[$name]);
     			setcookie($name, "", time() - 3600, $path, $domain, $isSecure, $isHttpOnly);
