@@ -69,7 +69,7 @@ $content = '
             }
 
             if ($printOutput && $i == 0) {
-                echo $result();
+                echo $result(["php" => ["register", "using"]]);
             }
         }
     }

@@ -209,10 +209,13 @@
                         $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
 
                         $templateMethodName = 'template_' . $object[0] . '_' . $functionName . '_' . $uniqueIdentifier . '_body';
-                        $this->Code->addMethod($templateMethodName, "public");
-                        $this->Code->addLine("return '". $template . "';");
+                        $this->Code->addMethod($templateMethodName, "public", ["tagsToParse"]);
+                        $this->Code->addLine('$' . "this->pushTagsToParse(" . '$' . "tagsToParse);");
+                        $this->Code->addLine('$' . "result = '". $template . "';");
+                        $this->Code->addLine('$' . "this->popTagsToParse();");
+                        $this->Code->addLine("return " . '$' . "result;");
                         $this->Code->closeBlock();
-                        $content = "function() { return " . '$' . "this->$templateMethodName(); }";
+                        $content = "function(" . '$' . "tagsToParse = null) { return " . '$' . "this->$templateMethodName(" . '$' . "tagsToParse); }";
                         $hasBodyTemplate = true;
                         
                         if (!$phpObject->sortFullAttributes($object[0], $object[1], $attributes, $content)) {
@@ -222,10 +225,10 @@
                         $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
                         
                         $templateMethodName = 'template_' . $object[0] . '_' . $functionName . '_' . $uniqueIdentifier . '_body';
-                        $this->Code->addMethod($templateMethodName, "public");
+                        $this->Code->addMethod($templateMethodName, "public", ["tagsToParse"]);
                         $this->Code->addLine("return '". $template . "';");
                         $this->Code->closeBlock();
-                        $content = "function() { return " . '$' . "this->$templateMethodName(); }";
+                        $content = "function(" . '$' . "tagsToParse = null) { return " . '$' . "this->$templateMethodName(" . '$' . "tagsToParse); }";
                         $hasBodyTemplate = true;
 
                         if (!$this->sortAnyTagAttributes($object[1], $attributes, $content)) {
@@ -602,7 +605,7 @@
                         }
 
                         if (!$isContentProcessed) {
-                            $this->Code->addLine('$'. "this->" . $identifier . "_body();");
+                            $this->Code->addLine('$'. "this->" . $identifier . "_body(null);");
                         }
                     }
                     $this->Code->closeBlock();

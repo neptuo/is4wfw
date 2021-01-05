@@ -2,18 +2,33 @@
 
 abstract class ParsedTemplate 
 {
-    private $tagsToParse;
+    private static $tagsToParse;
 
     private function findByPrefix(string $prefix) {
-        if (array_key_exists($prefix, $this->tagsToParse)) {
-            return $this->tagsToParse[$prefix];
+        $tagsToParse = null;
+        if (ParsedTemplate::$tagsToParse != null) {
+            $tagsToParse = ParsedTemplate::$tagsToParse->peek();
+        }
+
+        if (is_array($tagsToParse) && array_key_exists($prefix, $tagsToParse)) {
+            return $tagsToParse[$prefix];
         }
 
         return null;
     }
 
     protected function isTagProcessed(string $prefix, string $name) {
-        if ($this->tagsToParse != null) {
+        // Still not working.
+        // We need to push nulls to stack, so that we can pop safely.
+        // But when searching to current tagsToParse array, we need to dig until non-null value is peeked.
+        // I think...
+
+        $tagsToParse = null;
+        if (ParsedTemplate::$tagsToParse != null) {
+            $tagsToParse = ParsedTemplate::$tagsToParse->peek();
+        }
+
+        if ($tagsToParse != null) {
             $value = $this->findByPrefix($prefix);
             if ($value == null) {
                 $value = $this->findByPrefix("*");
@@ -31,14 +46,25 @@ abstract class ParsedTemplate
         return true;
     }
 
+    protected function pushTagsToParse($tagsToParse) {
+        if (ParsedTemplate::$tagsToParse == null) {
+            ParsedTemplate::$tagsToParse = new Stack();
+        }
+
+        ParsedTemplate::$tagsToParse->push($tagsToParse);
+    }
+
+    protected function popTagsToParse() {
+        ParsedTemplate::$tagsToParse->pop();
+    }
+
     protected abstract function evaluateInternal();
 
     public function evaluate($tagsToParse = null) {
-        if (is_array($tagsToParse) && count($tagsToParse) > 0) {
-            $this->tagsToParse = $tagsToParse;
-        }
-
-        return $this->evaluateInternal();
+        $this->pushTagsToParse($tagsToParse);
+        $result = $this->evaluateInternal();
+        $this->popTagsToParse();
+        return $result;
     }
 
     public function __toString() {
