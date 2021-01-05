@@ -228,6 +228,7 @@
 
         private function parseContentForCustomTags(array $keys, string $content) {
             $this->executeTemplateContent($keys, $content);
+            $this->Parser->getResult();
         }
 
         private function parsecproperty($cprop) {
@@ -244,7 +245,7 @@
                     return $return;
                 } else if($phpObject->isAnyProperty($object[0])) {
                     global ${$object[0] . "Object"};
-                    $func = 'getProperty';
+                    $func = $this->PropertyUse == 'set' ? 'setProperty' : 'getProperty';
                     eval('$return =  ${$object[0]."Object"}->{$func}("' . $object[1] . '", "' . $this->PropertyAttr . '");');
                     return $return;
                 }
