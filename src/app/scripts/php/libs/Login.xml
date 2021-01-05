@@ -15,6 +15,12 @@
     <attribute>
       <name>group</name>
       <required />
+      <atttype>string</atttype>
+    </attribute>
+    <attribute>
+      <name>cookieName</name>
+      <type>string</type>
+      <comment>Pokud je nastaven, bude brát i hodnotu této cookie.</comment>
     </attribute>
     <comment>
       Inicializuje login.
@@ -64,6 +70,11 @@
       <required />
       <type>string</type>
       <comment>Heslo.</comment>
+    </attribute>
+    <attribute>
+      <name>cookieName</name>
+      <type>string</type>
+      <comment>Pokud je nastaven, bude vytvářet cookie.</comment>
     </attribute>
     <comment>
       Provede přihlášení uživatele "username" do skupiny "group", pokud je "password" správné.
