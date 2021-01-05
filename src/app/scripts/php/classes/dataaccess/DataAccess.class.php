@@ -180,7 +180,7 @@ class DataAccess {
      *  @param  printOutput     			shows return from database through print_r function
      *  @param  notExecuteQuery 			if true, doesn't execute query
      *  @param	forceImmediateOutput  if previsou 2 are true, it immediatly output query & result
-     *  @return returns all rows fetched by database
+     *  @return array all rows fetched by database
      *
      */                   
     public function fetchAll($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
