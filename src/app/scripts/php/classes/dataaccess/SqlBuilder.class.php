@@ -102,6 +102,14 @@
         }
 
         public function insert($tableName, $item) {
+            return $this->insertOrUpdatePrivate($tableName, $item, null);
+        }
+
+        public function insertOrUpdate($tableName, $item, $updateFields) {
+            return $this->insertOrUpdatePrivate($tableName, $item, $updateFields);
+        }
+
+        private function insertOrUpdatePrivate($tableName, $item, $updateFields) {
             $columns = "";
             $values = "";
             foreach ($item as $field => $value) {
@@ -109,7 +117,18 @@
                 $values = self::joinString($values, self::escape($value));
             }
 
-            $sql = "INSERT INTO `$tableName`($columns) VALUES ($values);";
+            $updateString = "";
+            if (is_array($updateFields)) {
+                foreach ($updateFields as $field) {
+                    $value = $this->escape($item[$field]);
+                    $updateString = $this->joinString($updateString, "`$field` = $value");
+                }
+            }
+            if (!empty($updateString)) {
+                $updateString = " ON DUPLICATE KEY UPDATE $updateString";
+            }
+
+            $sql = "INSERT INTO `$tableName`($columns) VALUES ($values)$updateString;";
             return $sql;
         }
 
