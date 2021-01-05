@@ -764,7 +764,7 @@
 						$handler($file, $key);
 					}
 				} else {
-					$handler($files);
+					$handler($files, $key);
 				}
 			}
 		}
