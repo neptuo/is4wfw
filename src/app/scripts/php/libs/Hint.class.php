@@ -544,6 +544,7 @@
                     .'<label for="select-class-path-select">'.$rb->get('select-class-path.label').':</label> '
                     .'<select id="select-class-path-select" name="select-class-path-select">'
                         . $options
+                        .'<option value="php.libs.Cookie"'.($_SESSION['select-class-path'] == 'php.libs.Cookie' ? 'selected="selected"' : '').'>php.libs.Cookie</option>'
                     .'</select> '
                     .'<input type="submit" name="select-class-path-submit" value="'.$rb->get('select-class-path.submit').'" />'
                 .'</form>'
