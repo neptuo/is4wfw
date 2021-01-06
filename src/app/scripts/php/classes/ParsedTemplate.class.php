@@ -43,7 +43,10 @@ abstract class ParsedTemplate
 class TagsToParse 
 {
     private $stack;
-    private $nullCounter = 0;
+
+    public function __construct() {
+        $this->stack = new Stack();
+    }
 
     private function findByPrefix(array $tagsToParse, string $prefix) {
         if (is_array($tagsToParse) && array_key_exists($prefix, $tagsToParse)) {
@@ -54,12 +57,9 @@ class TagsToParse
     }
 
     public function isProcessed(string $prefix, string $name) {
-        $tagsToParse = null;
-        if ($this->stack != null) {
-            $tagsToParse = $this->stack->peek();
-        }
+        $tagsToParse = $this->stack->peekNotNull();
 
-        if ($tagsToParse == null) {
+        if ($tagsToParse === false) {
             return true;
         }
 
@@ -80,24 +80,10 @@ class TagsToParse
     }
 
     public function push($tagsToParse) {
-        if ($tagsToParse == null) {
-            $this->nullCounter++;
-            return;
-        }
-
-        if ($this->stack == null) {
-            $this->stack = new Stack();
-        }
-
         $this->stack->push($tagsToParse);
     }
 
     public function pop() {
-        if ($this->nullCounter > 0) {
-            $this->nullCounter--;
-            return;
-        }
-
         $this->stack->pop();
     }
 }
