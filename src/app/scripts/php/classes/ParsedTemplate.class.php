@@ -4,58 +4,22 @@ abstract class ParsedTemplate
 {
     private static $tagsToParse;
 
-    private function findByPrefix(string $prefix) {
-        $tagsToParse = null;
-        if (ParsedTemplate::$tagsToParse != null) {
-            $tagsToParse = ParsedTemplate::$tagsToParse->peek();
+    public function __construct() {
+        if (static::$tagsToParse == null) {
+            static::$tagsToParse = new TagsToParse();
         }
-
-        if (is_array($tagsToParse) && array_key_exists($prefix, $tagsToParse)) {
-            return $tagsToParse[$prefix];
-        }
-
-        return null;
     }
 
     protected function isTagProcessed(string $prefix, string $name) {
-        // Still not working.
-        // We need to push nulls to stack, so that we can pop safely.
-        // But when searching to current tagsToParse array, we need to dig until non-null value is peeked.
-        // I think...
-
-        $tagsToParse = null;
-        if (ParsedTemplate::$tagsToParse != null) {
-            $tagsToParse = ParsedTemplate::$tagsToParse->peek();
-        }
-
-        if ($tagsToParse != null) {
-            $value = $this->findByPrefix($prefix);
-            if ($value == null) {
-                $value = $this->findByPrefix("*");
-            }
-
-            if ($value != null) {
-                if (is_string($value)) {
-                    return $value == $name || $value == "*";
-                } else if (is_array($value)) {
-                    return in_array($name, $value) || in_array("*", $value);
-                }
-            }
-        }
-
-        return true;
+        return static::$tagsToParse->isProcessed($prefix, $name);
     }
 
     protected function pushTagsToParse($tagsToParse) {
-        if (ParsedTemplate::$tagsToParse == null) {
-            ParsedTemplate::$tagsToParse = new Stack();
-        }
-
-        ParsedTemplate::$tagsToParse->push($tagsToParse);
+        static::$tagsToParse->push($tagsToParse);
     }
 
     protected function popTagsToParse() {
-        ParsedTemplate::$tagsToParse->pop();
+        static::$tagsToParse->pop();
     }
 
     protected abstract function evaluateInternal();
@@ -73,6 +37,68 @@ abstract class ParsedTemplate
     
     public function __invoke($tagsToParse = null) {
         return $this->evaluate($tagsToParse);
+    }
+}
+
+class TagsToParse 
+{
+    private $stack;
+    private $nullCounter = 0;
+
+    private function findByPrefix(array $tagsToParse, string $prefix) {
+        if (is_array($tagsToParse) && array_key_exists($prefix, $tagsToParse)) {
+            return $tagsToParse[$prefix];
+        }
+
+        return null;
+    }
+
+    public function isProcessed(string $prefix, string $name) {
+        $tagsToParse = null;
+        if ($this->stack != null) {
+            $tagsToParse = $this->stack->peek();
+        }
+
+        if ($tagsToParse == null) {
+            return true;
+        }
+
+        $value = $this->findByPrefix($tagsToParse, $prefix);
+        if ($value == null) {
+            $value = $this->findByPrefix($tagsToParse, "*");
+        }
+
+        if ($value != null) {
+            if (is_string($value)) {
+                return $value == $name || $value == "*";
+            } else if (is_array($value)) {
+                return in_array($name, $value) || in_array("*", $value);
+            }
+        }
+
+        return false;
+    }
+
+    public function push($tagsToParse) {
+        if ($tagsToParse == null) {
+            $this->nullCounter++;
+            return;
+        }
+
+        if ($this->stack == null) {
+            $this->stack = new Stack();
+        }
+
+        $this->stack->push($tagsToParse);
+    }
+
+    public function pop() {
+        if ($this->nullCounter > 0) {
+            $this->nullCounter--;
+            return;
+        }
+
+        $this->stack->pop();
     }
 }
 

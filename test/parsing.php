@@ -30,6 +30,7 @@
 // </admin:field>
 // <hr />';
 
+$keys = ["test", "parsing", "1"];
 $cache = new TemplateCache();
 
 if (array_key_exists("clear", $_GET)) {
@@ -43,6 +44,10 @@ $content = '
 <php:using prefix="test" class="php.libs.test.TestLibrary">
     <web:a pageId="~/index.view" test:a="Hello" test:b="5" />
     <web:a pageId="~/index.view" test:attributeAsBody="Hi" />
+    <template:one />
+    <bs:button>
+        Test
+    </bs:button>
     <web:a pageId="~/index.view" test:a="Hello" test:b="5" test:attributeAsBody="Hi" test:if="f" test:if-is="f" />
     <web:a pageId="~/index.view" test:cool="Baf" />
     <web:a pageId="~/index.view" test:optionalBody="test" />
@@ -69,15 +74,15 @@ $content = '
             }
 
             if ($printOutput && $i == 0) {
-                echo $result(["php" => ["register", "using"]]);
+                echo $result(["php" => ["register", "using"], "bs" => "*", "web" => "*"]);
             }
         }
     }
 
-    measure(function() {
+    measure(function() use ($keys) {
         global $content;
         $parser = new TemplateParser();
-        parse($parser, [ "test", "parsing", "1" ], $content, 1, true);
+        parse($parser, $keys, $content, 1, true);
     });
 
     echo '<hr />';
