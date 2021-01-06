@@ -415,13 +415,16 @@
                     $this->PropertyUse = 'get';
                     
                     $valueType = 'raw';
+                    $contentType = null;
                     if (strlen($attributeValue) > 1) {
                         $attributeValue = substr($attributeValue, 1, strlen($attributeValue) - 2);
                         $evaluated = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $attributeValue);
 
                         if ($attributeValue != $evaluated) {
                             $attributeValue = $evaluated;
+
                             $valueType = 'eval';
+                            $contentType = 'template';
                         }
                     } else {
                         $attributeValue = '';
@@ -429,7 +432,10 @@
 
                     // #61 - Any input double quotes will be escaped
                     // $attributeValue = str_replace("\"", "\\\"", $attributeValue);
-                    $attributeValue = array('value' => $attributeValue, 'type' => $valueType);
+                    $attributeValue = ['value' => $attributeValue, 'type' => $valueType];
+                    if ($contentType != null) {
+                        $attributeValue['content'] = $contentType;
+                    }
 
                     $decorator = explode(":", $attributeName);
                     if (count($decorator) == 2) {
@@ -586,28 +592,45 @@
 
             if ($tagName != null) {
                 $this->Code->closeBlock();
-                if ($hasBodyTemplate) {
+                if ($hasBodyTemplate || $attributes->HasTemplateAttribute()) {
                     $this->Code->addLine("else {");
                     $this->Code->addIndent();
 
-                    if ($attributes->HasAttributeModifyingDecorators) {
-                        $this->Code->addLine($returnParametersName. "['" . PhpRuntime::$FullTagTemplateName . "']();");
+                    if ($hasBodyTemplate) {
+                        if ($attributes->HasAttributeModifyingDecorators) {
+                            $this->Code->addLine($returnParametersName. "['" . PhpRuntime::$FullTagTemplateName . "']();");
+                        } else {
+                            $isContentProcessed = false;
+                            if ($attributes->HasDecorators) {
+                                foreach ($attributes->Decorators as $prefix => $decorators) {
+                                    if ($decorator["providesFullTagBody"]) {
+                                        $this->Code->addLine($attributes->Attributes[PhpRuntime::$FullTagTemplateName]["value"] . "();");
+                                        $isContentProcessed = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!$isContentProcessed) {
+                                $this->Code->addLine('$'. "this->" . $identifier . "_body(null);");
+                            }
+                        }
                     } else {
-                        $isContentProcessed = false;
-                        if ($attributes->HasDecorators) {
-                            foreach ($attributes->Decorators as $prefix => $decorators) {
-                                if ($decorator["providesFullTagBody"]) {
-                                    $this->Code->addLine($attributes->Attributes[PhpRuntime::$FullTagTemplateName]["value"] . "();");
-                                    $isContentProcessed = true;
-                                    break;
+                        foreach ($attributes->Attributes as $attribute) {
+                            if ($attributes->IsTemplateAttribute($attribute)) {
+                                if (is_array($attribute["value"])) {
+                                    foreach ($attribute["value"] as $value) {
+                                        if ($attributes->IsTemplateAttribute($value)) {
+                                            $this->Code->addLine($value["value"] . ";");
+                                        }
+                                    }
+                                } else {
+                                    $this->Code->addLine($attribute["value"] . ";");
                                 }
                             }
                         }
-
-                        if (!$isContentProcessed) {
-                            $this->Code->addLine('$'. "this->" . $identifier . "_body(null);");
-                        }
                     }
+
                     $this->Code->closeBlock();
                 }
             }

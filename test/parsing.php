@@ -51,6 +51,18 @@ $content = '
     <web:a pageId="~/index.view" test:a="Hello" test:b="5" test:attributeAsBody="Hi" test:if="f" test:if-is="f" />
     <web:a pageId="~/index.view" test:cool="Baf" />
     <web:a pageId="~/index.view" test:optionalBody="test" />
+    <div>
+        <ce2:list name="person">
+            <ui:forEach items="ce2:list">
+                <div>
+                    <web:getProperty name="ce2:id" />
+                    <web:getProperty name="ce2:first_name" />
+                    <web:getProperty name="ce2:last_name" />
+                    <template:one text="ce2:age" />
+                </div>
+            </ui:forEach>
+        </ce2:list>
+    </div>
 </php:using>
 <php:unregister tagPrefix="ce2" />
 ';
@@ -74,7 +86,7 @@ $content = '
             }
 
             if ($printOutput && $i == 0) {
-                echo $result(["php" => ["register", "using"], "bs" => "*", "web" => "*"]);
+                echo $result();
             }
         }
     }

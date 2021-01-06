@@ -427,7 +427,11 @@
                     $attributeValueType = 'eval';
                 }
 
-                return array('value' => $attributeValue['value'], 'type' => $attributeValueType);
+                $result = ['value' => $attributeValue['value'], 'type' => $attributeValueType];
+                if (array_key_exists("content", $attribute)) {
+                    $result["content"] = $attribute["content"];
+                }
+                return $result;
             }
 
             return null;
@@ -571,7 +575,7 @@
             
             if (isset($att->type)) {
                 if (StringUtils::startsWith($val, '$this->template_') && StringUtils::endsWith($val, '()')) {
-                    return array('value' => $val, 'type' => 'eval');
+                    return ['value' => $val, 'type' => 'eval', 'content' => 'template'];
                 }
 
                 switch ($att->type) {
