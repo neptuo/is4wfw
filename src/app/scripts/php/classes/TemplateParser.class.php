@@ -38,10 +38,6 @@
             return $this->TemplateCache;
         }
 
-        public function setTagsToParse($tags) {
-            $this->TagsToParse = $tags;
-        }
-        
         public function parsePropertyExactly($value) {
             $this->PropertyUse = 'get';
             
@@ -76,24 +72,6 @@
         public function parse($content, $keys) {
             $this->Code = new CodeWriter();
             return $this->parseInternal($content, 'compile', $keys);
-        }
-
-        protected function isSkippedTag($ctag) {
-            if ($this->TagsToParse != array()) {
-                $skip = true;
-                foreach ($this->TagsToParse as $tag) {
-                    if($ctag[1] == $tag) {
-                        $skip = false;
-                        break;
-                    }
-                }
-                
-                if ($skip) {
-                    return $ctag[0];
-                }
-            }
-            
-            return false;
         }
 
         private function getClassName(array $keys) {
@@ -147,25 +125,12 @@
 
             $object = explode(":", $ctag[1]);
             
-            $skipped = $this->isSkippedTag($ctag);
-            
             $isFullTag = count($ctag) != 4;
             $attributes = $this->tryParseAttributes($isFullTag ? $ctag[4] : $ctag[3]);
             
             $content = 0;
             if ($isFullTag) {
                 $content = $ctag[5];
-            }
-
-            if ($skipped) {
-                $this->evalAttributesWithoutProcessingTag($attributes);
-
-                if ($isFullTag) {
-                    $parser = new TemplateParser();
-                    $parser->setTagsToParse($this->TagsToParse);
-                    $parser->parse($content);
-                }
-                return '';
             }
 
             // Now we know the tag is syntactically valid and should be processed.
