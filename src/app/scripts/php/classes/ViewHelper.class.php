@@ -4,7 +4,7 @@
 
     class ViewHelper {
 
-        public static function getViewContent($viewPath) {
+        private static function getServerPath($viewPath) {
             $serverPath = $viewPath;
             if (strpos($serverPath, '.view') == '') {
                 $serverPath = ViewHelper::resolveViewPath($serverPath);
@@ -14,11 +14,21 @@
             }
 
             $serverPath = str_replace('~/', APP_ADMIN_PATH . '/', $serverPath);
-            if (file_exists($serverPath)) {
-                return file_get_contents($serverPath);
-            } else {
+            if (!file_exists($serverPath)) {
                 throw new ViewMissingException($viewPath, $serverPath);
             }
+
+            return $serverPath;
+        }
+
+        public static function getViewContent($viewPath) {
+            $serverPath = static::getServerPath($viewPath);
+            return file_get_contents($serverPath);
+        }
+        
+        public static function getViewContentIdentifier($viewPath) {
+            $content = static::getViewContent($viewPath);
+            return sha1($content);
         }
 
         public static function resolveViewPath($path) {

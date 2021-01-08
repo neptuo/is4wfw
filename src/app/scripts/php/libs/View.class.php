@@ -44,6 +44,7 @@
 
             $virtualKeys = str_replace("~", "view", $virtualPath);
             $keys = explode("/", $virtualKeys);
+            $keys[count($keys) - 1] .= "." . ViewHelper::getViewContentIdentifier($virtualPath);
             return $keys;
         }
 
