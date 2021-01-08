@@ -163,7 +163,7 @@
   <tag>
     <name>urlResolver</name>
     <function>urlResolver</function>
-    <lookless>true</lookless>
+    <lookless />
     <attribute>
       <name>propertyName</name>
       <required />

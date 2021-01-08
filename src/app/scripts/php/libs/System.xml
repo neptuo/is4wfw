@@ -157,6 +157,14 @@
       Zobrazí odkaz pro založení hlášení o chybě.
     </comment>
   </tag>
+  <fulltag>
+    <name>clearTemplateCache</name>
+    <function>clearTemplateCache</function>
+    <lookless />
+    <comment>
+      Smaže cache všech zkompilovaných šablon.
+    </comment>
+  </fulltag>
   <property>
   	<name>cmsWindowsStyle</name>
   	<setFunction>setCmsWindowsStyle</setFunction>

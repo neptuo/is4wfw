@@ -897,6 +897,8 @@
 						if ($type == 'full') {
 							unlink($currentFileName);
 						}
+
+						$this->clearTemplateCache();
 						
 						$result['result'] = true;
 						return $result;
@@ -987,6 +989,14 @@
 
 		public function repositoryIssueCreateLink($linkText) {
 			return '<a target="_blank" href="https://github.com/maraf/PHP-WebFramework/issues/new">' . $linkText . '</a>';
+		}
+
+		public function clearTemplateCache($template = null) {
+			$this->deleteParsedTemplate([], true);
+
+			if (is_callable($template)) {
+				$template();
+			}
 		}
 
 		/* ---------- PROPERTIES ---------------------- */
