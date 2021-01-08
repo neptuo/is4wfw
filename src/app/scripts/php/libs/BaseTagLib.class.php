@@ -518,18 +518,6 @@
 
             return $stack->peek() != null;
         }
-        
-        // Obsolete!
-        // TODO: delete, because it can't work correctly.
-        public function parseContent($content, $tagsToParse = null) {
-            if (is_callable($content)) {
-                return $content();
-            }
-
-            $parser = self::getParsedTemplate($content, $tagsToParse);
-            $return = $parser->evaluate();
-            return $return;
-        }
 
         public function executeTemplateContent(array $keys, string $content) {
             if (is_callable($content)) {

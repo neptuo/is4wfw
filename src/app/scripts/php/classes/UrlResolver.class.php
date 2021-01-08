@@ -228,7 +228,6 @@
 
         private function parseContentForCustomTags(array $keys, string $content) {
             $this->executeTemplateContent($keys, $content);
-            $this->Parser->getResult();
         }
 
         private function parsecproperty($cprop) {
