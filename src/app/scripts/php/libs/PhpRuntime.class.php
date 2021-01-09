@@ -791,12 +791,6 @@
             return $return;
         }
 
-        public function provideAttributes($name, $tagPrefix, $tagName, $parameters) {
-            $parameters["when"] = "1";
-            $parameters["is"] = "1";
-            return $parameters;
-        }
-
         public function dispose() {
             foreach ($this->disposables as $tagPrefix) {
                 global ${$tagPrefix."Object"};
