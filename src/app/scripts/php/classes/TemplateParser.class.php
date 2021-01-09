@@ -81,15 +81,15 @@
             return $className;
         }
 
-        private function parseInternal(string $content, string $mode, array $keys = null) {
+        private function parseInternal(string $content, string $mode, array $keys = null, bool $excapeText = true) {
             if ($mode == 'parse') {
-                return $this->parseContentInternal($content);
+                return $this->parseContentInternal($content, $excapeText);
             } else if($mode == 'compile') {
                 $className = $this->getClassName($keys);
 
                 $this->Code->addClass($className, "ParsedTemplate");
                 
-                $processed = $this->parseContentInternal($content);
+                $processed = $this->parseContentInternal($content, $excapeText);
                 $this->Code->addMethod("evaluateInternal", "protected");
                 $this->Code->addLine("return '". $processed . "';");
                 $this->Code->closeBlock();
@@ -104,12 +104,17 @@
             }
         }
 
-        private function parseContentInternal($content) {
+        private function parseContentInternal(string $content, bool $excapeText = true) {
             $this->startMeasure();
             
             $processed = "";
             if ($content != "") {
-                $replaced = str_replace("'", "\\'", $content);
+                if ($excapeText) {
+                    $replaced = str_replace("'", "\'", $content);
+                } else {
+                    $replaced = $content;
+                }
+
                 $processed = preg_replace_callback($this->FULL_TAG_RE, array(&$this, 'parsefulltag'), $replaced);
                 $this->checkPregError("parsefulltag", $replaced);
             }
@@ -164,7 +169,7 @@
                         $phpObject->register($attributes->Attributes["prefix"]["value"], $attributes->Attributes["class"]["value"]);
                     }
 
-                    $template = $this->parseInternal($content, 'parse');
+                    $template = $this->parseInternal($content, 'parse', null, false);
                     
                     if ($object[0] == "php" && $object[1] == "using") {
                         $phpObject->unregister($attributes->Attributes["prefix"]["value"]);

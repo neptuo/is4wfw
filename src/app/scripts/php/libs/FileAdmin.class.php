@@ -708,7 +708,7 @@
 			}
 		}
 
-		public function uploadFormTag(string $template, int $dirId) {
+		public function uploadFormTag($template, int $dirId) {
 			$model = parent::getEditModel();
 
 			if ($model->isSubmit()) {
