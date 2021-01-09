@@ -37,9 +37,10 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
+      - PMA_HOST=db
       - PMA_USER=root
       - PMA_PASSWORD=1234
-      - PMA_ABSOLUTE_URI=http://localhost:8080/phpmyadmin
+      - PMA_ABSOLUTE_URI=http://localhost:4242/phpmyadmin
     links:
       - mysql:db
         
