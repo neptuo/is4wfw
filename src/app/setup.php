@@ -92,6 +92,9 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     require_once($targetFilePath);
     require_once("scripts/php/includes/settings.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "libs/Database.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/FileUtils.class.php");
+
+    FileUtils::clearDirectory(CACHE_SYSTEMPROPERTY_PATH);
 
     $importFile = fopen($importFilePath, 'r') or die('Cannot open file:  ' . $importFilePath);
 

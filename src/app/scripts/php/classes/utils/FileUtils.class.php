@@ -3,6 +3,11 @@
     class FileUtils {
         
         public static function removeDirectory($dir) {
+            static::clearDirectory($dir);
+            return rmdir($dir);
+        }
+
+        public static function clearDirectory($dir) {
             $files = array_diff(scandir($dir), array('.','..'));
             foreach ($files as $file) {
                 $itemPath = $dir . "/" . $file;
@@ -12,8 +17,6 @@
                     unlink($itemPath); 
                 }
             } 
-
-            return rmdir($dir); 
         }
 
     }
