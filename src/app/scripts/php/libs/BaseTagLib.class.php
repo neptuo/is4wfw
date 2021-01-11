@@ -413,10 +413,6 @@
             return $this->requestHeaders;
         }
 
-        public function currentFullUrl() {
-            return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        }
-
         public function debugFrame($title, $content, $contentTag = null) {
             if ($contentTag !== null && $contentTag !== '') {
                 $content = '<' . $contentTag . ' style="white-space: pre;">' . $content . '</' . $contentTag . '>';
