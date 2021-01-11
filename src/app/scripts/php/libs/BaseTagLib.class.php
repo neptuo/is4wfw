@@ -20,6 +20,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/HttpUtils.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/StringUtils.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/UrlUtils.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/ZipUtils.class.php");
 
     /**
      *
@@ -410,18 +411,6 @@
             }
 
             return $this->requestHeaders;
-        }
-
-        public function zipExtract($zipFileName, $targetPath) {
-            $zip = new ZipArchive();
-            $extractResult = $zip->open($zipFileName);
-            if ($extractResult === true) {
-                $extractResult = $zip->extractTo($targetPath);
-                $zip->close();
-                return $extractResult === true;
-            }
-
-            return false;
         }
 
         public function currentFullUrl() {

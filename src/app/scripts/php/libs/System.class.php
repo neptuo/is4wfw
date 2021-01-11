@@ -892,7 +892,7 @@
 						FileUtils::removeDirectory(APP_PATH);
 					}
 					
-					if (self::zipExtract($targetFileName, $targetPath)) {
+					if (ZipUtils::extract($targetFileName, $targetPath)) {
 						unlink($targetFileName);
 						if ($type == 'full') {
 							unlink($currentFileName);
@@ -906,7 +906,7 @@
 						unlink($targetFileName);
 						if ($type == 'full') {
 							FileUtils::removeDirectory(APP_PATH);
-							self::zipExtract($currentFileName, $targetPath);
+							ZipUtils::extract($currentFileName, $targetPath);
 						}
 
 						$result['log'] .= 'Unnable to extract zip archive with update.';
