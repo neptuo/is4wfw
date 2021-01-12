@@ -22,7 +22,7 @@
 			$this->current = new Stack();
 		}
 
-		private function formatColumnName($instance, $name) {
+		public static function formatColumnName($instance, $name) {
 			$alias = $instance->alias;
 			if (empty($alias))
 				return "`$name`";

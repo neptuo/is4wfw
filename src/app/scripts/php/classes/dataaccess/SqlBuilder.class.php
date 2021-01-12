@@ -221,7 +221,19 @@
             $condition = self::condition($filter, "AND");
             $condition = self::appendWhere($condition);
 
-            $sql = "SELECT COUNT(*) as `count` FROM `$tableName`$condition;";
+            $alias = "";
+            if (is_array($tableName)) {
+                $table = $tableName["table"];
+                $alias = $tableName["alias"];
+                $tableName = "`$table`";
+                if (!empty($alias)) {
+                    $tableName .= " AS $alias";
+                }
+            } else {
+                $tableName = "`$tableName`";
+            }
+
+            $sql = "SELECT COUNT(*) as `count` FROM $tableName$condition;";
             return $sql;
         }
     }

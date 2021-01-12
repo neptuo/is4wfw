@@ -113,6 +113,12 @@
       <prefix />
       <comment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</comment>
     </attribute>
+    <attribute>
+      <name>isEditPermissionRequired</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda se má zkontrolovat edit oprávnění.</comment>
+    </attribute>
     <comment>
       Vypíše seznam uživatelů.
     </comment>
@@ -136,6 +142,19 @@
       Field "group_id" musí být nastaven, jinak nepůjde nový uživatel uložit.
     </comment>
   </fulltag>
+  <tag>
+    <name>loginUrlResolver</name>
+    <function>loginUrlResolver</function>
+    <lookless />
+    <attribute>
+      <name>filter</name>
+      <prefix />
+      <comment>Seznam filtračních parametrů.</comment>
+    </attribute>
+    <comment>
+      Url resolver pro uživatelské jméno.
+    </comment>
+  </tag>
   <property>
     <name>list</name>
     <getFunction>getListItems</getFunction>
@@ -167,8 +186,10 @@
   <property>
     <name>login</name>
     <getFunction>getListItemLogin</getFunction>
+    <setFunction>setLoginFromUrl</setFunction>
     <comment>
       Vrací login aktuálního uživatel uvnitř "u:list".
+      Nastavení se používá pro resolve uživatelského jména z URL.
     </comment>
   </property>
   <property>

@@ -14,11 +14,17 @@
      */
     class User extends BaseTagLib {
 
-		const TableName = "user";
+        const TableName = "user";
+        
+        private $urlProperties;
+        private $urlResolvers;
 
         public function __construct() {
             self::setTagLibXml("User.xml");
             self::setLocalizationBundle("user");
+
+            $this->urlProperties = [];
+            $this->urlResolvers = [];
         }
 
         private function insertDefaultProperties($uid) {
@@ -892,7 +898,7 @@
             return sha1($login . $password);
         }
 
-        public function listItems($template, $filter = array(), $orderBy = array()) {
+        public function listItems($template, $filter = array(), $orderBy = array(), $isEditPermissionRequired = true) {
             $tableName = self::TableName;
 
 			$filter = ArrayUtils::removeKeysWithEmptyValues($filter);
@@ -920,7 +926,7 @@
             $dataAccessible = array();
             foreach ($data as $item) {
                 $uid = $item['uid'];
-                if (RoleHelper::canCurrentEditUser($uid)) {
+                if (!$isEditPermissionRequired || RoleHelper::canCurrentEditUser($uid)) {
                     $rolesSql = parent::sql()->select("user_in_group", array("gid"), array("uid" => $uid));
                     $rolesData = parent::dataAccess()->fetchAll($rolesSql);
                     $item["roleIds"] = array_column($rolesData, "gid");
@@ -956,7 +962,16 @@
 		}
 
 		public function getListItemLogin() {
-			return parent::peekListModel()->field("login");
+            $model = parent::peekListModel(false);
+            if ($model != null) {
+                return $model->field("login");
+            }
+
+            if (array_key_exists("login", $this->urlProperties)) {
+                return $this->urlProperties["login"];
+            }
+
+            return null;
 		}
 
 		public function getListItemEnable() {
@@ -1181,6 +1196,38 @@
             }
 
             return $groupIds;
+        }
+
+        public function loginUrlResolver($filter = array()) {
+            $this->urlResolvers["login"] = [
+                "filter" => $filter
+            ];
+        }
+
+        public function setLoginFromUrl($value) {
+            if (array_key_exists("login", $this->urlResolvers)) {
+                $resolver = $this->urlResolvers["login"];
+
+                $tableName = static::TableName;
+                $filter = $resolver["filter"];
+                if (parent::isFilterModel($filter)) {
+                    $filter = $filter[""];
+                    $filter["login"] = $value;
+                    $tableName = $filter->wrapTableName(static::TableName);
+                    $filter = $filter->toSql();
+                } else {
+                    $filter["login"] = $value;
+                }
+
+                $sql = parent::sql()->count($tableName, $filter);
+                $data = parent::db()->fetchSingle($sql);
+                if (empty($data) || $data["count"] != 1) {
+                    return "x.x---y\\r";
+                }
+            }
+
+            $this->urlProperties["login"] = $value;
+            return $value;
         }
     }
 
