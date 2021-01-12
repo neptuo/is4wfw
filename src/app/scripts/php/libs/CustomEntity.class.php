@@ -634,7 +634,9 @@
                 $filter = $resolver["filter"];
                 if (parent::isFilterModel($filter)) {
                     $filter = $filter[""];
-                    $filter[$resolver["columnName"]] = $value;
+                    $sqlName = Filter::formatColumnName($filter, $resolver["columnName"]);
+                    $sqlValue = parent::sql()->escape($value);
+                    $filter[] = "$sqlName = $sqlValue";
                     $tableName = $filter->wrapTableName($tableName);
                     $filter = $filter->toSql();
                 } else {

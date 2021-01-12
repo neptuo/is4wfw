@@ -1212,7 +1212,9 @@
                 $filter = $resolver["filter"];
                 if (parent::isFilterModel($filter)) {
                     $filter = $filter[""];
-                    $filter["login"] = $value;
+                    $sqlName = Filter::formatColumnName($filter, "login");
+                    $sqlValue = parent::sql()->escape($value);
+                    $filter[] = "$sqlName = $sqlValue";
                     $tableName = $filter->wrapTableName(static::TableName);
                     $filter = $filter->toSql();
                 } else {
