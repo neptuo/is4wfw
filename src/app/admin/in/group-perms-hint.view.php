@@ -50,6 +50,7 @@
                     <li>CMS.Web.Pages</li>
                     <li>CMS.Web.TextFiles</li>
                     <li>CMS.Web.Templates</li>
+                    <li>CMS.Web.Search</li>
                     <li>CMS.Web.EmbeddedResources</li>
                     <li>CMS.Web.CustomForms</li>
                     <li>CMS.Web.CustomEntities</li>

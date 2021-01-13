@@ -13,6 +13,9 @@
             <hr />
             <web:condition when="query:q">
                 <p:search text="query:q">
+                    <ui:empty items="p:searchList">
+                        <h4 class="warning">Nothing has been found.</h4>
+                    </ui:empty> 
                     <ui:grid items="p:searchList" class="data-table standart wmax">
                         <ui:column header="Type" th-class="w40" value="p:searchType" />
                         <ui:column header="Subtype" th-class="w40" value="p:searchSubType" />
@@ -28,6 +31,9 @@
                         </ui:columnTemplate>
                     </ui:grid>
                 </p:search>
+            </web:condition>
+            <web:condition when="query:q" isInverted="true">
+                <h4 class="warning">Query is empty.</h4>
             </web:condition>
         </edit:form>
     </web:frame>

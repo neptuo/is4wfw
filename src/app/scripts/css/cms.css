@@ -1765,11 +1765,11 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu li.menu-item.li-4 a {
-    background: url('/images/icons/script_link.png') no-repeat 4px center;
+    background: url('/images/icons/magnifier.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-5 a {
-    background: url('/images/icons/page_attachment.gif') no-repeat 4px center;
+    background: url('/images/icons/script_link.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-6 a {
@@ -1777,26 +1777,30 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu li.menu-item.li-7 a {
-    background: url('/images/icons/drive.png') no-repeat 4px center;
+    background: url('/images/icons/page_attachment.gif') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-8 a {
-    background: url('/images/icons/book_open.png') no-repeat 4px center;
+    background: url('/images/icons/drive.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-9 a {
-    background: url('/images/icons/comment.png') no-repeat 4px center;
+    background: url('/images/icons/book_open.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-10 a {
-    background: url('/images/icons/magnifier.png') no-repeat 4px center;
+    background: url('/images/icons/comment.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-11 a {
-    background: url('/images/icons/arrow_branch.png') no-repeat 4px center;
+    background: url('/images/icons/magnifier.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-12 a {
+    background: url('/images/icons/arrow_branch.png') no-repeat 4px center;
+}
+
+.cms-menu li.menu-item.li-13 a {
     background: url('/images/icons/building.png') no-repeat 4px center;
 }
 

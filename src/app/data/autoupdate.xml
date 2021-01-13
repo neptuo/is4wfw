@@ -74,4 +74,5 @@
     <script build="349">ALTER TABLE `template` ADD `identifier` VARCHAR(30) NULL AFTER `name`, ADD UNIQUE `template_identifier` (`identifier`);</script>
     <script build="350">ALTER TABLE `user_log` ADD `token` TINYTEXT NULL AFTER `used_group`;</script>
     <script build="351">ALTER TABLE `user_log` CHANGE COLUMN `logout_timestamp` `logout_timestamp` int(11) NOT NULL DEFAULT 0;</script>
+    <script build="352">INSERT INTO `group_perms`(`group_id`, `name`, `value`, `type`) values (1, 'CMS.Web.Search', 'true', 'bool');</script>
 </autoupdate>

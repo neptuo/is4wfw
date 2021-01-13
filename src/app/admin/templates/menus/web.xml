@@ -4,6 +4,7 @@
     <item name="Pages" name-cs="Stránky" url="~/in/pages.view" security:requirePerm="CMS.Web.Pages" />
     <item name="Text files (css/js)" name-cs="Textové soubory" url="~/in/text-files.view" security:requirePerm="CMS.Web.TextFiles" />
     <item name="Templates" name-cs="Šablony" url="~/in/templates.view" security:requirePerm="CMS.Web.Templates" />
+    <item name="Search" name-cs="Vyhledávání" url="~/in/search.view" security:requirePerm="CMS.Web.Search" />
     <item name="Embedded Resources" name-cs="Vložené zdroje" url="~/in/embedded-resources.view" security:requirePerm="CMS.Web.EmbeddedResources" />
     <item name="Custom forms" name-cs="Uživatelské formuláře" url="~/in/custom-forms.view" security:requirePerm="CMS.Web.CustomForms" />
     <item name="Custom entities" name-cs="Uživatelské entity" url="~/in/custom-entities.view" security:requirePerm="CMS.Web.CustomEntities" />
