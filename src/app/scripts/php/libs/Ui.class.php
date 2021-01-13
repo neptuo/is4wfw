@@ -280,9 +280,17 @@
 
 		private $isInsideForm = false;
 
-		public function form(callable $template, $method = "post", $pageId = null, $params = array()) {
+		public function form(callable $template, $method = "post", $pageId = null, $isEditable = true, $params = array()) {
+			$beforeBody = '';
+			$afterBody = '';
+
+			if (!$isEditable) {
+				$beforeBody .= '<fieldset disabled="disabled">';
+				$afterBody .= '</fieldset>';
+			}
+
 			if ($this->isInsideForm) {
-				return $template();
+				return $beforeBody . $template() . $afterBody;
 			} else {
 				$this->isInsideForm = true;
 
@@ -296,7 +304,7 @@
 				$params["action"] = $action;
 				$attributes = self::joinAttributes($params);
 
-				$result = "<form$attributes>" . $template() . "</form>";
+				$result = "<form$attributes>$beforeBody" . $template() . "$afterBody</form>";
 				$this->isInsideForm = false;
 				return $result;
 			}

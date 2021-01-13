@@ -17,7 +17,7 @@
 			parent::setTagLibXml("Editor.xml");
 		}
 		
-		public function form($template, $submit, $params = []) {
+		public function form($template, $submit, $isEditable = true, $params = []) {
             $model = new EditModel();
             $model->metadata("form", $params);
             parent::setEditModel($model);
@@ -27,7 +27,7 @@
             $template();
             $model->load(false);
 
-            if (HttpUtils::isPost() && array_key_exists($submit, $_REQUEST)) {
+            if ($isEditable && HttpUtils::isPost() && array_key_exists($submit, $_REQUEST)) {
                 // Submit form / bind data into the model.
                 $model->submit();
                 $template();
@@ -54,7 +54,7 @@
 
             // Render UI.
             $model->render();
-            $result = parent::ui()->form($template, "post", null, $model->metadata("form"));
+            $result = parent::ui()->form($template, "post", null, $isEditable, $model->metadata("form"));
             parent::clearEditModel();
             return $result;
         }
