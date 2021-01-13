@@ -144,6 +144,22 @@
     <comment>Vrátí timestamp pro zadaný datum (a čas) dle zadaného formátu.</comment>
   </tag>
   <tag>
+    <name>escapeHtml</name>
+    <function>escapeHtml</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>Hodnota k escapování.</comment>
+    </attribute>
+    <comment>Escapuje HTML značky na HTML entity.</comment>
+  </tag>
+  <tag>
     <name>clear</name>
     <function>clear</function>
     <lookless />

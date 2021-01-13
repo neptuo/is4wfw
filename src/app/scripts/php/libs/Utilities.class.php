@@ -54,6 +54,10 @@
             }
         }
 
+        public function escapeHtml($output, $value) {
+            $this->OutputValues[$output] = htmlspecialchars($value);
+        }
+
         public function clear($output) {
             unset($this->OutputValues[$output]);
         }
