@@ -228,6 +228,15 @@
       <name>text</name>
       <type>string</type>
       <required />
+      <comment>Vyhledávaná fráze.</comment>
+    </attribute>
+    <attribute>
+      <name>location</name>
+      <type>string</type>
+      <default>page-tlstart,page-tlend,page-content,page-head,template-content,textfile-content</default>
+      <comment>
+        Místa, ve kterých se má hledat (page-tlstart, page-tlend, page-content, page-head, template-content, textfile-content)
+      </comment>
     </attribute>
   </fulltag>
   <property>

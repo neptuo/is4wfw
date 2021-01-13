@@ -3250,19 +3250,24 @@
             return $items;
         }
 
-        public function search($template, string $text) {
+        public function search($template, string $text, string $location = "") {
             $model = new ListModel();
             parent::pushListModel($model);
 
             $text = parent::sql()->escape("%$text%");
+            if (empty($location)) {
+                $location = "page-tlstart,page-tlend,page-content,page-head,template-content,textfile-content";
+            }
+
+            $location = explode(",", $location);
 
             $items = array_merge(
-                $this->searchPageProperty("tag_lib_start", $text),
-                $this->searchPageProperty("tag_lib_end", $text),
-                $this->searchPageProperty("head", $text),
-                $this->searchPageProperty("content", $text),
-                $this->searchTemplate($text),
-                $this->searchTextFile($text)
+                in_array("page-tlstart", $location) ? $this->searchPageProperty("tag_lib_start", $text) : [],
+                in_array("page-tlend", $location) ? $this->searchPageProperty("tag_lib_end", $text) : [],
+                in_array("page-head", $location) ? $this->searchPageProperty("head", $text) : [],
+                in_array("page-content", $location) ? $this->searchPageProperty("content", $text) : [],
+                in_array("template-content", $location) ? $this->searchTemplate($text) : [],
+                in_array("textfile-content", $location) ? $this->searchTextFile($text) : []
             );
 
 			$model->render();

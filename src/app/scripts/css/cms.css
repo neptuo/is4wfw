@@ -1565,6 +1565,9 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     background: white !important;
 }
 
+.mr-1 {
+   margin-right: .25rem;
+}
 
 /* ----------------------- ICONS ------------------------------ */
 
