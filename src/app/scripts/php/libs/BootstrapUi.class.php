@@ -315,7 +315,7 @@
 			</val:message>
 			';
 
-			$keys = ["adminui", "validation", sha1($templateContent)];
+			$keys = ["bs", "validation", sha1($templateContent)];
 			$template = $this->getParsedTemplate($keys);
 			if ($template == null) {
 				$template = $this->parseTemplate($keys, $templateContent);

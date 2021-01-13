@@ -1074,7 +1074,7 @@
                         if ($model->hasKey("passwordCurrent") && $isUpdate) {
                             $passwordCurrent = $model["passwordCurrent"];
                             if (!$this->isPasswordMatch($uid, $passwordCurrent)) {
-                                Validator::addInvalidValue($model, "password");
+                                Validator::addInvalidValue($model, "passwordCurrent");
                             }
                         }
                     }
@@ -1113,34 +1113,36 @@
                     $groupIds = $model["group_ids"];
 
                     parent::unsetKeys($model, User::$EditIgnoredSaveKeys);
-                    if (!$model->metadata("isUpdate")) {
-                        $sql = parent::sql()->insert("user", $model);
-                        parent::dataAccess()->execute($sql);
-                        $model["uid"] = $uid = parent::dataAccess()->getLastId();
-                        $this->insertDefaultProperties($model["uid"]);
-                    } else {
-                        $sql = parent::sql()->update("user", $model, array("uid" => $uid));
-                        parent::dataAccess()->execute($sql);
-                    }
-
-                    if (is_array($groupIds)) {
-                        $groupId = intval($model["group_id"]);
-                        if (!in_array($groupId, $groupIds)) {
-                            $groupIds[] = $groupId;
+                    if (!$model->isEmpty()) {
+                        if (!$model->metadata("isUpdate")) {
+                            $sql = parent::sql()->insert("user", $model);
+                            parent::dataAccess()->execute($sql);
+                            $model["uid"] = $uid = parent::dataAccess()->getLastId();
+                            $this->insertDefaultProperties($model["uid"]);
+                        } else {
+                            $sql = parent::sql()->update("user", $model, array("uid" => $uid));
+                            parent::dataAccess()->execute($sql);
                         }
 
-                        $currentGroupIds = $this->getUserGroupIds($uid);
-                        foreach ($currentGroupIds as $groupId) {
+                        if (is_array($groupIds)) {
+                            $groupId = intval($model["group_id"]);
                             if (!in_array($groupId, $groupIds)) {
-                                $sql = parent::sql()->delete("user_in_group", ["uid" => $uid, "gid" => $groupId]);
-                                parent::dataAccess()->execute($sql);
+                                $groupIds[] = $groupId;
                             }
-                        }
 
-                        foreach ($groupIds as $groupId) {
-                            if (!in_array($groupId, $currentGroupIds)) {
-                                $sql = parent::sql()->insert("user_in_group", ["uid" => $uid, "gid" => $groupId]);
-                                parent::dataAccess()->execute($sql);
+                            $currentGroupIds = $this->getUserGroupIds($uid);
+                            foreach ($currentGroupIds as $groupId) {
+                                if (!in_array($groupId, $groupIds)) {
+                                    $sql = parent::sql()->delete("user_in_group", ["uid" => $uid, "gid" => $groupId]);
+                                    parent::dataAccess()->execute($sql);
+                                }
+                            }
+
+                            foreach ($groupIds as $groupId) {
+                                if (!in_array($groupId, $currentGroupIds)) {
+                                    $sql = parent::sql()->insert("user_in_group", ["uid" => $uid, "gid" => $groupId]);
+                                    parent::dataAccess()->execute($sql);
+                                }
                             }
                         }
                     }

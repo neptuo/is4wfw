@@ -283,6 +283,10 @@
         public function hasKey($key) {
             return $this->hasPrefix() && array_key_exists($key, $this->container[$this->prefix]);
         }
+
+        public function isEmpty() {
+            return empty($this->keys());
+        }
     }
 
 ?>
