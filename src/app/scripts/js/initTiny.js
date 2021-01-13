@@ -4,7 +4,7 @@
  *  @date    2018/02/09
  *
  */
-function initTiny(taId, language) {
+function initTiny(taId, language, isEditable) {
 	var config = {
 		selector: 'textarea#' + taId,
 		theme: 'modern',
@@ -17,6 +17,10 @@ function initTiny(taId, language) {
 			"/wysiwyg-styles.php"
 		]
 	};
+
+	if (isEditable === false) {
+		config.readonly = true;
+	}
 
 	if (typeof(language) != 'undefined' && language != null) {
 		config.language = language;

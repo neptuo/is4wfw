@@ -215,7 +215,7 @@
             return $return;
         }
 
-        public function tinyMce($ids, $language = '', $jQuery = true) {
+        public function tinyMce($ids, $language = '', $jQuery = true, $isEditable = true) {
             if ($jQuery) {
                 $this->addjQuery("1.4.2");
             }
@@ -230,7 +230,12 @@
                     $arguments = '"' . $id . '"';
                     if ($language != '') {
                         $arguments .= ', "' . $language . '"';
+                    } else {
+                        $arguments .= ', null';
                     }
+
+                    $isEditable = $isEditable == true ? "true" : "false";
+                    $arguments .= ", $isEditable";
 
                     $script .= 'initTiny(' . $arguments . ');';
                 }

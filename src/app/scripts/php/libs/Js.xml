@@ -134,6 +134,12 @@
       <default>true</default>
       <comment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</comment>
     </attribute>
+    <attribute>
+      <name>isEditable</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda má být tinyMce editovatelná.</comment>
+    </attribute>
     <comment>Vloží do stránky skripty pro tiny-mce.</comment>
   </tag>
   <tag>
