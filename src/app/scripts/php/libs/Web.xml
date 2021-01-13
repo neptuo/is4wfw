@@ -157,22 +157,62 @@
     <attribute>
       <name>pageId</name>
       <required />
+      <comment>ID stránky, na kterou má vést adresa.</comment>
     </attribute>
     <attribute>
       <name>languageId</name>
+      <comment>ID jazyku, na kterou má vést adresa. Pokud není vyplněn použije se aktuální.</comment>
     </attribute>
     <attribute>
       <name>isAbsolute</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda se má vygenerovat absolutní cesta, včetně domény.</comment>
     </attribute>
-    <anyAttribute />
+    <attribute>
+      <name>param</name>
+      <prefix />
+      <comment>Seznam parametrů, které se mají do URL přidat.</comment>
+    </attribute>
+    <anyAttribute>
+      <comment>Pouze pro zpětnou kompatibilitu. Vhodnější použít 'param-*'.</comment>
+    </anyAttribute>
     <comment>
       Vytvoří URL pro stránku.
-      Atribut 'pageId' je ID stránky, na kterou má vést adresa.
-      Atribut 'languageId' je ID jazyku, na který povede adresa.
-      Atribut 'isAbsolute' říká, zda se má vygenerovat absolutní cesta, včetně domény.
-      Params jsou použity jako URL parametry, pokud navíc mají prefix 'param-', ten je z názvu odebrán. Je tak možné nastavovat i parametry, které se jmenují jako jiné atributy.
     </comment>
   </tag>
+  <fulltag>
+    <name>url</name>
+    <function>providePageUrl</function>
+    <attribute>
+      <name>pageId</name>
+      <required />
+      <comment>ID stránky, na kterou má vést adresa.</comment>
+    </attribute>
+    <attribute>
+      <name>languageId</name>
+      <comment>ID jazyku, na kterou má vést adresa. Pokud není vyplněn použije se aktuální.</comment>
+    </attribute>
+    <attribute>
+      <name>isAbsolute</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda se má vygenerovat absolutní cesta, včetně domény.</comment>
+    </attribute>
+    <attribute>
+      <name>param</name>
+      <prefix />
+      <comment>Seznam parametrů, které se mají do URL přidat.</comment>
+    </attribute>
+    <comment>
+      Vytvoří URL, která uvnitř těla dostupná v propertě 'web:url'.
+    </comment>
+  </fulltag>
+  <property>
+    <name>url</name>
+    <getFunction>getProvidedPageUrl</getFunction>
+    <comment>Vrací URL vytvořenou v 'web:url' full tagu.</comment>
+  </property>
   <tag>
     <name>a</name>
     <function>makeAnchor</function>

@@ -1785,7 +1785,7 @@
             return '<div class="crumb-menu">' . $return . '</div>';
         }
 
-        public function getPageUrl($pageId, $languageId = false, $isAbsolute = false, $params = array()) {
+        public function getPageUrl($pageId, $languageId = false, $isAbsolute = false, $params = array(), $anything = array()) {
             $languageId = (!$languageId) ? $this->LanguageId : $languageId;
             $isAbsolute = (!$isAbsolute) ? false : true;
 
@@ -1793,6 +1793,10 @@
                 $url = self::composeUrl($pageId, $languageId, $isAbsolute);
 
                 foreach ($params as $key => $value) {
+                    $url = UrlUtils::addParameter($url, $key, $value);
+                }
+
+                foreach ($anything as $key => $value) {
                     if (strpos($key, 'param-') === 0) {
                         $key = substr($key, 6);
                     }
@@ -1804,6 +1808,20 @@
             }
 
             return $pageId;
+        }
+
+        private $providedPageUrl;
+
+        public function providePageUrl($template, $pageId, $languageId, $isAbsolute = false, $params = array()) {
+            $oldUrl = $this->providedPageUrl;
+            try {
+                $this->providedPageUrl = $this->getPageUrl($pageId, $languageId, $isAbsolute, $params);
+                if (is_callable($template)) {
+                    return $template();
+                }
+            } finally {
+                $this->providedPageUrl = $oldUrl;
+            }
         }
 
         /**
@@ -1876,6 +1894,10 @@
                 trigger_error($error, E_USER_WARNING);
                 return "<h4 class=\"error\">" . $error . "</h4>";
             }
+        }
+
+        public function getProvidedPageUrl() {
+            return $this->providedPageUrl;
         }
 
         public function makeAnchorFullTag($template, $pageId, $languageId = false, $class = "", $activeClass = '', $id = "", $target = "", $rel = "", $type = '', $params = false) {
