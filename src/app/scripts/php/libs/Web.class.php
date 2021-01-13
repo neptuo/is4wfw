@@ -2377,9 +2377,13 @@
             preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $prop);
         }
 
-        public function getProperty($prop) {
-            $this->PropertyUse = 'get';
-            return preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $prop);
+        public function getProperty($prop, $isEvaluated = true) {
+            if ($isEvaluated) {
+                $this->PropertyUse = 'get';
+                return preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $prop);
+            } else {
+                return $prop;
+            }
         }
 
         // min, max, scope + property pro jeho vypsani!!!!

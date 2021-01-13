@@ -470,6 +470,12 @@
       <name>name</name>
       <required />
     </attribute>
+    <attribute>
+      <name>isEvaluated</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda má být hodnota rozparsována jako property.</comment>
+    </attribute>
     <comment>
       Vrátí hodnotu dané proměnné.
     </comment>
