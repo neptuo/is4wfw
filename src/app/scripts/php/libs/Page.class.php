@@ -3,7 +3,6 @@
     require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Order.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/Editor.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/EmbeddedResourceManager.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/WebForwardManager.class.php");
     require_once("System.class.php");
@@ -3183,6 +3182,119 @@
             }
 
             return null;
+        }
+
+        private function searchPageProperty($property, $text) {
+            $infoJoin = [
+                "leftjoin" => [
+                    "table" => "info", 
+                    "alias" => "i", 
+                    "source" => "page_id", 
+                    "target" => "page_id"
+                ], 
+                "select" => [
+                    "column" => "name", 
+                    "alias" => "name"
+                ]
+            ];
+			$sql = parent::sql()->select(["table" => "content", "alias" => "c"], ["page_id", $property, $infoJoin], "c.`$property` like " . $text . "");
+            $data = parent::dataAccess()->fetchAll($sql);
+
+            $items = [];
+            foreach ($data as $item) {
+                $items[] = [
+                    "type" => "Page",
+                    "subType" => $property,
+                    "id" => $item["page_id"],
+                    "name" => $item["name"],
+                    "content" => $item[$property]
+                ];
+            }
+
+            return $items;
+        }
+
+        private function searchTemplate($text) {
+			$sql = parent::sql()->select("template", ["id", "name", "content"], "`content` like " . $text . "");
+            $data = parent::dataAccess()->fetchAll($sql);
+
+            $items = [];
+            foreach ($data as $item) {
+                $items[] = [
+                    "type" => "Template",
+                    "subType" => "content",
+                    "id" => $item["id"],
+                    "name" => $item["name"],
+                    "content" => $item["content"]
+                ];
+            }
+
+            return $items;
+        }
+
+        private function searchTextFile($text) {
+			$sql = parent::sql()->select("page_file", ["id", "name", "content"], "`content` like " . $text . "");
+            $data = parent::dataAccess()->fetchAll($sql);
+
+            $items = [];
+            foreach ($data as $item) {
+                $items[] = [
+                    "type" => "Text File",
+                    "subType" => "content",
+                    "id" => $item["id"],
+                    "name" => $item["name"],
+                    "content" => $item["content"]
+                ];
+            }
+
+            return $items;
+        }
+
+        public function search($template, string $text) {
+            $model = new ListModel();
+            parent::pushListModel($model);
+
+            $text = parent::sql()->escape("%$text%");
+
+            $items = array_merge(
+                $this->searchPageProperty("tag_lib_start", $text),
+                $this->searchPageProperty("tag_lib_end", $text),
+                $this->searchPageProperty("head", $text),
+                $this->searchPageProperty("content", $text),
+                $this->searchTemplate($text),
+                $this->searchTextFile($text)
+            );
+
+			$model->render();
+            $model->items($items);
+			$result = $template();
+
+			parent::popListModel();
+			return $result;
+        }
+
+        public function getSearchList() {
+            return parent::peekListModel();
+        }
+        
+        public function getSearchName() {
+            return parent::peekListModel()->field("name");
+        }
+        
+        public function getSearchType() {
+            return parent::peekListModel()->field("type");
+        }
+        
+        public function getSearchSubType() {
+            return parent::peekListModel()->field("subType");
+        }
+        
+        public function getSearchContent() {
+            return parent::peekListModel()->field("content");
+        }
+        
+        public function getSearchId() {
+            return parent::peekListModel()->field("id");
         }
     }
 

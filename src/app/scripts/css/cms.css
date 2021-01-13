@@ -301,6 +301,7 @@ table .template-id {
 
 .file-content-in .foo {
     width: 1000px;
+    white-space: nowrap
 }
 
 .file-tr td, .template-list td {
@@ -1367,9 +1368,30 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     width: 500px;
 }
 
+.gray-box .w600, .gray-box-float .w600, .standart .w600 {
+    width: 600px;
+}
+
+.gray-box .w700, .gray-box-float .w700, .standart .w700 {
+    width: 700px;
+}
+
 .gray-box .wmax, .gray-box-float .wmax, .standart .wmax {
-    width: 100%;
     display: block;
+}
+
+.wmax {
+    width: 100%;
+}
+
+.mw200 {
+    max-width: 200px;
+}
+
+.ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .gray-box .ml100, .gray-box-float .ml100, .standart .ml100 {

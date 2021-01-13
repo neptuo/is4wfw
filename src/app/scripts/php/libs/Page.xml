@@ -221,5 +221,44 @@
       <required />
     </attribute>
   </tag>
+  <fulltag>
+    <name>search</name>
+    <function>search</function>
+    <attribute>
+      <name>text</name>
+      <type>string</type>
+      <required />
+    </attribute>
+  </fulltag>
+  <property>
+    <name>searchList</name>
+    <getFunction>getSearchList</getFunction>
+    <comment>Vrací seznam položek uvnitř 'p:search'.</comment>
+  </property>
+  <property>
+    <name>searchId</name>
+    <getFunction>getSearchId</getFunction>
+    <comment>Vrací id položky uvnitř 'p:search'.</comment>
+  </property>
+  <property>
+    <name>searchType</name>
+    <getFunction>getSearchType</getFunction>
+    <comment>Vrací typ objektu položky uvnitř 'p:search'.</comment>
+  </property>
+  <property>
+    <name>searchSubType</name>
+    <getFunction>getSearchSubType</getFunction>
+    <comment>Vrací sub typ objektu položky uvnitř 'p:search'.</comment>
+  </property>
+  <property>
+    <name>searchName</name>
+    <getFunction>getSearchName</getFunction>
+    <comment>Vrací název položky uvnitř 'p:search'.</comment>
+  </property>
+  <property>
+    <name>searchContent</name>
+    <getFunction>getSearchContent</getFunction>
+    <comment>Vrací obsah položky uvnitř 'p:search'.</comment>
+  </property>
 </taglib>
 
