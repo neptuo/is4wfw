@@ -15,8 +15,10 @@
      */
     class Js extends BaseTagLib {
 
-        private $includedScripts = array();
-        private $includedStyles = array();
+        private $includedScripts = [];
+        private $includedInlineScripts = [];
+        private $includedStyles = [];
+        private $includedInlineStyles = [];
 
         public function __construct() {
             parent::setTagLibXml("Js.xml");
@@ -57,7 +59,13 @@
 			}
         }
 
-        public function addScriptInline($template, string $placement = "head") {
+        public function addScriptInline($template, string $placement = "head", $key = null) {
+            if ($key != null && in_array($key, $this->includedInlineScripts)) {
+                return;
+            } else {
+                $this->includedInlineScripts[] = $key;
+            }
+
             if (is_string($template)) {
                 $content = $template;
             } else {
@@ -74,7 +82,13 @@
 			}
 		}
 
-        public function addStyleInline(callable $template) {
+        public function addStyleInline(callable $template, $key = null) {
+            if ($key != null && in_array($key, $this->includedInlineStyles)) {
+                return;
+            } else {
+                $this->includedInlineStyles[] = $key;
+            }
+
             $content = $template();
             $style = parent::web()->formatStyleInline($content);
             parent::web()->addStyle($style);

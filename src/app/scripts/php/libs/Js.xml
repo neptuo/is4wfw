@@ -49,6 +49,11 @@
       <type>string</type>
       <comment>Umístění skriptu: "head" do hlavičky stránky; "tail" na konec těla.</comment>
     </attribute>
+    <attribute>
+      <name>key</name>
+      <type>string</type>
+      <comment>Pokud vyplněn, skript s takovým klíčem se vloží stránky maximálně jednou a použije se první obsah.</comment>
+    </attribute>
     <comment>
       Vloží do stránky skript z těla do systémového místa pro vkládání skriptů.
       Též zajistí spuštění pro ajax požadavku.
@@ -69,6 +74,11 @@
   <fulltag>
     <name>style</name>
     <function>addStyleInline</function>
+    <attribute>
+      <name>key</name>
+      <type>string</type>
+      <comment>Pokud vyplněn, skript s takovým klíčem se vloží stránky maximálně jednou a použije se první obsah.</comment>
+    </attribute>
     <comment>
       Vloží do stránky style z těla do systémového místa pro vkládání stylů.
     </comment>
