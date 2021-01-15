@@ -30,6 +30,15 @@
     </comment>
   </fulltag>
   <fulltag>
+    <name>execute</name>
+    <function>execute</function>
+    <lookless />
+    <comment>
+      Vykoná edit model (= "automaticky odeslaný formulář", nic však negeneruje do výstupu).
+      Provádí fáze "submit", "save", "saved".
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>prefix</name>
     <function>prefix</function>
     <attribute>
