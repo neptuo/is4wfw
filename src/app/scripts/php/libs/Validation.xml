@@ -22,6 +22,19 @@
     </comment>
   </tag>
   <tag>
+    <name>email</name>
+    <function>email</function>
+    <attribute>
+      <name>key</name>
+      <required />
+      <type>string</type>
+      <comment>Klíč, který má být email.</comment>
+    </attribute>
+    <comment>
+      Nastaví email validátor pro klíč "key".
+    </comment>
+  </tag>
+  <tag>
     <name>translate</name>
     <function>translate</function>
     <attribute>

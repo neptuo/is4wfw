@@ -27,6 +27,11 @@
 			Validator::required($model, $key);
 		}
 
+		public function email($key) {
+			$model = parent::getEditModel();
+			Validator::email($model, $key);
+		}
+
 		public function translate($identifier, $message) {
 			$this->translations[$identifier] = $message;
 		}
