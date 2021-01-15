@@ -55,6 +55,11 @@
         public static function format($format, $model) {
             foreach ($model as $key => $value) {
                 $source = "{" . $key . "}";
+
+                if (is_callable($value)) {
+                    continue;
+                }
+
                 $format = str_replace($source, $value, $format);
             }
 
