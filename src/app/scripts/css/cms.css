@@ -1201,6 +1201,11 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     background-color: #eeeeee;
 }
 
+.template-list .template-edit {
+    width: 1%;
+    white-space: nowrap;
+}
+
 .file-submit, .select-season, .select-table, .select-team {
     padding: 6px 8px;
     margin: 2px;
