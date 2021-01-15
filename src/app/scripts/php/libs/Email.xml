@@ -13,7 +13,6 @@
     <lookless />
     <attribute>
       <name>from</name>
-      <required />
       <type>string</type>
       <comment>Adresa odesílatele.</comment>
     </attribute>

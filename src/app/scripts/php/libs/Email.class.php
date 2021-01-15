@@ -53,6 +53,7 @@
             }
 
             $to = implode(",", $to);
+            $headers = implode(PHP_EOL, $headers);
 
             $result = mail($to, $subject, $content, $headers);
             if (!$result) {
