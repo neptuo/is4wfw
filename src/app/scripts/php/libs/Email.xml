@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Email library</name>
+  <classname>Email</classname>
+  <classpath>php.libs</classpath>
+  <count>*</count>
+  <comment>
+    Knihovna pro odesílání emailů.
+  </comment>
+  <fulltag>
+    <name>send</name>
+    <function>send</function>
+    <lookless />
+    <attribute>
+      <name>from</name>
+      <required />
+      <type>string</type>
+      <comment>Adresa odesílatele.</comment>
+    </attribute>
+    <attribute>
+      <name>to</name>
+      <required />
+      <type>string</type>
+      <comment>Adresy oddělené čárkou, kam má zpráva být odeslána.</comment>
+    </attribute>
+    <attribute>
+      <name>replyTo</name>
+      <type>string</type>
+      <comment>Adresa pro odepověď (protože 'from' musí být adresa, která patří k emailovému serveru).</comment>
+    </attribute>
+    <attribute>
+      <name>cc</name>
+      <type>string</type>
+      <comment>Adresa, pro odeslání kopie zprávy.</comment>
+    </attribute>
+    <attribute>
+      <name>bcc</name>
+      <type>string</type>
+      <comment>Adresa, pro odeslání skryté kopie zprávy.</comment>
+    </attribute>
+    <attribute>
+      <name>subject</name>
+      <required />
+      <type>string</type>
+      <comment>Předmět zprávy.</comment>
+    </attribute>
+    <attribute>
+      <name>isHtml</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda se má email odeslat jako HTML.</comment>
+    </attribute>
+    <comment>
+      Odešle email na adresy 'to'. Tělo definuje obsah emailu.
+    </comment>
+  </fulltag>
+</taglib>
+

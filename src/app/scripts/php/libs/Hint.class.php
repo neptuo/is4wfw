@@ -476,6 +476,7 @@
             "php.libs.CustomEntityAdmin",
             "php.libs.Database",
             "php.libs.Editor",
+            "php.libs.Email",
             "php.libs.ErrorHandler",
             "php.libs.File",
             "php.libs.FileAdmin",
