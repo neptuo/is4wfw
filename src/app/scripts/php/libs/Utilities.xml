@@ -160,6 +160,23 @@
     <comment>Escapuje HTML značky na HTML entity.</comment>
   </tag>
   <tag>
+    <name>nextId</name>
+    <function>nextIdentifier</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>prefix</name>
+      <type>string</type>
+      <default>id-</default>
+      <comment>Prefix identifikátoru.</comment>
+    </attribute>
+    <comment>Vygeneruje následující (sekvenční) unikátní identifikátor.</comment>
+  </tag>
+  <tag>
     <name>clear</name>
     <function>clear</function>
     <lookless />

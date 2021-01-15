@@ -12,7 +12,8 @@
      */
     class Utilities extends BaseTagLib {
 
-        private $OutputValues = array();
+        private $OutputValues = [];
+        private $Identifiers = [];
 
         public function __construct() {
             parent::setTagLibXml("Utilities.xml");
@@ -57,6 +58,15 @@
         public function escapeHtml($output, $value) {
             $this->OutputValues[$output] = htmlspecialchars($value);
         }
+
+		public function nextIdentifier($output, $prefix = 'id-') {
+            if (!array_key_exists($prefix, $this->Identifiers)) {
+                $this->Identifiers[$prefix] = 0;
+            }
+
+            $this->Identifiers[$prefix]++;
+            $this->OutputValues[$output] = $prefix . $this->Identifiers[$prefix];
+		}
 
         public function clear($output) {
             unset($this->OutputValues[$output]);
