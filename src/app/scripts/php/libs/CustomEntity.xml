@@ -69,6 +69,12 @@
       <required />
       <comment>Formátovací řetězec pro název nové složky. Např.: "{id} - {name}".</comment>
     </attribute>
+    <attribute>
+      <name>renameOnUpdate</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda se má složka přejmenovat při aktualizaci (update).</comment>
+    </attribute>
   </tag>
   <fulltag>
     <name>createIfEmpty</name>

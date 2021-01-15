@@ -295,6 +295,11 @@
                     $directory = $da->fetchSingle($directorySql);
                     if (empty($directory[$columnName])) {
                         self::executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys);
+                    } else if(array_key_exists("renameOnUpdate", $extra) && $extra["renameOnUpdate"]) {
+                        $directoryName = StringUtils::format($extra['nameFormat'], $model);
+                        $directoryName = StringUtils::format($directoryName, $primaryKeys);
+                        $directoryNameSql = parent::sql()->update("directory", ["name" => $directoryName], ["id" => $directory[$columnName]]);
+                        $da->execute($directoryNameSql);
                     }
                 } else if ($extra["type"] == "createIfEmpty") {
                     self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
@@ -461,13 +466,14 @@
             }
         }
 
-        public function emptyDirectory($name, $parentDirId, $nameFormat) {
+        public function emptyDirectory($name, $parentDirId, $nameFormat, $renameOnUpdate = false) {
             $model = parent::getEditModel();
             if ($model->isSubmit()) {
                 $model[$name] = array(
                     "type" => "emptyDirectory",
                     "parentDirId" => $parentDirId,
-                    "nameFormat" => $nameFormat
+                    "nameFormat" => $nameFormat,
+                    "renameOnUpdate" => $renameOnUpdate
                 );
             }
         }
