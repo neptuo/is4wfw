@@ -11,6 +11,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/UrlCache.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewHelper.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/WebForwardManager.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/HttpClient.class.php");
 
     /**
      *
@@ -1254,10 +1255,21 @@
             self::tryToComprimeContent($return);
         }
         
-        private function resolveWebRoot($content) {
+        private function resolveWebRoot($content, bool $absolute = false, $useIs4wfwPort = true) {
             $webProject = $this->UrlResolver->getWebProject();
             $rootUrl = UrlResolver::combinePath(INSTANCE_URL, $webProject['alias']['root_url']);
             $rootUrl = UrlResolver::combinePath($rootUrl, '/');
+
+            if ($absolute) {
+                $domainUrl = $this->getHttpHost();
+                if ($_ENV["IS4WFW_PORT"] && $useIs4wfwPort) {
+                    $domainUrl .= ":" . $_ENV["IS4WFW_PORT"];
+                }
+
+                $rootUrl = UrlResolver::combinePath($domainUrl, $rootUrl);
+                $rootUrl = UrlResolver::combinePath($this->Protocol, $rootUrl, '://');
+            }
+
             $content = str_replace("~/", $rootUrl, $content);
             return $content;
         }
@@ -1987,6 +1999,14 @@
                     trigger_error('Permission denied when reading template id = ' . $templateId . '!', E_USER_WARNING);
                 }
             }
+        }
+
+        public function includeUrl($url) {
+            $url = $this->resolveWebRoot($url, true, false);
+
+            $client = new HttpClient();
+            $content = $client->get($url);
+            return $content;
         }
 
         /**

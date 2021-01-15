@@ -152,6 +152,16 @@
     </comment>
   </tag>
   <tag>
+    <name>includeUrl</name>
+    <function>includeUrl</function>
+    <attribute>
+      <name>url</name>
+      <required />
+      <comment>URL, jejíž obsah se má vložit. Musí obsahovat absolutní hodnotu (http://...) nebo virtuální cestu (~/..)</comment>
+    </attribute>
+    <comment>Vloží obsah z externí URL.</comment>
+  </tag>
+  <tag>
     <name>url</name>
     <function>getPageUrl</function>
     <attribute>
