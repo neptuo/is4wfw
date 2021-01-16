@@ -490,6 +490,7 @@
             "php.libs.Image",
             "php.libs.Inquiry",
             "php.libs.Js",
+            "php.libs.Json",
             "php.libs.Language",
             "php.libs.Localization",
             "php.libs.Log",

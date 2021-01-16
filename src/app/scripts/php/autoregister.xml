@@ -20,6 +20,7 @@
 	<reg prefix="i" class="php.libs.Inquiry" />
 	<reg prefix="img" class="php.libs.Image" />
 	<reg prefix="js" class="php.libs.Js" />
+	<reg prefix="json" class="php.libs.Json" />
 	<reg prefix="loc" class="php.libs.Localization" />
 	<reg prefix="lang" class="php.libs.Language" />
 	<reg prefix="p" class="php.libs.Page" />

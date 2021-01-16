@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+  <taglib>
+  <name>JSON library</name>
+  <classname>Json</classname>
+  <classpath>php.libs</classpath>
+  <count>*</count>
+  <comment>
+    Knihovna pro zpracování JSON vstupu a generování JSON výstupu.
+  </comment>
+  <fulltag>
+    <name>output</name>
+    <function>processOutput</function>
+    <attribute>
+      <name>format</name>
+      <type>string</type>
+      <default>indented</default>
+      <comment>Formátování výstupu. Možné hodnoty "indented" nebo "inline".</comment>
+    </attribute>
+    <comment>
+      Nastaví odpověď na JSON a své tělo použije pro definici odpovědi.
+    </comment>
+  </fulltag>
+  <fulltag>
+    <name>object</name>
+    <function>processObject</function>
+    <comment>
+      Vygeneruje do výstupu JSON objekt. Své tělo je jeho obsahem.
+
+    </comment>
+  </fulltag>
+  <fulltag>
+    <name>array</name>
+    <function>processArray</function>
+    <comment>
+      Vygeneruje do výstupu JSON pole. Své tělo je jeho obsahem.
+
+    </comment>
+  </fulltag>
+  <tag>
+    <name>key</name>
+    <function>processKey</function>
+    <attribute>
+      <name>name</name>
+      <required />
+      <type>string</type>
+      <comment>Název JSON klíče.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>Hodnota JSON hodnoty.</comment>
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <type>string</type>
+      <default>string</default>
+      <comment>Typ JSON hodnoty. Možné hodnoty "string", "number", "bool".</comment>
+    </attribute>
+    <comment>
+      Vygeneruje do výstupu JSON dvojici klíč-hodnota. "type" je použit pro správný escape hodnoty.
+    </comment>
+  </tag>
+  <fulltag>
+    <name>key</name>
+    <function>processKeyWithBody</function>
+    <attribute>
+      <name>name</name>
+      <required />
+      <type>string</type>
+      <comment>Hodnota JSON klíče.</comment>
+    </attribute>
+    <comment>
+      Vygeneruje do výstupu JSON dvojici klíč-hodnota. Své tělo je jeho obsahem.
+    </comment>
+  </fulltag>
+</taglib>
+
