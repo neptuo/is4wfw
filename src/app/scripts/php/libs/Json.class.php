@@ -18,6 +18,7 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
         private $mode;
         private $output;
         private $outputKey;
+        private $outputParentType = '';
 
 		public function __construct() {
 			parent::setTagLibXml("Json.xml");
@@ -43,19 +44,26 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
         public function processObject($template) {
             $wasEmpty = false;
             $previousOutputKey = $this->outputKey;
+            $previousOutputParentType = $this->outputParentType;
             if ($this->mode == JsonMode::Output) {
+                if (!in_array($this->outputParentType, ['key-value', 'array', ''])) {
+                    throw new JsonOutputException("Array can't be placed outside of key-value or root.");
+                }
+
                 $value = [];
                 if ($this->output->isEmpty()) {
                     $wasEmpty = true;
                 }
 
                 $this->output->push($value);
+                $this->outputParentType = 'object';
             }
             
             $template();
             
             if ($this->mode == JsonMode::Output) {
                 $this->outputKey = $previousOutputKey;
+                $this->outputParentType = $previousOutputParentType;
 
                 $value = (object)$this->output->pop();
                 if (!$wasEmpty) {
@@ -75,7 +83,12 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
         public function processArray($template) {
             $wasEmpty = false;
             $previousOutputKey = $this->outputKey;
+            $previousOutputParentType = $this->outputParentType;
             if ($this->mode == JsonMode::Output) {
+                if (!in_array($this->outputParentType, ['key-value', ''])) {
+                    throw new JsonOutputException("Array can't be placed outside of key-value or root.");
+                }
+
                 $value = [];
                 if ($this->output->isEmpty()) {
                     $wasEmpty = true;
@@ -83,12 +96,14 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
                 
                 $this->output->push($value);
                 $this->outputKey = null;
+                $this->outputParentType = 'array';
             }
             
             $template();
             
             if ($this->mode == JsonMode::Output) {
                 $this->outputKey = $previousOutputKey;
+                $this->outputParentType = $previousOutputParentType;
 
                 $value = $this->output->pop();
                 if (!$wasEmpty) {
@@ -107,36 +122,39 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
 
         public function processKey($name, $value, $type) {
             if ($this->mode == JsonMode::Output) {
-                if ($this->output->isEmpty()) {
-                    throw new JsonOutputException("Key-value can't be placed in the response root.");
-                } else {
-                    if ($type == "number") {
-                        $value = (float)$value;
-                    } else if ($type == "bool") {
-                        $value = (bool)$value;
-                    }
-
-                    $parent = $this->output->pop();
-                    $parent[$name] = $value;
-                    $this->output->push($parent);
+                if ($this->output->isEmpty() || $this->outputParentType != 'object') {
+                    throw new JsonOutputException("Key-value '$name' can't be outide of object.");
                 }
+
+                if ($type == "number") {
+                    $value = (float)$value;
+                } else if ($type == "bool") {
+                    $value = (bool)$value;
+                }
+
+                $parent = $this->output->pop();
+                $parent[$name] = $value;
+                $this->output->push($parent);
             }
         }
 
         public function processKeyWithBody($template, $name) {
             $previousOutputKey = $this->outputKey;
+            $previousOutputParentType = $this->outputParentType;
             if ($this->mode == JsonMode::Output) {
-                if ($this->output->isEmpty()) {
-                    throw new JsonOutputException("Key-value can't be placed in the response root.");
-                } else {
-                    $this->outputKey = $name;
+                if ($this->output->isEmpty() || $this->outputParentType != 'object') {
+                    throw new JsonOutputException("Key-value '$name' can't be placed outside of object.");
                 }
+                
+                $this->outputKey = $name;
+                $this->outputParentType = 'key-value';
             }
             
             $template();
 
             if ($this->mode == JsonMode::Output) {
                 $this->outputKey = $previousOutputKey;
+                $this->outputParentType = $previousOutputParentType;
             }
         }
     }
