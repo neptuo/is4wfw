@@ -21,11 +21,21 @@
     </comment>
   </fulltag>
   <fulltag>
+    <name>input</name>
+    <function>processInput</function>
+    <comment>
+      Zpracuje obsah těla požadavku jako JSON objekt a použije svojí šablony pro průchod objektem a nastavení edit modelu.
+      Vytvoří edit model a spouští fáze "submit", "save", "saved".
+      Pokud průchod šablonou skončí validační chybou, vrací 400 a JSON ve formátu "https://is4wfw.neptuo.com/api-responses/validation-error" a zbytek stránky je ignorován.
+      Pokud průchod šablonou skončí výjimkou v save fázi, vrací 500 a JSON ve formátu "https://is4wfw.neptuo.com/api-responses/exception" a zbytek stránky je ignorován.
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>object</name>
     <function>processObject</function>
     <comment>
       Vygeneruje do výstupu JSON objekt. Své tělo je jeho obsahem.
-
+      Zvaliduje, že aktuální položka na vstup je objekt.
     </comment>
   </fulltag>
   <fulltag>
@@ -33,7 +43,7 @@
     <function>processArray</function>
     <comment>
       Vygeneruje do výstupu JSON pole. Své tělo je jeho obsahem.
-
+      Zvaliduje, že aktuální položka na vstup je pole a své tělo spustí pro každou položku.
     </comment>
   </fulltag>
   <tag>
@@ -58,6 +68,7 @@
     </attribute>
     <comment>
       Vygeneruje do výstupu JSON dvojici klíč-hodnota. "type" je použit pro správný escape hodnoty.
+      Nefunguje ve vstupním módu.
     </comment>
   </tag>
   <fulltag>
@@ -71,7 +82,24 @@
     </attribute>
     <comment>
       Vygeneruje do výstupu JSON dvojici klíč-hodnota. Své tělo je jeho obsahem.
+      Nastaví jako aktuální položku hodnotu klíče z "name".
     </comment>
   </fulltag>
+  <property>
+    <name>value</name>
+    <getFunction>getInputValue</getFunction>
+    <comment>
+      Vrací hodnotu klíče z inputu.
+      Při outputu nedělá nic.
+    </comment>
+  </property>
+  <property>
+    <name>arrayIndex</name>
+    <getFunction>getArrayIndex</getFunction>
+    <comment>
+      Vrací index položky uvnitř "json:array" v input módu.
+      Při outputu nedělá nic.
+    </comment>
+  </property>
 </taglib>
 

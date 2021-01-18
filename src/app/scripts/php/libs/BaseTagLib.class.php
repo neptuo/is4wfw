@@ -413,6 +413,15 @@
             return $this->requestHeaders;
         }
 
+        public function requestHeader($name) {
+            $headers = $this->requestHeaders();
+            if (array_key_exists($name, $headers)) {
+                return $headers[$name];
+            }
+
+            return null;
+        }
+        
         public function debugFrame($title, $content, $contentTag = null) {
             if ($contentTag !== null && $contentTag !== '') {
                 $content = '<' . $contentTag . ' style="white-space: pre;">' . $content . '</' . $contentTag . '>';

@@ -2,6 +2,7 @@
 
     class EditModel implements ArrayAccess, Iterator
     {
+        private $prefixes = [];
         private $prefix;
         private $metadata = [];
         private $container = [];
@@ -14,11 +15,19 @@
                 return $this->prefix;
             }
 
-            if ($name == null) {
+            if ($name === null) {
                 $name = "";
             }
 
+            if (!in_array($name, $this->prefixes)) {
+                $this->prefixes[] = $name;
+            }
+
             $this->prefix = $name;
+        }
+
+        public function prefixes() {
+            return $this->prefixes;
         }
 
         public function exception($e) {
@@ -27,6 +36,10 @@
 
         public function hasException() {
             return count($this->exceptions) > 0;
+        }
+
+        public function exceptions() {
+            return $this->exceptions;
         }
 
         // ------- ArrayAccess ------------------------------------------------
