@@ -11,9 +11,6 @@
         protected $Code = null;
         protected $TemplateCache = null;
         
-        // List of custom tags to parse [[prefix => name]]
-        protected $TagsToParse = array();
-
         // Current custom tag attributes.
         protected $Attributes = array();
 

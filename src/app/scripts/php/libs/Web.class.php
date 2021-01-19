@@ -144,10 +144,8 @@
          *  Regular expression for parsing c tag.     
          *
          */
-        //private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="([a-zA-Z0-9\.,\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*" )*)\/>)';
-        //private $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+) ((([a-zA-Z0-9]+)="[^"]*" )*)\/>)';  ///2010-10-11
         protected $TAG_RE = '(<([a-zA-Z0-9]+:[a-zA-Z0-9]+)( )+((([a-zA-Z0-9-]+[:]?[a-zA-Z0-9-]*)="[^"]*"( )*)*)\/>)';
-        private $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
+        private $PROP_RE = '(([a-zA-Z0-9-_]+:[a-zA-Z0-9-_.]+))';
         private $PropertyUse = '';
         private $PropertyAttr = '';
         /**
@@ -155,8 +153,6 @@
          *  Regular expression for parsing attribute.
          *
          */
-        //private $ATT_RE = '(([a-zA-Z0-9]+)="([a-zA-Z0-9\.\*`_;:/?-]+ *[a-zA-Z0-9\.,\*`_;:/?-]*)*")';
-        private $ATT_RE = '(([a-zA-Z0-9]+)="([^"]*)")';
         private $PagesId = array();
         private $PagesIdIndex = 0;
         private $ParsingPages = false;

@@ -12,7 +12,7 @@
      */
     class UrlResolver extends BaseTagLib {
 
-        private $PROP_RE = '(([a-zA-Z0-9]+:[a-zA-Z0-9]+))';
+        private $PROP_RE = '(([a-zA-Z0-9-_]+:[a-zA-Z0-9-_.]+))';
         private $PropertyUse = '';
         private $PropertyAttr = '';
         private $Parser;
