@@ -13,6 +13,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/SortModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/MissingEditModelException.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ParameterException.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateCacheKeys.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/ArrayUtils.class.php");
@@ -436,7 +437,7 @@
 
         private static $editModel;
 
-        public function getEditModel($thowIfNull = true) {
+        public function getEditModel($thowIfNull = true) : ?EditModel {
             if (BaseTagLib::$editModel != null) {
                 return BaseTagLib::$editModel;
             }

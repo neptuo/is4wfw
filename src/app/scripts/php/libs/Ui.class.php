@@ -378,7 +378,11 @@
 			}
 		}
 		
-		public function dropdownlist($name, $nameIndex = -1, $source, $display, $id, $emptyText = "", $params = array()) {
+		public function dropdownlist($name, $nameIndex = -1, $source, $display, $id, $emptyText = "", $mode = "single", $params = array()) {
+			if ($mode == "multi" && $nameIndex != -1) {
+				throw new ParameterException("nameIndex", "In mode=multi nameIndex is not supported.");
+			}
+
 			$model = parent::getEditModel();
 			if ($model->isRegistration()) {
 				$model->set($name, null, null);
@@ -391,8 +395,14 @@
 			if ($model->isRender()) {
 				$formName = $model->requestKey($name, $nameIndex);
 				$modelValue = $model->get($name, $nameIndex);
-				if ($nameIndex != -1) {
-					$modelValue = $modelValue[$nameIndex];
+
+				if ($mode == "multi") {
+					$formName .= "[]";
+					$params["multiple"] = "multiple";
+
+					if (!is_array($modelValue)) {
+						$modelValue = explode(",", $modelValue);
+					}
 				}
 				
 				$params = self::appendId($params);
@@ -414,7 +424,13 @@
 
 				foreach ($data as $item) {
 					$itemValue = $item[$id];
-					$result .= "<option value='$itemValue'" . ($modelValue == $itemValue ? " selected='selected'" : "") . ">$item[$display]</option>";
+					if (is_array($modelValue)) {
+						$isSelected = in_array($itemValue, $modelValue);
+					} else {
+						$isSelected = $modelValue == $itemValue;
+					}
+
+					$result .= "<option value='$itemValue'" . ($isSelected ? " selected='selected'" : "") . ">$item[$display]</option>";
 				}
 
 				$result .= "</select>";

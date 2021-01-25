@@ -254,6 +254,10 @@
         public function get($name, $nameIndex) {
             $value = $this[$name];
             if ($this->isNameIndex($nameIndex)) {
+                if (!is_array($value)) {
+                    $value = explode(",", $value);
+                }
+
                 $value = $value[$nameIndex];
             }
 

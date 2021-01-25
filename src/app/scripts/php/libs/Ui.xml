@@ -320,6 +320,11 @@
       <type>string</type>
       <comment>Pokud je zadán, obsahuje hodnotu pro nevyplněnou položku.</comment>
     </attribute>
+    <attribute>
+      <name>mode</name>
+      <type>string</type>
+      <comment>Zda umožňuje výběr jedné položky ("single") nebo více ("multi"). Pokud je multiplicitní, pak není možné použít "nameIndex".</comment>
+    </attribute>
     <anyAttribute />
     <comment>
       Vygeneruje dropdownlist z DB entity.
