@@ -517,6 +517,30 @@
       Nastavuje hodnotu fieldu "name" na hodnotu podle "format".
     </comment>
   </tag>
+  <fulltag>
+    <name>toUpperValue</name>
+    <function>toUpperValue</function>
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
+    </attribute>
+    <comment>
+      Obaluje libovolný editační tag a hodnotu v něm ("name") transformuje na UPPER CASE.
+    </comment>
+  </fulltag>
+  <fulltag>
+    <name>toLowerValue</name>
+    <function>toLowerValue</function>
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
+    </attribute>
+    <comment>
+      Obaluje libovolný editační tag a hodnotu v něm ("name") transformuje na lower case.
+    </comment>
+  </fulltag>
   <tag>
     <name>constant</name>
     <function>constantValue</function>

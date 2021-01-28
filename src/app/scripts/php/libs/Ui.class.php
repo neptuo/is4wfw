@@ -341,6 +341,10 @@
 				$url = $_SERVER['REQUEST_URI'];
 
                 foreach ($model as $key => $value) {
+					if (is_callable($value)) {
+						$value = $value();
+					}
+
 					if (is_array($value)) {
 						$value = implode(",", $value);
 					}
@@ -609,7 +613,20 @@
 		private function ensureModelDefaultValue($model, $name, $format) {
 			$value = $model[$name];
             if (empty($value)) {
-                $model[$name] = function() use ($model, $format) { return StringUtils::format($format, $model); };
+				$model[$name] = function() use ($model, $name, $format) { 
+					$items = [];
+					foreach ($model as $key => $value) {
+						if ($name != $key) {
+							if (is_callable($value)) {
+								$value = $value();
+							}
+
+							$items[$key] = $value;
+						}
+					}
+
+					return StringUtils::format($format, $items); 
+				};
             }
 		}
 
@@ -622,6 +639,52 @@
             if ($model->isSubmit()) {
 				$template();
 				self::ensureModelDefaultValue($model, $name, $format);
+            }
+
+            if ($model->isRender()) {
+                return $template();
+            }
+        }
+
+        public function toUpperValue($template, $name) {
+            $model = parent::getEditModel();
+            if ($model->isRegistration()) {
+				$model->set($name, null, null);
+			}
+
+            if ($model->isSubmit()) {
+				$template();
+				$value = $model[$name];
+				$model[$name] = function() use ($value) { 
+					if (is_callable($value)) {
+						$value = $value();
+					}
+
+					return strtoupper($value); 
+				};
+            }
+
+            if ($model->isRender()) {
+                return $template();
+            }
+        }
+
+        public function toLowerValue($template, $name) {
+            $model = parent::getEditModel();
+            if ($model->isRegistration()) {
+				$model->set($name, null, null);
+			}
+
+            if ($model->isSubmit()) {
+				$template();
+				$value = $model[$name];
+				$model[$name] = function() use ($value) { 
+					if (is_callable($value)) {
+						$value = $value();
+					}
+
+					return strtolower($value); 
+				};
             }
 
             if ($model->isRender()) {
