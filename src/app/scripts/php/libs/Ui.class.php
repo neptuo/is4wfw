@@ -692,6 +692,29 @@
             }
         }
 
+        public function toUrlValue($template, $name, $toLower = false) {
+            $model = parent::getEditModel();
+            if ($model->isRegistration()) {
+				$model->set($name, null, null);
+			}
+
+            if ($model->isSubmit()) {
+				$template();
+				$value = $model[$name];
+				$model[$name] = function() use ($value, $toLower) { 
+					if (is_callable($value)) {
+						$value = $value();
+					}
+
+					return UrlUtils::toValidUrl($value, true, $toLower); 
+				};
+            }
+
+            if ($model->isRender()) {
+                return $template();
+            }
+        }
+
         public function defaultValueWithoutEditor($name, $format) {
 			$model = parent::getEditModel();
             if ($model->isRegistration()) {
