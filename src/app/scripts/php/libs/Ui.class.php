@@ -522,6 +522,10 @@
 			return self::inputbox("password", $name, $nameIndex, $default, $params);
 		}
 
+		public function rangebox($name, $nameIndex = -1, $default = "", $params = array()) {
+			return self::inputbox("range", $name, $nameIndex, $default, $params);
+		}
+
 		public function filebox($name, $isMulti = false, $params = array()) {
 			$model = parent::getEditModel();
 

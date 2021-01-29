@@ -386,7 +386,7 @@
     <anyAttribute />
     <comment>
       Vygeneruje input pro zadání textu.
-      Všechny ostatní atributy jsou předány HTML select elementu.
+      Všechny ostatní atributy jsou předány HTML input elementu.
     </comment>
   </tag>
   <tag>
@@ -410,7 +410,31 @@
     <anyAttribute />
     <comment>
       Vygeneruje input pro zadání hesla.
-      Všechny ostatní atributy jsou předány HTML select elementu.
+      Všechny ostatní atributy jsou předány HTML input elementu (standartní min, max, step atd).
+    </comment>
+  </tag>
+  <tag>
+    <name>rangebox</name>
+    <function>rangebox</function>
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název fieldu, která se má nastavovat.</comment>
+    </attribute>
+    <attribute>
+      <name>nameIndex</name>
+      <type>number</type>
+      <default>-1</default>
+      <comment>Index, pokud je "name" typu pole.</comment>
+    </attribute>
+    <attribute>
+      <name>default</name>
+      <comment>Výchozí hodnota.</comment>
+    </attribute>
+    <anyAttribute />
+    <comment>
+      Vygeneruje input pro výběr z rozmězí.
+      Všechny ostatní atributy jsou předány HTML input elementu.
     </comment>
   </tag>
   <tag>
