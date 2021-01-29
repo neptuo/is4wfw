@@ -8,9 +8,9 @@
 <v:title value="is4wfw" />
 <login:init group="web-admins" />
 
-<bs:container fluid="true" class="is4wfw">
+<bs:container class="is4wfw">
     <bs:row vertical="center" class="justify-content-center">
-        <bs:column small="8" medium="4" >
+        <bs:column small="8" medium="6" large="4" >
             <bs:card header="is4wfw">
                 <edit:form submit="login">
                     <web:condition when="edit:save">

@@ -4,15 +4,11 @@ html, body {
 }
 
 body {
-    background: #E5E5E5;
+    background-color: #ddd !important;
 }
 
-.is4wfw.container-fluid, .is4wfw .row {
+.is4wfw.container, .is4wfw .row {
     height: 100%;
-}
-
-.is4wfw {
-    background: #ddd;
 }
 
 .is4wfw .card {
