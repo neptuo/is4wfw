@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+  <taglib>
+  <name>Paging library</name>
+  <classname>Paging</classname>
+  <classpath>php.libs</classpath>
+  <count>*</count>
+  <comment>
+    Knihovna pro generování odkazů na stránkované seznamy.
+  </comment>
+  <fulltag>
+    <name>container</name>
+    <function>container</function>
+    <attribute>
+      <name>size</name>
+      <type>number</type>
+      <required />
+      <comment>Velikost jedné stránky.</comment>
+    </attribute>
+    <attribute>
+      <name>number</name>
+      <comment>Aktuální číslo (od 1) stránky.</comment>
+    </attribute>
+    <attribute>
+      <name>index</name>
+      <comment>Aktuální index (od 0) stránky.</comment>
+    </attribute>
+    <comment>
+      Nastaví kontejner pro stránkování. Jeden z atributů "number" nebo "index" je povinný.
+      Pokud nebude vyplněný, počítá se s první stránkou.
+    </comment>
+  </fulltag>
+  <property>
+    <name>container</name>
+    <getFunction>getContainer</getFunction>
+    <comment>
+      Vrací kontejner pro kompatibilní stránkovaný seznamový tag.
+    </comment>
+  </property>
+  <property>
+    <name>list</name>
+    <getFunction>getList</getFunction>
+    <comment>
+      Vrací list model pro průchod forEachem.
+      V průchodu jsou dostupné vlastnosti "index" a "number".
+    </comment>
+  </property>
+  <property>
+    <name>totalCount</name>
+    <getFunction>getTotalCount</getFunction>
+    <comment>
+      Vrací celkový počet položek (až po nastavení od seznamového tagu).
+    </comment>
+  </property>
+  <property>
+    <name>currentNumber</name>
+    <getFunction>getCurrentNumber</getFunction>
+    <comment>
+      Vrací číslo aktuální stránky (právě zobrazené).
+    </comment>
+  </property>
+  <property>
+    <name>currentIndex</name>
+    <getFunction>getCurrentIndex</getFunction>
+    <comment>
+      Vrací index aktuální stránky (právě zobrazené).
+    </comment>
+  </property>
+  <property>
+    <name>previousNumber</name>
+    <getFunction>getPreviousNumber</getFunction>
+    <comment>
+      Vrací číslo předchozí stránky.
+    </comment>
+  </property>
+  <property>
+    <name>previousIndex</name>
+    <getFunction>getPreviousIndex</getFunction>
+    <comment>
+      Vrací index předchozí stránky.
+    </comment>
+  </property>
+  <property>
+    <name>nextNumber</name>
+    <getFunction>getNextNumber</getFunction>
+    <comment>
+      Vrací číslo následující stránky.
+    </comment>
+  </property>
+  <property>
+    <name>nextIndex</name>
+    <getFunction>getNextIndex</getFunction>
+    <comment>
+      Vrací index následující stránky.
+    </comment>
+  </property>
+  <property>
+    <name>number</name>
+    <getFunction>getNumber</getFunction>
+    <comment>
+      Vrací číslo aktuální stránky uvnitř "paging:list".
+    </comment>
+  </property>
+  <property>
+    <name>index</name>
+    <getFunction>getIndex</getFunction>
+    <comment>
+      Vrací index aktuální stránky uvnitř "paging:list".
+    </comment>
+  </property>
+</taglib>
+

@@ -497,6 +497,7 @@
             "php.libs.Login",
             "php.libs.Menu",
             "php.libs.Page",
+            "php.libs.Paging",
             "php.libs.PhpRuntime",
             "php.libs.Post",
             "php.libs.QueryString",

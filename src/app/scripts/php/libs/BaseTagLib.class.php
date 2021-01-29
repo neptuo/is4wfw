@@ -11,6 +11,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/FilterModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/SortModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/PagingModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/MissingEditModelException.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ParameterException.class.php");
