@@ -79,19 +79,25 @@
             return substr($url, 0, $queryIndex);
         }
 
-        public static function toValidUrl($value, $allowSlash = true) {
-            $value = str_replace(' - ', '-', $value);
+        public static function toValidUrl($value, $allowSlash = true, $toLower = false) {
+            require_once("StringAccentUtils.class.php");
 
-            $escapeChars = array("ě" => "e", "é" => "e", "ř" => "r", "ť" => "t", "ý" => "y", "ú" => "u", "ů" => "u", "í" => "i", "ó" => "o", "á" => "a", "š" => "s", "ď" => "d", "ž" => "z", "č" => "c", "ň" => "n", "Ě" => "E", "É" => "E", "Ř" => "R", "Ť" => "T", "Ý" => "Y", "Ú" => "U", "Ů" => "U", "Í" => "I", "Ó" => "O", "Á" => "A", "Š" => "S", "Ď" => "D", "Ž" => "Z", "Č" => "C", "Ň" => "N", " " => '-', "\"" => '-', "'" => '-', "(" => '-', ")" => '-', "[" => '-', "]" => '-', "{" => '-', "}" => '-', '&' => '-');
-            
-            if(strpos($value, "http") !== 0) {
-                $escapeChars["."] = "-";
+            $value = StringAccentUtils::unaccent($value);
+
+            if (!$allowSlash) {
+                $value = strtr($value, ["/" => "-"]);
             }
-            
-            $value = strtr($value, $escapeChars);
-            
-            if(!$allowSlash) {
-                $value = strtr($value, array("/" => "-"));
+
+            $value = preg_replace("/[^A-Za-z0-9\/_-]/", "-", $value);
+            $value = preg_replace("/[-]+/", "-", $value);
+            $value = trim($value, "-");
+
+            if ($allowSlash) {
+                $value = strtr($value, ["-/-" => "/", "-/" => "/", "/-" => "/"]);
+            }
+
+            if ($toLower) {
+                $value = strtolower($value);
             }
             
             return $value;
