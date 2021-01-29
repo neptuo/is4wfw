@@ -525,7 +525,7 @@
             return self::peekListModel();
         }
 
-        public function getList($template, $name, $filter = array(), $orderBy = array()) {
+        public function getList($template, $name, $filter = array(), $orderBy = array(), $paging = null) {
             $tableName = self::ensureTableName($name);
 
             $model = new ListModel();
@@ -588,7 +588,18 @@
                 $tableName = array("table" => $tableName, "alias" => "_ce");
             }
 
-            $sql = self::sql()->select($tableName, $fields, $filter, $orderBy);
+            $count = null;
+            $offset = null;
+            if ($paging instanceof PagingModel) {
+                $sql = self::sql()->count($tableName, $filter);
+                $totalCount = self::dataAccess()->fetchScalar($sql);
+                $paging->setTotalCount($totalCount);
+
+                $count = $paging->getSize();
+                $offset = $paging->getOffset();
+            }
+
+            $sql = self::sql()->select($tableName, $fields, $filter, $orderBy, $count, $offset);
             $data = self::dataAccess()->fetchAll($sql);
 
             $model->render();

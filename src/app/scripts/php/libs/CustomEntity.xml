@@ -143,6 +143,10 @@
       <prefix />
       <comment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</comment>
     </attribute>
+    <attribute>
+      <name>paging</name>
+      <comment>Nastavení stránkování pomocí knihovny "Paging".</comment>
+    </attribute>
     <comment>
       Vypíše seznam dat z entity "name".
       List model se nastaví do "ce:list", vypisovat pak lze pomocí "ce:*" (atribut) nebo "ce:_" (celá položka).
