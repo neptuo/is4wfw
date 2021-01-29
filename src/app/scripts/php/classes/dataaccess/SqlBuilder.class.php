@@ -148,7 +148,7 @@
             return $sql;
         }
 
-        public function select($tableName, $fields, $filter = array(), $orderBy = array()) {
+        public function select($tableName, $fields, $filter = array(), $orderBy = array(), $count = null, $offset = null) {
             $condition = self::condition($filter, "AND ");
             $condition = self::appendWhere($condition);
             $order = self::orderBy($orderBy);
@@ -213,7 +213,17 @@
                 $joins = "";
             }
 
-            $sql = "SELECT $columns FROM $tableName$joins$condition$order;";
+            $limit = "";
+            if ($count != null) {
+                $limit = " LIMIT ";
+                if ($offset !== null) {
+                    $limit .= "$offset, ";
+                }
+
+                $limit .= "$count";
+            }
+
+            $sql = "SELECT $columns FROM $tableName$joins$condition$order$limit;";
             return $sql;
         }
 
