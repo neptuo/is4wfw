@@ -327,6 +327,48 @@
 		public function getFieldValidatorCssClass() {
 			return $this->fieldValidatorCssClass;
 		}
+
+		public function paging($template, $size, $params = []) {
+			$params = $this->appendClass($params, "pagination");
+			
+			if ($size == "large") {
+				$params = $this->appendClass($params, "pagination-lg");
+			} else if ($size == "small") {
+				$params = $this->appendClass($params, "pagination-sm");
+			} else if (!empty($size)) {
+				$params = $this->appendClass($params, "pagination-$size");
+			}
+			
+			$attributes = parent::joinAttributes($params);
+			$content = $template();
+			return "<nav><ul$attributes>$content</ul></nav>";
+		}
+		
+		public function pageLink($text, $url, $isEnabled, $isActive, $aParams = [], $params = []) {
+			return $this->pageLinkFullTag(function() use ($text) { return $text; }, $url, $isEnabled, $isActive, $aParams, $params);
+		}
+
+		public function pageLinkFullTag($template, $url, $isEnabled, $isActive, $aParams = [], $params = []) {
+			$params = $this->appendClass($params, "page-item");
+			
+			if (!$isEnabled) {
+				$params = $this->appendClass($params, "disabled");
+				$url = "#";
+			}
+			
+			if ($isActive) {
+				$params = $this->appendClass($params, "active");
+			}
+			
+			$aParams = $this->appendClass($aParams, "page-link");
+			$aParams["href"] = $url;
+
+			$attributes = parent::joinAttributes($params);
+			$aAttributes = parent::joinAttributes($aParams);
+			
+			$content = $template();
+			return "<li$attributes><a$aAttributes>$content</a></li>";
+		}
 	}
 
 ?>

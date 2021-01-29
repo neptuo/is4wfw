@@ -376,4 +376,91 @@
       Vrací css třída uvnitř "fieldValidator" doplněnou o informaci, prvek validní.
     </comment>
   </property>
+  <fulltag>
+    <name>paging</name>
+    <function>paging</function>
+    <attribute>
+      <name>size</name>
+      <type>string</type>
+      <comment>Velikost tlačítek ("large" / "lg" nebo "small" / "sm" nebo cokoli).</comment>
+    </attribute>
+    <anyAttribute>
+      <comment>Atributy tag "li".</comment>
+    </anyAttribute>
+    <comment>
+      Stránkování.
+    </comment>
+  </fulltag>
+  <fulltag>
+    <name>pageLink</name>
+    <function>pageLinkFullTag</function>
+    <attribute>
+      <name>url</name>
+      <type>string</type>
+      <required />
+      <comment>URL adresa odkazu.</comment>
+    </attribute>
+    <attribute>
+      <name>isEnabled</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda je odkaz povolený.</comment>
+    </attribute>
+    <attribute>
+      <name>isActive</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda je tato stránka právě aktuální.</comment>
+    </attribute>
+    <attribute>
+      <name>a</name>
+      <prefix />
+      <comment>Atributy tag "a".</comment>
+    </attribute>
+    <anyAttribute>
+      <comment>Atributy tag "li".</comment>
+    </anyAttribute>
+    <comment>
+      Jedna položka ze stránkování.
+    </comment>
+  </fulltag>
+  <tag>
+    <name>pageLink</name>
+    <function>pageLink</function>
+    <attribute>
+      <name>text</name>
+      <type>string</type>
+      <required />
+      <comment>Text odkazu.</comment>
+    </attribute>
+    <attribute>
+      <name>url</name>
+      <type>string</type>
+      <required />
+      <comment>URL adresa odkazu.</comment>
+    </attribute>
+    <attribute>
+      <name>isEnabled</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda je odkaz povolený.</comment>
+    </attribute>
+    <attribute>
+      <name>isActive</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda je tato stránka právě aktuální.</comment>
+    </attribute>
+    <attribute>
+      <name>a</name>
+      <prefix />
+      <comment>Atributy tag "a".</comment>
+    </attribute>
+    <anyAttribute>
+      <comment>Atributy tag "li".</comment>
+    </anyAttribute>
+    <comment>
+      Jedna položka ze stránkování.
+    </comment>
+  </tag>
 </taglib>
