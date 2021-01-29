@@ -272,7 +272,7 @@ class DataAccess {
      *  @param  printOutput     			shows return from database through print_r function
      *  @param  notExecuteQuery 			if true, doesn't execute query
      *  @param	forceImmediateOutput  if previsou 2 are true, it immediatly output query & result
-     *  @return returns all rows fetched by database
+     *  @return array all rows fetched by database
      *
      */                   
     public function fetchSingle($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
@@ -282,7 +282,13 @@ class DataAccess {
     	} else {
     		return array();
     	}
-    }
+	}
+	
+	public function fetchScalar($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
+		$data = $this->fetchSingle($query, $showQuery, $printOutput, $forceImmediateOutput, $notExecuteQuery);
+		$key = array_key_first($data);
+		return $data[$key];
+	}
   
 	
 	private function tryToProcessError($query) {
