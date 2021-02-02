@@ -52,13 +52,12 @@ abstract class AbstractDao {
 		$fields = $this->getFields();
 		$values = $object;
 		for($i = 0; $i < $count; $i++) {
-			if($fields[$i] != $this->getIdField()) {
-				$set = $set . "`" . $fields[$i] . "` = '" . $this->dataAccess->escape($values[$fields[$i]]);
-				if ($i == $count - 1){
-					$set = $set . "'";
-				} else {
-					$set = $set . "', ";
+			if($fields[$i] != $this->getIdField() && array_key_exists($fields[$i], $object)) {
+				if ($set != '') {
+					$set = $set . ", ";
 				}
+
+				$set = $set . "`" . $fields[$i] . "` = '" . $this->dataAccess->escape($values[$fields[$i]]) . "'";
 			}
 		}
 		$param = array($this->getDatabase(), $this->getTableName(), $set, $this->getIdField(), $this->dataAccess->escape($object[$this->getIdField()]));
