@@ -43,8 +43,8 @@ class FileDao extends AbstractDao {
 		return parent::getList($select);
 	}
 	
-	public function getImagesFromDirectory($dirId, $pageIndex = false, $limit = false) {
-		$select = Select::factory($this->dataAccess())->where('dir_id', '=', $dirId)->conjunctIn('type', array(WEB_TYPE_JPG, WEB_TYPE_PNG, WEB_TYPE_GIF))->orderBy('name');
+	public function getImagesFromDirectory($dirId, $oderBy = "name", $pageIndex = false, $limit = false) {
+		$select = Select::factory($this->dataAccess())->where('dir_id', '=', $dirId)->conjunctIn('type', array(WEB_TYPE_JPG, WEB_TYPE_PNG, WEB_TYPE_GIF))->orderBy([$oderBy]);
 		$select = $this->applyLimit($select, $pageIndex, $limit);
 		return parent::getList($select);
 	}

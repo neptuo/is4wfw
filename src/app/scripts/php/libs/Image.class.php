@@ -41,8 +41,8 @@
 		}
 		
 		//C-tag
-		public function directoryList($template, $id, $pageIndex = false, $limit = false, $noDataMessage = false, $noDataImageId = false) {
-			$images = parent::dao('File')->getImagesFromDirectory($id, $pageIndex, $limit);
+		public function directoryList($template, $id, $pageIndex = false, $limit = false, $noDataMessage = false, $noDataImageId = false, $orderBy = "name") {
+			$images = parent::dao('File')->getImagesFromDirectory($id, $orderBy, $pageIndex, $limit);
 			$return = '';
 
 			if (count($images) == 0) {

@@ -26,6 +26,12 @@
     <attribute>
       <name>noDataImageId</name>
     </attribute>
+    <attribute>
+      <name>orderBy</name>
+      <type>string</type>
+      <default>name</default>
+      <comment>Podle čeho se mají soubory seřadit.</comment>
+    </attribute>
     <comment>
       Zobrazí seznam obrázků ze složky "id" dle šablony ze svého těla.
       Pokud je vyplněný 'noDataImageId', bude se chovat jako kdyby složka obsahovala jeden soubor, práve s tím id.
