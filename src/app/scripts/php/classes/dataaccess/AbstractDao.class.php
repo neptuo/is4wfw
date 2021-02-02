@@ -130,33 +130,36 @@ abstract class AbstractDao {
 	}
 	
 	public function insert($data) {
-		$sql = self::insertSql($data);
-		
-		$this->dataAccess->transaction();
-		$this->dataAccess->execute($sql);
-		$this->dataAccess->commit();
+		$sql = $this->insertSql($data);
+
+		$this->dataAccess->transaction(function() use ($sql) {
+			$this->dataAccess->execute($sql);
+		});
+
 		return $this->dataAccess->getErrorCode();
 	}
 	
 	public function update($data) {
-		$sql = self::updateSql($data);
+		$sql = $this->updateSql($data);
 		
-		$this->dataAccess->transaction();
-		$this->dataAccess->execute($sql);
-		$this->dataAccess->commit();
+		$this->dataAccess->transaction(function() use ($sql) {
+			$this->dataAccess->execute($sql);
+		});
+
 		return $this->dataAccess->getErrorCode();
 	}
 	
 	public function delete($data) {
-		if(is_array($data)) {
+		if (is_array($data)) {
 			$data = $data[$this->getIdField()];
 		}
 	
-		$sql = self::deleteSql($data);
-		
-		$this->dataAccess->transaction();
-		$this->dataAccess->execute($sql);
-		$this->dataAccess->commit();
+		$sql = $this->deleteSql($data);
+
+		$this->dataAccess->transaction(function() use ($sql) {
+			$this->dataAccess->execute($sql);
+		});
+
 		return $this->dataAccess->getErrorCode();
 	}
 	

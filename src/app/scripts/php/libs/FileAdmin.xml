@@ -65,6 +65,48 @@
       Položky jsou rozděleny na složky a soubory.
     </comment>
   </fulltag>
+  <fulltag>
+    <name>fileSwapOrder</name>
+    <function>fileSwapOrder</function>
+    <comment>
+      Prohodí pořadí souborů s "id1" a "id2". 
+      Šablona se spustí, pokud se prohození podaří.
+    </comment>
+    <lookless />
+    <attribute>
+      <name>id1</name>
+	    <type>number</type>
+      <required />
+      <comment>Id prvního souboru.</comment>
+    </attribute>
+    <attribute>
+      <name>id2</name>
+	    <type>number</type>
+      <required />
+      <comment>Id druhého souboru.</comment>
+    </attribute>
+  </fulltag>
+  <fulltag>
+    <name>directorySwapOrder</name>
+    <function>directorySwapOrder</function>
+    <comment>
+      Prohodí pořadí složek s "id1" a "id2". 
+      Šablona se spustí, pokud se prohození podaří.
+    </comment>
+    <lookless />
+    <attribute>
+      <name>id1</name>
+	    <type>number</type>
+      <required />
+      <comment>Id první složky.</comment>
+    </attribute>
+    <attribute>
+      <name>id2</name>
+	    <type>number</type>
+      <required />
+      <comment>Id druhé složky.</comment>
+    </attribute>
+  </fulltag>
   <property>
     <name>browserList</name>
     <getFunction>getFileBrowserListData</getFunction>

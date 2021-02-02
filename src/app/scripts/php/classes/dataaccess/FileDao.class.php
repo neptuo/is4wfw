@@ -39,13 +39,13 @@ class FileDao extends AbstractDao {
 			}
 		}
 		
-		$select = self::applyLimit($select->orderBy([$order]), $pageIndex, $limit);
+		$select = $this->applyLimit($select->orderBy([$order]), $pageIndex, $limit);
 		return parent::getList($select);
 	}
 	
 	public function getImagesFromDirectory($dirId, $pageIndex = false, $limit = false) {
-		$select = Select::factory(self::dataAccess())->where('dir_id', '=', $dirId)->conjunctIn('type', array(WEB_TYPE_JPG, WEB_TYPE_PNG, WEB_TYPE_GIF))->orderBy('name');
-		$select = self::applyLimit($select, $pageIndex, $limit);
+		$select = Select::factory($this->dataAccess())->where('dir_id', '=', $dirId)->conjunctIn('type', array(WEB_TYPE_JPG, WEB_TYPE_PNG, WEB_TYPE_GIF))->orderBy('name');
+		$select = $this->applyLimit($select, $pageIndex, $limit);
 		return parent::getList($select);
 	}
 
@@ -64,19 +64,18 @@ class FileDao extends AbstractDao {
 
 	public function insert($data) {
 		$sql = $this->insertSql($data);
-		
-		$this->dataAccess->transaction();
-		
-		$this->dataAccess->execute($sql);
-		$id = $this->dataAccess->getLastId();
-		if (empty($id)) {
-			throw new Exception("Missing inserted id while processing new file.");
-		}
 
-		$sql = "UPDATE `" . $this->getTableName() . "` SET `order` = `id` WHERE `" . $this->getIdField() . "` = " . $this->dataAccess->escape($id) . ";";
-		$this->dataAccess->execute($sql);
+		$this->dataAccess->transaction(function() use ($sql) {
+			$this->dataAccess->execute($sql);
+			$id = $this->dataAccess->getLastId();
+			if (empty($id)) {
+				throw new Exception("Missing inserted id while processing new file.");
+			}
 
-		$this->dataAccess->commit();
+			$sql = "UPDATE `" . $this->getTableName() . "` SET `order` = `id` WHERE `" . $this->getIdField() . "` = " . $this->dataAccess->escape($id) . ";";
+			$this->dataAccess->execute($sql);
+		});
+
 		return $this->dataAccess->getErrorCode();
 	}
 }

@@ -357,6 +357,9 @@
         
         private $daos = array();
         
+        /**
+         * @return AbstractDao
+         */
         public function dao($name) {
             if(!array_key_exists($name, $this->daos)) {
                 require_once(APP_SCRIPTS_PHP_PATH . 'classes/dataaccess/' . $name . 'Dao.class.php');

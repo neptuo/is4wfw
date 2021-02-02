@@ -24,7 +24,7 @@ class DirectoryDao extends AbstractDao {
 	
 	
 	public function getFromDirectory($dirId, $order = "name") {
-		return parent::getList(Select::factory(self::dataAccess())->where('parent_id', '=', $dirId)->orderBy([$order]));
+		return parent::getList(Select::factory($this->dataAccess())->where('parent_id', '=', $dirId)->orderBy([$order]));
 	}
 	
 	public function getParentId($dirId) {
@@ -34,19 +34,18 @@ class DirectoryDao extends AbstractDao {
 
 	public function insert($data) {
 		$sql = $this->insertSql($data);
-		
-		$this->dataAccess->transaction();
-		
-		$this->dataAccess->execute($sql);
-		$id = $this->dataAccess->getLastId();
-		if (empty($id)) {
-			throw new Exception("Missing inserted id while processing new directory.");
-		}
 
-		$sql = "UPDATE `" . $this->getTableName() . "` SET `order` = `id` WHERE `" . $this->getIdField() . "` = " . $this->dataAccess->escape($id) . ";";
-		$this->dataAccess->execute($sql);
+		$this->dataAccess->transaction(function() use ($sql) {
+			$this->dataAccess->execute($sql);
+			$id = $this->dataAccess->getLastId();
+			if (empty($id)) {
+				throw new Exception("Missing inserted id while processing new directory.");
+			}
 
-		$this->dataAccess->commit();
+			$sql = "UPDATE `" . $this->getTableName() . "` SET `order` = `id` WHERE `" . $this->getIdField() . "` = " . $this->dataAccess->escape($id) . ";";
+			$this->dataAccess->execute($sql);
+		});
+
 		return $this->dataAccess->getErrorCode();
 	}
 }

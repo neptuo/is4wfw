@@ -1005,6 +1005,48 @@
 		public function getFileDirectUrlWithTemplate() {
 			return $this->fileDirectUrlWithTemplate;
 		}
+
+		public function fileSwapOrder(callable $template, $id1, $id2) {
+			if ($this->canUserFile($id1, WEB_R_WRITE) && $this->canUserFile($id2, WEB_R_WRITE)) {
+				$dao = parent::dao('File');
+				$file1 = $dao->get($id1);
+				$file2 = $dao->get($id2);
+
+				if ($file1["dir_id"] == $file2["dir_id"]) {
+					$order = $file1["order"];
+					$file1["order"] = $file2["order"];
+					$file2["order"] = $order;
+
+					$this->dataAccess()->transaction(function() use ($dao, $file1, $file2) {
+						$dao->update($file1);
+						$dao->update($file2);
+					});
+
+					$template();
+				}
+			}
+		}
+
+		public function directorySwapOrder(callable $template, $id1, $id2) {
+			if ($this->canUserDir($id1, WEB_R_WRITE) && $this->canUserDir($id2, WEB_R_WRITE)) {
+				$dao = parent::dao('Directory');
+				$dir1 = $dao->get($id1);
+				$dir2 = $dao->get($id2);
+
+				if ($dir1["parent_id"] == $dir2["parent_id"]) {
+					$order = $dir1["order"];
+					$dir1["order"] = $dir2["order"];
+					$dir2["order"] = $order;
+
+					$this->dataAccess()->transaction(function() use ($dao, $dir1, $dir2) {
+						$dao->update($dir1);
+						$dao->update($dir2);
+					});
+
+					$template();
+				}
+			}
+		}
 	}
 
 	function CompareFileImport($a, $b)
