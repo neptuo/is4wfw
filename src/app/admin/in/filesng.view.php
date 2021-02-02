@@ -4,6 +4,12 @@
 		<web:condition when="post:new-import">
 			<fa:importFileSystem dirId="post:dir-id" />
 		</web:condition>
+		<web:condition when="post:file-swap-order">
+			<fa:fileSwapOrder id1="post:file1-id" id2="post:file2-id" />
+		</web:condition>
+		<web:condition when="post:dir-swap-order">
+			<fa:directorySwapOrder id1="post:dir1-id" id2="post:dir2-id" />
+		</web:condition>
 
 		<fa:upload />
 		<fa:directoryEditor />
@@ -39,8 +45,11 @@
 							</web:condition>
 						</ui:columnTemplate>
 
-						<ui:columnTemplate th-class="w40 th-edit">
+						<ui:columnTemplate th-class="w80 th-edit" td-class="data-item" td-data-item-id="fa:browserId" td-data-item-type="fa:browserType">
 							<web:condition when="fa:browserId" is="0" isInverted="true">
+								<span class="action-placeholder">
+
+								</span>
 								<ui:form>
 									<input type="hidden" name="dir-id" value="<web:getProperty name="post:dir-id" />" />
 									<web:condition when="fa:browserType" is="0">
@@ -103,3 +112,45 @@
 
 	</loc:use>
 </v:template>
+
+<js:script placement="tail">
+	function prepareForm(dirId, type, id1, id2, direction) {
+		var html = '<form method="post">';
+		html += '<input type="hidden" name="dir-id" value="' + dirId + '" />';
+		html += '<input type="image" src="/images/arro_' + (direction[0] + direction[1]) + '.png" name="' + type + '-swap-order" value="swap" title="Move ' + direction + '" />';
+		html += '<input type="hidden" name="' + type + '-swap-order" value="swap" />';
+		html += '<input type="hidden" name="' + type + '1-id" value="' + id1 + '" />';
+		html += '<input type="hidden" name="' + type + '2-id" value="' + id2 + '" />';
+		html += '</form>';
+		return html;
+	}
+
+	function prepareForms($items, type) {
+		$items.each(function(i) {
+			var $item = $(this);
+			var $placeholder = $item.find(".action-placeholder");
+
+			var dirId = <web:getProperty name="post:dir-id" />;
+			var html = '';
+			var cssClass = [];
+			if (i > 0) {
+				html += prepareForm(dirId, type, $($items[i - 1]).attr("data-item-id"), $item.attr("data-item-id"), 'up');
+				cssClass.push("has-prev");
+			}
+			if (i < $items.length - 1) {
+				html += prepareForm(dirId, type, $item.attr("data-item-id"), $($items[i + 1]).attr("data-item-id"), 'down');
+				cssClass.push("has-next");
+			}
+
+			cssClass = cssClass.join(" ");
+			$placeholder.html(html).addClass(cssClass);
+			
+		});
+	}
+
+	var $dataItems = $(".data-item");
+	var $directories = $dataItems.filter("[data-item-type=0]:not([data-item-id=0])");
+	var $files = $dataItems.filter("[data-item-type]:not([data-item-type=0])");
+	prepareForms($directories, "dir");
+	prepareForms($files, "file");
+</js:script>

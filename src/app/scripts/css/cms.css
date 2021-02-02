@@ -197,6 +197,14 @@ table.standart {
     height: 27px;
 }
 
+.action-placeholder:not(.has-prev) input[type=image] {
+    margin-left: 16px;
+}
+
+.action-placeholder:not(.has-next) input[type=image] {
+    margin-right: 16px;
+}
+
 .match-stats-name {
     width: 150px;
 }
