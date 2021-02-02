@@ -1,5 +1,5 @@
 <v:template src="~/templates/floorball-template.view">
-  <sport:editStatsForm />
-  <sport:editMatchForm />
-	<sport:editMatches />
+  <s:editStatsForm />
+  <s:editMatchForm />
+	<s:editMatches />
 </v:template>

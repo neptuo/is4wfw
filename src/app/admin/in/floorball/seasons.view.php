@@ -1,4 +1,4 @@
 <v:template src="~/templates/floorball-template.view">
-  <sport:editSeasonForm />
-	<sport:editSeasons />
+  <s:editSeasonForm />
+	<s:editSeasons />
 </v:template>
