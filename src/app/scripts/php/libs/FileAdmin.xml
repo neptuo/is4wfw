@@ -10,6 +10,7 @@
   <tag>
     <name>browser</name>
     <function>fileBrowser</function>
+    <obsolete>Použijte šablonový "fa:browser".</obsolete>
     <attribute>
       <name>dirId</name>
 	    <default>0</default>
@@ -21,6 +22,12 @@
     <attribute>
       <name>useFrames</name>
 	    <default>true</default>
+    </attribute>
+    <attribute>
+      <name>orderBy</name>
+	    <type>string</type>
+      <default>name</default>
+      <comment>Položka, podle které se má řadit ("id", "name", "timestamp", "order").</comment>
     </attribute>
     <comment>
       Zobrazí browser souborovým systémem
@@ -45,6 +52,12 @@
       <name>parentName</name>
       <type>string</type>
       <comment>Pokud je vyplněný, pak bude v seznamu zahrnut i odkaz na rodičovskou složku.</comment>
+    </attribute>
+    <attribute>
+      <name>orderBy</name>
+	    <type>string</type>
+      <default>name</default>
+      <comment>Položka, podle které se má řadit ("id", "name", "timestamp", "order").</comment>
     </attribute>
     <comment>
       Vypíše seznam dat ze složky "dirId".
@@ -101,6 +114,72 @@
       Vrací časové razítko poslední změny položky uvnitř párového "fa:browser".
     </comment>
   </property>
+  <fulltag>
+    <name>directoryPath</name>
+    <function>directoryPathWithTemplate</function>
+    <attribute>
+      <name>dirId</name>
+      <type>number</type>
+      <required />
+      <comment>Id složky, jejíž cesta se má sestavit.</comment>
+    </attribute>
+    <attribute>
+      <name>display</name>
+      <type>string</type>
+      <default>name</default>
+      <comment>Co ze složky se má použít pro zobrazení ("name", "id", "url")</comment>
+    </attribute>
+    <attribute>
+      <name>separator</name>
+      <type>string</type>
+      <default>/</default>
+      <comment>Oddělovač jednotlivých složek</comment>
+    </attribute>
+    <comment>
+      Vrací celou veřejnou cestu ke složky. Uvnitř šablony je nastavena property "fa:directoryPath".
+    </comment>
+  </fulltag>
+  <property>
+    <name>directoryPath</name>
+    <getFunction>getDirectoryPathWithTemplate</getFunction>
+    <comment>
+      Vrací hodnotu uvnitř "fa:directoryPath".
+    </comment>
+  </property>
+  <fulltag>
+    <name>fileDirectUrl</name>
+    <function>fileDirectUrlWithTemplate</function>
+    <attribute>
+      <name>fileId</name>
+      <type>number</type>
+      <required />
+      <comment>Id souboru, jehož přímý odkaz se má vytvořit.</comment>
+    </attribute>
+    <comment>
+      Vrací celou URL k souboru dle "fileId", kde ukazuje přímo do filesystému. Uvnitř šablony je nastavena property "fa:fileDirectUrl".
+    </comment>
+  </fulltag>
+  <property>
+    <name>fileDirectUrl</name>
+    <getFunction>getFileDirectUrlWithTemplate</getFunction>
+    <comment>
+      Vrací hodnotu uvnitř "fa:fileDirectUrl".
+    </comment>
+  </property>
+  <tag>
+    <name>importFileSystem</name>
+    <function>importFileSystem</function>
+    <lookless />
+    <attribute>
+      <name>dirId</name>
+      <type>number</type>
+      <required />
+      <comment>Id složky, jejíž obsah se má importovat.</comment>
+    </attribute>
+    <comment>
+      Naimportuje obsah ve filesystemu uvnitř složky "dirId" do databázové strunktury a převede názvy.
+    </comment>
+  </tag>
   <tag>
     <name>upload</name>
     <function>fileUpload</function>

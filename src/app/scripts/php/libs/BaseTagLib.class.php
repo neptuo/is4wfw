@@ -225,6 +225,9 @@
             return $jsObject;
         }
 
+        /**
+         * @return DataAccess
+         */
         public function dataAccess() {
             return self::db()->getDataAccess();
         }

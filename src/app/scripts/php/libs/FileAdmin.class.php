@@ -100,7 +100,7 @@
         *  @return   physical path to dir in fs
         *
         */
-		private function getDirectoryPath($dirId, $itemPath = '') {
+		private function getDirectoryPath($dirId, $itemPath = '', $separator = '/') {
 			$path = "";
 			if ($itemPath == '') {
 				$itemPath = FileAdmin::$FileSystemItemPath;
@@ -113,7 +113,7 @@
 					parent::db()->getDataAccess()->enableCache();
 					if (count($dirInfo) == 1) {
 						$dirId = $dirInfo[0]['parent_id'];
-						$path = $dirInfo[0][$itemPath] . '/' . $path;
+						$path = $dirInfo[0][$itemPath] . $separator . $path;
 					} else {
 						self::ThrowMissingDirectory();
 					}
@@ -134,6 +134,12 @@
 		public function getPhysicalPathToFile($file) {
 			$path = self::getPhysicalPathTo($file['dir_id']);
 			$filePath = $path.$file[FileAdmin::$FileSystemItemPath].".".self::getFileExtension($file);
+			return $filePath;
+		}
+		
+		public function getPhysicalUrlToFile($file) {
+			$path = $this->getPhysicalUrlTo($file['dir_id']);
+			$filePath = $path.$file[FileAdmin::$FileSystemItemPath] . "." . self::getFileExtension($file);
 			return $filePath;
 		}
 		
@@ -251,7 +257,7 @@
 			}
 		}
 		
-		protected function importFileSystem($rootId, $readRights = null, $writeRights = null, $deleteRights = null) {
+		public function importFileSystem($rootId, $readRights = null, $writeRights = null, $deleteRights = null) {
 			if(!self::canUserDir($rootId, WEB_R_WRITE)) {
 				return parent::rb('permissiondenied');
 			}
@@ -365,7 +371,7 @@
 		}
 		
 		//C-tag
-		public function fileBrowser($dirId, $browsable, $useFrames) {
+		public function fileBrowser($dirId, $browsable, $useFrames, $orderBy = "name") {
 			$return = '';
 		
 			if($browsable) {
@@ -389,7 +395,7 @@
 				$return .= self::deleteDirectory($directoryId, true);
 			}
 
-			if($_POST['new-import'] == parent::rb('button.import')) {
+			if ($_POST['new-import'] == parent::rb('button.import')) {
 				$result = self::importFileSystem($dirId);
 				if($result != null) {
 					$return .= parent::getError($result);
@@ -403,8 +409,8 @@
 				$parentDir = array('id' => $dirId);
 			}
 			
-			$dirs = parent::dao('Directory')->getFromDirectory($dirId);
-			$files = parent::dao('File')->getFromDirectory($dirId);
+			$dirs = parent::dao('Directory')->getFromDirectory($dirId, $orderBy);
+			$files = parent::dao('File')->getFromDirectory($dirId, $orderBy);
 			$dataModel = array('files' => $files, 'dirs' => $dirs, 'parent' => $parentDir);
 			
 			if($useFrames) {
@@ -414,9 +420,9 @@
 			}
 		}
 
-		public function fileBrowserWithTemplate($template, $dirId, $grouped = true, $parentName = "") {
-			$dirs = parent::dao('Directory')->getFromDirectory($dirId);
-			$files = parent::dao('File')->getFromDirectory($dirId);
+		public function fileBrowserWithTemplate($template, $dirId, $grouped = true, $parentName = "", $orderBy = "name") {
+			$dirs = parent::dao('Directory')->getFromDirectory($dirId, $orderBy);
+			$files = parent::dao('File')->getFromDirectory($dirId, $orderBy);
 
 			$resultDirs = array();
 			foreach ($dirs as $key => $dir) {
@@ -959,6 +965,45 @@
 				//echo $oldPath.' => '.$newPath.'<br />';
 				rename($oldPath, $newPath);
 			}
+		}
+
+		private $directoryPathWithTemplate;
+
+		public function directoryPathWithTemplate(callable $template, $dirId, $display = "name", $separator = "/") {
+			$oldPath = $this->directoryPathWithTemplate;
+			
+			$this->directoryPathWithTemplate = $this->getDirectoryPath($dirId, $display, $separator);
+			$result = $template();
+
+			$this->directoryPathWithTemplate = $oldPath;
+			
+			return $result;
+		}
+
+		public function getDirectoryPathWithTemplate() {
+			return $this->directoryPathWithTemplate;
+		}
+
+		private $fileDirectUrlWithTemplate;
+
+		public function fileDirectUrlWithTemplate(callable $template, $fileId) {
+			$result = "";
+
+			if ($this->canUserFile($fileId, WEB_R_READ)) {
+				$oldPath = $this->fileDirectUrlWithTemplate;
+
+				$file = parent::dao('File')->get($fileId);
+				$this->fileDirectUrlWithTemplate = $this->getPhysicalUrlToFile($file);
+				$result = $template();
+
+				$this->fileDirectUrlWithTemplate = $oldPath;
+			}
+
+			return $result;
+		}
+
+		public function getFileDirectUrlWithTemplate() {
+			return $this->fileDirectUrlWithTemplate;
 		}
 	}
 

@@ -1324,7 +1324,7 @@
 
             $return = '';
             
-            $files = parent::dao('File')->getFromDirectory($id, $type, $pageIndex, $limit);
+            $files = parent::dao('File')->getFromDirectory($id, "name", $type, $pageIndex, $limit);
             if (count($files) == 0) {
                 $return .= $noDataMessage;
             } else {
