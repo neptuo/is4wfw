@@ -75,4 +75,10 @@
     <script build="350">ALTER TABLE `user_log` ADD `token` TINYTEXT NULL AFTER `used_group`;</script>
     <script build="351">ALTER TABLE `user_log` CHANGE COLUMN `logout_timestamp` `logout_timestamp` int(11) NOT NULL DEFAULT 0;</script>
     <script build="352">INSERT INTO `group_perms`(`group_id`, `name`, `value`, `type`) values (1, 'CMS.Web.Search', 'true', 'bool');</script>
+    <script build="353">ALTER TABLE `file` ADD `order` INT NULL AFTER `timestamp`;</script>
+    <script build="354">UPDATE `file` SET `order` = `id`;</script>
+    <script build="355">ALTER TABLE `file` CHANGE `order` `order` INT NOT NULL;</script>
+    <script build="356">ALTER TABLE `directory` ADD `order` INT NULL AFTER `timestamp`;</script>
+    <script build="357">UPDATE `directory` SET `order` = `id`;</script>
+    <script build="358">ALTER TABLE `directory` CHANGE `order` `order` INT NOT NULL;</script>
 </autoupdate>
