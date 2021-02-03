@@ -658,7 +658,7 @@
                     $filter = $filter->toSql();
                 } else {
                     $filter[$resolver["columnName"]] = $value;
-                    $filter = parent::removeKeysWithEmptyValues($filter);
+                    $filter = ArrayUtils::removeKeysWithEmptyValues($filter);
                 }
 
                 $sql = parent::sql()->count($tableName, $filter);
