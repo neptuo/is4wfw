@@ -1880,28 +1880,28 @@
                         . '<tr class="file-tr">'
                         . '<th class="tf-id">' . $rb->get('tf.id') . ':</th>'
                         . '<th class="tf-name">' . $rb->get('tf.name') . ':</th>'
-                        . '<th class="tf-content">' . $rb->get('tf.content') . ':</th>'
                         . '<th class="tf-type">' . $rb->get('tf.type') . ':</th>'
+                        . '<th class="tf-content">' . $rb->get('tf.content') . ':</th>'
                         . '<th class="tf-action"></th>'
                         . '</tr>'
                         . '</thead>'
                         . '<tbody>';
                 foreach ($files as $file) {
                     $returnTmp .= ''
-                            . '<tr class="file-tr ' . (($n % 2) ? 'idle' : 'even') . '">'
-                            . '<td class="file-id">'
+                    . '<tr class="file-tr ' . (($n % 2) ? 'idle' : 'even') . '">'
+                        . '<td class="file-id">'
                             . $file['id']
-                            . '</td>'
-                            . '<td class="file-name">'
+                        . '</td>'
+                        . '<td class="file-name">'
                             . $file['name']
-                            . '</td>'
-                            . '<td class="file-content">'
-                            . '<div class="file-content-in"><div class="foo">' . substr($file['content'], 0, 130) . '</div></div>'
-                            . '</td>'
-                            . '<td class="file-type">'
+                        . '</td>'
+                        . '<td class="file-type">'
                             . $filesEx[$file['type']]
-                            . '</td>'
-                            . '<td>'
+                        . '</td>'
+                        . '<td class="file-content">'
+                            . '<div class="file-content-in"><div class="foo">' . substr($file['content'], 0, 130) . '</div></div>'
+                        . '</td>'
+                        . '<td>'
                             . (($editable) ? ''
                                     . '<form name="process-file1" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                     . '<input type="hidden" name="file-id" value="' . $file['id'] . '" />'
@@ -1913,8 +1913,8 @@
                                     . '<input type="hidden" name="delete-file" value="' . $rb->get('tf.delete') . '" />'
                                     . '<input class="confirm" type="image" src="~/images/page_del.png" name="delete-file" value="' . $rb->get('tf.delete') . '" title="' . $rb->get('tf.deletetitle') . ', id(' . $file['id'] . ')" />'
                                     . '</form>' : '')
-                            . '</td>'
-                            . '</tr>';
+                        . '</td>'
+                    . '</tr>';
                     $n++;
                 }
                 $returnTmp .= '</tbody></table>';
