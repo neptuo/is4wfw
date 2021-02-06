@@ -345,10 +345,10 @@
         }
 
         public function partialView($path) {
-            $keys = array_merge(["partialviews"], explode("/", $path));
+            $content = file_get_contents(APP_SCRIPTS_PATH . 'views/templates/'.$path.'.view.php');
+            $keys = array_merge(["partialviews"], explode("/", $path), [sha1($content)]);
             $template = $this->getParsedTemplate($keys);
             if ($template == null) {
-                $content = file_get_contents(APP_SCRIPTS_PATH . 'views/templates/'.$path.'.view.php');
                 $template = $this->parseTemplate($keys, $content);
             }
 
