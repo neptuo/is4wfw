@@ -41,6 +41,19 @@
                 <ui:textbox name="column-float-decimals" default="2" />
             </div>
         </div>
+        <div data-toggle="type-double">
+            <div class="gray-box">
+                <strong>Double</strong>
+            </div>
+            <div class="gray-box">
+                <label class="w90">Size:</label>
+                <ui:textbox name="column-float-size" default="16" />
+            </div>
+            <div class="gray-box">
+                <label class="w90">Decimals:</label>
+                <ui:textbox name="column-float-decimals" default="2" />
+            </div>
+        </div>
         <div data-toggle="type-varchar">
             <div class="gray-box">
                 <strong>Text (varchar)</strong>

@@ -287,6 +287,36 @@
                         }
                     ),
                     array(
+                        "key" => "double", 
+                        "name" => "Double", 
+                        "db" => "double",
+                        "db.formatter" => function($c) { 
+                            $size = (int)$c->size;
+                            $decimals = (int)$c->decimals;
+                            if ($size != null && $decimals != null) {
+                                return "double($size, $decimals)";
+                            }
+
+                            return "double";
+                        }, 
+                        "hasColumn" => true,
+                        "isLocalizable" => false,
+                        "fromUser" => function($value, $column) { 
+                            if ($column->required != true && $value == "") {
+                                return null;
+                            }
+
+                            return doubleval($value); 
+                        },
+                        "fromDb" => function($value) { 
+                            if ($value == "") {
+                                return null;
+                            }
+
+                            return doubleval($value); 
+                        }
+                    ),
+                    array(
                         "key" => "shorttext", 
                         "name" => "Short Text", 
                         "db" => "tinytext", 
