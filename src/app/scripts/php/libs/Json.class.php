@@ -165,6 +165,8 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
                 $value = [];
                 if ($this->output->isEmpty()) {
                     $wasEmpty = true;
+                } else if ($this->outputParentType == '') {
+                    throw new JsonOutputException("Multiple root elements.");
                 }
 
                 $this->output->push($value);
@@ -217,6 +219,8 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
                 $value = [];
                 if ($this->output->isEmpty()) {
                     $wasEmpty = true;
+                } else if ($this->outputParentType == '') {
+                    throw new JsonOutputException("Multiple root elements.");
                 }
                 
                 $this->output->push($value);
