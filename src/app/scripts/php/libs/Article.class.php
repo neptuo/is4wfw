@@ -1284,7 +1284,7 @@
 
                 //parent::db()->setMockMode(true);
                 if(strpos($articleContent['url'], '://') === false) {
-                    $articleContent['url'] = strtolower(UrlUtils::toValidUrl($articleContent['url'], false));
+                    $articleContent['url'] = UrlUtils::toValidUrl($articleContent['url']);
                 }
 
                 $idSql = '';
@@ -1707,7 +1707,7 @@
             if ($ok) {
                 if ($_POST['article-line-edit-submit'] == $rb->get('lines.save')) {
                     $name = $_POST['article-line-edit-name'];
-                    $url = strtolower(UrlUtils::toValidUrl(strlen($_POST['article-line-edit-url']) == 0 ? $name : $_POST['article-line-edit-url']));
+                    $url = UrlUtils::toValidUrl(strlen($_POST['article-line-edit-url']) == 0 ? $name : $_POST['article-line-edit-url']);
                     $parentDirectoryId = $_POST['article-line-edit-parentdirectoryid'];
                     $lineId = $_POST['article-line-edit-id'];
                     $read = $_POST['article-right-edit-groups-r'];
@@ -2008,7 +2008,7 @@
                     if (strlen($value) == 0 && $label['seturl'][$key] == 'on') {
                         $value = $label['name'][$key];
                     }
-                    $label['url'][$key] = strtolower(UrlUtils::toValidUrl($value));
+                    $label['url'][$key] = UrlUtils::toValidUrl($value);
                 }
                 
                 if (strlen($label['name']['null']) < 2) {

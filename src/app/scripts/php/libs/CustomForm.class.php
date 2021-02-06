@@ -1442,7 +1442,7 @@
                 $sql = 'select `id`, `'.$fieldName.'` from `cf_'.$formId.'`';
                 $data = parent::db()->fetchAll($sql);
                 foreach($data as $item) {
-                    if(UrlUtils::toValidUrl($item[$fieldName]) == $value) {
+                    if (UrlUtils::toValidUrl($item[$fieldName]) == $value) {
                         self::setRowId($item['id']);
                         return $value;
                     }

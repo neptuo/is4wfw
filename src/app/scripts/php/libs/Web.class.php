@@ -1173,7 +1173,7 @@
                     $diacont .= parent::debugFrame("Parser stats", "Count: $parserCount<br />Total time: $totalMeasure ms<br />Worst: $worstKey ($worstMeasure ms)", 'code');
                     $diacont .= $parsercont;
                 }
-                if (strlen($this->PageLog) != 0) {
+                if ($this->getDebugMode() && strlen($this->PageLog) != 0) {
                     $diacont .= parent::debugFrame('Page Log', $this->PageLog);
                 }
             }
@@ -1190,7 +1190,7 @@
             if ($this->Template == 'xml') {
                 $return = ''
                 . '<rssmm:response>'
-                    . ((strlen($this->PageLog) != 0) ? '<rssmm:log>' . $this->PageLog . '</rssmm:log>' : '')
+                    . (($this->getDebugMode() && strlen($this->PageLog) != 0) ? '<rssmm:log>' . $this->PageLog . '</rssmm:log>' : '')
                     . '<rssmm:head>'
                         . '<rssmm:title>' . $this->PageTitle . '</rssmm:title>'
                         . '<rssmm:keywords>' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo</rssmm:keywords>'

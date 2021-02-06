@@ -696,7 +696,7 @@
             }
         }
 
-        public function toUrlValue($template, $name, $toLower = false) {
+        public function toUrlValue($template, $name) {
             $model = parent::getEditModel();
             if ($model->isRegistration()) {
 				$model->set($name, null, null);
@@ -705,12 +705,12 @@
             if ($model->isSubmit()) {
 				$template();
 				$value = $model[$name];
-				$model[$name] = function() use ($value, $toLower) { 
+				$model[$name] = function() use ($value) { 
 					if (is_callable($value)) {
 						$value = $value();
 					}
 
-					return UrlUtils::toValidUrl($value, true, $toLower); 
+					return UrlUtils::toValidUrl($value); 
 				};
             }
 

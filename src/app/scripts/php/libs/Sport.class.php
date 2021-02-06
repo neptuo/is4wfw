@@ -746,9 +746,9 @@
                     $logo = $_POST['team-edit-logo'];
                     $season = $_POST['team-edit-season'];
                     $tables = $_POST['tables-list'];
-                    $url = trim(UrlUtils::toValidUrl($_POST['team-edit-url']));
+                    $url = UrlUtils::toValidUrl($_POST['team-edit-url']);
                     if ($url == '') {
-                        $url = strtolower(UrlUtils::toValidUrl($name));
+                        $url = UrlUtils::toValidUrl($name);
                     }
                     $urls = parent::db()->fetchAll('select `url` from `w_sport_team` where `url` = "' . $url . '" and `project_id` = ' . self::getProjectId() . ($teamId != '' ? ' and `id` != ' . $teamId : '') . ';');
                     if ($name != '' && count($urls) == 0) {
@@ -1180,7 +1180,7 @@
                     $updateType = $_POST['update-type'];
 
                     if ($player['url'] == '') {
-                        $player['url'] = strtolower(UrlUtils::toValidUrl($player['name'] . '-' . $player['surname']));
+                        $player['url'] = UrlUtils::toValidUrl($player['name'] . '-' . $player['surname']);
                     }
 
                     if (strlen(trim($player['name'])) == 0) {

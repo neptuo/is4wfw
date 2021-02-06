@@ -573,11 +573,6 @@
       <required />
       <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
     </attribute>
-    <attribute>
-      <name>toLower</name>
-      <type>bool</type>
-      <comment>Zda se má hodnota převést na lower case.</comment>
-    </attribute>
     <comment>
       Obaluje libovolný editační tag a hodnotu v něm ("name") transformuje na validní URL path string.
     </comment>

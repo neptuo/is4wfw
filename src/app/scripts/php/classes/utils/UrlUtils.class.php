@@ -79,7 +79,7 @@
             return substr($url, 0, $queryIndex);
         }
 
-        public static function toValidUrl($value, $allowSlash = true, $toLower = false) {
+        public static function toValidUrl($value, $allowSlash = false, $allowColon = false, $toLower = true) {
             require_once("StringAccentUtils.class.php");
 
             $value = StringAccentUtils::unaccent($value);
@@ -88,7 +88,7 @@
                 $value = strtr($value, ["/" => "-"]);
             }
 
-            $value = preg_replace("/[^A-Za-z0-9\/_-]/", "-", $value);
+            $value = preg_replace("/[^A-Za-z0-9\/_" . ($allowColon ? ":" : "") . "-]/", "-", $value);
             $value = preg_replace("/[-]+/", "-", $value);
             $value = trim($value, "-");
 

@@ -340,7 +340,7 @@
 					
 						$dataItem = array(
 							'name' => $entry, 
-							'url' => strtolower(UrlUtils::toValidUrl($entry)), 
+							'url' => UrlUtils::toValidUrl($entry), 
 							'parent_id' => $rootId, 
 							'timestamp' => time()
 						);
@@ -534,8 +534,8 @@
 		public function processFileUpload($dataItem, $fileTmpName, $readRights, $writeRights, $deleteRights) {
 			$new = $dataItem['id'] == '';
 			
-			if($dataItem['url'] == '') {
-				$dataItem['url'] = strtolower(UrlUtils::toValidUrl($dataItem['name']));
+			if ($dataItem['url'] == '') {
+				$dataItem['url'] = UrlUtils::toValidUrl($dataItem['name']);
 			}
 			
 			if($fileTmpName == '') {
@@ -807,8 +807,8 @@
 		protected function processDirectoryEdit($dataItem, $readRights, $writeRights, $deleteRights) {
 			$new = $dataItem['id'] == '';
 			
-			if($dataItem['url'] == '') {
-				$dataItem['url'] = strtolower(UrlUtils::toValidUrl($dataItem['name']));
+			if ($dataItem['url'] == '') {
+				$dataItem['url'] = UrlUtils::toValidUrl($dataItem['name']);
 			}
 			
 			if($new) {

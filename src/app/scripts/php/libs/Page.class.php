@@ -66,7 +66,7 @@
                 $parentId = $_POST['parent-id'];
                 $languageId = $_POST['language'];
                 $name = $_POST['edit-name'];
-                $href = UrlUtils::toValidUrl($_POST['edit-href']);
+                $href = UrlUtils::toValidUrl($_POST['edit-href'], true, true);
                 $inTitle = ($_POST['edit-in-title'] == "on") ? 1 : 0;
                 $visible = ($_POST['edit-visible'] == "on") ? 1 : 0;
                 $menu = ($_POST['edit-menu'] == "on") ? 1 : 0;
