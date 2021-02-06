@@ -81,4 +81,5 @@
     <script build="356">ALTER TABLE `directory` ADD `order` INT NULL AFTER `timestamp`;</script>
     <script build="357">UPDATE `directory` SET `order` = `id`;</script>
     <script build="358">ALTER TABLE `directory` CHANGE `order` `order` INT NOT NULL;</script>
+    <script build="359">ALTER TABLE `page_file` ADD `placement` TINYINT NOT NULL DEFAULT '0' AFTER `type`;</script>
 </autoupdate>

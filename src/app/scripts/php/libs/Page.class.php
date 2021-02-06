@@ -1697,6 +1697,10 @@
                     $fileTypesOpt .= '<option value="' . $key . '">' . $ext . '</option>';
                 }
 
+                $placementOptions = "";
+                $placementOptions .= '<option selected="selected" value="head">' . parent::rb()->get("tf.placement.head") . '</option>';
+                $placementOptions .= '<option value="tail">' . parent::rb()->get("tf.placement.tail") . '</option>';
+
                 $browsers['All'] = 1;
                 $browsers['IE6'] = 0;
                 $browsers['IE7'] = 0;
@@ -1705,38 +1709,49 @@
                 $browsers['Opera'] = 0;
                 $browsers['Safari'] = 0;
 
-                $return .= self::getFileUpdateForm(-1, '', '', $browsers, $fileTypesOpt);
+                $return .= $this->getFileUpdateForm(-1, '', '', $browsers, $fileTypesOpt, $placementOptions);
             }
 
             if ($_POST['save'] == $rb->get('tf.save') || $_POST['save'] == $rb->get('tf.saveandclose')) {
                 if (array_key_exists("file-id", $_POST)) {
                     $fileId = $_POST['file-id'];
                 }
-                $fileName = $_POST['file-name'];
-                $fileContent = $dbObject->escape(str_replace('&#126', '~', $_POST['file-content']));
-                $fileType = $_POST['file-type'];
-                $browser['all'] = (($_POST['browser-all'] == "on") ? 1 : 0);
-                $browser['msie6'] = (($_POST['browser-ie6'] == "on") ? 1 : 0);
-                $browser['msie7'] = (($_POST['browser-ie7'] == "on") ? 1 : 0);
-                $browser['msie8'] = (($_POST['browser-ie8'] == "on") ? 1 : 0);
-                $browser['firefox'] = (($_POST['browser-firefox'] == "on") ? 1 : 0);
-                $browser['safari'] = (($_POST['browser-safari'] == "on") ? 1 : 0);
-                $browser['opera'] = (($_POST['browser-opera'] == "on") ? 1 : 0);
+
+                $getBrowserValue = function($key) {
+                    return ($_POST[$key] == "on") ? 1 : 0;
+                };
+
+                $data = [
+                    "name" => $_POST['file-name'],
+                    "content" => str_replace('&#126', '~', $_POST['file-content']),
+                    "for_all" => $getBrowserValue('browser-all'),
+                    "for_msie6" => $getBrowserValue('browser-ie6'),
+                    "for_msie7" => $getBrowserValue('browser-ie7'),
+                    "for_msie8" => $getBrowserValue('browser-ie8'),
+                    "for_firefox" => $getBrowserValue('browser-firefox'),
+                    "for_opera" => $getBrowserValue('browser-opera'),
+                    "for_safari" => $getBrowserValue('browser-safari'),
+                    "type" => $_POST['file-type'],
+                    "placement" => $_POST['file-placement'] == 'tail' ? 1 : 0,
+                    "wp" => $projectId
+                ];
 
                 $newFile = false;
 
                 if (isset($fileId)) {
-                    $dbObject->execute("UPDATE `page_file` SET `name` = \"" . $fileName . "\", `content` = \"" . $fileContent . "\", `for_all` = " . $browser['all'] . ", `for_msie6` = " . $browser['msie6'] . ", `for_msie7` = " . $browser['msie7'] . ", `for_msie8` = " . $browser['msie8'] . ", `for_firefox` = " . $browser['firefox'] . ", `for_opera` = " . $browser['opera'] . ", `for_safari` = " . $browser['safari'] . ", `type` = \"" . $fileType . "\" WHERE `id` = " . $fileId . ";");
+                    $sql = parent::sql()->update("page_file", $data, ["id" => $fileId]);
+                    parent::dataAccess()->execute($sql);
                 } else {
-                    $dbObject->execute("INSERT INTO `page_file`(`name`, `content`, `for_all`, `for_msie6`, `for_msie7`, `for_msie8`, `for_firefox`, `for_opera`, `for_safari`, `type`, `wp`) VALUES (\"" . $fileName . "\", \"" . $fileContent . "\", " . $browser['all'] . ", " . $browser['msie6'] . ", " . $browser['msie7'] . ", " . $browser['msie8'] . ", " . $browser['firefox'] . ", " . $browser['opera'] . ", " . $browser['safari'] . ", " . $fileType . ", " . $projectId . ");");
+                    $sql = parent::sql()->insert("page_file", $data);
+                    parent::dataAccess()->execute($sql);
                     $newFile = true;
                 }
 
                 if ($_POST['save'] == $rb->get('tf.save')) {
                     $_POST['edit-file'] = $rb->get('tf.edit');
                     if ($newFile) {
-                        $fid = $dbObject->fetchAll("SELECT MAX(`id`) AS `id` FROM `page_file`;");
-                        $_POST['file-id'] = $fid[0]['id'];
+                        $newFileId = parent::dataAccess()->getLastId();
+                        $_POST['file-id'] = $newFileId;
                     }
                 }
             }
@@ -1744,21 +1759,26 @@
             if ($_POST['edit-file'] == $rb->get('tf.edit')) {
                 $fileId = $_POST['file-id'];
 
-                $file = $dbObject->fetchAll("SELECT `name`, `content`, `for_all`, `for_msie6`, `for_msie7`, `for_msie8`, `for_firefox`, `for_opera`, `for_safari`, `type` FROM `page_file` WHERE `id` = " . $fileId . ";");
-                if (count($file) == 1) {
+                $file = $dbObject->fetchSingle("SELECT `name`, `content`, `placement`, `for_all`, `for_msie6`, `for_msie7`, `for_msie8`, `for_firefox`, `for_opera`, `for_safari`, `type` FROM `page_file` WHERE `id` = " . $fileId . ";");
+                if (!empty($file)) {
                     $fileTypesOpt = "";
                     foreach ($filesEx as $key => $ext) {
-                        $fileTypesOpt .= '<option ' . (($key == $file[0]['type']) ? 'selected="selected"' : '') . 'value="' . $key . '">' . $ext . '</option>';
+                        $fileTypesOpt .= '<option ' . (($key == $file['type']) ? 'selected="selected"' : '') . 'value="' . $key . '">' . $ext . '</option>';
                     }
-                    $browsers['All'] = $file[0]['for_all'];
-                    $browsers['IE6'] = $file[0]['for_msie6'];
-                    $browsers['IE7'] = $file[0]['for_msie7'];
-                    $browsers['IE8'] = $file[0]['for_msie8'];
-                    $browsers['Firefox'] = $file[0]['for_firefox'];
-                    $browsers['Opera'] = $file[0]['for_opera'];
-                    $browsers['Safari'] = $file[0]['for_safari'];
 
-                    $return .= self::getFileUpdateForm($fileId, $file[0]['name'], $file[0]['content'], $browsers, $fileTypesOpt);
+                    $placementOptions = "";
+                    $placementOptions .= '<option ' . ((0 == $file['placement']) ? 'selected="selected"' : '') . 'value="head">' . parent::rb()->get("tf.placement.head") . '</option>';
+                    $placementOptions .= '<option ' . ((1 == $file['placement']) ? 'selected="selected"' : '') . 'value="tail">' . parent::rb()->get("tf.placement.tail") . '</option>';
+
+                    $browsers['All'] = $file['for_all'];
+                    $browsers['IE6'] = $file['for_msie6'];
+                    $browsers['IE7'] = $file['for_msie7'];
+                    $browsers['IE8'] = $file['for_msie8'];
+                    $browsers['Firefox'] = $file['for_firefox'];
+                    $browsers['Opera'] = $file['for_opera'];
+                    $browsers['Safari'] = $file['for_safari'];
+
+                    $return .= $this->getFileUpdateForm($fileId, $file['name'], $file['content'], $browsers, $fileTypesOpt, $placementOptions);
                 } else {
                     $return .= parent::getFrame($rb->get('tf.title'), parent::getError($rb->get('tf.notselected')), '', true);
                 }
@@ -1982,35 +2002,41 @@
          *  Generates form for updating text files.
          *
          */
-        private function getFileUpdateForm($fileId, $fileName, $fileContent, $browsers, $fileTypes) {
+        private function getFileUpdateForm($fileId, $fileName, $fileContent, $browsers, $fileTypes, $placementOptions) {
             $rb = self::rb();
             $htmlBrowsers = '';
             foreach ($browsers as $browser => $value) {
                 $htmlBrowsers .= ''
-                        . '<div class="text-file-browser">'
-                        . '<label for="browser-' . strtolower($browser) . '">' . $browser . '</label> '
-                        . '<input type="checkbox" name="browser-' . strtolower($browser) . '" id="browser-' . strtolower($browser) . '"' . (($value == 1) ? ' checked="checked"' : '') . ' />'
-                        . '</div>';
+                . '<div class="text-file-browser">'
+                    . '<label for="browser-' . strtolower($browser) . '">' . $browser . '</label> '
+                    . '<input type="checkbox" name="browser-' . strtolower($browser) . '" id="browser-' . strtolower($browser) . '"' . (($value == 1) ? ' checked="checked"' : '') . ' />'
+                . '</div>';
             }
 
             $returnTmp = ''
-                    . '<form name="edit-file" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                    . '<div class="edit-file-name">'
+            . '<form name="edit-file" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                . '<div class="edit-file-name">'
                     . '<div class="text-file-prop">'
-                    . '<div class="text-file-name gray-box">'
-                    . '<label for="file-name">' . $rb->get('tf.name') . ':</label> '
-                    . '<input type="text" name="file-name" value="' . $fileName . '" class="w300" /> '
-                    . '</div>'
-                    . '<div class="text-file-type">'
-                    . '<label for="file-type">' . $rb->get('tf.type') . ':</label> '
-                    . '<select name="file-type"> '
-                    . $fileTypes
-                    . '</select> '
-                    . '</div>'
-                    . '<div class="text-file-browsers">'
-                    . $htmlBrowsers
-                    . '</div>'
-                    . '<div class="clear"></div>'
+                        . '<div class="text-file-name gray-box">'
+                            . '<label for="file-name">' . $rb->get('tf.name') . ':</label> '
+                            . '<input type="text" name="file-name" value="' . $fileName . '" class="w300" /> '
+                        . '</div>'
+                        . '<div class="text-file-type">'
+                            . '<label for="file-type">' . $rb->get('tf.type') . ':</label> '
+                            . '<select name="file-type"> '
+                                . $fileTypes
+                            . '</select> '
+                        . '</div>'
+                        . '<div class="text-file-type">'
+                            . '<label for="file-placement">' . $rb->get('tf.placement') . ':</label> '
+                            . '<select name="file-placement"> '
+                                . $placementOptions
+                            . '</select> '
+                        . '</div>'
+                        . '<div class="text-file-browsers">'
+                            . $htmlBrowsers
+                        . '</div>'
+                        . '<div class="clear"></div>'
                     . '</div>'
                     . '<div class="text-file-content">';
 

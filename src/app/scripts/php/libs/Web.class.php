@@ -1047,7 +1047,7 @@
             }
 
             $pageIds = implode(', ', $this->PagesId);
-            $files = parent::db()->fetchAll("SELECT pfi.`page_id`, pf.`id`, pf.`type` FROM `page_file_inc` pfi LEFT JOIN `page_file` pf ON pfi.`file_id` = pf.`id` WHERE pfi.`page_id` in (" . $pageIds . ") AND pfi.`language_id` = " . $this->LanguageId . " AND (pf.`for_all` = 1 OR pf.`" . $browser . "` = 1) ORDER BY pfi.`order`;");
+            $files = parent::db()->fetchAll("SELECT pfi.`page_id`, pf.`id`, pf.`type`, pf.`placement` FROM `page_file_inc` pfi LEFT JOIN `page_file` pf ON pfi.`file_id` = pf.`id` WHERE pfi.`page_id` in (" . $pageIds . ") AND pfi.`language_id` = " . $this->LanguageId . " AND (pf.`for_all` = 1 OR pf.`" . $browser . "` = 1) ORDER BY pfi.`order`;");
             foreach ($this->PagesId as $pageId) {
                 foreach ($files as $file) {
                     if ($file['page_id'] == $pageId) {
@@ -1057,7 +1057,12 @@
                                 $this->PageStyles .= (($this->Template == 'xml') ? '<rssmm:link-ref>' . $fileUrl . '</rssmm:link-ref>' : '<link rel="stylesheet" href="' . $fileUrl . '" type="text/css" />');
                                 break;
                             case WEB_TYPE_JS: 
-                                $this->PageHeadScripts .= (($this->Template == 'xml') ? '<rssmm:script-ref>' . $fileUrl . '</rssmm:script-ref>' : '<script type="text/javascript" src="' . $fileUrl . '"></script>');
+                                $value = (($this->Template == 'xml') ? '<rssmm:script-ref>' . $fileUrl . '</rssmm:script-ref>' : '<script type="text/javascript" src="' . $fileUrl . '"></script>');
+                                if ($file['placement'] == 0) {
+                                    $this->PageHeadScripts .= $value;
+                                } else if ($file['placement'] == 1) {
+                                    $this->PageTailScripts .= $value;
+                                }
                                 break;
                         }
                     }
