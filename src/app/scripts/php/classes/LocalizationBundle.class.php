@@ -137,8 +137,7 @@
 					}
 				}
 			} else {
-				echo 'Some error in resource bundle!';
-				exit;
+				throw new Exception("Unnable to load resource bundle '$name' lang '$lang' .");
 			}
 		}
 

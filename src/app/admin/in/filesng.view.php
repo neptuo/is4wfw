@@ -1,5 +1,5 @@
 <v:template src="~/templates/in-template.view">
-	<loc:use name="FileAdmin">
+	<loc:use name="fileadmin">
 
 		<web:condition when="post:new-import">
 			<fa:importFileSystem dirId="post:dir-id" />
