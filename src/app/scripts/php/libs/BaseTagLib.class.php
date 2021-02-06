@@ -573,7 +573,8 @@
 		protected function joinAttributes($params) {
 			$attributes = "";
 			foreach ($params as $key => $value) {
-				$attributes = StringUtils::join($attributes, "$key='$value'", " ");
+                $value = htmlspecialchars($value);
+				$attributes = StringUtils::join($attributes, "$key=\"$value\"", " ");
 			}
 
 			if (!empty($attributes)) {
