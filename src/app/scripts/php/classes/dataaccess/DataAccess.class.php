@@ -2,6 +2,7 @@
 
 require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
 require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/DataAccessException.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/ArrayUtils.class.php");
 
 class DataAccess {
 	public static $CharsetSystemProperty = 'DataAccess.Charset';
@@ -286,7 +287,7 @@ class DataAccess {
 	
 	public function fetchScalar($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
 		$data = $this->fetchSingle($query, $showQuery, $printOutput, $forceImmediateOutput, $notExecuteQuery);
-		$key = array_key_first($data);
+		$key = ArrayUtils::firstKey($data);
 		return $data[$key];
 	}
   

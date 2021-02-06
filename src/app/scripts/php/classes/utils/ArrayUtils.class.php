@@ -16,6 +16,18 @@
             return $array;
         }
 
+        public static function firstKey($array) {
+            if (function_exists('array_key_first')) {
+                return array_key_first($array);
+            }
+
+            foreach($array as $key => $unused) {
+                return $key;
+            }
+            
+            return NULL;
+        }
+
     }
 
 ?>
