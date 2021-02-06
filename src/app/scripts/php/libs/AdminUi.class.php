@@ -16,8 +16,7 @@
 			}
 		}
 
-		public function deleteButton($hiddenField, $confirmValue = null, $params = array()) {
-			$hiddens = parent::findAttributesByPrefix($params, "hidden-");
+		public function deleteButton($hiddenField, $confirmValue = null, $hiddens = [], $params = array()) {
 			$hiddens[$hiddenField] = $hiddenField;
 
 			$template = "";

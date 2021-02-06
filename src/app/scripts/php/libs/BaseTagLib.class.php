@@ -559,17 +559,6 @@
             $parser->getCache()->delete($keys, $isRecursive);
         }
 
-        protected function findAttributesByPrefix($params, $prefix) {
-            $result = array();
-            foreach ($params as $key => $value) {
-                if (StringUtils::startsWith($key, $prefix) && !empty($value)) {
-                    $result[substr($key, strlen($prefix))] = $value;
-                }
-            }
-
-            return $result;
-        }
-
 		protected function joinAttributes($params) {
 			$attributes = "";
 			foreach ($params as $key => $value) {

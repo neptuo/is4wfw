@@ -57,12 +57,10 @@
 
 		private $forEachIndex;
 
-		public function forEachListModel($template, $model, $params = array()) {
-			self::pushListModel($model);
+		public function forEachListModel($template, $model, $filter = []) {
+			$this->pushListModel($model);
 			$result = "";
 
-			$where = self::findAttributesByPrefix($params, "filter-");
-			
 			if ($model->isRegistration()) {
 				$template();
 			}
@@ -71,7 +69,7 @@
 				$prevIndex = $this->forEachIndex;
 				$this->forEachIndex = 0;
 				foreach ($model->items() as $item) {
-					if (self::isPassedByWhere($item, $where)) {
+					if ($this->isPassedByWhere($item, $filter)) {
 						$model->data($item);
 						$result .= $template();
 						$this->forEachIndex++;
@@ -80,7 +78,7 @@
 				$this->forEachIndex = $prevIndex;
 			}
 
-			self::popListModel();
+			$this->popListModel();
 			return $result;
 		}
 

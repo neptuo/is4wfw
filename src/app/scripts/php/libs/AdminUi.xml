@@ -35,10 +35,15 @@
       <type>string</type>
       <comment>Hodnota z mazaného objektu, která se doplní do potvrzovacího dialogu.</comment>
     </attribute>
+    <attribute>
+      <name>hidden</name>
+      <type>string</type>
+      <prefix />
+      <comment>Všechny atributy jsou přidány jako hidden inputy formuláře.</comment>
+    </attribute>
     <anyAttribute />
     <comment>
       Vykreslí formulář pro smazání objektu (image button).
-      Všechny atributy začínající "hidden-" jsou přidány jako hidden inputy formuláře.
       Všechny ostatní atributy jsou přidání jako atributy HTML form elementu.
     </comment>
   </tag>

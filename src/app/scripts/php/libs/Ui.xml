@@ -15,10 +15,13 @@
       <required />
       <comment>Pole položek, které se mají enumerovat.</comment>
     </attribute>
-    <anyAttribute />
+    <attribute>
+      <name>filter</name>
+      <prefix />
+      <comment>Slouží pro odfiltrování dat.</comment>
+    </attribute>
     <comment>
       Pro každou položku z "items" vygeneruje obsah šablony.
-      Všechny atributy s prefixem "filter-" slouží pro odfiltrování dat.
     </comment>
   </fulltag>
   <property>
