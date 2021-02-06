@@ -388,6 +388,8 @@
 			if ($is === false) {
 				$result .= '<fieldset disabled="disabled">';
 				$model->editable(false);
+			} else if ($model->editable()) {
+				throw new Exception("Unnable to enable form part when disabled in parent.");
 			}
 			
 			$result .= $template();

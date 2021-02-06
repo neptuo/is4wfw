@@ -298,6 +298,12 @@
       <required />
       <comment>Zda má být tato část formuláře editovatelná.</comment>
     </attribute>
+    <comment>
+      Pokud je "is" = false, označení blok formuláře jako readonly.
+      Pokud je "is" = true, nedělá nic.
+      Není možnost nejprve form zakázat a uvnitř ho volit.
+      Na pozadí vykresluje fieldset.
+    </comment>
   </fulltag>
   <tag>
     <name>dropdownlist</name>
