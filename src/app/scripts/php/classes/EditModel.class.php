@@ -9,6 +9,7 @@
         private $validation = [];
         private $index = 0;
         private $exceptions = [];
+        private $editable = true;
 
         public function prefix($name = "1.1-def") {
             if ($name === "1.1-def") {
@@ -40,6 +41,14 @@
 
         public function exceptions() {
             return $this->exceptions;
+        }
+
+        public function editable($value = "0.0-def") {
+            if ($value == "0.0-def") {
+                return $this->editable;
+            }
+
+            $this->editable = $value;
         }
 
         // ------- ArrayAccess ------------------------------------------------
@@ -238,6 +247,10 @@
         }
 
         public function set($name, $nameIndex, $value) {
+            if (!$this->isRegistration() && !$this->editable()) {
+                return;
+            }
+
             if ($this->isNameIndex($nameIndex)) {
                 $array = $this[$name];
                 if ($array == null) {

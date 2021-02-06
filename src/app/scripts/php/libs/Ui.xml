@@ -289,6 +289,16 @@
       Všechny ostatní atributy jsou předány HTML form elementu.
     </comment>
   </fulltag>
+  <fulltag>
+    <name>editable</name>
+    <function>editable</function>
+    <attribute>
+      <name>is</name>
+      <type>bool</type>
+      <required />
+      <comment>Zda má být tato část formuláře editovatelná.</comment>
+    </attribute>
+  </fulltag>
   <tag>
     <name>dropdownlist</name>
     <function>dropdownlist</function>

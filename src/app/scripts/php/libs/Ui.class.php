@@ -379,6 +379,26 @@
 				return $result;
 			}
 		}
+
+		public function editable($template, $is) {
+			$model = $this->getEditModel();
+			$modelEditabled = $model->editable();
+
+			$result = "";
+			if ($is === false) {
+				$result .= '<fieldset disabled="disabled">';
+				$model->editable(false);
+			}
+			
+			$result .= $template();
+			
+			if ($is === false) {
+				$result .= '</fieldset>';
+				$model->editable($modelEditabled);
+			}
+
+			return $result;
+		}
 		
 		public function dropdownlist($name, $nameIndex = -1, $source, $display, $id, $emptyText = "", $mode = "single", $params = array()) {
 			if ($mode == "multi" && $nameIndex != -1) {
