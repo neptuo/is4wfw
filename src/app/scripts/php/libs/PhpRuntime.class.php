@@ -419,11 +419,11 @@
             }
         }
 
-        private function processParsedAttributeValue($attribute, $definition, $hasDefault) {
-            $attributeValue = self::getConvertValue($attribute['value'], $definition);
+        private function processParsedAttributeValue($attribute, $definition) {
+            $attributeValue = $this->getConvertValue($attribute['value'], $definition);
             if ($attributeValue != null) {
                 $attributeValueType = 'raw';
-                if (($hasDefault && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
+                if (((isset($definition->default) || isset($definition->type)) && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
                     $attributeValueType = 'eval';
                 }
 
@@ -464,7 +464,7 @@
                             $strippedName = substr($usedName, strlen($attPrefix));
 
                             $attribute = $atts->Attributes[$usedName];
-                            $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
+                            $processValue = $this->processParsedAttributeValue($attribute, $att);
                             if ($processValue != null) {
                                 $processedAtts[] = $usedName;
                                 $attributeValue[$strippedName] = $processValue;
@@ -479,7 +479,7 @@
                 
                 if (array_key_exists($attName, $atts->Attributes)) {
                     $attribute = $atts->Attributes[$attName];
-                    $processValue = $this->processParsedAttributeValue($attribute, $att, $hasDefault);
+                    $processValue = $this->processParsedAttributeValue($attribute, $att);
                     if ($processValue != null) {
                         $processedAtts[] = $attName;
                         if (array_key_exists($attName, $return)) {
