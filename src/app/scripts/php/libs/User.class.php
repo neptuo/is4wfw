@@ -1210,14 +1210,14 @@
             if (array_key_exists("login", $this->urlResolvers)) {
                 $resolver = $this->urlResolvers["login"];
 
-                $tableName = static::TableName;
+                $tableName = self::TableName;
                 $filter = $resolver["filter"];
                 if (parent::isFilterModel($filter)) {
                     $filter = $filter[""];
                     $sqlName = Filter::formatColumnName($filter, "login");
                     $sqlValue = parent::sql()->escape($value);
                     $filter[] = "$sqlName = $sqlValue";
-                    $tableName = $filter->wrapTableName(static::TableName);
+                    $tableName = $filter->wrapTableName(self::TableName);
                     $filter = $filter->toSql();
                 } else {
                     $filter["login"] = $value;

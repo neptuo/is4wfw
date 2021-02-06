@@ -32,13 +32,13 @@
         }
 
         public static function email(EditModel $model, string $key) {
-            if (!static::isEmail($model[$key])) {
+            if (!self::isEmail($model[$key])) {
                 self::addInvalidValue($model, $key);
             }
         }
 
         public static function isEmail($value) {
-            return preg_match(static::$EmailRegex, $value);
+            return preg_match(self::$EmailRegex, $value);
         }
     }
 

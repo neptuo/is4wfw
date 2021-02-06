@@ -3,7 +3,7 @@
     class FileUtils {
         
         public static function removeDirectory($dir) {
-            static::clearDirectory($dir);
+            self::clearDirectory($dir);
             return rmdir($dir);
         }
 

@@ -5,21 +5,21 @@ abstract class ParsedTemplate
     private static $tagsToParse;
 
     public function __construct() {
-        if (static::$tagsToParse == null) {
-            static::$tagsToParse = new TagsToParse();
+        if (self::$tagsToParse == null) {
+            self::$tagsToParse = new TagsToParse();
         }
     }
 
     protected function isTagProcessed(string $prefix, string $name) {
-        return static::$tagsToParse->isProcessed($prefix, $name);
+        return self::$tagsToParse->isProcessed($prefix, $name);
     }
 
     protected function pushTagsToParse($tagsToParse) {
-        static::$tagsToParse->push($tagsToParse);
+        self::$tagsToParse->push($tagsToParse);
     }
 
     protected function popTagsToParse() {
-        static::$tagsToParse->pop();
+        self::$tagsToParse->pop();
     }
 
     protected abstract function evaluateInternal();

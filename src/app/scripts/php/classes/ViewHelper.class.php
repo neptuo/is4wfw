@@ -22,12 +22,12 @@
         }
 
         public static function getViewContent($viewPath) {
-            $serverPath = static::getServerPath($viewPath);
+            $serverPath = self::getServerPath($viewPath);
             return file_get_contents($serverPath);
         }
         
         public static function getViewContentIdentifier($viewPath) {
-            $content = static::getViewContent($viewPath);
+            $content = self::getViewContent($viewPath);
             return sha1($content);
         }
 
