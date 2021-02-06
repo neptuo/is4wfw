@@ -1950,25 +1950,34 @@
             if ($_POST['text-file-search-submit'] == $rb->get('tf.search')) {
                 parent::session()->set('name', $_POST['text-file-search-name'], 'tf-search');
                 parent::session()->set('content', $_POST['text-file-search-content'], 'tf-search');
+                parent::session()->set('type', $_POST['text-file-search-type'], 'tf-search');
             } elseif ($_POST['text-file-search-clear'] == $rb->get('tf.clear')) {
                 parent::session()->clear('tf-search');
             }
 
             $return = ''
-                    . '<form name="text-file-search" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                    . '<div class="gray-box">'
+            . '<form name="text-file-search" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                . '<div class="gray-box">'
                     . '<label class="w80" for="text-file-search-name">' . $rb->get('tf.name') . ':</label>'
                     . '<input class="w300" nametype="text" name="text-file-search-name" id="text-file-search-name" value="' . parent::session()->get('name', 'tf-search') . '" />'
-                    . '</div>'
-                    . '<div class="gray-box">'
+                . '</div>'
+                . '<div class="gray-box">'
                     . '<label class="w80" for="text-file-search-content">' . $rb->get('tf.content') . ':</label>'
                     . '<input class="w500" type="text" name="text-file-search-content" id="text-file-search-content" value="' . parent::session()->get('content', 'tf-search') . '" />'
-                    . '</div>'
-                    . '<div class="gray-box">'
+                . '</div>'
+                . '<div class="gray-box">'
+                    . '<label class="w80" for="text-file-search-type">' . $rb->get('tf.type') . ':</label>'
+                    . '<select name="text-file-search-type" id="text-file-search-type">'
+                        . '<option value=""' . (parent::session()->get('type', 'tf-search') == "" ? " selected='selected'" : "") . '>---</option>'
+                        . '<option value="' . WEB_TYPE_CSS . '"' . (parent::session()->get('type', 'tf-search') == WEB_TYPE_CSS ? " selected='selected'" : "") . '>CSS</option>'
+                        . '<option value="' . WEB_TYPE_JS . '"' . (parent::session()->get('type', 'tf-search') == WEB_TYPE_JS ? " selected='selected'" : "") . '>JS</option>'
+                    . '</select>'
+                . '</div>'
+                . '<div class="gray-box">'
                     . '<input type="submit" name="text-file-search-submit" value="' . $rb->get('tf.search') . '" /> '
                     . '<input type="submit" name="text-file-search-clear" value="' . $rb->get('tf.clear') . '" /> '
-                    . '</div>'
-                    . '</form>';
+                . '</div>'
+            . '</form>';
 
             return $return;
         }
@@ -1982,6 +1991,7 @@
             $return = '';
             $name = parent::session()->get('name', 'tf-search');
             $content = parent::session()->get('content', 'tf-search');
+            $type = parent::session()->get('type', 'tf-search');
             if (strlen($name) != 0) {
                 if ($return == '') {
                     $return .= 'and ';
@@ -1993,6 +2003,12 @@
                     $return .= 'and ';
                 }
                 $return .= '`content` like "%' . $content . '%"';
+            }
+            if (!empty($type)) {
+                if ($return == '') {
+                    $return .= 'and ';
+                }
+                $return .= '`type` = ' . parent::dataAccess()->escape($type);
             }
             return $return;
         }
