@@ -77,22 +77,22 @@
     </comment>
   </property>
   <property>
-    <name>previousNumber</name>
-    <getFunction>getPreviousNumber</getFunction>
+    <name>prevNumber</name>
+    <getFunction>getPrevNumber</getFunction>
     <comment>
       Vrací číslo předchozí stránky.
     </comment>
   </property>
   <property>
-    <name>previousIndex</name>
-    <getFunction>getPreviousIndex</getFunction>
+    <name>prevIndex</name>
+    <getFunction>getPrevIndex</getFunction>
     <comment>
       Vrací index předchozí stránky.
     </comment>
   </property>
   <property>
-    <name>previousOffset</name>
-    <getFunction>getPreviousOffset</getFunction>
+    <name>prevOffset</name>
+    <getFunction>getPrevOffset</getFunction>
     <comment>
       Vrací absolutní offset prvního záznamu předchozí stránky.
     </comment>

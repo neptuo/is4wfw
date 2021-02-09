@@ -86,7 +86,7 @@ require_once("BaseTagLib.class.php");
             return $this->container->getOffset();
         }
         
-        public function getPreviousIndex() {
+        public function getPrevIndex() {
             $this->ensureContainer();
             $current = $this->container->getCurrentIndex();
             if ($current > 0) {
@@ -96,9 +96,9 @@ require_once("BaseTagLib.class.php");
             return null;
         }
         
-        public function getPreviousNumber() {
+        public function getPrevNumber() {
             $this->ensureContainer();
-            $index = $this->getPreviousIndex();
+            $index = $this->getPrevIndex();
             if ($index !== null) {
                 return $index + 1;
             }
@@ -106,16 +106,16 @@ require_once("BaseTagLib.class.php");
             return null;
         }
         
-        public function getPreviousOffset() {
+        public function getPrevOffset() {
             $this->ensureContainer();
             $current = $this->container->getOffset();
             if ($current > 0) {
-                $previous = $current - $this->container->getSize();
-                if ($previous < 0) {
-                    $previous = 0;
+                $prev = $current - $this->container->getSize();
+                if ($prev < 0) {
+                    $prev = 0;
                 }
 
-                return $previous;
+                return $prev;
             }
 
             return null;
