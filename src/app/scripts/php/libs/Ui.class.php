@@ -326,7 +326,7 @@
 			return self::input($params);
 		}
 
-		public function filter($template, $session = "") {
+		public function filter($template, $session = "", $pageId = "") {
             $model = parent::getEditModel();
 			$session = explode(",", $session);
 
@@ -336,7 +336,11 @@
 			}
 
 			if ($model->isSave()) {
-				$url = $_SERVER['REQUEST_URI'];
+				if ($pageId == "") {
+					$url = $_SERVER['REQUEST_URI'];
+				} else {
+					$url = parent::web()->composeUrl($pageId);
+				}
 
                 foreach ($model as $key => $value) {
 					if (is_callable($value)) {

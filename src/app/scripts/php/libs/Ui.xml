@@ -283,10 +283,12 @@
       <name>session</name>
       <comment>Čárkou oddělený seznam parametrů, které mají jít z/do session místo z/do QueryString.</comment>
     </attribute>
-    <anyAttribute />
+    <attribute>
+      <name>pageId</name>
+      <comment>Id stránky, kam se má přesměrovat po odeslání. Pokud není vyplněno, dělá přesměrování na aktuální stránku.</comment>
+    </attribute>
     <comment>
       Vygeneruje filtrační formulář, který při odeslání provede redirect s parametry v QueryString.
-      Všechny ostatní atributy jsou předány HTML form elementu.
     </comment>
   </fulltag>
   <fulltag>
