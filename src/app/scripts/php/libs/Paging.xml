@@ -24,8 +24,12 @@
       <name>index</name>
       <comment>Aktuální index (od 0) stránky.</comment>
     </attribute>
+    <attribute>
+      <name>offset</name>
+      <comment>Aktuální absolutní offset prvního záznamu.</comment>
+    </attribute>
     <comment>
-      Nastaví kontejner pro stránkování. Jeden z atributů "number" nebo "index" je povinný.
+      Nastaví kontejner pro stránkování. Jeden z atributů "number", "index" nebo "offset" je povinný. 
       Pokud nebude vyplněný, počítá se s první stránkou.
     </comment>
   </fulltag>
@@ -66,6 +70,13 @@
     </comment>
   </property>
   <property>
+    <name>currentOffset</name>
+    <getFunction>getCurrentOffset</getFunction>
+    <comment>
+      Vrací absolutní offset prvního záznamu aktuální stránky (právě zobrazené).
+    </comment>
+  </property>
+  <property>
     <name>previousNumber</name>
     <getFunction>getPreviousNumber</getFunction>
     <comment>
@@ -80,6 +91,13 @@
     </comment>
   </property>
   <property>
+    <name>previousOffset</name>
+    <getFunction>getPreviousOffset</getFunction>
+    <comment>
+      Vrací absolutní offset prvního záznamu předchozí stránky.
+    </comment>
+  </property>
+  <property>
     <name>nextNumber</name>
     <getFunction>getNextNumber</getFunction>
     <comment>
@@ -91,6 +109,13 @@
     <getFunction>getNextIndex</getFunction>
     <comment>
       Vrací index následující stránky.
+    </comment>
+  </property>
+  <property>
+    <name>nextOffset</name>
+    <getFunction>getNextOffset</getFunction>
+    <comment>
+      Vrací absolutní offset prvního záznamu následující stránky.
     </comment>
   </property>
   <property>

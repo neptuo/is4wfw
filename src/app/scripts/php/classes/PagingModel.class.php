@@ -3,6 +3,7 @@
     class PagingModel {
         private $size;
         private $currentIndex;
+        private $curentOffset = null;
         private $totalCount;
         private $count;
         private $list;
@@ -16,7 +17,15 @@
             return $this->size;
         }
 
+        public function setOffset($offset) {
+            $this->curentOffset = $offset;
+        }
+
         public function getOffset() {
+            if ($this->curentOffset != null) {
+                return $this->curentOffset;
+            }
+
             return $this->currentIndex * $this->size;
         }
 

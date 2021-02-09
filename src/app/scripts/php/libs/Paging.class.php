@@ -24,17 +24,30 @@ require_once("BaseTagLib.class.php");
             }
         }
         
-        public function container($template, $size, $number = "", $index = "") {
+        public function container($template, $size, $number = "", $index = "", $offset = "") {
             if ($number != "") {
                 $index = intval($number) - 1;
             }
 
+            if ($offset != "") {
+                if ($offset % $size == 0) {
+                    $index = $offset / $size;
+                } else {
+
+                }
+            }
+
             if ($index == "") {
                 $index = 0;
+            } else {
+                $offset = "";
             }
 
             $prevContainer = $this->container;
             $this->container = new PagingModel($size, $index);
+            if ($offset != "") {
+                $this->container->setOffset($offset);
+            }
 
             $result = $template();
             
@@ -68,6 +81,11 @@ require_once("BaseTagLib.class.php");
             return $this->container->getCurrentIndex() + 1;
         }
         
+        public function getCurrentOffset() {
+            $this->ensureContainer();
+            return $this->container->getOffset();
+        }
+        
         public function getPreviousIndex() {
             $this->ensureContainer();
             $current = $this->container->getCurrentIndex();
@@ -85,6 +103,21 @@ require_once("BaseTagLib.class.php");
                 return $index + 1;
             }
             
+            return null;
+        }
+        
+        public function getPreviousOffset() {
+            $this->ensureContainer();
+            $current = $this->container->getOffset();
+            if ($current > 0) {
+                $previous = $current - $this->container->getSize();
+                if ($previous < 0) {
+                    $previous = 0;
+                }
+
+                return $previous;
+            }
+
             return null;
         }
         
@@ -106,6 +139,18 @@ require_once("BaseTagLib.class.php");
                 return $index + 1;
             }
             
+            return null;
+        }
+        
+        public function getNextOffset() {
+            $this->ensureContainer();
+            $current = $this->container->getOffset();
+            $size = $this->container->getSize();
+            $count = $this->container->getTotalCount();
+            if ($current + $size < $count) {
+                return $current + $size;
+            }
+
             return null;
         }
         
