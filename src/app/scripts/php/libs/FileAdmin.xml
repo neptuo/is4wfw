@@ -55,9 +55,15 @@
     </attribute>
     <attribute>
       <name>orderBy</name>
-	    <type>string</type>
       <default>name</default>
-      <comment>Položka, podle které se má řadit ("id", "name", "timestamp", "order").</comment>
+      <prefix />
+      <comment>
+        Definice řazení 
+        Buď přámo stringová hodnota nebo prefixová a s hodnotami "asc"/"desc"
+        Řaditelné atributy "id", "name", "timestamp", "order".
+        Pro grouped=false podporuje pouze jednoduchou variantu.
+        Pro grouped=true podporuje pouze jeden klíč.
+      </comment>
     </attribute>
     <comment>
       Vypíše seznam dat ze složky "dirId".

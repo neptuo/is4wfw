@@ -26,6 +26,17 @@ class FileDao extends AbstractDao {
 	public function getFromDirectory($dirId, $order = "name", $type = null, $pageIndex = false, $limit = false) {
 		$select = Select::factory(self::dataAccess())->where('dir_id', '=', $dirId);
 		
+		$orderDirection = "ASC";
+		if (is_array($order)) {
+			$key = ArrayUtils::firstKey($order);
+			if ($key == "") {
+				$order = $order[$key];
+			} else {
+				$orderDirection = $order[$key];
+				$order = $key;
+			}
+		}
+
 		if (is_array($type)) {
 			$types = array();
 			foreach	(FileAdmin::$FileExtensions as $id => $extension) {
@@ -39,7 +50,7 @@ class FileDao extends AbstractDao {
 			}
 		}
 		
-		$select = $this->applyLimit($select->orderBy([$order]), $pageIndex, $limit);
+		$select = $this->applyLimit($select->orderBy([$order], $orderDirection), $pageIndex, $limit);
 		return parent::getList($select);
 	}
 	

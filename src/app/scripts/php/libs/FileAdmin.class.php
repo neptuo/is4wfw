@@ -476,6 +476,14 @@
 
 			$items = array_merge($parentResult, $resultDirs, $resultFiles);
 			if ($grouped == false) {
+				if (is_array($orderBy)) {
+					if (array_key_exists("", $orderBy)) {
+						$orderBy = $orderBy[""];
+					} else {
+						throw new ParameterException("orderBy", "For ungrouped fa:browser, only 'simple' sorting is allowed, not prefixed one.");
+					}
+				}
+
 				usort($items, function($a, $b) use ($orderBy) { return strcmp($a[$orderBy], $b[$orderBy]); });
 			}
 

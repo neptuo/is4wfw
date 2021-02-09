@@ -127,7 +127,7 @@ class Select{
 				$this->result .= $column . " ";
 			}
 			if ($how != null){
-				$this->result .= $how;
+				$this->result .= " " . $how;
 			}
 		}
 		
