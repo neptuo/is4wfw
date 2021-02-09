@@ -420,9 +420,21 @@
 			}
 		}
 
-		public function fileBrowserWithTemplate($template, $dirId, $grouped = true, $parentName = "", $orderBy = "name") {
-			$dirs = parent::dao('Directory')->getFromDirectory($dirId, $orderBy);
-			$files = parent::dao('File')->getFromDirectory($dirId, $orderBy);
+		public function fileBrowserWithTemplate($template, $dirId, $grouped = true, $parentName = "", $filter = null, $orderBy = "name") {
+			$types = null;
+			if (is_array($filter) && array_key_exists("type", $filter)) {
+				$types = $filter["type"];
+				if (is_string($types)) {
+					$types = explode(",", $types);
+				}
+			}
+
+			$dirs = [];
+			if ($types == null || in_array("dir", $types)) {
+				$dirs = parent::dao('Directory')->getFromDirectory($dirId, $orderBy);
+			}
+			
+			$files = parent::dao('File')->getFromDirectory($dirId, $orderBy, $types);
 
 			$resultDirs = array();
 			foreach ($dirs as $key => $dir) {

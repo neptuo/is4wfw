@@ -54,6 +54,15 @@
       <comment>Pokud je vyplněný, pak bude v seznamu zahrnut i odkaz na rodičovskou složku.</comment>
     </attribute>
     <attribute>
+      <name>filter</name>
+      <prefix />
+      <comment>
+        Filtrování pomocí prefixových atributů.
+        Jediný podporovaný nyná je "type". Může být seznam čárkou oddělených typů nebo pole ("jpg", "zip" nebo "dir" pro zahrnutí složek).
+        Není podporovaný filter model.
+      </comment>
+    </attribute>
+    <attribute>
       <name>orderBy</name>
       <default>name</default>
       <prefix />
