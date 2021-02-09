@@ -4,6 +4,7 @@
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/Select.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/RoleHelper.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/FileDao.class.php");
 
 	/**
 	 * 
@@ -135,6 +136,10 @@
 
 		public function getFileUrl() {
 			return parent::request()->get('file-url');
+		}
+
+		public function getAllImageExtensions() {
+			return FileDao::getImagesTypeExtensions();
 		}
 	}
 

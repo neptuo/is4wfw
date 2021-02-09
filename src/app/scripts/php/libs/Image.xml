@@ -137,5 +137,13 @@
       Vlastnost URL aktuálního souboru.
     </comment>
   </property>
+  <property>
+  	<name>allImageExtensions</name>
+  	<getFunction>getAllImageExtensions</getFunction>
+    <comment>
+      Vrací pole s koncovkami všech obrázkových typů souborů.
+      Vhodné pro filtrování souborů.
+    </comment>
+  </property>
 </taglib>
 
