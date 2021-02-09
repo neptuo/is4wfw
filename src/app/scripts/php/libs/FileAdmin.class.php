@@ -476,7 +476,7 @@
 
 			$items = array_merge($parentResult, $resultDirs, $resultFiles);
 			if ($grouped == false) {
-				usort($items, function($a, $b) { return strcmp($a["name"], $b["name"]); });
+				usort($items, function($a, $b) use ($orderBy) { return strcmp($a[$orderBy], $b[$orderBy]); });
 			}
 
 			$model = new ListModel();
