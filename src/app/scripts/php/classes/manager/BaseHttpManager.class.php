@@ -4,6 +4,12 @@ require_once(APP_SCRIPTS_PHP_PATH . "libs/BaseTagLib.class.php");
 require_once("Version.class.php");
 
 abstract class BaseHttpManager extends BaseTagLib {
+    private $isSessionCookieIncluded = false;
+
+    public function setSessionCookieIncluded($value) {
+        $this->isSessionCookieIncluded = $value;
+    }
+
     public function download($url, $filename) {
         if (!file_exists($filename)) {
             $content = self::httpGet($url, true);
@@ -22,6 +28,10 @@ abstract class BaseHttpManager extends BaseTagLib {
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_MAXREDIRS, 5); 
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); 
+
+            if ($this->isSessionCookieIncluded) {
+                curl_setopt($curl, CURLOPT_COOKIE, 'PHPSESSID=' . $_COOKIE['PHPSESSID']); 
+            }
             
             if ($binary) { 
                 curl_setopt($curl, CURLOPT_BINARYTRANSFER, true); 
