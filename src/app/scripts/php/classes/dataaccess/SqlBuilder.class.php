@@ -115,7 +115,7 @@
             if (is_array($updateFields)) {
                 foreach ($updateFields as $field) {
                     $value = $this->escape($item[$field]);
-                    $updateString = $this->joinString($updateString, "`$field` = $value");
+                    $updateString = StringUtils::join($updateString, "`$field` = $value");
                 }
             }
             if (!empty($updateString)) {
