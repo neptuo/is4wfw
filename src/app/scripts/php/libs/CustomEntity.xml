@@ -38,6 +38,30 @@
       Při editaci je nutné uvést všechny primární klíče záznamu, který se má editovat.
     </comment>
   </fulltag>
+  <fulltag>
+    <name>save</name>
+    <function>saveFullTag</function>
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název entity, pro kterou se má vygenerovat formulář.</comment>
+    </attribute>
+    <attribute>
+      <name>langIds</name>
+      <comment>Id jazyků, pro které mají zpracovávat lokalizované pole.</comment>
+    </attribute>
+    <attribute>
+      <name>key</name>
+      <prefix />
+      <comment>Primární klíče pro editaci záznamu. Klíčem je název sloupce.</comment>
+    </attribute>
+    <comment>
+      Odlehčený "ce:form", který zpracovává pouze akce modelu "save" a "saved".
+      Slopuží pro uložení (insert/update) hodnot, které nejsou vstupem od uživatele, 
+      ale mají typicky být součástí jiné ukládácí akce. 
+      Příklad použití: nastavení sloupce order po založení záznamů, avšak součástí transakce.
+    </comment>
+  </fulltag>
   <tag>
     <name>register</name>
     <function>register</function>
@@ -122,7 +146,7 @@
       <comment>Seznam sloupců s dodatečnými hodnota pro založení záznamu.</comment>
     </attribute>
     <comment>
-      Typické použití: Automatické založené položky pro SingleReference, kdy pomocí select2 (nebo jiné) uživatel zadal položku, která v číselníkové tabulky ještě není.
+      Typické použití: Automatické založené položky pro SingleReference, kdy pomocí select2 (nebo jiné) uživatel zadal položku, která v číselníkové tabulce ještě není.
     </comment>
   </fulltag>
   <fulltag>

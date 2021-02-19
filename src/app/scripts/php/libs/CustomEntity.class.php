@@ -428,6 +428,8 @@
 
             // Load data based on fields in template.
             if ($model->isLoad() && $model->metadata("isUpdate")) {
+                $model->copyFrom($keys);
+                
                 $model->registration();
                 $template();
                 $model->registration(false);
@@ -463,6 +465,38 @@
             if ($model->isRender()) {
                 $result = $template();
                 return $result;
+            }
+        }
+
+        public function saveFullTag($template, $name, $langIds = "", $keys = []) {
+            $model = $this->getEditModel();
+            if ($model->isSave() || $model->isSaved()) {
+                $tableName = $this->ensureTableName($name, $model);
+                $tableLocalizationName = $this->ensureTableLocalizationName($name, $model);
+                $xml = $this->getDefinition($name, $model);
+                $langIds = explode(",", $langIds);
+                $keys = ArrayUtils::removeKeysWithEmptyValues($keys);
+            }
+            
+            // Save if model is leased or isSubmit.
+            if ($model->isSave()) {
+                if (!$model->hasMetadataKey("isUpdate")) {
+                    $model->metadata("isUpdate", count($keys) > 0);
+                }
+
+                $template();
+
+                if ($model->metadata("isUpdate")) {
+                    $this->update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, false);
+                } else {
+                    $this->insert($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, false);
+                }
+            }
+
+            // AfterSave if model is leased or isSubmit.
+            if ($model->isSaved()) {
+                $model->copyFrom($keys);
+                $template();
             }
         }
 
