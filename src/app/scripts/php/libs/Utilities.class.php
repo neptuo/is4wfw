@@ -19,10 +19,33 @@
             parent::setTagLibXml("Utilities.xml");
         }
 
-        public function concatValues($output, $value1, $value2, $value3 = false, $value4 = false, $value5 = false, $value6 = false, $value7 = false, $value8 = false, 
+        public function concatValues($output, $separator, $value1, $value2, $value3 = false, $value4 = false, $value5 = false, $value6 = false, $value7 = false, $value8 = false, 
             $value9 = false, $value10 = false, $value11 = false, $value12 = false, $value13 = false, $value14 = false, $value15 = false) {
             
-            $this->OutputValues[$output] = $value1 . $value2 . $value3 . $value4 . $value5 . $value6 . $value7 . $value8 . $value9 . $value10 . $value11 . $value12 . $value13 . $value14 . $value15;
+            $values = [
+                $value1, 
+                $value2, 
+                $value3, 
+                $value4, 
+                $value5, 
+                $value6, 
+                $value7, 
+                $value8, 
+                $value9, 
+                $value10, 
+                $value11, 
+                $value12, 
+                $value13, 
+                $value14, 
+                $value15
+            ];
+
+            if ($separator != "") {
+                $values = array_filter($values, function($value) { return !($value == "" || $value == null); });
+            }
+
+            $result = implode($separator, $values);
+            $this->OutputValues[$output] = $result;
             return "";
         }
 

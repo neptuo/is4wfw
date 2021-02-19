@@ -13,8 +13,15 @@
     <lookless />
     <attribute>
       <name>output</name>
+      <type>string</type>
       <required />
       <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>separator</name>
+      <type>string</type>
+      <default></default>
+      <comment>Separátor použitý mezi jednotlivými hodnotami, pokud nejsou prázdné.</comment>
     </attribute>
     <attribute>
       <name>value1</name>
@@ -23,62 +30,80 @@
     </attribute>
     <attribute>
       <name>value2</name>
+      <type>string</type>
       <required />
       <comment>Druhá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value3</name>
+      <type>string</type>
       <comment>Třetí hodnota.</comment>
     </attribute>
     <attribute>
       <name>value4</name>
+      <type>string</type>
       <comment>Čtvrtá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value5</name>
+      <type>string</type>
       <comment>Pátá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value6</name>
+      <type>string</type>
       <comment>Šestá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value7</name>
+      <type>string</type>
       <comment>Sedmá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value8</name>
+      <type>string</type>
       <comment>Osmá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value9</name>
+      <type>string</type>
       <comment>Devátá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value10</name>
+      <type>string</type>
       <comment>Desátá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value11</name>
+      <type>string</type>
       <comment>Jedenáctá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value12</name>
+      <type>string</type>
       <comment>Dvanáctá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value13</name>
+      <type>string</type>
       <comment>Třináctá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value14</name>
+      <type>string</type>
       <comment>Čtrnáctá hodnota.</comment>
     </attribute>
     <attribute>
       <name>value15</name>
+      <type>string</type>
       <comment>Pátnáctá hodnota.</comment>
     </attribute>
-    <comment>Spojí hodnoty všech atributů 'value1-5' do jednoho řetězce a tuto hodnotu nastaví do proměnné 'output' v této knihovně.</comment>
+    <comment>
+      Spojí hodnoty všech atributů 'value1-15' do jednoho řetězce.
+      Pokud je vyplněn "separator", odstraně všechny prázdné hodnoty a mezi vyplněné položky vloží zadaný oddělovač.
+      Výslednou hodnotu nastaví do proměnné 'output' v této knihovně.
+    </comment>
   </tag>
   <tag>
     <name>arrayItem</name>
