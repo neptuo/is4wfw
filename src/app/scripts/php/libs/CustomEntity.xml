@@ -201,6 +201,41 @@
       Zaregistruje pravidlo, podle kterého je následně možné vyhodnotit property v definici URL.
     </comment>
   </tag>
+  <fulltag>
+    <name>swap</name>
+    <function>swap</function>
+    <comment>
+      Prohodí pořadí položek identifikovanými pomocí "key1" a "key2" z entity "name". 
+      Šablona se spustí, pokud se prohození podaří.
+    </comment>
+    <lookless />
+    <attribute>
+      <name>name</name>
+	    <type>string</type>
+      <required />
+      <comment>Název entity, jejíž položky se mají prohodit.</comment>
+    </attribute>
+    <attribute>
+      <name>key1</name>
+	    <type>string</type>
+      <required />
+      <prefix />
+      <comment>Klíč k první položce.</comment>
+    </attribute>
+    <attribute>
+      <name>key2</name>
+	    <type>string</type>
+      <required />
+      <prefix />
+      <comment>Klíč ke druhé položce.</comment>
+    </attribute>
+    <attribute>
+      <name>fields</name>
+	    <type>string</type>
+      <required />
+      <comment>Čárkou oddělený seznam názvů fieldů, které se mají mezi položkami prohodit.</comment>
+    </attribute>
+  </fulltag>
   <property>
     <name>list</name>
     <getFunction>getListData</getFunction>

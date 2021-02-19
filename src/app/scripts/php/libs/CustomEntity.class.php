@@ -694,6 +694,43 @@
             ];
             return;
         }
+
+        public function swap($template, $name, $key1, $key2, $fields) {
+            $tableName = $this->ensureTableName($name);
+            $fields = explode(",", $fields);
+
+            if (empty($fields)) {
+                throw new ParameterException("fields", "Missing fields to swap.");
+            }
+
+            if (empty($key1)) {
+                throw new ParameterException("key1", "Missing filter for the first item.");
+            }
+
+            if (empty($key2)) {
+                throw new ParameterException("key2", "Missing filter for the second item.");
+            }
+
+            $db = parent::dataAccess();
+
+            $data1 = $db->fetchSingle(parent::sql()->select($tableName, $fields, $key1));
+            $data2 = $db->fetchSingle(parent::sql()->select($tableName, $fields, $key2));
+
+            foreach ($fields as $field) {
+                $temp = $data1[$field];
+                $data1[$field] = $data2[$field];
+                $data2[$field] = $temp;
+            }
+
+            $updateSql1 = parent::sql()->update($tableName, $data1, $key1);
+            $updateSql2 = parent::sql()->update($tableName, $data2, $key2);
+            $db->transaction(function() use ($db, $updateSql1, $updateSql2) {
+                $db->execute($updateSql1);
+                $db->execute($updateSql2);
+            });
+
+            $template();
+        }
 	}
 
 ?>
