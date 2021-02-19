@@ -697,6 +697,7 @@
 
         public function swap($template, $name, $key1, $key2, $fields) {
             $tableName = $this->ensureTableName($name);
+            $xml = $this->getDefinition($name);
             $fields = explode(",", $fields);
 
             if (empty($fields)) {
@@ -728,6 +729,11 @@
                 $db->execute($updateSql1);
                 $db->execute($updateSql2);
             });
+
+            if ($this->hasAuditLog($xml)) {
+                $this->audit($tableName, "update", $key1, $data1);
+                $this->audit($tableName, "update", $key2, $data1);
+            }
 
             $template();
         }
