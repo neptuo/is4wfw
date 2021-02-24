@@ -660,7 +660,10 @@
 			}
 
 			if (($dirId == '' || $dirId == 0) && array_key_exists('dir-id', $_POST)) {
-				$dirId = $_POST['dir-id'];
+				$dirId = $_POST['dir-id']; 
+				if ($dirId == "") {
+					$dirId = "0";
+				}
 			}
 			
 			if ($_POST[$namePrefix . 'file-save'] == parent::rb('button.save')) {
@@ -893,6 +896,9 @@
 			
 			if(array_key_exists('dir-id', $_POST)) {
 				$dirId = $_POST['dir-id'];
+				if ($dirId == "") {
+					$dirId = "0";
+				}
 			}
 			
 			if($_POST['directory-save'] == parent::rb('button.save')) {
