@@ -17,17 +17,27 @@
 			parent::setTagLibXml("FileUrl.xml");
 		}
 
-		public function setValue($name, $id) {
-			parent::request()->set($name, $id, 'fileUrl');
+		public function setValue($name, $id, $width = 0, $height = 0) {
+			parent::request()->set($name, ["id" => $id, "width" => $width, "height" => $height], 'fileUrl');
 		}
 
 		public function getProperty($id) {
+			$width = 0;
+			$height = 0;
 			$value = intval($id);
 			if ($value == 0) {
-				$id = parent::request()->get($id, 'fileUrl');
+				$file = parent::request()->get($id, 'fileUrl');
+				["id" => $id, "width" => $width, "height" => $height] = $file;
 			}
 
 			$url = "~/file.php?rid=$id";
+			if (!empty($width)) {
+				$url .= "&width=$width";
+			}
+			if (!empty($height)) {
+				$url .= "&height=$height";
+			}
+
 			return $url;
 		}
 	}

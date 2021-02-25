@@ -21,6 +21,16 @@
       <required />
       <comment>ID souboru, jehož URL se má složit.</comment>
     </attribute>
+    <attribute>
+      <name>width</name>
+      <default>0</default>
+      <comment>Přídá atribut width. Použitelné pro obrázky.</comment>
+    </attribute>
+    <attribute>
+      <name>height</name>
+      <default>0</default>
+      <comment>Přídá atribut height. Použitelné pro obrázky.</comment>
+    </attribute>
     <comment>
       Nastaví URL k souboru do proměnné s názvem 'name'.
     </comment>
