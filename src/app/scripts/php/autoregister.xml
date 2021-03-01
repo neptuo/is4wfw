@@ -25,6 +25,7 @@
 	<reg prefix="lang" class="php.libs.Language" />
 	<reg prefix="p" class="php.libs.Page" />
 	<reg prefix="paging" class="php.libs.Paging" />
+	<reg prefix="params" class="php.libs.Parameters" />
 	<reg prefix="post" class="php.libs.Post" />
 	<reg prefix="query" class="php.libs.QueryString" />
 	<reg prefix="s" class="php.libs.Sport" />

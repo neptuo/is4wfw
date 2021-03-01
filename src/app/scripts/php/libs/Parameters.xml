@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Parameters library</name>
+  <classname>Parameters</classname>
+  <classpath>php.libs</classpath>
+  <count>*</count>
+  <comment>
+    Knihovna pro nastavování parametrů při generování odkazů.
+  </comment>
+  <tag>
+    <name>declare</name>
+    <function>setValue</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název (property), pod kterým mají být parametry dostupné.</comment>
+    </attribute>
+    <attribute>
+      <name>key</name>
+      <prefix />
+      <comment>Klíč-hodnota jednotlivých parametrů.</comment>
+    </attribute>
+    <attribute>
+      <name>copyCurrent</name>
+      <type>string</type>
+      <comment>Čárkou oddělený seznam parametrů, které se mají zkopírovat z aktuální URL.</comment>
+    </attribute>
+    <attribute>
+      <name>addEmpty</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda se mají přidat i parametry, které nemají hodnotu.</comment>
+    </attribute>
+    <comment>
+      Vytvoří instancí parametrů pod názvem "name".
+    </comment>
+  </tag>
+  <fulltag>
+    <name>declare</name>
+    <function>setValueFullTag</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název (property), pod kterým mají být parametry dostupné.</comment>
+    </attribute>
+    <attribute>
+      <name>addEmpty</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda se mají přidat i parametry, které nemají hodnotu.</comment>
+    </attribute>
+    <comment>
+      Vytvoří instancí parametrů pod názvem "name".
+    </comment>
+  </fulltag>
+  <tag>
+    <name>set</name>
+    <function>setKey</function>
+    <lookless />
+    <attribute>
+      <name>key</name>
+      <type>string</type>
+      <required />
+      <comment>Klíč parametru.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>Hodnota parametru.</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <comment>
+        Název (property), pod kterým mají být parametry dostupné.
+        Povinný jen pokud je použitý mimo tělo "params:declare".
+      </comment>
+    </attribute>
+    <comment>
+      Nastaví hodnotu parametru "key" na "value".
+      Pokud je použit mimo "params:declare", je nutné nastavit "name" - kolekci, do které se má zapsat.
+    </comment>
+  </tag>
+  <tag>
+    <name>copyCurrent</name>
+    <function>copyCurrent</function>
+    <lookless />
+    <attribute>
+      <name>include</name>
+      <type>string</type>
+      <default>*</default>
+      <comment>
+        Čárkou oddělený seznam názvů parametrů, které se mají zkopírovat.
+        Výchozí hodnota znamená všechny.
+      </comment>
+    </attribute>
+    <attribute>
+      <name>exclude</name>
+      <type>string</type>
+      <comment>
+        Čárkou oddělený seznam názvů parametrů, které se NEmají zkopírovat.
+      </comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <comment>
+        Název (property), pod kterým mají být parametry dostupné.
+        Povinný jen pokud je použitý mimo tělo "params:declare".
+      </comment>
+    </attribute>
+    <comment>
+      Zkopíruje aktuální parametry do kolekce parametrů.
+      Pokud je použit mimo "params:declare", je nutné nastavit "name" - kolekci, do které se má zapsat.
+    </comment>
+  </tag>
+  <anyProperty>
+    <comment>
+      Vrátí instancí parametrů jako asociativní pole.
+    </comment>
+  </anyProperty>
+</taglib>
+

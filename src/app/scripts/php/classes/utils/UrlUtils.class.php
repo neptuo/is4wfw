@@ -73,6 +73,17 @@
 
             return $url;
         }
+        
+        public static function getCurrentQueryString() {
+            $result = [];
+            foreach ($_GET as $key => $value) {
+                if ($key != 'WEB_PAGE_PATH') {
+                    $result[$key] = $value;
+                }
+            }
+
+            return $result;
+        }
 
         public static function removeQueryString($url) {
             $queryIndex = strpos($url, '?');
