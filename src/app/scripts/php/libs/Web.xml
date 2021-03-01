@@ -254,13 +254,18 @@
     <attribute>
       <name>type</name>
     </attribute>
+    <attribute>
+      <name>param</name>
+      <prefix />
+      <comment>Seznam paramtrů, které se mají předat URL.</comment>
+    </attribute>
     <anyAttribute />
     <comment>
       Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 
       "text" je text v html odkazu, "languageId" je jazyková verze požadované
       stránky, defaultně aktuální jazyková verze. Zbytek jsou standartní html atributy.
       "type" = link(default) nebo button.
-      Params jsou použity jako URL parametry, pokud navíc mají prefix 'param-', ten je z názvu odebrán. Je tak možné nastavovat i parametry, které se jmenují jako jiné atributy.
+      Všechny ostatní atributy jsou předány jako atributy "a" tagu.
     </comment>
   </tag>
   <fulltag>
