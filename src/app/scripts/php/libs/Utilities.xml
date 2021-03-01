@@ -133,6 +133,26 @@
     </comment>
   </tag>
   <tag>
+    <name>array</name>
+    <function>createArray</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>key</name>
+      <required />
+      <type>string</type>
+      <prefix />
+      <comment>Klíč-hodnota, které budou nastaveny do pole.</comment>
+    </attribute>
+    <comment>
+      Vytvoří pole v propertě "output" (z této knihovny) položku.
+    </comment>
+  </tag>
+  <tag>
     <name>replaceHtmlNewLines</name>
     <function>replaceHtmlNewLines</function>
     <lookless />

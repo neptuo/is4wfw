@@ -65,6 +65,10 @@
             }
         }
 
+        public function createArray($output, $key = array()) {
+            $this->OutputValues[$output] = $key;
+        }
+
         public function replaceHtmlNewLines($output, $input) {
             $isXhtml = parent::web()->getDoctype() == "xhtml";
             $replaced = nl2br($input, $isXhtml);
