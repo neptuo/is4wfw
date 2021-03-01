@@ -49,7 +49,7 @@
             return "";
         }
 
-        public function addToArray($output, $key = array()) {
+        public function addToArray($output, $key = array(), $value = "x-x.y-y") {
             if (!array_key_exists($output, $this->OutputValues)) {
                 $this->OutputValues[$output] = array();
             }
@@ -58,7 +58,11 @@
                 $key = $key[""];
             }
 
-            $this->OutputValues[$output][] = $key;
+            if (is_string($key) && $value != "x-x.y-y") {
+                $this->OutputValues[$output][$key] = $value;
+            } else {
+                $this->OutputValues[$output][] = $key;
+            }
         }
 
         public function replaceHtmlNewLines($output, $input) {

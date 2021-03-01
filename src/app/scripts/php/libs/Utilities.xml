@@ -119,9 +119,18 @@
       <required />
       <type>string</type>
       <prefix />
-      <comment>Klíč hodnota, které budou předány jako položky nově vytvořené položce v hlavním poli.</comment>
+      <comment>Klíč-hodnota, které budou předány jako položky nově vytvořené položce v hlavním poli.</comment>
     </attribute>
-    <comment>Přidá do pole v propertě "output" (z této knihovny) položku. Pokud pole ještě neexistuje, vytvořího</comment>
+    <attribute>
+      <name>value</name>
+      <type>string</type>
+      <default>x-x.y-y</default>
+      <comment>Pokud je zadán pouze "key" (ne prefixový), použije se tento atribut jako hodnota klíče.</comment>
+    </attribute>
+    <comment>
+      Přidá do pole v propertě "output" (z této knihovny) položku. Pokud pole ještě neexistuje, vytvoří ho.
+      Při použití s "key"-"value", přidává asociativní položku do pole.
+    </comment>
   </tag>
   <tag>
     <name>replaceHtmlNewLines</name>
