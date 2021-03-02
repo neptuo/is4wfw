@@ -582,11 +582,13 @@
 
 				$model->set($name, null, $file);
 			} else {
+				$nameIndex = -1;
 				if ($isMulti) {
 					$params["multiple"] = "multiple";
+					$nameIndex = 0;
 				}
 
-				return $this->inputbox("file", $name, 0, "", $params);
+				return $this->inputbox("file", $name, $nameIndex, "", $params);
 			}
 		}
 		
