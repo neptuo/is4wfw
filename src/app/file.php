@@ -96,7 +96,6 @@ if (array_key_exists('fid', $_REQUEST)) {
 
     if (count($file) == 1) {
         $filePath = $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
-        //echo $filePath;
         $updTime = filemtime($filePath);
 
         // Try cached file ...
@@ -104,21 +103,22 @@ if (array_key_exists('fid', $_REQUEST)) {
         header("Pragma: private");
         header("Expires: " . date(DATE_RFC822, strtotime("+7 day")));
         header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
-        // echo $updTime.' - '.getenv("HTTP_IF_MODIFIED_SINCE").' ; ';
         if (array_key_exists("HTTP_IF_MODIFIED_SINCE", $_SERVER) && $updTime <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
-            //header("HTTP/1.1 304 Not Modified");
             header('Last-Modified: ' . $_SERVER['HTTP_IF_MODIFIED_SINCE'], true, 304);
             exit;
         }
 
-        //$fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".FileAdmin::$FileExtensions[$file[0]['type']] : "document/".$file[0]['type'];
         $fileExt = FileAdmin::$FileMimeTypes[$file[0]['type']];
 
         if (array_key_exists("width", $_GET) && array_key_exists("height", $_GET)) {
-            $width = $_GET['width'];
-            $height = $_GET['height'];
-            
-            $thumbPath = CACHE_IMAGES_PATH . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
+            $width = intval($_GET['width']);
+            $height = intval($_GET['height']);
+            if (empty($width) || empty($height)) {
+                header("HTTP/1.1 400 Bad Request");
+                exit;
+            }
+
+            $thumbPath = $flObject->getImageThumbPath($file[0]['id'], $width, $height, $file[0]['type']);
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -127,12 +127,17 @@ if (array_key_exists('fid', $_REQUEST)) {
                 $filePath = $thumbPath;
             }
         } else if (array_key_exists("width", $_GET)) {
-            $width = $_GET['width'];
+            $width = intval($_GET['width']);
+            if (empty($width)) {
+                header("HTTP/1.1 400 Bad Request");
+                exit;
+            }
+            
             list($orWidth, $orHeight, $orType) = getimagesize($filePath);
             $ratio = $width / $orWidth;
             $height = round($ratio * $orHeight);
-
-            $thumbPath = CACHE_IMAGES_PATH . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
+                    
+            $thumbPath = $flObject->getImageThumbPath($file[0]['id'], $width, $height, $file[0]['type']);
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;
@@ -142,11 +147,16 @@ if (array_key_exists('fid', $_REQUEST)) {
             }
         } else if (array_key_exists("height", $_GET)) {
             $height = $_GET['height'];
+            if (empty($height)) {
+                header("HTTP/1.1 400 Bad Request");
+                exit;
+            }
+
             list($orWidth, $orHeight, $orType) = getimagesize($filePath);
             $ratio = $height / $orHeight;
             $width = round($ratio * $orWidth);
-
-            $thumbPath = CACHE_IMAGES_PATH . $file[0]['dir_id'] . '-' . $file[0]['id'] . '-' . $file[0]['name'] . '_' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$file[0]['type']];
+                    
+            $thumbPath = $flObject->getImageThumbPath($file[0]['id'], $width, $height, $file[0]['type']);
 
             if (file_exists($thumbPath) && is_readable($thumbPath)) {
                 $filePath = $thumbPath;

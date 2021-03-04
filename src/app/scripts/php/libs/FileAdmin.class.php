@@ -610,8 +610,9 @@
 			}
 			
 			if(!$new) {
-				if($fileTmpName != null) {
-					unlink(self::getPhysicalPathToFile($file));
+				if ($fileTmpName != null) {
+					unlink($this->getPhysicalPathToFile($file));
+					parent::autolib("f")->clearImageCache($dataItem['id']);
 				} else {
 					//rename(self::getPhysicalPathToFile($file), self::getPhysicalPathToFile($dataItem));
 				}

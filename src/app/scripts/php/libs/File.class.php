@@ -838,6 +838,28 @@
 
             return $path;
         }
+
+        public function getImageCacheDirectory($fileId) {
+            return CACHE_IMAGES_PATH . $fileId;
+        }
+
+        public function getImageThumbPath($fileId, $width, $height, $type) {
+            $directoryPath = $this->getImageCacheDirectory($fileId);
+            $filePath = $directoryPath  . '/' . $width . 'x' . $height . '.' . FileAdmin::$FileExtensions[$type];
+
+            if (!file_exists($directoryPath)) {
+                mkdir($directoryPath, 0777, true);
+            }
+
+            return $filePath;
+        }
+
+        public function clearImageCache($fileId) {
+            $directoryPath = $this->getImageCacheDirectory($fileId);
+            if (file_exists($directoryPath)) {
+                FileUtils::removeDirectory($directoryPath);
+            }
+        }
         
         /**
         *
@@ -851,96 +873,110 @@
         public function getFile($fileId = false) {
             global $dbObject;
             
-            if($fileId == false) {
-            if($this->CurrentId != 0) {
-                $fileId = $this->CurrentId;
-                $this->CurrentId = 0;
-            } elseif($_SESSION['file']['current_id'] != '') {
-                $fileId = $_SESSION['file']['current_id'];
-            } else {
-                // vrat image "file not found".
-            }
-            }
-            
-            $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = ".$fileId.";");
-            
-            if(count($file) == 1) {
-            $filePath = self::getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
-            $fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".FileAdmin::$FileExtensions[$file[0]['type']] : "document/".$file[0]['type'];
-            
-            if(array_key_exists("width", $_GET) && array_key_exists("height", $_GET)) {
-                $width = $_GET['width'];
-                $height = $_GET['height'];
-                $thumbPath = 'cache/images/'.$file[0]['dir_id'].'-'.$file[0]['id'].'-'.$file[0]['name'].'_'.$width.'x'.$height.'.'.FileAdmin::$FileExtensions[$file[0]['type']];
-                
-                if(file_exists($thumbPath) && is_readable($thumbPath)) {
-                $filePath = $thumbPath;
+            if ($fileId == false) {
+                if($this->CurrentId != 0) {
+                    $fileId = $this->CurrentId;
+                    $this->CurrentId = 0;
+                } elseif($_SESSION['file']['current_id'] != '') {
+                    $fileId = $_SESSION['file']['current_id'];
                 } else {
-                self::createThumb($filePath, $thumbPath, $width, $height, $file[0]['type']);
-                $filePath = $thumbPath;
-                }
-            } else if(array_key_exists("width", $_GET)) {
-                $width = $_GET['width'];
-                list($orWidth, $orHeight, $orType) = getimagesize($filePath);
-                $ratio = $width / $orWidth;
-                $height = round($ratio * $orHeight);
-                
-                $thumbPath = 'cache/images/'.$file[0]['dir_id'].'-'.$file[0]['id'].'-'.$file[0]['name'].'_'.$width.'x'.$height.'.'.FileAdmin::$FileExtensions[$file[0]['type']];
-                
-                if(file_exists($thumbPath) && is_readable($thumbPath)) {
-                $filePath = $thumbPath;
-                } else {
-                self::createThumb($filePath, $thumbPath, $width, $height, $file[0]['type']);
-                $filePath = $thumbPath;
-                }
-            } else if(array_key_exists("height", $_GET)) {
-                $height = $_GET['height'];
-                list($orWidth, $orHeight, $orType) = getimagesize($filePath);
-                $ratio = $height / $orHeight;
-                $width = round($ratio * $orWidth);
-                
-                $thumbPath = 'cache/images/'.$file[0]['dir_id'].'-'.$file[0]['id'].'-'.$file[0]['name'].'_'.$width.'x'.$height.'.'.FileAdmin::$FileExtensions[$file[0]['type']];
-                
-                if(file_exists($thumbPath) && is_readable($thumbPath)) {
-                $filePath = $thumbPath;
-                } else {
-                self::createThumb($filePath, $thumbPath, $width, $height, $file[0]['type']);
-                $filePath = $thumbPath;
+                    header("HTTP/1.1 404 Not Found");
+                    parent::close();
                 }
             }
             
-            header("Expires: ".gmdate("D, d M Y H:i:s", mktime(0, 0, 0, 12, 21, 2011))." GMT");
-            header("Cache-Control: max-age=31536000");
-            header("Pragma: cache");
-            header("Last-Modified: ".gmdate("D, d M Y H:i:s", $updTime)." GMT");
+            $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = " . $dbObject->escape($fileId) . ";");
             
-            $updTime = filemtime($filePath);
-            //echo $updTime.' - '.getenv("HTTP_IF_MODIFIED_SINCE").' ; ';
-            if($_SERVER["HTTP_IF_MODIFIED_SINCE"] && $updTime <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
-                header("HTTP/1.1 304 Not Modified");
-                parent::close();
-            }
+            if (count($file) == 1) {
+                $filePath = self::getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
+                $fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".FileAdmin::$FileExtensions[$file[0]['type']] : "document/".$file[0]['type'];
+                
+                if (array_key_exists("width", $_GET) && array_key_exists("height", $_GET)) {
+                    $width = intval($_GET['width']);
+                    $height = intval($_GET['height']);
+                    if (empty($width) || empty($height)) {
+                        header("HTTP/1.1 400 Bad Request");
+                        parent::close();
+                    }
 
-            
-            if(file_exists($filePath) && is_readable($filePath)) {
-                $fileSize = filesize($filePath);
+                    $thumbPath = $this->getImageThumbPath($file[0]['id'], $width, $height, $file[0]['type']);
+                    if(file_exists($thumbPath) && is_readable($thumbPath)) {
+                        $filePath = $thumbPath;
+                    } else {
+                        $this->createThumb($filePath, $thumbPath, $width, $height, $file[0]['type']);
+                        $filePath = $thumbPath;
+                    }
+                } else if(array_key_exists("width", $_GET)) {
+                    $width = intval($_GET['width']);
+                    if (empty($width)) {
+                        header("HTTP/1.1 400 Bad Request");
+                        parent::close();
+                    }
+
+                    list($orWidth, $orHeight, $orType) = getimagesize($filePath);
+                    $ratio = $width / $orWidth;
+                    $height = round($ratio * $orHeight);
+                    
+                    $thumbPath = $this->getImageThumbPath($file[0]['id'], $width, $height, $file[0]['type']);
+                    
+                    if(file_exists($thumbPath) && is_readable($thumbPath)) {
+                        $filePath = $thumbPath;
+                    } else {
+                        $this->createThumb($filePath, $thumbPath, $width, $height, $file[0]['type']);
+                        $filePath = $thumbPath;
+                    }
+                } else if(array_key_exists("height", $_GET)) {
+                    $height = $_GET['height'];
+                    if (empty($height)) {
+                        header("HTTP/1.1 400 Bad Request");
+                        parent::close();
+                    }
+
+                    list($orWidth, $orHeight, $orType) = getimagesize($filePath);
+                    $ratio = $height / $orHeight;
+                    $width = round($ratio * $orWidth);
+                    
+                    $thumbPath = $this->getImageThumbPath($file[0]['id'], $width, $height, $file[0]['type']);
+                    
+                    if(file_exists($thumbPath) && is_readable($thumbPath)) {
+                        $filePath = $thumbPath;
+                    } else {
+                        $this->createThumb($filePath, $thumbPath, $width, $height, $file[0]['type']);
+                        $filePath = $thumbPath;
+                    }
+                }
                 
-                header('Content-Type: '.$fileExt);
-                header('Content-Length: '.$fileSize);
-                header('Content-Disposition: attachment; filename='.$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']]);
-                header('Content-Transfer-Encoding: binary');
-                $file = @ fopen($filePath, 'rb');
-                if ($file) {
-                fpassthru($file);
-                parent::close();
+                $updTime = filemtime($filePath);
+
+                header("Expires: " . gmdate("D, d M Y H:i:s", mktime(0, 0, 0, 12, 21, 2011)) . " GMT");
+                header("Cache-Control: max-age=31536000");
+                header("Pragma: cache");
+                header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
+                
+                if ($_SERVER["HTTP_IF_MODIFIED_SINCE"] && $updTime <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
+                    header("HTTP/1.1 304 Not Modified");
+                    parent::close();
+                }
+
+                if (file_exists($filePath) && is_readable($filePath)) {
+                    $fileSize = filesize($filePath);
+                    
+                    header('Content-Type: '.$fileExt);
+                    header('Content-Length: '.$fileSize);
+                    header('Content-Disposition: attachment; filename='.$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']]);
+                    header('Content-Transfer-Encoding: binary');
+                    $file = @ fopen($filePath, 'rb');
+                    if ($file) {
+                        fpassthru($file);
+                        parent::close();
+                    } else {
+                        // vrat image "file not found".
+                    }
                 } else {
-                // vrat image "file not found".
+                    // vrat image "file not found".
                 }
             } else {
                 // vrat image "file not found".
-            }
-            } else {
-            // vrat image "file not found".
             }
         }
         
