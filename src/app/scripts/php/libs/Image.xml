@@ -122,6 +122,20 @@
     </comment>
   </property>
   <property>
+  	<name>extension</name>
+  	<getFunction>imageExtension</getFunction>
+    <comment>
+      Vrací připonu obrázku uvnitř img:directory (Např: "jpg").
+    </comment>
+  </property>
+  <property>
+  	<name>contentType</name>
+  	<getFunction>imageContentType</getFunction>
+    <comment>
+      Vrací content-type obrázku uvnitř img:directory.
+    </comment>
+  </property>
+  <property>
   	<name>fileId</name>
   	<setFunction>setFileId</setFunction>
   	<getFunction>getFileId</getFunction>

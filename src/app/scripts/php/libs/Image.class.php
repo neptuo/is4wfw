@@ -109,6 +109,18 @@
 			return parent::request()->get('type', 'g:image');
 		}
 
+		//C-Tag
+		public function imageExtension() {
+			$type = parent::request()->get('type', 'g:image');
+			return FileAdmin::$FileExtensions[$type];
+		}
+
+		//C-Tag
+		public function imageContentType() {
+			$type = parent::request()->get('type', 'g:image');
+			return FileAdmin::$FileMimeTypes[$type];
+		}
+
         public function getFavicon($fileId) {
 			if ($this->canUserFile($fileId, WEB_R_READ)) {
 				$image = parent::dao('File')->get($fileId);

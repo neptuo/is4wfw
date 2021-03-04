@@ -58,7 +58,7 @@
       <prefix />
       <comment>
         Filtrování pomocí prefixových atributů.
-        Jediný podporovaný nyná je "type". Může být seznam čárkou oddělených typů nebo pole ("jpg", "zip" nebo "dir" pro zahrnutí složek).
+        Jediný nyní podporovaný filtr je "type". Může být seznam čárkou oddělených typů nebo pole ("jpg", "zip" nebo "dir" pro zahrnutí složek).
         Není podporovaný filter model.
       </comment>
     </attribute>
@@ -155,6 +155,13 @@
     <getFunction>getFileBrowserItemExtension</getFunction>
     <comment>
       Vrací koncovku souboru uvnitř párového "fa:browser".
+    </comment>
+  </property>
+  <property>
+    <name>browserContentType</name>
+    <getFunction>getFileBrowserItemContentType</getFunction>
+    <comment>
+      Vrací content-type souboru uvnitř párového "fa:browser".
     </comment>
   </property>
   <property>
@@ -276,12 +283,21 @@
     <function>uploadFormTag</function>
     <attribute>
       <name>dirId</name>
-      <required />
 	    <type>number</type>
+      <default>0</default>
+      <required />
       <comment>Id složky, do které se má uploadovat.</comment>
     </attribute>
+    <attribute>
+      <name>fileId</name>
+	    <type>number</type>
+      <default>0</default>
+      <comment>Id souboru, který se má nahradit.</comment>
+    </attribute>
     <comment>
-      Zpracuje soubory uvnitř modelu a nahraje je do "dirId".
+      Zpracuje všechny klíče uvnitř edit modelu jako soubory, nebo pole souborů.
+      Pokud je zadán "fileId", edituje/nahrazuje existující soubor (jeho obsah) a dává smysl tak odeslat jen jeden soubor.
+      Pokud je zadán "dirId", nahrává nový soubor(y) do složky a dává smysl odeslat více souborů.
     </comment>
   </fulltag>
   <tag>

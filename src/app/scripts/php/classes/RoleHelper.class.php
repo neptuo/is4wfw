@@ -161,8 +161,8 @@ class RoleHelper {
 		$perms = array();
 		$instance->db()->getDataAccess()->transaction();
 		foreach ($result as $perm) {
+			$perms[] = $perm[$groupColumn];
 			if (RoleHelper::isInRole($allowedGroupIds, $perm[$groupColumn])) {
-				$perms[count($perms)] = $perm[$groupColumn];
 				if (!in_array($perm[$groupColumn], $newGroupIds)) {
 					$deleteSql = 'delete from `'.$table.'` where `'.$objectColumn.'` = '.$objectId.' and `'.$groupColumn.'` = '.$perm[$groupColumn].' and `'.$typeColumn.'` = '.$type.';';
 					$instance->db()->getDataAccess()->execute($deleteSql/*, true, true, true*/);

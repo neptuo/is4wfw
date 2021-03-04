@@ -535,6 +535,15 @@
 			return self::$FileExtensions[$type];
 		}
 
+		public function getFileBrowserItemContentType() {
+			$type = self::peekListModel()->field("type");
+			if ($type == 0) {
+				return "";
+			}
+
+			return self::$FileMimeTypes[$type];
+		}
+
 		public function getFileBrowserItemTitle() {
 			return self::peekListModel()->field("title");
 		}
@@ -737,7 +746,7 @@
 			}
 		}
 
-		public function uploadFormTag($template, int $dirId) {
+		public function uploadFormTag($template, $dirId = 0, $fileId = 0) {
 			$model = parent::getEditModel();
 
 			if ($model->isSubmit()) {
@@ -748,7 +757,7 @@
 					$hasAccess = false;
 				}
 
-				$this->forEachModelFile($model, function($file, $key) use ($model, $hasAccess, $dirId) {
+				$this->forEachModelFile($model, function($file, $key) use ($model, $hasAccess, $dirId, $fileId) {
 					if (!$hasAccess) {
 						$model->validationMessage($key, parent::rb('permissiondenied'));
 					}
@@ -762,16 +771,19 @@
 						$model->validationMessage($key, parent::rb('file.unsupportedtype'));
 					}
 
-					$name = $this->getFileNameWithoutExtension($file->Name);
-					$select = parent::select()->where('dir_id', '=', $dirId)->conjunct('name', '=', $name)->conjunct('type', '=', $type);
-					$existing = parent::dao('File')->select($select);
-					if (count($existing) > 0) {
-						$model->validationMessage($key, parent::rb('file.notuniquename').' "' . $file->Name . '"');
+					if (empty($fileId)) {
+						$name = $this->getFileNameWithoutExtension($file->Name);
+						$select = parent::select()->where('dir_id', '=', $dirId)->conjunct('name', '=', $name)->conjunct('type', '=', $type);
+						
+						$existing = parent::dao('File')->select($select);
+						if (count($existing) > 0) {
+							$model->validationMessage($key, parent::rb('file.notuniquename').' "' . $file->Name . '"');
+						}
 					}
 				});
 			} else if ($model->isSave()) {
-				$this->forEachModelFile($model, function($file) use ($dirId) {
-					$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId);
+				$this->forEachModelFile($model, function($file) use ($dirId, $fileId) {
+					$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId, $fileId);
 					$result = $this->processFileUploadBasic($dataItem, $file->TempName);
 					if ($result != null) {
 						throw new Error($result);
@@ -798,16 +810,21 @@
 			}
 		}
 
-		private function mapFileUploadModelToDataItem(FileUploadModel $file, int $dirId) {
+		private function mapFileUploadModelToDataItem(FileUploadModel $file, int $dirId, int $fileId) {
 			$name = $this->getFileNameWithoutExtension($file->Name);
 			$dataItem = [
 				"name" => $name,
 				"title" => $name,
 				"type" => $this->getWebFileType($file->Name),
-				'timestamp' => time(), 
-				'url' => UrlUtils::toValidUrl($name),
+				"timestamp" => time(), 
+				"url" => UrlUtils::toValidUrl($name),
 				"dir_id" => $dirId
 			];
+
+			if (!empty($fileId)) {
+				$dataItem["id"] = $fileId;
+			}
+
 			return $dataItem;
 		}
 
