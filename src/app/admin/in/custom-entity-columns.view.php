@@ -10,7 +10,8 @@
 		<web:a pageId="~/in/custom-entities.view" text="utils:backButtonText" />
 		
 		<admin:edit id="query:column">
-			<web:frame title="loc:columnlist.create">
+			<utils:concat output="editTitle" value1="loc:columnlist.edit.title" value2=" :: " value3="query:column" />
+			<web:frame title="utils:editTitle">
 				<edit:form submit="save">
 					<web:condition when="edit:saved">
 						<web:redirectTo pageId="~/in/custom-entity-columns.view" param-table="query:table" param-column="query:column" />

@@ -6,7 +6,8 @@
 			</ced:tableDeleter>
 		</web:condition>
 		<admin:edit id="query:table">
-			<web:frame title="loc:tablelist.create">
+			<utils:concat output="editTitle" value1="loc:tablelist.edit.title" value2=" :: " value3="query:table" />
+			<web:frame title="utils:editTitle">
 				<edit:form submit="save">
 					<web:condition when="edit:saved">
 						<admin:redirectAfterSave saveName="save" closePageId="~/in/custom-entities.view" saveParam-table="query:table" />
