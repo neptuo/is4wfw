@@ -100,8 +100,6 @@ if (array_key_exists('fid', $_REQUEST)) {
 
         // Try cached file ...
         header("Cache-Control: private, max-age=10800, pre-check=10800");
-        header("Pragma: private");
-        header("Expires: " . date(DATE_RFC822, strtotime("+7 day")));
         header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
         if (array_key_exists("HTTP_IF_MODIFIED_SINCE", $_SERVER) && $updTime <= strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) {
             header('Last-Modified: ' . $_SERVER['HTTP_IF_MODIFIED_SINCE'], true, 304);

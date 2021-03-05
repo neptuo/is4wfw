@@ -811,7 +811,7 @@
 			}
 		}
 
-		private function mapFileUploadModelToDataItem(FileUploadModel $file, int $dirId, int $fileId) {
+		private function mapFileUploadModelToDataItem(FileUploadModel $file, int $dirId, $fileId) {
 			$name = $this->getFileNameWithoutExtension($file->Name);
 			$dataItem = [
 				"name" => $name,
