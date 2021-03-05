@@ -11,12 +11,25 @@
 		
 		<admin:edit id="query:column">
 			<web:frame title="loc:columnlist.create">
-				<edit:form submit="ce-column-creator-save">
+				<edit:form submit="save">
 					<web:condition when="edit:saved">
-						<web:redirectTo pageId="~/in/custom-entity-columns.view" param-table="query:table" />
+						<web:redirectTo pageId="~/in/custom-entity-columns.view" param-table="query:table" param-column="query:column" />
 					</web:condition>
 
-					<ced:tableColumnCreator name="query:table" />
+					<web:condition when="query:column" is="new">
+						<ced:tableColumnCreator name="query:table" />
+					</web:condition>
+					<web:condition when="query:column" is="new" isInverted="true"> 
+						<ced:tableColumnEditor tableName="query:table" columnName="query:column">
+							<div class="gray-box">
+								<label class="block">Description:</label>
+								<ui:textarea name="column-description" class="w700 h100" />
+							</div>
+							<div class="gray-box">
+								<admin:saveButtons closePageId="~/in/custom-entity-columns.view" />
+							</div>
+						</ced:tableColumnEditor>
+					</web:condition>
 				</edit:form>
 			</web:frame>
 		</admin:edit>
@@ -26,11 +39,15 @@
 			<ced:listTableColumns name="query:table">
 				<ui:grid items="ced:listTableColumns" class="standart">
 					<ui:column header="loc:columnlist.name" value="ced:tableColumnName" />
+					<ui:column header="loc:columnlist.description" value="ced:tableColumnDescription" />
 					<ui:column header="loc:columnlist.type" value="ced:tableColumnType" />
 					<ui:columnBoolean header="loc:columnlist.primary" value="ced:tableColumnPrimaryKey" />
 					<ui:columnBoolean header="loc:columnlist.required" value="ced:tableColumnRequired" />
 					<ui:columnBoolean header="loc:columnlist.unique" value="ced:tableColumnUnique" />
 					<ui:columnTemplate header="">
+						<web:a pageId="~/in/custom-entity-columns.view" param-table="query:table" param-column="ced:tableColumnName" class="image-button button-edit">
+							<img src="~/images/page_edi.png" />
+						</web:a>
 						<web:condition when="ced:tableColumnPrimaryKey" is="false">
     						<admin:deleteButton hiddenField="delete" confirmValue="ced:tableColumnName" hidden-column="ced:tableColumnName" />
 						</web:condition>

@@ -136,6 +136,7 @@
         private function createTableColumn($name, $tableName, $model) {
             $columnName = $model["column-name"];
             $columnType = $model["column-type"];
+            $columnDescription = $model["column-description"];
 
             $xml = self::getDefinition($name);
             if ($xml == NULL) {
@@ -145,6 +146,7 @@
             $column = $xml->addChild("column");
             $column->addChild("name", $columnName);
             $column->addChild("type", $columnType);
+            $column->addChild("description", $columnDescription);
 
             if ($model["column-required"]) {
                 $column->addChild("required", true);
@@ -368,6 +370,10 @@
             return self::peekListModel()->data()->name;
         }
 
+        public function getTableColumnDescription() {
+            return self::peekListModel()->data()->description;
+        }
+
         public function getTableColumnType() {
             $typeDefinition = self::getTableColumnTypes(self::peekListModel()->data());
             return $typeDefinition["name"];
@@ -399,6 +405,45 @@
 
             if ($model->isRender()) {
                 $result = $this->partialView("customentities/tableColumnCreator");
+                return $result;
+            }
+        }
+        
+        public function tableColumnEditor($template, $tableName, $columnName) {
+            $model = $this->getEditModel();
+
+            $xml = $this->getDefinition($tableName);
+            if ($xml == NULL) {
+                return false;
+            }
+
+            if ($model->isLoad()) {
+                for ($i=0; $i < count($xml->column); $i++) { 
+                    if ($xml->column[$i]->name == $columnName) {
+                        $model->set("column-description", -1, $xml->column[$i]->description);
+                        break;
+                    }
+                }
+            }
+
+            if ($model->isSubmit()) {
+                $template();
+            }
+            
+            if ($model->isSave()) {
+                for ($i=0; $i < count($xml->column); $i++) { 
+                    if ($xml->column[$i]->name == $columnName) {
+                        $xml->column[$i]->description = $model->get("column-description", -1);
+                        break;
+                    }
+                }
+    
+                $updateSql = $this->getUpdateDefinitionSql($tableName, $xml);
+                $this->dataAccess()->execute($updateSql);
+            }
+            
+            if ($model->isRender()) {
+                $result = $template();
                 return $result;
             }
         }

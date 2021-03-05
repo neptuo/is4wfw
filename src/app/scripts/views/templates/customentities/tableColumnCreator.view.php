@@ -5,6 +5,10 @@
             <ui:textbox name="column-name" />
         </div>
         <div class="gray-box">
+            <label class="block">Description:</label>
+            <ui:textarea name="column-description" class="w700 h60" />
+        </div>
+        <div class="gray-box">
             <label class="w90">Type:</label>
             <ui:dropdownlist name="column-type" source="ced:tableColumnTypes" display="name" value="key" data-toggler="type" />
         </div>
@@ -112,7 +116,7 @@
         </div>
     </div>
     <div class="gray-box">
-        <input type="hidden" name="ce-column-creator-save" value="create" />
-        <button type="submit" name="ce-column-creator-save" value="create">Create</button>
+        <input type="hidden" name="save" value="create" />
+        <button type="submit" name="save" value="create">Create</button>
     </div>
 </ui:form>

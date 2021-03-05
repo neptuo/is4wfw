@@ -40,6 +40,23 @@
     </comment>
   </tag>
   <fulltag>
+    <name>tableColumnEditor</name>
+    <function>tableColumnEditor</function>
+    <attribute>
+      <name>tableName</name>
+      <required />
+      <comment>Název entity, jejíž sloupec se má editovat.</comment>
+    </attribute>
+    <attribute>
+      <name>columnName</name>
+      <required />
+      <comment>Název sloupce, který se má editovat.</comment>
+    </attribute>
+    <comment>
+      Editor sloupce uživatelské entity.
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>listTables</name>
     <function>listTables</function>
     <comment>
@@ -155,6 +172,13 @@
     <getFunction>getTableColumnName</getFunction>
     <comment>
         Vrací název aktuálního sloupce při průchodu přes "ced:listTableColumns".
+    </comment>
+  </property>
+  <property>
+    <name>tableColumnDescription</name>
+    <getFunction>getTableColumnDescription</getFunction>
+    <comment>
+        Vrací popisek aktuálního sloupce při průchodu přes "ced:listTableColumns".
     </comment>
   </property>
   <property>
