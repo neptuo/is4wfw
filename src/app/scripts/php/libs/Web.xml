@@ -296,6 +296,11 @@
     <attribute>
       <name>type</name>
     </attribute>
+    <attribute>
+      <name>param</name>
+      <prefix />
+      <comment>Seznam paramtrů, které se mají předat URL.</comment>
+    </attribute>
     <anyAttribute />
     <comment>
       Vytvoří odkaz na stránku v aplikaci, "pageId" je id požadovaného stránky, 

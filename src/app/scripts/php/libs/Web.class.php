@@ -1920,9 +1920,9 @@
             return $this->providedPageUrl;
         }
 
-        public function makeAnchorFullTag($template, $pageId, $languageId = false, $class = "", $activeClass = '', $id = "", $target = "", $rel = "", $type = '', $params = false) {
+        public function makeAnchorFullTag($template, $pageId, $languageId = false, $class = "", $activeClass = '', $id = "", $target = "", $rel = "", $type = '', $params = [], $attributes = []) {
             $text = $template();
-            return $this->makeAnchor($pageId, $text, $languageId, $class, $activeClass, $id, $target, $rel, $type, $params);
+            return $this->makeAnchor($pageId, $text, $languageId, $class, $activeClass, $id, $target, $rel, $type, $params, $attributes);
         }
 
         /**
