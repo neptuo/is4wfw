@@ -563,6 +563,22 @@
                     $this->Code->addLine("else {");
                     $this->Code->addIndent();
 
+                    // Call all properties in attributes.
+                    foreach ($attributes->Attributes as $attribute) {
+                        if ($attributes->IsTemplateAttribute($attribute)) {
+                            if (is_array($attribute["value"])) {
+                                foreach ($attribute["value"] as $value) {
+                                    if ($attributes->IsTemplateAttribute($value)) {
+                                        $this->Code->addLine($value["value"] . ";");
+                                    }
+                                }
+                            } else {
+                                $this->Code->addLine($attribute["value"] . ";");
+                            }
+                        }
+                    }
+
+                    // Call template/body function.
                     if ($hasBodyTemplate) {
                         if ($attributes->HasAttributeModifyingDecorators) {
                             $this->Code->addLine($returnParametersName. "['" . PhpRuntime::$FullTagTemplateName . "']();");
@@ -580,20 +596,6 @@
 
                             if (!$isContentProcessed) {
                                 $this->Code->addLine('$'. "this->" . $identifier . "_body(null);");
-                            }
-                        }
-                    } else {
-                        foreach ($attributes->Attributes as $attribute) {
-                            if ($attributes->IsTemplateAttribute($attribute)) {
-                                if (is_array($attribute["value"])) {
-                                    foreach ($attribute["value"] as $value) {
-                                        if ($attributes->IsTemplateAttribute($value)) {
-                                            $this->Code->addLine($value["value"] . ";");
-                                        }
-                                    }
-                                } else {
-                                    $this->Code->addLine($attribute["value"] . ";");
-                                }
                             }
                         }
                     }
