@@ -4,10 +4,6 @@
         <ui:textbox name="entity-name" />
     </div>
     <div class="gray-box">
-        <label class="w90">Description:</label>
-        <ui:textbox name="entity-description" class="w400" />
-    </div>
-    <div class="gray-box">
         <label class="w90">Engine:</label>
         <ui:dropdownlist name="entity-engine" source="ced:tableEngines" display="name" value="key" />
     </div>
@@ -17,6 +13,10 @@
             <ui:checkbox name="entity-audit-log" />
             Generate audit log
         </label>
+    </div>
+    <div class="gray-box">
+        <label class="block">Description:</label>
+        <ui:textarea name="entity-description" class="w700 h100" />
     </div>
     <hr />
     <div class="ce-primary-key-1">
@@ -68,7 +68,7 @@
         <hr />
     </div>
     <div class="gray-box">
-        <input type="hidden" name="ce-creator-save" value="create" />
-        <button type="submit" name="ce-creator-save" value="create">Create Table</button>
+        <input type="hidden" name="save" value="create" />
+        <button type="submit" name="save" value="create">Create Table</button>
     </div>
 </ui:form>

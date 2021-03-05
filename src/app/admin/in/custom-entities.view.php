@@ -7,12 +7,25 @@
 		</web:condition>
 		<admin:edit id="query:table">
 			<web:frame title="loc:tablelist.create">
-				<edit:form submit="ce-creator-save">
+				<edit:form submit="save">
 					<web:condition when="edit:saved">
-						<web:redirectTo pageId="~/in/custom-entities.view" />
+						<admin:redirectAfterSave saveName="save" closePageId="~/in/custom-entities.view" saveParam-table="query:table" />
 					</web:condition>
 
-					<ced:tableCreator />
+					<web:condition when="query:table" is="new">
+						<ced:tableCreator />
+					</web:condition>
+					<web:condition when="query:table" is="new" isInverted="true">
+						<ced:tableEditor name="query:table">
+							<div class="gray-box">
+								<label class="block">Description:</label>
+								<ui:textarea name="entity-description" class="w700 h100" />
+							</div>
+							<div class="gray-box">
+								<admin:saveButtons closePageId="~/in/custom-entities.view" />
+							</div>
+						</ced:tableEditor>
+					</web:condition>
 				</edit:form>
 			</web:frame>
 		</admin:edit>
@@ -26,8 +39,11 @@
 				<ui:grid items="ced:listTables" class="standart clickable">
 					<ui:column header="loc:tablelist.name" value="ced:tableName" />
 					<ui:column header="loc:tablelist.description" value="ced:tableDescription" />
-				<ui:columnBoolean header="Audit log" value="ced:tableAuditLog" />
+					<ui:columnBoolean header="Audit log" value="ced:tableAuditLog" />
 					<ui:columnTemplate header="">
+						<web:a pageId="~/in/custom-entities.view" param-table="ced:tableName" class="image-button button-edit">
+							<img src="~/images/page_edi.png" />
+						</web:a>
 						<web:a pageId="~/in/custom-entity-columns.view" param-table="ced:tableName" class="image-button button-edit">
 							<img src="~/images/page_pro.png" />
 						</web:a>

@@ -14,6 +14,19 @@
       Generátor základu tabulky uživatelských entit.
     </comment>
   </tag>
+  <fulltag>
+    <name>tableEditor</name>
+    <function>tableEditor</function>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název entity, která se má editovat.</comment>
+    </attribute>
+    <comment>
+      Editor uživatelské entity.
+    </comment>
+  </fulltag>
   <tag>
     <name>tableColumnCreator</name>
     <function>tableColumnCreator</function>

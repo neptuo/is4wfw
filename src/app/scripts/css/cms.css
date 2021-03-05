@@ -1444,6 +1444,10 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     min-height: 60px;
 }
 
+.h100 {
+    min-height: 100px;
+}
+
 .floatedl, .gray-box .floatedl, .gray-box-float .floatedl {
     float: left;
 }

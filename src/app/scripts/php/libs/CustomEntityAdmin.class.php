@@ -263,6 +263,35 @@
                 return $result;
             }
         }
+        
+        public function tableEditor($template, $name) {
+            $model = $this->getEditModel();
+
+            $xml = $this->getDefinition($name);
+            if ($xml == NULL) {
+                return false;
+            }
+
+            if ($model->isLoad()) {
+                $sql = $this->sql()->select("custom_entity", ["description"], ["name" => $name]);
+                $description = $this->dataAccess()->fetchScalar($sql);
+                $model->set("entity-description", -1, $description);
+            }
+
+            if ($model->isSubmit()) {
+                $template();
+            }
+            
+            if ($model->isSave()) {
+                $updateSql = $this->sql()->update("custom_entity", ["description" => $model->get("entity-description", -1)], ["name" => $name]);
+                $this->dataAccess()->execute($updateSql);
+            }
+            
+            if ($model->isRender()) {
+                $result = $template();
+                return $result;
+            }
+        }
 
         public function tableDeleter($template, $name) {
             $tableName = self::ensureTableName($name);
