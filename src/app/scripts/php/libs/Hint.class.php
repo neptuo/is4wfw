@@ -492,6 +492,7 @@
             "php.libs.Js",
             "php.libs.Json",
             "php.libs.Language",
+            "php.libs.Listing",
             "php.libs.Localization",
             "php.libs.Log",
             "php.libs.Login",

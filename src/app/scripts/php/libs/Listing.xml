@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Listing library</name>
+  <classname>Listing</classname>
+  <classpath>php.libs</classpath>
+  <count>*</count>
+  <comment>
+    Knihovna pro tvorbu list modelů uvnitř šablon.
+  </comment>
+  <tag>
+    <name>declare</name>
+    <function>setValue</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název (property), pod kterým má být model dostupný.</comment>
+    </attribute>
+    <attribute>
+      <name>fromArray</name>
+      <comment>Pole hodnot. Každá položka pole bude brána jako jeden záznam list modelu.</comment>
+    </attribute>
+    <comment>
+      Vytvoří instanci list modelu pod názvem "name".
+    </comment>
+  </tag>
+  <fulltag>
+    <name>declare</name>
+    <function>setValueFullTag</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název (property), pod kterým má být model dostupný.</comment>
+    </attribute>
+    <comment>
+      Vytvoří instanci list modelu pod názvem "name".
+    </comment>
+  </fulltag>
+  <tag>
+    <name>add</name>
+    <function>addItem</function>
+    <lookless />
+    <attribute>
+      <name>key</name>
+      <prefix />
+      <comment>Klíč hodnota jednotlivých atributů položky list modelu.</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <comment>
+        Název (property), pod kterým má být list model dostupný.
+        Povinný jen pokud je použitý mimo tělo "list:declare".
+      </comment>
+    </attribute>
+    <comment>
+      Přidá položku do list modelu.
+    </comment>
+  </tag>
+  <anyProperty>
+    <comment>
+      Vrátí instanci list modelu.
+    </comment>
+  </anyProperty>
+</taglib>
+

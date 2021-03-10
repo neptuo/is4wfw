@@ -52,6 +52,10 @@
             }
         }
 
+        public function addItem($item) {
+            $this->items[] = $item;
+        }
+
         public function data($item = "z.z-def") {
             if ($item != "z.z-def") {
                 $this->data = $item;
