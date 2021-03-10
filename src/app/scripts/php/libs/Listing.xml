@@ -46,7 +46,7 @@
     <attribute>
       <name>key</name>
       <prefix />
-      <comment>Klíč hodnota jednotlivých atributů položky list modelu.</comment>
+      <comment>Klíč hodnota jednotlivých fieldů položky list modelu.</comment>
     </attribute>
     <attribute>
       <name>name</name>
@@ -61,7 +61,9 @@
   </tag>
   <anyProperty>
     <comment>
-      Vrátí instanci list modelu.
+      Pokud je zadán název modelu, vrátí celý list model.
+      Pokud je ve formátu "{model}-{field}", vrátí hodnotu field aktuální položky.
+      Pokud název fieldu "_", pak vrací celou položku.
     </comment>
   </anyProperty>
 </taglib>

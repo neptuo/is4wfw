@@ -77,6 +77,10 @@
 				return $this->container[$name[0]];
 			}
 
+			if ($name[1] == "_") {
+				return $this->container[$name[0]]->data();
+			}
+
 			return $this->container[$name[0]]->field($name[1]);
 		}
 	}
