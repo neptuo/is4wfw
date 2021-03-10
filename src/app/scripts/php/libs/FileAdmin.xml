@@ -68,7 +68,7 @@
       <prefix />
       <comment>
         Definice řazení 
-        Buď přámo stringová hodnota nebo prefixová a s hodnotami "asc"/"desc"
+        Buď přímo stringová hodnota nebo prefixová a s hodnotami "asc"/"desc"
         Řaditelné atributy "id", "name", "timestamp", "order".
         Pro grouped=false podporuje pouze jednoduchou variantu.
         Pro grouped=true podporuje pouze jeden klíč.

@@ -62,11 +62,6 @@
 		
 		public function addItem($key, $name = "") {
 			$name = $this->ensureName($name);
-
-			if (count($key) == 1 && array_key_exists("", $key)) {
-				$key = $key[""];
-			}
-
 			$this->container[$name]->addItem($key);
 		}
 		

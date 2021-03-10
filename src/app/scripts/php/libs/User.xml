@@ -133,7 +133,7 @@
     </attribute>
     <attribute>
       <name>default</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Výchozí hodnoty fieldů při zakládání uživatele.</comment>
     </attribute>
     <comment>

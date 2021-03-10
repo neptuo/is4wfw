@@ -120,12 +120,12 @@
     </attribute>
     <attribute>
       <name>thead</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "thead".</comment>
     </attribute>
     <attribute>
       <name>tbody</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "tbody".</comment>
     </attribute>
     <anyAttribute />
@@ -148,12 +148,12 @@
     </attribute>
     <attribute>
       <name>th</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "th".</comment>
     </attribute>
     <attribute>
       <name>td</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "td".</comment>
     </attribute>
     <comment>
@@ -185,12 +185,12 @@
     </attribute>
     <attribute>
       <name>th</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "th".</comment>
     </attribute>
     <attribute>
       <name>td</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "td".</comment>
     </attribute>
     <comment>
@@ -216,12 +216,12 @@
     </attribute>
     <attribute>
       <name>th</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "th".</comment>
     </attribute>
     <attribute>
       <name>td</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "td".</comment>
     </attribute>
     <comment>
@@ -237,12 +237,12 @@
     </attribute>
     <attribute>
       <name>th</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "th".</comment>
     </attribute>
     <attribute>
       <name>td</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam atributů pro "td".</comment>
     </attribute>
     <comment>
