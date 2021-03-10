@@ -1,9 +1,6 @@
 <?php
 
-use Mpdf\Tag\P;
-
-require_once("BaseTagLib.class.php");
-	require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
+	require_once("BaseTagLib.class.php");
 
 	/**
 	 * 
@@ -21,11 +18,11 @@ require_once("BaseTagLib.class.php");
 			parent::setTagLibXml("Template.xml");
 		}
 
-		private function throwNotFound($filter) {
+		protected function throwNotFound($filter) {
 			throw new Error("Missing template filtered by '" . http_build_query($filter) . "'.");;
 		}
 
-		private function findBy($filter) {
+		private function getBy($filter) {
 			$sql = parent::sql()->select("template", ["id", "content"], $filter);
 			$data = parent::db()->fetchSingle($sql);
 			if (empty($data)) {
@@ -39,10 +36,10 @@ require_once("BaseTagLib.class.php");
 			throw new Error("Permission denied when reading template id = '" . $data["id"] . "'.");
 		}
 
-		private function includeBy(array $filter, array $keys, ?callable $contentTemplate, $params) {
+		protected function includeBy(array $filter, array $keys, ?callable $contentTemplate, $params) {
 			$template = $this->getParsedTemplate($keys);
 			if ($template == null) {
-				$templateContent = $this->findBy($filter);
+				$templateContent = $this->getBy($filter);
 				$template = $this->parseTemplate($keys, $templateContent);
 			}
 
@@ -82,12 +79,12 @@ require_once("BaseTagLib.class.php");
 		public function includeWithBodyByIdentifier($identifier, $template, $params) {
 			$filter = ["identifier" => $identifier, "group" => ""];
 			$sql = $this->sql()->select("template", ["id"], $filter);
-			$entity = $this->dataAccess()->fetchSingle($sql);
-			if (empty($entity)) {
+			$entityId = $this->dataAccess()->fetchScalar($sql);
+			if (empty($entityId)) {
 				$this->throwNotFound($filter);
 			}
 			
-			return $this->includeBy(["identifier" => $identifier], TemplateCacheKeys::template($entity["id"]), $template, $params);
+			return $this->includeBy(["id" => $entityId], TemplateCacheKeys::template($entityId), $template, $params);
 		}
 
 		public function content() {
@@ -117,7 +114,7 @@ require_once("BaseTagLib.class.php");
 			$keys = TemplateCacheKeys::template($id);
 			$template = $this->getParsedTemplate($keys);
 			if ($template == null) {
-				$templateContent = $this->findBy(["id" => $id]);
+				$templateContent = $this->getBy(["id" => $id]);
 				$template = $this->parseTemplate($keys, $templateContent);
 			}
 

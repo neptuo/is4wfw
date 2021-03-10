@@ -509,6 +509,7 @@
             "php.libs.Sport",
             "php.libs.System",
             "php.libs.Template",
+            "php.libs.TemplateGroup",
             "php.libs.User",
             "php.libs.Ui",
             "php.libs.Utilities",

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Template Group library</name>
+  <classname>TemplateGroup</classname>
+  <classpath>php.libs</classpath>
+  <count>*</count>
+  <comment>
+    Knihovna pro vkládání šablon, které spadají do jedné skupiny, do stránek.
+    Pro výběr skupiny slouží parametr při registraci "group".
+  </comment>
+  <anyTag>
+    <function>includeByIdentifier</function>
+    <comment>
+      Vloží obsah šablony, kde název tagu musí odpovídat "identifier" šablony.
+      Uživatel musí mít právo READ k dané šabloně.
+      Všechny atributy jsou parametry šablony.
+    </comment>
+  </anyTag>
+  <anyFulltag>
+    <function>includeWithBodyByIdentifier</function>
+    <comment>
+      Vloží obsah šablony, kde název tagu musí odpovídat "identifier" šablony.
+      Uživatel musí mít právo READ k dané šabloně.
+      Všechny atributy jsou parametry šablony.
+      Tělo je použito pro "template:content".
+    </comment>
+  </anyFulltag>
+</taglib>
+
