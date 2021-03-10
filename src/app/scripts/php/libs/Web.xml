@@ -484,8 +484,27 @@
     </comment>
   </tag>
   <tag>
+    <name>out</name>
+    <function>getProperty</function>
+    <attribute>
+      <name>text</name>
+      <required />
+    </attribute>
+    <attribute>
+      <name>isEvaluated</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda má být hodnota rozparsována jako property.</comment>
+    </attribute>
+    <comment>
+      Vrátí text z atributu "text". 
+      Vhodné pro vypsání proměnné.
+    </comment>
+  </tag>
+  <tag>
     <name>getProperty</name>
     <function>getProperty</function>
+    <obsolete>Používat "web:out". Je to kratší.</obsolete>
     <attribute>
       <name>name</name>
       <required />
