@@ -1,5 +1,6 @@
-Ajax = function(selector, parentPageId) {
+Ajax = function(selector, parentPageId, baseUrl) {
     this.Selector = selector;
+    this.BaseUrl = baseUrl;
     this.LoadingHandlers = [];
     this.CompletedHandlers = [];
     this.FailedHandlers = [];
@@ -61,8 +62,9 @@ Ajax.prototype._RaiseEvent = function(eventName) {
 
 Ajax.prototype._OnLinkClick = function(e) {
     var url = e.currentTarget.href;
+    var loadUrl = url.replace(window.location.origin, this.BaseUrl);
 
-    this.Load(url);
+    this.Load(loadUrl);
     this._UpdateHistory(url);
     this._StopEvent(e);
 };
@@ -76,7 +78,12 @@ Ajax.prototype._OnButtonClick = function(e) {
 
 Ajax.prototype._OnFormSubmit = function(e) {
     var form = e.currentTarget;
-    var url = form.action;
+    var url = null;
+    if (this.BaseUrl != null) {
+        url = this.BaseUrl + form.getAttribute("action");
+    } else {
+        url = form.action;
+    }
     var method = form.method;
     
     this._RaiseEvent('loading');
@@ -89,6 +96,7 @@ Ajax.prototype._OnFormSubmit = function(e) {
     }
 
     var request = new XMLHttpRequest();
+    request.withCredentials = true;
     request.addEventListener("readystatechange", this._OnFormReadyStateChanged.bind(this));
     request.open(method, url);
     this._ObserveRequest(request);
@@ -106,8 +114,14 @@ Ajax.prototype._OnFormReadyStateChanged = function(e) {
 
 Ajax.prototype.Load = function(url) {
     this._RaiseEvent('loading');
+
+    if (url.indexOf("http") != 0) {
+        url = this.BaseUrl + url;
+    }
+
     $.ajax({
         url: url,
+        xhrFields: {withCredentials: true},
         type: 'GET',
         beforeSend: this._ObserveRequest.bind(this),
         complete: this._OnLoadCompleted.bind(this)
@@ -137,9 +151,11 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
         return;
     }
 
-    var url = xhr.responseURL;
-    if (url != window.location.href) {
-        this._UpdateHistory(url, true);
+    if (xhr.responseURL) {
+        var url = xhr.responseURL.replace(this.BaseUrl, window.location.origin);
+        if (url != window.location.href) {
+            this._UpdateHistory(url, true);
+        }
     }
 
     var responseText = xhr.responseText;
@@ -161,7 +177,7 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
         if (styles != null) {
             var styleReferences = styles.getElementsByTagName("rssmm:link-ref");
             for (var i = 0, count = styleReferences.length; i < count; i++) {
-                var linkUrl = styleReferences[i].innerHTML;
+                var linkUrl = this.BaseUrl + styleReferences[i].innerHTML;
                 if (document.querySelector("link[href='" + linkUrl + "']") == null) {
                     var link = document.createElement("link");
                     link.rel = "stylesheet";
@@ -185,7 +201,7 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
         if (scripts != null) {
             var scriptReferences = scripts.getElementsByTagName("rssmm:script-ref");
             for (var i = 0, count = scriptReferences.length; i < count; i++) {
-                var linkUrl = scriptReferences[i].innerHTML;
+                var linkUrl = this.BaseUrl + scriptReferences[i].innerHTML;
                 if (document.querySelector("script[src='" + linkUrl + "']") == null) {
                     var link = document.createElement("script");
                     link.src = linkUrl;

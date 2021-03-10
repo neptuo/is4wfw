@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Site</title>
+    <script src="http://localhost:4242/js/jquery/jquery-3.5.1.min.js"></script>
+    <script src="http://localhost:4242/js/ajax.js"></script>
+    <script>
+        $(function() { var ajax = new Ajax("body", null, "http://localhost:4242"); ajax.Load("/webadmin") });
+    </script>
+</head>
+<body>
+</body>
+</html>
