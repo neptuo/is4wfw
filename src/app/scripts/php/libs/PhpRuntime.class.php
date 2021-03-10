@@ -484,7 +484,11 @@
                         $processedAtts[] = $attName;
                         if (array_key_exists($attName, $return)) {
                             if (empty($return[$attName]["value"])) {
-                                $return[$attName] = $processValue;
+                                if ($att->prefix["default"] == "merge") {
+                                    $return[$attName] = $processValue;
+                                } else {
+                                    $return[$attName]["value"][""] = $processValue;
+                                }
                             } else {
                                 $return[$attName]["mergeEmptyKey"] = $att->prefix["default"] == "merge" && $processValue["type"] == "eval";
                                 $return[$attName]["value"][""] = $processValue;
