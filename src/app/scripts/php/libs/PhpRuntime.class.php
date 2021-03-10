@@ -115,7 +115,7 @@
          *    @param $attlist array with required parameters (tagPrefix & classPath)                    
          *
          */                                                
-        public function register($tagPrefix, $classPath) {
+        public function register($tagPrefix, $classPath, $params = []) {
             $classJPath = $classPath;
             if (!array_key_exists($tagPrefix, $this->_REGISTERED) && !array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 if ($this->checkIfClassExists($tagPrefix, $classPath)) {
@@ -134,7 +134,7 @@
                     require_once(APP_SCRIPTS_PATH . $classPath . ".class.php");
                     
                     if ($this->isCountOfInstances($className, $classDir)) {
-                        $GLOBALS[$tagPrefix . "Object"] = new $className($tagPrefix);
+                        $GLOBALS[$tagPrefix . "Object"] = new $className($tagPrefix, $params);
                         if(array_key_exists($classJPath, $this->_CLASSES)) {
                             $this->_CLASSES[$classJPath] ++;
                         } else {
@@ -790,9 +790,9 @@
             });
         }
         
-        public function usingObject($content, $prefix, $class) {
+        public function usingObject($content, $prefix, $class, $params = []) {
             $return = '';
-            $this->register($prefix, $class);
+            $this->register($prefix, $class, $params);
 
             $return = $content();
             
