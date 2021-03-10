@@ -68,6 +68,14 @@
         public function createArray($output, $key = array()) {
             $this->OutputValues[$output] = $key;
         }
+        
+        public function splitToArray($output, $value, $separator, $limit = -1) {
+            if ($limit == -1) {
+                $limit = null;
+            }
+            
+            $this->OutputValues[$output] = explode($separator, $value, $limit);
+        }
 
         public function replaceHtmlNewLines($output, $input) {
             $isXhtml = parent::web()->getDoctype() == "xhtml";

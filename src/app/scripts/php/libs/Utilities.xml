@@ -153,6 +153,35 @@
     </comment>
   </tag>
   <tag>
+    <name>splitToArray</name>
+    <function>splitToArray</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required />
+      <type>string</type>
+      <comment>Stringová hodnota.</comment>
+    </attribute>
+    <attribute>
+      <name>separator</name>
+      <required />
+      <type>string</type>
+      <comment>Oddělovač, podle kterého se má dělit.</comment>
+    </attribute>
+    <attribute>
+      <name>limit</name>
+      <type>number</type>
+      <default>-1</default>
+      <comment>Maximální velikost pole (poslední položka obsahuje zbytek nerozděleného řetězce).</comment>
+    </attribute>
+    <comment>Rozdělí "value" do pole podle oddělovače "separator".</comment>
+  </tag>
+  <tag>
     <name>replaceHtmlNewLines</name>
     <function>replaceHtmlNewLines</function>
     <lookless />
