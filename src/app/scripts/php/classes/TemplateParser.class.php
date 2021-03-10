@@ -388,7 +388,7 @@
 
             foreach ($this->Attributes as $tmp) {
                 $attributePrefix = null;
-                [$attributeName, $attributeValue] = explode("=", $tmp);
+                [$attributeName, $attributeValue] = explode("=", $tmp, 2);
                 if (strlen($attributeName) > 0) {
                     $this->PropertyUse = 'get';
                     

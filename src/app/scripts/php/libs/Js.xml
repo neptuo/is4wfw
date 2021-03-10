@@ -36,6 +36,12 @@
       <required />
       <type>string</type>
     </attribute>
+    <attribute>
+      <name>placement</name>
+      <default>head</default>
+      <type>string</type>
+      <comment>Umístění skriptu: "head" do hlavičky stránky; "tail" na konec těla.</comment>
+    </attribute>
     <comment>
       Vloží do stránky skript s virtuální (nebo absolutní) url "path", pokud takový ještě není vložen.
     </comment>

@@ -22,7 +22,7 @@ require_once("BaseTagLib.class.php");
 		}
 
 		private function throwNotFound($filter) {
-			throw new Error("Missing template filterd by '" . http_build_query($filter) . "'.");;
+			throw new Error("Missing template filtered by '" . http_build_query($filter) . "'.");;
 		}
 
 		private function findBy($filter) {

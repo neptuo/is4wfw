@@ -40,22 +40,24 @@
                 $path = $minPath;
             }
             
-            return parent::web()->formatScript($path . '?version=' . WEB_VERSION);
+            $path = UrlUtils::addParameter($path, "version", WEB_VERSION);
+            return parent::web()->formatScript($path);
         }
-
+        
         public function formatStyle($path) {
             if (in_array($path, $this->includedStyles)) {
                 return null;
             }
             
             $this->includedStyles[] = $path;
-            return parent::web()->formatStyle($path . '?version=' . WEB_VERSION);
+            $path = UrlUtils::addParameter($path, "version", WEB_VERSION);
+            return parent::web()->formatStyle($path);
         }
 
-        public function addScript($virtualPath) {
+        public function addScript($virtualPath, $placement = "head") {
             $script = $this->formatScript($virtualPath);
 			if ($script != null) {
-                parent::web()->addScript($script);
+                parent::web()->addScript($script, $placement);
 			}
         }
 
