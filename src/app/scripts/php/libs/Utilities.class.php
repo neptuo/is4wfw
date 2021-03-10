@@ -54,10 +54,6 @@
                 $this->OutputValues[$output] = array();
             }
 
-            if (count($key) == 1 && array_key_exists("", $key)) {
-                $key = $key[""];
-            }
-
             if (is_string($key) && $value != "x-x.y-y") {
                 $this->OutputValues[$output][$key] = $value;
             } else {

@@ -30,7 +30,7 @@
     </attribute>
     <attribute>
       <name>key</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Primární klíče pro editaci záznamu. Klíčem je název sloupce.</comment>
     </attribute>
     <comment>
@@ -52,7 +52,7 @@
     </attribute>
     <attribute>
       <name>key</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Primární klíče pro editaci záznamu. Klíčem je název sloupce.</comment>
     </attribute>
     <comment>
@@ -142,7 +142,7 @@
     <attribute>
       <name>value</name>
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam sloupců s dodatečnými hodnota pro založení záznamu.</comment>
     </attribute>
     <comment>
@@ -243,14 +243,14 @@
       <name>key1</name>
 	    <type>string</type>
       <required />
-      <prefix />
+      <prefix default="merge" />
       <comment>Klíč k první položce.</comment>
     </attribute>
     <attribute>
       <name>key2</name>
 	    <type>string</type>
       <required />
-      <prefix />
+      <prefix default="merge" />
       <comment>Klíč ke druhé položce.</comment>
     </attribute>
     <attribute>

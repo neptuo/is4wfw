@@ -181,7 +181,7 @@
     </attribute>
     <attribute>
       <name>param</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam parametrů, které se mají do URL přidat.</comment>
     </attribute>
     <anyAttribute>
@@ -211,7 +211,7 @@
     </attribute>
     <attribute>
       <name>param</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam parametrů, které se mají do URL přidat.</comment>
     </attribute>
     <comment>
@@ -256,7 +256,7 @@
     </attribute>
     <attribute>
       <name>param</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam paramtrů, které se mají předat URL.</comment>
     </attribute>
     <anyAttribute />
@@ -298,8 +298,8 @@
     </attribute>
     <attribute>
       <name>param</name>
-      <prefix />
-      <comment>Seznam paramtrů, které se mají předat URL.</comment>
+      <prefix default="merge" />
+      <comment>Seznam parametrů, které se mají předat URL.</comment>
     </attribute>
     <anyAttribute />
     <comment>
@@ -367,7 +367,7 @@
     <attribute>
       <name>param</name>
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam parametrů (klíč=hodnota), které se mají přidat do URL. Mají přednost před hodnotami při "copyParameters".</comment>
     </attribute>
     <comment>

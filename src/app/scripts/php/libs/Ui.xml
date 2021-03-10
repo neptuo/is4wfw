@@ -17,7 +17,7 @@
     </attribute>
     <attribute>
       <name>filter</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Slouží pro odfiltrování dat.</comment>
     </attribute>
     <comment>

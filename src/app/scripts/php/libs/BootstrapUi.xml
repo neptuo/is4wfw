@@ -292,9 +292,9 @@
     </attribute>
     <attribute>
       <name>a</name>
-      <prefix />
+      <prefix default="merge" />
       <type>string</type>
-      <comment>Seznam atributů předaných vnitřnímu "a".</comment>
+      <comment>Seznam atributů předaných vnitřnímu "a". Výchozí atribut pouze pro předávní pole.</comment>
     </attribute>
     <anyAttribute>
       <comment>Všechny atributy jsou předány obalovému "li".</comment>
@@ -326,7 +326,7 @@
     </attribute>
     <attribute>
       <name>a</name>
-      <prefix />
+      <prefix default="merge" />
       <type>string</type>
       <comment>Seznam atributů předaných vnitřnímu "a".</comment>
     </attribute>
@@ -414,7 +414,7 @@
     </attribute>
     <attribute>
       <name>a</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Atributy tag "a".</comment>
     </attribute>
     <anyAttribute>
@@ -453,7 +453,7 @@
     </attribute>
     <attribute>
       <name>a</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Atributy tag "a".</comment>
     </attribute>
     <anyAttribute>

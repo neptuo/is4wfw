@@ -19,7 +19,7 @@
     </attribute>
     <attribute>
       <name>key</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Klíč-hodnota jednotlivých parametrů.</comment>
     </attribute>
     <attribute>

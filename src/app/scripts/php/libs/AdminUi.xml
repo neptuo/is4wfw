@@ -38,7 +38,7 @@
     <attribute>
       <name>hidden</name>
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Všechny atributy jsou přidány jako hidden inputy formuláře.</comment>
     </attribute>
     <anyAttribute />
@@ -71,7 +71,7 @@
     <attribute>
       <name>param</name>
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam parametrů předaných do odkazu.</comment>
     </attribute>
     <comment>
@@ -90,7 +90,7 @@
     <attribute>
       <name>saveParam</name>
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam parametrů předaných při přesměrování pro "Save".</comment>
     </attribute>
     <attribute>
@@ -102,7 +102,7 @@
     <attribute>
       <name>closeParam</name>
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam parametrů, které se předají "Close" odkazu.</comment>
     </attribute>
     <attribute>
@@ -127,7 +127,7 @@
     <attribute>
       <name>saveParam</name>
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam parametrů předaných při přesměrování pro "Save".</comment>
     </attribute>
     <attribute>
@@ -139,7 +139,7 @@
     <attribute>
       <name>closeParam</name>
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Seznam parametrů, které se předají "Close" odkazu.</comment>
     </attribute>
     <comment>

@@ -45,7 +45,7 @@
     <lookless />
     <attribute>
       <name>key</name>
-      <prefix />
+      <prefix default="merge" />
       <comment>Klíč hodnota jednotlivých fieldů položky list modelu.</comment>
     </attribute>
     <attribute>

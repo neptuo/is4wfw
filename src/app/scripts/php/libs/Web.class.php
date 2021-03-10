@@ -1828,10 +1828,6 @@
         public function providePageUrl($template, $pageId, $languageId, $isAbsolute = false, $params = array()) {
             $oldUrl = $this->providedPageUrl;
 
-            if (count($params) == 1 && array_key_exists("", $params)) {
-                $params = $params[""];
-            }
-
             try {
                 $this->providedPageUrl = $this->getPageUrl($pageId, $languageId, $isAbsolute, $params);
                 if (is_callable($template)) {
@@ -1878,10 +1874,6 @@
 
             if (count($sql_return) == 1 || !is_numeric($pageId)) {
                 $url = self::composeUrl($pageId, $languageId);
-
-                if (count($params) == 1 && array_key_exists("", $params)) {
-                    $params = $params[""];
-                }
     
                 foreach ($params as $key => $value) {
                     $url = UrlUtils::addParameter($url, $key, $value);

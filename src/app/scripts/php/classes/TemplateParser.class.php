@@ -356,9 +356,20 @@
             return true;
         }
 
-        protected function tryEvaluateAttribute($value) {
+        protected function tryEvaluateAttribute($name, $value, $isEmptyKeyMerged = false) {
             if (is_array($value)) {
+                $emptyKeyValue = null;
+                if ($isEmptyKeyMerged) {
+                    $emptyKeyValue = $value[""];
+                    unset($value[""]);
+                }
+
                 $result = "array(" . $this->concatAttributesToString($value, true) . ")";
+
+                if ($isEmptyKeyMerged) {
+                    $result = "array_merge(" . $this->serializeAttributeValue($name, $emptyKeyValue) . ", " . $result . ")";
+                }
+
                 return $result;
             } else if($value === false) {
                 return 'false';
@@ -420,6 +431,19 @@
             return $attributes;
         }
 
+        protected function serializeAttributeValue($name, $value) {
+            if ($value['type'] == 'raw') {
+                return "'" . $value['value'] . "'";
+            } else if ($value['type'] == 'eval') {
+                return $this->tryEvaluateAttribute($name, $value['value'], array_key_exists("mergeEmptyKey", $value) && $value["mergeEmptyKey"]);
+            } else {
+                echo '<pre>';
+                print_r(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT));
+                echo '</pre>';
+                die('Missing value type for attribute "' . $name . '".');
+            }
+        }
+
         protected function concatAttributesToString($attributes, $isItemNameIncluded = false, $isNewLineAfterAttribute = false) {
             $result = "";
             $i = 0;
@@ -428,16 +452,7 @@
                     $result .= "'" . $name . "' => ";
                 }
 
-                if ($value['type'] == 'raw') {
-                    $result .= "'" . $value['value'] . "'";
-                } else if ($value['type'] == 'eval') {
-                    $result .= $this->tryEvaluateAttribute($value['value']);
-                } else {
-                    echo '<pre>';
-                    print_r(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT));
-                    echo '</pre>';
-                    die('Missing value type for attribute "' . $name . '".');
-                }
+                $result .= $this->serializeAttributeValue($name, $value);
 
                 if ($i < (count($attributes) - 1)) {
                     $result .= ", ";

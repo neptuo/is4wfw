@@ -118,7 +118,7 @@
       <name>key</name>
       <required />
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Klíč-hodnota, které budou předány jako položky nově vytvořené položce v hlavním poli.</comment>
     </attribute>
     <attribute>
@@ -145,7 +145,7 @@
       <name>key</name>
       <required />
       <type>string</type>
-      <prefix />
+      <prefix default="merge" />
       <comment>Klíč-hodnota, které budou nastaveny do pole.</comment>
     </attribute>
     <comment>
