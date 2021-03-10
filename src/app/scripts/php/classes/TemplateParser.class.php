@@ -163,7 +163,8 @@
                 $uniqueIdentifier = $this->generateRandomString();
                 if ($isFullTag) {
                     if ($object[0] == "php" && $object[1] == "using") {
-                        $phpObject->register($attributes->Attributes["prefix"]["value"], $attributes->Attributes["class"]["value"]);
+                        $params = array_map(function($item) { return $item["value"]; }, $attributes->Attributes["param"]["value"]);
+                        $phpObject->register($attributes->Attributes["prefix"]["value"], $attributes->Attributes["class"]["value"], $params);
                     }
 
                     $template = $this->parseInternal($content, 'parse', null, false);
@@ -216,7 +217,8 @@
                     }
                     
                     if ($object[0] == "php" && $object[1] == "register") {
-                        $phpObject->register($attributes->Attributes["tagPrefix"]["value"], $attributes->Attributes["classPath"]["value"]);
+                        $params = array_map(function($item) { return $item["value"]; }, $attributes->Attributes["param"]["value"]);
+                        $phpObject->register($attributes->Attributes["tagPrefix"]["value"], $attributes->Attributes["classPath"]["value"], $params);
                     } else if ($object[0] == "php" && $object[1] == "unregister") {
                         $phpObject->unregister($attributes->Attributes["tagPrefix"]["value"]);
                     }
