@@ -2453,11 +2453,11 @@
                     $dbObject->execute('DELETE FROM `template_right` WHERE `tid` = ' . $templateId . ';');
                     $dbObject->execute('DELETE FROM `template` WHERE `id` = ' . $templateId . ';');
                     if ($showError != 'false') {
-                        $return .= '<h4 class="success">Template deleted!</h4>';
+                        $return .= parent::getSuccess('Template deleted!');
                     }
                 } else {
                     if ($showError != 'false') {
-                        $return .= '<h4 class="error">Permission Denied!</h4>';
+                        $return .= parent::getError('Permission Denied!');
                     }
                 }
             }
@@ -2466,14 +2466,17 @@
                 $name = $_POST['template-search-name'];
                 $content = $_POST['template-search-content'];
                 $identifier = $_POST['template-search-identifier'];
+                $group = $_POST['template-search-group'];
 
                 parent::session()->set('name', $name, 'template-search');
                 parent::session()->set('content', $content, 'template-search');
                 parent::session()->set('identifier', $identifier, 'template-search');
+                parent::session()->set('group', $group, 'template-search');
             } elseif ($_POST['template-search-clear'] == 'Clear') {
                 parent::session()->delete('name', 'template-search');
                 parent::session()->delete('content', 'template-search');
                 parent::session()->delete('identifier', 'template-search');
+                parent::session()->delete('group', 'template-search');
             }
 
             if (parent::getUserProperty('Templates.showFilter', 'true') == 'true') {
@@ -2482,6 +2485,10 @@
                     . '<div class="gray-box">'
                         . '<label for="template-search-name" class="w100">Name:</label>'
                         . '<input class="w300" type="text" name="template-search-name" id="template-search-name" value="' . parent::session()->get('name', 'template-search') . '" />'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<label for="template-search-group" class="w100">Group:</label>'
+                        . '<input class="w300" type="text" name="template-search-group" id="template-search-group" value="' . parent::session()->get('group', 'template-search') . '" />'
                     . '</div>'
                     . '<div class="gray-box">'
                         . '<label for="template-search-identifier" class="w100">Identifier:</label>'
@@ -2504,13 +2511,16 @@
             if (parent::session()->exists('name', 'template-search')) {
                 $searchPara .= ' and `template`.`name` like "%' . parent::session()->get('name', 'template-search') . '%"';
             }
+            if (parent::session()->exists('group', 'template-search')) {
+                $searchPara .= ' and `template`.`group` like "%' . parent::session()->get('group', 'template-search') . '%"';
+            }
             if (parent::session()->exists('identifier', 'template-search')) {
                 $searchPara .= ' and `template`.`identifier` like "%' . parent::session()->get('identifier', 'template-search') . '%"';
             }
             if (parent::session()->exists('content', 'template-search')) {
                 $searchPara .= ' and `template`.`content` like "%' . parent::session()->get('content', 'template-search') . '%"';
             }
-            $templates = $dbObject->fetchAll('SELECT `template`.`id`, `template`.`name`, `template`.`identifier`, `template`.`content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '))' . $searchPara . ' ORDER BY `template`.`id`;');
+            $templates = $dbObject->fetchAll('SELECT `template`.`id`, `template`.`name`, `template`.`group`, `template`.`identifier`, `template`.`content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '))' . $searchPara . ' ORDER BY `template`.`id`;');
 
             if (count($templates) > 0) {
                 $return .= ''
@@ -2519,6 +2529,7 @@
                         . '<tr>'
                             . '<th class="template-id">Id:</th>'
                             . '<th class="template-name w160">Name:</th>'
+                            . '<th class="template-name w80">Group:</th>'
                             . '<th class="template-identifier w120">Identifier:</th>'
                             . '<th class="template-content">Content:</th>'
                             . '<th class="template-edit">Edit:</th>'
@@ -2537,6 +2548,7 @@
                     . '<tr class="' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
                         . '<td class="template-id">' . $template['id'] . '</td>'
                         . '<td class="template-name">' . $template['name'] . '</td>'
+                        . '<td class="template-group">' . $template['group'] . '</td>'
                         . '<td class="template-identifier">' . $template['identifier'] . '</td>'
                         . '<td class="template-content" style="overflow:hidden;">'
                             . '<div class="file-content-in"><div class="foo">' . substr($template['content'], 0, 130) . '</div></div>'
@@ -2610,6 +2622,7 @@
                 $entity = [
                     "name" => $_POST['template-name'], 
                     "identifier" => $_POST['template-identifier'], 
+                    "group" => $_POST['template-group'], 
                     "content" => str_replace('&#126;', '~', $_POST['template-content'])
                 ];
                 $templateR = $_POST['template-right-edit-groups-r'];
@@ -2627,13 +2640,12 @@
                     $template = $dbObject->fetchAll('SELECT `id` FROM `template` WHERE `id` = ' . $templateId . ';');
                     if (count($template) == 0) {
                         $sql = parent::sql()->insert("template", $entity);
-                        try {
+                        try { 
                             $dbObject->execute($sql);
-                            $last = $dbObject->fetchAll('SELECT MAX(`id`) as `id` FROM `template`;');
-                            $templateId = $last[0]['id'];
+                            $templateId = $dbObject->getLastId();
                             $_POST['template-id'] = $templateId;
                             if ($showError != 'false') {
-                                $return .= '<h4 class="success">Template added!</h4>';
+                                $return .= parent::getSuccess('Template added!');
                             }
                         } catch (DataAccessException $e) {
                             $return .= $this->getError("Error: " . $e->errorMessage . ".");
@@ -2644,7 +2656,7 @@
                         try {
                             $dbObject->execute($sql);
                             if ($showError != 'false') {
-                                $return .= '<h4 class="success">Template updated!</h4>';
+                                $return .= parent::getSuccess('Template updated!');
                             }
 
                             $this->deleteParsedTemplate(TemplateCacheKeys::template($templateId));
@@ -2700,7 +2712,7 @@
                     }
                 } else {
                     if ($showError != 'false') {
-                        $return .= '<h4 class="error">Permission Denied!</h4>';
+                        $return .= parent::getError('Permission Denied!');
                     }
                 }
             }
@@ -2712,7 +2724,7 @@
             // Pokud je v postu template-id, vyber template, testuj prava, pokud, testuj prava pro template-id 0
             if ($entity == null) {
                 $templateId = ((array_key_exists('template-id', $_POST)) ? $_POST['template-id'] : 0);
-                $template = $dbObject->fetchAll('SELECT `template`.`name`, `identifier`, `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
+                $template = $dbObject->fetchAll('SELECT `template`.`name`, `identifier`, `group`, `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
             } else {
                 $template = [0 => $entity];
             }
@@ -2765,6 +2777,11 @@
                         . '<div class="gray-box-float">'
                             . '<label for="template-name" class="w100">Name:</label>'
                             . '<input class="w435" type="text" name="template-name" id="template-name" value="' . $template['name'] . '" />'
+                        . '</div>'
+                        . '<div class="clear"></div>'
+                        . '<div class="gray-box-float">'
+                            . '<label for="template-group" class="w100">Group:</label>'
+                            . '<input class="w180" type="text" name="template-group" id="template-group" value="' . $template['group'] . '" />'
                         . '</div>'
                         . '<div class="clear"></div>'
                         . '<div class="gray-box-float">'
@@ -2823,12 +2840,12 @@
                         . '</form>';
             } else {
                 if ($showError != 'false') {
-                    $return .= '<h4 class="error">Permission Denied!</h4>';
+                    $return .= parent::getError('Permission Denied!');
                 }
             }
 
             if ($useFrames != "false") {
-                return parent::getFrame('Temlate edit :: (' . ($templateId == '' ? 'New' : $templateId) . ') ' . $template['name'], $return, '');
+                return parent::getFrame('Template edit :: (' . ($templateId == '' ? 'New' : $templateId) . ') ' . $template['name'], $return, '');
             } else {
                 return $return;
             }

@@ -80,7 +80,7 @@ require_once("BaseTagLib.class.php");
 		}
 
 		public function includeWithBodyByIdentifier($identifier, $template, $params) {
-			$filter = ["identifier" => $identifier];
+			$filter = ["identifier" => $identifier, "group" => ""];
 			$sql = $this->sql()->select("template", ["id"], $filter);
 			$entity = $this->dataAccess()->fetchSingle($sql);
 			if (empty($entity)) {
