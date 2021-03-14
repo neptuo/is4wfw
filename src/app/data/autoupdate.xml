@@ -82,5 +82,6 @@
     <script build="357">UPDATE `directory` SET `order` = `id`;</script>
     <script build="358">ALTER TABLE `directory` CHANGE `order` `order` INT NOT NULL;</script>
     <script build="359">ALTER TABLE `page_file` ADD `placement` TINYINT NOT NULL DEFAULT '0' AFTER `type`;</script>
-    <script build="360">ALTER TABLE `template` DROP CONSTRAINT `template_identifier`, ADD `group` VARCHAR(30) NULL DEFAULT '' AFTER `name`, ADD UNIQUE `template_identifier` (`group`, `identifier`); UPDATE `template` SET `group` = '' WHERE `group` IS NULL;</script>
+    <script build="360">ALTER TABLE `template` DROP CONSTRAINT `template_identifier`, ADD `group` VARCHAR(30) NULL DEFAULT '' AFTER `name`, ADD UNIQUE `template_identifier` (`group`, `identifier`);</script>
+    <script build="361">UPDATE `template` SET `group` = '' WHERE `group` IS NULL;</script>
 </autoupdate>
