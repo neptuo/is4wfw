@@ -67,10 +67,10 @@
         
         public function splitToArray($output, $value, $separator, $limit = -1) {
             if ($limit == -1) {
-                $limit = null;
+                $this->OutputValues[$output] = explode($separator, $value);
+            } else {
+                $this->OutputValues[$output] = explode($separator, $value, $limit);
             }
-            
-            $this->OutputValues[$output] = explode($separator, $value, $limit);
         }
 
         public function replaceHtmlNewLines($output, $input) {
