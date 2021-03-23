@@ -41,6 +41,7 @@ services:
       - PMA_USER=root
       - PMA_PASSWORD=1234
       - PMA_ABSOLUTE_URI=http://localhost:4242/phpmyadmin
+      - UPLOAD_LIMIT=100M
     links:
       - mysql:db
         
