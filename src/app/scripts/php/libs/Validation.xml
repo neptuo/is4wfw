@@ -9,6 +9,26 @@
     Vždy pracuje uvnitř aktuálního prefixu EditModelu.
   </comment>
   <tag>
+    <name>add</name>
+    <function>addMessage</function>
+    <attribute>
+      <name>key</name>
+      <required />
+      <type>string</type>
+      <comment>Klíč, ke kterému má být přidána validační hláška.</comment>
+    </attribute>
+    <attribute>
+      <name>identifier</name>
+      <required />
+      <type>string</type>
+      <comment>Identifikátor validační hlášky.</comment>
+    </attribute>
+    <comment>
+      Přidá validační hlášku ke "key".
+      Systémové hodnoty pro "identifier" jsou "required", "unique", "invalid", "mustmatch".
+    </comment>
+  </tag>
+  <tag>
     <name>required</name>
     <function>required</function>
     <attribute>
@@ -19,6 +39,7 @@
     </attribute>
     <comment>
       Nastaví required validátor pro klíč "key".
+      Kontroluje hodnotu v modelu.
     </comment>
   </tag>
   <tag>
@@ -32,6 +53,7 @@
     </attribute>
     <comment>
       Nastaví email validátor pro klíč "key".
+      Kontroluje hodnotu v modelu.
     </comment>
   </tag>
   <tag>

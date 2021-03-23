@@ -22,6 +22,11 @@
 			parent::setLocalizationBundle('validation');
 		}
 
+		public function addMessage($key, $identifier) {
+			$model = parent::getEditModel();
+            $model->validationMessage($key, $identifier);
+		}
+
 		public function required($key) {
 			$model = parent::getEditModel();
 			Validator::required($model, $key);
