@@ -275,9 +275,15 @@
             }
 
             if ($model->isLoad()) {
-                $sql = $this->sql()->select("custom_entity", ["description"], ["name" => $name]);
-                $description = $this->dataAccess()->fetchScalar($sql);
-                $model->set("entity-description", -1, $description);
+                $sql = $this->sql()->select("custom_entity", ["description", "definition"], ["name" => $name]);
+
+                $entity = $this->dataAccess()->fetchSingle($sql);
+                $model->set("entity-description", -1, $entity["description"]);
+                
+                if (!empty($entity["definition"])) {
+                    $xml = new SimpleXMLElement($entity["definition"]);
+                    $model->set("entity-audit-log", -1, $this->hasAuditLog($xml) == true);
+                }
             }
 
             if ($model->isSubmit()) {
@@ -285,7 +291,27 @@
             }
             
             if ($model->isSave()) {
-                $updateSql = $this->sql()->update("custom_entity", ["description" => $model->get("entity-description", -1)], ["name" => $name]);
+                $entity = [
+                    "description" => $model->get("entity-description", -1)
+                ];
+
+                if ($model->hasKey("entity-audit-log")) {
+                    $xml = $this->getDefinition($name);
+                    if ($model["entity-audit-log"]) {
+                        if (!$this->hasAuditLog($xml)) {
+                            $audit = $xml->addChild("audit");
+                            $audit->log = true;
+                            $entity["definition"] = $xml->asXml();
+                        }
+                    } else {
+                        if ($this->hasAuditLog($xml)) {
+                            unset($xml->audit);
+                            $entity["definition"] = $xml->asXml();
+                        }
+                    }
+                }
+
+                $updateSql = $this->sql()->update("custom_entity", $entity, ["name" => $name]);
                 $this->dataAccess()->execute($updateSql);
             }
             

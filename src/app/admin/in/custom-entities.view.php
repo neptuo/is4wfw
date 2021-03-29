@@ -23,6 +23,13 @@
 								<ui:textarea name="entity-description" class="w700 h100" />
 							</div>
 							<div class="gray-box">
+								<label class="w90">Audit:</label>
+								<label>
+									<ui:checkbox name="entity-audit-log" />
+									Generate audit log
+								</label>
+							</div>
+							<div class="gray-box">
 								<admin:saveButtons closePageId="~/in/custom-entities.view" />
 							</div>
 						</ced:tableEditor>
