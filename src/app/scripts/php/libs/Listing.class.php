@@ -19,22 +19,28 @@
 			parent::setTagLibXml("Listing.xml");
 		}
 
-		private function ensureDeclaration($name) {
+		private function ensureDeclaration($name, $throw = true) {
 			if (!array_key_exists($name, $this->container)) {
-				throw new ParameterException("name", "Missing declaration for list model named '$name'.");
+				$e = new ParameterException("name", "Missing declaration for list model named '$name'");
+				if ($throw) {
+					throw $e;
+				} else {
+					$this->log($e->getMessage());
+					$this->setValue($name);
+				}
 			}
 		}
 
 		private function ensureName($name) {
 			if ($name == "") {
 				if ($this->currentName == "") {
-					throw new ParameterException("name", "Missing parameter 'name'.");
+					throw new ParameterException("name", "Missing parameter 'name'");
 				}
 				
 				return $this->currentName;
 			} else {
 				if ($this->currentName != "") {
-					throw new ParameterException("name", "Parameter 'name' can't be used inside of list:declare full tag.");
+					throw new ParameterException("name", "Parameter 'name' can't be used inside of list:declare full tag");
 				}
 				
 				$this->ensureDeclaration($name);
@@ -67,16 +73,19 @@
 		
 		public function getProperty($name) {
 			$name = explode("-", $name, 2);
-			$this->ensureDeclaration($name[0]);
+			$this->ensureDeclaration($name[0], false);
+
+			$model = $this->container[$name[0]];
+
 			if (count($name) == 1) {
-				return $this->container[$name[0]];
+				return $model;
 			}
 
 			if ($name[1] == "_") {
-				return $this->container[$name[0]]->data();
+				return $model->data();
 			}
 
-			return $this->container[$name[0]]->field($name[1]);
+			return $model->field($name[1]);
 		}
 	}
 
