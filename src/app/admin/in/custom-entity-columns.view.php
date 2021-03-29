@@ -14,7 +14,10 @@
 			<web:frame title="utils:editTitle">
 				<edit:form submit="save">
 					<web:condition when="edit:saved">
-						<web:redirectTo pageId="~/in/custom-entity-columns.view" param-table="query:table" param-column="query:column" />
+						<web:condition when="query:column" is="new">
+							<web:redirectTo pageId="~/in/custom-entity-columns.view" param-table="query:table" />
+						</web:condition>
+						<admin:redirectAfterSave saveName="save" saveParam-table="query:table" saveParam-column="query:column" closePageId="~/in/custom-entity-columns.view" closeParam-table="query:table" /> 
 					</web:condition>
 
 					<web:condition when="query:column" is="new">
@@ -27,7 +30,7 @@
 								<ui:textarea name="column-description" class="w700 h100" />
 							</div>
 							<div class="gray-box">
-								<admin:saveButtons closePageId="~/in/custom-entity-columns.view" />
+								<admin:saveButtons closePageId="~/in/custom-entity-columns.view" closeParam-table="query:table" />
 							</div>
 						</ced:tableColumnEditor>
 					</web:condition>
