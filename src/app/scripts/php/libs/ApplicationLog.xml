@@ -12,26 +12,37 @@
     <name>list</name>
     <function>listLogs</function>
     <attribute>
-      <name>useFrames</name>
-    </attribute>
-    <attribute>
-      <name>showMsg</name>
+      <name>filter</name>
+      <type>string</type>
+      <prefix />
+      <comment>
+        Filtrování logů. 
+        Není podporovaný FilterModel.
+        Filtr "age" filtruje pod maximálního stáří log souboru ve dnech.
+        Filtr "project" filtruje podle názvu nebo ID webového projektu / audit logu.
+      </comment>
     </attribute>
     <comment>
-      Zobrazí seznam logu.
+      Zobrazí seznam log souborů.
     </comment>
   </tag>
   <tag>
     <name>log</name>
     <function>showLog</function>
     <attribute>
-      <name>useFrames</name>
+      <name>fileName</name>
+      <type>string</type>
+      <required />
+      <comment>Název souboru ze složky logs, který má zobrazit.</comment>
     </attribute>
     <attribute>
-      <name>showMsg</name>
+      <name>tailLines</name>
+      <type>number</type>
+      <default>0</default>
+      <comment>Kolik posledních řádek se má zobrazit. '0' pro celý soubor.</comment>
     </attribute>
     <comment>
-      Zobrazí log.
+      Zobrazí log soubor.
     </comment>
   </tag>
 </taglib>
