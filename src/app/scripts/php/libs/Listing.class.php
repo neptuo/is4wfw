@@ -21,11 +21,9 @@
 
 		private function ensureDeclaration($name, $throw = true) {
 			if (!array_key_exists($name, $this->container)) {
-				$e = new ParameterException("name", "Missing declaration for list model named '$name'");
 				if ($throw) {
-					throw $e;
+					throw new ParameterException("name", "Missing declaration for list model named '$name'");
 				} else {
-					$this->log($e->getMessage());
 					$this->setValue($name);
 				}
 			}
