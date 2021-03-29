@@ -49,13 +49,13 @@
 					<ui:column header="loc:tablelist.description" value="ced:tableDescription" />
 					<ui:columnBoolean header="Audit log" value="ced:tableAuditLog" />
 					<ui:columnTemplate header="">
-						<web:a pageId="~/in/custom-entities.view" param-table="ced:tableName" class="image-button button-edit">
+						<web:a pageId="~/in/custom-entities.view" param-table="ced:tableName" class="image-button button-edit" title="Edit entity">
 							<img src="~/images/page_edi.png" />
 						</web:a>
-						<web:a pageId="~/in/custom-entity-columns.view" param-table="ced:tableName" class="image-button button-edit">
+						<web:a pageId="~/in/custom-entity-columns.view" param-table="ced:tableName" class="image-button button-edit" title="Entity columns">
 							<img src="~/images/page_pro.png" />
 						</web:a>
-						<web:a pageId="~/in/custom-entity-localization.view" param-table="ced:tableName" class="image-button">
+						<web:a pageId="~/in/custom-entity-localization.view" param-table="ced:tableName" class="image-button" title="Entity localized columns">
 							<img src="~/images/lang.png" />
 						</web:a>
     					<admin:deleteButton hiddenField="delete" confirmValue="ced:tableName" hidden-table="ced:tableName" />
