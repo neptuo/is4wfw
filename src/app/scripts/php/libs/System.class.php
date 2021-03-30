@@ -21,8 +21,8 @@
 	class System extends BaseTagLib {
 
 		public function __construct() {
-			self::setTagLibXml("System.xml");
-			self::setLocalizationBundle("system");
+			$this->setTagLibXml("System.xml");
+			$this->setLocalizationBundle("system");
 		}
 
 		public $UserSettingsEditors = array(
@@ -318,11 +318,10 @@
 		
 		public function adminMenu($url, $classes = false) {
 			global $dbObject;
-			global $webObject;
 			$inn = 1;
 			$data = $dbObject->fetchAll('select `id`, `name`, `icon`, `perm` from `system_adminmenu` order by `id`');
 		
-			$content .= '<div class="menu menu-' . $inn . ((strlen($classes) > 0) ? ' ' . $classes : '') . '"><ul class="ul-' . $inn . '">';
+			$content = '<div class="menu menu-' . $inn . ((strlen($classes) > 0) ? ' ' . $classes : '') . '"><ul class="ul-' . $inn . '">';
 			$i = 1;
 			foreach ($data as $lnk) {
 				if ($lnk['perm'] != '') {
@@ -341,15 +340,14 @@
 
 				$content .= ''
 						. '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . ' ' . '">'
-						. '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
-						. '<a href="' . $href . '"' . (($rel != false) ? ' rel="' . $rel . '"' : '') . ' style="background-image: url(\''.$lnk['icon'].'\') !important;">'
+						. '<div class="link' .  (($active) ? ' active-link' : '') . '">'
+						. '<a href="' . $href . '" style="background-image: url(\''.$lnk['icon'].'\') !important;">'
 						. '<span>' . $lnk['name'] . '</span>'
 						. '</a>'
 						. '</div>'
 						. '</li>';
 				$i++;
 			}
-			$inner--;
 			$content .= "</ul></div>";
 			
 			return $content;
@@ -357,7 +355,6 @@
 		
 		public function editAdminMenu($useFrames = false, $shpwMsg = false) {
 			global $dbObject;
-			global $loginObject;
 			$return = '';
 			
 			if($_POST['adminmenu-delete'] == "Delete") {
@@ -376,10 +373,10 @@
 				
 				if($data['id'] == "") {
 					$dbObject->execute('insert into `system_adminmenu`(`name`, `page_id`, `icon`, `perm`) values ("'.$data['name'].'", "'.$data['page_id'].'", "'.$data['icon'].'", "'.$data['perm'].'");');
-					$return = parent::getSuccess('Admin menu item with name '.$name.' save.');
+					$return = parent::getSuccess('Admin menu item with name '.$data['name'].' save.');
 				} else {
 					$dbObject->execute('update `system_adminmenu` set `name` = "'.$data['name'].'", `page_id` = "'.$data['page_id'].'", `icon` = "'.$data['icon'].'", `perm` = "'.$data['perm'].'" where `id` = '.$data['id'].';');
-					$return = parent::getSuccess('Admin menu item with name '.$name.' updated.');
+					$return = parent::getSuccess('Admin menu item with name '.$data['name'].' updated.');
 				}
 			}
 			
@@ -719,7 +716,7 @@
 			$avHtml = '';
 
 			if (IS_DEVELOPMENT_MODE) {
-				$note .= self::getWarning('In development mode, app folder is read-only and you can\'t update the application');
+				$note .= $this->getWarning('In development mode, app folder is read-only and you can\'t update the application');
 			}
 
 			$api = new GitHubReleaseManager();
@@ -729,19 +726,19 @@
 				$data = $result['data'];
 
 				if ($_POST['update'] == 'update' && $_POST['update-provider'] == "gh") {
-					$updated = self::updateToVersion($_POST['update-version'], $data);
+					$updated = $this->updateToVersion($_POST['update-version'], $data);
 					if ($updated['result']) {
-						self::redirectToSelf();
+						$this->redirectToSelf();
 					} else {
-						$return .= self::getError('Error occured during update: ' . $updated['log']);
+						$return .= $this->getError('Error occured during update: ' . $updated['log']);
 					}
 				}
 
-				$newerMajors = self::getNewerMajorReleases($data, $current);
-				$newerPatches = self::getNewerPatchReleases($data, $current);
+				$newerMajors = $this->getNewerMajorReleases($data, $current);
+				$newerPatches = $this->getNewerPatchReleases($data, $current);
 
-				$majorHtml = self::getReleaseGridHtml($newerMajors, 'major', "gh", 'You are running latest major version.');
-				$patchHtml = self::getReleaseGridHtml($newerPatches, 'patch', "gh", 'You are running latest patch for your major version.');
+				$majorHtml = $this->getReleaseGridHtml($newerMajors, 'major', "gh", 'You are running latest major version.');
+				$patchHtml = $this->getReleaseGridHtml($newerPatches, 'patch', "gh", 'You are running latest patch for your major version.');
 
 				$ghHtml .= ''
 				. '<div class="grid-3">'
@@ -761,46 +758,58 @@
 					. '</div>'
 				. '</div>';
 			} else {
-				$ghHtml .= self::getError($result['log']);
+				$ghHtml .= $this->getError($result['log']);
 			}
 
-			$api = new AppVeyorReleaseManager();
-			$result = $api->getList();
+			
+			$avHtml = ''
+			. '<div class="gray-box">'
+				. '<strong>' . 'Nightly Builds' . '</strong>'
+			. '</div>';
 
-			if ($result['result']) {
-				$data = $result['data'];
+			$avUpdate = $_POST['update'] == 'update' && $_POST['update-provider'] == "av";
+			$appveyor = array_key_exists("appveyor", $_GET);
+			if ($appveyor || $avUpdate) {
+				$api = new AppVeyorReleaseManager();
+				$result = $api->getList();
 
-				if ($_POST['update'] == 'update' && $_POST['update-provider'] == "av") {
-					$updated = self::updateToVersion($_POST['update-version'], $data);
-					if ($updated['result']) {
-						self::redirectToSelf();
-					} else {
-						$return .= self::getError('Error occured during update: ' . $updated['log']);
+				if ($result['result']) {
+					$data = $result['data'];
+
+					if ($avUpdate) {
+						$updated = $this->updateToVersion($_POST['update-version'], $data);
+						if ($updated['result']) {
+							$this->redirectToSelf();
+						} else {
+							$return .= $this->getError('Error occured during update: ' . $updated['log']);
+						}
 					}
-				}
 
-				$newer = self::getNewerReleases($data, $current, true);
-				$nightlyHtml = self::getReleaseGridHtml($newer, 'major', "av", 'You are running latest nightly build.');
+					$newer = $this->getNewerReleases($data, $current, true);
+					$nightlyHtml = $this->getReleaseGridHtml($newer, 'major', "av", 'You are running latest nightly build.');
 
-				$avHtml = ''
-				. '<div class="grid-3">'
-					. '<div class="gray-box">'
-						. '<strong>' . 'Nightly Builds' . '</strong>'
-					. '</div>'
+					$avHtml .= ''
 					. '<div class="gray-box">'
 						. $nightlyHtml
-					. '</div>'
-				. '</div>'
-				. '<div class="clear"></div>';
+					. '</div>';
+				} else {
+					$avHtml .= $this->getError($result['log']);
+				}
 			} else {
-				$ghHtml .= self::getError($result['log']);
+				$avUrl = UrlUtils::addParameter($_SERVER["REQUEST_URI"], "appveyor");
+				$avHtml .= ''
+				. '<div class="gray-box">'
+					. '<a href="' . $avUrl . '" class="button">Show AppVeyor nightly builds</a>'
+				. '</div>';
 			}
 
 			$return .= ''
-			. $note
-			. $ghHtml
-			. $avHtml
-			. '<div class="clear"></div>';
+				. $note
+				. $ghHtml
+				. '<div class="grid-3">'
+					. $avHtml
+				. '</div>'
+				. '<div class="clear"></div>';
 
 			return $return;
 		}
