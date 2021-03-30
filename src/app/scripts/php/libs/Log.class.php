@@ -68,14 +68,33 @@
             fclose($file);
         }
 
-        public function exception($e) {
+        public function exception($e, $tagPrefix = null, $tagName = null) {
             $editModel = parent::getEditModel(false);
             if ($editModel != null && $editModel->isSave()) {
                 $editModel->exception($e);
             }
 
-            $message = "An exception of type '" . get_class($e) . "' has occured. " . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . '@ ' . HttpUtils::currentAbsoluteUrl();
-            self::write($message);
+            $message = "An exception of type '" . get_class($e) . "' has occured";
+            if ($tagPrefix != null && $tagName != null) {
+                $message .= " while processing tag '$tagPrefix:$tagName'";
+            }
+            $message .= ". " . PHP_EOL;
+
+            $message .= $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . '@ ' . HttpUtils::currentAbsoluteUrl();
+            $this->write($message);
+
+            global $webObject;
+            if ($webObject->getDebugMode()) {
+                return ''
+                . '<error style="position: relative;">'
+                    . '<error-header style="padding: 4px 8px; color: red; font-weight: bold; display: inline-block; cursor: pointer; background: yellow;" title="Custom tag error" onclick="this.nextSibling.style.display = this.nextSibling.style.display == \'block\' ? \'none\' : \'block\'">!</error-header>'
+                    . '<error-body style="position: absolute; top: 24px; left: 0; overflow: auto; width: 800px; max-height: 600px; background: yellow; display: none; padding: 4px 8px; white-space: pre; font-family: monospace;">'
+                        . $message
+                    . '</error-body>'
+                . '</error>';
+            } else {
+                return "";
+            }
         }
     }
 

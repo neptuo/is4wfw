@@ -623,7 +623,7 @@
 
             $this->Code->addCatch(["Exception", "e"]);
             $this->Code->addLine("global $logObject;");
-            $this->Code->addLine($logObject . "->exception(" . '$e' . ");");
+            $this->Code->addLine("return " . $logObject . "->exception(" . '$e' . ", '$tagPrefix', '$tagName');");
             $this->Code->closeBlock();
             $this->Code->addLine("return $defaultReturnValue;");
             $this->Code->closeBlock();

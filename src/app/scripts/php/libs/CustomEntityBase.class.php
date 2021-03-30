@@ -15,7 +15,7 @@
                     $sql = parent::sql()->select("custom_entity", array("name"), array("name" => $name));
                     $table = self::dataAccess()->fetchAll($sql);
                     if (count($table) == 0) {
-                        trigger_error("Table name must be custom entity", E_USER_ERROR);
+                        throw new Exception("Table name '$name' must be custom entity.");
                     }
                 } else {
                     $tableName = $name;
