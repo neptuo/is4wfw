@@ -1993,24 +1993,24 @@
             $content = parent::session()->get('content', 'tf-search');
             $type = parent::session()->get('type', 'tf-search');
             if (strlen($name) != 0) {
-                if ($return == '') {
+                if ($return != '') {
                     $return .= 'and ';
                 }
                 $return .= '`name` like "%' . $name . '%"';
             }
             if (strlen($content) != 0) {
-                if ($return == '') {
+                if ($return != '') {
                     $return .= 'and ';
                 }
                 $return .= '`content` like "%' . $content . '%"';
             }
             if (!empty($type)) {
-                if ($return == '') {
+                if ($return != '') {
                     $return .= 'and ';
                 }
                 $return .= '`type` = ' . parent::dataAccess()->escape($type);
             }
-            return $return;
+            return 'and ' . $return;
         }
 
         /**
