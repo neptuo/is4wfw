@@ -263,6 +263,8 @@ Ajax.prototype._OnPopState = function(e) {
         url = window.location.href;
     }
 
-    this.Load(url);
+    var loadUrl = url.replace(window.location.origin, this.BaseUrl);
+
+    this.Load(loadUrl);
     this._StopEvent(e);
 };
