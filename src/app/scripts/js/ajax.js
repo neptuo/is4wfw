@@ -1,6 +1,6 @@
-Ajax = function(selector, parentPageId, baseUrl) {
+Ajax = function(selector, parentPageId, options) {
     this.Selector = selector;
-    this.BaseUrl = baseUrl;
+    this.BackendOrigin = null;
     this.LoadingHandlers = [];
     this.CompletedHandlers = [];
     this.FailedHandlers = [];
@@ -9,6 +9,12 @@ Ajax = function(selector, parentPageId, baseUrl) {
         this.ParentPageId = parentPageId;
     } else {
         this.ParentPageId = null;
+    }
+    
+    if (options) {
+        if (options.backendOrigin) {
+            this.BackendOrigin = options.backendOrigin;
+        }
     }
 
     window.addEventListener("popstate", this._OnPopState.bind(this));
@@ -60,17 +66,17 @@ Ajax.prototype._RaiseEvent = function(eventName) {
     }
 }
 
-Ajax.prototype._ReplaceBrowserOriginWithBaseOrigin = function(url) {
-    if (this.BaseUrl != null) {
-        url = url.replace(window.location.origin, this.BaseUrl);
+Ajax.prototype._ReplaceBrowserOriginWithBackendOrigin = function(url) {
+    if (this.BackendOrigin != null) {
+        url = url.replace(window.location.origin, this.BackendOrigin);
     }
 
     return url;
 }
 
-Ajax.prototype._ReplaceBaseOriginWithBrowserOrigin = function(url) {
-    if (this.BaseUrl != null) {
-        url = url.replace(this.BaseUrl, window.location.origin);
+Ajax.prototype._ReplaceBackendOriginWithBrowserOrigin = function(url) {
+    if (this.BackendOrigin != null) {
+        url = url.replace(this.BackendOrigin, window.location.origin);
     }
 
     return url;
@@ -78,7 +84,7 @@ Ajax.prototype._ReplaceBaseOriginWithBrowserOrigin = function(url) {
 
 Ajax.prototype._OnLinkClick = function(e) {
     var url = e.currentTarget.href;
-    var loadUrl = this._ReplaceBrowserOriginWithBaseOrigin(url);
+    var loadUrl = this._ReplaceBrowserOriginWithBackendOrigin(url);
 
     this.Load(loadUrl);
     this._UpdateHistory(url);
@@ -94,7 +100,7 @@ Ajax.prototype._OnButtonClick = function(e) {
 
 Ajax.prototype._OnFormSubmit = function(e) {
     var form = e.currentTarget;
-    var url = this._ReplaceBrowserOriginWithBaseOrigin(form.action);
+    var url = this._ReplaceBrowserOriginWithBackendOrigin(form.action);
     var method = form.method;
     
     this._RaiseEvent('loading');
@@ -126,8 +132,8 @@ Ajax.prototype._OnFormReadyStateChanged = function(e) {
 Ajax.prototype.Load = function(url) {
     this._RaiseEvent('loading');
 
-    if (url.indexOf("http") != 0) {
-        url = this.BaseUrl + url;
+    if (this.BackendOrigin != null && url.indexOf("http") != 0) {
+        url = this.BackendOrigin + url;
     }
 
     $.ajax({
@@ -163,7 +169,7 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
     }
 
     if (xhr.responseURL) {
-        var url = this._ReplaceBaseOriginWithBrowserOrigin(xhr.responseURL);
+        var url = this._ReplaceBackendOriginWithBrowserOrigin(xhr.responseURL);
         if (url != window.location.href) {
             this._UpdateHistory(url, true);
         }
@@ -188,7 +194,11 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
         if (styles != null) {
             var styleReferences = styles.getElementsByTagName("rssmm:link-ref");
             for (var i = 0, count = styleReferences.length; i < count; i++) {
-                var linkUrl = this.BaseUrl + styleReferences[i].innerHTML;
+                var linkUrl = styleReferences[i].innerHTML;
+                if (this.BackendOrigin != null) {
+                    linkUrl = this.BackendOrigin + linkUrl;
+                }
+
                 if (document.querySelector("link[href='" + linkUrl + "']") == null) {
                     var link = document.createElement("link");
                     link.rel = "stylesheet";
@@ -212,7 +222,11 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
         if (scripts != null) {
             var scriptReferences = scripts.getElementsByTagName("rssmm:script-ref");
             for (var i = 0, count = scriptReferences.length; i < count; i++) {
-                var linkUrl = this.BaseUrl + scriptReferences[i].innerHTML;
+                var linkUrl = scriptReferences[i].innerHTML;
+                if (this.BackendOrigin != null) {
+                    linkUrl = this.BackendOrigin + linkUrl;
+                }
+
                 if (document.querySelector("script[src='" + linkUrl + "']") == null) {
                     var link = document.createElement("script");
                     link.src = linkUrl;
@@ -274,7 +288,7 @@ Ajax.prototype._OnPopState = function(e) {
         url = window.location.href;
     }
 
-    url = this._ReplaceBrowserOriginWithBaseOrigin(url);
+    url = this._ReplaceBrowserOriginWithBackendOrigin(url);
 
     this.Load(url);
     this._StopEvent(e);

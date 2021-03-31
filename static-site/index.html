@@ -8,7 +8,7 @@
     <script src="http://localhost:4242/js/jquery/jquery-3.5.1.min.js"></script>
     <script src="http://localhost:4242/js/ajax.js"></script>
     <script>
-        $(function() { var ajax = new Ajax("body", null, "http://localhost:4242"); window.ajax = ajax; ajax.Load("/"); });
+        $(function() { var ajax = new Ajax("body", null, { backendOrigin: "http://localhost:4242" }); window.ajax = ajax; ajax.Load("/"); });
     </script>
 </head>
 <body>
