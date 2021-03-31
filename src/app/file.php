@@ -11,6 +11,8 @@ require_once(APP_SCRIPTS_PHP_PATH . "libs/FileAdmin.class.php");
 require_once(APP_SCRIPTS_PHP_PATH . "classes/UrlResolver.class.php");
 require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/EmbeddedResourceManager.class.php");
 
+// require_once("scripts/php/includes/cors.inc.php");
+
 error_reporting(0);
 session_start();
 
