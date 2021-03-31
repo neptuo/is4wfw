@@ -60,9 +60,25 @@ Ajax.prototype._RaiseEvent = function(eventName) {
     }
 }
 
+Ajax.prototype._ReplaceBrowserOriginWithBaseOrigin = function(url) {
+    if (this.BaseUrl != null) {
+        url = url.replace(window.location.origin, this.BaseUrl);
+    }
+
+    return url;
+}
+
+Ajax.prototype._ReplaceBaseOriginWithBrowserOrigin = function(url) {
+    if (this.BaseUrl != null) {
+        url = url.replace(this.BaseUrl, window.location.origin);
+    }
+
+    return url;
+}
+
 Ajax.prototype._OnLinkClick = function(e) {
     var url = e.currentTarget.href;
-    var loadUrl = url.replace(window.location.origin, this.BaseUrl);
+    var loadUrl = this._ReplaceBrowserOriginWithBaseOrigin(url);
 
     this.Load(loadUrl);
     this._UpdateHistory(url);
@@ -78,12 +94,7 @@ Ajax.prototype._OnButtonClick = function(e) {
 
 Ajax.prototype._OnFormSubmit = function(e) {
     var form = e.currentTarget;
-    var url = null;
-    if (this.BaseUrl != null) {
-        url = this.BaseUrl + form.getAttribute("action");
-    } else {
-        url = form.action;
-    }
+    var url = this._ReplaceBrowserOriginWithBaseOrigin(form.action);
     var method = form.method;
     
     this._RaiseEvent('loading');
@@ -152,7 +163,7 @@ Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
     }
 
     if (xhr.responseURL) {
-        var url = xhr.responseURL.replace(this.BaseUrl, window.location.origin);
+        var url = this._ReplaceBaseOriginWithBrowserOrigin(xhr.responseURL);
         if (url != window.location.href) {
             this._UpdateHistory(url, true);
         }
@@ -263,8 +274,8 @@ Ajax.prototype._OnPopState = function(e) {
         url = window.location.href;
     }
 
-    var loadUrl = url.replace(window.location.origin, this.BaseUrl);
+    url = this._ReplaceBrowserOriginWithBaseOrigin(url);
 
-    this.Load(loadUrl);
+    this.Load(url);
     this._StopEvent(e);
 };
