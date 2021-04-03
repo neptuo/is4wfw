@@ -1033,7 +1033,7 @@ function initDataTables() {
 
 function initClickableGrid() {
 	var rows = $('.clickable').find('tr');
-	for(var i = 0, s = rows.size(); i < s; i++) {
+	for(var i = 0, s = rows.length; i < s; i++) {
 		$(rows[i]).click(function(e) {
 			var el = e.target ? e.target : e.srcElement;
 

@@ -1,9 +1,42 @@
 /* CSS Document */
 
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
 body {
     min-width: 1200px;
     margin: 0 auto;
 }
+
+.main-layout {
+    height: calc(100vh - 56px);
+}
+
+.main-content {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.frame-body {
+    font-size: 14px;
+}
+
+.frame label {
+    margin: 0 !important;
+}
+
+.frame hr {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
+
+.frame code {
+    color: unset;
+}
+
+
 
 form {
     margin: 0;
@@ -426,7 +459,6 @@ div.login-form p.login-message {
 
 .frame-head .frame-label {
     color: white;
-    font-weight: bold;
     float: left;
     padding: 1px 0 1px 5px;
 }
@@ -1570,10 +1602,6 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     margin: 0 0 0 2px;
 }
 
-.cms .data-table {
-    background: white;
-    border: 2px solid #cccccc;
-}
 
 .cms .guestbook-line {
     background: white !important;

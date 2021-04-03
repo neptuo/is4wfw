@@ -27,10 +27,10 @@
 			<ui:form>
 				<web:switch when="web:debug">
 					<web:case is="true">
-						<button name="debug" value="disable">Disable debug mode</button>
+						<bs:button name="debug" value="disable" text="Disable debug mode" />
 					</web:case>
 					<web:case>
-						<button name="debug" value="enable">Enable debug mode</button>
+						<bs:button name="debug" value="enable" text="Enable debug mode" />
 					</web:case>
 				</web:switch>
 			</ui:form>

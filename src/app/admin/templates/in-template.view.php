@@ -8,7 +8,7 @@
 <v:template src="~/templates/template.view">
     <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
         <bs:container fluid="true">
-            <a href="/" class="navbar-brand mr-4">
+            <a href="~/in/index.view" class="navbar-brand mr-4">
                 is4wfw
             </a>
             <div id="main-navbar" class="collapse navbar-collapse">
@@ -56,7 +56,7 @@
         </bs:container>
     </nav>
 
-    <bs:row class="no-gutters">
+    <bs:row class="no-gutters main-layout">
         <bs:column default="2">
             <nav class="p-1">
                 <v:panel class="cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
@@ -99,7 +99,7 @@
                 </web:condition>
             </nav>
         </bs:column>
-        <bs:column default="10" class="p-1">
+        <bs:column default="10" class="p-1 main-content">
             <div class="cms">
                 <div id="cms-body" class="body">
                     <v:content />
