@@ -2010,7 +2010,11 @@
                 }
                 $return .= '`type` = ' . parent::dataAccess()->escape($type);
             }
-            return 'and ' . $return;
+
+            if (!empty($return))
+                return 'and ' . $return;
+
+            return $return;
         }
 
         /**
