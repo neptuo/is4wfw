@@ -38,7 +38,7 @@ input[disabled] {
     background: #eeeeee;
 }
 
-input[type=button], input[type=submit], button, .editor-panel input[type=button], a.button, .buttons a {
+.frame input[type=button], .frame input[type=submit], .frame button, .frame .editor-panel input[type=button], .frame a.button, .frame .buttons a {
     cursor: pointer;
     font-size: small;
     font-family: Arial;
@@ -50,7 +50,7 @@ input[type=button], input[type=submit], button, .editor-panel input[type=button]
     border: 1px outset #CCCCCC;
 }
 
-a.button, .buttons a {
+.frame a.button, .frame .buttons a {
     padding: 2px 10px 3px 10px;
     display: inline-block;
 }

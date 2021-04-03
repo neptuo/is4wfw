@@ -8,28 +8,14 @@
 <v:template src="~/templates/template.view">
     <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
         <bs:container fluid="true">
-            <a href="/" class="navbar-brand">
+            <a href="/" class="navbar-brand mr-4">
                 is4wfw
             </a>
             <div id="main-navbar" class="collapse navbar-collapse">
                 <div class="mr-auto">
-                    <wp:selectProject showMsg="false" useFrames="false" label=" " /> 
-
-                    <ul class="navbar-nav d-none d-md-flex nav">
-
-                    </ul>
+                    <wp:selectProject showMsg="false" useFrames="false" label=" " />
                 </div>
                 
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <span class="navbar-text mr-3">
-                            <fa5:icon name="user" />
-                            <login:info field="username" />
-                        </span>
-                    </li>
-                </ul>
-
-
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <span class="navbar-text mr-3">
@@ -43,7 +29,17 @@
                     <li class="nav-item">
                         <span class="navbar-text mr-3">
                             <fa5:icon name="database" />
-                            <web:dbVersion />
+                            r<web:dbVersion />
+                        </span>
+                    </li>
+                </ul>
+                
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <span class="navbar-text mr-3">
+                            <fa5:icon name="user" />
+                            <login:info field="username" />
                         </span>
                     </li>
                 </ul>

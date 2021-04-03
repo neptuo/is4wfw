@@ -77,9 +77,9 @@
             
                 $return .= ''
                 . '<div class="select-project">'
-                    . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                    . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-inline">'
                         . '<label for="select-project">' . $label . '</label> '
-                        . '<select id="select-project" name="project-id">';
+                        . '<select id="select-project" name="project-id" class="form-control form-control-sm">';
                 $projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `web_project`.`name`;');
                 foreach ($projects as $project) {
                     $permission = $dbObject->fetchAll('SELECT `value` FROM `web_project_right` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `wp` = ' . $project['id'] . ' AND `type` = ' . WEB_R_WRITE . ' ORDER BY `value` DESC;');
@@ -89,9 +89,9 @@
                 }
                 $return .= ''
                         . '</select> '
-                        . '<input type="submit" name="select-project" value="' . $rb->get('selectproject.submit') . '" />'
-                        . '</form>'
-                        . '</div>';
+                        . '<input type="submit" name="select-project" value="' . $rb->get('selectproject.submit') . '" class="d-none" />'
+                    . '</form>'
+                . '</div>';
             } else {
                 if ($showMsg != 'false') {
                     $return .= '<div class="select-project">' . parent::getWarning('No projects') . '</div>';
