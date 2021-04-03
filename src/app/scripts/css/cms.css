@@ -321,6 +321,10 @@ table .template-id {
     margin-top: 15px;
 }
 
+.frame-cover:first-child {
+    margin-top: 0;
+}
+
 div.login {
     width: 256px;
     margin: 100px 0 0 100px;
@@ -798,12 +802,6 @@ body {
 .cms .head .cms-menu .menu-root a {
     color: white;
     text-decoration: none;
-}
-
-.cms .body {
-    /*position: relative;*/
-    margin: 47px 5px 30px 5px;
-    /*margin: 60px 60px 40px 60px;*/
 }
 
 .cms .body .home-cover {
@@ -1681,52 +1679,43 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 /* ---------------------- CMS MENU ------------------------------------------- */
 
-.cms .head .cms-menu {
-    position: absolute;
-    margin: 10px 0pt 0pt 45px;
+.cms-menu a {
+    padding: 4px 10px 4px 24px;
+    color: #04601C;
+    text-decoration: none;
 }
 
-.cms .head .cms-menu.cms-menu-2 {
-    position: absolute;
-    margin: 10px 0pt 0pt 110px;
+.cms-menu a:hover {
+    text-decoration: underline;
 }
 
-.cms .head .cms-menu.cms-menu-3 {
-    position: absolute;
-    margin: 10px 0pt 0pt 10px;
+.cms-menu ul {
+    padding-left: 22px;
+    list-style: none;
 }
 
-.cms .head .cms-menu.cms-menu-4 {
-    position: absolute;
-    margin: 10px 0pt 0pt 210px;
-}
-
-.cms .head .cms-menu.cms-menu-5 {
-    position: absolute;
-    margin: 10px 0pt 0pt 300px;
-}
-
-.cms .head .cms-menu .menu-root a {
+.cms-menu .menu-root a {
     padding: 1px 0 1px 24px;
+    font-weight: bold;
     background: url('/images/icons/at.png') no-repeat 4px 3px;
 }
 
-.cms .head .cms-menu.cms-menu-2 .menu-root a {
+.cms-menu.cms-menu-2 .menu-root a {
     padding: 1px 0 1px 24px;
     background: url('/images/icons/floorball/ball.png') no-repeat 4px 3px;
 }
 
-.cms .head .cms-menu.cms-menu-3 .menu-root a {
+.cms-menu.cms-menu-3 .menu-root a {
     padding: 1px 0 1px 24px;
     background: url('/images/icons/hint.png') no-repeat 4px 3px;
 }
 
-.cms .head .cms-menu.cms-menu-4 .menu-root a {
+.cms-menu.cms-menu-4 .menu-root a {
     padding: 1px 0 1px 24px;
     background: url('/images/icons/radioactive.png') no-repeat 4px 3px;
 }
 
-.cms .head .cms-menu.cms-menu-5 .menu-root a {
+.cms-menu.cms-menu-5 .menu-root a {
     padding: 1px 0 1px 24px;
     background: url('/images/icons/cog.png') no-repeat 4px 3px;
 }
@@ -1736,39 +1725,8 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     background: none;
 }
 
-.cms .head .cms-menu .menu {
-    width: 184px;
-    margin: 11px 0 0;
-    padding: 2px 10px 10px;
-    display: none;
-    padding: 2px 0 10px 0;
-    background: transparent url('/images/cms/design/menu-background.png') repeat;
-    border: 1px solid #011D09;
-    border-top: none;
-}
-
-
-.cms .head .cms-menu .menu .menu-item a {
-    width: 150px;
-    padding: 4px 10px 4px 24px;
-    display: block;
-    color: #04601C;
-    text-decoration: none;
-}
-
-.cms .head .cms-menu .menu .menu-item a:hover {
-    color: white;
-    background-color: #04601C;
-}
-
-.cms .head .cms-menu:hover .menu {
-    display: block;
-}
-
-.cms .head .cms-menu ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+.cms-menu li.menu-item .link {
+    white-space: nowrap;
 }
 
 .cms-menu li.menu-item.li-1 a {

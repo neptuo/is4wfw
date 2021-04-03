@@ -13,7 +13,7 @@
             </a>
             <div id="main-navbar" class="collapse navbar-collapse">
                 <div class="mr-auto">
-                    <wp:selectProject showMsg="false" useFrames="false" />
+                    <wp:selectProject showMsg="false" useFrames="false" label=" " /> 
 
                     <ul class="navbar-nav d-none d-md-flex nav">
 
@@ -62,7 +62,7 @@
 
     <bs:row class="no-gutters">
         <bs:column default="2">
-            <nav>
+            <nav class="p-1">
                 <v:panel class="cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
                     <span class="menu-root">
                         <web:a pageId="~/in/hint.view" text="Documentation" />
@@ -103,7 +103,7 @@
                 </web:condition>
             </nav>
         </bs:column>
-        <bs:column default="10">
+        <bs:column default="10" class="p-1">
             <div class="cms">
                 <div id="cms-body" class="body">
                     <v:content />

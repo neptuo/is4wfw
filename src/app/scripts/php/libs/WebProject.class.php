@@ -76,8 +76,8 @@
                 }
             
                 $return .= ''
-                        . '<div class="select-project">'
-                        . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
+                . '<div class="select-project">'
+                    . '<form name="select-project" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                         . '<label for="select-project">' . $label . '</label> '
                         . '<select id="select-project" name="project-id">';
                 $projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `web_project`.`name`;');
