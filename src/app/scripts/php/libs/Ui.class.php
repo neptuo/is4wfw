@@ -805,6 +805,7 @@
 
 			return $value;
 		}
+		
 		public function formatNumber($value, $thousandsSeparator = "", $decimalsSeparator = "", $decimals = "") {
 			if ($thousandsSeparator) {
 				if ($decimals == "0") {

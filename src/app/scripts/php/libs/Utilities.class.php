@@ -90,6 +90,10 @@
             }
         }
 
+        public function timestampToDateTime($output, $value, $format) {
+            $this->OutputValues[$output] = $this->autolib("ui")->formatDateTime($value, $format);
+        }
+
         public function escapeHtml($output, $value) {
             $this->OutputValues[$output] = htmlspecialchars($value);
         }

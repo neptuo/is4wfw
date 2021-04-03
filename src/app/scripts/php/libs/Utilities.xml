@@ -227,6 +227,28 @@
     <comment>Vrátí timestamp pro zadaný datum (a čas) dle zadaného formátu.</comment>
   </tag>
   <tag>
+    <name>timestampToDateTime</name>
+    <function>timestampToDateTime</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>Hodnota k rozparsování.</comment>
+    </attribute>
+    <attribute>
+      <name>format</name>
+      <required />
+      <type>string</type>
+      <comment>Formátovací řetězec pro datum (a čas).</comment>
+    </attribute>
+    <comment>Vrátí naformátovaný datum (a čas) pro zadaný timestamp.</comment>
+  </tag>
+  <tag>
     <name>escapeHtml</name>
     <function>escapeHtml</function>
     <lookless />
