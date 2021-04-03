@@ -16,7 +16,7 @@
 			</web:frame>
 		</web:condition>
 		<web:frame title="Application Logs">
-			<utils:arrayItem output="dates" key-name="Today" key-value="0" />
+			<utils:arrayItem output="dates" key-name="Today" key-value="0.001" />
 			<utils:arrayItem output="dates" key-name="Yesterday" key-value="1" />
 			<utils:arrayItem output="dates" key-name="7 days" key-value="7" />
 			<utils:arrayItem output="dates" key-name="14 days" key-value="14" />

@@ -118,12 +118,14 @@
 				$data[] = $item;
 			}
 			
-			if ($data != array()) {
+			if (!empty($data)) {
 				$grid = new BaseGrid();
 				$grid->addClass("clickable");
 				$grid->setHeader(array(0 => 'Project name:', 1 => 'Date:', 2 => "Size:", 3 => ''));
 				$grid->addRows($data);
 				$return .= $grid->render();
+			} else {
+				$return .= $this->getWarning("No log files to show.");
 			}
 
 			return $return;
