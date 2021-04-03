@@ -105,10 +105,6 @@
   <tag>
     <name>cmsResources</name>
     <function>getCmsResources</function>
-    <attribute>
-      <name>useWindows</name>
-      <required />
-    </attribute>
     <comment>
       Vkládá do stránky zdroje pro cms, pokud je useWindows true, pak vloží verzi pro windows cms.
     </comment>

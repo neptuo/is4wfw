@@ -118,7 +118,7 @@
          * 	@param		useWindows				if true, includes scripts for windows
          *
          */
-        public function getCmsResources($useWindows) {
+        public function getCmsResources($useWindows = false) {
             $return = '';
 
             if ($useWindows) {
