@@ -270,5 +270,7 @@
     </attribute>
     <comment>Smaže dříve vytvořenou propety.</comment>
   </tag>
-  <anyProperty />
+  <anyProperty>
+    <comment>Vrací hodnoty vytvořenou pomocí jednoho z custom tagů.</comment>
+  </anyProperty>
 </taglib>
