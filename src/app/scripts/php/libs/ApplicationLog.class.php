@@ -145,7 +145,11 @@
 				if ($tailLines == 0) {
 					$content = file_get_contents(LOGS_PATH . $fileName);
 				} else {
-					$content = "..." . PHP_EOL . PHP_EOL . FileUtils::tail(LOGS_PATH . $fileName, $tailLines);
+					$startReached = false;
+					$content = FileUtils::tail(LOGS_PATH . $fileName, $tailLines, $startReached);
+					if (!$startReached) {
+						$content = "..." . PHP_EOL . $content;
+					}
 				}
 				$content = htmlspecialchars($content);
 				$content = str_replace(PHP_EOL, "<br />", $content);

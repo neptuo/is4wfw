@@ -19,7 +19,7 @@
             } 
         }
 
-        public static function tail($filepath, $lines = 1, $adaptive = true) {
+        public static function tail($filepath, $lines = 1, &$startReached = false) {
             // Open file
             $f = @fopen($filepath, "rb");
             if ($f === false) {
@@ -28,11 +28,7 @@
     
             // Sets buffer size, according to the number of lines to retrieve.
             // This gives a performance boost when reading a few lines from the file.
-            if (!$adaptive) {
-                $buffer = 4096;
-            } else {
-                $buffer = ($lines < 2 ? 64 : ($lines < 10 ? 512 : 4096));
-            }
+            $buffer = ($lines < 2 ? 64 : ($lines < 10 ? 512 : 4096));
     
             // Jump to last character
             fseek($f, -1, SEEK_END);
@@ -66,6 +62,8 @@
                 $lines -= substr_count($chunk, "\n");
     
             }
+
+            $startReached = ftell($f) == 0;
     
             // While we have too many lines
             // (Because of buffer size we might have read too many)
