@@ -11,7 +11,7 @@
 <bs:container class="is4wfw">
     <bs:row vertical="center" class="justify-content-center">
         <bs:column small="8" medium="6" large="4" >
-            <bs:card header="is4wfw">
+            <bs:card header="&lt;is4wfw /&gt;">
                 <edit:form submit="login">
                     <web:condition when="edit:save">
                         <login:login group="web-admins" username="edit:username" password="edit:password">
@@ -25,10 +25,10 @@
                         </p>
                     </web:condition>
                     
-                    <bs:formGroup label="Username">
+                    <bs:formGroup label="Username:">
                         <ui:textbox name="username" class="form-control form-control-sm" autofocus="autofocus" />
                     </bs:formGroup>
-                    <bs:formGroup label="Password">
+                    <bs:formGroup label="Password:">
                         <ui:passwordbox name="password" type="password" class="form-control form-control-sm" />
                     </bs:formGroup>
                     

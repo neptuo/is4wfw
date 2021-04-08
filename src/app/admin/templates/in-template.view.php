@@ -10,7 +10,7 @@
             <bs:column default="2">
                 <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
                     <a href="~/in/index.view" class="navbar-brand mr-4">
-                        is4wfw
+                        &lt;is4wfw /&gt;
                     </a>
                 </nav>
                     
