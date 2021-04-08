@@ -6,108 +6,110 @@
     <js:cmsResources />
 </v:head>
 <v:template src="~/templates/template.view">
-    <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
-        <bs:container fluid="true">
-            <a href="~/in/index.view" class="navbar-brand mr-4">
-                is4wfw
-            </a>
-            <div id="main-navbar" class="collapse navbar-collapse">
-                <div class="mr-auto">
-                    <wp:selectProject showMsg="false" useFrames="false" label=" " />
+        <bs:row class="no-gutters">
+            <bs:column default="2">
+                <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
+                    <a href="~/in/index.view" class="navbar-brand mr-4">
+                        is4wfw
+                    </a>
+                </nav>
+                    
+                <div class="border-right shadow main-menu-background">
+                    <nav class="py-3 px-2">
+                        <v:panel class="mb-3 cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
+                            <div class="menu-root">
+                                <web:a pageId="~/in/hint.view" text="Documentation" />
+                            </div>
+                        </v:panel>
+                        <v:panel class="mb-3 cms-menu" security:requirePerm="CMS.Web">
+                            <div class="menu-root">
+                                <web:a pageId="~/in/index.view" text="Web" />
+                            </div>
+                            <m:xmlMenu file="~/templates/menus/web.xml" />
+                        </v:panel>
+                        <v:panel class="mb-3 cms-menu cms-menu-2" security:requirePerm="CMS.Floorball">
+                            <div class="menu-root">
+                                <web:a pageId="~/in/floorball/seasons.view">
+                                    <web:static value="Floorball" lang="en" />
+                                    <web:static value="Florbal" lang="cs" />
+                                </web:a>
+                            </div>
+                            <m:xmlMenu file="~/templates/menus/floorball.xml" />
+                        </v:panel>
+                        <v:panel class="mb-3 cms-menu cms-menu-4" security:requirePerm="CMS.Settings">
+                            <div class="menu-root">
+                                <web:a pageId="~/in/personal-notes.view">
+                                    <web:static value="Settings" lang="en" />
+                                    <web:static value="Nastavení" lang="cs" />
+                                </web:a>
+                            </div>
+                            <m:xmlMenu file="~/templates/menus/settings.xml" />
+                        </v:panel>
+                        <web:condition when="sys:hasAdminMenu">
+                            <v:panel class="mb-3 cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
+                                <div class="menu-root">
+                                    <web:a pageId="~/in/personal-notes.view">
+                                        <web:static value="Custom" lang="en" />
+                                        <web:static value="Další" lang="cs" />
+                                    </web:a>
+                                </div>
+                                <sys:adminMenu url="~/in/admin-menu.view" />
+                            </v:panel>
+                        </web:condition>
+                    </nav>
                 </div>
-                
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <span class="navbar-text mr-3">
-                            <fa5:icon name="server" />
-                            <web:version />
-                        </span>
-                    </li>
-                </ul>
+            </bs:column>
 
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <span class="navbar-text mr-3">
-                            <fa5:icon name="database" />
-                            r<web:dbVersion />
-                        </span>
-                    </li>
-                </ul>
-                
+            <bs:column>
+                <div class="navbar navbar-dark bg-dark sticky-top">
+                    <div class="mr-auto">
+                        <wp:selectProject showMsg="false" useFrames="false" label=" " />
+                    </div>
+                    
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <span class="navbar-text mr-3">
+                                <fa5:icon name="server" />
+                                <web:version />
+                            </span>
+                        </li>
+                    </ul>
 
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <span class="navbar-text mr-3">
-                            <fa5:icon name="user" />
-                            <login:info field="username" />
-                        </span>
-                    </li>
-                </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <span class="navbar-text mr-3">
+                                <fa5:icon name="database" />
+                                r<web:dbVersion />
+                            </span>
+                        </li>
+                    </ul>
+                    
 
-                <ui:form class="form-inline">
-                    <button name="logout" value="logout" class="btn btn-sm btn-outline-danger">
-                        <fa5:icon name="sign-out-alt" />
-                        <span class="d-none d-md-inline">
-                            Log out
-                        </span>
-                    </button>
-                </ui:form>
-            </div>
-        </bs:container>
-    </nav>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <span class="navbar-text mr-3">
+                                <fa5:icon name="user" />
+                                <login:info field="username" />
+                            </span>
+                        </li>
+                    </ul>
 
-    <bs:row class="no-gutters main-layout">
-        <bs:column default="2" class="border-right shadow main-menu-background">
-            <nav class="py-3 px-2">
-                <v:panel class="mb-3 cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
-                    <div class="menu-root">
-                        <web:a pageId="~/in/hint.view" text="Documentation" />
-                    </div>
-                </v:panel>
-                <v:panel class="mb-3 cms-menu" security:requirePerm="CMS.Web">
-                    <div class="menu-root">
-                        <web:a pageId="~/in/index.view" text="Web" />
-                    </div>
-                    <m:xmlMenu file="~/templates/menus/web.xml" />
-                </v:panel>
-                <v:panel class="mb-3 cms-menu cms-menu-2" security:requirePerm="CMS.Floorball">
-                    <div class="menu-root">
-                        <web:a pageId="~/in/floorball/seasons.view">
-                            <web:static value="Floorball" lang="en" />
-                            <web:static value="Florbal" lang="cs" />
-                        </web:a>
-                    </div>
-                    <m:xmlMenu file="~/templates/menus/floorball.xml" />
-                </v:panel>
-                <v:panel class="mb-3 cms-menu cms-menu-4" security:requirePerm="CMS.Settings">
-                    <div class="menu-root">
-                        <web:a pageId="~/in/personal-notes.view">
-                            <web:static value="Settings" lang="en" />
-                            <web:static value="Nastavení" lang="cs" />
-                        </web:a>
-                    </div>
-                    <m:xmlMenu file="~/templates/menus/settings.xml" />
-                </v:panel>
-                <web:condition when="sys:hasAdminMenu">
-                    <v:panel class="mb-3 cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
-                        <div class="menu-root">
-                            <web:a pageId="~/in/personal-notes.view">
-                                <web:static value="Custom" lang="en" />
-                                <web:static value="Další" lang="cs" />
-                            </web:a>
-                        </div>
-                        <sys:adminMenu url="~/in/admin-menu.view" />
-                    </v:panel>
-                </web:condition>
-            </nav>
-        </bs:column>
-        <bs:column default="10" class="p-3 main-content">
-            <div class="cms">
-                <div id="cms-body" class="body">
-                    <v:content />
+                    <ui:form class="form-inline">
+                        <button name="logout" value="logout" class="btn btn-sm btn-outline-danger">
+                            <fa5:icon name="sign-out-alt" />
+                            <span class="d-none d-md-inline">
+                                Log out
+                            </span>
+                        </button>
+                    </ui:form>
                 </div>
-            </div>
-        </bs:column>
-    </bs:row>
+
+                <div class="p-3 cms">
+                    <div id="cms-body" class="body">
+                        <v:content />
+                    </div>
+                </div>
+            </bs:column>
+        </bs:row>
 
 </v:template>

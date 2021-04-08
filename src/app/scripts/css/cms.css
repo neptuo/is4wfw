@@ -10,15 +10,6 @@ body {
     margin: 0 auto;
 }
 
-.main-layout {
-    height: calc(100vh - 56px);
-}
-
-.main-content {
-    height: 100%;
-    overflow-y: scroll;
-}
-
 .main-menu-background {
     background: url(/images/cms/design/menu-background.png);
 }
