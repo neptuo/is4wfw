@@ -57,49 +57,51 @@
     </nav>
 
     <bs:row class="no-gutters main-layout">
-        <bs:column default="2">
-            <nav class="p-1">
-                <v:panel class="cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
-                    <span class="menu-root">
+        <bs:column default="2" class="border-right shadow main-menu-background">
+            <nav class="py-3 px-2">
+                <v:panel class="mb-3 cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
+                    <div class="menu-root">
                         <web:a pageId="~/in/hint.view" text="Documentation" />
-                    </span>
+                    </div>
                 </v:panel>
-                <v:panel class="cms-menu" security:requirePerm="CMS.Web">
-                    <span class="menu-root"><web:a pageId="~/in/index.view" text="Web" /></span>
+                <v:panel class="mb-3 cms-menu" security:requirePerm="CMS.Web">
+                    <div class="menu-root">
+                        <web:a pageId="~/in/index.view" text="Web" />
+                    </div>
                     <m:xmlMenu file="~/templates/menus/web.xml" />
                 </v:panel>
-                <v:panel class="cms-menu cms-menu-2" security:requirePerm="CMS.Floorball">
-                    <span class="menu-root">
+                <v:panel class="mb-3 cms-menu cms-menu-2" security:requirePerm="CMS.Floorball">
+                    <div class="menu-root">
                         <web:a pageId="~/in/floorball/seasons.view">
                             <web:static value="Floorball" lang="en" />
                             <web:static value="Florbal" lang="cs" />
                         </web:a>
-                    </span>
+                    </div>
                     <m:xmlMenu file="~/templates/menus/floorball.xml" />
                 </v:panel>
-                <v:panel class="cms-menu cms-menu-4" security:requirePerm="CMS.Settings">
-                    <span class="menu-root">
+                <v:panel class="mb-3 cms-menu cms-menu-4" security:requirePerm="CMS.Settings">
+                    <div class="menu-root">
                         <web:a pageId="~/in/personal-notes.view">
                             <web:static value="Settings" lang="en" />
                             <web:static value="Nastavení" lang="cs" />
                         </web:a>
-                    </span>
+                    </div>
                     <m:xmlMenu file="~/templates/menus/settings.xml" />
                 </v:panel>
                 <web:condition when="sys:hasAdminMenu">
-                    <v:panel class="cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
-                        <span class="menu-root">
+                    <v:panel class="mb-3 cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
+                        <div class="menu-root">
                             <web:a pageId="~/in/personal-notes.view">
                                 <web:static value="Custom" lang="en" />
                                 <web:static value="Další" lang="cs" />
                             </web:a>
-                        </span>
+                        </div>
                         <sys:adminMenu url="~/in/admin-menu.view" />
                     </v:panel>
                 </web:condition>
             </nav>
         </bs:column>
-        <bs:column default="10" class="p-1 main-content">
+        <bs:column default="10" class="p-3 main-content">
             <div class="cms">
                 <div id="cms-body" class="body">
                     <v:content />

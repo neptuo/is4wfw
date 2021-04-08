@@ -19,6 +19,14 @@ body {
     overflow-y: scroll;
 }
 
+.main-menu-background {
+    background: url(/images/cms/design/menu-background.png);
+}
+
+.cms-menu .menu-root a, .cms-menu .menu-root a:hover {
+    background-color: #04601C !important;
+}
+
 .frame-body {
     font-size: 14px;
 }
@@ -1708,44 +1716,46 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 /* ---------------------- CMS MENU ------------------------------------------- */
 
 .cms-menu a {
-    padding: 4px 10px 4px 24px;
+    padding: 2px 0 2px 24px;
+    display: block;
     color: #04601C;
     text-decoration: none;
 }
 
 .cms-menu a:hover {
-    text-decoration: underline;
+    background-color: #ccc !important;
 }
 
 .cms-menu ul {
-    padding-left: 22px;
+    padding: 0;
+    margin: 0;
     list-style: none;
 }
 
 .cms-menu .menu-root a {
     padding: 1px 0 1px 24px;
-    font-weight: bold;
-    background: url('/images/icons/at.png') no-repeat 4px 3px;
+    color: white;
+    background: url('/images/icons/at.png') no-repeat 4px;
 }
 
 .cms-menu.cms-menu-2 .menu-root a {
     padding: 1px 0 1px 24px;
-    background: url('/images/icons/floorball/ball.png') no-repeat 4px 3px;
+    background: url('/images/icons/floorball/ball.png') no-repeat 4px;
 }
 
 .cms-menu.cms-menu-3 .menu-root a {
     padding: 1px 0 1px 24px;
-    background: url('/images/icons/hint.png') no-repeat 4px 3px;
+    background: url('/images/icons/hint.png') no-repeat 4px;
 }
 
 .cms-menu.cms-menu-4 .menu-root a {
     padding: 1px 0 1px 24px;
-    background: url('/images/icons/radioactive.png') no-repeat 4px 3px;
+    background: url('/images/icons/radioactive.png') no-repeat 4px;
 }
 
 .cms-menu.cms-menu-5 .menu-root a {
     padding: 1px 0 1px 24px;
-    background: url('/images/icons/cog.png') no-repeat 4px 3px;
+    background: url('/images/icons/cog.png') no-repeat 4px;
 }
 
 .cms .head .cms-menu.cms-menu-5 .menu-root a {
