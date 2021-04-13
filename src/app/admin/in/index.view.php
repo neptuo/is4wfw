@@ -30,9 +30,18 @@
 		</bs:card>
 
 		<bs:card title="Repository" class="mb-4">
-			<sys:repositoryLink text="Open project page at GitHub" />
-			<br />
-			<sys:repositoryIssueCreateLink text="Report a new issue" />
+			<div class="mb-1">
+				<fa5:icon name="github" prefix="fab" />
+				<sys:repositoryLink text="Open project page at GitHub" />
+			</div>
+			<div class="mb-1">
+				<fa5:icon name="bug" />
+				<sys:repositoryIssueCreateLink text="Report a new issue" />
+			</div>
+			<div class="mb-1">
+				<fa5:icon name="globe-europe" />
+				<a target="_blank" href="http://is4wfw.neptuo.com">Product website</a>
+			</div>
 		</bs:card>
 	</div>
 </v:template>

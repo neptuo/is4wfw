@@ -15,7 +15,10 @@
                 <edit:form submit="login">
                     <web:condition when="edit:save">
                         <login:login group="web-admins" username="edit:username" password="edit:password">
-                            <web:redirectTo pageId="~/in/index.view" />
+                            <web:condition when="var:adminLastPage" isInverted="true">
+                                <var:declare name="adminLastPage" value="~/in/index.view" />
+                            </web:condition>
+                            <web:redirectTo pageId="var:adminLastPage" />
                         </login:login>
                     </web:condition>
 

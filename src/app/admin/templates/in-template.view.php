@@ -1,3 +1,14 @@
+<login:init group="web-admins" />
+<login:refresh group="web-admins">
+    <var:declare name="adminLastPage" value="web:currentPath" scope="session" />
+    <web:redirectTo pageId="~/login.view" />
+</login:refresh>
+<web:condition when="post:logout" is="logout">
+    <login:logout group="web-admins">
+        <var:declare name="adminLastPage" value="web:currentPath" scope="session" />
+        <web:redirectTo pageId="~/login.view" />
+    </login:logout>
+</web:condition>
 <v:head>
 	<meta name="viewport" content="width=device-width" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />

@@ -674,7 +674,6 @@ table.gray-box tr td {
 }
 
 .note, .warning, .error, .fatal, .success {
-    font-family: Times;
     font-size: 15px;
     margin: 2px;
     padding: 0 0 1px 18px;
