@@ -1,17 +1,10 @@
 <v:template src="~/templates/in-template.view">
 	<div id="home-desktop" class="home-cover">
-		<fieldset>
-			<legend>
-				<strong>Personal notes:</strong>
-			</legend>
+		<bs:card title="Personal notes" class="mb-4">
 			<sys:printNotes useFrames="false" showMsg="false" />
-		</fieldset>
+		</bs:card>
 		
-		<br >
-		<fieldset>
-			<legend>
-				<strong>Debug mode:</strong>
-			</legend>
+		<bs:card title="Debug mode" class="mb-4">
 			<web:condition when="post:debug">
 				<web:switch when="post:debug">
 					<web:case is="enable">
@@ -34,16 +27,12 @@
 					</web:case>
 				</web:switch>
 			</ui:form>
-		</fieldset>
+		</bs:card>
 
-		<br >
-		<fieldset>
-			<legend>
-				<strong>Repository:</strong>
-			</legend>
+		<bs:card title="Repository" class="mb-4">
 			<sys:repositoryLink text="Open project page at GitHub" />
 			<br />
 			<sys:repositoryIssueCreateLink text="Report a new issue" />
-		</fieldset>
+		</bs:card>
 	</div>
 </v:template>

@@ -10,6 +10,14 @@ body {
     margin: 0 auto;
 }
 
+.main-layout {
+    min-height: 100vh;
+}
+
+.main-menu {
+    min-height: calc(100% - 56px);
+}
+
 .main-menu-background {
     background: url(/images/cms/design/menu-background.png);
 }
