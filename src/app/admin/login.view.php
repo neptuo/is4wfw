@@ -11,7 +11,7 @@
 <bs:container class="is4wfw">
     <bs:row vertical="center" class="justify-content-center">
         <bs:column small="8" medium="6" large="4" >
-            <bs:card header="&lt;is4wfw /&gt;">
+            <bs:card header="&lt;is4wfw /&gt;" class="shadow">
                 <edit:form submit="login">
                     <web:condition when="edit:save">
                         <login:login group="web-admins" username="edit:username" password="edit:password">
