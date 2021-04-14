@@ -69,6 +69,38 @@ body {
     box-shadow: 0 0 0 0.2rem rgb(4 96 28 / 50%);
 }
 
+
+.main-menu-col .navbar-toggler {
+    display: block;
+    border: none;
+    outline: none;
+    padding: .3125rem 0;
+}
+
+.main-menu-col .navbar {
+    padding-right: .5rem;
+}
+
+.main-menu-collapsed {
+    flex: 0 0 41px;
+    width: 41px;
+}
+
+.main-menu-collapsed .navbar {
+    padding: .5rem .45rem;
+}
+
+.main-menu-collapsed .navbar-brand {
+    display: none;
+}
+
+.main-menu-collapsed .menu span, 
+.main-menu-collapsed .menu-root span {
+    visibility: hidden;
+}
+
+
+
 form {
     margin: 0;
     display: inline;

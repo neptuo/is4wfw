@@ -70,8 +70,8 @@
 
                 $return .= ''
                 . '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . '">'
-                    . '<div class="link' . (($parent) ? ' active-parent-link' : '') . (($active) ? ' active-link' : '') . '">'
-                        . '<a href="' . $url . '"' . ((isset($attrs['rel'])) ? ' rel="' . $attrs['rel'] . '"' : '') . '>'
+                    . '<div class="link' . (($active) ? ' active-link' : '') . '">'
+                        . '<a href="' . $url . '"' . ((isset($attrs['rel'])) ? ' rel="' . $attrs['rel'] . '"' : '') . ' data-bs-placement="right" title="' . $name . '">'
                             . '<span>' . $name . '</span>'
                         . '</a>'
                     . '</div>'

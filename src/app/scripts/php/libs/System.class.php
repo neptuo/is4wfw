@@ -339,13 +339,13 @@
 				}
 
 				$content .= ''
-						. '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . ' ' . '">'
-						. '<div class="link' .  (($active) ? ' active-link' : '') . '">'
-						. '<a href="' . $href . '" style="background-image: url(\''.$lnk['icon'].'\') !important;">'
-						. '<span>' . $lnk['name'] . '</span>'
+				. '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . ' ' . '">'
+					. '<div class="link' .  (($active) ? ' active-link' : '') . '">'
+						. '<a href="' . $href . '" style="background-image: url(\''.$lnk['icon'].'\') !important;" data-bs-placement="right" title="' . $lnk['name'] . '">'
+							. '<span>' . $lnk['name'] . '</span>'
 						. '</a>'
-						. '</div>'
-						. '</li>';
+					. '</div>'
+				. '</li>';
 				$i++;
 			}
 			$content .= "</ul></div>";

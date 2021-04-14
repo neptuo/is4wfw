@@ -18,40 +18,48 @@
 </v:head>
 <v:template src="~/templates/template.view">
     <bs:row class="no-gutters main-layout">
-        <bs:column default="2">
+        <var:declare name="mainMenuColCssClass" value="main-menu-col" />
+        <web:condition when="cookie:mainMenu" is="collapsed">
+            <utils:concat output="mainMenuColCssClass" separator=" " value1="var:mainMenuColCssClass" value2="main-menu-collapsed" />
+            <var:declare name="mainMenuColCssClass" value="utils:mainMenuColCssClass" />
+        </web:condition>
+        <bs:column default="2" class="var:mainMenuColCssClass">
             <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
-                <a href="~/in/index.view" class="navbar-brand mr-4">
+                <a href="~/in/index.view" class="navbar-brand mr-auto">
                     &lt;is4wfw /&gt;
                 </a>
+                <button class="navbar-toggler" type="button"><span class="navbar-toggler-icon"></span></button>
             </nav>
                 
             <div class="border-right shadow main-menu main-menu-background">
                 <nav class="py-3 px-2">
                     <v:panel class="mb-3 cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
                         <div class="menu-root">
-                            <web:a pageId="~/in/hint.view" text="Documentation" />
+                            <web:a pageId="~/in/hint.view" data-bs-placement="right" title="Documentation">
+                                <span>Documentation</span>
+                            </web:a>
                         </div>
                     </v:panel>
                     <v:panel class="mb-3 cms-menu" security:requirePerm="CMS.Web">
                         <div class="menu-root">
-                            <web:a pageId="~/in/index.view" text="Web" />
+                            <web:a pageId="~/in/index.view" data-bs-placement="right" title="Web">
+                                <span>Web</span>
+                            </web:a>
                         </div>
                         <m:xmlMenu file="~/templates/menus/web.xml" />
                     </v:panel>
                     <v:panel class="mb-3 cms-menu cms-menu-2" security:requirePerm="CMS.Floorball">
                         <div class="menu-root">
-                            <web:a pageId="~/in/floorball/seasons.view">
-                                <web:static value="Floorball" lang="en" />
-                                <web:static value="Florbal" lang="cs" />
+                            <web:a pageId="~/in/floorball/seasons.view" data-bs-placement="right" title="Floorball">
+                                <span>Floorball</span>
                             </web:a>
                         </div>
                         <m:xmlMenu file="~/templates/menus/floorball.xml" />
                     </v:panel>
                     <v:panel class="mb-3 cms-menu cms-menu-4" security:requirePerm="CMS.Settings">
                         <div class="menu-root">
-                            <web:a pageId="~/in/personal-notes.view">
-                                <web:static value="Settings" lang="en" />
-                                <web:static value="Nastavení" lang="cs" />
+                            <web:a pageId="~/in/personal-notes.view" data-bs-placement="right" title="Settings">
+                                <span>Settings</span>
                             </web:a>
                         </div>
                         <m:xmlMenu file="~/templates/menus/settings.xml" />
@@ -59,9 +67,8 @@
                     <web:condition when="sys:hasAdminMenu">
                         <v:panel class="mb-3 cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
                             <div class="menu-root">
-                                <web:a pageId="~/in/personal-notes.view">
-                                    <web:static value="Custom" lang="en" />
-                                    <web:static value="Další" lang="cs" />
+                                <web:a pageId="~/in/personal-notes.view" data-bs-placement="right" title="Custom">
+                                    <span>Custom</span>
                                 </web:a>
                             </div>
                             <sys:adminMenu url="~/in/admin-menu.view" />
@@ -122,4 +129,50 @@
             </div>
         </bs:column>
     </bs:row>
+
+    <js:script placement="tail">
+
+        var tooltips = [];
+
+        function createTooltips() {
+            var elements = document.querySelectorAll('.main-menu [title]');
+            for (let i = 0; i < elements.length; i++) {
+                const element = elements[i];
+                
+                tooltips.push(new bootstrap.Tooltip(element, {
+                    boundary: 'window'
+                }));
+            }
+        }
+
+        function destroyTooltips() {
+            tooltips.forEach(function(t) {
+                t.dispose();
+            });
+
+            tooltips = [];
+        }
+
+        var $mainMenuCol = $(".main-menu-col");
+        $(".navbar-toggler").click(function(e) {
+            e.preventDefault();
+            
+            if ($mainMenuCol.hasClass("main-menu-collapsed")) {
+                $mainMenuCol.removeClass("main-menu-collapsed");
+                
+                new Cookies().create("mainMenu", null);
+                destroyTooltips();
+            } else {
+                $mainMenuCol.addClass("main-menu-collapsed");
+
+                new Cookies().create("mainMenu", "collapsed");
+                createTooltips();
+            }
+        });
+
+        if ($mainMenuCol.hasClass("main-menu-collapsed")) {
+            createTooltips();
+        }
+
+    </js:script>
 </v:template>
