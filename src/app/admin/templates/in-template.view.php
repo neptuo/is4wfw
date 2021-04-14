@@ -35,14 +35,14 @@
                 <nav class="py-3 px-2">
                     <v:panel class="mb-3 cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
                         <div class="menu-root">
-                            <web:a pageId="~/in/hint.view" data-bs-placement="right" title="Documentation">
+                            <web:a pageId="~/in/hint.view" title="Documentation">
                                 <span>Documentation</span>
                             </web:a>
                         </div>
                     </v:panel>
                     <v:panel class="mb-3 cms-menu" security:requirePerm="CMS.Web">
                         <div class="menu-root">
-                            <web:a pageId="~/in/index.view" data-bs-placement="right" title="Web">
+                            <web:a pageId="~/in/index.view" title="Web">
                                 <span>Web</span>
                             </web:a>
                         </div>
@@ -50,7 +50,7 @@
                     </v:panel>
                     <v:panel class="mb-3 cms-menu cms-menu-2" security:requirePerm="CMS.Floorball">
                         <div class="menu-root">
-                            <web:a pageId="~/in/floorball/seasons.view" data-bs-placement="right" title="Floorball">
+                            <web:a pageId="~/in/floorball/seasons.view" title="Floorball">
                                 <span>Floorball</span>
                             </web:a>
                         </div>
@@ -58,7 +58,7 @@
                     </v:panel>
                     <v:panel class="mb-3 cms-menu cms-menu-4" security:requirePerm="CMS.Settings">
                         <div class="menu-root">
-                            <web:a pageId="~/in/personal-notes.view" data-bs-placement="right" title="Settings">
+                            <web:a pageId="~/in/personal-notes.view" title="Settings">
                                 <span>Settings</span>
                             </web:a>
                         </div>
@@ -67,7 +67,7 @@
                     <web:condition when="sys:hasAdminMenu">
                         <v:panel class="mb-3 cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
                             <div class="menu-root">
-                                <web:a pageId="~/in/personal-notes.view" data-bs-placement="right" title="Custom">
+                                <web:a pageId="~/in/personal-notes.view" title="Custom">
                                     <span>Custom</span>
                                 </web:a>
                             </div>
@@ -140,7 +140,8 @@
                 const element = elements[i];
                 
                 tooltips.push(new bootstrap.Tooltip(element, {
-                    boundary: 'window'
+                    boundary: 'window',
+                    placement: 'right'
                 }));
             }
         }

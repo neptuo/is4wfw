@@ -71,7 +71,7 @@
                 $return .= ''
                 . '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . '">'
                     . '<div class="link' . (($active) ? ' active-link' : '') . '">'
-                        . '<a href="' . $url . '"' . ((isset($attrs['rel'])) ? ' rel="' . $attrs['rel'] . '"' : '') . ' data-bs-placement="right" title="' . $name . '">'
+                        . '<a href="' . $url . '"' . ((isset($attrs['rel'])) ? ' rel="' . $attrs['rel'] . '"' : '') . ' title="' . $name . '">'
                             . '<span>' . $name . '</span>'
                         . '</a>'
                     . '</div>'

@@ -341,7 +341,7 @@
 				$content .= ''
 				. '<li class="menu-item li-' . $i . (($active) ? ' active-item' : '') . ' ' . '">'
 					. '<div class="link' .  (($active) ? ' active-link' : '') . '">'
-						. '<a href="' . $href . '" style="background-image: url(\''.$lnk['icon'].'\') !important;" data-bs-placement="right" title="' . $lnk['name'] . '">'
+						. '<a href="' . $href . '" style="background-image: url(\''.$lnk['icon'].'\') !important;" title="' . $lnk['name'] . '">'
 							. '<span>' . $lnk['name'] . '</span>'
 						. '</a>'
 					. '</div>'
