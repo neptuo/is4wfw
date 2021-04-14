@@ -18,6 +18,11 @@ body {
     min-height: calc(100% - 56px);
 }
 
+.main-menu > nav {
+    position: sticky;
+    top: 56px;
+}
+
 .main-menu-background {
     background: url(/images/cms/design/menu-background.png);
 }
