@@ -51,13 +51,13 @@
                 
                 $links = '<div class="gray-box">';
                 if (count($xml->tag) > 0 || isset($xml->anyTag)) {
-                    $links .= '<div>'.$rb->get('lib.tags').':';
+                    $links .= '<div>'.$rb->get('lib.tags').': ';
                     foreach($xml->tag as $tag) {
                         $obsolete = null;
                         if (isset($tag->obsolete)) {
                             $obsolete = (string)$tag->obsolete;
                         }
-                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#tag-'.$tag->name.'">'.$tag->name.'</a> ';
+                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#tag-'.$tag->name.'">'.$tag->name.'</a> ';
                     }
 
                     if (isset($xml->anyTag)) {
@@ -66,20 +66,20 @@
                             $obsolete = (string)$xml->anyTag->obsolete;
                         }
 
-                        $links .= ' - <a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#anytag">any</a> ';
+                        $links .= ' - <a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#anytag">any</a> ';
                     }
 
                     $links .= '</div>';
                 }
                 
                 if (count($xml->fulltag) > 0 || isset($xml->anyFulltag)) {
-                    $links .= '<div>'.$rb->get('lib.fulltags').':';
+                    $links .= '<div>'.$rb->get('lib.fulltags').': ';
                     foreach($xml->fulltag as $tag) {
                         $obsolete = null;
                         if (isset($tag->obsolete)) {
                             $obsolete = (string)$tag->obsolete;
                         }
-                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#fulltag-'.$tag->name.'">'.$tag->name.'</a> ';
+                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#fulltag-'.$tag->name.'">'.$tag->name.'</a> ';
                     }
 
                     if (isset($xml->anyFulltag)) {
@@ -88,26 +88,26 @@
                             $obsolete = (string)$xml->anyFulltag->obsolete;
                         }
 
-                        $links .= ' - <a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#anyfulltag">any</a> ';
+                        $links .= ' - <a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#anyfulltag">any</a> ';
                     }
                     
                     $links .= '</div>';
                 }
 
                 if (count($xml->property) > 0) {
-                    $links .= '<div>'.$rb->get('lib.properties').':';
+                    $links .= '<div>'.$rb->get('lib.properties').': ';
                     foreach($xml->property as $prop) {
                         $obsolete = null;
                         if (isset($prop->obsolete)) {
                             $obsolete = (string)$prop->obsolete;
                         }
-                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#property-'.$prop->name.'">'.$prop->name.'</a> ';
+                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#property-'.$prop->name.'">'.$prop->name.'</a> ';
                     }
                     $links .= '</div>';
                 }
 
                 if (count($xml->decorator) > 0) {
-                    $links .= '<div>'.$rb->get('lib.decorators').':';
+                    $links .= '<div>'.$rb->get('lib.decorators').': ';
                     foreach($xml->decorator as $decorator) {
                         $obsolete = null;
                         if (isset($decorator->obsolete)) {
@@ -120,7 +120,7 @@
                         };
                         $name = implode(", ", $attributeNames);
                         $identifier = implode("-", $attributeNames);
-                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . $obsolete . '"' : '') . 'href="#decorator-' . $identifier . '">' . $name . '</a> ';
+                        $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#decorator-' . $identifier . '">' . $name . '</a> ';
                     }
                     $links .= '</div>';
                 }
