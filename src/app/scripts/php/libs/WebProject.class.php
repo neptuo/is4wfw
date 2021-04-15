@@ -227,11 +227,13 @@
                 $return .= ''
                         . (($editable == "true") ? ''
                                 . '<hr />'
+                                . '<div class="gray-box">'
                                 . '<form name="projects-new" method="post" action="' . $actionUrl . '">'
                                 . '<input type="submit" name="new-project" value="' . $rb->get('project.create') . '" title="Create new project" />'
                                 . ''
                                 . ''
-                                . '</form>' : '');
+                                . '</form>'
+                                . '</div>' : '');
             }
 
             //$loginObject->getGroups();
