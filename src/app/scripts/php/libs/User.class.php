@@ -624,8 +624,12 @@
             if ($ok) {
                 $rows = '';
                 $i = 0;
-                $logs = $dbObject->fetchAll('SELECT `user_log`.`id`, `user_log`.`session_id`, `user_log`.`user_id`, `user_log`.`used_group`, `user`.`name`, `user`.`surname`, `user`.`login`, `user_log`.`login_timestamp`, `user_log`.`logout_timestamp` FROM `user_log` LEFT JOIN `user` ON `user_log`.`user_id` = `user`.`uid` ORDER BY `user_log`.`login_timestamp`;');
+                $logs = $dbObject->fetchAll('SELECT `user_log`.`id`, `user_log`.`session_id`, `user_log`.`user_id`, `user_log`.`used_group`, `user`.`name`, `user`.`surname`, `user`.`login`, `user_log`.`login_timestamp`, `user_log`.`logout_timestamp` FROM `user_log` LEFT JOIN `user` ON `user_log`.`user_id` = `user`.`uid` ORDER BY `user_log`.`login_timestamp` DESC LIMIT 0, 101;');
                 foreach ($logs as $log) {
+                    if ($i == 100) {
+                        break;
+                    }
+
                     $rows .= ''
                             . '<tr class="' . ((($i % 2) == 1) ? 'even' : 'idle') . '">'
                             . '<td class="user-log-ud">' . $log['id'] . '</td>'
@@ -659,6 +663,7 @@
                         . $rows
                         . '</tbody>'
                         . '</table>'
+                        . (count($logs) == 101 ? "<div class='gray-box'>And more...</div>" : '')
                         . '</div>';
             } else {
                 $return .= '<h4 class="error">Permission Denied!</h4>';
@@ -693,7 +698,7 @@
             }
 
             if ($ok) {
-                if ($_POST['user-log-truncate'] == 'Clear user log!') {
+                if ($_POST['user-log-truncate'] == 'Clear user log') {
                     $dbObject->execute('DELETE FROM `user_log` WHERE `session_id` != ' . $loginObject->getSessionId() . ';');
                     $return .= '<h4 class="success">User log clared!</h4>';
                 }
@@ -701,7 +706,7 @@
                 $return .= ''
                         . '<div class="user-log-truncate">'
                         . '<form name="user-log-truncate" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
-                        . '<input class="confirm" type="submit" name="user-log-truncate" value="Clear user log!" title="Clear user log" />'
+                        . '<input class="confirm" type="submit" name="user-log-truncate" value="Clear user log" title="Clear user log" />'
                         . '</form>'
                         . '</div>';
             } else {
