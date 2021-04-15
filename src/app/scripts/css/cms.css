@@ -6,7 +6,6 @@ html, body {
 }
 
 body {
-    min-width: 1200px;
     margin: 0 auto;
 }
 
@@ -69,7 +68,6 @@ body {
     box-shadow: 0 0 0 0.2rem rgb(4 96 28 / 50%);
 }
 
-
 .main-menu-col .navbar-toggler {
     display: block;
     border: none;
@@ -78,7 +76,7 @@ body {
 }
 
 .main-menu-col .navbar {
-    padding-right: .5rem;
+    padding: .5rem .45rem;
 }
 
 .main-menu-collapsed {
@@ -91,12 +89,16 @@ body {
 }
 
 .main-menu-collapsed .navbar-brand {
-    display: none;
+    display: none !important;
 }
 
 .main-menu-collapsed .menu span, 
 .main-menu-collapsed .menu-root span {
     visibility: hidden;
+}
+
+.navbar {
+    min-height: 56px;
 }
 
 
@@ -1770,9 +1772,12 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 /* ---------------------- CMS MENU ------------------------------------------- */
 
 .cms-menu a {
-    padding: 2px 0 2px 24px;
+    width: 100%;
     display: block;
+    padding: 2px 0 2px 24px;
     color: #04601C;
+    overflow: hidden;
+    text-overflow: ellipsis;
     text-decoration: none;
 }
 
@@ -1810,6 +1815,10 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .cms-menu.cms-menu-5 .menu-root a {
     padding: 1px 0 1px 24px;
     background: url('/images/icons/cog.png') no-repeat 4px;
+}
+
+.cms-menu.cms-menu-6 .menu-root a {
+    background: url('/images/icons/house.png') no-repeat 4px;
 }
 
 .cms .head .cms-menu.cms-menu-5 .menu-root a {

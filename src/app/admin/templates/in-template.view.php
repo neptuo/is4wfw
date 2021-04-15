@@ -23,9 +23,9 @@
             <utils:concat output="mainMenuColCssClass" separator=" " value1="var:mainMenuColCssClass" value2="main-menu-collapsed" />
             <var:declare name="mainMenuColCssClass" value="utils:mainMenuColCssClass" />
         </web:condition>
-        <bs:column default="2" class="var:mainMenuColCssClass">
+        <bs:column default="3" large="2" class="var:mainMenuColCssClass">
             <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
-                <a href="~/in/index.view" class="navbar-brand mr-auto">
+                <a href="~/in/index.view" class="navbar-brand d-none d-md-block mr-auto">
                     &lt;is4wfw /&gt;
                 </a>
                 <button class="navbar-toggler" type="button"><span class="navbar-toggler-icon"></span></button>
@@ -33,6 +33,13 @@
                 
             <div class="border-right shadow main-menu main-menu-background">
                 <nav class="py-3 px-2">
+                    <v:panel class="mb-3 cms-menu cms-menu-6 d-block d-md-none">
+                        <div class="menu-root">
+                            <web:a pageId="~/in/index.view" title="Home">
+                                <span>Home</span>
+                            </web:a>
+                        </div>
+                    </v:panel>
                     <v:panel class="mb-3 cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
                         <div class="menu-root">
                             <web:a pageId="~/in/hint.view" title="Documentation">
@@ -84,26 +91,19 @@
                     <wp:selectProject showMsg="false" useFrames="false" label=" " />
                 </div>
                 
-                <ul class="navbar-nav">
+                <ul class="navbar-nav flex-row d-none d-md-flex">
                     <li class="nav-item">
                         <span class="navbar-text mr-3">
                             <fa5:icon name="server" />
                             <web:version />
                         </span>
                     </li>
-                </ul>
-
-                <ul class="navbar-nav">
                     <li class="nav-item">
                         <span class="navbar-text mr-3">
                             <fa5:icon name="database" />
                             r<web:dbVersion />
                         </span>
                     </li>
-                </ul>
-                
-
-                <ul class="navbar-nav">
                     <li class="nav-item">
                         <span class="navbar-text mr-3">
                             <fa5:icon name="user" />
