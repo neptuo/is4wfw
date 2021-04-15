@@ -2512,16 +2512,16 @@
 
             // Vyber templatu do kterych smim zapisovat
             $searchPara = '';
-            if (parent::session()->exists('name', 'template-search')) {
+            if (parent::session()->exists('name', 'template-search') && parent::session()->get('name', 'template-search') != "") {
                 $searchPara .= ' and `template`.`name` like "%' . parent::session()->get('name', 'template-search') . '%"';
             }
-            if (parent::session()->exists('group', 'template-search')) {
+            if (parent::session()->exists('group', 'template-search') && parent::session()->get('group', 'template-search') != "") {
                 $searchPara .= ' and `template`.`group` like "%' . parent::session()->get('group', 'template-search') . '%"';
             }
-            if (parent::session()->exists('identifier', 'template-search')) {
+            if (parent::session()->exists('identifier', 'template-search') && parent::session()->get('identifier', 'template-search') != "") {
                 $searchPara .= ' and `template`.`identifier` like "%' . parent::session()->get('identifier', 'template-search') . '%"';
             }
-            if (parent::session()->exists('content', 'template-search')) {
+            if (parent::session()->exists('content', 'template-search') && parent::session()->get('content', 'template-search') != "") {
                 $searchPara .= ' and `template`.`content` like "%' . parent::session()->get('content', 'template-search') . '%"';
             }
             $templates = $dbObject->fetchAll('SELECT `template`.`id`, `template`.`name`, `template`.`group`, `template`.`identifier`, `template`.`content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . '))' . $searchPara . ' ORDER BY `template`.`id`;');
