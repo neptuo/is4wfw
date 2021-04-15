@@ -1044,7 +1044,7 @@ function initClickableGrid() {
 			} else {
 				$target = $tr.find(".clickable-target");
 				$buttons = $tr.find('input[type=image]');
-				$button = $buttons.filter('[src$=edi.png]');
+				$button = $buttons.filter('[src$="edi.png"]');
 				$checkbox = $tr.find('input[type=checkbox]');
 				if ($target.length > 0) {
 					$button = $target[0];
