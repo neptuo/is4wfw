@@ -152,6 +152,15 @@ body {
     font-size: 1rem;
 }
 
+.data-item {
+    white-space: nowrap;
+}
+
+.data-item .action-placeholder {
+    width: 32px;
+    display: inline-block;
+}
+
 form {
     margin: 0;
     display: inline;
