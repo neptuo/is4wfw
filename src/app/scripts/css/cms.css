@@ -194,7 +194,7 @@ input[disabled] {
     background: #eeeeee;
 }
 
-.frame input[type=button], .frame input[type=submit], .frame button, .frame .editor-panel input[type=button], .frame a.button, .frame .buttons a {
+.frame input[type=button], .frame input[type=submit], .frame button:not([role="presentation"]):not(.mce-open), .frame .editor-panel input[type=button], .frame a.button, .frame .buttons a {
     cursor: pointer;
     font-size: small;
     font-family: Arial;
