@@ -203,6 +203,11 @@ select[multiple=multiple] {
     vertical-align: middle;
 }
 
+.image-button img {
+    display: block;
+    margin-bottom: 1px;
+}
+
 .add-rem-text-files-submit {
     margin-top: 10px;
 }
@@ -226,6 +231,10 @@ select[multiple=multiple] {
 
 table.pages-table {
     border-collapse: collapse;
+}
+
+.add-page {
+    margin-top: .5rem;
 }
 /*
 .inn-1 {
