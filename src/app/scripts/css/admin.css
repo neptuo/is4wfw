@@ -31,7 +31,7 @@ input[disabled] {
     background: #eeeeee;
 }
 
-input[type=button], input[type=submit], button, .editor-panel input[type=button], a.button, .buttons a {
+.frame input[type=button], .frame input[type=submit], .frame button:not([role="presentation"]):not(.mce-open), .frame .editor-panel input[type=button], .frame a.button, .frame .buttons a {
     cursor: pointer;
     font-size: small;
     margin: 0;
@@ -348,6 +348,23 @@ table .template-id {
 
 .frames-used .frame-body {
     display: none;
+}
+
+.frame-body {
+    font-size: 14px;
+}
+
+.frame label {
+    margin: 0 !important;
+}
+
+.frame hr {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+}
+
+.frame code {
+    color: unset;
 }
 
 th.file-head-th {
