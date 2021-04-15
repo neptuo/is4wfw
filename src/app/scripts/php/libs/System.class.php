@@ -254,7 +254,7 @@
 			if($useFrames == "false") {
 				return $return;
 			} else {
-				return parent::getFrame('System notes', $return, "", true);
+				return parent::getFrame('Personal notes', $return, "", true);
 			}
 		}
 		
@@ -272,23 +272,27 @@
 			$userId = $loginObject->getUserId();
 			$types = array('', 'note', 'warning', 'error', 'fatal', 'success');
 			
-			$properties = $dbObject->fetchAll('SELECT `value`, `type` FROM `personal_note` WHERE `user_id` = '.$userId.' ORDER BY `id`;');
+			$notes = $dbObject->fetchAll('SELECT `value`, `type` FROM `personal_note` WHERE `user_id` = '.$userId.' ORDER BY `id`;');
 			
-			$return .= '' 
-			.'<div class="system-note-print">';
-			$i = 0;
-			foreach($properties as $prop) {
+			if (count($notes) > 0) {
+				$return .= '' 
+				.'<div class="system-note-print">';
+				$i = 0;
+				foreach($notes as $note) {
+					$return .= ''
+							.'<h4 class="system-note-item system-note-item-'.$i.' system-note-item-'.($i % 2 == 0 ? "idle" : "even").' '.$types[$note['type']].'">'.$note['value'].'</h4>';
+					$i ++;
+				}
 				$return .= ''
-						.'<h4 class="system-note-item system-note-item-'.$i.' system-note-item-'.($i % 2 == 0 ? "idle" : "even").' '.$types[$prop['type']].'">'.$prop['value'].'</h4>';
-				$i ++;
+				.'</div>';
+			} else if($showMsg == "true") {
+				$return .= $this->getWarning("You don't have any notes.");
 			}
-			$return .= ''
-			.'</div>';
 			
 			if($useFrames == "false") {
 				return $return;
 			} else {
-				return parent::getFrame('System notes print', $return, "", true);
+				return parent::getFrame('Personal notes', $return, "", true);
 			}
 		}
 		

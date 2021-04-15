@@ -1,7 +1,13 @@
 <v:template src="~/templates/in-template.view">
-	<div class="m-md-2 m-lg-4">
+	<div class="m-md-2 m-lg-4 home">
 		<bs:card title="Personal notes" class="mb-4">
-			<sys:printNotes useFrames="false" showMsg="false" />
+			<sys:printNotes useFrames="false" showMsg="true" />
+
+			<div class="mt-2">
+				<web:a pageId="~/in/personal-notes.view">
+					Edit your notes &raquo;
+				</web:a>
+			</div>
 		</bs:card>
 		
 		<bs:card title="Debug mode" class="mb-4">
