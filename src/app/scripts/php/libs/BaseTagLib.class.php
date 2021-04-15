@@ -573,6 +573,16 @@
 			return $attributes;
         }
 
+		protected function appendClass($attributes, $class) {
+			if (array_key_exists("class", $attributes)) {
+				$attributes["class"] .= " $class";
+			} else {
+				$attributes["class"] = $class;
+			}
+
+			return $attributes;
+		}
+
         protected function isFilterModel($filter) {
             return count($filter) == 1 && array_key_exists("", $filter) && ($filter[""] instanceof FilterModel);
         }

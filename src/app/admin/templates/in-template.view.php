@@ -15,6 +15,7 @@
     <bs:resources />
     <fa5:resources />
     <js:cmsResources />
+    <js:script placement="tail" path="~/js/Admin.js" />
 </v:head>
 <v:template src="~/templates/template.view">
     <bs:row class="no-gutters main-layout">
@@ -33,7 +34,31 @@
                 
             <div class="border-right shadow main-menu main-menu-background">
                 <nav class="py-3 px-2">
-                    <v:panel class="mb-3 cms-menu cms-menu-6 d-block d-md-none">
+                    <template:declare identifier="menuContainer">
+                        <utils:concat output="menuContainerCssClass" separator=" " value1="mb-3 cms-menu" value2="template:class" />
+                        <utils:concat output="menuContainerTogglerTitle" separator=" " value1="Collapse/Expand" value2="template:title" />
+                        <web:condition when="template:cookie" is="collapsed">
+                            <utils:concat output="menuContainerCssClass" separator=" " value1="utils:menuContainerCssClass" value2="cms-menu-collapsed" />
+                        </web:condition>
+                        <v:panel class="utils:menuContainerCssClass" data-menu="template:name" security:requirePerm="template:permission"> 
+                            <div class="menu-root">
+                                <web:a pageId="template:rootUrl" title="template:title">
+                                    <span>
+                                        <web:out text="template:title" />
+                                    </span>
+                                </web:a>
+                                <button class="menu-toggler" title="<web:out text="utils:menuContainerTogglerTitle" />"></button>
+                            </div>
+                            <web:condition when="template:menu">
+                                <m:xmlMenu file="template:menu" />
+                            </web:condition>
+                            <web:condition when="template:menu" isInverted="true">
+                                <template:content />
+                            </web:condition>
+                        </v:panel>
+                    </template:declare>
+
+                    <v:panel class="mb-3 cms-menu cms-menu-6 d-block d-md-none cms-menu-home">
                         <div class="menu-root">
                             <web:a pageId="~/in/index.view" title="Home">
                                 <span>Home</span>
@@ -47,39 +72,13 @@
                             </web:a>
                         </div>
                     </v:panel>
-                    <v:panel class="mb-3 cms-menu" security:requirePerm="CMS.Web">
-                        <div class="menu-root">
-                            <web:a pageId="~/in/index.view" title="Web">
-                                <span>Web</span>
-                            </web:a>
-                        </div>
-                        <m:xmlMenu file="~/templates/menus/web.xml" />
-                    </v:panel>
-                    <v:panel class="mb-3 cms-menu cms-menu-2" security:requirePerm="CMS.Floorball">
-                        <div class="menu-root">
-                            <web:a pageId="~/in/floorball/seasons.view" title="Floorball">
-                                <span>Floorball</span>
-                            </web:a>
-                        </div>
-                        <m:xmlMenu file="~/templates/menus/floorball.xml" />
-                    </v:panel>
-                    <v:panel class="mb-3 cms-menu cms-menu-4" security:requirePerm="CMS.Settings">
-                        <div class="menu-root">
-                            <web:a pageId="~/in/personal-notes.view" title="Settings">
-                                <span>Settings</span>
-                            </web:a>
-                        </div>
-                        <m:xmlMenu file="~/templates/menus/settings.xml" />
-                    </v:panel>
+                    <template:menuContainer name="web" title="Web" permission="CMS.Web" rootUrl="~/in/pages.view" cookie="cookie:cmsMenu-web" menu="~/templates/menus/web.xml" />
+                    <template:menuContainer name="floorball" title="Floorball" permission="CMS.Floorball" rootUrl="~/in/floorball/seasons.view" cookie="cookie:cmsMenu-floorball" menu="~/templates/menus/floorball.xml" class="cms-menu-2" />
+                    <template:menuContainer name="settings" title="Settings" permission="CMS.Settings" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-settings" menu="~/templates/menus/settings.xml" class="cms-menu-4" />
                     <web:condition when="sys:hasAdminMenu">
-                        <v:panel class="mb-3 cms-menu cms-menu-5" security:requirePerm="CMS.AdminMenu">
-                            <div class="menu-root">
-                                <web:a pageId="~/in/personal-notes.view" title="Custom">
-                                    <span>Custom</span>
-                                </web:a>
-                            </div>
+                        <template:menuContainer name="custom" title="Custom" permission="CMS.AdminMenu" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-custom" class="cms-menu-5">
                             <sys:adminMenu url="~/in/admin-menu.view" />
-                        </v:panel>
+                        </template:menuContainer>
                     </web:condition>
                 </nav>
             </div>
@@ -130,50 +129,4 @@
         </bs:column>
     </bs:row>
 
-    <js:script placement="tail">
-
-        var tooltips = [];
-
-        function createTooltips() {
-            var elements = document.querySelectorAll('.main-menu [title]');
-            for (let i = 0; i < elements.length; i++) {
-                const element = elements[i];
-                
-                tooltips.push(new bootstrap.Tooltip(element, {
-                    boundary: 'window',
-                    placement: 'right'
-                }));
-            }
-        }
-
-        function destroyTooltips() {
-            tooltips.forEach(function(t) {
-                t.dispose();
-            });
-
-            tooltips = [];
-        }
-
-        var $mainMenuCol = $(".main-menu-col");
-        $(".navbar-toggler").click(function(e) {
-            e.preventDefault();
-            
-            if ($mainMenuCol.hasClass("main-menu-collapsed")) {
-                $mainMenuCol.removeClass("main-menu-collapsed");
-                
-                new Cookies().create("mainMenu", null);
-                destroyTooltips();
-            } else {
-                $mainMenuCol.addClass("main-menu-collapsed");
-
-                new Cookies().create("mainMenu", "collapsed");
-                createTooltips();
-            }
-        });
-
-        if ($mainMenuCol.hasClass("main-menu-collapsed")) {
-            createTooltips();
-        }
-
-    </js:script>
 </v:template>

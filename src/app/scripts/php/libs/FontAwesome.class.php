@@ -16,16 +16,6 @@
 			}
 		}
 
-		private function appendClass($attributes, $class) {
-			if (array_key_exists("class", $attributes)) {
-				$attributes["class"] .= " $class";
-			} else {
-				$attributes["class"] = $class;
-			}
-
-			return $attributes;
-		}
-
 		public function icon($name, $prefix = "fa", $tag = "span", $params = []) {
 			$this->resources();
 

@@ -95,6 +95,9 @@
     <attribute>
       <name>class</name>
     </attribute>
+    <anyAttribute>
+      <comment>HTML atributy pro obalový div.</comment>
+    </anyAttribute>
     <comment>
       Panel
     </comment>

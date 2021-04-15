@@ -121,15 +121,13 @@
             $this->Title = $title;
         }
 
-        public function showPanel($template, $id = false, $class = false) {
-            $att = '';
-            if ($id != '') {
-                $att .= ' id="' . $id . '"';
+        public function showPanel($template, $id = false, $class = false, $attributes = []) {
+            $attributes = $this->appendClass($attributes, $class);
+            if (!empty($id)) {
+                $attributes["id"] = $id;
             }
-            if ($class != '') {
-                $att .= ' class="' . $class . '"';
-            }
-            $return = '<div' . $att . '>' . $template() . '</div>';
+
+            $return = '<div' . $this->joinAttributes($attributes) . '>' . $template() . '</div>';
 
             return $return;
         }

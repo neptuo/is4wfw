@@ -68,6 +68,10 @@ body {
     box-shadow: 0 0 0 0.2rem rgb(4 96 28 / 50%);
 }
 
+.navbar {
+    min-height: 56px;
+}
+
 .main-menu-col .navbar-toggler {
     display: block;
     border: none;
@@ -92,13 +96,43 @@ body {
     display: none !important;
 }
 
+.main-menu-collapsed .cms-menu-home {
+    display: block !important;
+}
+
 .main-menu-collapsed .menu span, 
 .main-menu-collapsed .menu-root span {
     visibility: hidden;
 }
 
-.navbar {
-    min-height: 56px;
+.menu-root {
+    position: relative;
+}
+
+.menu-toggler {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 15px;
+    height: 15px;
+    outline: none !important;
+    border: none;
+    background: url(/images/minus.png);
+}
+
+.cms-menu-collapsed .menu-toggler {
+    background: url(/images/plus.png);
+}
+
+.cms-menu-collapsed .menu {
+    display: none;
+}
+
+.main-menu-collapsed .menu-toggler {
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    background: none;
 }
 
 .home .warning {
