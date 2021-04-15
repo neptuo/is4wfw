@@ -1,7 +1,7 @@
 <v:template src="~/templates/in-template.view">
 	<div class="m-md-2 m-lg-4 home">
 		<bs:card title="Personal notes" class="mb-4">
-			<sys:printNotes useFrames="false" showMsg="true" />
+			<sys:printNotes useFrames="false" />
 
 			<div class="mt-2">
 				<web:a pageId="~/in/personal-notes.view">
