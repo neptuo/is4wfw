@@ -21,7 +21,10 @@
 			<utils:arrayItem output="dates" key-name="7 days" key-value="7" />
 			<utils:arrayItem output="dates" key-name="14 days" key-value="14" />
 			<utils:arrayItem output="dates" key-name="30 days" key-value="30" />
-			<utils:arrayItem output="dates" key-name="All" key-value="" />
+			<utils:arrayItem output="dates" key-name="All" key-value="-1" />
+			<web:condition when="session:logs-age" is="">
+				<session:declare name="logs-age" value="1" />
+			</web:condition>
 			<edit:form submit="search">
 				<ui:filter session="logs-project,logs-age">
 					<admin:field label="Project" label-class="w80">
@@ -36,7 +39,11 @@
 				</ui:filter>
 			</edit:form>
 			<hr />
-			<applog:list filter-age="session:logs-age" filter-project="session:logs-project" />
+			<var:declare name="logs-age" value="session:logs-age" />
+			<web:condition when="var:logs-age" is="-1">
+				<var:declare name="logs-age" value="" />
+			</web:condition>
+			<applog:list filter-age="var:logs-age" filter-project="session:logs-project" />
 		</web:frame>
 	</php:using>
 </v:template>
