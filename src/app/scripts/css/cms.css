@@ -1461,6 +1461,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .gray-box .w20, .gray-box-float .w20,
 .gray-box .w30, .gray-box-float .w30,
 .gray-box .w40, .gray-box-float .w40,
+.gray-box .w50, .gray-box-float .w50,
 .gray-box .w60, .gray-box-float .w60,
 .gray-box .w80, .gray-box-float .w80,
 .gray-box .w90, .gray-box-float .w90,
@@ -1487,6 +1488,10 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .gray-box .w40, .gray-box-float .w40, .standart .w40 {
     width: 40px;
+}
+
+.gray-box .w50, .gray-box-float .w50, .standart .w50 {
+    width: 50px;
 }
 
 .gray-box .w60, .gray-box-float .w60, .standart .w60 {
