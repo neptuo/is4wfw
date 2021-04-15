@@ -189,13 +189,13 @@
                             . '<input type="hidden" name="user-list-uid" value="' . $user['this_uid'] . '" />'
                             . '<input type="hidden" name="user-list-edit" value="' . $rb->get('management.edit') . '" />'
                             . '<input type="image" src="~/images/page_edi.png" name="user-list-edit" value="' . $rb->get('management.edit') . '" title="' . $rb->get('management.edit') . ', id(' . $user['this_uid'] . ')" /> '
-                            . '</form>'
-                            . ($propertiesPageId != '' ? '<a href="' . UrlUtils::addParameter($propertiesUrl, "uid", $user['this_uid']) . '"><img class="image-button" src="~/images/page_pro.png" /></a>' : '')
+                            . '</form> '
+                            . ($propertiesPageId != '' ? '<a href="' . UrlUtils::addParameter($propertiesUrl, "uid", $user['this_uid']) . '"><img class="image-button" src="~/images/page_pro.png" /></a> ' : '')
                             . '<form name="user-list-edit2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                             . '<input type="hidden" name="user-list-uid" value="' . $user['this_uid'] . '" />'
                             . '<input type="hidden" name="user-list-delete" value="' . $rb->get('management.delete') . '" />'
                             . '<input class="confirm" type="image" src="~/images/page_del.png" name="user-list-delete" value="' . $rb->get('management.delete') . '" title="' . $rb->get('management.deletetitle') . ', id(' . $user['this_uid'] . ')" />'
-                            . '</form>'
+                            . '</form> '
                             . '</td>'
                             . '</tr>';
                     $n++;

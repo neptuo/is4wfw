@@ -211,6 +211,16 @@ input[disabled] {
     display: inline-block;
 }
 
+.frame input,
+.frame textarea,
+.frame button,
+.frame select {
+    outline: none;
+}
+.frame input[type=text], .frame input[type=password], .frame select {
+    padding: 1px 2px;
+}
+
 input[type=button]:hover, input[type=submit]:hover, a.button:hover, .buttons a:hover {
     border-color:#99CCFF #6699EE #6699EE #77AAFF;
 }
@@ -249,6 +259,10 @@ select[multiple=multiple] {
 .image-button img {
     display: block;
     margin-bottom: 1px;
+}
+
+a .image-button {
+    margin-top: -4px;
 }
 
 .add-rem-text-files-submit {
@@ -458,7 +472,8 @@ table .template-id {
     width: 20px;
 }
 
-.template-name {
+.template-name,
+.user-list-edit {
     white-space: nowrap;
 }
 
