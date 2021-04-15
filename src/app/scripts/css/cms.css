@@ -1804,7 +1804,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .cms-menu.cms-menu-3 .menu-root a {
     padding: 1px 0 1px 24px;
-    background: url('/images/icons/hint.png') no-repeat 4px;
+    background: url('/images/icons/anchor.png') no-repeat 4px;
 }
 
 .cms-menu.cms-menu-4 .menu-root a {
@@ -1855,7 +1855,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu li.menu-item.li-7 a {
-    background: url('/images/icons/page_attachment.gif') no-repeat 4px center;
+    background: url('/images/icons/database.png') no-repeat 4px center;
 }
 
 .cms-menu li.menu-item.li-8 a {
