@@ -69,14 +69,14 @@
 		}
 
 		public function includeByIdentifier($identifier, $params) {
-			if (array_key_exists($identifier, $this->inline)) {
-				return $this->includeFinal($this->inline[$identifier], null, $params);
-			}
-
 			return $this->includeWithBodyByIdentifier($identifier, null, $params);
 		}
 
 		public function includeWithBodyByIdentifier($identifier, $template, $params) {
+			if (array_key_exists($identifier, $this->inline)) {
+				return $this->includeFinal($this->inline[$identifier], $template, $params);
+			}
+
 			$filter = ["identifier" => $identifier, "group" => ""];
 			$sql = $this->sql()->select("template", ["id"], $filter);
 			$entityId = $this->dataAccess()->fetchScalar($sql);
