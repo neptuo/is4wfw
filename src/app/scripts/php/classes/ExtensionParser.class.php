@@ -58,7 +58,7 @@ class ExtensionParser {
 		return $result;
 	}
 	
-	private function template($param, $data, $selector) {
+	private function template($param, $data, $selector = null) {
 		$content = ExtensionParser::loadView($param);
 		$result = '';
 		
