@@ -86,8 +86,15 @@
 
         <bs:column>
             <div class="navbar navbar-dark bg-dark sticky-top">
-                <div class="mr-auto">
+                <div>
                     <wp:selectProject showMsg="false" useFrames="false" label=" " />
+                </div>
+                <div class="mx-auto">
+                    <web:condition when="var:is4wfw.instance.name">
+                        <div class="navbar-text" data-modal="instance-name-editor">
+							<web:out text="var:is4wfw.instance.name" />
+                        </div>
+                    </web:condition>
                 </div>
                 
                 <ul class="navbar-nav flex-row d-none d-md-flex">

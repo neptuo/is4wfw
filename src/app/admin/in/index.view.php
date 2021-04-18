@@ -53,7 +53,11 @@
 				</bs:card>
 			</bs:column>
 			<bs:column default="12" large="6" class="mb-4">
-				<bs:card title="Application" class="h-100">
+				<bs:card class="h-100">
+					<h5 class="card-title">
+						Application
+						<fa5:icon name="pen-alt" class="text-secondary h6 ml-1" data-modal="instance-name-editor" />
+					</h5>
 					<div class="mb-1">
 						<fa5:icon name="server" />
 						<web:version />
@@ -70,4 +74,6 @@
 			</bs:column>
 		</bs:row>
 	</div>
+
+	<v:template src="~/templates/includes/instance-name.view" />
 </v:template>
