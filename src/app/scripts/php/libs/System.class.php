@@ -1049,6 +1049,10 @@
 			}
 			return $value;
 		}
+
+		public function getDatabaseName() {
+			return WEB_DB_DATABASE;
+		}
 	}
 
 ?>

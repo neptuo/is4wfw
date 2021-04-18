@@ -64,7 +64,7 @@
 					</div>
 					<div class="mb-1">
 						<fa5:icon name="database" />
-						r<web:dbVersion />
+						r<web:dbVersion /> (<web:out text="sys:databaseName" />)
 					</div>
 					<div>
 						<fa5:icon name="user" />
