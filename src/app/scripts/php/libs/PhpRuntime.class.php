@@ -820,6 +820,10 @@
         public function cache($cache) {
 
         }
+
+        public function getNull() {
+            return null;
+        }
     }
 
 ?>
