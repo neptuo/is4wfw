@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monaco</title>
+</head>
+<body>
+    <div id="container" style="height:500px;"></div>
+
+	<script></script>
+    <script src="/js/vs/loader.js"></script>
+
+    <script>
+
+        require.config({ paths: { 'vs': '/js/vs' } });
+        require(['vs/editor/editor.main'], function() {
+            let editor = monaco.editor.create(document.getElementById("container"), {
+                value: ["A", "B", "C", "D", "E", "F"].join("\n"),
+                language: "html"
+            });
+            editor.focus();
+        });
+
+    </script>
+</body>
+</html>
