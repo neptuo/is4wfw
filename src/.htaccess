@@ -14,6 +14,9 @@ RewriteRule ^wysiwyg-styles.php$ app/wysiwyg-styles.php [END]
 
 # Static assets
 RewriteRule ^js/(.*)\.js$ app/scripts/js/$1.js [END]
+RewriteRule ^js/(.*)\.map$ app/scripts/js/$1.map [END]
+RewriteRule ^js/(.*)\.css$ app/scripts/js/$1.css [END]
+RewriteRule ^js/(.*)\.ttf$ app/scripts/js/$1.ttf [END]
 RewriteRule ^css/(.*)\.css$ app/scripts/css/$1.css [END]
 RewriteRule ^css/(.*)\.eot$ app/scripts/css/$1.eot [END]
 RewriteRule ^css/(.*)\.svg$ app/scripts/css/$1.svg [END]
