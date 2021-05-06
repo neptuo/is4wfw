@@ -180,6 +180,45 @@
 			$this->greateOrLower($name, $than, $orEqual, "<");
 		}
 
+		public function geoContains(callable $template, $latitudeName, $longitudeName) {
+			$parent = $this->current->peek();
+			
+			$instance = new FilterModel();
+			$this->current->push($instance);
+			$template();
+			$this->current->pop();
+
+			$area = $instance[0];
+			if (!empty($area)) {
+				$latitudeName = $this->formatColumnName($parent, $latitudeName);
+				$longitudeName = $this->formatColumnName($parent, $longitudeName);
+				$parent[] = "ST_CONTAINS($area, point($latitudeName, $longitudeName))";
+			}
+		}
+
+		public function geoPolygon(callable $template) {
+			$instance = $this->current->peek();
+
+			$parentPoints = $this->points;
+			$this->points = [];
+
+			$template();
+
+			$points = implode(", ", $this->points);
+			if (!empty($points)) {
+				$instance[] = "ST_GEOMFROMTEXT('POLYGON(($points))')";
+			}
+
+			$this->points = $parentPoints;
+		}
+
+		private $points;
+
+		public function geoPoint($latitude, $longitude) {
+			$this->points[] = "$latitude $longitude";
+		}
+
+
 		public function getProperty($name) {
 			return $this->instances[$name];
 		}

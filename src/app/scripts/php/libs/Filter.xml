@@ -203,6 +203,45 @@
       <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
     </attribute>
   </tag>
+  <fulltag>
+    <name>geoContains</name>
+    <function>geoContains</function>
+    <comment>Volání funkce ST_CONTAINS. V těle je možné používat "filter:geoPolygon".</comment>
+    <attribute>
+      <name>latitudeName</name>
+      <type>string</type>
+      <comment>Název sloupce obsahující "latitude" hodnotu záznamu.</comment>
+      <required />
+    </attribute>
+    <attribute>
+      <name>longitudeName</name>
+      <type>string</type>
+      <comment>Název sloupce obsahující "longitude" hodnotu záznamu.</comment>
+      <required />
+    </attribute>
+  </fulltag>
+  <fulltag>
+    <name>geoPolygon</name>
+    <function>geoPolygon</function>
+    <comment>Volání funkce POLYGON. V těle je možné používat "filter:geoPoint".</comment>
+  </fulltag>
+  <tag>
+    <name>geoPoint</name>
+    <function>geoPoint</function>
+    <comment>Přidá do aktuální kolekce points nové souřadnice.</comment>
+    <attribute>
+      <name>latitude</name>
+      <type>string</type>
+      <comment>Hodnota "latitude".</comment>
+      <required />
+    </attribute>
+    <attribute>
+      <name>longitude</name>
+      <type>string</type>
+      <comment>Hodnota "longitude".</comment>
+      <required />
+    </attribute>
+  </tag>
   <anyProperty>
     <comment>Slouží k získání dříve deklarovaného filtru. Název proměnné odpovídá názvu při deklaraci.</comment>
   </anyProperty>
