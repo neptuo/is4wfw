@@ -56,11 +56,11 @@
 		}
 		
 		public function operatorAnd($template) {
-			self::joiner($template, "AND");
+			$this->joiner($template, "AND");
 		}
 		
 		public function operatorOr($template) {
-			self::joiner($template, "OR");
+			$this->joiner($template, "OR");
 		}
 
 		public function exists($template, $from, $alias, $outerColumn, $innerColumn) {
@@ -173,11 +173,11 @@
 		}
 		
 		public function greater($name, $than, $orEqual = false) {
-			self::greateOrLower($name, $than, $orEqual, ">");
+			$this->greateOrLower($name, $than, $orEqual, ">");
 		}
 		
 		public function lower($name, $than, $orEqual = false) {
-			self::greateOrLower($name, $than, $orEqual, "<");
+			$this->greateOrLower($name, $than, $orEqual, "<");
 		}
 
 		public function getProperty($name) {
