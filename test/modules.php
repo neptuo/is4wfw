@@ -7,9 +7,9 @@
     require_once(APP_SCRIPTS_PHP_PATH . "includes/settings.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/Moduler.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Module.class.php");
 
-    $moduler = new Moduler();
-    $moduler->generatePostInit();
+    ModuleGenerator::loader();
+    // ModuleGenerator::postInit();
 
 ?>
