@@ -1106,23 +1106,27 @@
          *  @return none
          *
          */
-        public function flush($path = null) {
+        public function flush() {
             $_SESSION['last-request']['pages-id'] = $this->PagesId;
 
             if (!RoleHelper::canUser(Web::$PageRightDesc, $this->PagesId, WEB_R_READ)) {
-                self::generateErrorPage('403');
+                $this->generateErrorPage('403');
             }
 
-            self::loadPageFiles();
+            $this->loadPageFiles();
 
             $lang = $this->UrlResolver->getLanguage()['language'];
-            $isLang = strlen($lang) > 0;
-
             $keywords = file_get_contents("keywords.txt");
+
+            $this->flushContent($lang, $keywords);
+        }
+
+        public function flushContent($lang = null, $keywords = null, $webRootUrl = null) {
+            $isLang = strlen($lang) > 0;
 
             // Diagnostics
             $diacont = "";
-            if (!$this->IsCached && self::getDebugMode()) {
+            if (!$this->IsCached && $this->getDebugMode()) {
                 if (array_key_exists('mem-stats', $_GET)) {
                     $diacont = $this->Diagnostics->printMemoryStats();
                 }
@@ -1237,7 +1241,12 @@
                     . '</body>'
                 . '</html>';
             }
-            $return = self::resolveWebRoot($return);
+
+            if ($webRootUrl == null) {
+                $return = $this->resolveWebRoot($return);
+            } else {
+                $return = str_replace("~/", $webRootUrl, $return);
+            }
 
             if ($this->IsCached) {
                 file_put_contents(CACHE_PAGES_PATH . $this->CacheFile, $return);
@@ -1248,30 +1257,28 @@
             // Generate web:frames
             $return = preg_replace_callback('(<web:frame( title="([^"]*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', array(&$this, 'parsepostframes'), $return);
 
-            //if ($this->CacheInfo['cachetime'] != -1) {
-            //    parent::db()->execute('UPDATE `urlcache` SET `lastcache` = ' . (time() + $this->CacheInfo['cachetime']) . ' WHERE `id` = ' . $this->CacheInfo['id'] . ';');
-            //    file_put_contents($this->CacheInfo['path'], $return);
-            //}
-
-            self::tryToComprimeContent($return);
+            $this->tryToComprimeContent($return);
         }
         
         private function resolveWebRoot($content, bool $absolute = false, $useIs4wfwPort = true) {
-            $webProject = $this->UrlResolver->getWebProject();
-            $rootUrl = UrlResolver::combinePath(INSTANCE_URL, $webProject['alias']['root_url']);
-            $rootUrl = UrlResolver::combinePath($rootUrl, '/');
+            if ($this->UrlResolver != null) {
+                $webProject = $this->UrlResolver->getWebProject();
+                $rootUrl = UrlResolver::combinePath(INSTANCE_URL, $webProject['alias']['root_url']);
+                $rootUrl = UrlResolver::combinePath($rootUrl, '/');
 
-            if ($absolute) {
-                $domainUrl = $this->getHttpHost();
-                if ($_ENV["IS4WFW_PORT"] && $useIs4wfwPort) {
-                    $domainUrl .= ":" . $_ENV["IS4WFW_PORT"];
+                if ($absolute) {
+                    $domainUrl = $this->getHttpHost();
+                    if ($_ENV["IS4WFW_PORT"] && $useIs4wfwPort) {
+                        $domainUrl .= ":" . $_ENV["IS4WFW_PORT"];
+                    }
+
+                    $rootUrl = UrlResolver::combinePath($domainUrl, $rootUrl);
+                    $rootUrl = UrlResolver::combinePath($this->Protocol, $rootUrl, '://');
                 }
 
-                $rootUrl = UrlResolver::combinePath($domainUrl, $rootUrl);
-                $rootUrl = UrlResolver::combinePath($this->Protocol, $rootUrl, '://');
+                $content = str_replace("~/", $rootUrl, $content);
             }
 
-            $content = str_replace("~/", $rootUrl, $content);
             return $content;
         }
 
@@ -1583,6 +1590,10 @@
             }
 
             return $pageContent;
+        }
+
+        public function setContent($pageContent) {
+            $this->PageContent = $pageContent;
         }
 
         private function getMenuItems($parentId, $display) {
