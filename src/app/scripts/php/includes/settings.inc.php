@@ -18,6 +18,8 @@
     define("CACHE_SYSTEMPROPERTY_PATH", CACHE_PATH . "systemproperty/");
     
     define("LOGS_PATH", INSTANCE_PATH . "logs/");
+
+    define("MODULES_PATH", INSTANCE_PATH . "modules/");
     
     define("USER_PATH", INSTANCE_PATH . "user/");
     define("USER_FILESYSTEM_PATH", USER_PATH . "filesystem/");

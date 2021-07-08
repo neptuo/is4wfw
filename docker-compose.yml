@@ -27,6 +27,7 @@ services:
       - ./src/app:/var/www/html/app:ro
       - ./temp/instance/cache:/var/www/html/cache
       - ./temp/instance/logs:/var/www/html/logs
+      - ./temp/instance/modules:/var/www/html/modules
       - ./temp/instance/user:/var/www/html/user
       - ./test:/var/www/html/test:ro
       - ./docker/php.conf:/usr/local/etc/php-fpm.d/zz-log.conf
