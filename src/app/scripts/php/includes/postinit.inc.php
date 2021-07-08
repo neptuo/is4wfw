@@ -7,4 +7,6 @@
 	 */
 	$webObject->setZipOutput(true);
 
+	include(MODULES_PATH . "postinit.inc.php");
+
 ?>

@@ -107,6 +107,12 @@
         public function toString() {
             return $this->output;
         }
+
+        public function writeToFile($filePath) {
+            $content = $this->toString();
+            $content = "<?php" . PHP_EOL . PHP_EOL . $content . PHP_EOL . PHP_EOL . "?>";
+            file_put_contents($filePath, $content);
+        }
     }
 
 ?>
