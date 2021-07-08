@@ -28,6 +28,7 @@
 	<reg prefix="paging" class="php.libs.Paging" />
 	<reg prefix="params" class="php.libs.Parameters" />
 	<reg prefix="post" class="php.libs.Post" />
+	<reg prefix="route" class="php.libs.Route" />
 	<reg prefix="query" class="php.libs.QueryString" />
 	<reg prefix="s" class="php.libs.Sport" />
 	<reg prefix="security" class="php.libs.Security" />

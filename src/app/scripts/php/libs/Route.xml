@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Routing library</name>
+  <classname>Route</classname>
+  <classpath>php.libs</classpath>
+  <count>*</count>
+  <comment>
+    Knihovna pro routování URL adres uvnitř šablony.
+  </comment>
+  <fulltag>
+    <name>router</name>
+    <function>router</function>
+    <comment>
+      Router...
+    </comment>
+  </fulltag>
+  <fulltag>
+    <name>directory</name>
+    <function>directory</function>
+    <attribute>
+      <name>path</name>
+      <type>string</type>
+      <required />
+    </attribute>
+    <comment>
+      Složka v URL routování.
+      Není koncovým uzlem. Vyžaduje soubor uvnitř.
+    </comment>
+  </fulltag>
+  <fulltag>
+    <name>file</name>
+    <function>file</function>
+    <attribute>
+      <name>path</name>
+      <type>string</type>
+      <required />
+    </attribute>
+    <comment>
+      Koncový/spustitelný uzel routování.
+    </comment>
+  </fulltag>
+</taglib>
+

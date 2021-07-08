@@ -503,6 +503,7 @@
             "php.libs.Parameters",
             "php.libs.PhpRuntime",
             "php.libs.Post",
+            "php.libs.Router",
             "php.libs.QueryString",
             "php.libs.Session",
             "php.libs.Sort",

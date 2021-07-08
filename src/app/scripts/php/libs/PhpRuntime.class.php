@@ -412,7 +412,7 @@
                     return false;
                 }
             } else {
-                $str = "Xml library definition doesn.'t exists! [".$xmlPath."]";
+                $str = "Xml library definition doesn't exists! [".$xmlPath."]";
                 trigger_error($str , E_USER_WARNING);
                 echo "<h4 class=\"error\">".$str."</h4>";
                 return false;
