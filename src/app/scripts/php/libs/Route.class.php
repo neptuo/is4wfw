@@ -25,6 +25,10 @@
 			$this->setTagLibXml("Route.xml");
 		}
 
+		private function hasMatch() {
+			return $this->selectedTemplate != null;
+		}
+
 		public function router($template) {
 			$virtualUrl = parent::web()->getVirtualUrl();
 			$this->virtualUrlParts = StringUtils::explode($virtualUrl, '/');
@@ -63,8 +67,8 @@
 		}
 
 		public function file($template, $path, $name = null) {
-			if ($this->canMatch) {
-				if (empty($path) && count($this->virtualUrlParts) == $this->virtualUrlPartsIndex) {
+			if ($this->canMatch && !$this->hasMatch()) {
+				if ($path == "*" || (empty($path) && count($this->virtualUrlParts) == $this->virtualUrlPartsIndex)) {
 					$this->selectedTemplate = $template;
 				} else {
 					$currentPath = $this->virtualUrlParts[$this->virtualUrlPartsIndex];

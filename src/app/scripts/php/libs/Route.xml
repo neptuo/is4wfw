@@ -35,7 +35,7 @@
       <name>path</name>
       <type>string</type>
       <required />
-      <comment>Název "souboru".</comment>
+      <comment>Název "souboru". Wildcard "*" slouží jako fallback.</comment>
     </attribute>
     <attribute>
       <name>name</name>
