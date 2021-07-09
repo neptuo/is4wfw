@@ -18,7 +18,6 @@
 		private $translations = [];
 
 		public function __construct() {
-			parent::setTagLibXml("Validation.xml");
 			parent::setLocalizationBundle('validation');
 		}
 

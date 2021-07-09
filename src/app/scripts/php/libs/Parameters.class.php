@@ -15,10 +15,6 @@
         private $container;
 		private $currentName = "";
 
-		public function __construct() {
-			parent::setTagLibXml("Parameters.xml");
-		}
-
 		private function ensureDeclaration($name) {
 			if (!array_key_exists($name, $this->container)) {
 				throw new ParameterException("name", "Missing declaration for parameter collection named '$name'.");

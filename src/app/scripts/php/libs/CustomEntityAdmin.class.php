@@ -21,8 +21,6 @@
         );
 
 		public function __construct() {
-            parent::setTagLibXml("CustomEntityAdmin.xml");
-            
             $this->tables = new Stack();
             $this->columns = new Stack();
         }

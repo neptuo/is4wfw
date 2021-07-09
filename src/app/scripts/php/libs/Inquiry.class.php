@@ -17,9 +17,6 @@
 		private $BundleLang = 'cs';
 
 		public function __construct() {
-			global $webObject;
-
-			parent::setTagLibXml("Inquiry.xml");
 			parent::setLocalizationBundle('inquiry');
 		}
 		

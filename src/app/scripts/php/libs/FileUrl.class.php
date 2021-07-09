@@ -13,10 +13,6 @@
 	 */
 	class FileUrl extends BaseTagLib {
 
-		public function __construct() {
-			parent::setTagLibXml("FileUrl.xml");
-		}
-
 		public function setValue($name, $id, $width = 0, $height = 0) {
 			parent::request()->set($name, ["id" => $id, "width" => $width, "height" => $height], 'fileUrl');
 		}

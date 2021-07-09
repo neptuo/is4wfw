@@ -8,7 +8,6 @@
 		private $lastId = 0;
 
 		public function __construct() {
-			parent::setTagLibXml("BootstrapUi.xml");
 			parent::setLocalizationBundle("bootstrapui");
 		}
 

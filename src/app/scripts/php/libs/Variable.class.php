@@ -16,10 +16,6 @@
 		private $tempValues = [];
 		private $nameScopes = [];
 
-		public function __construct() {
-			parent::setTagLibXml("Variable.xml");
-		}
-		
 		public function setValue($name, $value, $scope = "request", $select = "") {
 			if ($value instanceof ListModel) {
 				$value = $value->items();

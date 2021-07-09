@@ -19,15 +19,6 @@
   
   	private static $count = 0;
     
-    /**
-     *
-     *  Initialize object.
-     *
-     */                   
-    public function __construct() {
-      self::setTagLibXml("Form.xml");
-    }
-    
     public function orderForm1() {
       $this->count ++;
       

@@ -16,10 +16,6 @@
 		private $definitions = [];
 		private $current;
 
-		public function __construct() {
-			parent::setTagLibXml("Sort.xml");
-		}
-
 		private function ensureCurrent() {
 			if (!array_key_exists($this->current, $this->definitions)) {
 				throw new Exception("Missing declaration for '$this->current'.");

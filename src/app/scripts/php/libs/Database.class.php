@@ -24,8 +24,6 @@
 		 *
 		 */                   
 		public function __construct($defaultLogin = true) {
-			self::setTagLibXml("Database.xml");
-			
 			$this->dataAccess = new DataAccess();
 
 			if ($defaultLogin) {

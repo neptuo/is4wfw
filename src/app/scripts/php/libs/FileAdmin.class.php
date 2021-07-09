@@ -49,11 +49,7 @@
 		);
 
 		public function __construct() {
-			global $webObject;
-
-			parent::setTagLibXml("FileAdmin.xml");
 			parent::setLocalizationBundle('fileadmin');
-			
 			self::transformFileSystem();
 		}
 		

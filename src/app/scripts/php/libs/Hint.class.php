@@ -16,7 +16,6 @@
     class Hint extends BaseTagLib {
 
         public function __construct() {
-            self::setTagLibXml("Hint.xml");
             self::setLocalizationBundle("hint");
         }
 

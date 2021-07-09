@@ -18,7 +18,6 @@
 		private $current;
 
 		public function __construct() {
-			parent::setTagLibXml("Filter.xml");
 			$this->current = new Stack();
 		}
 

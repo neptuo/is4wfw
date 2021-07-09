@@ -12,10 +12,6 @@
 	 */
 	class Cookie extends BaseTagLib {
 
-		public function __construct() {
-			parent::setTagLibXml("Cookie.xml");
-		}
-		
 		public function setValue($name, $value, $expire = 0, $path = "", $domain = "", $isSecure = false, $isHttpOnly = false) {
 			if ($value != "") {
 				$result = setcookie($name, $value, time() + $expire, $path, $domain, $isSecure, $isHttpOnly);

@@ -9,10 +9,6 @@
 
 		private $id;
 
-		public function __construct() {
-			parent::setTagLibXml("Ui.xml");
-		}
-
 		private function setModelValueFromRequest($model, $modelKey, $requestKey, $index = -1) {
 			$value = $model->request($requestKey, $index);
 			$model->set($modelKey, $index, $value);

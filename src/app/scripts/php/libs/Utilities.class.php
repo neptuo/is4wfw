@@ -15,10 +15,6 @@
         private $OutputValues = [];
         private $Identifiers = [];
 
-        public function __construct() {
-            parent::setTagLibXml("Utilities.xml");
-        }
-
         public function concatValues($output, $separator, $value1, $value2, $value3 = false, $value4 = false, $value5 = false, $value6 = false, $value7 = false, $value8 = false, 
             $value9 = false, $value10 = false, $value11 = false, $value12 = false, $value13 = false, $value14 = false, $value15 = false) {
             

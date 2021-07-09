@@ -14,10 +14,6 @@
 
 		private $inline = [];
 
-		public function __construct() {
-			parent::setTagLibXml("Template.xml");
-		}
-
 		protected function throwNotFound($filter) {
 			throw new Error("Missing template filtered by '" . http_build_query($filter) . "'.");;
 		}

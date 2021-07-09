@@ -34,41 +34,13 @@
      *
      */
     class BaseTagLib {
-
-        /**
-         *
-         *  Path to library xml definition.
-         *
-         */
-        private $TagLibXml = "";
+        
         /**
          *
          *  True, if no is used on page yet.     
          *
          */
         private $FirstFrame = true;
-
-        /**
-         *
-         *  return path to library xml definition.
-         *  
-         *  @return path to library xml definition
-         *
-         */
-        public function getTagLibXml() {
-            return $this->TagLibXml;
-        }
-
-        /**
-         *
-         *  set path to library xml definition.
-         *  
-         *  @return none
-         *
-         */
-        protected function setTagLibXml($xml) {
-            $this->TagLibXml = $xml;
-        }
 
         /**
          *

@@ -14,10 +14,6 @@ require_once("BaseTagLib.class.php");
 
         private $container;
 
-		public function __construct() {
-			parent::setTagLibXml("Paging.xml");
-        }
-
         private function ensureContainer() {
             if ($this->container == null) {
                 throw new Exception("Missing paging container.");

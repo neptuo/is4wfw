@@ -6,7 +6,6 @@
 	class AdminUi extends BaseTagLib {
 
 		public function __construct() {
-			parent::setTagLibXml("AdminUi.xml");
 			parent::setLocalizationBundle("adminui");
 		}
 

@@ -15,7 +15,6 @@
     class Menu extends BaseTagLib {
 
         public function __construct() {
-            self::setTagLibXml("Menu.xml");
             self::setLocalizationBundle("view");
         }
 

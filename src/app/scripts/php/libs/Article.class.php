@@ -31,7 +31,6 @@
         private $BundleLang = 'cs';
 
         public function __construct() {
-            self::setTagLibXml("Article.xml");
             self::setLocalizationBundle('article');
         }
         

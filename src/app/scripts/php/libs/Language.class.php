@@ -18,10 +18,6 @@
 
 		const TableName = "language";
 
-		public function __construct() {
-			parent::setTagLibXml("Language.xml");
-		}
-		
 		public function listItems($template, $filter = [], $orderBy = []) {
 			$tableName = self::TableName;
 

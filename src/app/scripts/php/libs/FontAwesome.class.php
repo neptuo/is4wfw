@@ -6,10 +6,6 @@
 
 		private $areResourcesIncluded = false;
 
-		public function __construct() {
-			parent::setTagLibXml("FontAwesome.xml");
-		}
-
 		public function resources() {
 			if (!$this->areResourcesIncluded) {
 				parent::js()->addStyle("~/css/fontawesome/all.min.css");

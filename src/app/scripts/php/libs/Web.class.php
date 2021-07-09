@@ -188,8 +188,6 @@
          *
          */
         public function __construct() {
-            $this->setTagLibXml("Web.xml");
-
             $this->PageTitle = $_SERVER['HTTP_HOST'];
             $this->ServerName = $_SERVER['SERVER_NAME'];
             $this->Https = $_SERVER['HTTPS'];

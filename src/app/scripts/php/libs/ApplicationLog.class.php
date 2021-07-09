@@ -13,10 +13,6 @@
 	 * 
 	 */
 	class ApplicationLog extends BaseTagLib {	
-		public function __construct() {
-			parent::setTagLibXml("ApplicationLog.xml");
-		}
-
 		/**
 		 *
 		 *	Shows list of application logs

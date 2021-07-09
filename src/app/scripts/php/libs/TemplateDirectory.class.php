@@ -17,8 +17,6 @@ require_once("Template.class.php");
 		private $directory = "";
 
 		public function __construct($prefix, $params = []) {
-			parent::setTagLibXml("TemplateDirectory.xml");
-
 			if (array_key_exists("path", $params)) {
 				$this->directory = $params["path"];
 			}

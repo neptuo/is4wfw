@@ -31,7 +31,6 @@
         private $CurrentId = 0;
 
         public function __construct() {
-            parent::setTagLibXml("File.xml");
             self::setLocalizationBundle("file");
         }
         

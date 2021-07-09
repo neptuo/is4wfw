@@ -15,8 +15,6 @@
 		private $group = "";
 
 		public function __construct($prefix, $params = []) {
-			parent::setTagLibXml("TemplateGroup.xml");
-
 			if (array_key_exists("group", $params)) {
 				$this->group = $params["group"];
 			}

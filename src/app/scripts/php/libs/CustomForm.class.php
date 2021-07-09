@@ -34,7 +34,6 @@
         private $AdditionalKeys = array();
 
         public function __construct($tagPrefix) {
-            parent::setTagLibXml("CustomForm.xml");
             parent::setLocalizationBundle("customform");
             $this->tagPrefix = $tagPrefix;
         }

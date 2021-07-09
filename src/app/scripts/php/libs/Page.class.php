@@ -24,7 +24,6 @@
         private $MessageFromEdit = '';
 
         public function __construct() {
-            self::setTagLibXml("Page.xml");
             self::setLocalizationBundle('page');
         }
 

@@ -23,7 +23,6 @@
         private $ViewPhase = 0;
 
         public function __construct() {
-            self::setTagLibXml("Sport.xml");
             self::setLocalizationBundle("sport");
         }
 

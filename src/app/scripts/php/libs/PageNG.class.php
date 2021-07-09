@@ -14,7 +14,6 @@
 	class PageNG extends BaseTagLib {
 
 		public function __construct() {
-			self::setTagLibXml("PageNG.xml");
 			self::setLocalizationBundle("pageng");
 			
 			if($_GET['clear'] == 'session') {

@@ -16,7 +16,6 @@
     class WebProject extends BaseTagLib {
 
         public function __construct() {
-            self::setTagLibXml("WebProject.xml");
             self::setLocalizationBundle("webproject");
         }
 

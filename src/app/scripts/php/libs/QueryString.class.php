@@ -12,10 +12,6 @@
 	 */
 	class QueryString extends BaseTagLib {
 
-		public function __construct() {
-			parent::setTagLibXml("QueryString.xml");
-		}
-
 		public function getProperty($name) {
 			if (array_key_exists($name, $_GET)) {
 				return $_GET[$name];

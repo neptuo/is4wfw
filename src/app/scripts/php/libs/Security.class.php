@@ -13,10 +13,6 @@
 	 */
 	class Security extends BaseTagLib {
 
-		public function __construct() {
-			parent::setTagLibXml("Security.xml");
-		}
-		
 		public function requirePerm($name) {
 			$login = $this->login();
 			$perm = $login->getGroupPerm($name, $login->getMainGroupId(), false, 'false');

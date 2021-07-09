@@ -13,10 +13,6 @@
 	 */
 	class Editor extends BaseTagLib {
 
-		public function __construct() {
-			parent::setTagLibXml("Editor.xml");
-        }
-        
         private function executeSave($template, EditModel $model) {
             parent::dataAccess()->transaction(function() use ($model, $template) {
                 $model->save();

@@ -14,10 +14,6 @@
 	 */
 	class Email extends BaseTagLib {
 
-		public function __construct() {
-			parent::setTagLibXml("Email.xml");
-		}
-		
 		public function send($template, $from, $to, $replyTo, $cc, $bcc, $subject, $isHtml = true) {
             $content = $template();
             

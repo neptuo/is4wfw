@@ -18,10 +18,6 @@
    */  
   class Hotproject extends BaseTagLib {
   
-    public function __construct() {
-      parent::setTagLibXml("Hotproject.xml");
-    }
-    
     /**
      *
      *	Print projections management.

@@ -12,10 +12,6 @@
 	 */
 	class Post extends BaseTagLib {
 
-		public function __construct() {
-			parent::setTagLibXml("Post.xml");
-		}
-
 		public function getProperty($name) {
 			if (array_key_exists($name, $_POST)) {
 				return $_POST[$name];

@@ -20,15 +20,6 @@
         private $File = null;
         public static $LogFile = '';
 
-        /**
-         *
-         *  Object constructor     
-         *
-         */
-        public function __construct() {
-            parent::setTagLibXml("Log.xml");
-        }
-
         public function __destruct() {
             if ($this->IsOpen == true) {
                 fclose($this->File);

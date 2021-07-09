@@ -12,10 +12,6 @@
 	 */
 	class Localization extends BaseTagLib {
 
-		public function __construct() {
-			parent::setTagLibXml("Localization.xml");
-		}
-		
 		public function setLanguage($name) {
 			self::web()->LanguageName = $name;
 		}

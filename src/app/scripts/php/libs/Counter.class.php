@@ -13,10 +13,6 @@
      */  
     class Counter extends BaseTagLib {                      
 
-        public function __construct() {
-            parent::setTagLibXml("Counter.xml");
-        }
-
         /**
          *
          *  Counts user access.

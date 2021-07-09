@@ -95,17 +95,6 @@
 
         /**
          *
-         *  Initialize object.
-         *
-         */
-        public function __construct() {
-            self::setTagLibXml("Login.xml");
-
-            //self::initLogin();
-        }
-
-        /**
-         *
          *  Init login.
          *  C tag.
          *

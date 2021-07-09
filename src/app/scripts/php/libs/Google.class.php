@@ -12,12 +12,8 @@
     */
     class Google extends BaseTagLib {
 
-        public function __construct() {
-            parent::setTagLibXml("Google.xml");
-        }
-        
         public function analytics($id) {
-            $return .= ''
+            $return = ''
             . "<script>" . PHP_EOL 
             . "  (function (i, s, o, g, r, a, m) {" . PHP_EOL 
             . "     i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {" . PHP_EOL 

@@ -28,10 +28,6 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
         private $inputParentType = '';
         private $inputArrayIndex;
 
-		public function __construct() {
-			parent::setTagLibXml("Json.xml");
-        }
-        
         public function processOutput($template, $format = 'indented') {
             parent::web()->setFlushOptions("none", $this->outputPreferedContentType);
 

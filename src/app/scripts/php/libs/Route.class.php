@@ -21,10 +21,6 @@
 		private $pathBuilder;
 		private $routes = [];
 
-		public function __construct() {
-			$this->setTagLibXml("Route.xml");
-		}
-
 		private function hasMatch() {
 			return $this->selectedTemplate != null;
 		}

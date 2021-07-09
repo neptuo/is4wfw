@@ -16,12 +16,6 @@
 	 */
 	class Image extends BaseTagLib {
 
-		public function __construct() {
-			global $webObject;
-
-			parent::setTagLibXml("Image.xml");
-		}
-		
 		protected function canUserFile($objectId, $rightType) {
 			return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(FileAdmin::$FileRightDesc, $objectId, $rightType));
 		}

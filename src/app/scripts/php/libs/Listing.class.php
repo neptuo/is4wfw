@@ -15,10 +15,6 @@
         private $container;
 		private $currentName = "";
 
-		public function __construct() {
-			parent::setTagLibXml("Listing.xml");
-		}
-
 		private function ensureDeclaration($name, $throw = true) {
 			if (!array_key_exists($name, $this->container)) {
 				if ($throw) {

@@ -13,7 +13,6 @@
         private $urlResolvers;
 
 		public function __construct($tagPrefix) {
-            parent::setTagLibXml("CustomEntity.xml");
             $this->tagPrefix = $tagPrefix;
             $this->urlProperties = [];
             $this->urlResolvers = [];

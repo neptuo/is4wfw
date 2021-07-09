@@ -22,14 +22,8 @@
          */                   
         private $Errors;
 
-        /**
-         *
-         *  Object constructor     
-         *
-         */              
         public function __construct() {
-            parent::setTagLibXml("ErrorHandler.xml");
-            //error_reporting(0);
+            // noop, required because of errorHandler function name.
         }
 
         /**

@@ -20,7 +20,6 @@
         private $urlResolvers;
 
         public function __construct() {
-            self::setTagLibXml("User.xml");
             self::setLocalizationBundle("user");
 
             $this->urlProperties = [];

@@ -21,7 +21,6 @@
 	class System extends BaseTagLib {
 
 		public function __construct() {
-			$this->setTagLibXml("System.xml");
 			$this->setLocalizationBundle("system");
 		}
 

@@ -24,7 +24,6 @@
         private $Header = "";
 
         public function __construct() {
-            $this->setTagLibXml("View.xml");
             $this->setLocalizationBundle("view");
         }
 

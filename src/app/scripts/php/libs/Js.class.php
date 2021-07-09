@@ -20,10 +20,6 @@
         private $includedStyles = [];
         private $includedInlineStyles = [];
 
-        public function __construct() {
-            parent::setTagLibXml("Js.xml");
-        }
-
         public function formatScript($path, $checkExistence = false) {
             if (in_array($path, $this->includedScripts)) {
                 return null;

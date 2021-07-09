@@ -16,7 +16,6 @@
         private $GuestbookId = 0;
 
         public function __construct() {
-            self::setTagLibXml("Guestbook.xml");
             self::setLocalizationBundle("guestbook");
         }
         

@@ -86,8 +86,6 @@
          *
          */                                                
         public function __construct() {
-            $this->setTagLibXml("PhpRuntime.xml");
-            
             // Init defalt objects (php, error, log)
             $GLOBALS['errorObject'] = new ErrorHandler();
             $GLOBALS['logObject'] = new Log();
@@ -133,14 +131,14 @@
 
                     require_once(APP_SCRIPTS_PATH . $classPath . ".class.php");
                     
-                    if ($this->isCountOfInstances($className, $classDir)) {
+                    if ($this->isCountOfInstances($className, $classDir, $classPath)) {
                         $GLOBALS[$tagPrefix . "Object"] = new $className($tagPrefix, $params);
                         if(array_key_exists($classJPath, $this->_CLASSES)) {
                             $this->_CLASSES[$classJPath] ++;
                         } else {
                             $this->_CLASSES[$classJPath] = 1;
                         }
-                        $this->_REGISTERED[$tagPrefix] = $classDir;
+                        $this->_REGISTERED[$tagPrefix] = $classDir . "." . $className;
                         $this->tryRegisterDisposable($tagPrefix);
                     } else {
                         return '<h4 class="error">Too much instances of tag lib! [' . $classJPath . ']</h4>';
@@ -254,10 +252,10 @@
         private function withXml(string $tagPrefix, $handler) {
             if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
                 global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix]) . ".xml";
             } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
                 global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix])."/".${$tagPrefix."Object"}->getTagLibXml();
+                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix]) . ".xml";
             }
             
             if (isset($xmlPath)) {
@@ -391,16 +389,14 @@
          *    @return true if max count is "*" or actual count is lower than max, false otherwise.                                                                                
          *
          */                                     
-        private function isCountOfInstances($className, $classDir) {
+        private function isCountOfInstances($className, $classDir, $classPath) {
             $count = 0;
 
             if (array_key_exists($classDir.".".$className, $this->_CLASSES)) {
                 $count = $this->_CLASSES[$classDir.".".$className];
             }
             
-            //echo ' '.$className.'<br />';
-            $tmp = new $className("");
-            $xmlPath = str_replace(".", "/", $classDir)."/".$tmp->getTagLibXml();
+            $xmlPath = $classPath . ".xml";
             if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
                 $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
 
