@@ -21,6 +21,7 @@
       <name>path</name>
       <type>string</type>
       <required />
+      <comment>Název "složky".</comment>
     </attribute>
     <comment>
       Složka v URL routování.
@@ -34,10 +35,41 @@
       <name>path</name>
       <type>string</type>
       <required />
+      <comment>Název "souboru".</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>Název routy pro generování odkazů.</comment>
     </attribute>
     <comment>
       Koncový/spustitelný uzel routování.
     </comment>
   </fulltag>
+  <tag>
+    <name>declare</name>
+    <function>setRoute</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název routy pro generování odkazů.</comment>
+    </attribute>
+    <attribute>
+      <name>url</name>
+      <type>string</type>
+      <required />
+      <comment>URL routy.</comment>
+    </attribute>
+    <comment>
+      Declare pojmenované URL/routy pro další použití.
+    </comment>
+  </tag>
+  <anyProperty>
+    <comment>
+      Vygeneruje URL pro pojmenovanou routu.
+    </comment>
+  </anyProperty>
 </taglib>
 

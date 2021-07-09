@@ -238,6 +238,10 @@
             }
         }
 
+        public function getVirtualUrl() {
+            return $_REQUEST['WEB_PAGE_PATH'];
+        }
+
         public function processRequestNG() {
             if (self::getDebugMode()) {
                 if (array_key_exists('query-list', $_GET)) {
@@ -257,7 +261,7 @@
             $domainUrl = $_SERVER['HTTP_HOST'];
 
             $rootUrl = INSTANCE_URL;
-            $virtualUrl = $_REQUEST['WEB_PAGE_PATH'];
+            $virtualUrl = $this->getVirtualUrl();
             $fullUrl = UrlResolver::combinePath($domainUrl, UrlResolver::combinePath($rootUrl, $virtualUrl));
 
             $item = $this->UrlCache->read($fullUrl);
@@ -2508,7 +2512,7 @@
         private function generateErrorPage($errorCode) {
             $domainUrl = $_SERVER['HTTP_HOST'];
             $rootUrl = INSTANCE_URL;
-            $virtualUrl = $_REQUEST['WEB_PAGE_PATH'];
+            $virtualUrl = $this->getVirtualUrl();
             $fullUrl = UrlResolver::combinePath($domainUrl, UrlResolver::combinePath($rootUrl, $virtualUrl));
 
             if (self::processForwards(self::findForward(array($errorCode, 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'))) {

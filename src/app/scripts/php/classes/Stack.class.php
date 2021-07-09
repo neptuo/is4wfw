@@ -42,6 +42,10 @@
             return empty($this->arr);
         }
 
+        public function toArray() {
+            return $this->arr;
+        }
+
     }
 
 ?>
