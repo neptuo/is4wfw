@@ -38,11 +38,6 @@
 			$this->selectedTemplate = null;
 			
 			$template();
-
-			if ($this->selectedTemplate != null) {
-				$template = $this->selectedTemplate;
-				return $template();
-			}
 		}
 
 		public function directory($template, $path) {
@@ -85,6 +80,13 @@
 				}
 				$url = "~/" . implode("/", $parts);
 				$this->routes[$name] = $url;
+			}
+		}
+
+		public function render() {
+			if ($this->hasMatch()) {
+				$template = $this->selectedTemplate;
+				return $template();
 			}
 		}
 

@@ -10,6 +10,7 @@
   <fulltag>
     <name>router</name>
     <function>router</function>
+    <lookless />
     <comment>
       Router...
     </comment>
@@ -17,6 +18,7 @@
   <fulltag>
     <name>directory</name>
     <function>directory</function>
+    <lookless />
     <attribute>
       <name>path</name>
       <type>string</type>
@@ -31,6 +33,7 @@
   <fulltag>
     <name>file</name>
     <function>file</function>
+    <lookless />
     <attribute>
       <name>path</name>
       <type>string</type>
@@ -46,6 +49,13 @@
       Koncový/spustitelný uzel routování.
     </comment>
   </fulltag>
+  <tag>
+    <name>render</name>
+    <function>render</function>
+    <comment>
+      Vykreslí vybranou routu pomocí "route:router".
+    </comment>
+  </tag>
   <tag>
     <name>declare</name>
     <function>setRoute</function>
