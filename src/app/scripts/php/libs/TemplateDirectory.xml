@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <name>Template Directory library</name>
+  <classname>TemplateDirectory</classname>
+  <classpath>php.libs</classpath>
+  <count>*</count>
+  <comment>
+    Knihovna pro vkládání šablon, které jsou definované jako soubory ve složce.
+  </comment>
+  <anyTag>
+    <function>includeByFileName</function>
+    <comment>
+      Vloží obsah šablony, kde název tagu musí odpovídat názvu souboru.
+      Všechny atributy jsou parametry šablony.
+    </comment>
+  </anyTag>
+  <anyFulltag>
+    <function>includeWithBodyByFileName</function>
+    <comment>
+      Vloží obsah šablony, kde název tagu musí odpovídat názvu souboru.
+      Všechny atributy jsou parametry šablony.
+      Tělo je použito pro "template:content".
+    </comment>
+  </anyFulltag>
+</taglib>

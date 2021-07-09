@@ -79,7 +79,7 @@
 					$parts[] = $path;
 				}
 				$url = "~/" . implode("/", $parts);
-				$this->routes[$name] = $url;
+				$this->setRoute($name, $url);
 			}
 		}
 

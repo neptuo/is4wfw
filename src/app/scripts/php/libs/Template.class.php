@@ -46,7 +46,7 @@
 			return $this->includeFinal($template, $contentTemplate, $params);
 		}
 
-		private function includeFinal(callable $template, ?callable $contentTemplate, $params) {
+		protected function includeFinal(callable $template, ?callable $contentTemplate, $params) {
 			$oldContent = parent::request()->get('content', 'template:include');
 			$oldParams = parent::request()->get('params', 'template:include');
 			parent::request()->set('params', $params, 'template:include');

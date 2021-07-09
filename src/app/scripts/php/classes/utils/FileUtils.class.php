@@ -78,6 +78,40 @@
             fclose($f);
             return trim($output);
         }
+
+        public static function combinePath($path1, $path2, $path3 = null, $path4 = null, $path5 = null) {
+            $path1 = FileUtils::combinePathInternal($path1, $path2);
+            $path1 = FileUtils::combinePathInternal($path1, $path3);
+            $path1 = FileUtils::combinePathInternal($path1, $path4);
+            $path1 = FileUtils::combinePathInternal($path1, $path5);
+
+            return $path1;
+        }
+
+        private static function combinePathInternal($path1, $path2) {
+            $separator = "/";
+            if (!empty($path1)) {
+                if ($path1[strlen($path1) - 1] == "/") {
+                    $separator = "";
+                }
+            } else {
+                $separator = "";
+            }
+
+            if (!empty($path2)) {
+                if ($path2[0] == "/") {
+                    if ($separator == "/") {
+                        $separator = "";
+                    } else {
+                        $path2 = substr($path2, 1);
+                    }
+                }
+            } else {
+                $separator = "";
+            }
+
+            return $path1 . $separator . $path2;
+        }
     }
 
 
