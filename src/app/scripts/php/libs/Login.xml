@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <taglib>
-  <name>Login lib</name>
-  <classname>Login</classname>
-  <classpath>php.libs</classpath>
   <count>1</count>
   <comment>
     Třída pro logování užívatelů, je defaultním objektem a maximálně jedna instance.

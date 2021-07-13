@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
-  <name>Template Directory library</name>
-  <classname>TemplateDirectory</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Knihovna pro vkládání šablon, které jsou definované jako soubory ve složce.
   </comment>

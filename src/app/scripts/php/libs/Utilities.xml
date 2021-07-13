@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
-  <name>Various utilities</name>
-  <classname>Variable</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Knihovna obshaující různé pomocné metody.
   </comment>

@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
-  <name>FileAdmin Lib</name>
-  <classname>FileAdmin</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Knihovna pro správu souborového systému, náhrada za admin funkce z File class.
   </comment>

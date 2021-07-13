@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
-  <name>Image library</name>
-  <classname>Image</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Knihovna pro lepší zobrazování galerií.
   </comment>

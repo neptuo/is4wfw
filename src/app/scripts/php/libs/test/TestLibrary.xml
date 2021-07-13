@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
-  <name>Test library</name>
-  <classname>TestLibrary</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Knihovna pro testovací účely.
   </comment>

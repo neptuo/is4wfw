@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
-  <name>FileUrl library</name>
-  <classname>FileUrl</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Knihovna pro generování odkazů na soubory pomocí property.
   </comment>

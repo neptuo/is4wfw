@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <taglib>
-  <name>Application log lib</name>
-  <classname>Application</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Třída pro správu logu.
   </comment>

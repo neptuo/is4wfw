@@ -267,7 +267,7 @@
             if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
                 $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
 
-                if ((string)$xml->count == "*") {
+                if (!isset($xml->count) || (string)$xml->count == "*") {
                     return true;
                 } else if ((int)$xml->count > $count) {
                     return true;

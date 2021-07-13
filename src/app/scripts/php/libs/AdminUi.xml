@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
-  <name>Admin UI controls.</name>
-  <classname>AdminUi</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Knihovna pro generování prvků uživatelského rozhraní kompatibilních s administrační částí aplikace.
   </comment>

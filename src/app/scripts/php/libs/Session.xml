@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
-  <name>Session library</name>
-  <classname>Session</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Knihovna pro ukládání a načítání hodnot z/do Session.
     Není kompatibilní s knihovnou Variable v módu Session.

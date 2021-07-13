@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <taglib>
-  <name>Web library</name>
-  <classname>Web</classname>
-  <classpath>php.libs</classpath>
   <count>1</count>
   <comment>
     Základní třída aplikace.

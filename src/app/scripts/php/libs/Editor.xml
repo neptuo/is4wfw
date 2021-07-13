@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
-  <name>Editors library</name>
-  <classname>Editor</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Knihovna pro realizaci edit formuláře bez pevné struktury. Tedy uživatelsky definovaného.
   </comment>

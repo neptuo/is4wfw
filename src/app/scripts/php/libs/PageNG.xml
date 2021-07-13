@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
 <taglib>
-  <name>PageNG Lib</name>
-  <classname>PageNG</classname>
-  <classpath>php.libs</classpath>
-  <count>*</count>
   <comment>
     Třída pro správu obsahu jednotlivých stránek.
   </comment>

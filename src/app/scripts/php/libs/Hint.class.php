@@ -127,13 +127,14 @@
                 $links .= '</div>';
             
                 $return .= ''
-                .'<div class="hint-lib">'
-                    .'<div class="lib-head">'
-                        .'<h1>'.$xml->name.' ('.$xml->classpath.'.'.$xml->classname.')</h1>'
-                        .'<strong class="version">'.$rb->get('lib.count-of-instances').': '.$xml->count.'</strong>'
-                    .'</div>'
-                    .'<div class="clear"></div>'
-                    .$links;
+                . '<div class="hint-lib">'
+                    . '<div class="lib-head">'
+                        . "<h1>$classPath</h1>"
+                        . '<strong class="version">'.$rb->get('lib.count-of-instances').': '. ($xml->count ?? "*") .'</strong>'
+                        . "<div class='mt-1'>$xml->comment</div>"
+                    . '</div>'
+                    . '<div class="clear"></div>'
+                    . $links;
 
                 if (count($xml->tag) > 0 || isset($xml->anyTag)) {
                     $return .= ''
