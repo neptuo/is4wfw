@@ -71,8 +71,12 @@
                 }
 
                 $result = $template();
-            } catch (Exception $ex) {
-                echo parent::getError($ex->getMessage());
+            } catch (Exception $e) {
+                if (IS_DEVELOPMENT_MODE) {
+                    echo "<pre>" . $e->getMessage() . PHP_EOL . $e->getTraceAsString() . "</pre>";
+                } else {
+                    echo parent::getError($e->getMessage());
+                }
             }
 
             $this->flush($result);
