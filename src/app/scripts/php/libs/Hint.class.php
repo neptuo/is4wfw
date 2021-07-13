@@ -623,13 +623,6 @@
                 'class' => $rb->get('autoregister.class')
             ]);
 
-            foreach (parent::php()->getDefaultRegistrations() as $prefix => $classPath) {
-                $grid->addRow([
-                    'prefix' => $prefix, 
-                    'class' => $classPath
-                ]);
-            }
-            
             $xml = new SimpleXMLElement(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'));
             foreach ($xml->reg as $reg) {
                 $attrs = $reg->attributes();
@@ -655,8 +648,6 @@
                 return parent::getFrame($rb->get('autoregister.title'), $return, "", true);
             }
         }
-
-
 
         public function setPropClassPath($classPath) {
             $_SESSION['select-class-path'] = $classPath;

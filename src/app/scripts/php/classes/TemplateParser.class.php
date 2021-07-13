@@ -10,6 +10,8 @@
 
         protected $Code = null;
         protected $TemplateCache = null;
+        protected $libraries;
+        protected $defaultRegistrations;
         
         // Current custom tag attributes.
         protected $Attributes = array();
@@ -27,8 +29,9 @@
         // Regular expression for parsing full tag.     
         protected $FULL_TAG_RE = "#<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)((.*?)(?=\/>)\/>|([^>]*)>((?:[^<]|<(?!/?\\1[^>]*>)|(?R))+)</\\1>)#";
 
-        public function __construct() {
+        public function __construct($defaultRegistrations) {
             $this->TemplateCache = new TemplateCache();
+            $this->defaultRegistrations = $defaultRegistrations;
         }
 
         public function getCache() {
@@ -68,6 +71,7 @@
          */
         public function parse($content, $keys) {
             $this->Code = new CodeWriter();
+            $this->libraries = new AutoLibraryCollection(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'), false);
             return $this->parseInternal($content, 'compile', $keys);
         }
 
@@ -79,6 +83,12 @@
         }
 
         private function parseInternal(string $content, string $mode, array $keys = null, bool $excapeText = true) {
+            if ($this->defaultRegistrations) {
+                foreach ($this->defaultRegistrations as $prefix => $xmlPath) {
+                    $this->libraries->add($prefix, $xmlPath);
+                }
+            }
+
             if ($mode == 'parse') {
                 return $this->parseContentInternal($content, $excapeText);
             } else if($mode == 'compile') {
@@ -123,8 +133,6 @@
         // Parses full tag
         // Output of this function can't contain ' (apostrophe), as the output is evaluated as PHP code wrapped in ' (apostrophe).
         private function parsefulltag($ctag) {
-            global $phpObject;
-
             $object = explode(":", $ctag[1]);
             
             $isFullTag = count($ctag) != 4;
@@ -136,7 +144,9 @@
             }
 
             // Now we know the tag is syntactically valid and should be processed.
-            if ($phpObject->isRegistered($object[0])) {
+            if ($this->libraries->exists($object[0])) {
+                $library = $this->libraries->get($object[0]);
+
                 // Find which decorators are used.
                 if ($attributes->HasDecorators) {
                     if (!$this->parseDecorators($attributes)) {
@@ -151,8 +161,8 @@
 
                 $functionName = null;
 
-                $isRegisteredTag = $phpObject->isTag($object[0], $object[1], $attributes);
-                $isRegisteredFullTag = $phpObject->isFullTag($object[0], $object[1], $attributes);
+                $isRegisteredTag = $library->isTag($object[1]);
+                $isRegisteredFullTag = $library->isFullTag($object[1]);
                 if (!$isFullTag && !$isRegisteredTag && $isRegisteredFullTag) {
                     // Allow full tags to be used without body/template.
                     $isFullTag = true;
@@ -163,18 +173,18 @@
                 $uniqueIdentifier = $this->generateRandomString();
                 if ($isFullTag) {
                     if ($object[0] == "php" && $object[1] == "using") {
-                        $params = array_map(function($item) { return $item["value"]; }, $attributes->Attributes["param"]["value"]);
-                        $phpObject->register($attributes->Attributes["prefix"]["value"], $attributes->Attributes["class"]["value"], $params);
+                        $xmlPath = APP_SCRIPTS_PATH . str_replace(".", "/", $attributes->Attributes["class"]["value"]) . ".xml";
+                        $this->libraries->add($attributes->Attributes["prefix"]["value"], $xmlPath);
                     }
 
                     $template = $this->parseInternal($content, 'parse', null, false);
                     
                     if ($object[0] == "php" && $object[1] == "using") {
-                        $phpObject->unregister($attributes->Attributes["prefix"]["value"]);
+                        $this->libraries->remove($attributes->Attributes["prefix"]["value"]);
                     }
                     
                     if ($isRegisteredFullTag) {
-                        $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
+                        $functionName = $library->getFuncToFullTag($object[1]);
 
                         $templateMethodName = 'template_' . $object[0] . '_' . $functionName . '_' . $uniqueIdentifier . '_body';
                         $this->Code->addMethod($templateMethodName, "public", ["tagsToParse"]);
@@ -186,11 +196,11 @@
                         $content = "function(" . '$' . "tagsToParse = null) { return " . '$' . "this->$templateMethodName(" . '$' . "tagsToParse); }";
                         $hasBodyTemplate = true;
                         
-                        if (!$phpObject->sortFullAttributes($object[0], $object[1], $attributes, $content)) {
+                        if (!$this->sortFullAttributes($object[0], $object[1], $attributes, $content)) {
                             return "";
                         }
-                    } else if ($phpObject->isAnyFullTag($object[0], $object[1])) {
-                        $functionName = $phpObject->getFuncToFullTag($object[0], $object[1]);
+                    } else if ($library->isAnyFullTag($object[1])) {
+                        $functionName = $library->getFuncToFullTag($object[1]);
                         
                         $templateMethodName = 'template_' . $object[0] . '_' . $functionName . '_' . $uniqueIdentifier . '_body';
                         $this->Code->addMethod($templateMethodName, "public", ["tagsToParse"]);
@@ -205,22 +215,22 @@
                     }
                 } else {
                     if ($isRegisteredTag) {
-                        $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
-                        if (!$phpObject->sortAttributes($object[0], $object[1], $attributes)) {
+                        $functionName = $library->getFuncToTag($object[1]);
+                        if (!$this->sortAttributes($object[0], $object[1], $attributes)) {
                             return "";
                         }
-                    } else if ($phpObject->isAnyTag($object[0], $object[1])) {
-                        $functionName = $phpObject->getFuncToTag($object[0], $object[1]);
+                    } else if ($library->isAnyTag($object[1])) {
+                        $functionName = $library->getFuncToTag($object[1]);
                         if (!$this->sortAnyTagAttributes($object[1], $attributes)) {
                             return "";
                         }
                     }
                     
                     if ($object[0] == "php" && $object[1] == "register") {
-                        $params = array_map(function($item) { return $item["value"]; }, $attributes->Attributes["param"]["value"]);
-                        $phpObject->register($attributes->Attributes["tagPrefix"]["value"], $attributes->Attributes["classPath"]["value"], $params);
+                        $xmlPath = APP_SCRIPTS_PATH . str_replace(".", "/", $attributes->Attributes["classPath"]["value"]) . ".xml";
+                        $this->libraries->add($attributes->Attributes["tagPrefix"]["value"], $xmlPath);
                     } else if ($object[0] == "php" && $object[1] == "unregister") {
-                        $phpObject->unregister($attributes->Attributes["tagPrefix"]["value"]);
+                        $this->libraries->remove($attributes->Attributes["tagPrefix"]["value"]);
                     }
                 }
 
@@ -233,19 +243,14 @@
                 }
             }
             
-            return '<h4 class="error">Tag "' . $object[0] . ':' . $object[1] . '" is not registered!</h4>';
+            throw new Exception("Tag '$object[0]:$object[1]' is not registered!");
         }
 
         protected function parseDecorators(TemplateAttributeCollection $tagAttributes) {
-            global $phpObject;
-
             foreach ($tagAttributes->Decorators as $prefix => $attributes) {
-                if ($phpObject->isRegistered($prefix)) {
-                    if (!$phpObject->findDecoratorsForAttributes($prefix, $tagAttributes)) {
-                        return false;
-                    }
-                } else {
-                    return $phpObject->triggerUnregisteredPrefix($prefix);
+                $library = $this->libraries->get($prefix);
+                if (!$library->findDecoratorsForAttributes($tagAttributes)) {
+                    return false;
                 }
             }
 
@@ -253,14 +258,12 @@
         }
 
         protected function generateDecorators(string $tagPrefix, string $tagName, TemplateAttributeCollection $tagAttributes) {
-            global $phpObject;
-
             foreach ($tagAttributes->Decorators as $prefix => $decorators) {
                 foreach ($decorators as $decorator) {
                     $attributes = new TemplateAttributeCollection();
                     $attributes->Attributes = $decorator["attributes"];
 
-                    if (!$phpObject->sortDecoratorAttributes($prefix, $decorator["function"], $attributes, $tagPrefix, $tagName)) {
+                    if (!$this->sortDecoratorAttributes($prefix, $decorator["function"], $attributes, $tagPrefix, $tagName)) {
                         return false;
                     }
 
@@ -296,15 +299,15 @@
             $object = explode(":", $cprop[1]);
             $this->Attributes = array();
 
-            global $phpObject;
-            if ($phpObject->isRegistered($object[0])) {
-                if ($phpObject->isProperty($object[0], $object[1])) {
-                    $functionName = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
+            if ($this->libraries->exists($object[0])) {
+                $library = $this->libraries->get($object[0]);
+                if ($library->isProperty($object[1])) {
+                    $functionName = $library->getFuncToProperty($object[1], $this->PropertyUse);
 
                     $attributes = new TemplateAttributeCollection();
                     $identifier = $this->generateRandomString();
                     return $this->generateFunctionOutput($identifier, $object[0], null, false, $functionName, $attributes, false);
-                } else if($phpObject->isAnyProperty($object[0])) {
+                } else if($library->isAnyProperty()) {
                     $functionName = 'getProperty';
                     
                     $attributes = new TemplateAttributeCollection();
@@ -634,6 +637,210 @@
             }
 
             return $result;
+        }
+
+        private function sortAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes): bool {
+            return $this->sortAttributesInternal("tag", $tagPrefix, $tagName, $attributes);
+        }
+
+        private function sortFullAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes, string $content): bool {
+            if (!$this->sortAttributesInternal("fulltag", $tagPrefix, $tagName, $attributes)) {
+                return false;
+            }
+
+            $attributes->Attributes = array_merge(array(PhpRuntime::$FullTagTemplateName => array('value' => $content, 'type' => 'eval')), $attributes->Attributes);
+            return true;
+        }
+
+        private function sortDecoratorAttributes(string $decoratorPrefix, string $decoratorFunctionName, TemplateAttributeCollection $attributes, string $tagPrefix, string $tagName) {
+            $xml = $this->libraries->get($decoratorPrefix)->getXml();
+            foreach ($xml->decorator as $decorator) {
+                if ($decorator->function == $decoratorFunctionName) {
+                    return $this->sortAttributesForXmlElement($decorator, $attributes, "Decorator on '$tagPrefix:$tagName'");
+                }
+            }
+        }
+
+        private function sortAttributesInternal(string $tagListName, string $tagPrefix, string $tagName, TemplateAttributeCollection $atts): bool {
+            $xml = $this->libraries->get($tagPrefix)->getXml();
+            foreach ($xml->{$tagListName} as $tag) {
+                if ($tag->name == $tagName) {
+                    return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName);
+                }
+            }
+
+            return false;
+        }
+        
+        private function sortAttributesForXmlElement(SimpleXMLElement $tag, TemplateAttributeCollection $atts, string $nameForErrorReport) {
+            $processedAtts = array();
+            $return = [];
+
+            for ($i = 0; $i < count($tag->attribute); $i ++) {
+                $isProcessed = false;
+                $att = $tag->attribute[$i];
+                $attName = (string)$att->name;
+                $hasDefault = isset($att->default);
+                if (isset($att->prefix)) {
+                    $attPrefix = "$attName-";
+                    $attributeValue = array();
+                    foreach ($atts->Attributes as $usedName => $usedValue) {
+                        if (StringUtils::startsWith($usedName, $attPrefix)) {
+                            $strippedName = substr($usedName, strlen($attPrefix));
+
+                            $attribute = $atts->Attributes[$usedName];
+                            $processValue = $this->processParsedAttributeValue($attribute, $att);
+                            if ($processValue != null) {
+                                $processedAtts[] = $usedName;
+                                $attributeValue[$strippedName] = $processValue;
+                                continue;
+                            }
+                        }
+                    }
+
+                    $return[$attName] = array('value' => $attributeValue, 'type' => "eval");
+                    $isProcessed = true;
+                }
+                
+                if (array_key_exists($attName, $atts->Attributes)) {
+                    $attribute = $atts->Attributes[$attName];
+                    $processValue = $this->processParsedAttributeValue($attribute, $att);
+                    if ($processValue != null) {
+                        $processedAtts[] = $attName;
+                        if (array_key_exists($attName, $return)) {
+                            if (empty($return[$attName]["value"])) {
+                                if ($att->prefix["default"] == "merge") {
+                                    $return[$attName] = $processValue;
+                                } else {
+                                    $return[$attName]["value"][""] = $processValue;
+                                }
+                            } else {
+                                $return[$attName]["mergeEmptyKey"] = $att->prefix["default"] == "merge" && $processValue["type"] == "eval";
+                                $return[$attName]["value"][""] = $processValue;
+                            }
+                        } else {
+                            $return[$attName] = $processValue;
+                        }
+
+                        $isProcessed = true;
+                    }
+                }
+
+                if ($isProcessed) {
+                    continue;
+                }
+                
+                if ($hasDefault) {
+                    if ($att->type == 'string') {
+                        $attributeValue = "'" . eval('return "'. $att->default.'";') . "'";
+                    } else {
+                        $attributeValue = eval('return '. $att->default.';');
+                    }
+                    
+                    $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
+                } else if (isset($att->required) && !$atts->HasAttributeModifyingDecorators) {
+                    return $this->triggerFail("Missing required attribute '$att->name' on tag '$nameForErrorReport'.");
+                } else {
+                    $value = false;
+                    if ($att->type == "string") {
+                        $value = "";
+                    } else if ($att->type == "number") { 
+                        $value = 0;
+                    }
+
+                    $return[$attName] = array('value' => $value, 'type' => 'raw');
+                }
+            }
+    
+            if (isset($tag->anyAttribute)) {
+                $params = array();
+                foreach ($atts->Attributes as $usedName => $usedValue) {
+                    if (!in_array($usedName, $processedAtts)) {
+                        $processedAtts[] = $usedName;
+                        $params[$usedName] = $usedValue;
+                    }
+                }
+
+                $return[PhpRuntime::$ParamsName] = array('value' => $params, 'type' => 'eval');
+            }
+
+            if (count($processedAtts) == count($atts->Attributes)) {
+                $atts->Attributes = $return;
+                return true;
+            } else {
+                foreach ($atts->Attributes as $name => $value) {
+                    if (!in_array($name, $processedAtts)) {
+                        $this->triggerFail("Used undefined attribute! [$name] on [$nameForErrorReport]");
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        private function processParsedAttributeValue($attribute, $definition) {
+            $attributeValue = $this->getConvertValue($attribute['value'], $definition);
+            if ($attributeValue != null) {
+                $attributeValueType = 'raw';
+                if (((isset($definition->default) || isset($definition->type)) && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
+                    $attributeValueType = 'eval';
+                }
+
+                $result = ['value' => $attributeValue['value'], 'type' => $attributeValueType];
+                if (array_key_exists("content", $attribute)) {
+                    $result["content"] = $attribute["content"];
+                }
+                return $result;
+            }
+
+            return null;
+        }
+        
+        protected function getConvertValue($val, $att) {
+            $convert = isset($att->default);
+            
+            if (isset($att->type)) {
+                if (StringUtils::startsWith($val, '$this->template_') && StringUtils::endsWith($val, '()')) {
+                    return ['value' => $val, 'type' => 'eval', 'content' => 'template'];
+                }
+
+                switch ($att->type) {
+                    case 'string':
+                        return array('value' => $val, 'type' => 'raw');
+                    case 'number':
+                        $trimmed = trim($val, "'");
+                        if (is_numeric($trimmed)) {
+                            return array('value' => $trimmed, 'type' => 'eval');
+                        } else {
+                            return null;
+                        }
+                    case 'bool':
+                        if ($val === 'true' || $val === '1') {
+                            return array('value' => true, 'type' => 'eval');
+                        } else if ($val === 'false' || $val === '0') {
+                            return array('value' => false, 'type' => 'eval');
+                        } else {
+                            return null;
+                        }
+                }
+            }
+
+            if ($convert) {
+                if ($val === 'true') {
+                    return array('value' => true, 'type' => 'eval');
+                }
+                
+                if ($val === 'false') {
+                    return array('value' => false, 'type' => 'eval');
+                }
+            }
+            
+            return array('value' => $val, 'type' => 'raw');
+        }
+
+        public function triggerFail($message, $errorType = E_USER_WARNING) {
+            trigger_error($message, $errorType);
+            return false;
         }
     }
 

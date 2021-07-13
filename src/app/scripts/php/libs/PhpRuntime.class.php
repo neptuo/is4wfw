@@ -6,6 +6,7 @@
     require_once("Database.class.php");
     require_once("Login.class.php");
     require_once("System.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/LibraryDefinition.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateAttributeCollection.class.php");
 
     /**
@@ -25,21 +26,6 @@
         public static $FullTagTemplateName = 'full:content';
         public static $DecoratorExecuteName = 'decorator:execute';
     
-        /**
-         *
-         *    List of default registered tag libs.
-         *
-         */
-        private $_DEFAULT = array(
-            "php" => "php.libs", 
-            "web" => "php.libs", 
-            "error" => "php.libs", 
-            "log" => "php.libs", 
-            "db" => "php.libs", 
-            "login" => "php.libs", 
-            "sys" => "php.libs"
-        );
-
         private $defaultRegistrations = [
             "php" => "php.libs.PhpRuntime", 
             "web" => "php.libs.Web", 
@@ -53,13 +39,15 @@
         public function getDefaultRegistrations() {
             return $this->defaultRegistrations;
         }
-    
-        /**
-         *
-         *    Array with registered tag prefixes.
-         *
-         */                                     
-        private $_REGISTERED = array();
+
+        public function getCurrentRegistrations() {
+            $result = [];
+            foreach ($this->libraries->getPrefixes() as $prefix) {
+                $result[$prefix] = $this->libraries->get($prefix)->getXmlPath();
+            }
+
+            return $result;
+        }
 
         private $disposables = [];
         
@@ -68,7 +56,7 @@
          *    Array with count of instacence of each tag lib.
          *
          */                                     
-        private $_CLASSES = array(
+        private $instanceCounter = [
             "php.libs.PhpRuntime" => 1, 
             "php.libs.Web" => 1, 
             "php.libs.ErrorHandler" => 1, 
@@ -76,22 +64,26 @@
             "php.libs.Database" => 1,
             "php.libs.Login" => 1, 
             "php.libs.System" => 1
-        );
+        ];
+
+        private $libraries;
                                                             
-        private $_AUTOXML = null;
-        
         /**
          *
          *    Creates other default objects.
          *
          */                                                
         public function __construct() {
-            // Init defalt objects (php, error, log)
             $GLOBALS['errorObject'] = new ErrorHandler();
             $GLOBALS['logObject'] = new Log();
             $GLOBALS['dbObject'] = new Database();
             $GLOBALS['loginObject'] = new Login();
             $GLOBALS['sysObject'] = new System();
+
+            $this->libraries = new LibraryCollection();
+            foreach ($this->defaultRegistrations as $prefix => $classPath) {
+                $this->libraries->add($prefix, APP_SCRIPTS_PATH . $this->parseClassPath($classPath) . ".xml");
+            }
             
             set_error_handler("ErrorHandler::errorHandler");
         }
@@ -108,14 +100,12 @@
 
         /**
          *
-         *    Registrate tag library.
-         *    
-         *    @param $attlist array with required parameters (tagPrefix & classPath)                    
+         *    Registers tag library.
          *
          */                                                
         public function register($tagPrefix, $classPath, $params = []) {
             $classJPath = $classPath;
-            if (!array_key_exists($tagPrefix, $this->_REGISTERED) && !array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            if (!$this->libraries->exists($tagPrefix)) {
                 if ($this->checkIfClassExists($tagPrefix, $classPath)) {
                     $classArray = StringUtils::explode($classPath, '.');
                     $classDir = "";
@@ -133,57 +123,46 @@
                     
                     if ($this->isCountOfInstances($className, $classDir, $classPath)) {
                         $GLOBALS[$tagPrefix . "Object"] = new $className($tagPrefix, $params);
-                        if(array_key_exists($classJPath, $this->_CLASSES)) {
-                            $this->_CLASSES[$classJPath] ++;
+                        if(array_key_exists($classJPath, $this->instanceCounter)) {
+                            $this->instanceCounter[$classJPath] ++;
                         } else {
-                            $this->_CLASSES[$classJPath] = 1;
+                            $this->instanceCounter[$classJPath] = 1;
                         }
-                        $this->_REGISTERED[$tagPrefix] = $classDir . "." . $className;
-                        $this->tryRegisterDisposable($tagPrefix);
+
+                        $library = $this->libraries->add($tagPrefix, APP_SCRIPTS_PATH . $classPath . ".xml");
+                        if ($library->isDisposable()) {
+                            $this->disposables[] = $tagPrefix;
+                        }
                     } else {
-                        return '<h4 class="error">Too much instances of tag lib! [' . $classJPath . ']</h4>';
+                        return $this->getError('Too much instances of tag lib! [' . $classJPath . ']');
                     }
                 } else {
-                    return '<h4 class="error">This class does not exist "' . $classPath . '".</h4>';
+                    return $this->getError('This class does not exist "' . $classPath . '".');
                 }
             } else {
-                return '<h4 class="error">This tag prefix already used! [' . $tagPrefix . ']</h4>';
+                return $this->getError('This tag prefix already used! [' . $tagPrefix . ']');
             }
             
             return "";
         }
-
-        private function tryRegisterDisposable(string $tagPrefix) {
-            return $this->withXml($tagPrefix, function($xml) use ($tagPrefix) {
-                if (isset($xml->disposable)) {
-                    $this->disposables[] = $tagPrefix;
-                }
-            });
-        }
     
         /**
          *
-         *    Unregistrate tag library.
-         *    
-         *    @param $attlist array with required parameters (tagPrefix)                    
+         *    Unregisters tag library.
          *
          */ 
         public function unregister($tagPrefix) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED) && $tagPrefix != "php") {
-                foreach($this->_REGISTERED as $name => $tmp) {
-                    if ($name == $tagPrefix) {
-                        $object = ${$name."Object"};
-                        if (array_key_exists($tagPrefix, $this->disposables)) {
-                            $object->dispose();
-                            unset($this->disposables[$name]);
-                        }
-
-                        unset($this->_REGISTERED[$name]);
-                        unset($object);
-                        $this->_CLASSES[$name] --;
-                        break;
-                    }
+            if ($this->libraries->exists($tagPrefix) && !array_key_exists($tagPrefix, $this->defaultRegistrations)) {
+                
+                $object = ${$tagPrefix."Object"};
+                if (array_key_exists($tagPrefix, $this->disposables)) {
+                    $object->dispose();
+                    unset($this->disposables[$tagPrefix]);
                 }
+
+                $this->libraries->remove($tagPrefix);
+                $this->instanceCounter[$tagPrefix] --;
+                unset($object);
             }
             
             return "";
@@ -198,10 +177,8 @@
          *
          */                                     
         private function checkIfClassExists($tagPrefix, $classPath) {
-            $path = APP_SCRIPTS_PATH . $this->parseClassPath($classPath).".class.php";
-            if(is_file($path)) {
-                //$cont = file_get_contents($path);
-                //if(eregi("class *"))
+            $path = APP_SCRIPTS_PATH . $this->parseClassPath($classPath) . ".class.php";
+            if (is_file($path)) {
                 return true;
             } else {
                 return false;
@@ -229,124 +206,24 @@
          *
          */                                     
         public function isRegistered($tagPrefix) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED) || array_key_exists($tagPrefix, $this->_DEFAULT)) {
+            if ($this->libraries->exists($tagPrefix)) {
                 return true;
             } else {
-                return self::autoRegisterPrefix($tagPrefix);
+                return $this->autoRegisterPrefix($tagPrefix);
             }
         }
         
         public function autoRegisterPrefix($prefix) {
-            $xml = self::getXml(APP_SCRIPTS_PHP_PATH . 'autoregister.xml');
+            $xml = $this->getXml(APP_SCRIPTS_PHP_PATH . 'autoregister.xml');
             foreach ($xml->reg as $reg) {
                 $attrs = $reg->attributes();
                 if ($attrs['prefix'] == $prefix) {
-                    self::register($prefix, (string)$attrs['class']);
+                    $this->register($prefix, (string)$attrs['class']);
                     return true;
                 }
             }
             
             return false;
-        }
-
-        private function withXml(string $tagPrefix, $handler) {
-            if (array_key_exists($tagPrefix, $this->_REGISTERED)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_REGISTERED[$tagPrefix]) . ".xml";
-            } else if (array_key_exists($tagPrefix, $this->_DEFAULT)) {
-                global ${$tagPrefix."Object"};
-                $xmlPath = str_replace(".", "/", $this->_DEFAULT[$tagPrefix]) . ".xml";
-            }
-            
-            if (isset($xmlPath)) {
-                if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                    $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
-                    return $handler($xml);
-                } else {
-                    $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-                    trigger_error($str , E_USER_WARNING);
-                    echo "<h4 class=\"error\">".$str."</h4>";
-                    return false;
-                }
-            }
-            
-            return false;
-        }
-        
-        /**
-         *
-         *    Check if passed values are valid tag of library.
-         *    
-         *    @param    tagPrefix library object name
-         *    @param    tagName name of required tag
-         *    @param    atts    passed tag attributes
-         *    @return true is passed values are valid tagPrefix and tag name, false other wise
-         *
-         */                                     
-        public function isTag($tagPrefix, $tagName, $atts) {
-            return $this->withXml($tagPrefix, function($xml) use ($tagName) {
-                foreach ($xml->tag as $tag) {
-                    if ($tag->name == $tagName) {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
-        }
-
-        public function isAnyTag($tagPrefix, $tagName) {
-            return $this->withXml($tagPrefix, function($xml) use ($tagName) {
-                if (isset($xml->anyTag)) {
-                    foreach ($xml->tag as $tag) {
-                        if ($tag->name == $tagName) {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                }
-
-                return false;
-            });
-        }
-        
-        /**
-         *
-         *    Check if passed values are valid fulltag of library.
-         *    
-         *    @param    tagPrefix library object name
-         *    @param    tagName name of required tag
-         *    @param    atts    passed tag attributes
-         *    @return true is passed values are valid tagPrefix and tag name, false other wise
-         *
-         */                                     
-        public function isFullTag($tagPrefix, $tagName, $atts) {
-            return $this->withXml($tagPrefix, function($xml) use ($tagName) {
-                foreach ($xml->fulltag as $tag) {
-                    if ($tag->name == $tagName) {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
-        }
-
-        public function isAnyFullTag($tagPrefix, $tagName) {
-            return $this->withXml($tagPrefix, function($xml) use ($tagName) {
-                if (isset($xml->anyFulltag)) {
-                    foreach ($xml->fulltag as $tag) {
-                        if ($tag->name == $tagName) {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                }
-
-                return false;
-            });
         }
         
         /**
@@ -359,22 +236,12 @@
          *
          */                                     
         public function isProperty($tagPrefix, $propName) {
-            return $this->withXml($tagPrefix, function($xml) use ($propName) {
-                foreach ($xml->property as $prop) {
-                    if ($prop->name == $propName) {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
+            return $this->libraries->get($tagPrefix)->isProperty($propName);
         }
 
         // Vrací true, pokud daná knihovna umožňuje <anyProperty />.
         public function isAnyProperty($tagPrefix) {
-            return $this->withXml($tagPrefix, function($xml) {
-                return isset($xml->anyProperty);
-            });
+            return $this->libraries->get($tagPrefix)->isAnyProperty();
         }
         
         /**
@@ -392,8 +259,8 @@
         private function isCountOfInstances($className, $classDir, $classPath) {
             $count = 0;
 
-            if (array_key_exists($classDir.".".$className, $this->_CLASSES)) {
-                $count = $this->_CLASSES[$classDir.".".$className];
+            if (array_key_exists($classDir.".".$className, $this->instanceCounter)) {
+                $count = $this->instanceCounter[$classDir.".".$className];
             }
             
             $xmlPath = $classPath . ".xml";
@@ -414,285 +281,6 @@
                 return false;
             }
         }
-
-        private function processParsedAttributeValue($attribute, $definition) {
-            $attributeValue = $this->getConvertValue($attribute['value'], $definition);
-            if ($attributeValue != null) {
-                $attributeValueType = 'raw';
-                if (((isset($definition->default) || isset($definition->type)) && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
-                    $attributeValueType = 'eval';
-                }
-
-                $result = ['value' => $attributeValue['value'], 'type' => $attributeValueType];
-                if (array_key_exists("content", $attribute)) {
-                    $result["content"] = $attribute["content"];
-                }
-                return $result;
-            }
-
-            return null;
-        }
-
-        public function sortDecoratorAttributes(string $decoratorPrefix, string $decoratorFunctionName, TemplateAttributeCollection $attributes, string $tagPrefix, string $tagName) {
-            return $this->withXml($decoratorPrefix, function($xml) use ($decoratorFunctionName, $attributes, $tagPrefix, $tagName) {
-                foreach ($xml->decorator as $decorator) {
-                    if ($decorator->function == $decoratorFunctionName) {
-                        return $this->sortAttributesForXmlElement($decorator, $attributes, "Decorator on '$tagPrefix:$tagName'");
-                    }
-                }
-            });
-        }
-
-        private function sortAttributesForXmlElement(SimpleXMLElement $tag, TemplateAttributeCollection $atts, string $nameForErrorReport) {
-            $processedAtts = array();
-            $return = [];
-
-            for ($i = 0; $i < count($tag->attribute); $i ++) {
-                $isProcessed = false;
-                $att = $tag->attribute[$i];
-                $attName = (string)$att->name;
-                $hasDefault = isset($att->default);
-                if (isset($att->prefix)) {
-                    $attPrefix = "$attName-";
-                    $attributeValue = array();
-                    foreach ($atts->Attributes as $usedName => $usedValue) {
-                        if (StringUtils::startsWith($usedName, $attPrefix)) {
-                            $strippedName = substr($usedName, strlen($attPrefix));
-
-                            $attribute = $atts->Attributes[$usedName];
-                            $processValue = $this->processParsedAttributeValue($attribute, $att);
-                            if ($processValue != null) {
-                                $processedAtts[] = $usedName;
-                                $attributeValue[$strippedName] = $processValue;
-                                continue;
-                            }
-                        }
-                    }
-
-                    $return[$attName] = array('value' => $attributeValue, 'type' => "eval");
-                    $isProcessed = true;
-                }
-                
-                if (array_key_exists($attName, $atts->Attributes)) {
-                    $attribute = $atts->Attributes[$attName];
-                    $processValue = $this->processParsedAttributeValue($attribute, $att);
-                    if ($processValue != null) {
-                        $processedAtts[] = $attName;
-                        if (array_key_exists($attName, $return)) {
-                            if (empty($return[$attName]["value"])) {
-                                if ($att->prefix["default"] == "merge") {
-                                    $return[$attName] = $processValue;
-                                } else {
-                                    $return[$attName]["value"][""] = $processValue;
-                                }
-                            } else {
-                                $return[$attName]["mergeEmptyKey"] = $att->prefix["default"] == "merge" && $processValue["type"] == "eval";
-                                $return[$attName]["value"][""] = $processValue;
-                            }
-                        } else {
-                            $return[$attName] = $processValue;
-                        }
-
-                        $isProcessed = true;
-                    }
-                }
-
-                if ($isProcessed) {
-                    continue;
-                }
-                
-                if ($hasDefault) {
-                    if ($att->type == 'string') {
-                        $attributeValue = "'" . eval('return "'. $att->default.'";') . "'";
-                    } else {
-                        $attributeValue = eval('return '. $att->default.';');
-                    }
-                    
-                    $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
-                } else if (isset($att->required) && !$atts->HasAttributeModifyingDecorators) {
-                    return $this->triggerFail("Missing required attribute '$att->name' on tag '$nameForErrorReport'.");
-                } else {
-                    $value = false;
-                    if ($att->type == "string") {
-                        $value = "";
-                    } else if ($att->type == "number") { 
-                        $value = 0;
-                    }
-
-                    $return[$attName] = array('value' => $value, 'type' => 'raw');
-                }
-            }
-    
-            if (isset($tag->anyAttribute)) {
-                $params = array();
-                foreach ($atts->Attributes as $usedName => $usedValue) {
-                    if (!in_array($usedName, $processedAtts)) {
-                        $processedAtts[] = $usedName;
-                        $params[$usedName] = $usedValue;
-                    }
-                }
-
-                $return[PhpRuntime::$ParamsName] = array('value' => $params, 'type' => 'eval');
-            }
-
-            if (count($processedAtts) == count($atts->Attributes)) {
-                $atts->Attributes = $return;
-                return true;
-            } else {
-                foreach ($atts->Attributes as $name => $value) {
-                    if (!in_array($name, $processedAtts)) {
-                        $this->triggerFail("Used undefined attribute! [$name] on [$nameForErrorReport]");
-                    }
-                }
-
-                return false;
-            }
-        }
-
-        private function sortAttributesInternal(string $tagListName, string $tagPrefix, string $tagName, TemplateAttributeCollection $atts): bool {
-            return $this->withXml($tagPrefix, function($xml) use ($tagListName, $tagPrefix, $tagName, $atts) {
-                foreach ($xml->{$tagListName} as $tag) {
-                    if ($tag->name == $tagName) {
-                        return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName);
-                    }
-                }
-
-                return false;
-            });
-        }
-        
-        /**
-         *
-         *    Sort attributes to right sequence.
-         *    
-         *    @param    tagPrefix library object name
-         *    @param    tagName name of required tag
-         *    @param    atts    passed tag attributes
-         *    @return sorted attributes
-         *
-         */                                                
-        public function sortAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes): bool {
-            return $this->sortAttributesInternal("tag", $tagPrefix, $tagName, $attributes);
-        }
-        
-        protected function getConvertValue($val, $att) {
-            $convert = isset($att->default);
-            
-            if (isset($att->type)) {
-                if (StringUtils::startsWith($val, '$this->template_') && StringUtils::endsWith($val, '()')) {
-                    return ['value' => $val, 'type' => 'eval', 'content' => 'template'];
-                }
-
-                switch ($att->type) {
-                    case 'string':
-                        return array('value' => $val, 'type' => 'raw');
-                    case 'number':
-                        $trimmed = trim($val, "'");
-                        if (is_numeric($trimmed)) {
-                            return array('value' => $trimmed, 'type' => 'eval');
-                        } else {
-                            return null;
-                        }
-                    case 'bool':
-                        if ($val === 'true' || $val === '1') {
-                            return array('value' => true, 'type' => 'eval');
-                        } else if ($val === 'false' || $val === '0') {
-                            return array('value' => false, 'type' => 'eval');
-                        } else {
-                            return null;
-                        }
-                }
-            }
-
-            if ($convert) {
-                if ($val === 'true') {
-                    return array('value' => true, 'type' => 'eval');
-                }
-                
-                if ($val === 'false') {
-                    return array('value' => false, 'type' => 'eval');
-                }
-            }
-            
-            return array('value' => $val, 'type' => 'raw');
-        }
-        
-        /**
-         *
-         *    Sort attributes to right sequence.
-         *    
-         *    @param    tagPrefix library object name
-         *    @param    tagName name of required tag
-         *    @param    atts    passed tag attributes
-         *    @return sorted attributes
-         *
-         */                                                
-        public function sortFullAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes, string $content): bool {
-            if (!$this->sortAttributesInternal("fulltag", $tagPrefix, $tagName, $attributes)) {
-                return false;
-            }
-
-            $attributes->Attributes = array_merge(array(PhpRuntime::$FullTagTemplateName => array('value' => $content, 'type' => 'eval')), $attributes->Attributes);
-            return true;
-        }
-        
-        /**
-         *
-         *    Return function name to passed tag name.
-         *    
-         *    @return function name                    
-         *
-         */                                     
-        public function getFuncToTag(string $tagPrefix, string $tagName) : string {
-            $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $tagName) {
-                foreach ($xml->tag as $tag) {
-                    if ($tag->name == $tagName) {
-                        return (string)$tag->function;
-                    }
-                }
-                
-                if (isset($xml->anyTag)) {
-                    return $xml->anyTag->function;
-                }
-
-                return $this->triggerFail("Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]");
-            });
-
-            if ($functionName === false) {
-                return $this->triggerUnregisteredPrefix($tagPrefix);
-            }
-
-            return $functionName;
-        }
-        
-        /**
-         *
-         *    Return function name to passed fulltag name.
-         *    
-         *    @return function name                    
-         *
-         */                                     
-        public function getFuncToFullTag(string $tagPrefix, string $tagName) : string {
-            $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $tagName) {
-                foreach ($xml->fulltag as $tag) {
-                    if ($tag->name == $tagName) {
-                        return (string)$tag->function;
-                    }
-                }
-                
-                if (isset($xml->anyFulltag)) {
-                    return $xml->anyFulltag->function;
-                }
-
-                return $this->triggerFail("Unnable to find tag [".$tagName."] in lib [".$tagPrefix."]");
-            });
-
-            if ($functionName === false) {
-                return $this->triggerUnregisteredPrefix($tagPrefix);
-            }
-
-            return $functionName;
-        }
         
         /**
          *
@@ -702,88 +290,7 @@
          *
          */                                     
         public function getFuncToProperty(string $tagPrefix, string $propName, string $use) : string {
-            $functionName = $this->withXml($tagPrefix, function($xml) use ($tagPrefix, $propName, $use) {
-                foreach ($xml->property as $prop) {
-                    if ($prop->name == $propName) {
-                        if (strtolower($use) == 'set') {
-                            return (string)$prop->setFunction;
-                        } elseif (strtolower($use) == 'get') {
-                            return (string)$prop->getFunction;
-                        } else {
-                            return false;                        
-                        }
-                    }
-                }
-
-                return $this->triggerFail("Unnable to find property [".$propName."] in lib [".$tagPrefix."]");
-            });
-
-            if ($functionName === false) {
-                return $this->triggerUnregisteredPrefix($tagPrefix);
-            }
-
-            return $functionName;
-        }
-
-        public function findDecoratorsForAttributes(string $prefix, TemplateAttributeCollection $tagAttributes) {
-            return $this->withXml($prefix, function($xml) use ($prefix, $tagAttributes) {
-                $decorators = [];
-                $attributeNames = array_keys($tagAttributes->Decorators[$prefix]);
-
-                foreach ($xml->decorator as $decorator) {
-                    foreach ($decorator->attribute as $attribute) {
-                        if (in_array($attribute->name, $attributeNames)) {
-                            if (!array_key_exists($attribute->name, $decorators)) {
-                                $modifiesAttributes = isset($decorator->features->modifiesAttributes);
-                                $conditionsExecution = isset($decorator->features->conditionsExecution);
-                                $providesFullTagBody = isset($decorator->features->providesFullTagBody);
-
-                                // If the decorator return 2 ways, we wrap it in an array.
-                                if ($modifiesAttributes || $conditionsExecution && $providesFullTagBody) {
-                                    $tagAttributes->HasAttributeModifyingDecorators = true;
-                                }
-
-                                if ($conditionsExecution) {
-                                    $tagAttributes->HasConditionalDecorators = true;
-                                }
-
-                                if ($providesFullTagBody) {
-                                    $tagAttributes->HasBodyProvidingDecorators = true;
-                                }
-
-                                $functionName = (string)$decorator->function;
-                                if (!array_key_exists($functionName, $decorators)) {
-                                    $decorators[$functionName] = [
-                                        "function" => $functionName,
-                                        "attributes" => [(string)$attribute->name => $tagAttributes->Decorators[$prefix][(string)$attribute->name]],
-                                        "modifiesAttributes" => $modifiesAttributes,
-                                        "conditionsExecution" => $conditionsExecution,
-                                        "providesFullTagBody" => $providesFullTagBody,
-                                    ];
-                                } else {
-                                    $decorators[$functionName]["attributes"][(string)$attribute->name] = $tagAttributes->Decorators[$prefix][(string)$attribute->name];
-                                }
-                            } else {
-                                $decorators[$decorator->function]["attributes"][(string)$attribute->name] = $tagAttributes->Decorators[$prefix][(string)$attribute->name];
-                            }
-
-                            
-                            unset($attributeNames[array_search((string)$attribute->name, $attributeNames)]);
-                        }
-                    }
-                }
-
-                if (count($attributeNames) > 0) {
-                    for ($i = 0; $i < count($attributeNames); $i++) { 
-                        $attributeNames[$i] = $prefix . ":" . $attributeNames[$i];
-                    }
-
-                    return $this->triggerFail("Unnable to find decorator for attributes " . implode(", ", $attributeNames) . ".");
-                }
-
-                $tagAttributes->Decorators[$prefix] = $decorators;
-                return true;
-            });
+            return $this->libraries->get($tagPrefix)->getFuncToProperty($propName, $use);
         }
         
         public function usingObject($content, $prefix, $class, $params = []) {

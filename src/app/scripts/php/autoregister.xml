@@ -8,8 +8,10 @@
 	<reg prefix="cf" class="php.libs.CustomForm" />
 	<reg prefix="ce" class="php.libs.CustomEntity" />
 	<reg prefix="ced" class="php.libs.CustomEntityAdmin" />
+	<reg prefix="db" class="php.libs.Database" />
 	<reg prefix="edit" class="php.libs.Editor" />
 	<reg prefix="email" class="php.libs.Email" />
+	<reg prefix="error" class="php.libs.ErrorHandler" />
 	<reg prefix="f" class="php.libs.File" />
 	<reg prefix="fa" class="php.libs.FileAdmin" />
 	<reg prefix="fileUrl" class="php.libs.FileUrl" />
@@ -23,11 +25,14 @@
 	<reg prefix="json" class="php.libs.Json" />
 	<reg prefix="list" class="php.libs.Listing" />
 	<reg prefix="loc" class="php.libs.Localization" />
+	<reg prefix="log" class="php.libs.Log" />
+	<reg prefix="login" class="php.libs.Login" />
 	<reg prefix="lang" class="php.libs.Language" />
 	<reg prefix="p" class="php.libs.Page" />
 	<reg prefix="paging" class="php.libs.Paging" />
 	<reg prefix="params" class="php.libs.Parameters" />
 	<reg prefix="post" class="php.libs.Post" />
+	<reg prefix="php" class="php.libs.PhpRuntime" />
 	<reg prefix="route" class="php.libs.Route" />
 	<reg prefix="query" class="php.libs.QueryString" />
 	<reg prefix="s" class="php.libs.Sport" />
@@ -41,5 +46,6 @@
 	<reg prefix="utils" class="php.libs.Utilities" />
 	<reg prefix="val" class="php.libs.Validation" />
 	<reg prefix="var" class="php.libs.Variable" />
+	<reg prefix="web" class="php.libs.Web" />
 	<reg prefix="wp" class="php.libs.WebProject" />
 </autoregister>

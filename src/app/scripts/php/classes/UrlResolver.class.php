@@ -21,7 +21,7 @@
         private $PagesId = array();
 
         public function __construct() {
-            $this->Parser = new TemplateParser();
+            $this->Parser = new TemplateParser(parent::php()->getCurrentRegistrations());
         }
 
         public function resolveUrl($domainUrl, $rootUrl, $pageUrl) {
