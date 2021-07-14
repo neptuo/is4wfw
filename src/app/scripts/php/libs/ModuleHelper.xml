@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <comment>
+    Knihovna pro manipulaci s moduly.
+  </comment>
+  <fulltag>
+    <name>use</name>
+    <function>use</function>
+    <attribute>
+      <name>id</name>
+      <type>string</type>
+      <required />
+      <comment>Id modulu.</comment>
+    </attribute>
+    <comment>
+      Vybere modul podle id pro další práci s ním (uvnitř těla).
+    </comment>
+  </fulltag>
+  <fulltag>
+    <name>views</name>
+    <function>views</function>
+    <attribute>
+      <name>path</name>
+      <type>string</type>
+      <required />
+      <comment>Relativní cesta uvnitř views složky modulu.</comment>
+    </attribute>
+    <comment>
+      Vytvoří fyzickou cestu na disku k vybrané složce uvnitř složky views.
+    </comment>
+  </fulltag>
+  <property>
+    <name>views</name>
+    <getFunction>getViewsPath</getFunction>
+    <comment>
+      Vrací složenou cestu uvnitř "module:views" tagu.
+    </comment>
+  </property>
+</taglib>
+

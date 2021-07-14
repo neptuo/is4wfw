@@ -28,6 +28,7 @@
 	<reg prefix="log" class="php.libs.Log" />
 	<reg prefix="login" class="php.libs.Login" />
 	<reg prefix="lang" class="php.libs.Language" />
+	<reg prefix="module" class="php.libs.ModuleHelper" />
 	<reg prefix="p" class="php.libs.Page" />
 	<reg prefix="paging" class="php.libs.Paging" />
 	<reg prefix="params" class="php.libs.Parameters" />
