@@ -410,7 +410,7 @@ table.standart th {
 }
 
 .file-tr th, .dir-list th, .show-lines th, .template-list th, .group-list th, .user-log-list th, .hp-projection-edit th, 
-.references-edit th, table.seasons-list th, table.teams-list th, table.players-list th, table.table th,
+.references-edit th, table.seasons-list th, table.teams-list th, table.players-list th,
 table.match-edit-table th, table.matches-table th, table.match-stats-table th, .system-properties th, .system-notes th,
 .db-connection table th, table.guestbook-list th,
 table.standart th {
@@ -441,6 +441,11 @@ table.match-edit-table td {
 
 table.match-edit-table td {
     padding: 6px 8px;
+}
+
+.table td:last-child {
+    width:1%;
+    white-space:nowrap;
 }
 
 .match-table-score input, .match-table-shoots input, .match-table-penalty input, .match-edit-round input {
@@ -2050,6 +2055,10 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu-4 li.menu-item.li-13 a {
+    background: url('/images/icons/plugin.png') no-repeat 4px center;
+}
+
+.cms-menu-4 li.menu-item.li-14 a {
     background: url('/images/icons/building.png') no-repeat 4px center;
 }
 

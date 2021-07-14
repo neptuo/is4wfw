@@ -36,5 +36,40 @@
       Vrací složenou cestu uvnitř "module:views" tagu.
     </comment>
   </property>
+  <fulltag>
+    <name>list</name>
+    <function>list</function>
+    <comment>
+      Seznam nainstalovaných modulů.
+    </comment>
+  </fulltag>
+  <property>
+    <name>list</name>
+    <getFunction>getList</getFunction>
+    <comment>
+      Vrací ListModel uvnitř "module:list" tagu.
+    </comment>
+  </property>
+  <property>
+    <name>id</name>
+    <getFunction>getId</getFunction>
+    <comment>
+      Vrací id modulu uvnitř "module:list" tagu.
+    </comment>
+  </property>
+  <property>
+    <name>alias</name>
+    <getFunction>getAlias</getFunction>
+    <comment>
+      Vrací alias modulu uvnitř "module:list" tagu.
+    </comment>
+  </property>
+  <property>
+    <name>name</name>
+    <getFunction>getName</getFunction>
+    <comment>
+      Vrací name modulu uvnitř "module:list" tagu.
+    </comment>
+  </property>
 </taglib>
 

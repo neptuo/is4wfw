@@ -50,6 +50,35 @@
 			return $this->currentViews;
 		}
 
+		public function list($template) {
+			$modules = Module::all();
+			
+			$model = new ListModel();
+			$this->pushListModel($model);
+			
+			$model->render();
+			$model->items($modules);
+			$result = $template();
+			
+			$this->popListModel();
+			return $result;
+		}
+
+		public function getList() {
+			return $this->peekListModel();
+		}
+
+		public function getId() {
+			return $this->peekListModel()->data()->id;
+		}
+
+		public function getAlias() {
+			return $this->peekListModel()->data()->alias;
+		}
+
+		public function getName() {
+			return $this->peekListModel()->data()->name;
+		}
     }
 
 ?>

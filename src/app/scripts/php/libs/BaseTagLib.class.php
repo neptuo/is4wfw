@@ -461,7 +461,7 @@
 			$stack->push($model);
         }
 
-        public function peekListModel($createIfNotExists = true) {
+        public function peekListModel($createIfNotExists = true): ListModel {
             $model = null;
             $stack = self::getLocalModelStack("listModels", false);
             if ($stack != null) {

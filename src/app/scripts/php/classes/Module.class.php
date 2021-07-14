@@ -54,11 +54,13 @@
 
         public $id;
         public $alias;
+        public $name;
 
-        public function __construct($id, $alias)
+        public function __construct($id, $alias, $name)
         {
             $this->id = $id;
             $this->alias = $alias;
+            $this->name = $name;
         }
 
         public function getLibsPath() {
@@ -89,7 +91,7 @@
             if (file_exists($path)) {
                 $xml = new SimpleXMLElement(file_get_contents($path));
                 foreach ($xml->module as $module) {
-                    $code->addLine("new Module('" . $module->id . "', '" . $module->alias . "'),", true);
+                    $code->addLine("new Module('" . $module->id . "', '" . $module->alias . "', '" . $module->name . "'),", true);
                 }
             }
 
