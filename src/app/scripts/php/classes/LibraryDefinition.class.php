@@ -1,6 +1,7 @@
 <?php
 
     require_once("TemplateAttributeCollection.class.php");
+    require_once("LibraryLoader.class.php");
 
     class LibraryDefinition {
         private $prefix;
@@ -207,7 +208,7 @@
     class LibraryCollection {
         private $storage = [];
 
-        public function add(string $prefix, string $xmlPath) {
+        public function add(string $prefix, string $xmlPath): LibraryDefinition {
             return $this->storage[$prefix] = new LibraryDefinition($prefix, $xmlPath);
         }
 
@@ -215,7 +216,7 @@
             unset($this->storage[$prefix]);
         }
 
-        public function exists(string $prefix) {
+        public function exists(string $prefix): bool {
             return array_key_exists($prefix, $this->storage);
         }
 
@@ -236,7 +237,7 @@
             throw new Exception("Prefix '$prefix' not registered.");
         }
 
-        public function getPrefixes() {
+        public function getPrefixes(): array {
             return array_keys($this->storage);
         }
     }
@@ -245,10 +246,12 @@
         private $isReadOnly = false;
 
         public function __construct($xmlPath, $lock = true) {
+            $loader = new LibraryLoader();
+
             $xml = new SimpleXMLElement($xmlPath);
             foreach ($xml->reg as $reg) {
                 $attrs = $reg->attributes();
-                $this->add((string)$attrs['prefix'], APP_SCRIPTS_PATH . str_replace(".", "/", (string)$attrs['class']) . ".xml");
+                $this->add((string)$attrs['prefix'], $loader->getXmlPath((string)$attrs['class']));
             }
 
             $this->isReadOnly = $lock;
@@ -260,9 +263,9 @@
             }
         }
 
-        public function add(string $prefix, string $xmlPath) {
+        public function add(string $prefix, string $xmlPath): LibraryDefinition {
             $this->ensureWriteable();
-            parent::add($prefix, $xmlPath);
+            return parent::add($prefix, $xmlPath);
         }
         
         public function remove(string $prefix) {

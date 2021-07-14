@@ -11,6 +11,7 @@
         protected $Code = null;
         protected $TemplateCache = null;
         protected $libraries;
+        protected $libraryLoader;
         protected $defaultRegistrations;
         
         // Current custom tag attributes.
@@ -72,6 +73,7 @@
         public function parse($content, $keys) {
             $this->Code = new CodeWriter();
             $this->libraries = new AutoLibraryCollection(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'), false);
+            $this->libraryLoader = new LibraryLoader();
             return $this->parseInternal($content, 'compile', $keys);
         }
 
@@ -173,7 +175,7 @@
                 $uniqueIdentifier = $this->generateRandomString();
                 if ($isFullTag) {
                     if ($object[0] == "php" && $object[1] == "using") {
-                        $xmlPath = APP_SCRIPTS_PATH . str_replace(".", "/", $attributes->Attributes["class"]["value"]) . ".xml";
+                        $xmlPath = $this->libraryLoader->getXmlPath($attributes->Attributes["class"]["value"]);
                         $this->libraries->add($attributes->Attributes["prefix"]["value"], $xmlPath);
                     }
 
@@ -227,7 +229,7 @@
                     }
                     
                     if ($object[0] == "php" && $object[1] == "register") {
-                        $xmlPath = APP_SCRIPTS_PATH . str_replace(".", "/", $attributes->Attributes["classPath"]["value"]) . ".xml";
+                        $xmlPath = $this->libraryLoader->getXmlPath($attributes->Attributes["classPath"]["value"]);
                         $this->libraries->add($attributes->Attributes["tagPrefix"]["value"], $xmlPath);
                     } else if ($object[0] == "php" && $object[1] == "unregister") {
                         $this->libraries->remove($attributes->Attributes["tagPrefix"]["value"]);

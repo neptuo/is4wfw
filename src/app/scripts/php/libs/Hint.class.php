@@ -3,6 +3,7 @@
     require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/BaseGrid.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Module.class.php");
 
     /**
      * 
@@ -15,8 +16,11 @@
      */  
     class Hint extends BaseTagLib {
 
+        private $libraryLoader;
+
         public function __construct() {
-            self::setLocalizationBundle("hint");
+            $this->libraryLoader = new LibraryLoader();
+            $this->setLocalizationBundle("hint");
         }
 
         /**
@@ -31,20 +35,11 @@
          *
          */                                    
         public function showHintForLib($classPath = false, $useFrames = false, $showMsg = false) {
-            global $phpObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
+
+            $xmlPath = $this->libraryLoader->getXmlPath($classPath);
             
-            $cpArray = StringUtils::explode($classPath, '.');
-            $xmlPath = APP_SCRIPTS_PATH;
-            for ($i = 0; $i < count($cpArray); $i ++) {
-                if($i < count($cpArray) - 1) {
-                    $xmlPath .= $cpArray[$i] . '/';
-                } else {
-                    $xmlPath .= $cpArray[$i] . '.xml';
-                }
-            }
-                
             if (is_file($xmlPath)) {
                 $xml = new SimpleXMLElement(file_get_contents($xmlPath));
                 
@@ -466,61 +461,6 @@
             }
         }
 
-        private $libraries = [
-            "php.libs.AdminUi",
-            "php.libs.Article",
-            "php.libs.BootstrapUi",
-            "php.libs.Counter",
-            "php.libs.CustomForm",
-            "php.libs.CustomEntity",
-            "php.libs.CustomEntityAdmin",
-            "php.libs.Database",
-            "php.libs.Editor",
-            "php.libs.Email",
-            "php.libs.ErrorHandler",
-            "php.libs.File",
-            "php.libs.FileAdmin",
-            "php.libs.FileUrl",
-            "php.libs.Filter",
-            "php.libs.FontAwesome",
-            "php.libs.Google",
-            "php.libs.Guestbook",
-            "php.libs.Hint",
-            "php.libs.hp.Hotproject",
-            "php.libs.Image",
-            "php.libs.Inquiry",
-            "php.libs.Js",
-            "php.libs.Json",
-            "php.libs.Language",
-            "php.libs.Listing",
-            "php.libs.Localization",
-            "php.libs.Log",
-            "php.libs.Login",
-            "php.libs.Menu",
-            "php.libs.Page",
-            "php.libs.PageNG",
-            "php.libs.Paging",
-            "php.libs.Parameters",
-            "php.libs.PhpRuntime",
-            "php.libs.Post",
-            "php.libs.Router",
-            "php.libs.QueryString",
-            "php.libs.Session",
-            "php.libs.Sort",
-            "php.libs.Sport",
-            "php.libs.System",
-            "php.libs.Template",
-            "php.libs.TemplateGroup",
-            "php.libs.User",
-            "php.libs.Ui",
-            "php.libs.Utilities",
-            "php.libs.Validation",
-            "php.libs.Variable",
-            "php.libs.View",
-            "php.libs.Web",
-            "php.libs.WebProject"
-        ];
-            
         /**
          *
          *    Generates form for select taglib
@@ -540,18 +480,16 @@
             }
 
             $options = "";
-            foreach ($this->libraries as $library) {
+            foreach ($this->libraryLoader->all() as $library) {
                 $options .= "<option value='$library'" . ($_SESSION['select-class-path'] == $library ? "selected='selected'" : "") . ">$library</option>";
             }
 
-            
             $return .= ''
             .'<div class="select-class-path">'
                 .'<form name="select-class-path" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="auto-submit">'
                     .'<label for="select-class-path-select">'.$rb->get('select-class-path.label').':</label> '
                     .'<select id="select-class-path-select" name="select-class-path-select">'
                         . $options
-                        .'<option value="php.libs.Cookie"'.($_SESSION['select-class-path'] == 'php.libs.Cookie' ? 'selected="selected"' : '').'>php.libs.Cookie</option>'
                     .'</select> '
                     .'<input type="submit" name="select-class-path-submit" value="'.$rb->get('select-class-path.submit').'" />'
                 .'</form>'

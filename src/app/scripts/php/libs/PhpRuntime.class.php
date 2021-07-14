@@ -7,6 +7,7 @@
     require_once("Login.class.php");
     require_once("System.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/LibraryDefinition.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/LibraryLoader.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateAttributeCollection.class.php");
 
     /**
@@ -67,6 +68,7 @@
         ];
 
         private $libraries;
+        private $libraryLoader;
                                                             
         /**
          *
@@ -80,9 +82,10 @@
             $GLOBALS['loginObject'] = new Login();
             $GLOBALS['sysObject'] = new System();
 
+            $this->libraryLoader = new LibraryLoader();
             $this->libraries = new LibraryCollection();
             foreach ($this->defaultRegistrations as $prefix => $classPath) {
-                $this->libraries->add($prefix, APP_SCRIPTS_PATH . $this->parseClassPath($classPath) . ".xml");
+                $this->libraries->add($prefix, $this->libraryLoader->getXmlPath($classPath));
             }
             
             set_error_handler("ErrorHandler::errorHandler");
@@ -98,46 +101,41 @@
             return $this->XmlStorage[$path];
         }
 
+        private function addInstanceToCounter($classPath) {
+            if (array_key_exists($classPath, $this->instanceCounter)) {
+                $this->instanceCounter[$classPath] ++;
+            } else {
+                $this->instanceCounter[$classPath] = 1;
+            }
+        }
+
         /**
          *
          *    Registers tag library.
          *
          */                                                
         public function register($tagPrefix, $classPath, $params = []) {
-            $classJPath = $classPath;
             if (!$this->libraries->exists($tagPrefix)) {
-                if ($this->checkIfClassExists($tagPrefix, $classPath)) {
-                    $classArray = StringUtils::explode($classPath, '.');
-                    $classDir = "";
-                    for ($i = 0; $i < count($classArray) - 1; $i ++) {
-                        $classDir .= $classArray[$i];
-                        if($i < (count($classArray) - 2)) {
-                            $classDir .= ".";
-                        }
-                    }
-
-                    $className = $classArray[count($classArray) - 1];
-                    $classPath = $this->parseClassPath($classPath);
-
-                    require_once(APP_SCRIPTS_PATH . $classPath . ".class.php");
+                $codePath = $this->libraryLoader->getCodePath($classPath);
+                if (is_file($codePath)) {
+                    require_once($codePath);
                     
-                    if ($this->isCountOfInstances($className, $classDir, $classPath)) {
+                    $xmlPath = $this->libraryLoader->getXmlPath($classPath);
+                    $library = $this->libraries->add($tagPrefix, $xmlPath);
+                    if ($this->isCountOfInstances($classPath, $library)) {
+                        $className = $this->libraryLoader->getClassName($classPath);
                         $GLOBALS[$tagPrefix . "Object"] = new $className($tagPrefix, $params);
-                        if(array_key_exists($classJPath, $this->instanceCounter)) {
-                            $this->instanceCounter[$classJPath] ++;
-                        } else {
-                            $this->instanceCounter[$classJPath] = 1;
-                        }
+                        $this->addInstanceToCounter($classPath);
 
-                        $library = $this->libraries->add($tagPrefix, APP_SCRIPTS_PATH . $classPath . ".xml");
                         if ($library->isDisposable()) {
                             $this->disposables[] = $tagPrefix;
                         }
                     } else {
-                        return $this->getError('Too much instances of tag lib! [' . $classJPath . ']');
+                        $this->libraries->remove($tagPrefix);
+                        return $this->getError('Too much instances of tag lib! [' . $classPath . ']');
                     }
                 } else {
-                    return $this->getError('This class does not exist "' . $classPath . '".');
+                    return $this->getError('This class does not exist "' . $codePath . '".');
                 }
             } else {
                 return $this->getError('This tag prefix already used! [' . $tagPrefix . ']');
@@ -153,7 +151,6 @@
          */ 
         public function unregister($tagPrefix) {
             if ($this->libraries->exists($tagPrefix) && !array_key_exists($tagPrefix, $this->defaultRegistrations)) {
-                
                 $object = ${$tagPrefix."Object"};
                 if (array_key_exists($tagPrefix, $this->disposables)) {
                     $object->dispose();
@@ -166,35 +163,6 @@
             }
             
             return "";
-        }
-        
-        /**
-         *
-         *    Check if passed string is valid class path.
-         *    
-         *    @param    classPath path to required class
-         *    @return true of class existes, false other wise
-         *
-         */                                     
-        private function checkIfClassExists($tagPrefix, $classPath) {
-            $path = APP_SCRIPTS_PATH . $this->parseClassPath($classPath) . ".class.php";
-            if (is_file($path)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        
-        /**
-         *
-         *    Parse string to array separated by '/'
-         *    
-         *    @return array with directory names                    
-         *
-         */                                     
-        private function parseClassPath($classPath) {
-            $classPath = str_replace(".", "/", $classPath);
-            return $classPath;
         }
         
         /**
@@ -243,41 +211,19 @@
         public function isAnyProperty($tagPrefix) {
             return $this->libraries->get($tagPrefix)->isAnyProperty();
         }
-        
-        /**
-         *
-         *    Compare actual count and max count for passed class.
-         *    Return true if max count is "*" or actual count is lower than max,
-         *    false otherwise.
-         *    
-         *    @param    className name of class
-         *    @param    dir where tu find class
-         *    
-         *    @return true if max count is "*" or actual count is lower than max, false otherwise.                                                                                
-         *
-         */                                     
-        private function isCountOfInstances($className, $classDir, $classPath) {
+                                           
+        private function isCountOfInstances($classPath, LibraryDefinition $library) {
             $count = 0;
-
-            if (array_key_exists($classDir.".".$className, $this->instanceCounter)) {
-                $count = $this->instanceCounter[$classDir.".".$className];
+            if (array_key_exists($classPath, $this->instanceCounter)) {
+                $count = $this->instanceCounter[$classPath];
             }
             
-            $xmlPath = $classPath . ".xml";
-            if (is_file(APP_SCRIPTS_PATH . $xmlPath)) {
-                $xml = $this->getXml(APP_SCRIPTS_PATH . $xmlPath);
-
-                if (!isset($xml->count) || (string)$xml->count == "*") {
-                    return true;
-                } else if ((int)$xml->count > $count) {
-                    return true;
-                } else {
-                    return false;
-                }
+            $xml = $library->getXml();
+            if (!isset($xml->count) || (string)$xml->count == "*") {
+                return true;
+            } else if ((int)$xml->count > $count) {
+                return true;
             } else {
-                $str = "Xml library definition doesn't exists! [".$xmlPath."]";
-                trigger_error($str , E_USER_WARNING);
-                echo "<h4 class=\"error\">".$str."</h4>";
                 return false;
             }
         }

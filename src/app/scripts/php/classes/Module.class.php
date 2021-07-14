@@ -5,7 +5,7 @@
     class Module {
         private static $modules = null;
 
-        public static function all() {
+        public static function all(): array {
             if (Module::$modules == null) {
                 require_once(MODULES_PATH . ModuleGenerator::loaderFileName);
                 Module::$modules = __loadModules();
@@ -22,11 +22,29 @@
 
             return null;
         }
+
+        public static function findByAlias($alias): ?Module {
+            $modules = array_filter(Module::all(), function ($module) use ($alias) { return $module->alias == $alias; });
+            if (count($modules) == 1) {
+                return $modules[0];
+            }
+
+            return null;
+        }
         
         public static function getById($id): Module {
             $module = Module::findById($id);
             if ($module == null) {
                 throw new Exception("Missing module '$id'.");
+            }
+
+            return $module;
+        }
+        
+        public static function getByAlias($alias): Module {
+            $module = Module::findByAlias($alias);
+            if ($module == null) {
+                throw new Exception("Missing module with alias '$alias'.");
             }
 
             return $module;
@@ -41,6 +59,10 @@
         {
             $this->id = $id;
             $this->alias = $alias;
+        }
+
+        public function getLibsPath() {
+            return MODULES_PATH . $this->alias . "/libs/";
         }
 
         public function getViewsPath() {

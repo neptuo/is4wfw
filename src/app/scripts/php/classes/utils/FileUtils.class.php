@@ -112,6 +112,19 @@
 
             return $path1 . $separator . $path2;
         }
+
+        public static function searchDirectoryRecursive($directory, $fileExtension) {
+            $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
+            $result = array();
+            foreach($iterator as $file) {
+                $path = $file->getPathName();
+                if (StringUtils::endsWith($path, $fileExtension)) {
+                    $result[] = $path;
+                }
+            }
+
+            return $result;
+        }
     }
 
 
