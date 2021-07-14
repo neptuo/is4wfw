@@ -79,6 +79,12 @@
 		public function getName() {
 			return $this->peekListModel()->data()->name;
 		}
+
+		public function rebuildInitializers($template) {
+			ModuleGenerator::loader();
+			ModuleGenerator::postInit();
+			$template();
+		}
     }
 
 ?>

@@ -71,5 +71,14 @@
       Vrací name modulu uvnitř "module:list" tagu.
     </comment>
   </property>
+  <fulltag>
+    <name>rebuildInitializers</name>
+    <function>rebuildInitializers</function>
+    <lookless />
+    <comment>
+      Přegeneruje všechny skripty spojené s moduly.
+      Vykoná tělo, pokud se vše povede.
+    </comment>
+  </fulltag>
 </taglib>
 

@@ -161,7 +161,7 @@ body {
     display: inline-block;
 }
 
-form {
+.frame form {
     margin: 0;
     display: inline;
 }
