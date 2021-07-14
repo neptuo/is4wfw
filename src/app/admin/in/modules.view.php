@@ -8,6 +8,11 @@
     <div class="m-md-2 m-lg-4">
         <bs:card title="Modules">
             <module:list>
+                <ui:empty items="module:list">
+                    <bs:alert color="warning">
+                        No modules installed...
+                    </bs:alert>
+                </ui:empty>
                 <ui:grid class="table table-striped" thead-class="table-dark" items="module:list">
                     <ui:column header="Alias" value="module:alias" />
                     <ui:column header="Id" value="module:id" />
