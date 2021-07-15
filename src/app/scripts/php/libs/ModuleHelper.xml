@@ -37,6 +37,26 @@
     </comment>
   </property>
   <fulltag>
+    <name>assets</name>
+    <function>assets</function>
+    <attribute>
+      <name>path</name>
+      <type>string</type>
+      <required />
+      <comment>Relativní cesta uvnitř assets složky modulu.</comment>
+    </attribute>
+    <comment>
+      Vytvoří virtuální URL k vybrané složce uvnitř složky assets.
+    </comment>
+  </fulltag>
+  <property>
+    <name>assets</name>
+    <getFunction>getAssetsUrl</getFunction>
+    <comment>
+      Vrací složenou URL uvnitř "module:assets" tagu.
+    </comment>
+  </property>
+  <fulltag>
     <name>list</name>
     <function>list</function>
     <comment>

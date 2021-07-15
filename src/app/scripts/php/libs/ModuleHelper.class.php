@@ -50,6 +50,23 @@
 			return $this->currentViews;
 		}
 
+		public function assets($template, $path) {
+			$this->ensureCurrent();
+
+			$lastAssets = $this->currentAssets;
+
+			$this->currentAssets = FileUtils::combinePath($this->current->getAssetsPath(), $path);
+			$result = $template();
+
+			$this->currentViews = $lastAssets;
+
+			return $result;
+		}
+
+		public function getAssetsUrl() {
+			return $this->currentAssets;
+		}
+
 		public function list($template) {
 			$modules = Module::all();
 			

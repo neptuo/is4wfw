@@ -74,6 +74,10 @@
         public function getViewsPath() {
             return MODULES_PATH . $this->alias . "/views/";
         }
+
+        public function getAssetsPath() {
+            return "~/assets/" . $this->alias . "/";
+        }
     }
 
     class ModuleXml {
