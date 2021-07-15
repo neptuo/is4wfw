@@ -16,10 +16,13 @@
 		private $virtualUrlParts;
 		private $virtualUrlPartsIndex;
 		private $canMatch;
+		private $selectedName;
 		private $selectedTemplate;
 
 		private $pathBuilder;
 		private $routes = [];
+
+		private $useName;
 
 		private function hasMatch() {
 			return $this->selectedTemplate != null;
@@ -32,6 +35,7 @@
 			$this->canMatch = true;
 			$this->pathBuilder = new Stack();
 			$this->selectedTemplate = null;
+			$this->selectedName = null;
 			
 			$template();
 		}
@@ -61,10 +65,12 @@
 			if ($this->canMatch && !$this->hasMatch()) {
 				if ($path == "*" || (empty($path) && count($this->virtualUrlParts) == $this->virtualUrlPartsIndex)) {
 					$this->selectedTemplate = $template;
+					$this->selectedName = $name;
 				} else {
 					$currentPath = $this->virtualUrlParts[$this->virtualUrlPartsIndex];
 					if (strcasecmp($currentPath, $path) == 0 && count($this->virtualUrlParts) == $this->virtualUrlPartsIndex + 1) {
 						$this->selectedTemplate = $template;
+						$this->selectedName = $name;
 					}
 				}
 			}
@@ -88,6 +94,29 @@
 
 		public function setRoute($name, $url) {
 			$this->routes[$name] = $url;
+		}
+
+		public function use($template, $name) {
+			$lastName = $this->useName;
+			$this->useName = $name;
+
+			$result = $template();
+
+			$this->$name = $lastName;
+
+			return $result;
+		}
+
+		public function getName() {
+			return $this->useName;
+		}
+
+		public function getUrl() {
+			return $this->getProperty($this->useName);
+		}
+
+		public function getIsActive() {
+			return $this->useName == $this->selectedName;
 		}
 
 		public function getProperty($name) {

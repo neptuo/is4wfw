@@ -69,9 +69,44 @@
       <comment>URL routy.</comment>
     </attribute>
     <comment>
-      Declare pojmenované URL/routy pro další použití.
+      Definice pojmenované URL/routy pro další použití.
     </comment>
   </tag>
+  <fulltag>
+    <name>use</name>
+    <function>use</function>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název routy.</comment>
+    </attribute>
+    <comment>
+      Výběr routy. V těle jsou pak dostupné detaily o ní "route:name", "route:url", "route:isActive".
+    </comment>
+  </fulltag>
+  <property>
+    <name>name</name>
+    <getFunction>getName</getFunction>
+    <comment>
+      Vrací název routy uvnitř "route:use" tagu.
+    </comment>
+  </property>
+  <property>
+    <name>url</name>
+    <getFunction>getUrl</getFunction>
+    <comment>
+      Vrací URL routy uvnitř "route:use" tagu.
+    </comment>
+  </property>
+  <property>
+    <name>isActive</name>
+    <getFunction>getIsActive</getFunction>
+    <comment>
+      Vrací true/false zda je routa aktivní uvnitř "route:use" tagu.
+      Pouze po vyhodnocení "route:router".
+    </comment>
+  </property>
   <anyProperty>
     <comment>
       Vygeneruje URL pro pojmenovanou routu.
