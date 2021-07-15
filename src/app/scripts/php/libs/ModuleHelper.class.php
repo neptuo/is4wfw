@@ -85,6 +85,24 @@
 			ModuleGenerator::postInit();
 			$template();
 		}
+
+		public function delete($template, $id) {
+			$module = Module::findById($id);
+			if ($module) {
+				$xml = ModuleXml::read();
+				for ($i=0; $i < count($xml); $i++) { 
+					if ($xml->module[$i]->id == $id) {
+						unset($xml->module[$i]);
+						break;
+					}
+				}
+
+				ModuleXml::write($xml);
+				FileUtils::removeDirectory($module->getRootPath());
+
+				$this->rebuildInitializers($template);
+			}
+		}
     }
 
 ?>

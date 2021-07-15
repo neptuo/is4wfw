@@ -3,6 +3,11 @@
         <web:redirectToSelf />
     </module:rebuildInitializers>
 </web:condition>
+<web:condition when="post:delete">
+    <module:delete id="post:id">
+        <web:redirectToSelf />
+    </module:delete>
+</web:condition>
 
 <v:template src="~/templates/in-template.view">
     <div class="m-md-2 m-lg-4">
@@ -18,7 +23,12 @@
                     <ui:column header="Id" value="module:id" />
                     <ui:column header="Name" value="module:name" />
                     <ui:columnTemplate>
-                        <fa5:icon name="trash-alt" class="text-danger" />
+                        <ui:form class="d-inline">
+                            <input type="hidden" name="id" value="<web:out text="module:id" />" />
+                            <button name="delete" value="delete" class="icon-button confirm" title="Delete module">
+                                <fa5:icon name="trash-alt" class="text-danger" />
+                            </button>
+                        </ui:form>
                     </ui:columnTemplate>
                 </ui:grid>
             </module:list>

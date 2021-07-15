@@ -17,7 +17,7 @@
         public static function findById($id): ?Module {
             $modules = array_filter(Module::all(), function ($module) use ($id) { return $module->id == $id; });
             if (count($modules) == 1) {
-                return $modules[0];
+                return $modules[ArrayUtils::firstKey($modules)];
             }
 
             return null;
@@ -63,12 +63,35 @@
             $this->name = $name;
         }
 
+        public function getRootPath() {
+            return MODULES_PATH . $this->alias . "/";
+        }
+
         public function getLibsPath() {
             return MODULES_PATH . $this->alias . "/libs/";
         }
 
         public function getViewsPath() {
             return MODULES_PATH . $this->alias . "/views/";
+        }
+    }
+
+    class ModuleXml {
+        public static function filePath() {
+            return USER_PATH . "modules.xml";
+        }
+
+        public static function read() {
+            $path = ModuleXml::filePath();
+            if (file_exists($path)) {
+                return new SimpleXMLElement(file_get_contents($path));
+            }
+
+            return new SimpleXMLElement("<modules></modules>");
+        }
+
+        public static function write(SimpleXMLElement $xml) {
+            file_put_contents(ModuleXml::filePath(), $xml->asXML());
         }
     }
 
@@ -87,12 +110,9 @@
             $code->addLine("return [");
             $code->addIndent();
             
-            $path = USER_PATH . "modules.xml";
-            if (file_exists($path)) {
-                $xml = new SimpleXMLElement(file_get_contents($path));
-                foreach ($xml->module as $module) {
-                    $code->addLine("new Module('" . $module->id . "', '" . $module->alias . "', '" . $module->name . "'),", true);
-                }
+            $xml = ModuleXml::read();
+            foreach ($xml->module as $module) {
+                $code->addLine("new Module('" . $module->id . "', '" . $module->alias . "', '" . $module->name . "'),", true);
             }
 
             $code->removeIndent();

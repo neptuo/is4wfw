@@ -80,5 +80,20 @@
       Vykoná tělo, pokud se vše povede.
     </comment>
   </fulltag>
+  <fulltag>
+    <name>delete</name>
+    <function>delete</function>
+    <lookless />
+    <attribute>
+      <name>id</name>
+      <type>string</type>
+      <required />
+      <comment>Id modulu.</comment>
+    </attribute>
+    <comment>
+      Smaže modul.
+      Vykoná tělo, pokud se vše povede.
+    </comment>
+  </fulltag>
 </taglib>
 

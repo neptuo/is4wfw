@@ -68,6 +68,11 @@ body {
     box-shadow: 0 0 0 0.2rem rgb(4 96 28 / 50%);
 }
 
+.icon-button {
+    background: transparent;
+    border: none;
+}
+
 .navbar {
     min-height: 56px;
 }
