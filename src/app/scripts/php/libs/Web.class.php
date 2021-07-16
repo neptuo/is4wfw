@@ -2513,7 +2513,15 @@
             $virtualUrl = $this->getVirtualUrl();
             $fullUrl = UrlResolver::combinePath($domainUrl, UrlResolver::combinePath($rootUrl, $virtualUrl));
 
+            if ($this->runHook(WebHook::ErrorPageBeforeForward, ["code" => $errorCode])) {
+                return;
+            }
+
             if (self::processForwards(self::findForward(array($errorCode, 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'))) {
+                return;
+            }
+
+            if ($this->runHook(WebHook::ErrorPageAfterForward, ["code" => $errorCode])) {
                 return;
             }
 
@@ -2523,24 +2531,29 @@
                 $path = APP_PATH . $relativePath;
             }
             
-            if (file_exists($path)) {
-                header("HTTP/1.1 404 Not Found");
-                echo file_get_contents($path);
-                parent::close();
-            }
-
             if ($errorCode == 404) {
                 header("HTTP/1.1 404 Not Found");
-                echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exist.</p>';
-                parent::close();
+                if (file_exists($path)) {
+                    echo file_get_contents($path);
+                } else {
+                    echo '<h1 class="error">Error 404</h1><p class="error">Requested page doesn\'t exist.</p>';
+                }
             } elseif ($errorCode == 403) {
                 header("HTTP/1.1 403 Forbidden");
-                echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
-                parent::close();
+                if (file_exists($path)) {
+                    echo file_get_contents($path);
+                } else {
+                    echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
+                }
             } else {
-                echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
-                parent::close();
+                if (file_exists($path)) {
+                    echo file_get_contents($path);
+                } else {
+                    echo '<h1 class="error">Error</h1><p class="error">Sorry, some error occurs.</p>';
+                }
             }
+
+            parent::close();
         }
         
         public function getPageId() {
@@ -2758,6 +2771,39 @@
         public function getLastPageId() {
             return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['id'];
         }
+
+        private $hooks = [];
+
+        private function runHook($name, $params) {
+            if (array_key_exists($name, $this->hooks)) {
+                foreach ($this->hooks[$name] as $handler) {
+                    if ($handler($params)) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public function addHook($name, $handler) {
+            if (!array_key_exists($name, $this->hooks)) {
+                $this->hooks[$name] = [];
+            }
+
+            $this->hooks[$name][] = $handler;
+        }
+    }
+
+    class WebHook {
+
+        // A hook executed when generating error page, but after processing forwards.
+        // Parameters contains status code (404, 403, etc).
+        public const ErrorPageBeforeForward = "errorPage-beforeForward";
+        
+        // A hook executed when generating error page, but after processing forwards.
+        // Parameters contains status code (404, 403, etc).
+        public const ErrorPageAfterForward = "errorPage-afterForward";
     }
 
 ?>
