@@ -1,82 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib>
   <comment>
-    Knihovna pro routování URL adres uvnitř šablony.
+    Knihovna pro evidenci generování URL adres.
   </comment>
-  <fulltag>
-    <name>router</name>
-    <function>router</function>
-    <lookless />
-    <comment>
-      Router...
-    </comment>
-  </fulltag>
-  <fulltag>
-    <name>directory</name>
-    <function>directory</function>
-    <identifiable />
-    <attribute>
-      <name>path</name>
-      <type>string</type>
-      <required />
-      <comment>Název "složky".</comment>
-    </attribute>
-    <comment>
-      Složka v URL routování.
-      Není koncovým uzlem. Vyžaduje soubor uvnitř.
-    </comment>
-  </fulltag>
-  <fulltag>
-    <name>file</name>
-    <function>file</function>
-    <identifiable />
-    <attribute>
-      <name>path</name>
-      <type>string</type>
-      <required />
-      <comment>Název "souboru". Wildcard "*" slouží jako fallback.</comment>
-    </attribute>
-    <attribute>
-      <name>name</name>
-      <type>string</type>
-      <comment>Název routy pro generování odkazů.</comment>
-    </attribute>
-    <comment>
-      Koncový/spustitelný uzel routování.
-    </comment>
-  </fulltag>
-  <tag>
-    <name>render</name>
-    <function>render</function>
-    <comment>
-      Vykreslí vybranou routu pomocí "route:router".
-    </comment>
-  </tag>
-  <property>
-    <name>isBuild</name>
-    <getFunction>getIsBuild</getFunction>
-    <comment>
-      Vrací true/false zda je aktuálně build fáze routeru.
-    </comment>
-  </property>
-  <property>
-    <name>isEvaluate</name>
-    <getFunction>getIsEvaluate</getFunction>
-    <comment>
-      Vrací true/false zda je aktuálně evaluate fáze routeru.
-    </comment>
-  </property>
-  <property>
-    <name>isRender</name>
-    <getFunction>getIsRender</getFunction>
-    <comment>
-      Vrací true/false zda je aktuálně render fáze routeru.
-    </comment>
-  </property>
-  
   <tag>
     <name>declare</name>
-    <function>setRoute</function>
+    <function>set</function>
     <lookless />
     <attribute>
       <name>name</name>
