@@ -33,7 +33,7 @@ require_once("Template.class.php");
             }
             
             $templateContent = file_get_contents($filePath);
-            $keys = ["templatedirectories", sha1($templateContent)];
+            $keys = ["templatedirectories", $fileName . "." . sha1($templateContent)];
 
             $parsedTemplate = $this->getParsedTemplate($keys);
 			if ($parsedTemplate == null) {
