@@ -13,7 +13,7 @@
 	 */
 	class TestLibrary extends BaseTagLib {
 
-        public function provideAttributes(string $a, int $b = 0, $tagPrefix, $tagName, $tagParameters) {
+        public function provideAttributes(string $identifier, string $a, int $b = 0, $tagPrefix, $tagName, $tagParameters) {
             return $tagParameters;
         }
 
@@ -60,6 +60,10 @@
             }
 
             return $tagParameters;
+        }
+
+        public function dispose() {
+            // noop
         }
     }
 

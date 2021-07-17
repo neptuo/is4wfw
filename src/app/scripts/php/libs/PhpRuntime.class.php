@@ -24,6 +24,7 @@
     class PhpRuntime extends BaseTagLib {
         
         public static $ParamsName = 'params';
+        public static $IdentifiableName = 'identifiable';
         public static $FullTagTemplateName = 'full:content';
         public static $DecoratorExecuteName = 'decorator:execute';
     

@@ -198,7 +198,7 @@
                         $content = "function(" . '$' . "tagsToParse = null) { return " . '$' . "this->$templateMethodName(" . '$' . "tagsToParse); }";
                         $hasBodyTemplate = true;
                         
-                        if (!$this->sortFullAttributes($object[0], $object[1], $attributes, $content)) {
+                        if (!$this->sortFullAttributes($object[0], $object[1], $attributes, $content, $uniqueIdentifier)) {
                             return "";
                         }
                     } else if ($library->isAnyFullTag($object[1])) {
@@ -218,7 +218,7 @@
                 } else {
                     if ($isRegisteredTag) {
                         $functionName = $library->getFuncToTag($object[1]);
-                        if (!$this->sortAttributes($object[0], $object[1], $attributes)) {
+                        if (!$this->sortAttributes($object[0], $object[1], $attributes, $uniqueIdentifier)) {
                             return "";
                         }
                     } else if ($library->isAnyTag($object[1])) {
@@ -262,10 +262,12 @@
         protected function generateDecorators(string $tagPrefix, string $tagName, TemplateAttributeCollection $tagAttributes) {
             foreach ($tagAttributes->Decorators as $prefix => $decorators) {
                 foreach ($decorators as $decorator) {
+                    $identifier = $this->generateRandomString();
+
                     $attributes = new TemplateAttributeCollection();
                     $attributes->Attributes = $decorator["attributes"];
 
-                    if (!$this->sortDecoratorAttributes($prefix, $decorator["function"], $attributes, $tagPrefix, $tagName)) {
+                    if (!$this->sortDecoratorAttributes($prefix, $decorator["function"], $attributes, $tagPrefix, $tagName, $identifier)) {
                         return false;
                     }
 
@@ -278,7 +280,6 @@
                         $defaultReturnValue = '$parameters';
                     }
 
-                    $identifier = $this->generateRandomString();
                     $call = $this->generateFunctionOutput($identifier, $prefix, null, false, $decorator["function"], $attributes, false, $defaultReturnValue);
                     if (!$tagAttributes->HasAttributeModifyingDecorators && $decorator["providesFullTagBody"]) {
                         $tagAttributes->Attributes[PhpRuntime::$FullTagTemplateName] = array("value" => $call . "['" . PhpRuntime::$FullTagTemplateName . "']", "type" => "eval");
@@ -641,12 +642,12 @@
             return $result;
         }
 
-        private function sortAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes): bool {
-            return $this->sortAttributesInternal("tag", $tagPrefix, $tagName, $attributes);
+        private function sortAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes, string $uniqueIdentifier): bool {
+            return $this->sortAttributesInternal("tag", $tagPrefix, $tagName, $attributes, $uniqueIdentifier);
         }
 
-        private function sortFullAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes, string $content): bool {
-            if (!$this->sortAttributesInternal("fulltag", $tagPrefix, $tagName, $attributes)) {
+        private function sortFullAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes, string $content, string $uniqueIdentifier): bool {
+            if (!$this->sortAttributesInternal("fulltag", $tagPrefix, $tagName, $attributes, $uniqueIdentifier)) {
                 return false;
             }
 
@@ -654,29 +655,33 @@
             return true;
         }
 
-        private function sortDecoratorAttributes(string $decoratorPrefix, string $decoratorFunctionName, TemplateAttributeCollection $attributes, string $tagPrefix, string $tagName) {
+        private function sortDecoratorAttributes(string $decoratorPrefix, string $decoratorFunctionName, TemplateAttributeCollection $attributes, string $tagPrefix, string $tagName, string $uniqueIdentifier) {
             $xml = $this->libraries->get($decoratorPrefix)->getXml();
             foreach ($xml->decorator as $decorator) {
                 if ($decorator->function == $decoratorFunctionName) {
-                    return $this->sortAttributesForXmlElement($decorator, $attributes, "Decorator on '$tagPrefix:$tagName'");
+                    return $this->sortAttributesForXmlElement($decorator, $attributes, "Decorator on '$tagPrefix:$tagName'", $uniqueIdentifier);
                 }
             }
         }
 
-        private function sortAttributesInternal(string $tagListName, string $tagPrefix, string $tagName, TemplateAttributeCollection $atts): bool {
+        private function sortAttributesInternal(string $tagListName, string $tagPrefix, string $tagName, TemplateAttributeCollection $atts, string $uniqueIdentifier): bool {
             $xml = $this->libraries->get($tagPrefix)->getXml();
             foreach ($xml->{$tagListName} as $tag) {
                 if ($tag->name == $tagName) {
-                    return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName);
+                    return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName, $uniqueIdentifier);
                 }
             }
 
             return false;
         }
         
-        private function sortAttributesForXmlElement(SimpleXMLElement $tag, TemplateAttributeCollection $atts, string $nameForErrorReport) {
+        private function sortAttributesForXmlElement(SimpleXMLElement $tag, TemplateAttributeCollection $atts, string $nameForErrorReport, string $uniqueIdentifier) {
             $processedAtts = array();
             $return = [];
+
+            if ($tag->identifiable) {
+                $return[PhpRuntime::$IdentifiableName] = ['value' => $uniqueIdentifier, 'type' => "raw"];
+            }
 
             for ($i = 0; $i < count($tag->attribute); $i ++) {
                 $isProcessed = false;

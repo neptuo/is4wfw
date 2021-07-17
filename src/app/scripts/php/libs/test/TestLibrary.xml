@@ -6,6 +6,7 @@
   <disposable />
   <decorator>
     <function>provideAttributes</function>
+    <identifiable />
     <attribute>
       <name>a</name>
       <type>string</type>
