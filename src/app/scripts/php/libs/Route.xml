@@ -14,7 +14,7 @@
   <fulltag>
     <name>directory</name>
     <function>directory</function>
-    <lookless />
+    <identifiable />
     <attribute>
       <name>path</name>
       <type>string</type>
@@ -29,7 +29,7 @@
   <fulltag>
     <name>file</name>
     <function>file</function>
-    <lookless />
+    <identifiable />
     <attribute>
       <name>path</name>
       <type>string</type>
@@ -52,6 +52,28 @@
       Vykreslí vybranou routu pomocí "route:router".
     </comment>
   </tag>
+  <property>
+    <name>isBuild</name>
+    <getFunction>getIsBuild</getFunction>
+    <comment>
+      Vrací true/false zda je aktuálně build fáze routeru.
+    </comment>
+  </property>
+  <property>
+    <name>isEvaluate</name>
+    <getFunction>getIsEvaluate</getFunction>
+    <comment>
+      Vrací true/false zda je aktuálně evaluate fáze routeru.
+    </comment>
+  </property>
+  <property>
+    <name>isRender</name>
+    <getFunction>getIsRender</getFunction>
+    <comment>
+      Vrací true/false zda je aktuálně render fáze routeru.
+    </comment>
+  </property>
+  
   <tag>
     <name>declare</name>
     <function>setRoute</function>
