@@ -171,7 +171,7 @@
             return $rules;
         }
 
-        private function listFindFieldsInTemplate($formId, ParsedTemplate $template) {
+        private function listFindFieldsInTemplate($formId, $template) {
             $this->ViewPhase = 1;
             $this->ViewFieldsFound = array();
             $this->ViewFieldsFound[] = array('id', 'number');
