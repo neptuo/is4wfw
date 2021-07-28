@@ -49,5 +49,27 @@
       Odešle email na adresy 'to'. Tělo definuje obsah emailu.
     </comment>
   </fulltag>
+  <tag>
+    <name>attachment</name>
+    <function>attachment</function>
+    <lookless />
+    <attribute>
+      <name>upload</name>
+      <comment>Model uploadované souboru pomocí "ui:filebox".</comment>
+    </attribute>
+    <attribute>
+      <name>fileId</name>
+      <comment>Id souboru z file systemu.</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>Volitelný název souboru.</comment>
+    </attribute>
+    <comment>
+      Připojí do aktuální emailu uvnitř "email:send" přilohu.
+      Pokud není vyplněn ani "fileId", ani "upload", je tiše ignorován.
+    </comment>
+  </tag>
 </taglib>
 
