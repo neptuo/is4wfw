@@ -560,19 +560,23 @@
 					if ($isMulti) {
 						$file = [];
 						for ($i = 0; $i < count($value["name"]); $i++) { 
-							$item = new FileUploadModel();
-							$item->Name = $value["name"][$i];
-							$item->Type = $value["type"][$i];
-							$item->TempName = $value["tmp_name"][$i];
-							$item->Size = $value["size"][$i];
-							$file[] = $item;
+							if ($value["error"][$i] == UPLOAD_ERR_OK) {
+								$item = new FileUploadModel();
+								$item->Name = $value["name"][$i];
+								$item->Type = $value["type"][$i];
+								$item->TempName = $value["tmp_name"][$i];
+								$item->Size = $value["size"][$i];
+								$file[] = $item;
+							}
 						}
 					} else {
-						$file = new FileUploadModel();
-						$file->Name = $value["name"];
-						$file->Type = $value["type"];
-						$file->TempName = $value["tmp_name"];
-						$file->Size = $value["size"];
+						if ($value["error"] == UPLOAD_ERR_OK) {
+							$file = new FileUploadModel();
+							$file->Name = $value["name"];
+							$file->Type = $value["type"];
+							$file->TempName = $value["tmp_name"];
+							$file->Size = $value["size"];
+						}
 					}
 				}
 
