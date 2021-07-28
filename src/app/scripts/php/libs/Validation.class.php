@@ -37,6 +37,38 @@
 			Validator::email($model, $key);
 		}
 
+		public function uploadSize($key, $maxBytes, $maxKiloBytes, $maxMegaBytes) {
+			if (empty($maxBytes)) {
+				$maxBytes = 0;
+			}
+
+			if (!empty($maxKiloBytes)) {
+				$maxBytes += 1024 * $maxKiloBytes;
+			}
+
+			if (!empty($maxMegaBytes)) {
+				$maxBytes += 1024 * 1024 * $maxMegaBytes;
+			}
+
+			if ($maxBytes > 0) {
+				$model = parent::getEditModel();
+				$upload = $model[$key];
+				if ($upload instanceof FileUploadModel) {
+					if ($upload->Size > $maxBytes) {
+						$model->validationMessage($key, "invalidsize");
+					}
+				} else if (is_array($upload)) {
+					foreach ($upload as $item) {
+						if ($item instanceof FileUploadModel) {
+							if ($item->Size > $maxBytes) {
+								$model->validationMessage($key, "invalidsize");
+							}
+						}
+					}
+				}
+            }
+		}
+
 		public function translate($identifier, $message) {
 			$this->translations[$identifier] = $message;
 		}

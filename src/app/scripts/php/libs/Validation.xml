@@ -25,7 +25,7 @@
     </attribute>
     <comment>
       Přidá validační hlášku ke "key".
-      Systémové hodnoty pro "identifier" jsou "required", "unique", "invalid", "mustmatch".
+      Systémové hodnoty pro "identifier" jsou "required", "unique", "invalid", "mustmatch", "invalidsize".
     </comment>
   </tag>
   <tag>
@@ -53,6 +53,36 @@
     </attribute>
     <comment>
       Nastaví email validátor pro klíč "key".
+      Kontroluje hodnotu v modelu.
+    </comment>
+  </tag>
+  <tag>
+    <name>uploadSize</name>
+    <function>uploadSize</function>
+    <attribute>
+      <name>key</name>
+      <required />
+      <type>string</type>
+      <comment>Klíč, který obsahuje soubor/soubory z uploadu.</comment>
+    </attribute>
+    <attribute>
+      <name>maxBytes</name>
+      <type>number</type>
+      <comment>Maximální velikost v bajtech.</comment>
+    </attribute>
+    <attribute>
+      <name>maxKiloBytes</name>
+      <type>number</type>
+      <comment>Maximální velikost v kilo bajtech.</comment>
+    </attribute>
+    <attribute>
+      <name>maxMegaBytes</name>
+      <type>number</type>
+      <comment>Maximální velikost v mega bajtech.</comment>
+    </attribute>
+    <comment>
+      Nastaví validátor na maximálně velikost uploadovaného souboru pro klíč "key".
+      Atributy pro zadání velikost se dají kombinovat. Pokud není ani jeden vyplněný, validátor se ignoruje.
       Kontroluje hodnotu v modelu.
     </comment>
   </tag>
