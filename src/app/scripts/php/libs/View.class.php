@@ -35,7 +35,7 @@
             return $this->getCurrentVirtualUrlWithoutExtension() . ".view";
         }
 
-        private function getVirtualPathKeys($virtualPath) {
+        public function getVirtualPathKeys($virtualPath) {
             $withoutView = (strlen($virtualPath) - 5);
             if (strpos($virtualPath, ".view") == $withoutView) {
                 $virtualPath = substr($virtualPath, 0, $withoutView);
