@@ -7,6 +7,7 @@
 
 <v:title value="is4wfw" />
 <login:init group="web-admins" />
+<login:redirectWhenLogged pageId="~/in/index.view" />
 
 <bs:container class="is4wfw">
     <bs:row vertical="center" class="justify-content-center">
