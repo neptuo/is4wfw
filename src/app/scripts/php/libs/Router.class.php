@@ -3,6 +3,7 @@
 	require_once("BaseTagLib.class.php");
 	require_once("Route.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/UrlResolver.class.php");
 
 	/**
 	 * 
@@ -13,6 +14,8 @@
 	 * 
 	 */
 	class Router extends BaseTagLib {
+
+		private $urlResolver;
 
 		private $routerPhase;
 		private $template;
@@ -25,12 +28,21 @@
 
 		private $pathBuilder;
 
+		public function __construct() {
+			$this->urlResolver = new UrlResolver();
+		}
+
 		public function route(): Route {
 			return $this->autolib("route");
 		}
 
 		private function hasMatch() {
-			return $this->selectedName != null;
+			return $this->selectedName !== null;
+		}
+
+		private function isPathMatched($currentPath, $path) {
+			$parsed = $this->urlResolver->parseSingleUrlPart($path, $currentPath);
+			return strcasecmp($currentPath, $parsed) == 0;
 		}
 
 		public function fromPath($template) {
@@ -59,7 +71,7 @@
 				$wasMatch = $this->hasMatch();
 				if ($this->canMatch) {
 					$currentPath = $this->virtualUrlParts[$this->virtualUrlPartsIndex];
-					if (strcasecmp($currentPath, $path) == 0) {
+					if ($this->isPathMatched($currentPath, $path)) {
 						$this->virtualUrlPartsIndex++;
 						$template();
 						$this->virtualUrlPartsIndex--;
@@ -96,7 +108,7 @@
 						$this->selectedIdentifiers->push($identifier);
 					} else {
 						$currentPath = $this->virtualUrlParts[$this->virtualUrlPartsIndex];
-						if (strcasecmp($currentPath, $path) == 0 && count($this->virtualUrlParts) == $this->virtualUrlPartsIndex + 1) {
+						if ($this->isPathMatched($currentPath, $path) && count($this->virtualUrlParts) == $this->virtualUrlPartsIndex + 1) {
 							$this->selectedName = $name;
 							$this->selectedIdentifiers->push($identifier);
 						}

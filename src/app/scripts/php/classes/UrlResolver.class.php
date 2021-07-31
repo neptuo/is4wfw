@@ -15,14 +15,9 @@
         private $PROP_RE = '(([a-zA-Z0-9-_]+:[a-zA-Z0-9-_.]+))';
         private $PropertyUse = '';
         private $PropertyAttr = '';
-        private $Parser;
         private $WebProject = array();
         private $Language = array();
         private $PagesId = array();
-
-        public function __construct() {
-            $this->Parser = new TemplateParser(parent::php()->getCurrentRegistrations());
-        }
 
         public function resolveUrl($domainUrl, $rootUrl, $pageUrl) {
             //echo $url;

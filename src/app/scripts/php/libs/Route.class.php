@@ -50,10 +50,19 @@
 
 		public function getProperty($name) {
 			if (array_key_exists($name, $this->routes)) {
-				return $this->routes[$name];
+				return $this->parseDynamic($this->routes[$name]);
 			}
 
 			throw new Exception("Named route '$name' not found.");
+		}
+
+		private function parseDynamic($route) {
+			$parts = StringUtils::explode($route, "/");
+			foreach ($parts as $key => $part) {
+				$parts[$key] = parent::web()->getProperty($part);
+			}
+
+			return implode("/", $parts);
 		}
 	}
 
