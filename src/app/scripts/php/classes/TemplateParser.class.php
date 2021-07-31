@@ -404,13 +404,25 @@
                     $contentType = null;
                     if (strlen($attributeValue) > 1) {
                         $attributeValue = substr($attributeValue, 1, strlen($attributeValue) - 2);
-                        $evaluated = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $attributeValue);
+                        $isEscapedProperty = false;
+                        if (StringUtils::startsWith($attributeValue, "\\")) {
+                            $maybeProperty = substr($attributeValue, 1);
 
-                        if ($attributeValue != $evaluated) {
-                            $attributeValue = $evaluated;
+                            if (preg_match($this->ATT_PROPERTY_RE, $maybeProperty, $matches)) {
+                                $attributeValue = $maybeProperty;
+                                $isEscapedProperty = true;
+                            }
+                        }
 
-                            $valueType = 'eval';
-                            $contentType = 'template';
+                        if (!$isEscapedProperty) {
+                            $evaluated = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $attributeValue);
+
+                            if ($attributeValue != $evaluated) {
+                                $attributeValue = $evaluated;
+
+                                $valueType = 'eval';
+                                $contentType = 'template';
+                            }
                         }
                     } else {
                         $attributeValue = '';
