@@ -39,6 +39,9 @@
   <tag>
     <name>content</name>
     <function>content</function>
+    <anyAttribute>
+      <comment>Všechny atributy je možné použít uvnitř těla.</comment>
+    </anyAttribute>
     <comment>
       Vkládá tělo tagu "template:include" (párové značky).
     </comment>

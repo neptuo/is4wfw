@@ -83,12 +83,19 @@
 			return $this->includeBy(["id" => $entityId], TemplateCacheKeys::template($entityId), $template, $params);
 		}
 
-		public function content() {
+		public function content($params) {
 			$template = parent::request()->get('content', 'template:include');
 			if ($template != null && is_callable($template)) {
-				return $template();
-			}
+				$oldParams = parent::request()->get('params', 'template:include');
+				parent::request()->set('params', $params, 'template:include');
+				
+				$result = $template();
 
+				parent::request()->set('params', $oldParams, 'template:include');
+
+				return $result;
+			}
+			
 			return "";
 		}
 
