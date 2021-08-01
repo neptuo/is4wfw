@@ -252,6 +252,10 @@
                 }
             }
 
+            if ($this->runHook(WebHook::ProcessRequestBeforeCms, [])) {
+                return;
+            }
+
             $this->UrlResolver = new UrlResolver();
             $this->UrlCache = new UrlCache();
 
@@ -2800,6 +2804,9 @@
     }
 
     class WebHook {
+
+        // A hook executed before any CMS content processing.
+        public const ProcessRequestBeforeCms = "processRequest-beforeCms";
 
         // A hook executed when generating error page, but after processing forwards.
         // Parameters contains status code (404, 403, etc).
