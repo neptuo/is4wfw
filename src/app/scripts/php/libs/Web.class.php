@@ -1443,11 +1443,7 @@
             }
 
             if ($absolute) {
-                $domainUrl = $project['alias']['domain_url'];
-                if ($_ENV["IS4WFW_PORT"]) {
-                    $domainUrl .= ":" . $_ENV["IS4WFW_PORT"];
-                }
-
+                $domainUrl = $project['alias']['domain_url'] . $this->getDevelopmentPortWithSeparator();
                 $pageUrl = UrlResolver::combinePath($domainUrl, $pageUrl);
 
                 $other = ($this->Protocol == 'http') ? 'https' : 'http';
@@ -1459,6 +1455,14 @@
             }
 
             return $pageUrl;
+        }
+
+        public function getDevelopmentPortWithSeparator() {
+            if ($_ENV["IS4WFW_PORT"]) {
+                return ":" . $_ENV["IS4WFW_PORT"];
+            }
+
+            return "";
         }
 
         public function addSpecialParams($url) {

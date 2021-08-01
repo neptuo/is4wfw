@@ -27,6 +27,12 @@
       <default>0</default>
       <comment>Přídá atribut height. Použitelné pro obrázky.</comment>
     </attribute>
+    <attribute>
+      <name>isAbsolute</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda se má vygenerovat absolutní URL (včetně protokolu a aktuální domény).</comment>
+    </attribute>
     <comment>
       Nastaví URL k souboru do proměnné s názvem 'name'.
     </comment>
