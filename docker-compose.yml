@@ -57,4 +57,4 @@ services:
       - MYSQL_PASSWORD=1234
     command: --sql_mode="" --lower_case_table_names=1
     volumes:
-      - "./temp/mysql:/var/lib/mysql"
+      - "./temp/mysql-casazela-20210108:/var/lib/mysql"

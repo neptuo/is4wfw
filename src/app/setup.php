@@ -33,7 +33,8 @@ if (count($_POST) == 0) {
     $_POST['user-surname'] = 'admin';
     $_POST['user-login'] = 'admin';
     $_POST['user-password'] = '';
-
+    $_POST['instance-name'] = '';
+    
     if ($isDevelopment) {
         $_POST['database-hostname'] = 'db';
         $_POST['database-username'] = 'phpwfw';
@@ -44,6 +45,7 @@ if (count($_POST) == 0) {
         $_POST['user-surname'] = 'admin';
         $_POST['user-login'] = 'admin';
         $_POST['user-password'] = '123456';
+        $_POST['instance-name'] = 'Local Development';
     }
 }
 
@@ -155,6 +157,14 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     if (!file_exists($readmePath)) {
         file_put_contents($readmePath, '');
     }
+
+    if (array_key_exists('instance-name', $_POST) && !empty($_POST['instance-name'])) {
+        require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/ApplicationVariableDao.class.php");
+
+        $var = new ApplicationVariableDao();
+        $var->setDataAccess($db->getDataAccess());
+        $var->setValue("is4wfw.instance.name", $_POST['instance-name']);
+    }
     
     if (file_exists($targetFilePath)) {
         header("Location: /login.view"); 
@@ -257,6 +267,13 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                 <div class="gray-box">
                                     <label class="w110" for="user-password" title="When creating user, minimal password length is 6 characters.">Password:</label>
                                     <input type="password" name="user-password" id="user-password" value="<?php echo $_POST['user-password'] ?>" class="w200" />
+                                </div>
+
+                                <h2>Instance</h2>
+                                <div class="clear"></div>
+                                <div class="gray-box">
+                                    <label class="w110" for="instance-name">Name:</label>
+                                    <input type="text" name="instance-name" id="instance-name" value="<?php echo $_POST['instance-name'] ?>" class="w200" />
                                 </div>
 
                                 <hr />
