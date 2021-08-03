@@ -1825,23 +1825,23 @@
 
             if (is_numeric($pageId)) {
                 $url = self::composeUrl($pageId, $languageId, $isAbsolute);
-
-                foreach ($params as $key => $value) {
-                    $url = UrlUtils::addParameter($url, $key, $value);
-                }
-
-                foreach ($anything as $key => $value) {
-                    if (strpos($key, 'param-') === 0) {
-                        $key = substr($key, 6);
-                    }
-
-                    $url = UrlUtils::addParameter($url, $key, $value);
-                }
-
-                return $url;
+            } else {
+                $url = $pageId;
             }
 
-            return $pageId;
+            foreach ($params as $key => $value) {
+                $url = UrlUtils::addParameter($url, $key, $value);
+            }
+
+            foreach ($anything as $key => $value) {
+                if (strpos($key, 'param-') === 0) {
+                    $key = substr($key, 6);
+                }
+
+                $url = UrlUtils::addParameter($url, $key, $value);
+            }
+
+            return $url;
         }
 
         private $providedPageUrl;
