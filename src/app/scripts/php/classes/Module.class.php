@@ -137,7 +137,7 @@
                 $alias = $module->alias;
                 $path = MODULES_PATH . $alias . "/" . ModuleGenerator::postInitFileName;
                 if (file_exists($path)) {
-                    $code->addLine("require(MODULES_PATH . '$alias' . '/' . '" . ModuleGenerator::postInitFileName . "')");
+                    $code->addLine("require(MODULES_PATH . '$alias' . '/' . '" . ModuleGenerator::postInitFileName . "');");
                 }
             }
 
