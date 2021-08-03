@@ -696,6 +696,12 @@
     <lookless />
     <comment>Zpracuje tělo, ale kompletně ignoruje jeho výstup.</comment>
   </fulltag>
+  <fulltag>
+    <name>head</name>
+    <function>appendToHead</function>
+    <lookless />
+    <comment>Přidá tělo tagu do hlavičky generované stránky.</comment>
+  </fulltag>
   <property>
   	<name>currentPage</name>
   	<getFunction>getCurrentPage</getFunction>

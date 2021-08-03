@@ -2780,6 +2780,10 @@
             return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['id'];
         }
 
+        public function appendToHead($template) {
+            $this->PageHead .= $template();
+        }
+
         private $hooks = [];
 
         private function runHook($name, $params) {
