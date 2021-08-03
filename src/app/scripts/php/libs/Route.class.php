@@ -62,7 +62,12 @@
 				$parts[$key] = parent::web()->getProperty($part);
 			}
 
-			return implode("/", $parts);
+			$result = implode("/", $parts);
+			if ($result == "~") {
+				$result = "~/";
+			}
+			
+			return $result;
 		}
 	}
 
