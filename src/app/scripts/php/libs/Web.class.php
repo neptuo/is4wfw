@@ -1218,34 +1218,45 @@
             } else if ($this->Template == 'none') {
                 $return = $this->PageContent;
             } else {
-                $doctype = ''
-                . '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
-                . '<html xmlns="http://www.w3.org/1999/xhtml">';
-
+                $isHtml = false;
                 if ($this->Doctype == 'html5') {
+                    $isHtml = true;
                     $doctype = ''
                     . '<!DOCTYPE html>'
                     . '<html' . ($isLang ? ' lang="' . $lang . '"' : '') . '>';
+                } else if ($this->Doctype == 'svg') {
+                    $doctype = ''
+                    . '<?xml version="1.0" encoding="utf-8"?>'
+                    . '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
+                } else {
+                    $isHtml = true;
+                    $doctype = ''
+                    . '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
+                    . '<html xmlns="http://www.w3.org/1999/xhtml">';
                 }
 
-                $return = ''
-                    . $doctype
-                    . '<head>'
-                        . (($areHeadersSent || $this->IsCached) ? '<meta http-equiv="content-type" content="' . $this->ContentType . '; charset=utf-8" />' : '')
-                        . '<meta name="description" content="' . $this->PageTitle . '" />'
-                        . '<meta name="keywords" content="' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo" />'
-                        . (($areHeadersSent && $isLang) ? '<meta http-equiv="Content-language" content="' . $lang . '" />' : '')
-                        . '<meta name="robots" content="all, index, follow" />'
-                        . '<meta name="author" content="Marek Fišera" />'
-                        . '<title>' . $this->PageTitle . '</title>'
-                        . $this->PageHead . $this->PageStyles . $this->PageHeadScripts
-                    . '</head>'
-                    . '<body>' 
-                        . $this->PageContent 
-                        . $diacont 
-                        . $this->PageTailScripts
-                    . '</body>'
-                . '</html>';
+                if ($isHtml) {
+                    $return = ''
+                        . $doctype
+                        . '<head>'
+                            . (($areHeadersSent || $this->IsCached) ? '<meta http-equiv="content-type" content="' . $this->ContentType . '; charset=utf-8" />' : '')
+                            . '<meta name="description" content="' . $this->PageTitle . '" />'
+                            . '<meta name="keywords" content="' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo" />'
+                            . (($areHeadersSent && $isLang) ? '<meta http-equiv="Content-language" content="' . $lang . '" />' : '')
+                            . '<meta name="robots" content="all, index, follow" />'
+                            . '<meta name="author" content="Marek Fišera" />'
+                            . '<title>' . $this->PageTitle . '</title>'
+                            . $this->PageHead . $this->PageStyles . $this->PageHeadScripts
+                        . '</head>'
+                        . '<body>' 
+                            . $this->PageContent 
+                            . $diacont 
+                            . $this->PageTailScripts
+                        . '</body>'
+                    . '</html>';
+                } else {
+                    $return = $doctype . $this->PageContent;
+                }
             }
 
             if ($webRootUrl == null) {
@@ -2590,7 +2601,7 @@
         }
 
         public function setDoctype($doctype) {
-            if ($doctype == 'html5' || $doctype == 'xhtml') {
+            if ($doctype == 'html5' || $doctype == 'xhtml' || $doctype == 'svg') {
                 $this->Doctype = $doctype;
             }
         }
