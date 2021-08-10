@@ -114,6 +114,10 @@
         }
 
         public static function searchDirectoryRecursive($directory, $fileExtension) {
+            if (!file_exists($directory)) {
+                return [];
+            }
+
             $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
             $result = array();
             foreach($iterator as $file) {
