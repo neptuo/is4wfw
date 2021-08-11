@@ -7,8 +7,17 @@
 
         public static function all(): array {
             if (Module::$modules == null) {
-                require_once(MODULES_PATH . ModuleGenerator::loaderFileName);
-                Module::$modules = __loadModules();
+                $loaderPath = MODULES_PATH . ModuleGenerator::loaderFileName;
+                if (file_exists($loaderPath)) {
+                    include($loaderPath);
+                    if (function_exists("__loadModules")) {
+                        Module::$modules = __loadModules();
+                    }
+                }
+            }
+
+            if (!is_array(Module::$modules)) {
+                Module::$modules = [];
             }
 
             return Module::$modules;
