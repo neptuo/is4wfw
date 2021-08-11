@@ -105,6 +105,25 @@
       Vrací index aktuální položky při průchodu přes "loc:editItems".
     </comment>
   </property>
+  <tag>
+    <name>download</name>
+    <function>download</function>
+    <attribute>
+      <name>bundleName</name>
+      <required />
+      <type>string</type>
+      <comment>Název uživatelského bundlu, který se má editovat.</comment>
+    </attribute>
+    <attribute>
+      <name>languageName</name>
+      <required />
+      <type>string</type>
+      <comment>Název uživatelského bundlu, který se má editovat.</comment>
+    </attribute>
+    <comment>
+      Stáhne uživatelský bundle.
+    </comment>
+  </tag>
   <anyProperty />
 </taglib>
 

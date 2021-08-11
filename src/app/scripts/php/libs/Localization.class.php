@@ -147,33 +147,66 @@
 		public function edit($bundleName, $languageName, $filterKeyPrefixes = "") {
 			return self::editFullTag(null, $bundleName, $languageName, $filterKeyPrefixes);
 		}
-
+		
 		private function isKeyIncluded($filter, $key) {
 			if ($filter == null) {
 				return true;
 			}
-
+			
 			for ($i=0; $i < count($filter); $i++) { 
 				if (StringUtils::startsWith($key, $filter[$i])) {
 					return true;
 				}
 			}
-
+			
 			return false;
 		}
-
+		
 		private function createListItem($index) {
 			return array(
 				"index" => $index
 			);
 		}
-
+		
 		public function getEditItems() {
 			return self::peekListModel();
 		}
-
+		
 		public function getEditItemIndex() {
 			return self::peekListModel()->field("index");
+		}
+
+		public function download($bundleName, $languageName) {
+			$rb = new LocalizationBundle();
+			$rb->setSource($bundleName);
+			$rb->setLanguage($languageName);
+			$rb->setIsSystem(false);
+			if ($rb->exists()) {
+				$filePath = $rb->getFilePath();
+
+				if (file_exists($filePath) && is_readable($filePath)) {
+					$fileSize = filesize($filePath);
+		
+					header('Content-Type: text/plain');
+					header('Accept-Ranges: bytes');
+					header('Content-Length: ' . $fileSize);
+					header('Content-Disposition: attachment; filename=' . $rb->getFileName());
+					header('Content-Transfer-Encoding: binary');
+					$file = @fopen($filePath, 'rb');
+					if ($file) {
+						fpassthru($file);
+						exit;
+					} else {
+						header("HTTP/1.1 404 Not Found");
+						echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';
+						exit;
+					}
+				} else {
+					header("HTTP/1.1 404 Not Found");
+					echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';
+					exit;
+				}
+			}
 		}
 	}
 

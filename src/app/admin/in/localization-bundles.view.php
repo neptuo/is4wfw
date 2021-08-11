@@ -14,6 +14,9 @@
                 <div class="gray-box-float">
                     <button name="search">Open</button>
                 </div>
+                <div class="gray-box-float">
+                    <button formaction="~/in/localization-bundle-download.view" method="get" name="search">Download</button>
+                </div>
                 <div class="clear"></div>
             </ui:filter>
         </edit:form>

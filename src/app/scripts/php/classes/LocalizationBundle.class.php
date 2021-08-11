@@ -71,8 +71,12 @@
 			$this->ModuleId = $moduleId;
 		}
 
-		private function getFilePath() {
-			$name = $this->Source . "_" . $this->Language . ".properties";
+		public function getFileName() {
+			return $this->Source . "_" . $this->Language . ".properties";
+		}
+
+		public function getFilePath() {
+			$name = $this->getFileName();
 			if (!empty($this->ModuleId)) {
 				return Module::getById($this->ModuleId)->getBundlesPath() . $name;
 			} else if ($this->IsSystem) {
