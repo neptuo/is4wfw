@@ -8,7 +8,7 @@
         }
 
         public static function clearDirectory($dir) {
-            if (!file_exists(CACHE_SYSTEMPROPERTY_PATH)) {
+            if (!file_exists($dir)) {
                 return;
             }
 
