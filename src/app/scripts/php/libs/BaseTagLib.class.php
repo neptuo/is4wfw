@@ -277,10 +277,12 @@
         private $BundleName;
         private $BundleLang = 'cs';
         private $BundleIsSystem = true;
+        private $BundleModuleId = "";
         
-        public function setLocalizationBundle($name, $system = true) {
+        public function setLocalizationBundle($name, $system = true, $moduleId = "") {
             $this->BundleName = $name;
             $this->BundleIsSystem = $system;
+            $this->BundleModuleId = $moduleId;
         }
         
         public function rb($key = false) {
@@ -289,6 +291,10 @@
                     $rb = new LocalizationBundle();
                     if (!$this->BundleIsSystem) {
                         $rb->setIsSystem(false);
+                    }
+
+                    if (!empty($this->BundleModuleId)) {
+                        $rb->setModuleId($this->BundleModuleId);
                     }
 
                     if ($rb->exists($this->BundleName, self::web()->LanguageName)) {
@@ -300,11 +306,15 @@
                 if (!$this->BundleIsSystem) {
                     $this->LocalizationBundle->setIsSystem(false);
                 }
+
+                if (!empty($this->BundleModuleId)) {
+                    $this->LocalizationBundle->setModuleId($this->BundleModuleId);
+                }
                 
                 $this->LocalizationBundle->load($this->BundleName, $this->BundleLang);
             }
 
-            if($key == false) {
+            if ($key == false) {
                 return $this->LocalizationBundle;
             } else {
                 return $this->LocalizationBundle->get($key);

@@ -24,6 +24,8 @@
 		 *
 		 */
 		private $IsSystem = true;
+
+		private $ModuleId = "";
 		
 		/**
 		 *
@@ -64,13 +66,19 @@
 		public function setIsSystem($isSystem) {
 			$this->IsSystem = $isSystem;
 		}
+		
+		public function setModuleId($moduleId) {
+			$this->ModuleId = $moduleId;
+		}
 
 		private function getFilePath() {
-			$name = $this->Source . "_" . $this->Language;
-			if ($this->IsSystem) {
-				return APP_SCRIPTS_BUNDLES_PATH . $name . ".properties";
+			$name = $this->Source . "_" . $this->Language . ".properties";
+			if (!empty($this->ModuleId)) {
+				return Module::getById($this->ModuleId)->getBundlesPath() . $name;
+			} else if ($this->IsSystem) {
+				return APP_SCRIPTS_BUNDLES_PATH . $name;
 			} else {
-				return USER_BUNDLES_PATH . $name . ".properties";
+				return USER_BUNDLES_PATH . $name;
 			}
 		}
 		
@@ -95,7 +103,7 @@
 			if ($isSystem != null) {
 				$this->IsSystem = $isSystem;
 			}
-			
+
 			$filePath = self::getFilePath();
 			if (strlen($filePath) > 0 && is_file($filePath) && is_readable($filePath)) {
 				return true;
@@ -137,7 +145,7 @@
 					}
 				}
 			} else {
-				throw new Exception("Unnable to load resource bundle '$name' lang '$lang' .");
+				throw new Exception("Unnable to load resource bundle '$name' lang '$lang'" . (!empty($this->ModuleId) ? " from module '" . $this->ModuleId . "'" : "") . ".");
 			}
 		}
 

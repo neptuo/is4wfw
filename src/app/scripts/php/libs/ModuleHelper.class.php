@@ -86,15 +86,33 @@
 		}
 
 		public function getId() {
-			return $this->peekListModel()->data()->id;
+			if ($this->hasListModel()) {
+				return $this->peekListModel()->data()->id;
+			}
+
+			if ($this->current) {
+				return $this->current->id;
+			}
 		}
 
 		public function getAlias() {
-			return $this->peekListModel()->data()->alias;
+			if ($this->hasListModel()) {
+				return $this->peekListModel()->data()->alias;
+			}
+
+			if ($this->current) {
+				return $this->current->alias;
+			}
 		}
 
 		public function getName() {
-			return $this->peekListModel()->data()->name;
+			if ($this->hasListModel()) {
+				return $this->peekListModel()->data()->name;
+			}
+
+			if ($this->current) {
+				return $this->current->name;
+			}
 		}
 
 		public function rebuildInitializers($template) {

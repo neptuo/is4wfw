@@ -74,21 +74,21 @@
     <name>id</name>
     <getFunction>getId</getFunction>
     <comment>
-      Vrací id modulu uvnitř "module:list" tagu.
+      Vrací id modulu uvnitř "module:list" (preferovaný) nebo "module:use" tagu.
     </comment>
   </property>
   <property>
     <name>alias</name>
     <getFunction>getAlias</getFunction>
     <comment>
-      Vrací alias modulu uvnitř "module:list" tagu.
+      Vrací alias modulu uvnitř "module:list" (preferovaný) nebo "module:use" tagu.
     </comment>
   </property>
   <property>
     <name>name</name>
     <getFunction>getName</getFunction>
     <comment>
-      Vrací name modulu uvnitř "module:list" tagu.
+      Vrací name modulu uvnitř "module:list" (preferovaný) nebo "module:use" tagu.
     </comment>
   </property>
   <fulltag>

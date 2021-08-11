@@ -29,8 +29,6 @@
                 $domainProtocol = "http";
             }
 
-            parent::log("UrlResolve: " . $domainProtocol.' :: '.$domainUrl.' :: '.$rootUrl.' :: '.$pageUrl);
-
             $urls = parent::db()->fetchAll('select `id`, `project_id`, `domain_url`, `root_url`, `virtual_url`, `http`, `https` from `web_url` where `enabled` = 1;');
 
             // Domains

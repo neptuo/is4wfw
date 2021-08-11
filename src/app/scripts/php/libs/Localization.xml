@@ -33,8 +33,14 @@
       <default>true</default>
       <comment>Zda se jedná o systémový bundle.</comment>
     </attribute>
+    <attribute>
+      <name>moduleId</name>
+      <type>string</type>
+      <comment>Id modulu, pokud se má načíst bundle z module.</comment>
+    </attribute>
     <comment>
       Načte bundle podle "name". Uvnitř šablony je možné s ním pracovat.
+      Nedává smysl kombinovat "system" a "moduleId".
     </comment>
   </fulltag>
   <tag>

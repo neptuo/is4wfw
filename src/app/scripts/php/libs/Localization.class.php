@@ -16,8 +16,8 @@
 			self::web()->LanguageName = $name;
 		}
 
-		public function useBundle($template, $name, $system = true) {
-			self::setLocalizationBundle($name, $system);
+		public function useBundle($template, $name, $system = true, $moduleId = "") {
+			self::setLocalizationBundle($name, $system, $moduleId);
 			return $template();
 		}
 

@@ -87,6 +87,10 @@
         public function getAssetsPath() {
             return "~/assets/" . $this->alias . "/";
         }
+
+        public function getBundlesPath() {
+            return MODULES_PATH . $this->alias . "/bundles/";
+        }
     }
 
     class ModuleXml {
