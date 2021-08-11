@@ -241,6 +241,10 @@
         }
 
         public function processRequestNG() {
+            if (IS_DEVELOPMENT_MODE) {
+                $this->debugMode(true);
+            }
+
             if (self::getDebugMode()) {
                 if (array_key_exists('query-list', $_GET)) {
                     parent::db()->getDataAccess()->saveQueries(true);
