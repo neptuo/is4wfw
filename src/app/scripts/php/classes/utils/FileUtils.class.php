@@ -8,6 +8,10 @@
         }
 
         public static function clearDirectory($dir) {
+            if (!file_exists(CACHE_SYSTEMPROPERTY_PATH)) {
+                return;
+            }
+
             $files = array_diff(scandir($dir), array('.','..'));
             foreach ($files as $file) {
                 $itemPath = $dir . "/" . $file;
