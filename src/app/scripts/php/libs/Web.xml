@@ -703,6 +703,15 @@
     <comment>Přidá tělo tagu do hlavičky generované stránky.</comment>
   </fulltag>
   <property>
+  	<name>pageTitle</name>
+  	<setFunction>setPageTitle</setFunction>
+  	<getFunction>getPageTitle</getFunction>
+    <comment>
+      Vrací nebo nastavuje HTML titulek stránky. 
+      Přepisuje aktuální hodnotu.
+    </comment>
+  </property>
+  <property>
   	<name>currentPage</name>
   	<getFunction>getCurrentPage</getFunction>
     <comment>
@@ -711,7 +720,6 @@
   </property>
   <property>
   	<name>currentPageName</name>
-  	<setFunction>setCurrentPageName</setFunction>
   	<getFunction>getCurrentPageName</getFunction>
     <comment>
       Vrátí název aktuální stránky. V průběhu renderování
@@ -719,7 +727,6 @@
   </property>
   <property>
   	<name>currentPageTitle</name>
-  	<setFunction>setCurrentPageTitle</setFunction>
   	<getFunction>getCurrentPageTitle</getFunction>
     <comment>
       Vrátí titulek aktuální stránky. V průběhu renderování
@@ -727,7 +734,6 @@
   </property>
   <property>
   	<name>lastPageName</name>
-  	<setFunction>setLastPageName</setFunction>
   	<getFunction>getLastPageName</getFunction>
     <comment>
       Vrátí název poslední stránky, která se má renderovat (té, co již neobsahuje web:content)
@@ -735,7 +741,6 @@
   </property>
   <property>
   	<name>lastPageTitle</name>
-  	<setFunction>setLastPageTitle</setFunction>
   	<getFunction>getLastPageTitle</getFunction>
     <comment>
       Vrátí titulek poslední stránky, která se má renderovat (té, co již neobsahuje web:content)
@@ -743,7 +748,6 @@
   </property>
   <property>
   	<name>childPage</name>
-  	<setFunction>setChildPage</setFunction>
   	<getFunction>getChildPage</getFunction>
     <comment>
       Vrátí ID další vykreslované stránky. Pokud bude PAGES={1,2,3,4}, a aktuálně se bude vykreslovat stránka ID=3, pak property web:childPage bude mít hodnotu 4.
@@ -751,7 +755,6 @@
   </property>
   <property>
   	<name>currentTime</name>
-  	<setFunction>setCurrentTime</setFunction>
   	<getFunction>getCurrentTime</getFunction>
     <comment>
       Vrátí aktuální čas (timestamp)

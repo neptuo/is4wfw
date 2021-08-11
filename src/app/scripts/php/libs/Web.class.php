@@ -2288,13 +2288,11 @@
             return;
         }
 
-        /**
-         *
-         * 	Returns current page title.
-         *
-         * 	@return		page title
-         *
-         */
+        public function setPageTitle($pageTitle) {
+            $this->PageTitle = $pageTitle;
+            return $this->PageTitle;
+        }
+
         public function getPageTitle() {
             return $this->PageTitle;
         }
@@ -2696,16 +2694,8 @@
             return $this->TempLoadedContent[$this->PagesIdIndex - 1]['id'];
         }
 
-        public function setCurrentPageName($name) {
-            return $name;
-        }
-
         public function getCurrentPageName() {
             return $this->TempLoadedContent[$this->PagesIdIndex - 1]['name'];
-        }
-
-        public function setCurrentPageTitle($name) {
-            return $name;
         }
 
         public function getCurrentPageTitle() {
@@ -2716,16 +2706,8 @@
             }
         }
 
-        public function setLastPageName($name) {
-            return $name;
-        }
-
         public function getLastPageName() {
             return $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['name'];
-        }
-
-        public function setLastPageTitle($name) {
-            return $name;
         }
 
         public function getLastPageTitle() {
@@ -2734,10 +2716,6 @@
             if (strlen($page['title']) > 0) {
                 return $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "title"), $page['title']);
             }
-        }
-
-        public function setCurrentTime($time) {
-            return $time;
         }
 
         public function getCurrentTime() {
