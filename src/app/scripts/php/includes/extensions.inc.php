@@ -41,6 +41,7 @@
 	define("WEB_TYPE_WOFF2", 34);
 	define("WEB_TYPE_EOT", 35);
 	define("WEB_TYPE_JSON", 36);
+	define("WEB_TYPE_MP4", 37);
 
 
 ?>
