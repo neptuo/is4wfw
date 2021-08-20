@@ -1,5 +1,7 @@
 <?php
 
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Module.class.php");
+
     class LibraryLoader {
         private function getFilePath($classPath, $extension) {
             $cpArray = StringUtils::explode($classPath, '.');
