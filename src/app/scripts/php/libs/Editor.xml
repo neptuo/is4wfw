@@ -18,6 +18,12 @@
       <default>true</default>
       <comment>Nastavuje, zda je možné formulář editor. Pokud je 'false' vygeneruje do těla readonly 'fieldset'.</comment>
     </attribute>
+    <attribute>
+      <name>isTransactional</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda se má automaticky vytváření transakce při ukládání.</comment>
+    </attribute>
     <anyAttribute>
       <comment>Všechny další atributy jsou předány "form" tagu.</comment>
     </anyAttribute>

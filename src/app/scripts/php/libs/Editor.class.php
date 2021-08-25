@@ -15,17 +15,21 @@
 
         private function executeSave($template, EditModel $model) {
             parent::dataAccess()->transaction(function() use ($model, $template) {
-                $model->save();
-                $template();
-                $model->save(false);
-
-                if ($model->hasException()) {
-                    throw new Exception("One or more exceptions raised during save phase of EditModel. All of them should be logged.");
-                }
+                $this->executeSaveWithoutTransaction($template, $model);
             });
         }
+
+        private function executeSaveWithoutTransaction($template, EditModel $model) {
+            $model->save();
+            $template();
+            $model->save(false);
+
+            if ($model->hasException()) {
+                throw new Exception("One or more exceptions raised during save phase of EditModel. All of them should be logged.");
+            }
+        }
 		
-		public function form($template, $submit, $isEditable = true, $params = []) {
+		public function form($template, $submit, $isEditable = true, $isTransactional = true, $params = []) {
             $model = new EditModel();
             $model->metadata("form", $params);
             parent::setEditModel($model);
@@ -42,8 +46,12 @@
                 $model->submit(false);
 
                 if ($model->isValid()) {
-                    // Save data in transaction.
-                    $this->executeSave($template, $model);
+                    // Save data.
+                    if ($isTransactional) {
+                        $this->executeSave($template, $model);
+                    } else {
+                        $this->executeSaveWithoutTransaction($template, $model);
+                    }
 
                     // Process after save redirects.
                     $model->saved(true);
