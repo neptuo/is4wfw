@@ -36,9 +36,15 @@
                 $value15
             ];
 
-            if ($separator != "") {
-                $values = array_filter($values, function($value) { return !($value == "" || $value == null); });
+            $exploded = [];
+            foreach ($values as $value) {
+                if (is_array($value)) {
+                    $exploded = array_merge($exploded, $value);
+                } else if (!($value == "" || $value == null)) {
+                    $exploded[] = $value;
+                }
             }
+            $values = $exploded;
 
             $result = implode($separator, $values);
             $this->OutputValues[$output] = $result;
