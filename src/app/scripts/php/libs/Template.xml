@@ -47,6 +47,17 @@
     </comment>
   </tag>
   <fulltag>
+    <name>content</name>
+    <function>contentWithBody</function>
+    <anyAttribute>
+      <comment>Všechny atributy je možné použít uvnitř těla.</comment>
+    </anyAttribute>
+    <comment>
+      Vkládá tělo tagu "template:include" (párové značky).
+      Uvnitř párové "template:include" je možné zase použít "template:content" obsahující tělo tohoto tagu.
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>declare</name>
     <function>declareInline</function>
     <attribute>

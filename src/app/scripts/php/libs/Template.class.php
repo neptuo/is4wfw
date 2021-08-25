@@ -84,14 +84,20 @@
 		}
 
 		public function content($params) {
-			$template = parent::request()->get('content', 'template:include');
-			if ($template != null && is_callable($template)) {
+			return $this->contentWithBody(function() { }, $params);
+		}
+
+		public function contentWithBody($template, $params) {
+			$oldContent = parent::request()->get('content', 'template:include');
+			if ($oldContent != null && is_callable($oldContent)) {
 				$oldParams = parent::request()->get('params', 'template:include');
 				parent::request()->set('params', $params, 'template:include');
+				parent::request()->set('content', $template, 'template:include');
 				
-				$result = $template();
+				$result = $oldContent();
 
 				parent::request()->set('params', $oldParams, 'template:include');
+				parent::request()->set('content', $oldContent, 'template:include');
 
 				return $result;
 			}
