@@ -613,7 +613,7 @@
       <required />
     </attribute>
     <comment>
-      Umožňuje v těle definovat několik příkazů web:cache, ze kterých je vybrán maximálně jeden, který odpovídá hodnotě atributu "when".
+      Umožňuje v těle definovat několik příkazů "web:case", ze kterých je vybrán maximálně jeden, který odpovídá hodnotě atributu "when".
     </comment>
   </fulltag>
   <fulltag>
@@ -623,9 +623,18 @@
       <name>is</name>
       <type>string</type>
       <default>x.x-def</default>
+      <comment>Hodnota k porovnání.</comment>
+    </attribute>
+    <attribute>
+      <name>in</name>
+      <type>string</type>
+      <default>x.x-def</default>
+      <comment>Čárkou oddělený seznam hodnot, kdy porovnávaná hodnota musí odpovídat alespoň jedné z těchto hodnot.</comment>
     </attribute>
     <comment>
-      Použitelný uvnitř web:switch. Definuje jeden test na porovnávanou hodnotu. Pokud atribut "is" není definován, jedná se o 'default' case.
+      Použitelný uvnitř "web:switch". 
+      Definuje jeden test na porovnávanou hodnotu. 
+      Pokud není definován atribut "is" ani "in", jedná se o 'default' case.
     </comment>
   </fulltag>
   <tag>

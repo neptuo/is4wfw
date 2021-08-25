@@ -2645,7 +2645,7 @@
             return $result;
         }
 
-        public function switchConditionCase($template, $is = 'x.x-def') {
+        public function switchConditionCase($template, $is = 'x.x-def', $in = 'x.x-def') {
             $index = count($this->switchConditionWhenStack);
             if ($index == 0) {
                 return '';
@@ -2658,7 +2658,24 @@
             }
 
             $when = $this->switchConditionWhenStack[$index];
-            $condition = $is === 'x.x-def' || $when == $is;
+            $condition = $is === 'x.x-def' && $in === 'x.x-def';
+            if (!$condition && $is !== 'x.x-def' && $when == $is) {
+                $condition = true;
+            }
+
+            if (!$condition && $in !== 'x.x-def') {
+                if (is_string($in)) {
+                    $in = explode(",", $in);
+                }
+                
+                foreach ($in as $item) {
+                    if ($when == $item) {
+                        $condition = true;
+                        break;
+                    }
+                }
+            }
+
             if ($condition === true) {
                 $this->switchConditionCaseStack[$index] = $template();
             }
