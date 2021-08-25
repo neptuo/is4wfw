@@ -145,7 +145,11 @@
 		}
 
 		public function getAllImageExtensions() {
-			return FileDao::getImagesTypeExtensions();
+			return FileDao::getImageTypeExtensions();
+		}
+
+		public function getAllVideoExtensions() {
+			return FileDao::getVideoTypeExtensions();
 		}
 	}
 

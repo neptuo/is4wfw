@@ -155,5 +155,13 @@
       Vhodné pro filtrování souborů.
     </comment>
   </property>
+  <property>
+  	<name>allVideoExtensions</name>
+  	<getFunction>getAllVideoExtensions</getFunction>
+    <comment>
+      Vrací pole s koncovkami všech video typů souborů.
+      Vhodné pro filtrování souborů.
+    </comment>
+  </property>
 </taglib>
 

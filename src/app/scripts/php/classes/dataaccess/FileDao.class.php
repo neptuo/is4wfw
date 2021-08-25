@@ -54,13 +54,26 @@ class FileDao extends AbstractDao {
 		return parent::getList($select);
 	}
 
-	public static function getImagesTypeIds() {
+	public static function getImageTypeIds() {
 		return [WEB_TYPE_JPG, WEB_TYPE_PNG, WEB_TYPE_GIF];
 	}
 
-	public static function getImagesTypeExtensions() {
+	public static function getImageTypeExtensions() {
 		$result = [];
-		foreach (self::getImagesTypeIds() as $id) {
+		foreach (self::getImageTypeIds() as $id) {
+			$result[] = FileAdmin::$FileExtensions[$id];
+		}
+
+		return $result;
+	}
+
+	public static function getVideoTypeIds() {
+		return [WEB_TYPE_MPEG, WEB_TYPE_MP4];
+	}
+
+	public static function getVideoTypeExtensions() {
+		$result = [];
+		foreach (self::getVideoTypeIds() as $id) {
 			$result[] = FileAdmin::$FileExtensions[$id];
 		}
 
@@ -68,7 +81,7 @@ class FileDao extends AbstractDao {
 	}
 	
 	public function getImagesFromDirectory($dirId, $oderBy = "name", $pageIndex = false, $limit = false) {
-		$select = Select::factory($this->dataAccess())->where('dir_id', '=', $dirId)->conjunctIn('type', self::getImagesTypeIds())->orderBy([$oderBy]);
+		$select = Select::factory($this->dataAccess())->where('dir_id', '=', $dirId)->conjunctIn('type', self::getImageTypeIds())->orderBy([$oderBy]);
 		$select = $this->applyLimit($select, $pageIndex, $limit);
 		return parent::getList($select);
 	}
