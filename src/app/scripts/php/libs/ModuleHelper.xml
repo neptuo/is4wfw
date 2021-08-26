@@ -92,6 +92,13 @@
     </comment>
   </property>
   <fulltag>
+    <name>edit</name>
+    <function>edit</function>
+    <comment>
+      Vytvoření nového modulu (editace existujícího zatím neimplementována).
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>rebuildInitializers</name>
     <function>rebuildInitializers</function>
     <lookless />

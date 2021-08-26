@@ -14,6 +14,27 @@
             return false;
         }
 
+        public static function getFileContent($zipFileName, $fileName) {
+            $contents = '';
+            $zip = new ZipArchive();
+            if ($zip->open($zipFileName)) {
+                $fileStream = $zip->getStream($fileName);
+                if (!$fileStream) {
+                    return false;
+                }
+
+                while (!feof($fileStream)) {
+                    $contents .= fread($fileStream, 2);
+                }
+
+                fclose($fileStream);
+                $zip->close();
+                return $contents;
+            }
+
+            return false;
+        }
+
     }
 
 ?>

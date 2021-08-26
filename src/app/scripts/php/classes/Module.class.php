@@ -9,7 +9,7 @@
             if (Module::$modules == null) {
                 $loaderPath = MODULES_PATH . ModuleGenerator::loaderFileName;
                 if (file_exists($loaderPath)) {
-                    include($loaderPath);
+                    include_once($loaderPath);
                     if (function_exists("__loadModules")) {
                         Module::$modules = __loadModules();
                     }
@@ -115,6 +115,11 @@
     class ModuleGenerator {
         public const loaderFileName = "loader.inc.php";
         public const postInitFileName = "postinit.inc.php";
+
+        public static function all() {
+            ModuleGenerator::loader();
+            ModuleGenerator::postInit();
+        }
         
         public static function loader() {
             $code = new CodeWriter();
