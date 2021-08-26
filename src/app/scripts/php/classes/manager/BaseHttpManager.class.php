@@ -5,9 +5,16 @@ require_once("Version.class.php");
 
 abstract class BaseHttpManager extends BaseTagLib {
     private $isSessionCookieIncluded = false;
+    private $username;
+    private $password;
 
     public function setSessionCookieIncluded($value) {
         $this->isSessionCookieIncluded = $value;
+    }
+
+    public function setBasicAuthentication($username, $password) {
+        $this->username = $username;
+        $this->password = $password;
     }
 
     public function download($url, $filename) {
@@ -28,6 +35,10 @@ abstract class BaseHttpManager extends BaseTagLib {
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_MAXREDIRS, 5); 
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); 
+            
+            if ($this->username && $this->password) {
+                curl_setopt($curl, CURLOPT_USERPWD, $this->username . ":" . $this->password);
+            }
 
             if ($this->isSessionCookieIncluded) {
                 curl_setopt($curl, CURLOPT_COOKIE, 'PHPSESSID=' . $_COOKIE['PHPSESSID']); 
