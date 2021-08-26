@@ -37,21 +37,18 @@ class FileDao extends AbstractDao {
 			}
 		}
 
-		if (is_array($type)) {
-			$types = array();
-			foreach	(FileAdmin::$FileExtensions as $id => $extension) {
-				if (in_array($extension, $type)) {
-					$types[] = $id;
-				}
-			}
-
-			if (count($types) > 0) {
-				$select = $select->conjunctIn('type', $types);
-			}
-		}
-		
-		$select = $this->applyLimit($select->orderBy([$order], $orderDirection), $pageIndex, $limit);
+		$this->applyFileTypeFilter($select, $type);
+		$this->applyLimit($select->orderBy([$order], $orderDirection), $pageIndex, $limit);
 		return parent::getList($select);
+	}
+
+	public function countFromDirectory($dirId, $type = null) {
+		$db = $this->dataAccess();
+		$select = Select::factory($db)->where('dir_id', '=', $dirId);
+		$this->applyFileTypeFilter($select, $type);
+
+		$sql = $this->countSql($this->selectObjectToResult($select));
+		return $db->fetchScalar($sql);
 	}
 
 	public static function getImageTypeIds() {
@@ -97,6 +94,21 @@ class FileDao extends AbstractDao {
 		}
 
 		return $select;
+	}
+
+	private function applyFileTypeFilter($select, $type) {
+		if (is_array($type)) {
+			$types = array();
+			foreach	(FileAdmin::$FileExtensions as $id => $extension) {
+				if (in_array($extension, $type)) {
+					$types[] = $id;
+				}
+			}
+
+			if (count($types) > 0) {
+				$select = $select->conjunctIn('type', $types);
+			}
+		}
 	}
 
 	public function insert($data) {

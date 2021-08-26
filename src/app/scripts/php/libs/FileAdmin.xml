@@ -63,11 +63,18 @@
       <default>name</default>
       <prefix />
       <comment>
-        Definice řazení 
+        Definice řazení.
         Buď přímo stringová hodnota nebo prefixová a s hodnotami "asc"/"desc"
         Řaditelné atributy "id", "name", "timestamp", "order".
         Pro grouped=false podporuje pouze jednoduchou variantu.
         Pro grouped=true podporuje pouze jeden klíč.
+      </comment>
+    </attribute>
+    <attribute>
+      <name>paging</name>
+      <comment>
+        Nastavení stránkování pomocí knihovny "Paging".
+        Dostupné jen pro zobrazení souborů (pokud jsou složky odfiltrovány).
       </comment>
     </attribute>
     <comment>

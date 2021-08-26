@@ -416,7 +416,7 @@
 			}
 		}
 
-		public function fileBrowserWithTemplate($template, $dirId, $grouped = true, $parentName = "", $filter = null, $orderBy = "name") {
+		public function fileBrowserWithTemplate($template, $dirId, $grouped = true, $parentName = "", $filter = null, $orderBy = "name", $paging = null) {
 			$types = null;
 			if (is_array($filter) && array_key_exists("type", $filter)) {
 				$types = $filter["type"];
@@ -425,12 +425,28 @@
 				}
 			}
 
+			$areDirsIncluded = $types == null || in_array("dir", $types);
+			
+			$pageIndex = null;
+			$pageSize = null;
+            if ($paging instanceof PagingModel) {
+				$pageIndex = $paging->getCurrentIndex();
+                $pageSize = $paging->getSize();
+
+				if ($areDirsIncluded) {
+					throw new ParameterException("paging", "Paging is available only for files.");
+				}
+
+				$totalFileCount = parent::dao('File')->countFromDirectory($dirId, $types);
+				$paging->setTotalCount($totalFileCount);
+			}
+
 			$dirs = [];
-			if ($types == null || in_array("dir", $types)) {
+			if ($areDirsIncluded) {
 				$dirs = parent::dao('Directory')->getFromDirectory($dirId, $orderBy);
 			}
 			
-			$files = parent::dao('File')->getFromDirectory($dirId, $orderBy, $types);
+			$files = parent::dao('File')->getFromDirectory($dirId, $orderBy, $types, $pageIndex, $pageSize);
 
 			$resultDirs = array();
 			foreach ($dirs as $key => $dir) {
