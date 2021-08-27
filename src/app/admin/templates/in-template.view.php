@@ -136,4 +136,5 @@
         </bs:column>
     </bs:row>
 
+	<v:template src="~/templates/includes/instance-name.view" />
 </v:template>

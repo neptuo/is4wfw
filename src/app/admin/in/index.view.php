@@ -74,6 +74,4 @@
 			</bs:column>
 		</bs:row>
 	</div>
-
-	<v:template src="~/templates/includes/instance-name.view" />
 </v:template>
