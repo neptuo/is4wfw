@@ -132,6 +132,7 @@
         private $CurrentPath = "";
         private $TempLoadedContent = array();
         private $SelectedEntrypoint = null;
+        private $SelectedEntrypointTrailingUrl = null;
         private $CacheInfo = array();
         private $CacheTime = 10000000000;
         private $ServerName = '';
@@ -443,6 +444,7 @@
             $reqVirs = StringUtils::explode($virtualUrl, '/');
             $prjVirs = self::prepareVirtualPathAsArray($webProject, $lang);
             self::parseAllPagesTagLib('tag_lib_start');
+            $lastIndex = 0;
             foreach ($prjVirs as $key => $prj) {
                 $vir = $reqVirs[$key];
                 $output = $this->UrlResolver->parseSingleUrlPart($prj, $vir);
@@ -450,14 +452,30 @@
                     // parent::log('URL: NotFound -> '.$vir.' : '.$prj.'<br />');
                     return false;
                 }
+
+                $lastIndex = $key;
             }
             self::parseAllPagesTagLib('tag_lib_end');
-            
-            foreach($this->TempLoadedContent as $page) {
-                
-            }
+
             
             return true;
+        }
+
+        private function getEntrypointTrailingUrl($virtualUrl) {
+            $webProject = $this->UrlResolver->getWebProject();
+
+            $reqVirs = StringUtils::explode($virtualUrl, '/');
+            $prjVirs = $this->prepareVirtualPathAsArray($webProject, ["language" => ""]);
+            
+            $trailing = [];
+            $lastIndex = count($prjVirs);
+            if (count($reqVirs) > $lastIndex) {
+                for ($i = $lastIndex; $i < count($reqVirs); $i++) { 
+                    $trailing[] = $reqVirs[$i];
+                }
+            }
+
+            return implode("/", $trailing);
         }
 
         private function prepareVirtualPathAsArray($webProject, $lang) {
@@ -1589,7 +1607,8 @@
                 if ($module != null) {
                     foreach ($this->entrypoints as $item) {
                         if ($item["moduleId"] == $entrypoint[0] && $item["id"] == $entrypoint[1]) {
-                            return $item["handler"]([]);
+                            $trailingUrl = $this->getEntrypointTrailingUrl($this->getVirtualUrl());
+                            return $item["handler"](["relativeUrl" => $trailingUrl]);
                         }
                     }
                 }
