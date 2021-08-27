@@ -131,6 +131,7 @@
          */
         private $CurrentPath = "";
         private $TempLoadedContent = array();
+        private $SelectedEntrypoint = null;
         private $CacheInfo = array();
         private $CacheTime = 10000000000;
         private $ServerName = '';
@@ -284,10 +285,15 @@
             self::processForwards(self::findForward(array('Always')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'));
 
             if ($item != array()) {
-                // Stranka jiz je v urlcache
-                $this->UrlResolver->setPagesId(self::parsePagesId($item['pages_id']));
+                if ($item["language_id"] != 0) {
+                    // Stranka jiz je v urlcache
+                    $this->UrlResolver->setPagesId(self::parsePagesId($item['pages_id']));
+                    $this->UrlResolver->selectLanguage($item['language_id']);
+                } else {
+                    $this->SelectedEntrypoint = $item["pages_id"];
+                }
+
                 $this->UrlResolver->selectProjectById($item);
-                $this->UrlResolver->selectLanguage($item['language_id']);
                 
                 if ($item['cachetime'] != -1) {
                     // Pouzijeme cache
@@ -316,7 +322,7 @@
                     self::loadPageData();
 
                     // Ulozit do urlcache
-                    $this->UrlCache->write($fullUrl, $this->UrlResolver->getWebProject(), self::pagesIdAsString('-'), $this->UrlResolver->getLanguage(), self::findCachetime());
+                    $this->UrlCache->write($fullUrl, $this->UrlResolver->getWebProject(), $this->SelectedEntrypoint ?? self::pagesIdAsString('-'), $this->UrlResolver->getLanguage(), self::findCachetime());
                     $found = true;
                 }
             }
@@ -363,19 +369,24 @@
         }
 
         private function loadPageData() {
-            $selectSql = ""
-                . "SELECT p.`id`, i.`name`, i.`href`, i.`in_title`, i.`keywords`, i.`title`, i.`timestamp`, i.`cachetime`, "
-                . "IFNULL(c.`tag_lib_start`, cd.`tag_lib_start`) AS `tag_lib_start`, IFNULL(c.`tag_lib_end`, cd.`tag_lib_end`) AS `tag_lib_end`, IFNULL(c.`head`, cd.`head`) AS `head`, IFNULL(c.`content`, cd.`content`) AS `content` "
-                . "FROM `page` p "
-                    . "LEFT JOIN `info` i ON p.`id` = i.`page_id` "
-                    . "LEFT JOIN `content` c ON p.`id` = c.`page_id` AND c.`language_id` = " . $this->UrlResolver->getLanguageId() . " " 
-                    . "LEFT JOIN `content` cd ON p.`id` = cd.`page_id` AND cd.`language_id` = (SELECT `id` FROM `language` WHERE `language` = '') " 
-                . "WHERE i.`is_visible` = 1 "
-                    . "AND i.`language_id` = " . $this->UrlResolver->getLanguageId() . " "
-                    . "AND p.`id` IN (" . self::pagesIdAsString() . ") "
-                    . "AND p.`wp` = " . $this->UrlResolver->getWebProjectId() . ";";
-            
-            $this->TempLoadedContent = self::sortPages(parent::db()->fetchAll($selectSql), $this->UrlResolver->getPagesId());
+            $entrypoint = $this->UrlResolver->getWebProject()["entrypoint"];
+            if (empty($entrypoint)) {
+                $selectSql = ""
+                    . "SELECT p.`id`, i.`name`, i.`href`, i.`in_title`, i.`keywords`, i.`title`, i.`timestamp`, i.`cachetime`, "
+                    . "IFNULL(c.`tag_lib_start`, cd.`tag_lib_start`) AS `tag_lib_start`, IFNULL(c.`tag_lib_end`, cd.`tag_lib_end`) AS `tag_lib_end`, IFNULL(c.`head`, cd.`head`) AS `head`, IFNULL(c.`content`, cd.`content`) AS `content` "
+                    . "FROM `page` p "
+                        . "LEFT JOIN `info` i ON p.`id` = i.`page_id` "
+                        . "LEFT JOIN `content` c ON p.`id` = c.`page_id` AND c.`language_id` = " . $this->UrlResolver->getLanguageId() . " " 
+                        . "LEFT JOIN `content` cd ON p.`id` = cd.`page_id` AND cd.`language_id` = (SELECT `id` FROM `language` WHERE `language` = '') " 
+                    . "WHERE i.`is_visible` = 1 "
+                        . "AND i.`language_id` = " . $this->UrlResolver->getLanguageId() . " "
+                        . "AND p.`id` IN (" . self::pagesIdAsString() . ") "
+                        . "AND p.`wp` = " . $this->UrlResolver->getWebProjectId() . ";";
+                
+                $this->TempLoadedContent = self::sortPages(parent::db()->fetchAll($selectSql), $this->UrlResolver->getPagesId());
+            } else {
+                $this->SelectedEntrypoint = $entrypoint;
+            }
         }
 
         private function parsePagesId($item) {
@@ -395,6 +406,10 @@
 
         private function findCachetime() {
             $cachetime = 10000000000;
+            if (!empty($this->SelectedEntrypoint)) {
+                return -1;
+            }
+
             foreach ($this->TempLoadedContent as $page) {
                 //echo $cachetime . '<br />';
                 if ($cachetime != -1 && ($page['cachetime'] < $cachetime || $cachetime == 0)) {
@@ -1117,13 +1132,15 @@
          *
          */
         public function flush() {
-            $_SESSION['last-request']['pages-id'] = $this->PagesId;
+            if (empty($this->SelectedEntrypoint)) {
+                $_SESSION['last-request']['pages-id'] = $this->PagesId;
 
-            if (!RoleHelper::canUser(Web::$PageRightDesc, $this->PagesId, WEB_R_READ)) {
-                $this->generateErrorPage('403');
+                if (!RoleHelper::canUser(Web::$PageRightDesc, $this->PagesId, WEB_R_READ)) {
+                    $this->generateErrorPage('403');
+                }
+
+                $this->loadPageFiles();
             }
-
-            $this->loadPageFiles();
 
             $lang = $this->UrlResolver->getLanguage()['language'];
             $keywords = file_get_contents("keywords.txt");
@@ -1566,7 +1583,19 @@
          *
          */
         public function getContent() {
-            global $phpObject;
+            if (!empty($this->SelectedEntrypoint)) {
+                $entrypoint = explode(":", $this->SelectedEntrypoint);
+                $module = Module::findById($entrypoint[0]);
+                if ($module != null) {
+                    foreach ($this->entrypoints as $item) {
+                        if ($item["moduleId"] == $entrypoint[0] && $item["id"] == $entrypoint[1]) {
+                            return $item["handler"]([]);
+                        }
+                    }
+                }
+
+                $this->generateErrorPage("404");
+            }
 
             $path = StringUtils::explode($this->Path, '/', 1);
             $page = $this->TempLoadedContent[$this->PagesIdIndex];

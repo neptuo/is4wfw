@@ -29,7 +29,7 @@
                 $domainProtocol = "http";
             }
 
-            $urls = parent::db()->fetchAll('select `id`, `project_id`, `domain_url`, `root_url`, `virtual_url`, `http`, `https` from `web_url` where `enabled` = 1;');
+            $urls = parent::db()->fetchAll('select wu.`id`, wu.`project_id`, wu.`domain_url`, wu.`root_url`, wu.`virtual_url`, wu.`http`, wu.`https`, wp.`entrypoint` from `web_url` wu join `web_project` wp on wu.`project_id` = wp.`id` where `enabled` = 1;');
 
             // Domains
             $selected = array();
@@ -125,14 +125,20 @@
                         }
 
                         if ($ok) {
-                            // prejit na parsovani url stranek
-                            $key++;
-                            if (self::parsePageUrl(self::subarray($pageUrls, $key), $url['project_id'])) {
-                                // mame viteze
+                            if (empty($url['entrypoint'])) {
+                                // prejit na parsovani url stranek
+                                $key++;
+                                if (self::parsePageUrl(self::subarray($pageUrls, $key), $url['project_id'])) {
+                                    // mame viteze
+                                    self::selectProject($url);
+                                    return true;
+                                } else {
+                                    continue;
+                                }
+                            } else {
+                                // First matched project with entrypoint is the winner.
                                 self::selectProject($url);
                                 return true;
-                            } else {
-                                continue;
                             }
                         } else {
                             continue;
@@ -257,6 +263,7 @@
         public function selectProject($url) {
             self::loadProjectById($url['project_id']);
             $this->WebProject['alias'] = $url;
+            $this->WebProject['entrypoint'] = $url["entrypoint"];
         }
 
         public function selectProjectById($cacheItem) {
@@ -269,6 +276,10 @@
                 'http' => $cacheItem['http'],
                 'https' => $cacheItem['https'],
             );
+
+            if ($cacheItem["language_id"] == 0) {
+                $this->WebProject['entrypoint'] = $cacheItem["pages_id"];
+            }
         }
 
         public function selectLanguage($id) {

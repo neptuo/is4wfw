@@ -21,7 +21,7 @@
         
         public function write($fullUrl, $webProject, $pages, $lang, $cachetime) {
             if (WEB_USE_URLCACHE) {
-                $sql = 'insert into `urlcache`(`url`, `http`, `https`, `domain_url`, `root_url`, `virtual_url`, `project_id`, `pages_id`, `language_id`, `cachetime`, `lastcache`) values ("'.$fullUrl.'", '.$webProject['alias']['http'].', '.$webProject['alias']['https'].', "'.$webProject['alias']['domain_url'].'", "'.$webProject['alias']['root_url'].'", "'.$webProject['alias']['virtual_url'].'", '.$webProject['id'].', "'.$pages.'", '.$lang['id'].', '.$cachetime.', '.time().');';
+                $sql = 'insert into `urlcache`(`url`, `http`, `https`, `domain_url`, `root_url`, `virtual_url`, `project_id`, `pages_id`, `language_id`, `cachetime`, `lastcache`) values ("'.$fullUrl.'", '.$webProject['alias']['http'].', '.$webProject['alias']['https'].', "'.$webProject['alias']['domain_url'].'", "'.$webProject['alias']['root_url'].'", "'.$webProject['alias']['virtual_url'].'", '.$webProject['id'].', "'.$pages.'", ' . ($lang['id'] ?? "0") . ', '.$cachetime.', '.time().');';
                 parent::db()->execute($sql);
             }
         }
