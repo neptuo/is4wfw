@@ -80,6 +80,7 @@
                 $tlEnd =   $dbObject->escape(str_replace('&#126', '~', $tlEnd));
                 $type = $_POST['type'];
                 $keywords = $dbObject->escape(str_replace('&#126', '~', $_POST['edit-keywords']));
+                $entrypoint = $_POST['edit-entrypoint'];
                 $icon = $dbObject->escape(str_replace('&#126', '~', $_POST['edit-icon']));
                 $title = $dbObject->escape(str_replace('&#126', '~', $_POST['edit-title']));
                 $clearUrlCache = $_POST['edit-clearurlcache'];
@@ -105,10 +106,10 @@
 
                 if (count($errors) == 0) {
                     if ($type == "page-edit") {
-                        $dbObject->execute("UPDATE `info` SET `name` = \"" . $name . "\", `href` = \"" . $href . "\", `in_title` = \"" . $inTitle . "\", `in_menu` = " . $menu . ", `is_visible` = " . $visible . ", `keywords` = \"" . $keywords . "\", `icon` = \"" . $icon . "\", `title` = \"" . $title . "\", `timestamp` = " . time() . ", `cachetime` = " . $cacheTime . " WHERE `page_id` = " . $pageId . " AND `language_id` = " . $languageId . ";");
+                        $dbObject->execute("UPDATE `info` SET `name` = \"" . $name . "\", `href` = \"" . $href . "\", `in_title` = \"" . $inTitle . "\", `in_menu` = " . $menu . ", `is_visible` = " . $visible . ", `entrypoint` = \"" . $entrypoint ."\", `keywords` = \"" . $keywords . "\", `icon` = \"" . $icon . "\", `title` = \"" . $title . "\", `timestamp` = " . time() . ", `cachetime` = " . $cacheTime . " WHERE `page_id` = " . $pageId . " AND `language_id` = " . $languageId . ";");
                         
                         $contentFilter = array("page_id" => $pageId, "language_id" => $languageId);
-                        if ($isContentless) {
+                        if ($isContentless || !empty($entrypoint)) {
                             $deleteSql = parent::sql()->delete("content", $contentFilter);
                             parent::dataAccess()->execute($deleteSql);
                         } else {
@@ -201,8 +202,10 @@
                         $languageId = $_POST['language'];
 
                         $dbObject->execute("INSERT INTO `page`(`id`, `parent_id`, `wp`) VALUES(" . $pageId . ", " . $parentId . ", " . $projectId . ");");
-                        $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(" . $pageId . ", \"" . $tlStart . "\", \"" . $tlEnd . "\", \"" . $head . "\", \"" . $content . "\", " . $languageId . ");");
-                        $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `icon`, `title`, `timestamp`, `cachetime`) VALUES(" . $pageId . ", " . $languageId . ", \"" . $name . "\", \"" . $href . "\", " . $inTitle . ", " . $menu . ", " . $pageId . ", " . $visible . ", \"" . $keywords . "\", \"" . $icon . "\", \"" . $title . "\", " . time() . ", " . $cacheTime . ");");
+                        $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `entrypoint`, `keywords`, `icon`, `title`, `timestamp`, `cachetime`) VALUES(" . $pageId . ", " . $languageId . ", \"" . $name . "\", \"" . $href . "\", " . $inTitle . ", " . $menu . ", " . $pageId . ", " . $visible . ", \"" . $entrypoint . "\", \"" . $keywords . "\", \"" . $icon . "\", \"" . $title . "\", " . time() . ", " . $cacheTime . ");");
+                        if (empty($entrypoint)) {
+                            $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(" . $pageId . ", \"" . $tlStart . "\", \"" . $tlEnd . "\", \"" . $head . "\", \"" . $content . "\", " . $languageId . ");");
+                        }
 
                         if (count($pageRightR) != 0) {
                             foreach ($pageRightR as $right) {
@@ -270,11 +273,11 @@
 
                         $this->MessageFromEdit = '<h4 class="success">' . $rb->get('page.success.added') . '</h4>';
                     } else if ($type == "page-add-lang-ver") {
-                        if (!$isContentless) {
+                        if (!$isContentless && empty($entrypoint)) {
                             $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(" . $pageId . ", \"" . $tlStart . "\", \"" . $tlEnd . "\", \"" . $head . "\", \"" . $content . "\", " . $languageId . ");");
                         }
 
-                        $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `icon`, `title`, `timestamp`, `cachetime`) VALUES(" . $pageId . ", " . $languageId . ", \"" . $name . "\", \"" . $href . "\", " . $inTitle . ", " . $menu . ", " . $pageId . ", " . $visible . ", \"" . $keywords . "\", \"" . $icon . "\", \"" . $title . "\", " . time() . ", " . $cacheTime . ");");
+                        $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `entrypoint`, `keywords`, `icon`, `title`, `timestamp`, `cachetime`) VALUES(" . $pageId . ", " . $languageId . ", \"" . $name . "\", \"" . $href . "\", " . $inTitle . ", " . $menu . ", " . $pageId . ", " . $visible . ", \"" . $entrypoint . "\", \"" . $keywords . "\", \"" . $icon . "\", \"" . $title . "\", " . time() . ", " . $cacheTime . ");");
 
                         $this->MessageFromEdit = '<h4 class="success">' . $rb->get('page.success.langadded') . '</h4>';
                     } else if ($type == "page-add-sub") {
@@ -284,8 +287,10 @@
                         $_POST['page-id'] = $pageId;
 
                         $dbObject->execute("INSERT INTO `page`(`id`, `parent_id`, `wp`) VALUES(" . $pageId . ", " . $parentId . ", " . $projectId . ");");
-                        $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(" . $pageId . ", \"" . $tlStart . "\", \"" . $tlEnd . "\", \"" . $head . "\", \"" . $content . "\", " . $languageId . ");");
-                        $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `keywords`, `icon`, `title`, `timestamp`, `cachetime`) VALUES(" . $pageId . ", " . $languageId . ", \"" . $name . "\", \"" . $href . "\", " . $inTitle . ", " . $menu . ", " . $pageId . ", " . $visible . ", \"" . $keywords . "\", \"" . $icon . "\", \"" . $title . "\", " . time() . ", " . $cacheTime . ");");
+                        $dbObject->execute("INSERT INTO `info`(`page_id`, `language_id`, `name`, `href`, `in_title`, `in_menu`, `page_pos`, `is_visible`, `entrypoint`, `keywords`, `icon`, `title`, `timestamp`, `cachetime`) VALUES(" . $pageId . ", " . $languageId . ", \"" . $name . "\", \"" . $href . "\", " . $inTitle . ", " . $menu . ", " . $pageId . ", " . $visible . ", \"" . $entrypoint . "\", \"" . $keywords . "\", \"" . $icon . "\", \"" . $title . "\", " . time() . ", " . $cacheTime . ");");
+                        if (empty($entrypoint)) {
+                            $dbObject->execute("INSERT INTO `content`(`page_id`, `tag_lib_start` , `tag_lib_end`, `head`, `content`, `language_id`) VALUES(" . $pageId . ", \"" . $tlStart . "\", \"" . $tlEnd . "\", \"" . $head . "\", \"" . $content . "\", " . $languageId . ");");
+                        }
 
                         if (count($pageRightR) != 0) {
                             foreach ($pageRightR as $right) {
@@ -429,7 +434,7 @@
                     if ($_POST['page-edit'] == $rb->get('page.action.edit')) {
                         // $sql_return = $dbObject->fetchAll("SELECT `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content`, `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`title`, `info`.`cachetime` FROM `content` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `info`.`language_id` = `content`.`language_id` WHERE `info`.`page_id` = " . $pageId . " AND `info`.`language_id` = " . $langId . ";");
                         $sql_return = array();
-                        $sql_info = $dbObject->fetchAll("SELECT `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`keywords`, `info`.`icon`, `info`.`title`, `info`.`cachetime` FROM `info` WHERE `info`.`page_id` = " . $pageId . " AND `info`.`language_id` = " . $langId . ";");
+                        $sql_info = $dbObject->fetchAll("SELECT `info`.`name`, `info`.`href`, `info`.`in_title`, `info`.`in_menu`, `info`.`is_visible`, `info`.`entrypoint`, `info`.`keywords`, `info`.`icon`, `info`.`title`, `info`.`cachetime` FROM `info` WHERE `info`.`page_id` = " . $pageId . " AND `info`.`language_id` = " . $langId . ";");
                         $sql_content = $dbObject->fetchAll("SELECT `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content`.`head`, `content`.`content` FROM `content` WHERE `content`.`page_id` = " . $pageId . " AND `content`.`language_id` = " . $langId . ";");
                         if ($sql_content != array()) {
                             $sql_info[0]["tag_lib_start"] = $sql_content[0]["tag_lib_start"];
@@ -437,7 +442,7 @@
                             $sql_info[0]["head"] = $sql_content[0]["head"];
                             $sql_info[0]["content"] = $sql_content[0]["content"];
                             $sql_info[0]["contentless"] = 0;
-                        } else {
+                        } else if (empty($sql_info[0]["entrypoint"])) {
                             $sql_info[0]["contentless"] = 1;
                         }
 
@@ -471,6 +476,7 @@
                         $sql_return[0]['tag_lib_start'] = $tlStart;
                         $sql_return[0]['tag_lib_end'] = $tlEnd;
                         $sql_return[0]['cachetime'] = $cacheTime;
+                        $sql_return[0]['entrypoint'] = $entrypoint;
                         $sql_return[0]['keywords'] = $keywords;
                         $sql_return[0]['icon'] = $icon;
                         $sql_return[0]['title'] = $title;
@@ -688,19 +694,44 @@
                         . '</div>'
                         . '<div class="clear"></div>';
 
-                        if ($type == "page-add-lang-ver" || $type == "page-edit") {
-                            $defaultLanguageId = parent::dataAccess()->fetchSingle(parent::sql()->select("language", array("id"), array("language" => "")))["id"];
-                            $hasDefaultContent = parent::dataAccess()->fetchSingle(parent::sql()->count("content", array("language_id" => $defaultLanguageId, "page_id" => $pageId)))["count"] != 0;
-                            if ($hasDefaultContent) {
+                        // if ($type == "page-add-lang-ver" || $type == "page-edit") {
+                        //     $defaultLanguageId = parent::dataAccess()->fetchSingle(parent::sql()->select("language", array("id"), array("language" => "")))["id"];
+                        //     $hasDefaultContent = parent::dataAccess()->fetchSingle(parent::sql()->count("content", array("language_id" => $defaultLanguageId, "page_id" => $pageId)))["count"] != 0;
+                        //     if ($hasDefaultContent) {
+                            $lastModuleId = null;
+
                                 $returnTmp .= ''
-                                . '<div class="gray-box">'
+                                . '<div class="gray-box-float">'
                                     . '<label>'
-                                    . '<input type="checkbox" name="edit-contentless"' . ($sql_return[0]["contentless"] == 1 ? ' checked="checked"' : '') . '>' 
-                                    . $rb->get("page.field.contentless") 
+                                        . '<input type="checkbox" name="edit-contentless"' . ($sql_return[0]["contentless"] == 1 ? ' checked="checked"' : '') . '> ' 
+                                        . $rb->get("page.field.contentless") 
                                     . '</label>'
-                                . '</div>';
-                            }
-                        }
+                                . '</div>'
+                                . '<div class="gray-box-float">'
+                                    . '<label for="entrypoint">' . $rb->get('page.field.entrypoint') . ':</label> '
+                                    . '<select id="entrypoint" name="edit-entrypoint" class="w200">'
+                                        . '<option value="">---</option>'
+                                        . implode("", (array_map(function($e) use($lastModuleId, $sql_return) {
+                                            $result = "";
+                                            if ($lastModuleId !== $e["moduleId"]) {
+                                                if ($lastModuleId === null) {
+                                                    $result .= "</optgroup>";    
+                                                }
+
+                                                $lastModuleId = $e["moduleId"];
+                                                $result .= "<optgroup label='" . $e["moduleName"] . "'>";
+                                            }
+
+                                            $identifier = $e["moduleId"] . ":" . $e["id"];
+                                            $result .= "<option value='" . $identifier . "'" . ($sql_return[0]['entrypoint'] == $identifier ? " selected='selected'" : "") . ">" . $e["displayName"] . "</option>";
+                                            return $result;
+                                        }, $this->web()->getEntrypointsInfo())))
+                                        . ($lastModuleId !== null ? "</optgroup>" : "")
+                                    . '</select>'
+                                . '</div>'
+                                . '<div class="clear"></div>';
+                        //     }
+                        // }
 
                         if ($propertyEditors == 'edit_area') {
                             $returnTmp .= ''

@@ -2819,6 +2819,41 @@
 
             $this->hooks[$name][] = $handler;
         }
+
+        private $entrypoints = [];
+
+        public function addEntrypoint(string $moduleId, string $id, string $displayName, callable $handler) {
+            $this->entrypoints[] = [
+                "moduleId" => $moduleId,
+                "id" => $id,
+                "displayName" => $displayName,
+                "handler" => $handler
+            ];
+        }
+
+        public function getEntrypointsInfo() {
+            $data = [];
+            foreach ($this->entrypoints as $entrypoint) {
+                $module = Module::getById($entrypoint["moduleId"]);
+                $data[] = [
+                    "moduleId" => $entrypoint["moduleId"],
+                    "moduleName" => $module->alias,
+                    "id" => $entrypoint["id"],
+                    "displayName" => $entrypoint["displayName"]
+                ];
+            }
+
+            usort($data, function($a, $b) {
+                $result = strcmp($a["moduleName"], $b["moduleName"]);
+                if ($result === 0) {
+                    $result = strcmp($a["displayName"], $b["displayName"]);
+                }
+
+                return $result;
+            });
+
+            return $data;
+        }
     }
 
     class WebHook {
