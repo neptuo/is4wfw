@@ -132,7 +132,6 @@
         private $CurrentPath = "";
         private $TempLoadedContent = array();
         private $SelectedEntrypoint = null;
-        private $SelectedEntrypointTrailingUrl = null;
         private $CacheInfo = array();
         private $CacheTime = 10000000000;
         private $ServerName = '';
@@ -1402,8 +1401,17 @@
             $lastPageId = 0;
             $pageProjectId = 0;
             if (!is_numeric($pageId)) {
-                $url = ViewHelper::resolveUrl($pageId);
-                return self::addSpecialParams($url);
+                if ($this->UrlResolver == null) {
+                    $url = ViewHelper::resolveUrl($pageId);
+                } else {
+                    $project = $this->UrlResolver->getWebProject();
+                    $pageId = str_replace("~/", "/", $pageId);
+                    $url = $this->composeUrlProjectPart($pageId, $project, $absolutePath);
+                    if ($copyParameters) {
+                        $url = UrlUtils::addCurrentQueryString($url);
+                    }
+                }
+                return $this->addSpecialParams($url);
             }
             
             $currentValues = array();
