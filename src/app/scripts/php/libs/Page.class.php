@@ -695,7 +695,7 @@
                                 $returnTmp .= ''
                                 . '<div class="gray-box">'
                                     . '<label>'
-                                    . '<input type="checkbox" name="edit-contentless"' . ($sql_return[0]["contentless"] == 1 ? ' checked="checked"' : '') . '>' 
+                                    . '<input type="checkbox" name="edit-contentless"' . ($sql_return[0]["contentless"] == 1 ? ' checked="checked"' : '') . '> ' 
                                     . $rb->get("page.field.contentless") 
                                     . '</label>'
                                 . '</div>';

@@ -9,11 +9,16 @@
     <attribute>
       <name>id</name>
       <type>string</type>
-      <required />
       <comment>Id modulu.</comment>
     </attribute>
+    <attribute>
+      <name>alias</name>
+      <type>string</type>
+      <comment>Alias modulu.</comment>
+    </attribute>
     <comment>
-      Vybere modul podle id pro další práci s ním (uvnitř těla).
+      Vybere modul podle id nebo aliasu pro další práci s ním (uvnitř těla).
+      Je nutné zadat atribut "id" nebo "alias".
     </comment>
   </fulltag>
   <fulltag>
@@ -27,6 +32,7 @@
     </attribute>
     <comment>
       Vytvoří fyzickou cestu na disku k vybrané složce uvnitř složky views.
+      Možno použít uvnitř "module:use".
     </comment>
   </fulltag>
   <property>
@@ -47,6 +53,7 @@
     </attribute>
     <comment>
       Vytvoří virtuální URL k vybrané složce uvnitř složky assets.
+      Možno použít uvnitř "module:use".
     </comment>
   </fulltag>
   <property>
@@ -122,5 +129,25 @@
       Vykoná tělo, pokud se vše povede.
     </comment>
   </fulltag>
+  <tag>
+    <name>entrypoint</name>
+    <function>entrypoint</function>
+    <comment>
+      Vykreslí entrypoint z modulu.
+      Možno použít uvnitř "module:use".
+    </comment>
+    <attribute>
+      <name>id</name>
+      <type>string</type>
+      <required />
+      <comment>Id entrypointu.</comment>
+    </attribute>
+    <attribute>
+      <name>param</name>
+      <type>string</type>
+      <prefix />
+      <comment>Seznam parametrů předaných entrypointu.</comment>
+    </attribute>
+  </tag>
 </taglib>
 

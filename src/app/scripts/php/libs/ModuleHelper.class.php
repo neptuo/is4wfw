@@ -23,10 +23,19 @@
 			}
 		}
 
-		public function use($template, $id) {
+		public function use($template, $id, $alias) {
 			$lastCurrent = $this->current;
 
-			$this->current = Module::getById($id);
+			if (empty($id) && empty($alias)) {
+				throw new ParameterException("id", "One for 'id' or 'alias' must be provided.");
+			}
+
+			if (!empty($id)) {
+				$this->current = Module::getById($id);
+			} else if (!empty($alias)) {
+				$this->current = Module::getByAlias($alias);
+			}
+			
 			$result = $template();
 
 			$this->current = $lastCurrent;
@@ -214,6 +223,11 @@
 
 				$this->rebuildInitializers($template);
 			}
+		}
+
+		public function entrypoint($id, $params = []) {
+			$this->ensureCurrent();
+			return $this->web()->renderEntrypoint($this->current->id, $id, $params);
 		}
     }
 

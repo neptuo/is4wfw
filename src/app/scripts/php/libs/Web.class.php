@@ -12,6 +12,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewHelper.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/WebForwardManager.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/HttpClient.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/MissingEntrypointException.class.php");
 
     /**
      *
@@ -1601,6 +1602,20 @@
             return $cprop[0];
         }
 
+        public function renderEntrypoint($moduleId, $entrypointId, $params) {
+            $module = Module::findById($moduleId);
+            if ($module != null) {
+                foreach ($this->entrypoints as $item) {
+                    if ($item["moduleId"] == $moduleId && $item["id"] == $entrypointId) {
+                        $trailingUrl = $this->getEntrypointTrailingUrl($this->getVirtualUrl());
+                        return $item["handler"]($params);
+                    }
+                }
+            }
+
+            throw new MissingEntrypointException($moduleId, $entrypointId);
+        }
+
         /**
          *
          *  Generates page content and parse c tags.
@@ -1610,18 +1625,14 @@
          */
         public function getContent() {
             if (!empty($this->SelectedEntrypoint)) {
-                $entrypoint = explode(":", $this->SelectedEntrypoint);
-                $module = Module::findById($entrypoint[0]);
-                if ($module != null) {
-                    foreach ($this->entrypoints as $item) {
-                        if ($item["moduleId"] == $entrypoint[0] && $item["id"] == $entrypoint[1]) {
-                            $trailingUrl = $this->getEntrypointTrailingUrl($this->getVirtualUrl());
-                            return $item["handler"](["relativeUrl" => $trailingUrl]);
-                        }
-                    }
+                try {
+                    $entrypoint = explode(":", $this->SelectedEntrypoint);
+                    $trailingUrl = $this->getEntrypointTrailingUrl($this->getVirtualUrl());
+                    return $this->renderEntrypoint($entrypoint[0], $entrypoint[1], ["relativeUrl" => $trailingUrl]);
                 }
-
-                $this->generateErrorPage("404");
+                catch (MissingEntrypointException $e) {
+                    $this->generateErrorPage("404");
+                }
             }
 
             $path = StringUtils::explode($this->Path, '/', 1);
