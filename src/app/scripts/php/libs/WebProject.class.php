@@ -183,6 +183,9 @@
                         $project['url'] = "https";
                     }
                     $project['url'] = UrlResolver::combinePath($project['url'], $url['domain_url'], "://");
+                    if ($_ENV["IS4WFW_PORT"]) {
+                        $project['url'] .= ":" . $_ENV["IS4WFW_PORT"];
+                    }
                     $project['url'] = UrlResolver::combinePath($project['url'], $url['root_url']);
                     $project['url'] = UrlResolver::combinePath($project['url'], $url['virtual_url']);
 

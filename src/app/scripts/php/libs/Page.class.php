@@ -2152,11 +2152,11 @@
                     $dbObject->execute('DELETE FROM `urlcache` WHERE `id` = ' . $del . ';');
                 }
                 $msg = '<h4 class="success">Selected items have been deleted!</h4>';
-                $_POST['show-url-cache'] = 'Show url cache';
+                $_POST['show-url-cache'] = 'Search';
                 $sent = true;
             }
 
-            if ($_POST['show-url-cache'] == 'Show url cache') {
+            if ($_POST['show-url-cache'] == 'Search') {
                 $pageId = $_POST['page-id-url-cache'];
                 $projectId = $_POST['project-id-url-cache'];
                 $partOfUrl = $_POST['part-of-url-url-cache'];
@@ -2216,6 +2216,11 @@
                             $cacheTime = 'Unlimited';
                         }
 
+                        if ($_ENV["IS4WFW_PORT"]) {
+                            $urlFix = explode("/", $url['url'], 2);
+                            $url['url'] = $urlFix[0] . ":" . $_ENV["IS4WFW_PORT"] . "/" . $urlFix[1];
+                        }
+
                         $urlCacheReturn .= ''
                         . '<tr class="' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
                             . '<td class="url-cache-id"><label for="url-cache-delete-checkbox-' . $url['id'] . '">' . $url['id'] . '</label></td>'
@@ -2266,7 +2271,7 @@
                     . '</div>'
                     . '<div class="clear"></div>'
                     . '<div id="clear-url-cache-submit" class="submit">'
-                    . '<input type="submit" name="show-url-cache" value="Show url cache" />'
+                    . '<input type="submit" name="show-url-cache" value="Search" />'
                     . ((strlen($urlCacheReturn) > 0) ? ''
                             . '<input class="confirm" type="submit" name="delete-from-url-cache" value="Delete selected" title="Delete selected items from urlcache" />' : '')
                     . '<input class="confirm" type="submit" name="clear-url-cache" value="Do \'Clear Url Cache\'" title="Clear whole url cache" />'
