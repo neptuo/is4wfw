@@ -96,6 +96,12 @@ if (array_key_exists('fid', $_REQUEST)) {
 
     if (count($file) == 1) {
         $filePath = $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
+        if (!file_exists($filePath) || is_readable($filePath)) {
+            header("HTTP/1.1 404 Not Found");
+            echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';
+            exit;
+        }
+        
         $updTime = filemtime($filePath);
 
         // Try cached file ...
@@ -164,24 +170,18 @@ if (array_key_exists('fid', $_REQUEST)) {
             }
         }
 
-        if (file_exists($filePath) && is_readable($filePath)) {
-            $fileSize = filesize($filePath);
+        $fileSize = filesize($filePath);
 
-            header('Content-Type: ' . $fileExt);
-            header('Accept-Ranges: bytes');
-            header('Content-Length: ' . $fileSize);
-            header('Content-Disposition: inline; filename=' . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']]);
-            header('Content-Transfer-Encoding: binary');
-            header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
-            $file = @fopen($filePath, 'rb');
-            if ($file) {
-                fpassthru($file);
-                exit;
-            } else {
-                header("HTTP/1.1 404 Not Found");
-                echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';
-                exit;
-            }
+        header('Content-Type: ' . $fileExt);
+        header('Accept-Ranges: bytes');
+        header('Content-Length: ' . $fileSize);
+        header('Content-Disposition: inline; filename=' . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']]);
+        header('Content-Transfer-Encoding: binary');
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s", $updTime) . " GMT");
+        $file = @fopen($filePath, 'rb');
+        if ($file) {
+            fpassthru($file);
+            exit;
         } else {
             header("HTTP/1.1 404 Not Found");
             echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';
