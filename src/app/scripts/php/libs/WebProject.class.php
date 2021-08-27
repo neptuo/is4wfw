@@ -148,18 +148,16 @@
                 $return .= parent::getWarning($rb->get('project.nodata'));
             } else {
                 $return .= ''
-                        . '<table class="show-projects data-table standart clickable">'
-                        . '<thead>'
+                . '<table class="show-projects data-table standart clickable">'
+                    . '<thead>'
                         . '<tr>'
-                        . '<th class="th-id">' . $rb->get('project.id') . ':</th>'
-                        . '<th class="th-name">' . $rb->get('project.name') . ':</th>'
-                        . '<th class="th-url">' . $rb->get('project.url') . ':</th>'
-                        //. '<th class="th-url"></th>'
-                        . (($editable == "true") ? ''
-                                . '<th class="th-edit"></th>' : '')
+                            . '<th class="th-id">' . $rb->get('project.id') . ':</th>'
+                            . '<th class="th-name">' . $rb->get('project.name') . ':</th>'
+                            . '<th class="th-url">' . $rb->get('project.url') . ':</th>'
+                            . (($editable == "true") ? '' . '<th class="th-edit"></th>' : '')
                         . '</tr>'
-                        . '</thead>'
-                        . '<tbody>';
+                    . '</thead>'
+                    . '<tbody>';
 
                 $i = 1;
                 foreach ($projects as $project) {
@@ -194,21 +192,21 @@
                                 . '<tr class="' . ((($i % 2) == 0) ? 'even' : 'idle') . '">'
                                 . '<td class="td-id">' . $project['id'] . '</td>'
                                 . '<td class="td-name">' . $project['name'] . '</td>'
-                                . '<td class="td-url">' . $project['url'] . '</td>'
+                                . '<td class="td-url"><a target="_blank" href="' . $project['url'] . '">' . $project['url'] . '</a></td>'
                                 //. '<td class="td-url">' . '<a target="_blank" href="' . (($project['http'] == 1) ? 'http://' : 'https://') . $project['url'] . '">view</a>' . '</td>'
                                 . '<td class="td-edit">'
                                 . (($editable == "true") ? ''
-                                        . '<form name="edit-projects1" method="post" action="' . $actionUrl . '"> '
+                                    . '<form name="edit-projects1" method="post" action="' . $actionUrl . '"> '
                                         . '<input type="hidden" name="wp" value="' . $project['id'] . '" />'
                                         . '<input type="hidden" name="edit" value="' . $rb->get('project.edit') . '" />'
                                         . '<input type="image" src="~/images/page_edi.png" name="edit" value="' . $rb->get('project.edit') . '" />'
-                                        . '</form>'
-                                        . ((count($pages) == 0) ? ''
-                                                . '<form name="edit-projects2" method="post" action="' . $_SERVER['REQUEST_URI'] . '"> '
-                                                . '<input type="hidden" name="wp" value="' . $project['id'] . '" />'
-                                                . '<input type="hidden" name="delete" value="' . $rb->get('project.delete') . '" />'
-                                                . '<input class="confirm" type="image" src="~/images/page_del.png" name="delete" value="' . $rb->get('project.delete') . '" title="' . $rb->get('project.deletetitle') . ', id(' . $project['id'] . ')" />'
-                                                . '</form>' : '') : '')
+                                    . '</form>'
+                                    . ((count($pages) == 0) ? ''
+                                        . '<form name="edit-projects2" method="post" action="' . $_SERVER['REQUEST_URI'] . '"> '
+                                            . '<input type="hidden" name="wp" value="' . $project['id'] . '" />'
+                                            . '<input type="hidden" name="delete" value="' . $rb->get('project.delete') . '" />'
+                                            . '<input class="confirm" type="image" src="~/images/page_del.png" name="delete" value="' . $rb->get('project.delete') . '" title="' . $rb->get('project.deletetitle') . ', id(' . $project['id'] . ')" />'
+                                        . '</form>' : '') : '')
                                 . '</td>'
                                 . '</tr>';
 
@@ -259,7 +257,7 @@
                 //echo '<pre>';
                 //print_r($_POST);
                 //echo '</pre>';
-                $project = array('id' => $_POST['project-id'], 'name' => $_POST['project-name'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d'], 'wysiwyg' => $_POST['project-edit-styles-wysiwyg']);
+                $project = array('id' => $_POST['project-id'], 'name' => $_POST['project-name'], 'entrypoint' => $_POST['project-entrypoint'], 'read' => $_POST['project-right-edit-groups-r'], 'write' => $_POST['project-right-edit-groups-w'], 'delete' => $_POST['project-right-edit-groups-d'], 'wysiwyg' => $_POST['project-edit-styles-wysiwyg']);
                 $urls['domain'] = $_POST['project-urls-domain'];
                 $urls['root'] = $_POST['project-urls-root'];
                 $urls['virtual'] = $_POST['project-urls-virtual'];
@@ -281,7 +279,7 @@
                     if (count($errors) == 0) {
                         if ($project['id'] == 0) {
                             // vlozit novy projekt
-                            parent::db()->execute('INSERT INTO `web_project`(`name`) VALUES ("' . $project['name'] . '");');
+                            parent::db()->execute($this->sql()->insert("web_project", ["name" => $project["name"], "entrypoint" => $project["entrypoint"]]));
                             $projectId = parent::db()->getLastId();
                             $project['id'] = $projectId;
 
@@ -324,7 +322,7 @@
                             }
                         } else {
                             // update stavajiciho projektu
-                            parent::db()->execute('UPDATE `web_project` SET `name` = "' . $project['name'] . '" WHERE `id` = ' . $project['id'] . ';');
+                            parent::db()->execute($this->sql()->update("web_project", ["name" => $project["name"], "entrypoint" => $project["entrypoint"]], ["id" => $project['id']]));
 
                             parent::db()->execute('delete from `web_url` where `project_id` = ' . $project['id'] . ';');
                             foreach ($urls['domain'] as $key => $domainUrl) {
@@ -444,7 +442,7 @@
                     $projectId = $project['id'];
                 } elseif ($_POST['edit'] == $rb->get('project.edit')) {
                     $projectId = $_POST['wp'];
-                    $project = parent::db()->fetchSingle('SELECT `id`, `name` FROM `web_project` WHERE `id` = ' . $projectId . ';');
+                    $project = parent::db()->fetchSingle('SELECT `id`, `name`, `entrypoint` FROM `web_project` WHERE `id` = ' . $projectId . ';');
                     if ($project != array()) {
                         $aliases = parent::db()->fetchAll('select `id`, `domain_url`, `root_url`, `virtual_url`, `http`, `https`, `default`, `enabled` from `web_url` where `project_id` = ' . $projectId . ' order by `id`;');
                         $project['aliases'] = $aliases;
@@ -565,12 +563,36 @@
                     . '</td>'
                 . '</tr>';
 
+                $lastModuleId = null;
+
                 // Vytvorit formular ....
                 $return .= ''
                 . '<form name="project-edit-detail" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                     . '<div class="gray-box">'
-                        . '<label class="w60" for="project-edit-name' . $project['id'] . '">' . $rb->get('project.name') . ':</label> '
+                        . '<label class="w80" for="project-edit-name' . $project['id'] . '">' . $rb->get('project.name') . ':</label> '
                         . '<input class="w400" type="text" id="project-edit-name' . $project['id'] . '" name="project-name" value="' . $project['name'] . '" />'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<label class="w80" for="entrypoint">' . $rb->get('project.entrypoint') . ':</label> '
+                        . '<select id="entrypoint" name="project-entrypoint" class="w200">'
+                            . '<option value="">---</option>'
+                            . implode("", (array_map(function($e) use($lastModuleId, $project) {
+                                $result = "";
+                                if ($lastModuleId !== $e["moduleId"]) {
+                                    if ($lastModuleId === null) {
+                                        $result .= "</optgroup>";    
+                                    }
+
+                                    $lastModuleId = $e["moduleId"];
+                                    $result .= "<optgroup label='" . $e["moduleName"] . "'>";
+                                }
+
+                                $identifier = $e["moduleId"] . ":" . $e["id"];
+                                $result .= "<option value='" . $identifier . "'" . ($project['entrypoint'] == $identifier ? " selected='selected'" : "") . ">" . $e["displayName"] . "</option>";
+                                return $result;
+                            }, $this->web()->getEntrypointsInfo())))
+                            . ($lastModuleId !== null ? "</optgroup>" : "")
+                        . '</select>'
                     . '</div>'
                     . '<div class="project-edit-rights">'
                         . (($show['read']) ? ''
