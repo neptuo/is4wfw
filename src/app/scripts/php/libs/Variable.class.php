@@ -67,9 +67,6 @@
 			return true;
 		}
 
-		private function getUserVariableDao() {
-		}
-
 		public function removeValue($name) {
 			if ($this->isScopeAvailableForName($name, "request") && parent::request()->exists($name, 'variable')) {
 				return parent::request()->delete($name, 'variable');
@@ -135,6 +132,11 @@
 			}
 
 			return null;
+		}
+
+		public function setProperty($name, $value) {
+			$this->setValue($name, $value);
+			return $value;
 		}
 
 		public function dispose() {
