@@ -1570,6 +1570,10 @@
 
             $path = StringUtils::explode($this->Path, '/', 1);
             $page = $this->TempLoadedContent[$this->PagesIdIndex];
+            if ($page == null) {
+                trigger_error("Missing child page, used 'web:content' in leaf page.", E_USER_WARNING);
+                return "";
+            }
 
             $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "tag_lib_start"), $page['tag_lib_start']);
 
