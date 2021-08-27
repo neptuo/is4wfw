@@ -40,10 +40,16 @@
 				$this->tempValues[$name] = $value;
 			} else if ($scope == 'cookie') {
 				setcookie($name, $value);
+			} else if ($scope == 'user') {
+				if ($this->login()->isLogged()) {
+					parent::dao('UserVariable')->setValue($this->login()->getUserId(), $name, $value);
+				} else {
+					trigger_error("User must be signed-in for variable scope '$scope'.");
+				}
 			} else if($scope == 'application') {
 				parent::dao('ApplicationVariable')->setValue($name, $value);
 			} else {
-				trigger_error("Invalid scope value '" . $scope . "'.");
+				trigger_error("Invalid scope value '$scope'.");
 			}
 
 			return '';
@@ -59,6 +65,9 @@
 			}
 
 			return true;
+		}
+
+		private function getUserVariableDao() {
 		}
 
 		public function removeValue($name) {
@@ -78,6 +87,13 @@
 
 				if (parent::session()->exists($name, 'variable-temp')) {
 					return parent::session()->delete($name, 'variable-temp');
+				}
+			}
+
+			if ($this->isScopeAvailableForName($name, "user") && $this->login()->isLogged()) {
+				if (parent::dao('UserVariable')->getValue($this->login()->getUserId(), $name) !== null) {
+					parent::dao('UserVariable')->delete($this->login()->getUserId(), $name);
+					return;
 				}
 			}
 
@@ -103,6 +119,13 @@
 
 				if (parent::session()->exists($name, 'variable-temp')) {
 					return parent::session()->get($name, 'variable-temp');
+				}
+			}
+
+			if ($this->isScopeAvailableForName($name, "user") && $this->login()->isLogged()) {
+				$user = parent::dao('UserVariable')->getValue($this->login()->getUserId(), $name);
+				if ($user !== null) {
+					return $user;
 				}
 			}
 

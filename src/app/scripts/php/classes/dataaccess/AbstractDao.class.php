@@ -216,6 +216,10 @@ abstract class AbstractDao {
 	protected function dataAccess() {
 		return $this->dataAccess;
 	}
+
+	protected function sql() {
+		return new SqlBuilder($this->dataAccess());
+	}
 	
 	public function getLastId() {
 		$sql = 'select max(`'.$this->getIdField().'`) as `'.$this->getIdField().'` from `'.$this->getTableName().'`;';

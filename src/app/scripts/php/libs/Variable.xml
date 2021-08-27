@@ -22,7 +22,7 @@
       <name>scope</name>
       <type>string</type>
       <default>request</default>
-      <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</comment>
+      <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie', 'user' a 'application'.</comment>
     </attribute>
     <attribute>
       <name>select</name>
@@ -46,7 +46,7 @@
       <required />
       <type>string</type>
       <default>request</default>
-      <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie' a 'application'.</comment>
+      <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie', 'user' a 'application'.</comment>
     </attribute>
     <comment>
       Řekne o proměnné, že patří do daného scope. Pokud se bude proměnná v rámci request ještě číst, bude se číst z tohoto scope.
