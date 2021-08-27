@@ -1607,7 +1607,6 @@
             if ($module != null) {
                 foreach ($this->entrypoints as $item) {
                     if ($item["moduleId"] == $moduleId && $item["id"] == $entrypointId) {
-                        $trailingUrl = $this->getEntrypointTrailingUrl($this->getVirtualUrl());
                         return $item["handler"]($params);
                     }
                 }
