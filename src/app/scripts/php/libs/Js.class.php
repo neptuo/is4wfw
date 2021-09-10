@@ -50,8 +50,8 @@
             return parent::web()->formatStyle($path);
         }
 
-        public function addScript($virtualPath, $placement = "head") {
-            $script = $this->formatScript($virtualPath);
+        public function addScript($virtualPath, $placement = "head", $checkExistence = false) {
+            $script = $this->formatScript($virtualPath, $checkExistence);
 			if ($script != null) {
                 parent::web()->addScript($script, $placement);
 			}
@@ -272,7 +272,7 @@
 
         public function bootstrapDatePicker($selector, $format = "", $language = "", $autoclose = false, $orientation = "") {
             $this->addScript("~/js/bootstrap-datepicker/bootstrap-datepicker.min.js");
-            $this->addScript("~/js/bootstrap-datepicker/locales/bootstrap-datepicker.$language.min.js", true);
+            $this->addScript("~/js/bootstrap-datepicker/locales/bootstrap-datepicker.$language.min.js", "head", true);
             $this->addStyle('~/css/bootstrap-datepicker/bootstrap-datepicker.min.css');
             
             $options = [];
