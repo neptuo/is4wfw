@@ -174,6 +174,7 @@
 		// ------- GRID -------------------------------------------------------
 
 		private $gridPhase = "";
+		private $gridExplicitRow = false;
 
 		public function grid($template, $model, $thead = array(), $tbody = array(), $params = array()) {
 			if ($model->isRender()) {
@@ -193,9 +194,14 @@
 						$result .= "<thead$theadAttributes>";
 					}
 					
-					$result .= "<tr>";
-					$result .= $template();
-					$result .= "</tr>";
+					$oldGridExplicitRow = $this->gridExplicitRow;
+					$header = $template();
+					if ($this->gridExplicitRow) {
+						$result .= $header;
+					} else {
+						$result .= "<tr>$header</tr>";
+					}
+					$this->gridExplicitRow = $oldGridExplicitRow;
 
 					if ($isWellStructured) {
 						$result .= "</thead>";
@@ -209,9 +215,14 @@
 					foreach ($items as $item) {
 						$model->data($item);
 						
-						$result .= "<tr>";
-						$result .= $template();
-						$result .= "</tr>";
+						$oldGridExplicitRow = $this->gridExplicitRow;
+						$row = $template();
+						if ($this->gridExplicitRow) {
+							$result .= $row;
+						} else {
+							$result .= "<tr>$row</tr>";
+						}
+						$this->gridExplicitRow = $oldGridExplicitRow;
 					}
 
 					if ($isWellStructured) {
@@ -225,6 +236,14 @@
 
 				return $result;
 			}
+		}
+
+		public function gridRow($template, $headTr = [], $bodyTr = []) {
+			$this->gridExplicitRow = true;
+
+			$trAttributes = parent::joinAttributes($this->gridPhase == "header" ? $headTr : $bodyTr);
+			$result = "<tr$trAttributes>" . $template() . "</tr>";
+			return $result;
 		}
 
 		public function gridColumn($header, $value, $th = array(), $td = array()) {

@@ -131,6 +131,25 @@
       Struktura tabulky pomocí "thead" a "tbody" je generována pouze pokud je vyplněn některý z těchto atributů.
     </comment>
   </fulltag>
+  <fulltag>
+    <name>row</name>
+    <function>gridRow</function>
+    <attribute>
+      <name>headTr</name>
+      <prefix default="merge" />
+      <comment>Seznam atributů pro "tr" v záhlaví.</comment>
+    </attribute>
+    <attribute>
+      <name>bodyTr</name>
+      <prefix default="merge" />
+      <comment>Seznam atributů pro "tr" v každém řádku tabulky (těle).</comment>
+    </attribute>
+    <comment>
+      Řádka v "ui:grid".
+      Není povinná, vhoudná použít pouze pokud je potřeba definovat atribute "tr".
+      Pokud není použita, grid si ji přidá sám.
+    </comment>
+  </fulltag>
   <tag>
     <name>column</name>
     <function>gridColumn</function>
@@ -145,12 +164,12 @@
     <attribute>
       <name>th</name>
       <prefix default="merge" />
-      <comment>Seznam atributů pro "th".</comment>
+      <comment>Seznam atributů pro "th" (v hlavičce).</comment>
     </attribute>
     <attribute>
       <name>td</name>
       <prefix default="merge" />
-      <comment>Seznam atributů pro "td".</comment>
+      <comment>Seznam atributů pro "td" (v těle).</comment>
     </attribute>
     <comment>
       Základ sloupec pro "ui:grid".
