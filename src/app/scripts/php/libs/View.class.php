@@ -232,35 +232,9 @@
                 array(&$this, 'parsepostframes'), 
                 $return
             );
-            $this->tryToComprimeContent($return);
-        }
-
-        private function tryToComprimeContent($content) {
-            $acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
-            if (headers_sent ()) {
-                $encoding = false;
-            } elseif (strpos($acceptEnc, 'x-gzip') !== false) {
-                $encoding = 'x-gzip';
-            } elseif (strpos($acceptEnc, 'gzip') !== false) {
-                $encoding = 'gzip';
-            } else {
-                $encoding = false;
-            }
-
-            $return = $content;
-
-            if ($encoding) {
-                header('Content-Encoding: ' . $encoding);
-                print ("\x1f\x8b\x08\x00\x00\x00\x00\x00");
-                $size = strlen($return);
-                $return = gzcompress($return, 9);
-                $return = substr($return, 0, $size);
-                print ($return);
-                parent::close();
-            } else {
-                echo $return;
-                parent::close();
-            }
+            
+            echo $return;
+            parent::close();
         }
 
     }

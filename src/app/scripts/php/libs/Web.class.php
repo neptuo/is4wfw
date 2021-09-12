@@ -1357,33 +1357,32 @@
         }
 
         private function tryToComprimeContent($content) {
-            $acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
-            if (headers_sent ()) {
-                $encoding = false;
-            } elseif (strpos($acceptEnc, 'x-gzip') !== false) {
-                $encoding = 'x-gzip';
-            } elseif (strpos($acceptEnc, 'gzip') !== false) {
-                $encoding = 'gzip';
-            } else {
-                $encoding = false;
-            }
-
-            //file_put_contents('databasequeries.txt', parent::db()->getQueriesPerRequest());
-
             $return = $content;
 
-            if ($this->ZipOutput && $encoding) {
-                $return = gzcompress($return, 9);
-                $size = strlen($return);
+            if ($this->ZipOutput) {
+                $acceptEnc = $_SERVER['HTTP_ACCEPT_ENCODING'];
+                if (headers_sent ()) {
+                    $encoding = false;
+                } elseif (strpos($acceptEnc, 'x-gzip') !== false) {
+                    $encoding = 'x-gzip';
+                } elseif (strpos($acceptEnc, 'gzip') !== false) {
+                    $encoding = 'gzip';
+                } else {
+                    $encoding = false;
+                }
 
-                header('Content-Encoding: ' . $encoding);
-                print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
-                print($return);
-                parent::close();
-            } else {
-                echo $return;
-                parent::close();
+                if ($encoding) {
+                    $return = gzcompress($return, 9);
+
+                    header('Content-Encoding: ' . $encoding);
+                    print("\x1f\x8b\x08\x00\x00\x00\x00\x00");
+                    print($return);
+                    parent::close();
+                }
             }
+
+            echo $return;
+            parent::close();
         }
 
         /**
@@ -2682,7 +2681,7 @@
             return $this->Doctype;
         }
 
-        public function setFlushOptions($template = false, $contentType = false) {
+        public function setFlushOptions($template = false, $contentType = false, $isZipEnabled = true) {
             if ($template == 'null') {
                 $this->Template = null;
             } else if ($template == 'xml') {
@@ -2694,6 +2693,8 @@
             if ($contentType != false && $contentType != '') {
                 $this->ContentType = $contentType;
             }
+
+            $this->setZipOutput($isZipEnabled);
         }
 
         public function getFavicon($url, $contentType) {

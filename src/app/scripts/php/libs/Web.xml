@@ -658,6 +658,12 @@
     <attribute>
       <name>contentType</name>
     </attribute>
+    <attribute>
+      <name>isZipEnabled</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda se má odpověď zipovat.</comment>
+    </attribute>
     <comment>
       Nastaví vlastnosti výstupu.
       Atribut 'template' nahrazuje globální parametr requestu '__TEMPLATE' pro definici výstupní šablony - 'none', 'xml' nebo 'null'.
