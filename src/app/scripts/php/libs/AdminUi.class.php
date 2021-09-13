@@ -125,13 +125,9 @@
 				return;
 			}
 
-			if (!is_numeric($id)) {
-				$id = 0;
-			}
-
 			$this->edit["id"] = $id;
 			$this->edit["isEdit"] = true;
-			if ($id == 0) {
+			if ($id == "new") {
 				$this->edit["title"] = "Create";
 			} else {
 				$this->edit["title"] = "Edit";

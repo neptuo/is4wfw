@@ -125,38 +125,61 @@
 			}
 		}
 
-		public function edit($template) {
+		public function getVersion() {
+			if ($this->hasListModel()) {
+				return $this->peekListModel()->data()->version;
+			}
+
+			if ($this->current) {
+				return $this->current->version;
+			}
+		}
+
+		public function edit($template, $id) {
 			$model = parent::getEditModel();
 
+			$isEdit = $id != "new";
+
 			if ($model->isLoad()) {
+				if ($isEdit) {
+					$module = Module::findById($id);
+					if ($module) {
+						$model["id"] = $module->id;
+						$model["alias"] = $module->alias;
+						$model["name"] = $module->name;
+					}
+				}
+
 				$template();
 			}
 
 			if ($model->isSubmit()) {
 				$template();
 				
-				Validator::required($model, "alias");
 				Validator::required($model, "zip");
+				if (!$id) {
+					Validator::required($model, "alias");
 
-				if ($model->isValid()) {
-					if (Module::findByAlias($model["alias"])) {
-						Validator::addUnique($model, "alias");
-					}
+					if ($model->isValid()) {
+						if (Module::findByAlias($model["alias"])) {
+							Validator::addUnique($model, "alias");
+						}
 
-					$xml = ZipUtils::getFileContent($model["zip"]->TempName, "module.xml");
-					if ($xml) {
-						$xml = new SimpleXMLElement($xml);
-						if (isset($xml->id) && isset($xml->name) && isset($xml->is4wfw->minVersion)) {
-							if (Module::findById($xml->id)) {
-								Validator::addUnique($model, "zip");
+						$xml = ZipUtils::getFileContent($model["zip"]->TempName, "module.xml");
+						if ($xml) {
+							$xml = new SimpleXMLElement($xml);
+							if (isset($xml->id) && isset($xml->name) && isset($xml->is4wfw->minVersion)) {
+								if (Module::findById($xml->id)) {
+									Validator::addUnique($model, "zip");
+								}
+								
+								// TODO: Check version.
+							} else {
+								Validator::addInvalidValue($model, "zip");
 							}
-							
-							// TODO: Check version.
 						} else {
 							Validator::addInvalidValue($model, "zip");
 						}
-					} else {
-						Validator::addInvalidValue($model, "zip");
 					}
 				}
             }
@@ -168,31 +191,49 @@
 					$xml = ZipUtils::getFileContent($tempName, "module.xml");
 					if ($xml) {
 						$xml = new SimpleXMLElement($xml);
-						if (isset($xml->is4wfw->minVersion)) {
-							$xml->alias = $model["alias"];
-
-							$modules = ModuleXml::read();
-
-							$toDom = dom_import_simplexml($modules);
-							$fromDom = dom_import_simplexml($xml);
-							$toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
-
-							ModuleXml::write($modules);
-
-							$extractPath = MODULES_PATH . $model["alias"];
-							mkdir($extractPath);
-							ZipUtils::extract($tempName, $extractPath);
-							
-							ModuleGenerator::all();
-						} else {
+						if (!isset($xml->is4wfw->minVersion)) {
 							Validator::addInvalidValue($model, "zip");
 						}
+						
+						if ($isEdit) {
+							$module = Module::getById($id);
+							if ($module->id != $xml->id) {
+								Validator::addInvalidValue($model, "zip");
+							}
+						}
+					} else {
+						Validator::addInvalidValue($model, "zip");
+					}
+
+					if ($model->isValid()) {
+						$modules = ModuleXml::read();
+
+						if ($isEdit) {
+							$xml->alias = $module->alias;
+							$this->removeModuleXml($modules, $id);
+						} else {
+							$xml->alias = $model["alias"];
+						}
+
+						$toDom = dom_import_simplexml($modules);
+						$fromDom = dom_import_simplexml($xml);
+						$toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
+
+						ModuleXml::write($modules);
+
+						$extractPath = MODULES_PATH . $model["alias"];
+						mkdir($extractPath);
+
+						ZipUtils::extract($tempName, $extractPath);
+						ModuleGenerator::all();
 					}
 				}
 			}
 			
             if ($model->isSaved()) {
-                $template();
+				if ($model->isValid()) {
+                	$template();
+				}
             }
 			
             if ($model->isRender()) {
@@ -211,17 +252,21 @@
 			$module = Module::findById($id);
 			if ($module) {
 				$xml = ModuleXml::read();
-				for ($i=0; $i < count($xml); $i++) { 
-					if ($xml->module[$i]->id == $id) {
-						unset($xml->module[$i]);
-						break;
-					}
-				}
+				$this->removeModuleXml($xml, $id);
 
 				ModuleXml::write($xml);
 				FileUtils::removeDirectory($module->getRootPath());
 
 				$this->rebuildInitializers($template);
+			}
+		}
+
+		private function removeModuleXml($xml, $id) {
+			for ($i=0; $i < count($xml); $i++) { 
+				if ($xml->module[$i]->id == $id) {
+					unset($xml->module[$i]);
+					return;
+				}
 			}
 		}
 

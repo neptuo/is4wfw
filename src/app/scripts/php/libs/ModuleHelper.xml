@@ -98,9 +98,21 @@
       Vrací name modulu uvnitř "module:list" (preferovaný) nebo "module:use" tagu.
     </comment>
   </property>
+  <property>
+    <name>version</name>
+    <getFunction>getVersion</getFunction>
+    <comment>
+      Vrací version modulu uvnitř "module:list" (preferovaný) nebo "module:use" tagu.
+    </comment>
+  </property>
   <fulltag>
     <name>edit</name>
     <function>edit</function>
+    <attribute>
+      <name>id</name>
+      <type>string</type>
+      <comment>Id modulu.</comment>
+    </attribute>
     <comment>
       Vytvoření nového modulu (editace existujícího zatím neimplementována).
     </comment>

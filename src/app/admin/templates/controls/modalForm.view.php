@@ -1,4 +1,4 @@
-<div id="<web:out text="template:id" />" class="modal fade" tabindex="-1" role="dialog">
+<div id="<web:out text="template:id" />" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <edit:form submit="template:submit">
             <div class="modal-content">
@@ -6,9 +6,6 @@
                     <h4 class="modal-title">
                         <web:out text="template:title" />
                     </h4>
-                    <button type="button" class="close close-button">
-                        <span aria-hidden="true">×</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     <template:content />
@@ -17,7 +14,12 @@
                     <bs:button name="template:submit">
                         <web:out text="template:submitText" />
                     </bs:button>
-                    <bs:button type="button" color="light" class="close-button">Close</bs:button>
+                    <web:condition when="template:closeUrl">
+                        <web:a pageId="template:closeUrl" class="btn btn-light close-button" text="Close" />
+                    </web:condition>
+                    <web:condition when="template:closeUrl" isInverted="true">
+                        <bs:button type="button" color="light" class="close-button">Close</bs:button>
+                    </web:condition>
                 </div>
             </div>
         </edit:form>

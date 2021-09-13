@@ -87,6 +87,10 @@ body {
     border: none;
 }
 
+.icon-button:hover {
+    text-decoration: none !important;
+}
+
 .navbar {
     min-height: 56px;
 }

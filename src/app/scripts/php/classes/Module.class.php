@@ -64,12 +64,14 @@
         public $id;
         public $alias;
         public $name;
+        public $version;
 
-        public function __construct($id, $alias, $name)
+        public function __construct($id, $alias, $name, $version = null)
         {
             $this->id = $id;
             $this->alias = $alias;
             $this->name = $name;
+            $this->version = $version;
         }
 
         public function getRootPath() {
@@ -134,7 +136,7 @@
             
             $xml = ModuleXml::read();
             foreach ($xml->module as $module) {
-                $code->addLine("new Module('" . $module->id . "', '" . $module->alias . "', '" . $module->name . "'),", true);
+                $code->addLine("new Module('" . $module->id . "', '" . $module->alias . "', '" . $module->name . "', '" . $module->version . "'),", true);
             }
 
             $code->removeIndent();

@@ -44,7 +44,7 @@
         }
 
         public function editable($value = "0.0-def") {
-            if ($value == "0.0-def") {
+            if ($value === "0.0-def") {
                 return $this->editable;
             }
 
