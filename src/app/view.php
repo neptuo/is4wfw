@@ -28,6 +28,8 @@
 	$phpObject->register('m', 'php.libs.Menu');
   
 	require_once(APP_SCRIPTS_PHP_PATH . "includes/postinitview.inc.php");
+
+	$phpObject->register("controls", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/templates/controls")]);
   
 	$vObject->processView();
 

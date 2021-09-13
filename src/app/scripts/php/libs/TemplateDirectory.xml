@@ -2,6 +2,7 @@
 <taglib>
   <comment>
     Knihovna pro vkládání šablon, které jsou definované jako soubory ve složce.
+    Při registraci je nutné zadat parametr "path" (param-path).
   </comment>
   <anyTag>
     <function>includeByFileName</function>
