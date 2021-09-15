@@ -278,6 +278,22 @@
     <comment>Vygeneruje následující (sekvenční) unikátní identifikátor.</comment>
   </tag>
   <tag>
+    <name>formatBytes</name>
+    <function>formatBytes</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <type>string</type>
+      <comment>Hodnota v bytech.</comment>
+    </attribute>
+    <comment>Naformátuje hodnotu ve "value" na nejvyšší desetinnou jednotku (GB, MB, KB).</comment>
+  </tag>
+  <tag>
     <name>clear</name>
     <function>clear</function>
     <lookless />

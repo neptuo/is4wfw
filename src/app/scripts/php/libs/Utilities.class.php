@@ -1,6 +1,7 @@
 <?php
 
     require_once("BaseTagLib.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/Formatter.class.php");
 
     /**
      * 
@@ -108,6 +109,10 @@
             $this->Identifiers[$prefix]++;
             $this->OutputValues[$output] = $prefix . $this->Identifiers[$prefix];
 		}
+
+        public function formatBytes($output, $value) {
+            $this->OutputValues[$output] = Formatter::toByteString($value);
+        }
 
         public function clear($output) {
             unset($this->OutputValues[$output]);

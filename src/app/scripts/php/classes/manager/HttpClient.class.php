@@ -4,8 +4,8 @@
 
     class HttpClient extends BaseHttpManager {
 
-        public function get($url, $binary = false) {
-            return parent::httpGet($url, $binary);
+        public function get($url, $headers = []) {
+            return parent::httpGet($url, $headers);
         }
     }
 

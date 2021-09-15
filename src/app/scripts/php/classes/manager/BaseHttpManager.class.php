@@ -17,9 +17,9 @@ abstract class BaseHttpManager extends BaseTagLib {
         $this->password = $password;
     }
 
-    public function download($url, $filename) {
-        if (!file_exists($filename)) {
-            $content = self::httpGet($url, true);
+    public function download($url, $filename, $isExistenceChecked = true) {
+        if (!$isExistenceChecked || !file_exists($filename)) {
+            $content = self::httpGet($url);
             file_put_contents($filename, $content);
             return true;
         }
@@ -27,7 +27,7 @@ abstract class BaseHttpManager extends BaseTagLib {
         return false;
     }
 
-    protected function httpGet($url, $binary = false) {
+    protected function httpGet($url, $headers = []) {
         if (function_exists('curl_version')) {
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_URL, $url);
@@ -43,9 +43,9 @@ abstract class BaseHttpManager extends BaseTagLib {
             if ($this->isSessionCookieIncluded) {
                 curl_setopt($curl, CURLOPT_COOKIE, 'PHPSESSID=' . $_COOKIE['PHPSESSID']); 
             }
-            
-            if ($binary) { 
-                curl_setopt($curl, CURLOPT_BINARYTRANSFER, true); 
+
+            if (!empty($headers)) {
+                curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
             }
     
             $content = curl_exec($curl);

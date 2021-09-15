@@ -65,13 +65,14 @@
         public $alias;
         public $name;
         public $version;
+        public $gitHub;
 
-        public function __construct($id, $alias, $name, $version = null)
-        {
+        public function __construct($id, $alias, $name, $version = null, $gitHub = null) {
             $this->id = $id;
             $this->alias = $alias;
             $this->name = $name;
             $this->version = $version;
+            $this->gitHub = $gitHub;
         }
 
         public function getRootPath() {
@@ -92,6 +93,18 @@
 
         public function getBundlesPath() {
             return MODULES_PATH . $this->alias . "/bundles/";
+        }
+    }
+
+    class ModuleGitHub {
+        public $repositoryName;
+        public $isPublic = true;
+        public $accessToken;
+
+        public function __construct($repositoryName, $isPublic, $accessToken) {
+            $this->repositoryName = $repositoryName;
+            $this->isPublic = $isPublic;
+            $this->accessToken = $accessToken;
         }
     }
 
@@ -136,7 +149,20 @@
             
             $xml = ModuleXml::read();
             foreach ($xml->module as $module) {
-                $code->addLine("new Module('" . $module->id . "', '" . $module->alias . "', '" . $module->name . "', '" . $module->version . "'),", true);
+                $args = [
+                    "'" . $module->id . "'",
+                    "'" . $module->alias . "'",
+                    "'" . $module->name . "'",
+                    "'" . $module->version . "'"
+                ];
+
+                if ($module->gitHub) {
+                    $args[] = "new ModuleGitHub('" . $module->gitHub->repository->name . "', " . ($module->gitHub->repository->private ? 'false' : 'true') . ", '" . $module->gitHub->pat . "')";
+                } else {
+                    $args[] = "null";
+                }
+
+                $code->addLine("new Module(" . implode(", ", $args) . "),", true);
             }
 
             $code->removeIndent();

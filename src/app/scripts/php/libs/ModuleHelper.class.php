@@ -3,6 +3,7 @@
 	require_once("BaseTagLib.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/Module.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/Validator.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/GitHubReleaseClient.class.php");
 
 	/**
 	 * 
@@ -135,6 +136,23 @@
 			}
 		}
 
+		public function getGitHubRepositoryName() {
+			$module = null;
+			if ($this->hasListModel()) {
+				$module = $this->peekListModel()->data();
+			}
+
+			if ($this->current) {
+				$module = $this->current;
+			}
+
+			if ($module && $module->gitHub) {
+				return $module->gitHub->repositoryName;
+			}
+
+			return null;
+		}
+
 		public function edit($template, $id) {
 			$model = parent::getEditModel();
 
@@ -188,45 +206,7 @@
 				$file = $model["zip"];
 				if ($file) {
 					$tempName = $file->TempName;
-					$xml = ZipUtils::getFileContent($tempName, "module.xml");
-					if ($xml) {
-						$xml = new SimpleXMLElement($xml);
-						if (!isset($xml->is4wfw->minVersion)) {
-							Validator::addInvalidValue($model, "zip");
-						}
-						
-						if ($isEdit) {
-							$module = Module::getById($id);
-							if ($module->id != $xml->id) {
-								Validator::addInvalidValue($model, "zip");
-							}
-						}
-					} else {
-						Validator::addInvalidValue($model, "zip");
-					}
-
-					if ($model->isValid()) {
-						$modules = ModuleXml::read();
-
-						if ($isEdit) {
-							$xml->alias = $module->alias;
-							$this->removeModuleXml($modules, $id);
-						} else {
-							$xml->alias = $model["alias"];
-						}
-
-						$toDom = dom_import_simplexml($modules);
-						$fromDom = dom_import_simplexml($xml);
-						$toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
-
-						ModuleXml::write($modules);
-
-						$extractPath = MODULES_PATH . $model["alias"];
-						mkdir($extractPath);
-
-						ZipUtils::extract($tempName, $extractPath);
-						ModuleGenerator::all();
-					}
+					$this->installFromZip($model, $id, $tempName, $isEdit);
 				}
 			}
 			
@@ -242,9 +222,53 @@
 			}
 		}
 
+		private function installFromZip(EditModel $model, string $moduleId, string $fileName, bool $isEdit) {
+			$xml = ZipUtils::getFileContent($fileName, "module.xml");
+			if ($xml) {
+				$xml = new SimpleXMLElement($xml);
+				if (!isset($xml->is4wfw->minVersion)) {
+					Validator::addInvalidValue($model, "zip");
+				}
+				
+				if ($isEdit) {
+					$module = Module::getById($moduleId);
+					if ($module->id != $xml->id) {
+						Validator::addInvalidValue($model, "zip");
+					}
+				}
+			} else {
+				Validator::addInvalidValue($model, "zip");
+			}
+
+			if ($model->isValid()) {
+				$modules = ModuleXml::read();
+
+				if ($isEdit) {
+					$xml->alias = $module->alias;
+					$this->removeModuleXml($modules, $moduleId);
+				} else {
+					$xml->alias = $model["alias"];
+				}
+
+				$toDom = dom_import_simplexml($modules);
+				$fromDom = dom_import_simplexml($xml);
+				$toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
+
+				ModuleXml::write($modules);
+
+				$extractPath = MODULES_PATH . $model["alias"];
+				mkdir($extractPath);
+
+				ZipUtils::extract($fileName, $extractPath);
+				ModuleGenerator::all();
+				return true;
+			}
+
+			return false;
+		}
+
 		public function rebuildInitializers($template) {
-			ModuleGenerator::loader();
-			ModuleGenerator::postInit();
+			ModuleGenerator::all();
 			$template();
 		}
 
@@ -273,6 +297,90 @@
 		public function entrypoint($id, $params = []) {
 			$this->ensureCurrent();
 			return $this->web()->renderEntrypoint($this->current->id, $id, $params);
+		}
+
+		private function ensureGitHub($module) {
+			if (!$module->gitHub || !$module->gitHub->repositoryName) {
+				throw new Exception("Missing GitHub registration in module '$module->id'.");
+			}
+		}
+
+		private function getGitHubClient($module) {
+			$client = new GitHubReleaseClient();
+			if (!$module->gitHub->isPublic) {
+				$userName = explode("/", $module->gitHub->repositoryName)[0];
+				$client->setBasicAuthentication($userName, $module->gitHub->accessToken);
+			}
+
+			return $client;
+		}
+
+		public function gitHubUpdateList($template, $moduleId) {
+			$module = Module::getById($moduleId);
+			$this->ensureGitHub($module);
+
+			$model = new ListModel();
+			$this->pushListModel($model);
+
+			$client = $this->getGitHubClient($module);
+
+			$data = $client->getList($module->gitHub->repositoryName);
+			if ($data["result"]) {
+				$model->render();
+				$model->items($data["data"]);
+				$result = $template();
+			}
+			
+			$this->popListModel();
+			return $result;
+		}
+
+		public function getGitHubUpdateList() {
+			return $this->peekListModel();
+		}
+
+		public function getGitHubUpdateId() {
+			return $this->peekListModel()->field("id");
+		}
+
+		public function getGitHubUpdateName() {
+			return $this->peekListModel()->field("name");
+		}
+
+		public function getGitHubUpdateVersion() {
+			return $this->peekListModel()->field("version");
+		}
+
+		public function getGitHubUpdatePublishedAt() {
+			return $this->peekListModel()->field("published_at");
+		}
+
+		public function getGitHubUpdateHtmlUrl() {
+			return $this->peekListModel()->field("html_url");
+		}
+
+		public function getGitHubUpdateSize() {
+			return $this->peekListModel()->data()["download"]["size"];
+		}
+
+		public function gitHubUpdate($template, $moduleId, $updateId) {
+			$module = Module::getById($moduleId);
+			$this->ensureGitHub($module);
+
+			$client = $this->getGitHubClient($module);
+
+			$fileName = tempnam(sys_get_temp_dir(), $updateId);
+			$result = $client->downloadReleaseAsset($module->gitHub->repositoryName, $updateId, $fileName);
+			if ($result["result"]) {
+				$editModel = $this->getEditModel(false);
+				if ($editModel == null) {
+					$editModel = new EditModel();
+				}
+				$result["result"] = $this->installFromZip($editModel, $moduleId, $fileName, true);
+				if ($result["result"]) {
+					$template();
+				}
+			}
 		}
     }
 

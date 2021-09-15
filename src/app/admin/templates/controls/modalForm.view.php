@@ -1,5 +1,9 @@
 <div id="<web:out text="template:id" />" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <utils:clear output="modalFormSize" />
+    <web:condition when="template:size">
+        <utils:concat output="modalFormSize" value1="modal-" value2="template:size" />
+    </web:condition>
+    <div class="modal-dialog <web:out text="utils:modalFormSize" />" role="document">
         <edit:form submit="template:submit">
             <div class="modal-content">
                 <div class="modal-header">
@@ -11,9 +15,11 @@
                     <template:content />
                 </div>
                 <div class="modal-footer">
-                    <bs:button name="template:submit">
-                        <web:out text="template:submitText" />
-                    </bs:button>
+                    <web:condition when="template:submitText">
+                        <bs:button name="template:submit">
+                            <web:out text="template:submitText" />
+                        </bs:button>
+                    </web:condition>
                     <web:condition when="template:closeUrl">
                         <web:a pageId="template:closeUrl" class="btn btn-light close-button" text="Close" />
                     </web:condition>

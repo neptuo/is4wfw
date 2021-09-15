@@ -44,6 +44,44 @@
                 $("#module-edit").modal("show");
             </js:script>
         </admin:edit>
+        
+        <admin:edit id="query:ghupdate">
+            <controls:modalForm id="ghupdate-modal" title="Download update from GitHub" submit="ghdownload" closeUrl="var:selfUrl" size="lg">
+                <web:condition when="edit:save">
+                    <module:gitHubUpdate moduleId="admin:editId" updateId="post:ghdownload">
+                        <web:redirectTo pageId="var:selfUrl" />
+                    </module:gitHubUpdate>
+                </web:condition>
+                <web:condition when="edit:render">
+                    <module:gitHubUpdateList moduleId="admin:editId">
+                        <ui:empty items="module:gitHubUpdateList">
+                            <bs:alert color="warning">
+                                No releases...
+                            </bs:alert>
+                        </ui:empty>
+                        <ui:grid class="table table-striped" thead-class="table-dark" items="module:gitHubUpdateList">
+                            <utils:formatBytes output="gitHubUpdateSize" value="module:gitHubUpdateSize" />
+
+                            <ui:column header="Version" value="module:gitHubUpdateVersion" />
+                            <ui:column header="Name" value="module:gitHubUpdateName" />
+                            <ui:column header="Published at" value="module:gitHubUpdatePublishedAt" />
+                            <ui:column header="Size" value="utils:gitHubUpdateSize" />
+                            <ui:columnTemplate header="">
+                                <a target="_blank" href="<web:out text="module:gitHubUpdateHtmlUrl" />" class="text-dark" title="Release notes">
+                                    <fa5:icon prefix="fas" name="external-link-alt" />
+                                </a>
+                                <button name="ghdownload" value="<web:out text="module:gitHubUpdateId" />" class="icon-button confirm" title="Download update '<web:out text="module:gitHubUpdateVersion" />', file '<web:out text="module:gitHubUpdateName" />'">
+                                    <fa5:icon prefix="fas" name="cloud-download-alt" />
+                                </button>
+                            </ui:columnTemplate>
+                        </ui:grid>
+                    </module:gitHubUpdateList>
+                </web:condition>
+            </controls:modalForm>
+            <js:script placement="tail">
+                $("#ghupdate-modal").modal("show");
+            </js:script>
+        </admin:edit>
 
         <bs:card title="Modules">
             <module:list>
@@ -57,6 +95,13 @@
                     <ui:column header="Id" value="module:id" />
                     <ui:column header="Name" value="module:name" />
                     <ui:column header="Version" value="module:version" />
+                    <ui:columnTemplate>
+                        <web:condition when="module:gitHubRepositoryName">
+                            <web:a pageId="var:selfUrl" class="icon-button" param-ghupdate="module:id">
+                                <fa5:icon prefix="fab" name="github" class="text-dark" />
+                            </web:a>
+                        </web:condition>
+                    </ui:columnTemplate>
                     <ui:columnTemplate>
                         <web:a pageId="var:selfUrl" class="icon-button" param-id="module:id">
                             <fa5:icon name="pencil-alt" class="text-dark" />

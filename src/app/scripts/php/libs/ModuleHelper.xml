@@ -105,6 +105,14 @@
       Vrací version modulu uvnitř "module:list" (preferovaný) nebo "module:use" tagu.
     </comment>
   </property>
+  <property>
+    <name>gitHubRepositoryName</name>
+    <getFunction>getGitHubRepositoryName</getFunction>
+    <comment>
+      Vrací název repozitáře na githubu modulu uvnitř "module:list" (preferovaný) nebo "module:use" tagu.
+      Může být null.
+    </comment>
+  </property>
   <fulltag>
     <name>edit</name>
     <function>edit</function>
@@ -161,5 +169,66 @@
       <comment>Seznam parametrů předaných entrypointu.</comment>
     </attribute>
   </tag>
+  <fulltag>
+    <name>gitHubUpdateList</name>
+    <function>gitHubUpdateList</function>
+    <attribute>
+      <name>moduleId</name>
+      <type>string</type>
+      <required />
+      <comment>Id modulu.</comment>
+    </attribute>
+    <comment>
+      Získá seznam dostupných aktualizací modulu z GitHubu.
+    </comment>
+  </fulltag>
+  <property>
+    <name>gitHubUpdateList</name>
+    <getFunction>getGitHubUpdateList</getFunction>
+  </property>
+  <property>
+    <name>gitHubUpdateId</name>
+    <getFunction>getGitHubUpdateId</getFunction>
+  </property>
+  <property>
+    <name>gitHubUpdateName</name>
+    <getFunction>getGitHubUpdateName</getFunction>
+  </property>
+  <property>
+    <name>gitHubUpdateVersion</name>
+    <getFunction>getGitHubUpdateVersion</getFunction>
+  </property>
+  <property>
+    <name>gitHubUpdatePublishedAt</name>
+    <getFunction>getGitHubUpdatePublishedAt</getFunction>
+  </property>
+  <property>
+    <name>gitHubUpdateHtmlUrl</name>
+    <getFunction>getGitHubUpdateHtmlUrl</getFunction>
+  </property>
+  <property>
+    <name>gitHubUpdateSize</name>
+    <getFunction>getGitHubUpdateSize</getFunction>
+  </property>
+  <fulltag>
+    <name>gitHubUpdate</name>
+    <function>gitHubUpdate</function>
+    <lookless />
+    <attribute>
+      <name>moduleId</name>
+      <type>string</type>
+      <required />
+      <comment>Id modulu.</comment>
+    </attribute>
+    <attribute>
+      <name>updateId</name>
+      <type>string</type>
+      <required />
+      <comment>Id update z "module:gitHubUpdateId".</comment>
+    </attribute>
+    <comment>
+      Provede update modulu z GitHub releasu.
+    </comment>
+  </fulltag>
 </taglib>
 

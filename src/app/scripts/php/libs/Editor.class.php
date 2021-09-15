@@ -127,6 +127,11 @@
             return $model != null && $model->isSaved();
         }
         
+        public function isRender() {
+            $model = parent::getEditModel(true);
+            return $model != null && $model->isRender();
+        }
+        
         public function getProperty($name) {
             $model = parent::getEditModel(true);
             return $model[$name];

@@ -95,6 +95,11 @@
   	<getFunction>isSaved</getFunction>
     <comment>Vrací "true", pokud se právě jedná o fázi po uložení formuláře.</comment>
   </property>
+  <property>
+  	<name>render</name>
+  	<getFunction>isRender</getFunction>
+    <comment>Vrací "true", pokud se právě jedná o fázi vykreslení formuláře.</comment>
+  </property>
   <anyProperty>
     <comment>Vrací libovolnou hodnotu z edit modelu podle názvu property.</comment>
   </anyProperty>
