@@ -227,10 +227,21 @@
       <prefix />
       <comment>Popisek fieldu. Výchozí atribut je textem. Ostatní atributy jsou předány tagu.</comment>
     </attribute>
+    <attribute>
+      <name>field</name>
+      <type>string</type>
+      <comment>Název fieldu. Pokud je vyplněn, vypíší se za šablonu/tělo i validační zprávy pro tento field.</comment>
+    </attribute>
+    <attribute>
+      <name>fieldCssClass</name>
+      <type>string</type>
+      <default>form-control</default>
+      <comment>Css třída pro field. Aplikuje se pouze pokud je vyplněn atribut "field" a slouží jako základ pro "bs:fieldValidatorCssClass".</comment>
+    </attribute>
     <anyAttribute>
       <comment>Všechny atributy jsou předány obalovému "div".</comment>
     </anyAttribute>
-    <comment>Vykresluje komponentu "form-group". Pokud není zadán "label-for", pak se ho pokusí vygenerovat na "ui" komponenty by ho měly použit.</comment>
+    <comment>Vykresluje komponentu "form-group". Pokud není zadán "label-for", pak se ho pokusí vygenerovat a "ui" komponenty by ho měly použit.</comment>
   </fulltag>
   <fulltag>
     <name>nav</name>

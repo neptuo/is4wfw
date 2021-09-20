@@ -175,7 +175,7 @@
 				$template();
 				
 				Validator::required($model, "zip");
-				if (!$id) {
+				if (!$isEdit) {
 					Validator::required($model, "alias");
 
 					if ($model->isValid()) {

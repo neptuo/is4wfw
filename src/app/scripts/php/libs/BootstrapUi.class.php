@@ -181,7 +181,7 @@
 			return "bs-" . $this->lastId;
 		}
 
-		public function formGroup($template, $label = array(), $params = array()) {
+		public function formGroup($template, $label = array(), $field = "", $fieldCssClass = "form-control", $params = array()) {
 			$labelId = "";
 			if (array_key_exists("for", $label)) {
 				$labelId = $label["for"];
@@ -193,6 +193,10 @@
 			$labelHtml = self::getTagHtml($label, "label");
 			
 			parent::ui()->pushId($labelId);
+
+			if ($field) {
+				$template = function() use($template, $field, $fieldCssClass) { return $this->fieldValidator($template, $field, $fieldCssClass); };
+			}
 
 			$params = self::appendClass($params, "form-group");
 			$attributes = parent::joinAttributes($params);

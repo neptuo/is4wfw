@@ -22,14 +22,11 @@
                     </web:condition>
 
                     <ui:editable is="admin:new">
-                        <bs:fieldValidator name="alias" cssClass="form-control">
-                            <bs:formGroup label="Alias">
-                                <ui:textbox name="alias" class="bs:fieldValidatorCssClass" />
-                                <bs:fieldValidationMessage name="alias" />
-                            </bs:formGroup>
-                        </bs:fieldValidator>
+                        <bs:formGroup label="Alias" field="alias">
+                            <ui:textbox name="alias" class="bs:fieldValidatorCssClass" />
+                        </bs:formGroup>
                     </ui:editable>
-                    <bs:fieldValidator name="alias" cssClass="custom-file">
+                    <bs:fieldValidator name="zip" cssClass="custom-file">
                         <bs:formGroup label="Upload zip">
                             <div class="<web:out text="bs:fieldValidatorCssClass" />">
                                 <ui:filebox name="zip" class="custom-file-input" />
