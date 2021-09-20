@@ -305,31 +305,39 @@
 			}
 		}
 
-		private function getGitHubClient($module) {
+		private function getGitHubClient($module, $userName = "", $accessToken = "") {
 			$client = new GitHubReleaseClient();
 			if (!$module->gitHub->isPublic) {
-				$userName = explode("/", $module->gitHub->repositoryName)[0];
-				$client->setBasicAuthentication($userName, $module->gitHub->accessToken);
+				if (!$userName) {
+					$userName = explode("/", $module->gitHub->repositoryName)[0];
+				}
+
+				if (!$accessToken) {
+					$accessToken = $module->gitHub->accessToken;
+				}
+
+				$client->setBasicAuthentication($userName, $accessToken);
 			}
 
 			return $client;
 		}
 
-		public function gitHubUpdateList($template, $moduleId) {
+		public function gitHubUpdateList($template, $moduleId, $userName, $accessToken) {
 			$module = Module::getById($moduleId);
 			$this->ensureGitHub($module);
 
 			$model = new ListModel();
 			$this->pushListModel($model);
 
-			$client = $this->getGitHubClient($module);
+			$client = $this->getGitHubClient($module, $userName, $accessToken);
 
 			$data = $client->getList($module->gitHub->repositoryName);
+			$model->render();
 			if ($data["result"]) {
-				$model->render();
 				$model->items($data["data"]);
-				$result = $template();
 			}
+			
+			$result = $template();
 			
 			$this->popListModel();
 			return $result;
@@ -363,11 +371,11 @@
 			return $this->peekListModel()->data()["download"]["size"];
 		}
 
-		public function gitHubUpdate($template, $moduleId, $updateId) {
+		public function gitHubUpdate($template, $moduleId, $updateId, $userName, $accessToken) {
 			$module = Module::getById($moduleId);
 			$this->ensureGitHub($module);
 
-			$client = $this->getGitHubClient($module);
+			$client = $this->getGitHubClient($module, $userName, $accessToken);
 
 			$fileName = tempnam(sys_get_temp_dir(), $updateId);
 			$result = $client->downloadReleaseAsset($module->gitHub->repositoryName, $updateId, $fileName);

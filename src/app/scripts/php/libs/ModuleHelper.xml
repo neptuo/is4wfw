@@ -178,6 +178,16 @@
       <required />
       <comment>Id modulu.</comment>
     </attribute>
+    <attribute>
+      <name>userName</name>
+      <type>string</type>
+      <comment>Uživatelské jméno pro přihlášení k privátnímu repozitáři (pokud není uložen v modulu).</comment>
+    </attribute>
+    <attribute>
+      <name>accessToken</name>
+      <type>string</type>
+      <comment>Access token pro přihlášení k privátnímu repozitáři (pokud není uložen v modulu).</comment>
+    </attribute>
     <comment>
       Získá seznam dostupných aktualizací modulu z GitHubu.
     </comment>
@@ -225,6 +235,16 @@
       <type>string</type>
       <required />
       <comment>Id update z "module:gitHubUpdateId".</comment>
+    </attribute>
+    <attribute>
+      <name>userName</name>
+      <type>string</type>
+      <comment>Uživatelské jméno pro přihlášení k privátnímu repozitáři (pokud není uložen v modulu).</comment>
+    </attribute>
+    <attribute>
+      <name>accessToken</name>
+      <type>string</type>
+      <comment>Access token pro přihlášení k privátnímu repozitáři (pokud není uložen v modulu).</comment>
     </attribute>
     <comment>
       Provede update modulu z GitHub releasu.

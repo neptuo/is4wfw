@@ -45,12 +45,34 @@
         <admin:edit id="query:ghupdate">
             <controls:modalForm id="ghupdate-modal" title="Download update from GitHub" submit="ghdownload" closeUrl="var:selfUrl" size="lg">
                 <web:condition when="edit:save">
-                    <module:gitHubUpdate moduleId="admin:editId" updateId="post:ghdownload">
+                    <module:gitHubUpdate moduleId="admin:editId" updateId="post:ghdownload" userName="post:ghUserName" accessToken="post:ghAccessToken">
                         <web:redirectTo pageId="var:selfUrl" />
                     </module:gitHubUpdate>
                 </web:condition>
+                    
+                <bs:row class="form-row align-items-end">
+                    <bs:column>
+                        <bs:formGroup label="User name:">
+                            <input type="text" name="ghUserName" value="<web:out text="post:ghUserName" />" autocomplete="off" class="form-control" />
+                        </bs:formGroup>
+                    </bs:column>
+                    <bs:column>
+                        <bs:formGroup label="Access token:">
+                            <input type="password" name="ghAccessToken" value="<web:out text="post:ghAccessToken" />" autocomplete="off" class="form-control" />
+                        </bs:formGroup>
+                    </bs:column>
+                    <bs:column default="auto">
+                        <bs:formGroup>
+                            <bs:button>
+                                <fa5:icon name="search" />
+                                Search
+                            </bs:button>
+                        </bs:formGroup>
+                    </bs:column>
+                </bs:row>
+
                 <web:condition when="edit:render">
-                    <module:gitHubUpdateList moduleId="admin:editId">
+                    <module:gitHubUpdateList moduleId="admin:editId" userName="post:ghUserName" accessToken="post:ghAccessToken">
                         <ui:empty items="module:gitHubUpdateList">
                             <bs:alert color="warning">
                                 No releases...
