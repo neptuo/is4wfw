@@ -261,6 +261,10 @@
 
 				ZipUtils::extract($fileName, $extractPath);
 				ModuleGenerator::all();
+				
+				$postScript = FileUtils::combinePath($extractPath, $isEdit ? "postupdate.inc.php" : "postinstall.inc.php");
+				$this->runScriptIsolated($postScript);
+
 				return true;
 			}
 
@@ -279,9 +283,24 @@
 				$this->removeModuleXml($xml, $id);
 
 				ModuleXml::write($xml);
+
+				$preScript = FileUtils::combinePath($module->getRootPath(), "preuninstall.inc.php");
+				$this->runScriptIsolated($preScript);
+
 				FileUtils::removeDirectory($module->getRootPath());
 
 				$this->rebuildInitializers($template);
+			}
+		}
+
+		private function runScriptIsolated($script) {
+			if (file_exists($script)) {
+				try {
+					include_once($script);
+				} catch (Exception $e) {
+					global $logObject;
+					$logObject->exception($e);
+				}
 			}
 		}
 
@@ -336,7 +355,7 @@
 			if ($data["result"]) {
 				$model->items($data["data"]);
 			}
-			
+
 			$result = $template();
 			
 			$this->popListModel();
