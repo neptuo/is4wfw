@@ -41,7 +41,7 @@
             foreach ($xml->column as $column) {
                 if ($column->primaryKey == true) {
                     $columnName = (string)$column->name;
-                    $dbType = self::getTableColumnTypes($column, "db");
+                    $dbType = $this->getTableColumnTypes($column, "db");
                     $columns = StringUtils::join($columns, "`$columnName` $dbType NOT NULL");
 
                     if ($column->identity == true) {
@@ -52,28 +52,28 @@
                 }
             }
 
-            $engine = self::getTableEngineSql($xml);
+            $engine = $this->getTableEngineSql($xml);
             $sql = "CREATE TABLE `$name` ($columns, PRIMARY KEY ($primary)) $engine DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;";
             return $sql;
         }
 
         private function executeSql($sql1, $sql2 = "", $sql3 = "") {
-            self::dataAccess()->transaction();
+            $this->dataAccess()->transaction();
 
             try {
-                self::dataAccess()->execute($sql1);
+                $this->dataAccess()->execute($sql1);
 
                 if (!empty($sql2)) {
-                    self::dataAccess()->execute($sql2);
+                    $this->dataAccess()->execute($sql2);
                 }
 
                 if (!empty($sql3)) {
-                    self::dataAccess()->execute($sql3);
+                    $this->dataAccess()->execute($sql3);
                 }
 
-                self::dataAccess()->commit();
+                $this->dataAccess()->commit();
             } catch(DataAccessException $e) {
-                self::dataAccess()->rollback();
+                $this->dataAccess()->rollback();
                 throw $e;
             }
         }
@@ -82,7 +82,7 @@
             $xml = new SimpleXMLElement("<definition />");
             $name = $model["entity-name"];
             $engine = $model["entity-engine"];
-            $tableName = self::TablePrefix . $name;
+            $tableName = $this->TablePrefix . $name;
 
             $xml->engine = $engine;
             if ($model["entity-audit-log"]) {
@@ -119,11 +119,11 @@
                 $keyElement->addChild("required", true);
             }
 
-            $createSql = self::getCreateSql($tableName, $xml);
-            $insertSql = self::sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"], "definition" => $xml->asXml()));
+            $createSql = $this->getCreateSql($tableName, $xml);
+            $insertSql = $this->sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"], "definition" => $xml->asXml()));
 
             try {
-                self::executeSql($insertSql, $createSql);
+                $this->executeSql($insertSql, $createSql);
             } catch(DataAccessException $e) {
                 return false;
             }
@@ -136,7 +136,7 @@
             $columnType = $model["column-type"];
             $columnDescription = $model["column-description"];
 
-            $xml = self::getDefinition($name);
+            $xml = $this->getDefinition($name);
             if ($xml == NULL) {
                 return false;
             }
@@ -179,8 +179,8 @@
                 }
             }
 
-            $typeDefinition = self::getTableColumnTypes($column);
-            $dbType = self::getTableColumnDbType($typeDefinition, $column);
+            $typeDefinition = $this->getTableColumnTypes($column);
+            $dbType = $this->getTableColumnDbType($typeDefinition, $column);
 
             $sql = array();
 
@@ -219,7 +219,7 @@
                     $cascade = " ON DELETE CASCADE";
                 }
 
-                $primaryKeys = self::getPrimaryKeyColumns($xml);
+                $primaryKeys = $this->getPrimaryKeyColumns($xml);
                 for ($i=0; $i < count($primaryKeys); $i++) { 
                     $primaryKey = $primaryKeys[$i];
                     $primaryKeyColumnName = (string)$primaryKey->name;
@@ -230,10 +230,10 @@
                 }
             }
 
-            $sql[] = self::getUpdateDefinitionSql($name, $xml);
+            $sql[] = $this->getUpdateDefinitionSql($name, $xml);
             
             try {
-                self::dataAccess()->transaction(function($da) use ($sql) {
+                $this->dataAccess()->transaction(function($da) use ($sql) {
                     foreach ($sql as $item) {
                         if (!empty($item)) {
                             $da->execute($item);
@@ -248,14 +248,14 @@
         }
         
         public function tableCreator() {
-            $model = self::getEditModel();
+            $model = $this->getEditModel();
 
             if ($model->isSubmit()) {
                 $this->partialView("customentities/tableCreator");
             }
 
             if ($model->isSave()) {
-                self::createTable($model);
+                $this->createTable($model);
             }
 
             if ($model->isRender()) {
@@ -320,51 +320,51 @@
         }
 
         public function tableDeleter($template, $name) {
-            $tableName = self::ensureTableName($name);
+            $tableName = $this->ensureTableName($name);
 
-            self::executeSql(
+            $this->executeSql(
                 "DROP TABLE `$tableName`;", 
-                self::sql()->delete("custom_entity", array("name" => $name))
+                $this->sql()->delete("custom_entity", array("name" => $name))
             );
             $template();
         }
 
         public function listTables($template) {
-            $tables = self::dataAccess()->fetchAll(self::sql()->select("custom_entity", array("name", "description", "definition"), array(), array("name" => "asc")));
+            $tables = $this->dataAccess()->fetchAll($this->sql()->select("custom_entity", array("name", "description", "definition"), array(), array("name" => "asc")));
             for ($i=0; $i < count($tables); $i++) { 
                 $tables[$i]["definition"] = new SimpleXMLElement($tables[$i]["definition"]);
             }
 
             $model = new ListModel();
             $model->items($tables);
-            self::pushListModel($model);
+            $this->pushListModel($model);
 
             $model->render();
             $result = $template();
             
-            self::popListModel();
+            $this->popListModel();
             return $result;
         }
 
         public function getListTables() {
-            return self::peekListModel();
+            return $this->peekListModel();
         }
 
         public function getTableName() {
-            return self::peekListModel()->field("name");
+            return $this->peekListModel()->field("name");
         }
 
         public function getTableDescription() {
-            return self::peekListModel()->field("description");
+            return $this->peekListModel()->field("description");
         }
 
         public function getTableAuditLog() {
-            return self::hasAuditLog(self::peekListModel()->field("definition"));
+            return $this->hasAuditLog($this->peekListModel()->field("definition"));
         }
 
         public function listTableColumns($template, $name) {
-            $tableName = self::ensureTableName($name);
-            $xml = self::getDefinition($name);
+            $tableName = $this->ensureTableName($name);
+            $xml = $this->getDefinition($name);
             if ($xml == NULL) {
                 return "";
             }
@@ -377,42 +377,42 @@
 
             $model = new ListModel();
             $model->items($columns);
-            self::pushListModel($model);
+            $this->pushListModel($model);
 
             $model->render();
             $result = $template();
             
-            self::popListModel();
+            $this->popListModel();
             return $result;
         }
 
         public function getListTableColumns() {
-            return self::peekListModel();
+            return $this->peekListModel();
         }
 
         public function getTableColumnName() {
-            return self::peekListModel()->data()->name;
+            return $this->peekListModel()->data()->name;
         }
 
         public function getTableColumnDescription() {
-            return self::peekListModel()->data()->description;
+            return $this->peekListModel()->data()->description;
         }
 
         public function getTableColumnType() {
-            $typeDefinition = self::getTableColumnTypes(self::peekListModel()->data());
+            $typeDefinition = $this->getTableColumnTypes($this->peekListModel()->data());
             return $typeDefinition["name"];
         }
 
         public function getTableColumnPrimaryKey() {
-            return self::peekListModel()->data()->primaryKey == TRUE;
+            return $this->peekListModel()->data()->primaryKey == TRUE;
         }
 
         public function getTableColumnRequired() {
-            return self::peekListModel()->data()->required == TRUE;
+            return $this->peekListModel()->data()->required == TRUE;
         }
 
         public function getTableColumnUnique() {
-            return self::peekListModel()->data()->unique == TRUE;
+            return $this->peekListModel()->data()->unique == TRUE;
         }
 
         public function tableColumnCreator($name) {
@@ -424,7 +424,7 @@
             }
 
             if ($model->isSave()) {
-                self::createTableColumn($name, $tableName, $model);
+                $this->createTableColumn($name, $tableName, $model);
             }
 
             if ($model->isRender()) {
@@ -473,27 +473,27 @@
         }
 
         public function tableColumnDeleter($template, $entityName, $columnName) {
-            $tableName = self::ensureTableName($entityName);
-            $xml = self::getDefinition($entityName);
+            $tableName = $this->ensureTableName($entityName);
+            $xml = $this->getDefinition($entityName);
             if ($xml == NULL) {
                 return;
             }
 
             for ($i=0; $i < count($xml->column); $i++) { 
                 if ($xml->column[$i]->name == $columnName) {
-                    $typeDefinition = self::getTableColumnTypes($xml->column[$i]);
+                    $typeDefinition = $this->getTableColumnTypes($xml->column[$i]);
                     unset($xml->column[$i]);
                     break;
                 }
             }
 
-            $updateSql = self::getUpdateDefinitionSql($entityName, $xml);
+            $updateSql = $this->getUpdateDefinitionSql($entityName, $xml);
 
             if ($typeDefinition["hasColumn"]) {
                 $alterSql = "ALTER TABLE `$tableName` DROP COLUMN `$columnName`;";
             }
 
-            self::executeSql($updateSql, $alterSql);
+            $this->executeSql($updateSql, $alterSql);
             $template();
         }
 
@@ -506,7 +506,7 @@
                     continue;
                 }
                 
-                $typeDefinition = self::getTableColumnTypes($column);
+                $typeDefinition = $this->getTableColumnTypes($column);
                 if (!$typeDefinition["isLocalizable"]) {
                     continue;
                 }
@@ -532,7 +532,7 @@
         public function tableLocalizationEditor($name) {
             $model = parent::getEditModel();
             $tableName = parent::ensureTableLocalizationName($name, $model);
-            $xml = self::getDefinition($name);
+            $xml = $this->getDefinition($name);
             if ($xml == null) {
                 return;
             }
@@ -553,15 +553,15 @@
 
             if ($model->isSave()) {
                 $newColumns = $model["columns"];
-                self::updateXmlLocalizedColumns($xml, $newColumns);
+                $this->updateXmlLocalizedColumns($xml, $newColumns);
 
-                $sql = array(self::getUpdateDefinitionSql($name, $xml));
+                $sql = array($this->getUpdateDefinitionSql($name, $xml));
 
                 if (empty($newColumns)) {
                     $sql[] = "DROP TABLE IF EXISTS `$tableName`;";
                 } else {
                     if (empty($columns)) {
-                        $sql[] = self::getCreateLocalizationSql($tableName, $xml);
+                        $sql[] = $this->getCreateLocalizationSql($tableName, $xml);
                     }
 
                     foreach ($columns as $columnName) {
@@ -572,14 +572,14 @@
 
                     foreach ($newColumns as $columnName) {
                         if (!in_array($columnName, $columns)) {
-                            $column = self::findColumn($xml, $columnName);
-                            $columnType = self::getTableColumnTypes($column, "db");
+                            $column = $this->findColumn($xml, $columnName);
+                            $columnType = $this->getTableColumnTypes($column, "db");
                             $sql[] = "ALTER TABLE `$tableName` ADD COLUMN `" . $columnName . "` $columnType; ";
                         }
                     }
                 }
 
-                self::dataAccess()->transaction(function($da) use ($sql) {
+                $this->dataAccess()->transaction(function($da) use ($sql) {
                     foreach ($sql as $item) {
                         $da->execute($item);
                     }
@@ -587,7 +587,7 @@
             }
             
             if ($model->isRender()) {
-                $this->tableLocalizationColumns = self::getLocalizableColumns($xml);
+                $this->tableLocalizationColumns = $this->getLocalizableColumns($xml);
                 $result = $this->partialView("customentities/tableLocalizationEditor");
                 $this->tableLocalizableColumns = null;
                 return $result;
@@ -601,7 +601,7 @@
             foreach ($xml->column as $column) {
                 if ($column->primaryKey == true) {
                     $columnName = (string)$column->name;
-                    $columnType = self::getTableColumnTypes($column, "db");
+                    $columnType = $this->getTableColumnTypes($column, "db");
                     $columns = StringUtils::join($columns, "`$columnName` $columnType NOT NULL");
                     $primary = StringUtils::join($primary, "`$columnName`");
                 }
@@ -610,7 +610,7 @@
             $columns .= ", `lang_id` int(11) NOT NULL";
             $primary .= ", `lang_id`";
 
-            $engine = self::getTableEngineSql($xml);
+            $engine = $this->getTableEngineSql($xml);
             $sql = "CREATE TABLE `$tableName` ($columns, PRIMARY KEY ($primary)) $engine DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;";
             return $sql;
         }

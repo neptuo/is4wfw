@@ -19,7 +19,7 @@ abstract class BaseHttpManager extends BaseTagLib {
 
     public function download($url, $filename, $isExistenceChecked = true) {
         if (!$isExistenceChecked || !file_exists($filename)) {
-            $content = self::httpGet($url);
+            $content = $this->httpGet($url);
             file_put_contents($filename, $content);
             return true;
         }
@@ -63,7 +63,7 @@ abstract class BaseHttpManager extends BaseTagLib {
     }
 
     protected function httpGetJson($url) {
-        $content = self::httpGet($url);
+        $content = $this->httpGet($url);
         if ($content != null && strlen($content) != 0) {
             $json = json_decode($content);
             return  $json;

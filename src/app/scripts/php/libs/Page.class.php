@@ -24,13 +24,13 @@
         private $MessageFromEdit = '';
 
         public function __construct() {
-            self::setLocalizationBundle('page');
+            $this->setLocalizationBundle('page');
         }
 
         public function showEditPage($paramPageId = false, $paramLangId = false) {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
             
             if ($paramPageId != 0 && $paramLangId != 0) {
@@ -130,7 +130,7 @@
                         if (count($pageRightR) != 0) {
                             $dbR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `page_right`.`pid` = " . $pageId . " AND `type` = " . WEB_R_READ . ";");
                             foreach ($dbR as $right) {
-                                if (!in_array($right['gid'], $pageRightR) && self::inAsocArray($right['gid'], $allUserGroups, 'gid')) {
+                                if (!in_array($right['gid'], $pageRightR) && $this->inAsocArray($right['gid'], $allUserGroups, 'gid')) {
                                     $dbObject->execute("DELETE FROM `page_right` WHERE `pid` = " . $pageId . " AND `type` = " . WEB_R_READ . " and `gid` = " . $right['gid'] . ";");
                                 }
                             }
@@ -146,7 +146,7 @@
                         if (count($pageRightW) != 0) {
                             $dbR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `page_right`.`pid` = " . $pageId . " AND `type` = " . WEB_R_WRITE . ";");
                             foreach ($dbR as $right) {
-                                if (!in_array($right['gid'], $pageRightW) && self::inAsocArray($right['gid'], $allUserGroups, 'gid')) {
+                                if (!in_array($right['gid'], $pageRightW) && $this->inAsocArray($right['gid'], $allUserGroups, 'gid')) {
                                     $dbObject->execute("DELETE FROM `page_right` WHERE `pid` = " . $pageId . " AND `type` = " . WEB_R_WRITE . " and `gid` = " . $right['gid'] . ";");
                                 }
                             }
@@ -162,7 +162,7 @@
                         if (count($pageRightD) != 0) {
                             $dbR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `page_right`.`pid` = " . $pageId . " AND `type` = " . WEB_R_DELETE . ";");
                             foreach ($dbR as $right) {
-                                if (!in_array($right['gid'], $pageRightD) && self::inAsocArray($right['gid'], $allUserGroups, 'gid')) {
+                                if (!in_array($right['gid'], $pageRightD) && $this->inAsocArray($right['gid'], $allUserGroups, 'gid')) {
                                     $dbObject->execute("DELETE FROM `page_right` WHERE `pid` = " . $pageId . " AND `type` = " . WEB_R_DELETE . " and `gid` = " . $right['gid'] . ";;");
                                 }
                             }
@@ -178,7 +178,7 @@
                         if (count($pageRightA) != 0) {
                             $dbR = $dbObject->fetchAll("SELECT `gid` FROM `page_right` WHERE `page_right`.`pid` = " . $pageId . " AND `type` = " . WEB_R_ADDCHILD . ";");
                             foreach ($dbR as $right) {
-                                if (!in_array($right['gid'], $pageRightA) && self::inAsocArray($right['gid'], $allUserGroups, 'gid')) {
+                                if (!in_array($right['gid'], $pageRightA) && $this->inAsocArray($right['gid'], $allUserGroups, 'gid')) {
                                     $dbObject->execute("DELETE FROM `page_right` WHERE `pid` = " . $pageId . " AND `type` = " . WEB_R_ADDCHILD . " and `gid` = " . $right['gid'] . ";;");
                                 }
                             }
@@ -660,7 +660,7 @@
 
                         $returnTmp .= ''
                         . '</div>'
-                        . ((self::getGroupPermCached('Page.ManageRights')) ? ''
+                        . (($this->getGroupPermCached('Page.ManageRights')) ? ''
                                 . '<div class="edit edit-rights">'
                                 . (($show['read']) ? ''
                                         . '<div class="edit edit-right-read">'
@@ -706,7 +706,7 @@
                             $returnTmp .= ''
                             . '<div id="editors" class="editors edit-area-editors">'
                                 . '<div id="editors-tab" class="editors-tab"></div>'
-                                . ((self::getGroupPermCached('Page.TagLibs')) ? ''
+                                . (($this->getGroupPermCached('Page.TagLibs')) ? ''
                                     . '<div id="cover-page-edit-tag-lib-start">'
                                         . '<label for="page-edit-tag-lib-start">' . $rb->get('page.field.tlstartlabel') . ':</label>'
                                         . '<textarea id="page-edit-tag-lib-start" class="edit-area html" name="edit-tl-start" rows="' . ($editAreaTLStartRows > 0 ? $editAreaTLStartRows : 20) . '">' . $sql_return[0]['tag_lib_start'] . '</textarea>'
@@ -715,7 +715,7 @@
                                         . '<label for="page-edit-tag-lib-end">' . $rb->get('page.field.tlendlabel') . ':</label>'
                                         . '<textarea id="page-edit-tag-lib-end" class="edit-area html" name="edit-tl-end" rows="' . ($editAreaTLEndRows > 0 ? $editAreaTLEndRows : 20) . '">' . $sql_return[0]['tag_lib_end'] . '</textarea>'
                                     . '</div>' : '')
-                                . ((self::getGroupPermCached('Page.Head')) ? ''
+                                . (($this->getGroupPermCached('Page.Head')) ? ''
                                     . '<div id="cover-page-edit-head">'
                                         . '<label for="page-edit-head">' . $rb->get('page.field.headlabel') . ':</label>'
                                         . '<textarea id="page-edit-head" class="edit-area html" name="edit-head" rows="' . ($editAreaHeadRows > 0 ? $editAreaHeadRows : 20) . '">' . $sql_return[0]['head'] . '</textarea>'
@@ -727,7 +727,7 @@
                             . '</div>';
                         } elseif ($propertyEditors == 'tiny') {
                             $returnTmp .= ''
-                            . ((self::getGroupPermCached('Page.TagLibs')) ? ''
+                            . (($this->getGroupPermCached('Page.TagLibs')) ? ''
                                 . '<div class="edit edit-tag-lib">'
                                     . '<div class="edit edit-tl-start">'
                                         . '<label for="edit-tl-start">' . $rb->get('page.field.tlstartlabel') . ':</label>'
@@ -749,7 +749,7 @@
                                     . '</div>'
                                 . '</div>' : '')
                             . '<div class="edit edit-content">'
-                                . ((self::getGroupPermCached('Page.Head')) ? ''
+                                . (($this->getGroupPermCached('Page.Head')) ? ''
                                     . '<div class="edit edit-head">'
                                         . '<label for="edit-head">' . $rb->get('page.field.headlabel') . ':</label>'
                                         . '<div class="editor-cover">'
@@ -771,10 +771,10 @@
                             . '</div>';
 
                             $js = parent::autolib('js');
-                            $return .= $js->tinyMce("page-content", self::web()->LanguageName);
+                            $return .= $js->tinyMce("page-content", $this->web()->LanguageName);
                         } else {
                             $returnTmp .= ''
-                            . ((self::getGroupPermCached('Page.TagLibs')) ? ''
+                            . (($this->getGroupPermCached('Page.TagLibs')) ? ''
                                 . '<div class="edit edit-tag-lib">'
                                     . '<div class="edit edit-tl-start">'
                                         . '<label for="edit-tl-start">' . $rb->get('page.field.tlstartlabel') . ':</label>'
@@ -796,7 +796,7 @@
                                     . '</div>'
                                 . '</div>' : '')
                             . '<div class="edit edit-content">'
-                            . ((self::getGroupPermCached('Page.Head')) ? ''
+                            . (($this->getGroupPermCached('Page.Head')) ? ''
                                     . '<div class="edit edit-head">'
                                         . '<label for="edit-head">' . $rb->get('page.field.headlabel') . ':</label>'
                                         . '<div class="editor-cover">'
@@ -864,7 +864,7 @@
             global $dbObject;
             global $loginObject;
             global $webObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
 
             $projects = $dbObject->fetchAll('SELECT `web_project`.`id` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND `group`.`value` >= ' . $loginObject->getGroupValue() . ';');
@@ -1061,7 +1061,7 @@
                             } else {
                                 $dbObject->execute('UPDATE `page` SET `parent_id` = ' . $parentId . ', `wp` = ' . $projectID . ' WHERE `id` = ' . $pageId . ';');
                                 // Zavolat fci pro rekurzivni prespsani projektu u podstranek.
-                                self::rewriteProjectIdRecursivly($pageId, $projectID);
+                                $this->rewriteProjectIdRecursivly($pageId, $projectID);
                             }
                         } else {
                             $return .= '<h4 class="error">' . $rb->get('page.error.permissiondenied') . '</h4>';
@@ -1126,7 +1126,7 @@
                                             foreach ($rights as $right) {
                                                 $dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES (' . $newId . ', ' . $right['gid'] . ', ' . $right['type'] . ');');
                                             }
-                                            self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
+                                            $this->copyPagesRecursivly($page['id'], $newId, $projectID, true);
                                         }
                                         $page['tag_lib_start'] = addslashes($page['tag_lib_start']);
                                         $page['tag_lib_end'] = addslashes($page['tag_lib_end']);
@@ -1156,7 +1156,7 @@
                                             foreach ($rights as $right) {
                                                 $dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES (' . $newId . ', ' . $right['gid'] . ', ' . $right['type'] . ');');
                                             }
-                                            self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
+                                            $this->copyPagesRecursivly($page['id'], $newId, $projectID, true);
                                         }
                                         $page['tag_lib_start'] = addslashes($page['tag_lib_start']);
                                         $page['tag_lib_end'] = addslashes($page['tag_lib_end']);
@@ -1189,7 +1189,7 @@
                                             foreach ($rights as $right) {
                                                 $dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES (' . $newId . ', ' . $right['gid'] . ', ' . $right['type'] . ');');
                                             }
-                                            self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
+                                            $this->copyPagesRecursivly($page['id'], $newId, $projectID, true);
                                         }
                                         $page['tag_lib_start'] = addslashes($page['tag_lib_start']);
                                         $page['tag_lib_end'] = addslashes($page['tag_lib_end']);
@@ -1219,7 +1219,7 @@
                                             foreach ($rights as $right) {
                                                 $dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES (' . $newId . ', ' . $right['gid'] . ', ' . $right['type'] . ');');
                                             }
-                                            self::copyPagesRecursivly($page['id'], $newId, $projectID, true);
+                                            $this->copyPagesRecursivly($page['id'], $newId, $projectID, true);
                                         }
                                         $page['tag_lib_start'] = addslashes($page['tag_lib_start']);
                                         $page['tag_lib_end'] = addslashes($page['tag_lib_end']);
@@ -1413,7 +1413,7 @@
                     . '<div class="page-list">';
 
             $returnTmp .= '<div class="pages-list-in">';
-            $returnTmp .= self::generatePageList(0, $editable, 0, $projectId);
+            $returnTmp .= $this->generatePageList(0, $editable, 0, $projectId);
             $returnTmp .= '</div></div>';
             //$return .= parent::getFrame($rb->get('pagelist.title'), $returnTmp, 'page-pagelist');
             if ($_SESSION['selected-project'] != '') {
@@ -1459,7 +1459,7 @@
         private function generatePageList($parentId, $editable, $inn, $projectId) {
             global $dbObject;
             global $webObject;
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $sql_return = $dbObject->fetchAll("SELECT `page`.`parent_id`, `page`.`id` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`parent_id` = " . $parentId . " AND `page`.`wp` = " . $projectId . " GROUP BY `page`.`id` ORDER BY `info`.`page_pos`;");
             if (count($sql_return) == 0 && $parentId == 0) {
@@ -1498,7 +1498,7 @@
                                 . '<span class="page-language">'
                                 . '<a target="_blank" href="' . $webObject->composeUrl($tmp['id'], $inf['lang_id']) . '">' . ((strlen($inf['language']) != 0) ? $inf['language'] : "-") . '</a>'
                                 . '</span>'
-                                . ((self::getGroupPermCached('Page.EditDetail')) ? ''
+                                . (($this->getGroupPermCached('Page.EditDetail')) ? ''
                                         . '<form name="page1" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page1">'
                                         . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                         . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
@@ -1506,7 +1506,7 @@
                                         . '<input type="hidden" name="page-edit" value="' . $rb->get('page.action.edit') . '" /> '
                                         . '<input type="image" title="' . $rb->get('pagelist.field.edit') . '" src="~/images/page_edi.png" name="page-edit" value="' . $rb->get('page.action.edit') . '" /> '
                                         . '</form>' : '')
-                                . ((self::getGroupPermCached('Page.AddNew')) ? ''
+                                . (($this->getGroupPermCached('Page.AddNew')) ? ''
                                         . '<form name="page2" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page2">'
                                         . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                         . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
@@ -1514,7 +1514,7 @@
                                         . '<input type="hidden" name="page-add-sub" value="' . $rb->get('page.action.addsubpage') . '" /> '
                                         . '<input type="image" title="' . $rb->get('page.action.addsubpage') . '" src="~/images/page_add.png" name="page-add-sub" value="' . $rb->get('page.action.addsubpage') . '" /> '
                                         . '</form>' : '')
-                                . ((self::getGroupPermCached('Page.ManageFiles')) ? ''
+                                . (($this->getGroupPermCached('Page.ManageFiles')) ? ''
                                         . '<form name="page3" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page3">'
                                             . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                             . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
@@ -1522,13 +1522,13 @@
                                             . '<input type="hidden" name="added-files" value="' . $rb->get('pagelist.field.addedfiles') . '" /> '
                                             . '<input type="image" title="' . $rb->get('pagelist.field.addedfiles') . '" src="~/images/file_bws.png" name="added-files" value="' . $rb->get('pagelist.action.addedfiles') . '" /> '
                                         . '</form>' : '')
-                                . ((self::getGroupPermCached('Page.ManageProperties')) ? ''
+                                . (($this->getGroupPermCached('Page.ManageProperties')) ? ''
                                         . '<form name="page3" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page5">'
                                             . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                             . '<input type="hidden" name="manage-properties" value="' . $rb->get('pagelist.field.manageprops') . '" /> '
                                             . '<input type="image" title="' . $rb->get('pagelist.field.manageprops') . '" src="~/images/page_pro.png" name="manage-properties" value="' . $rb->get('pagelist.action.manageprops') . '" /> '
                                         . '</form>' : '')
-                                . ((self::getGroupPermCached('Page.Delete') && (!$parent || !$thisParent)) ? ''
+                                . (($this->getGroupPermCached('Page.Delete') && (!$parent || !$thisParent)) ? ''
                                         . '<form name="page4" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="form-page4">'
                                         . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                         . '<input type="hidden" name="parent-id" value="' . $tmp['id'] . '" /> '
@@ -1540,38 +1540,38 @@
                     }
                     $innText .= ''
                             . '[ '
-                            . ((self::getGroupPermCached('Page.MoveTree')) ? ''
+                            . (($this->getGroupPermCached('Page.MoveTree')) ? ''
                                     . '<form name="page-move1" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move1">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" />'
                                     . '<input type="hidden" name="move-branch" value="' . $rb->get('pagelist.action.move') . '" />'
                                     . '<input type="image" src="~/images/page_mov.png" title="' . $rb->get('pagelist.field.move') . '" name="move-branch" value="' . $rb->get('pagelist.action.move') . '" />'
                                     . '</form> ' : '')
-                            . ((self::getGroupPermCached('Page.CopyTree')) ? ''
+                            . (($this->getGroupPermCached('Page.CopyTree')) ? ''
                                     . '<form name="page-move2" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move2">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" />'
                                     . '<input type="hidden" name="copy-branch" value="' . $rb->get('pagelist.action.copy') . '" />'
                                     . '<input type="image" src="~/images/page_cop.png" title="' . $rb->get('pagelist.field.copy') . '" name="copy-branch" value="' . $rb->get('pagelist.action.copy') . '" />'
                                     . '</form> ' : '')
-                            . ((self::getGroupPermCached('Page.MoveUpDown')) ? ''
+                            . (($this->getGroupPermCached('Page.MoveUpDown')) ? ''
                                     . '<form name="page-move3" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move3">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="move-up" value="' . $rb->get('pagelist.action.up') . '" /> '
                                     . '<input type="image" src="~/images/arro_up.png" title="' . $rb->get('pagelist.field.up') . '" name="move-up" value="' . $rb->get('pagelist.action.up') . '" />'
                                     . '</form>' : '')
-                            . ((self::getGroupPermCached('Page.MoveUpDown')) ? ''
+                            . (($this->getGroupPermCached('Page.MoveUpDown')) ? ''
                                     . '<form name="page-move4" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-move4">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="move-down" value="' . $rb->get('pagelist.action.down') . '" /> '
                                     . '<input type="image" src="~/images/arro_do.png" title="' . $rb->get('pagelist.field.down') . '" name="move-down" value="' . $rb->get('pagelist.action.down') . '" />'
                                     . '</form>' : '')
                             . '] '
-                            . ((self::getGroupPermCached('Page.AddLang')) ? ''
+                            . (($this->getGroupPermCached('Page.AddLang')) ? ''
                                     . '<form name="page-add-lang1" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-add-lang1">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="page-add-lang-ver" value="' . $rb->get('page.action.addlang') . '" /> '
                                     . '<input type="image" title="' . $rb->get('pagelist.field.addlang') . '" src="~/images/lang_add.png" name="page-add-lang-ver" value="' . $rb->get('page.action.addlang') . '" /> '
                                     . '</form>' : '')
-                            . ((self::getGroupPermCached('Page.Delete') && count($dbObject->fetchAll("SELECT `id` FROM `page` WHERE `parent_id` = " . $tmp['id'] . ";")) == 0) ? ''
+                            . (($this->getGroupPermCached('Page.Delete') && count($dbObject->fetchAll("SELECT `id` FROM `page` WHERE `parent_id` = " . $tmp['id'] . ";")) == 0) ? ''
                                     . '<form name="page-add-lang2" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="page-add-lang2">'
                                     . '<input type="hidden" name="page-id" value="' . $tmp['id'] . '" /> '
                                     . '<input type="hidden" name="delete" value="' . $rb->get('pagelist.action.delete') . '" /> '
@@ -1581,7 +1581,7 @@
                     $return .= ''
                             . '<li class="page page-item-' . $count . ' inn-' . $inn . (($parent) ? ' parent' : ' single') . $last . '">'
                             . (($editable) ? '<div><div><span class="page page-id">' . $innText . '</span></div></div>' : '')
-                            . self::generatePageList($tmp['id'], $editable, $inn + 1, $projectId)
+                            . $this->generatePageList($tmp['id'], $editable, $inn + 1, $projectId)
                             . '</li>';
                 }
             }
@@ -1628,7 +1628,7 @@
             $pages = $dbObject->fetchAll('SELECT `id` FROM `page` WHERE `parent_id` = ' . $pageId . ';');
             foreach ($pages as $page) {
                 $dbObject->execute('UPDATE `page` SET `wp` = ' . $projectId . ' WHERE `id` = ' . $page['id'] . ';');
-                self::rewriteProjectIdRecursivly($page['id'], $projectId);
+                $this->rewriteProjectIdRecursivly($page['id'], $projectId);
             }
         }
 
@@ -1649,7 +1649,7 @@
                         foreach ($rights as $right) {
                             $dbObject->execute('INSERT INTO `page_right`(`pid`, `gid`, `type`) VALUES (' . $newId . ', ' . $right['gid'] . ', ' . $right['type'] . ');');
                         }
-                        self::copyPagesRecursivly($page['id'], $newId, $projectId, $pageFileInc);
+                        $this->copyPagesRecursivly($page['id'], $newId, $projectId, $pageFileInc);
                     }
                     $page['tag_lib_start'] = addslashes($page['tag_lib_start']);
                     $page['tag_lib_end'] = addslashes($page['tag_lib_end']);
@@ -1671,7 +1671,7 @@
         public function showEditPageFile() {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
             $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
 
@@ -1836,7 +1836,7 @@
         public function showPageFiles($editable = false) {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
             $editable = (strtolower($editable) == "true") ? true : false;
             $filesEx = array(WEB_TYPE_CSS => "Css", WEB_TYPE_JS => "Js");
@@ -1866,12 +1866,12 @@
             }
 
             if (parent::getUserProperty('TextFiles.showFilter', 'true') == 'true') {
-                $searchForm = self::getTextFileSearchForm() . '<hr />';
+                $searchForm = $this->getTextFileSearchForm() . '<hr />';
             }
 
             $n = 1;
             $returnTmp = "";
-            $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` WHERE `wp` = " . $projectId . " " . self::getTextFileSearchPartSql() . " ORDER BY `id`;");
+            $files = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `type` FROM `page_file` WHERE `wp` = " . $projectId . " " . $this->getTextFileSearchPartSql() . " ORDER BY `id`;");
             if (count($files) != 0) {
                 $returnTmp .= ''
                         . '<table class="page-file-list data-table clickable standart">'
@@ -1944,7 +1944,7 @@
          *
          */
         private function getTextFileSearchForm() {
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($_POST['text-file-search-submit'] == $rb->get('tf.search')) {
                 parent::session()->set('name', $_POST['text-file-search-name'], 'tf-search');
@@ -2022,7 +2022,7 @@
          *
          */
         private function getFileUpdateForm($fileId, $fileName, $fileContent, $browsers, $fileTypes, $placementOptions) {
-            $rb = self::rb();
+            $rb = $this->rb();
             $htmlBrowsers = '';
             foreach ($browsers as $browser => $value) {
                 $htmlBrowsers .= ''
@@ -2294,7 +2294,7 @@
          *
          */
         public function updateKeywords() {
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $return = $msg = '';
 
@@ -2860,7 +2860,7 @@
         }
 
         public function showEmbeddedResources($useFrames = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
 
             if ($_POST['er-delete'] == $rb->get('er.delete')) {
@@ -2927,7 +2927,7 @@
         }
 
         public function showEditEmbeddedResourceFrom($useFrames = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
             $er;
             $fromSave = false;
@@ -2961,7 +2961,7 @@
                         . '<div class="gray-box">'
                         . '<label class="w100" for="er-type">' . $rb->get('er.type') . ':</label>'
                         . '<select class="w200" name="er-type" id="er-type">'
-                        . self::simpleArrayToOptions(EmbeddedResourceManager::types(), $er->getType())
+                        . $this->simpleArrayToOptions(EmbeddedResourceManager::types(), $er->getType())
                         . '</select>'
                         . '</div>'
                         . '<div class="gray-box">'
@@ -2975,7 +2975,7 @@
                         . '<div class="gray-box">'
                         . '<label class="w100" for="er-cache">' . $rb->get('er.cache') . ':</label>'
                         . '<select class="w200" name="er-cache" id="er-cache">'
-                        . self::simpleArrayToOptions(EmbeddedResourceManager::cache(), $er->getCache())
+                        . $this->simpleArrayToOptions(EmbeddedResourceManager::cache(), $er->getCache())
                         . '</select>'
                         . '</div>'
                         . '<div class="gray-box">'
@@ -2994,7 +2994,7 @@
         }
 
         public function showWebForwards($useFrames = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
 
             if ($_POST['wf-delete'] == $rb->get('wf.delete')) {
@@ -3067,7 +3067,7 @@
         }
 
         public function showEditWebForwardFrom($useFrames = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
             $wf;
             $fromSave = false;
@@ -3106,13 +3106,13 @@
                     . '<div class="gray-box">'
                         . '<label class="w100" for="wf-type">' . $rb->get('wf.type') . ':</label>'
                         . '<select class="w200" name="wf-type" id="wf-type">'
-                            . self::simpleArrayToOptions(WebForwardManager::type(), $wf->getType())
+                            . $this->simpleArrayToOptions(WebForwardManager::type(), $wf->getType())
                         . '</select>'
                     . '</div>'
                     . '<div class="gray-box">'
                         . '<label class="w100" for="wf-condition">' . $rb->get('wf.condition') . ':</label>'
                         . '<select class="w200" name="wf-condition" id="wf-condition">'
-                            . self::simpleArrayToOptions(WebForwardManager::condition(), $wf->getCondition())
+                            . $this->simpleArrayToOptions(WebForwardManager::condition(), $wf->getCondition())
                         . '</select>'
                     . '</div>'
                     . '<div class="gray-box">'

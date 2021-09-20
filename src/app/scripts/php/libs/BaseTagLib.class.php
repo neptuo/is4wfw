@@ -68,7 +68,7 @@
             //$name = strtr($name, $escapeChars);
             $name = UrlUtils::toValidUrl($name);
 
-            $value = self::system()->getPropertyValue($name);
+            $value = $this->system()->getPropertyValue($name);
             $closed = false;
             if ($value == 'true') {
                 $closed = true;
@@ -81,7 +81,7 @@
             }
             
             $defaultClosed = !$this->FirstFrame && !$ignoreFirstFrame;
-            if(self::system()->getPropertyValue('Frames.leaveOpened') == 'true') {
+            if($this->system()->getPropertyValue('Frames.leaveOpened') == 'true') {
                 $defaultClosed = false;
             }
 
@@ -152,8 +152,8 @@
         }
 
         public function autolib($prefix) {
-            if (!self::php()->isRegistered($prefix)) {
-                if (!self::php()->autoRegisterPrefix($prefix)) {
+            if (!$this->php()->isRegistered($prefix)) {
+                if (!$this->php()->autoRegisterPrefix($prefix)) {
                     return null;
                 }
             }
@@ -181,7 +181,7 @@
         public function ui() {
             global $uiObject;
             if ($uiObject == NULL) {
-                self::php()->autoRegisterPrefix("ui");
+                $this->php()->autoRegisterPrefix("ui");
                 global $uiObject;
             }
             
@@ -191,7 +191,7 @@
         public function js() {
             global $jsObject;
             if ($jsObject == NULL) {
-                return self::autolib('js');
+                return $this->autolib('js');
             }
 
             return $jsObject;
@@ -201,11 +201,11 @@
          * @return DataAccess
          */
         public function dataAccess() {
-            return self::db()->getDataAccess();
+            return $this->db()->getDataAccess();
         }
 
         public function sql() {
-            return new SqlBuilder(self::dataAccess());
+            return new SqlBuilder($this->dataAccess());
         }
 
         public function login() {
@@ -234,7 +234,7 @@
         }
 
         protected function getUserProperty($name, $default = -1) {
-            $value = self::system()->getPropertyValue($name);
+            $value = $this->system()->getPropertyValue($name);
             if ($value == -1) {
                 return $default;
             } else {
@@ -245,7 +245,7 @@
         public function getGroupPerm($name, $groupId, $inherited, $default = '') {
             //echo 'Name: '.$name.', GroupID: '.$groupId.', Inherited: '.($inherited ? 'true' : 'false').', Default: "'.$default.'"<br />';
             if ($groupId != 0) {
-                $perms = self::db()->fetchAll('select `name`, `value`, `type` from `group_perms` where `group_id` = ' . $groupId . ';');
+                $perms = $this->db()->fetchAll('select `name`, `value`, `type` from `group_perms` where `group_id` = ' . $groupId . ';');
                 foreach ($perms as $perm) {
                     if ($name == $perm['name']) {
                         return $perm;
@@ -253,9 +253,9 @@
                 }
 
                 if ($inherited) {
-                    $group = self::db()->fetchSingle('select `parent_gid` from `group` where `gid` = ' . $groupId . ';');
+                    $group = $this->db()->fetchSingle('select `parent_gid` from `group` where `gid` = ' . $groupId . ';');
                     if ($group != array()) {
-                        return self::getGroupPerm($name, $group['parent_gid'], true, $default);
+                        return $this->getGroupPerm($name, $group['parent_gid'], true, $default);
                     }
                 }
             }
@@ -264,12 +264,12 @@
         }
         
         public function getSystemProperty($name) {
-            $property = new SystemProperty(self::db()->getDataAccess());
+            $property = new SystemProperty($this->db()->getDataAccess());
             return $property->getValue($name);
         }
         
         public function setSystemProperty($name, $value) {
-            $property = new SystemProperty(self::db()->getDataAccess());
+            $property = new SystemProperty($this->db()->getDataAccess());
             $property->setValue($name, $value);
         }
         
@@ -297,8 +297,8 @@
                         $rb->setModuleId($this->BundleModuleId);
                     }
 
-                    if ($rb->exists($this->BundleName, self::web()->LanguageName)) {
-                        $this->BundleLang = self::web()->LanguageName;
+                    if ($rb->exists($this->BundleName, $this->web()->LanguageName)) {
+                        $this->BundleLang = $this->web()->LanguageName;
                     }
                 }
 
@@ -322,7 +322,7 @@
         }
         
         public function view($name, $data) {
-            $parser = ExtensionParser::initialize($name, self::rb(), $data);
+            $parser = ExtensionParser::initialize($name, $this->rb(), $data);
             return $parser->parse();
         }
 
@@ -347,7 +347,7 @@
                 require_once(APP_SCRIPTS_PHP_PATH . 'classes/dataaccess/' . $name . 'Dao.class.php');
                 $classname = $name.'Dao';
                 $dao = new $classname;
-                $dao->setDataAccess(self::db()->getDataAccess());
+                $dao->setDataAccess($this->db()->getDataAccess());
                 $this->daos[$name] = $dao;
             }
             
@@ -355,11 +355,11 @@
         }
 
         public function select() {
-            return Select::factory(self::db()->getDataAccess());
+            return Select::factory($this->db()->getDataAccess());
         }
         
         public function log($message) {
-            self::logVar($message);
+            $this->logVar($message);
         }
         
         public function logVar($variable) {
@@ -376,7 +376,7 @@
         }
 
         public function redirectToSelf() {
-            self::redirectToUrl($_SERVER['REQUEST_URI']);
+            $this->redirectToUrl($_SERVER['REQUEST_URI']);
         }
 
         public function redirectToUrl($url) {
@@ -384,12 +384,12 @@
                 header("Location: " . $url, true, 302);
                 echo '<script type="text/javascript">window.location.href = "' . $url . '";</script>';
                 echo '<a href="' . $url . '">Redirect to ' . $url . '</a>';
-                self::close();
+                $this->close();
             }
         }
 
         protected function close() {
-            self::php()->dispose();
+            $this->php()->dispose();
             exit;
         }
 
@@ -467,13 +467,13 @@
         }
 
         public function pushListModel($model) {
-            $stack = self::getLocalModelStack("listModels", true);
+            $stack = $this->getLocalModelStack("listModels", true);
 			$stack->push($model);
         }
 
         public function peekListModel($createIfNotExists = true): ?ListModel {
             $model = null;
-            $stack = self::getLocalModelStack("listModels", false);
+            $stack = $this->getLocalModelStack("listModels", false);
             if ($stack != null) {
                 $model = $stack->peek();
             }
@@ -486,7 +486,7 @@
         }
 
         public function popListModel() {
-            $stack = self::getLocalModelStack("listModels", false);
+            $stack = $this->getLocalModelStack("listModels", false);
 			if ($stack == NULL) {
                 return new ListModel();
 			}
@@ -495,7 +495,7 @@
         }
 
         public function hasListModel() {
-            $stack = self::getLocalModelStack("listModels", false);
+            $stack = $this->getLocalModelStack("listModels", false);
 			if ($stack == NULL) {
                 return false;
 			}

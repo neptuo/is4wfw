@@ -79,7 +79,7 @@
 					$oid = $oid[0]['id'];
 					$_GET['order1-id'] = $oid;
 					
-					$objCon = self::showOrder1Detail();
+					$objCon = $this->showOrder1Detail();
 					
 					$obsah = "Vaše poptávka byla zaznamenána";
   				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Kyvná vrata\"\n\n");
@@ -288,7 +288,7 @@
 					$oid = $oid[0]['id'];
 					$_GET['order2-id'] = $oid;
 					
-					$objCon = self::showOrder2Detail();
+					$objCon = $this->showOrder2Detail();
 					
 					$obsah = "Vaše poptávka byla zaznamenána";
   				$message = sprintf("Máte novou poptávka na www.plasticport.cz. \"Lamelové clony\"<br /><br />");

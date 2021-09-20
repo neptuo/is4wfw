@@ -74,7 +74,7 @@
 					$return .= parent::getSuccess(parent::rb('message.updated'));
 				}
 			} else if($_POST['inquiry-reset'] == parent::rb('button.reset')) {
-				self::resetInquiry($_POST['inquiry-id']);
+				$this->resetInquiry($_POST['inquiry-id']);
 				$return .= parent::getSuccess(parent::rb('message.reseted'));
 			}
 			
@@ -183,8 +183,8 @@
 			$return = '';
 			
 			if($_POST['inquiry-set-current'] == parent::rb('button.setcurrent')) {
-				self::setCurrentInquiryId($_POST['inquiry-current-id']);
-				self::setCurrentInquiryId2($_POST['inquiry-current-id2']);
+				$this->setCurrentInquiryId($_POST['inquiry-current-id']);
+				$this->setCurrentInquiryId2($_POST['inquiry-current-id2']);
 			}
 			
 			$data = parent::db()->fetchAll('select `id`, `question` from `inquiry` where `enabled` = 1 order by `id`;');
@@ -203,7 +203,7 @@
 					.'<select id="inquiry-current-id" name="inquiry-current-id">';
 					
 			foreach($data as $i => $item) {
-				$return .= '<option value="'.$item['id'].'"'.(self::getCurrentInquiryId() == $item['id'] ? ' selected="selected"' : '').'>'.$item['question'].'</option>';
+				$return .= '<option value="'.$item['id'].'"'.($this->getCurrentInquiryId() == $item['id'] ? ' selected="selected"' : '').'>'.$item['question'].'</option>';
 			}
 			
 			$return .= ''			
@@ -214,7 +214,7 @@
 					.'<select id="inquiry-current-id2" name="inquiry-current-id2">';
 					
 			foreach($data as $i => $item) {
-				$return .= '<option value="'.$item['id'].'"'.(self::getCurrentInquiryId2() == $item['id'] ? ' selected="selected"' : '').'>'.$item['question'].'</option>';
+				$return .= '<option value="'.$item['id'].'"'.($this->getCurrentInquiryId2() == $item['id'] ? ' selected="selected"' : '').'>'.$item['question'].'</option>';
 			}
 			
 			$return .= ''			
@@ -273,10 +273,10 @@
 						.'<div class="inquiry-answer inquiry-answer-'.($i + 1).'">'
 							.$item['answer']
 							.'<div class="inquiry-count">'
-								.$item['count'].' / '.self::getPercentage($item['count'], $data['vote_count'], true)
+								.$item['count'].' / '.$this->getPercentage($item['count'], $data['vote_count'], true)
 							.'</div>'
 							.'<div class="inquiry-percentage">'
-								.'<div class="inquiry-slider" style="width: '.self::getPercentage($item['count'], $data['vote_count']).';"></div>'
+								.'<div class="inquiry-slider" style="width: '.$this->getPercentage($item['count'], $data['vote_count']).';"></div>'
 							.'</div>'
 						.'</div>';
 					}
@@ -300,10 +300,10 @@
 							.'<label for="inquiry-answer-'.$item['id'].'">'.$item['answer'].'</label>'
 							.($data['allow_multiple'] ? ''
 								.'<div class="inquiry-count">'
-									.$item['count'].' / '.self::getPercentage($item['count'], $data['vote_count'], true)
+									.$item['count'].' / '.$this->getPercentage($item['count'], $data['vote_count'], true)
 								.'</div>'
 								.'<div class="inquiry-percentage">'
-									.'<div class="inquiry-slider" style="width: '.self::getPercentage($item['count'], $data['vote_count']).';"></div>'
+									.'<div class="inquiry-slider" style="width: '.$this->getPercentage($item['count'], $data['vote_count']).';"></div>'
 								.'</div>'
 							: '')
 						.'</div>';

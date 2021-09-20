@@ -11,14 +11,14 @@
         private $order;
 
         public function  __construct($id, $type, $rule, $condition, $pageId, $langId, $order, $enabled) {
-            self::setId($id);
-            self::setType($type);
-            self::setRule($rule);
-            self::setCondition($condition);
-            self::setEnabled($enabled);
-            self::setPageId($pageId);
-            self::setOrder($order);
-            self::setLangId($langId);
+            $this->setId($id);
+            $this->setType($type);
+            $this->setRule($rule);
+            $this->setCondition($condition);
+            $this->setEnabled($enabled);
+            $this->setPageId($pageId);
+            $this->setOrder($order);
+            $this->setLangId($langId);
         }
 
         public function getId() {

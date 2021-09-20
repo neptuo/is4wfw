@@ -13,16 +13,16 @@
 	class Localization extends BaseTagLib {
 
 		public function setLanguage($name) {
-			self::web()->LanguageName = $name;
+			$this->web()->LanguageName = $name;
 		}
 
 		public function useBundle($template, $name, $system = true, $moduleId = "") {
-			self::setLocalizationBundle($name, $system, $moduleId);
+			$this->setLocalizationBundle($name, $system, $moduleId);
 			return $template();
 		}
 
 		public function getProperty($name) {
-			return self::rb($name);
+			return $this->rb($name);
 		}
 
 		private function submit($rb, $editModel, $listModel, $template) {
@@ -31,7 +31,7 @@
 			
 			$listItems = array();
 			for ($index = 0; $index < $count; $index++) { 
-				$listItems[] = self::createListItem($index);
+				$listItems[] = $this->createListItem($index);
 			}
 
 			$listModel->items($listItems);
@@ -71,10 +71,10 @@
 
 			$editModel = parent::getEditModel();
 			$listModel = new ListModel();
-			self::pushListModel($listModel);
+			$this->pushListModel($listModel);
 
 			if ($editModel->isSubmit()) {
-				self::submit($rb, $editModel, $listModel, $template);
+				$this->submit($rb, $editModel, $listModel, $template);
 			}
 
 			if ($editModel->isSave()) {
@@ -86,14 +86,14 @@
 					if ($rb->exists()) {
 						$source->load();
 						foreach ($source->getKeys() as $key) {
-							if (!self::isKeyIncluded($filterKeyPrefix, $key)) {
+							if (!$this->isKeyIncluded($filterKeyPrefix, $key)) {
 								$rb->set($key, $source->get($key));
 							}
 						}
 					}
 				}
 
-				self::save($rb, $editModel, $listModel);
+				$this->save($rb, $editModel, $listModel);
 			}
 			
             if ($editModel->isSaved()) {
@@ -114,8 +114,8 @@
 				if ($rb->exists()) {
 					$rb->load();
 					foreach ($rb->getKeys() as $key) {
-						if (self::isKeyIncluded($filterKeyPrefix, $key)) {
-							$listItems[] = self::createListItem($index);
+						if ($this->isKeyIncluded($filterKeyPrefix, $key)) {
+							$listItems[] = $this->createListItem($index);
 							$keys[] = $key;
 							$values[] = $rb->get($key);
 							$index++;
@@ -123,7 +123,7 @@
 					}
 				}
 
-				$listItems[] = self::createListItem($index);
+				$listItems[] = $this->createListItem($index);
 				$keys[] = "";
 				$values[] = "";
 
@@ -140,12 +140,12 @@
 				$listModel->render(false);
 			}
 			
-			self::popListModel();
+			$this->popListModel();
 			return $result;
 		}
 		
 		public function edit($bundleName, $languageName, $filterKeyPrefixes = "") {
-			return self::editFullTag(null, $bundleName, $languageName, $filterKeyPrefixes);
+			return $this->editFullTag(null, $bundleName, $languageName, $filterKeyPrefixes);
 		}
 		
 		private function isKeyIncluded($filter, $key) {
@@ -169,11 +169,11 @@
 		}
 		
 		public function getEditItems() {
-			return self::peekListModel();
+			return $this->peekListModel();
 		}
 		
 		public function getEditItemIndex() {
-			return self::peekListModel()->field("index");
+			return $this->peekListModel()->field("index");
 		}
 
 		public function download($bundleName, $languageName) {

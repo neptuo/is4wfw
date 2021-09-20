@@ -50,7 +50,7 @@
 
 		public function __construct() {
 			parent::setLocalizationBundle('fileadmin');
-			self::transformFileSystem();
+			$this->transformFileSystem();
 		}
 		
 		protected function canUserDir($objectId, $rightType) {
@@ -71,7 +71,7 @@
         *
         */                   
         public function getPhysicalPathTo($dirId, $itemPath = '') {
-            return USER_FILESYSTEM_PATH . self::getDirectoryPath($dirId, $itemPath);
+            return USER_FILESYSTEM_PATH . $this->getDirectoryPath($dirId, $itemPath);
         }
 
         /**
@@ -84,7 +84,7 @@
         *
         */
         public function getPhysicalUrlTo($dirId, $itemPath = '') {
-            return USER_FILESYSTEM_URL . self::getDirectoryPath($dirId, $itemPath);
+            return USER_FILESYSTEM_URL . $this->getDirectoryPath($dirId, $itemPath);
         }
 		
         /**
@@ -111,11 +111,11 @@
 						$dirId = $dirInfo[0]['parent_id'];
 						$path = $dirInfo[0][$itemPath] . $separator . $path;
 					} else {
-						self::ThrowMissingDirectory();
+						$this->ThrowMissingDirectory();
 					}
 				}
 			} else {
-				self::ThrowMissingDirectory();
+				$this->ThrowMissingDirectory();
 			}
 			
 			return $path;
@@ -128,14 +128,14 @@
 		}
 		
 		public function getPhysicalPathToFile($file) {
-			$path = self::getPhysicalPathTo($file['dir_id']);
-			$filePath = $path.$file[FileAdmin::$FileSystemItemPath].".".self::getFileExtension($file);
+			$path = $this->getPhysicalPathTo($file['dir_id']);
+			$filePath = $path.$file[FileAdmin::$FileSystemItemPath].".".$this->getFileExtension($file);
 			return $filePath;
 		}
 		
 		public function getPhysicalUrlToFile($file) {
 			$path = $this->getPhysicalUrlTo($file['dir_id']);
-			$filePath = $path.$file[FileAdmin::$FileSystemItemPath] . "." . self::getFileExtension($file);
+			$filePath = $path.$file[FileAdmin::$FileSystemItemPath] . "." . $this->getFileExtension($file);
 			return $filePath;
 		}
 		
@@ -154,7 +154,7 @@
 		}
 		
 		public function getFileDirectUrl($file) {
-			return self::getPhysicalUrlTo($file['dir_id'], false).$file[FileAdmin::$FileSystemItemPath].".".self::$FileExtensions[$file['type']];
+			return $this->getPhysicalUrlTo($file['dir_id'], false).$file[FileAdmin::$FileSystemItemPath].".".self::$FileExtensions[$file['type']];
 		}
 		
 		/* ================== ADMIN ======================================================= */
@@ -166,7 +166,7 @@
 				return false;
 			}
 		
-			return self::canUserDir($data['id'], WEB_R_READ);
+			return $this->canUserDir($data['id'], WEB_R_READ);
 		}
 		
 		public function canWriteDirectory($data) {
@@ -174,11 +174,11 @@
 				return false;
 			}
 		
-			return self::canUserDir($data['id'], WEB_R_WRITE);
+			return $this->canUserDir($data['id'], WEB_R_WRITE);
 		}
 		
 		public function canReadFile($data) {
-			return self::canUserFile($data['id'], WEB_R_READ);
+			return $this->canUserFile($data['id'], WEB_R_READ);
 		}
 		
 		public function generatePermsForm($data, $objectType, $type) {
@@ -208,10 +208,10 @@
 		}
 		
 		protected function deleteFile($fileId) {
-			if (self::canUserFile($fileId, WEB_R_DELETE)) {
+			if ($this->canUserFile($fileId, WEB_R_DELETE)) {
 				$file = parent::dao('File')->get($fileId);
 				if (!parent::dao('File')->delete($file)) {
-					unlink(self::getPhysicalPathToFile($file));
+					unlink($this->getPhysicalPathToFile($file));
 					RoleHelper::deleteRights(FileAdmin::$FileRightDesc, $fileId);
 					return true;
 				} else {
@@ -223,7 +223,7 @@
 		}
 		
 		public function deleteDirectory($directoryId, $recursive = true) {
-			if(self::canUserDir($directoryId, WEB_R_DELETE)) {
+			if($this->canUserDir($directoryId, WEB_R_DELETE)) {
 				$dirs = parent::dao('Directory')->getFromDirectory($directoryId);
 				$files = parent::dao('File')->getFromDirectory($directoryId);
 				
@@ -231,15 +231,15 @@
 					return parent::getError(parent::rb('dir.notempty'));
 				} elseif($recursive) {
 					foreach($dirs as $dir) {
-						self::deleteDirectory($dir['id'], true);
+						$this->deleteDirectory($dir['id'], true);
 					}
 					foreach($files as $file) {
-						self::deleteFile($file['id']);
+						$this->deleteFile($file['id']);
 					}
 				}
 				
 				$directory = parent::dao('Directory')->get($directoryId);
-				$path = self::getPhysicalPathTo($directoryId);
+				$path = $this->getPhysicalPathTo($directoryId);
 				if(!parent::dao('Directory')->delete($directory)) {
 					//echo $path;
 					rmdir($path);
@@ -254,7 +254,7 @@
 		}
 		
 		public function importFileSystem($rootId, $readRights = null, $writeRights = null, $deleteRights = null) {
-			if(!self::canUserDir($rootId, WEB_R_WRITE)) {
+			if(!$this->canUserDir($rootId, WEB_R_WRITE)) {
 				return parent::rb('permissiondenied');
 			}
 		
@@ -268,7 +268,7 @@
 			
 			$fileNames = array();
 			foreach($files as $file) {
-				$fileNames[count($fileNames)] = $file[FileAdmin::$FileSystemItemPath].'.'.self::getFileExtension($file);
+				$fileNames[count($fileNames)] = $file[FileAdmin::$FileSystemItemPath].'.'.$this->getFileExtension($file);
 			}
 			
 			if($readRights == null) {
@@ -281,7 +281,7 @@
 				$deleteRights = RoleHelper::getRights(FileAdmin::$DirectoryRightDesc, $rootId, WEB_R_DELETE);
 			}
 			
-			$path = self::getPhysicalPathTo($rootId);
+			$path = $this->getPhysicalPathTo($rootId);
 		
 			if ($handle = opendir($path)) {
 				$newDirs = array();
@@ -303,13 +303,13 @@
 						
 						$info = pathinfo($path.$entry);
 						
-						if(self::getWebFileType($info['basename']) == -1) {
+						if($this->getWebFileType($info['basename']) == -1) {
 							continue;
 						}
 						
 						$dataItem = array(
 							'name' => $info['filename'], 
-							'type' => self::getWebFileType($info['basename']), 
+							'type' => $this->getWebFileType($info['basename']), 
 							'dir_id' => $rootId, 
 							'timestamp' => time(), 
 							'url' => UrlUtils::toValidUrl($info['filename'])
@@ -321,7 +321,7 @@
 						$dataItem['id'] = parent::dao('File')->getLastId();
 						
 						//Rename to match filesystem item path
-						self::transformFileSystemFiles(array($dataItem));
+						$this->transformFileSystemFiles(array($dataItem));
 						array_push($newFiles, $dataItem);
 						
 						RoleHelper::setRights(FileAdmin::$FileRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $readRights, WEB_R_READ);
@@ -347,7 +347,7 @@
 						$dataItem['id'] = parent::dao('Directory')->getLastId();
 						
 						//Rename to match filesystem item path
-						self::transformFileSystemDirs(array($dataItem));
+						$this->transformFileSystemDirs(array($dataItem));
 						array_push($newDirs, $dataItem);
 						
 						RoleHelper::setRights(FileAdmin::$DirectoryRightDesc, $dataItem['id'], RoleHelper::getCurrentRoles(), $readRights, WEB_R_READ);
@@ -356,13 +356,13 @@
 					
 						//echo 'Imported folder: '.$path.$entry.'<br />';
 						parent::db()->getDataAccess()->disableCache();
-						self::importFileSystem($dataItem['id'], $readRights, $writeRights, $deleteRights);
+						$this->importFileSystem($dataItem['id'], $readRights, $writeRights, $deleteRights);
 						parent::db()->getDataAccess()->enableCache();
 					}
 				}
 				
-				//self::transformFileSystemDirs($newDirs);
-				//self::transformFileSystemFiles($newFiles);
+				//$this->transformFileSystemDirs($newDirs);
+				//$this->transformFileSystemFiles($newFiles);
 			}
 		}
 		
@@ -378,7 +378,7 @@
 			
 			if($_POST['delete-file'] == parent::rb('file.delete')) {
 				$fileId = $_POST['file-id'];
-				$message = self::deleteFile($fileId);
+				$message = $this->deleteFile($fileId);
 				if ($message === true) {
 					$message = parent::getSuccess(parent::rb('file.deleted'));
 				}
@@ -388,11 +388,11 @@
 			
 			if($_POST['delete-dir']  == parent::rb('dir.delete')) {
 				$directoryId = $_POST['directory-id'];
-				$return .= self::deleteDirectory($directoryId, true);
+				$return .= $this->deleteDirectory($directoryId, true);
 			}
 
 			if ($_POST['new-import'] == parent::rb('button.import')) {
-				$result = self::importFileSystem($dirId);
+				$result = $this->importFileSystem($dirId);
 				if($result != null) {
 					$return .= parent::getError($result);
 				} else {
@@ -410,7 +410,7 @@
 			$dataModel = array('files' => $files, 'dirs' => $dirs, 'parent' => $parentDir);
 			
 			if($useFrames) {
-				return parent::getFrame(parent::rb('title.browser').' :: '.self::getDirectoryPath($dirId, 'name'), $return . parent::view('fileadmin-list', $dataModel), true);
+				return parent::getFrame(parent::rb('title.browser').' :: '.$this->getDirectoryPath($dirId, 'name'), $return . parent::view('fileadmin-list', $dataModel), true);
 			} else {
 				return $return.parent::view('fileadmin-list', $dataModel);
 			}
@@ -450,7 +450,7 @@
 
 			$resultDirs = array();
 			foreach ($dirs as $key => $dir) {
-				if (self::canReadDirectory($dir)) {
+				if ($this->canReadDirectory($dir)) {
 					$item = array(
 						"id" => $dir["id"],
 						"name" => $dir["name"],
@@ -465,7 +465,7 @@
 
 			$resultFiles = array();
 			foreach ($files as $key => $file) {
-				if (self::canReadFile($file)) {
+				if ($this->canReadFile($file)) {
 					$item = array(
 						"id" => $file["id"],
 						"name" => $file["name"],
@@ -512,34 +512,34 @@
 			}
 
 			$model = new ListModel();
-			self::pushListModel($model);
+			$this->pushListModel($model);
 			
 			$model->items($items);
 			$model->render();
             $result = $template();
 
-            self::popListModel();
+            $this->popListModel();
             return $result;
 		}
 
 		public function getFileBrowserListData() {
-			return self::peekListModel();
+			return $this->peekListModel();
 		}
 
 		public function getFileBrowserItemId() {
-			return self::peekListModel()->field("id");
+			return $this->peekListModel()->field("id");
 		}
 
 		public function getFileBrowserItemName() {
-			return self::peekListModel()->field("name");
+			return $this->peekListModel()->field("name");
 		}
 
 		public function getFileBrowserItemType() {
-			return self::peekListModel()->field("type");
+			return $this->peekListModel()->field("type");
 		}
 
 		public function getFileBrowserItemExtension() {
-			$type = self::peekListModel()->field("type");
+			$type = $this->peekListModel()->field("type");
 			if ($type == 0) {
 				return "";
 			}
@@ -548,7 +548,7 @@
 		}
 
 		public function getFileBrowserItemContentType() {
-			$type = self::peekListModel()->field("type");
+			$type = $this->peekListModel()->field("type");
 			if ($type == 0) {
 				return "";
 			}
@@ -557,11 +557,11 @@
 		}
 
 		public function getFileBrowserItemTitle() {
-			return self::peekListModel()->field("title");
+			return $this->peekListModel()->field("title");
 		}
 
 		public function getFileBrowserItemTimestamp() {
-			return self::peekListModel()->field("timestamp");
+			return $this->peekListModel()->field("timestamp");
 		}
 		
 		public function processFileUploadBasic($dataItem, $fileTmpName) {
@@ -569,7 +569,7 @@
 			$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_WRITE);
 			$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_DELETE);
 			
-			return self::processFileUpload($dataItem, $fileTmpName, $read, $write, $delete);
+			return $this->processFileUpload($dataItem, $fileTmpName, $read, $write, $delete);
 		}
 		
 		public function processFileUpload($dataItem, $fileTmpName, $readRights, $writeRights, $deleteRights) {
@@ -584,11 +584,11 @@
 			}
 			
 			if($new) {
-				if(!self::canUserDir($dataItem['dir_id'], WEB_R_WRITE)) {
+				if(!$this->canUserDir($dataItem['dir_id'], WEB_R_WRITE)) {
 					return parent::rb('permissiondenied');
 				}
 			} else {
-				if(!self::canUserFile($dataItem['id'], WEB_R_WRITE)) {
+				if(!$this->canUserFile($dataItem['id'], WEB_R_WRITE)) {
 					return parent::rb('permissiondenied');
 				}
 			}	
@@ -614,7 +614,7 @@
 			
 			$existing = parent::dao('File')->select($select);
 			if(count($existing) > 0) {
-				return parent::rb('file.notuniquename').' "'.$dataItem['name'].'.'.self::getFileExtension($dataItem).'"';
+				return parent::rb('file.notuniquename').' "'.$dataItem['name'].'.'.$this->getFileExtension($dataItem).'"';
 			}
 			
 			if($new && $fileTmpName == null) {
@@ -626,19 +626,19 @@
 					unlink($this->getPhysicalPathToFile($file));
 					parent::autolib("f")->clearImageCache($dataItem['id']);
 				} else {
-					//rename(self::getPhysicalPathToFile($file), self::getPhysicalPathToFile($dataItem));
+					//rename($this->getPhysicalPathToFile($file), $this->getPhysicalPathToFile($dataItem));
 				}
 			}
 			
 			if($fileTmpName != null) {
-				//echo self::getPhysicalPathToFile($dataItem);			
+				//echo $this->getPhysicalPathToFile($dataItem);			
 				if($new) {
 					if(parent::dao('File')->insert($dataItem) != 0) {
 						return parent::dao('File')->getErrorMessage();
 					}
 					$dataItem['id'] = parent::dao('File')->getLastId();
 				}
-				$moved = move_uploaded_file($fileTmpName, self::getPhysicalPathToFile($dataItem));
+				$moved = move_uploaded_file($fileTmpName, $this->getPhysicalPathToFile($dataItem));
 				//TODO: Show error!
 			}
 			
@@ -660,11 +660,11 @@
 			
 			$zip = new ZipArchive();
 			if ($zip->open($fileTmpName) === TRUE) {
-				$zip->extractTo(self::getPhysicalPathTo($dirId));
+				$zip->extractTo($this->getPhysicalPathTo($dirId));
 				$zip->close();
 				
 				parent::db()->getDataAccess()->disableCache();
-				self::importFileSystem($dirId, $readRights, $writeRights, $deleteRights);
+				$this->importFileSystem($dirId, $readRights, $writeRights, $deleteRights);
 				parent::db()->getDataAccess()->enableCache();
 			} else {
 				return parent::rb('message.cantextract');
@@ -715,7 +715,7 @@
 							'name' => $name, 
 							'title' => $_POST[$namePrefix . 'file-title'][$i], 
 							'dir_id' => $parentId, 
-							'type' => self::getWebFileType($requestFileName), 
+							'type' => $this->getWebFileType($requestFileName), 
 							'timestamp' => time(),
 							'url' => $_POST[$namePrefix . 'file-url'][$i]
 						);
@@ -723,7 +723,7 @@
 						//print_r($read);
 						//print_r($write);
 						//print_r($delete);
-						$result = self::processFileUpload($dataItem, $_FILES[$namePrefix . 'file-upload']['tmp_name'][$i], $read, $write, $delete);
+						$result = $this->processFileUpload($dataItem, $_FILES[$namePrefix . 'file-upload']['tmp_name'][$i], $read, $write, $delete);
 						if ($result != null) {
 							$_POST[$namePrefix . 'new-file'] = parent::rb('button.newfile');
 							$return .= parent::getError($result);
@@ -732,7 +732,7 @@
 						}
 					}
 				} else {
-					self::zipOutFile($_POST[$namePrefix . 'dir-id'], $_FILES[$namePrefix . 'file-upload']['tmp_name'][0], $read, $write, $delete);
+					$this->zipOutFile($_POST[$namePrefix . 'dir-id'], $_FILES[$namePrefix . 'file-upload']['tmp_name'][0], $read, $write, $delete);
 				}
 			}
 			
@@ -851,7 +851,7 @@
 			$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $parentId, WEB_R_DELETE);
 			
 			$dataItem = array('id' => '', 'name' => $name, 'url' => $url, 'parent_id' => $parentId, 'timestamp' => time());
-			$result = self::processDirectoryEdit($dataItem, $read, $write, $delete);
+			$result = $this->processDirectoryEdit($dataItem, $read, $write, $delete);
 			$dataItem['id'] = $_POST['new-directory-id'];
 
 			return $dataItem;
@@ -865,11 +865,11 @@
 			}
 			
 			if($new) {
-				if(!self::canUserDir($dataItem['parent_id'], WEB_R_WRITE)) {
+				if(!$this->canUserDir($dataItem['parent_id'], WEB_R_WRITE)) {
 					return parent::rb('permissiondenied');
 				}
 			} else {
-				if(!self::canUserDir($dataItem['id'], WEB_R_WRITE)) {
+				if(!$this->canUserDir($dataItem['id'], WEB_R_WRITE)) {
 					return parent::rb('permissiondenied');
 				}
 			}
@@ -894,7 +894,7 @@
 			}
 			
 			if(!$new) {
-				$path = self::getPhysicalPathTo($dir['parent_id']);
+				$path = $this->getPhysicalPathTo($dir['parent_id']);
 				//rename($path.$dir['name'], $path.$dataItem['name']);
 				
 				if(parent::dao('Directory')->update($dataItem) != 0) {
@@ -907,7 +907,7 @@
 				$dataItem['id'] = parent::dao('Directory')->getLastId();
 				$_POST['new-directory-id'] = $dataItem['id'];
 				
-				$path = self::getPhysicalPathTo($dataItem['parent_id']).$dataItem[FileAdmin::$FileSystemItemPath];
+				$path = $this->getPhysicalPathTo($dataItem['parent_id']).$dataItem[FileAdmin::$FileSystemItemPath];
 				mkdir($path);
 			}
 			
@@ -953,7 +953,7 @@
 				//print_r($read);
 				//print_r($write);
 				//print_r($delete);
-				$result = self::processDirectoryEdit($dataItem, $read, $write, $delete);
+				$result = $this->processDirectoryEdit($dataItem, $read, $write, $delete);
 				if($result != null) {
 					$_POST['new-directory'] = parent::rb('button.newdirectory');
 					$return .= parent::getError($result);
@@ -978,7 +978,7 @@
 
 		//C-fulltag
 		public function fileDeleter($template, $id) {
-			if (self::deleteFile($id) === true) {
+			if ($this->deleteFile($id) === true) {
 				$template();
 			}
 		}
@@ -986,37 +986,37 @@
 		protected function transformFileSystem() {
 			$transformed = parent::getSystemProperty('FileAdmin.fileSystemTransformed');
 			if(!$transformed) {
-				self::transformSubFileSystem(0);
+				$this->transformSubFileSystem(0);
 				parent::setSystemProperty('FileAdmin.fileSystemTransformed', 1);
 			}
 		}
 		
 		protected function transformSubFileSystem($dirId) {
 			$dirs = parent::dao('Directory')->getFromDirectory($dirId);
-			self::transformFileSystemDirs($dirs);
+			$this->transformFileSystemDirs($dirs);
 			
 			$files = parent::dao('File')->getFromDirectory($dirId);
-			self::transformFileSystemFiles($files);
+			$this->transformFileSystemFiles($files);
 		}
 		
 		protected function transformFileSystemDirs($dirs) {
 			foreach($dirs as $dir) {
-				$path = self::getPhysicalPathTo($dir['parent_id']);
+				$path = $this->getPhysicalPathTo($dir['parent_id']);
 				$oldPath = $path.$dir['name'];
 				$newPath = $path.$dir[FileAdmin::$FileSystemItemPath];
 				
 				//echo $oldPath.' => '.$newPath.'<br />';
 				$result = rename($oldPath, $newPath);
 				//echo $result ? "Ok" : "Failed";
-				self::transformSubFileSystem($dir['id']);
+				$this->transformSubFileSystem($dir['id']);
 			}
 		}
 		
 		protected function transformFileSystemFiles($files) {
 			foreach($files as $file) {
-				$path = self::getPhysicalPathTo($file['dir_id']);
-				$oldPath = $path.$file['name'].".".self::getFileExtension($file);
-				$newPath = self::getPhysicalPathToFile($file);
+				$path = $this->getPhysicalPathTo($file['dir_id']);
+				$oldPath = $path.$file['name'].".".$this->getFileExtension($file);
+				$newPath = $this->getPhysicalPathToFile($file);
 				
 				//echo $oldPath.' => '.$newPath.'<br />';
 				rename($oldPath, $newPath);

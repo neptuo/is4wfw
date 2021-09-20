@@ -31,7 +31,7 @@
         private $CurrentId = 0;
 
         public function __construct() {
-            self::setLocalizationBundle("file");
+            $this->setLocalizationBundle("file");
         }
         
         function __destruct() {
@@ -55,7 +55,7 @@
         public function showDirectory($dirId = false, $editable = false, $useFrames = false, $showParent = false, $showTitleInsteadOfName = false, $browsable = true, $parentName = false, $nameWithExtension = false, $fileNameHeader = false) {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
             $origDirId = $dirId;
 
@@ -68,7 +68,7 @@
             }
 
             if($browsable) {
-                $dirId = self::setDirId($dirId);
+                $dirId = $this->setDirId($dirId);
             }
                 
             if($_POST['delete-dir'] == $rb->get('dir.delete')) {
@@ -81,7 +81,7 @@
                     $subf = $dbObject->fetchAll("SELECT count(`id`) AS `count` FROM `file` WHERE `dir_id` = ".$directoryId.";");
                 
                     if($subd[0]['count'] == 0 && $subf[0]['count'] == 0) {
-                        $path = self::getPhysicalPathTo($directoryId);
+                        $path = $this->getPhysicalPathTo($directoryId);
                         $dbObject->execute("DELETE FROM `directory` WHERE `id` = ".$directoryId.";");
                         $dbObject->execute("DELETE FROM `directory_right` WHERE `id` = ".$directoryId.";");
                         rmdir($path);
@@ -101,7 +101,7 @@
                     if(count($file) == 1) {
                         $dbObject->execute("DELETE FROM `file` WHERE `id` = ".$fileId.";");
                         $dbObject->execute("DELETE FROM `file_right` WHERE `id` = ".$fileId.";");
-                        $path = self::getPhysicalPathTo($file[0]['dir_id']);
+                        $path = $this->getPhysicalPathTo($file[0]['dir_id']);
                         $filePath = $path . $file[0]['name'] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
                         //echo $filePath;
                         unlink($filePath);
@@ -120,9 +120,9 @@
             }
         
             if($useFrames != 'false') {
-                return parent::getFrame($rb->get('dir.filelist')." :: /" . self::getPhysicalUrlTo($dirId), $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true"), "", true, $parentName, $nameWithExtension, $fileNameHeader);
+                return parent::getFrame($rb->get('dir.filelist')." :: /" . $this->getPhysicalUrlTo($dirId), $return.$this->getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true"), "", true, $parentName, $nameWithExtension, $fileNameHeader);
             } else {
-                return $return.self::getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true", $parentName, $nameWithExtension, $fileNameHeader);
+                return $return.$this->getList($dirId, $editable, $showParent, $showTitleInsteadOfName == "true", $parentName, $nameWithExtension, $fileNameHeader);
             }
         }
         
@@ -138,7 +138,7 @@
         private function getList($dirId, $editable, $showParent, $showTitleInsteadOfName, $parentName, $nameWithExtension, $fileNameHeader) {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
                 
                 $dirs = $dbObject->fetchAll('SELECT distinct `directory`.`id`, `directory`.`name`, .`directory`.`timestamp` FROM `directory` LEFT JOIN `directory_right` ON `directory`.`id` = `directory_right`.`did` LEFT JOIN `group` ON `directory_right`.`gid` = `group`.`gid` WHERE `parent_id` = '.$dirId.' AND `directory_right`.`type` = '.WEB_R_READ.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().')) ORDER BY `name`;');
@@ -229,7 +229,7 @@
                 .'</a>'
                     .'</td>'
                     .'<td class="dir-physical-path">'
-                        .'<a href="'.self::getPhysicalUrlTo($dirId).$file['name'].".".FileAdmin::$FileExtensions[$file['type']].'" target="_blank">open</a>'
+                        .'<a href="'.$this->getPhysicalUrlTo($dirId).$file['name'].".".FileAdmin::$FileExtensions[$file['type']].'" target="_blank">open</a>'
                     .'</td>'
                     .'<td class="file-timestamp">'
                 .'<span class="file-timestamp-date">'.date('d.m.Y', $file['timestamp']).'</span> '
@@ -273,9 +273,9 @@
         public function showNewDirectoryForm($dirId = false, $useFrames = false, $useRights = false) {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
-            $dirId = self::setDirId($dirId);
+            $dirId = $this->setDirId($dirId);
             
             if($_POST['new-directory'] == $rb->get('dir.new') || $_POST['edit-directory'] == $rb->get('dir.edithint')) {
                 $directoryParentId = $_POST['directory-parent-id'];
@@ -304,12 +304,12 @@
                                 $dbObject->execute("INSERT INTO `directory`(`parent_id`, `name`, `url`, `timestamp`) VALUES(".$directoryParentId.", \"".$directoryName."\", \"".$directoryUrl."\", ".time().");");
                             $directoryId = $dbObject->fetchAll('SELECT MAX(`id`) AS `id` FROM `directory`;');
                                 $directoryId = $directoryId[0]['id'];
-                            $path = self::getPhysicalPathTo($directoryParentId).$directoryName;
+                            $path = $this->getPhysicalPathTo($directoryParentId).$directoryName;
                             mkdir($path);
                         } elseif($_POST['edit-directory'] == $rb->get('dir.edithint')) {
                             $oldName = $dbObject->fetchAll('SELECT `name`, `parent_id` FROM `directory` WHERE `id` = '.$directoryParentId.';');
-                            $path1 = substr(self::getPhysicalPathTo($oldName[0]['parent_id']).$oldName[0]['name'].'/', 1);
-                            $path2 = substr(self::getPhysicalPathTo($oldName[0]['parent_id']).$directoryName.'/', 1);
+                            $path1 = substr($this->getPhysicalPathTo($oldName[0]['parent_id']).$oldName[0]['name'].'/', 1);
+                            $path2 = substr($this->getPhysicalPathTo($oldName[0]['parent_id']).$directoryName.'/', 1);
                             rename($path1, $path2);
                             $dbObject->execute('UPDATE `directory` SET `name` = "'.$directoryName.'", `url` = "'.$directoryUrl.'", `timestamp` = "'.time().'" WHERE `id` = '.$directoryParentId.';');
                             $directoryId = $directoryParentId;
@@ -507,12 +507,12 @@
         public function showUploadForm($dirId = false, $useRights = false, $useFrames = false) {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
-            $dirId = self::setDirId($dirId);
+            $dirId = $this->setDirId($dirId);
             
             if(array_key_exists('file-name', $_POST)) {
-            $return .= self::processFileUpload();
+            $return .= $this->processFileUpload();
             }
             
             // Ziskat prava ....
@@ -623,7 +623,7 @@
         private function processFileUpload() {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $fileName = $_POST['file-name'];
             $dirId = $_POST['dir-id'];
             $fileTitle = $_POST['file-title'];
@@ -631,7 +631,7 @@
             $read = $_POST['file-right-edit-groups-r'];
             $write = $_POST['file-right-edit-groups-w'];
             $delete = $_POST['file-right-edit-groups-d'];
-            $extType = self::getWebFileType($_FILES['file-rs']['name']);
+            $extType = $this->getWebFileType($_FILES['file-rs']['name']);
             $oldFile = null;
             
             if(is_uploaded_file($_FILES['file-rs']['tmp_name'])) {
@@ -654,14 +654,14 @@
                 }
                 if(count($files) == 0) {
                     if($extType > 0) {
-                    $path = self::getPhysicalPathTo($dirId);
+                    $path = $this->getPhysicalPathTo($dirId);
                     $moved = move_uploaded_file($original, $path.$fileName.".".FileAdmin::$FileExtensions[$extType]);
                     
                     if($moved) {
                         if(array_key_exists('file-id', $_POST)) {
                         $files = $dbObject->fetchAll("SELECT `id`, `name`, `type`, `dir_id` FROM `file` WHERE `dir_id` = ".$dirId." AND `id` = ".$fileId.";");
                         $oldFile = $files[0];
-                        $path = self::getPhysicalPathTo($oldFile['dir_id']);
+                        $path = $this->getPhysicalPathTo($oldFile['dir_id']);
                         $filePath = $path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
                         //echo $filePath;
                         if($fileName != $oldFile['name'] || $extType != $oldFile['type']) {
@@ -752,7 +752,7 @@
             if(count($permission) > 0) {
             $files = $dbObject->fetchAll("SELECT `id`, `name`, `type`, `dir_id` FROM `file` WHERE `dir_id` = ".$dirId." AND `id` = ".$fileId.";");
             $oldFile = $files[0];
-            $path = self::getPhysicalPathTo($oldFile['dir_id']);
+            $path = $this->getPhysicalPathTo($oldFile['dir_id']);
             $filePath = $path.$oldFile['name'].".".FileAdmin::$FileExtensions[$oldFile['type']];
             if($fileName != $oldFile['name']) {
                 $i = rename($filePath, str_replace($oldFile['name'], $fileName, $filePath));
@@ -798,7 +798,7 @@
         *
         */                   
         public function getPhysicalPathTo($dirId) {
-            return USER_FILESYSTEM_PATH . self::getDirectoryPathIndernal($dirId);
+            return USER_FILESYSTEM_PATH . $this->getDirectoryPathIndernal($dirId);
         }
 
         /**
@@ -810,7 +810,7 @@
         *
         */    
         public function getPhysicalUrlTo($dirId) {
-            return USER_FILESYSTEM_URL . self::getDirectoryPathIndernal($dirId);
+            return USER_FILESYSTEM_URL . $this->getDirectoryPathIndernal($dirId);
         }
 
         private function getDirectoryPathIndernal($dirId) {
@@ -887,7 +887,7 @@
             $file = $dbObject->fetchAll("SELECT `id`, `dir_id`, `name`, `type`, `timestamp` FROM `file` WHERE `id` = " . $dbObject->escape($fileId) . ";");
             
             if (count($file) == 1) {
-                $filePath = self::getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
+                $filePath = $this->getPhysicalPathTo($file[0]['dir_id']).$file[0]['name'].".".FileAdmin::$FileExtensions[$file[0]['type']];
                 $fileExt = ($file[0]['type'] == WEB_TYPE_JPG || $file[0]['type'] == WEB_TYPE_GIF || $file[0]['type'] == WEB_TYPE_PNG) ? "image/".FileAdmin::$FileExtensions[$file[0]['type']] : "document/".$file[0]['type'];
                 
                 if (array_key_exists("width", $_GET) && array_key_exists("height", $_GET)) {
@@ -1159,7 +1159,7 @@
                 
             if($filesBeforeFolders != "true") {
                 if($showSubDirs == "true" || $recursively == "true") {
-                $return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders, $dirPageSize, $filePageSize);
+                $return .= $this->galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders, $dirPageSize, $filePageSize);
                 $return .= '<div class="clear"></div>';
                 }
             }
@@ -1197,13 +1197,13 @@
             foreach($images as $image) {
             if($lightbox == "true" || $lightbox == "added") {
                 $link = ''
-                .'<a class="gallery-link" title="'.$image['title'].'" href="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$lsize : self::getPhysicalUrlTo($dirId).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
-                    .'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalUrlTo($dirId).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
+                .'<a class="gallery-link" title="'.$image['title'].'" href="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$lsize : $this->getPhysicalUrlTo($dirId).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'"'.(($lightbox == "true") ? ' rel="lightbox'.(($lightId != false) ? '['.$lightId.']' : '').'"' : '').(($lightTitle == "true") ? ' title="'.$image['title'].'"' : '').'>'
+                    .'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : $this->getPhysicalUrlTo($dirId).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
                 .'</a>';
             } else {
                 $link = ''
                 .(($pageId != false) ? '<a class="gallery-link" title="'.$image['title'].'" href="'.$webObject->composeUrl($pageId, $langId).(($method == "dynamic") ? '/'.$image['id'].'-'.$image['name'] : '?file-id='.$image['id']).'">' : '')
-                    .'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : self::getPhysicalUrlTo($dirId).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
+                    .'<img src="'.(($useDirectLink != "true") ? '~/file.php?rid='.$image['id'].'&'.$size : $this->getPhysicalUrlTo($dirId).$image['name'].".".FileAdmin::$FileExtensions[$image['type']]).'" alt="'.$image['title'].'" />'
                 .(($pageId != false) ? '</a>' : '');
             }
             
@@ -1220,7 +1220,7 @@
             if($filesBeforeFolders == "true") {
                 $return .= '<div class="clear"></div>';
                 if($showSubDirs == "true" || $recursively == "true") {
-                    $return .= self::galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders, $dirPageSize, $filePageSize);
+                    $return .= $this->galleryShowDirectories($method, $pageId, $langId, $dirId, false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders, $dirPageSize, $filePageSize);
                 }
             }
                 
@@ -1248,7 +1248,7 @@
             
             $sql = "SELECT `id`, `name`, `url`, `timestamp` FROM `directory` WHERE `parent_id` = ".$dirId." ORDER BY `".$order."`".(($desc == true) ? " DESC" : "");
             if($dirPageSize != '') {
-                $start = self::getDirOffset();
+                $start = $this->getDirOffset();
             
                 $sql .= ' limit ' . $start . ',' . $dirPageSize;
             }
@@ -1265,8 +1265,8 @@
                     $_REQUEST['dir-id'] = $dir['id'];
                     $_REQUEST['dir-url'] = $dir['url'];
                     $url = $webObject->composeUrl($pageId);
-                    if(self::getDirOffset() != 0) {
-                        $url .= '?dir-offset=' . self::getDirOffset();
+                    if($this->getDirOffset() != 0) {
+                        $url .= '?dir-offset=' . $this->getDirOffset();
                     }
                 }
             
@@ -1278,7 +1278,7 @@
                         .((strlen($url) != 0) ? '<a href="'.$url.'">'.$dir['name'].'</a> ' : $dir['name'])
                         .(($dirDateFormat != "") ? date($dirDateFormat, $dir['timestamp']) : "")
                     .'</div>'
-                        .($recursively == "true" ? self::galleryFromDirectory($method, $pageId, $langId, $dir['id'], false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders, $dirPageSize, $filePageSize) : "")
+                        .($recursively == "true" ? $this->galleryFromDirectory($method, $pageId, $langId, $dir['id'], false, $showSubDirs, $showNames, $showTitles, $limit, $detailWidth, $detailHeight, $lightbox == "true" ? "added" : $lightbox, $lightWidth, $lightHeight, $lightTitle, $lightId, $useDirectLink, $recursively, $dirDateFormat, $orderFilesBy, $orderDirsBy, $desc, $filesBeforeFolders, $dirPageSize, $filePageSize) : "")
                     .'</div>';
             }
 
@@ -1286,7 +1286,7 @@
             $_REQUEST['dir-url'] = $tmpDirUrl;
             
             if($dirPageSize != '') {
-                $start = self::getDirOffset();
+                $start = $this->getDirOffset();
             
                 $sql = "SELECT count(`id`) as `count` FROM `directory` WHERE `parent_id` = ".$dirId;
                 $result = $dbObject->fetchSingle($sql);
@@ -1459,7 +1459,7 @@
         
         public function getDirectoryName() {
             global $dbObject;
-            $sql = 'select `name` from `directory` where `id` = ' . self::getDirectoryId();
+            $sql = 'select `name` from `directory` where `id` = ' . $this->getDirectoryId();
             $result = $dbObject->fetchSingle($sql);
             return $result['name'];
         }

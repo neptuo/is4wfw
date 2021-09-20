@@ -29,7 +29,7 @@
 				.'<div style="color: red; font-weight: bold;">Current memory used:</div>'
 				.'<div style="color: black;">' . Formatter::toByteString(memory_get_usage()) . '</div>'
 				.'<div style="color: red; font-weight: bold;">Difference:</div>'
-				.'<div style="color: black;">' . Formatter::toByteString(self::getMyUsedMemory()) . '</div>'
+				.'<div style="color: black;">' . Formatter::toByteString($this->getMyUsedMemory()) . '</div>'
 				.'<div style="color: red; font-weight: bold;">Peak memory:</div>'
 				.'<div style="color: black;">' . Formatter::toByteString(memory_get_peak_usage()) . '</div>'
 			.'</div>';
@@ -40,7 +40,7 @@
 		}
 		
 		public function printDuration() {
-			return parent::debugFrame('Script duration', '' . round(self::getDuration(), 2) . 's');
+			return parent::debugFrame('Script duration', '' . round($this->getDuration(), 2) . 's');
 		}
 	}
 

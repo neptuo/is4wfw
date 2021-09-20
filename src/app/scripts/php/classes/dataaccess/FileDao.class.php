@@ -24,7 +24,7 @@ class FileDao extends AbstractDao {
 	
 	
 	public function getFromDirectory($dirId, $order = "name", $type = null, $pageIndex = false, $limit = false) {
-		$select = Select::factory(self::dataAccess())->where('dir_id', '=', $dirId);
+		$select = Select::factory($this->dataAccess())->where('dir_id', '=', $dirId);
 		
 		$orderDirection = "ASC";
 		if (is_array($order)) {

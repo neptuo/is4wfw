@@ -9,11 +9,11 @@
 		private $cache;
 		
 		public function __construct($id = null, $type = null, $url = null, $rid = null, $cache = null) {
-			self::setId($id);
-			self::setType($type);
-			self::setUrl($url);
-			self::setRid($rid);
-			self::setCache($cache);
+			$this->setId($id);
+			$this->setType($type);
+			$this->setUrl($url);
+			$this->setRid($rid);
+			$this->setCache($cache);
 		}
 	
 		public function getId() {

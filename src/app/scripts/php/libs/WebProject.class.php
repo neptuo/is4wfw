@@ -16,7 +16,7 @@
     class WebProject extends BaseTagLib {
 
         public function __construct() {
-            self::setLocalizationBundle("webproject");
+            $this->setLocalizationBundle("webproject");
         }
 
         /**
@@ -28,7 +28,7 @@
         public function selectProject($label = false, $useFrames = false, $showMsg = false) {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
             $projects = array();
 
@@ -112,7 +112,7 @@
          *
          */
         public function showProjects($detailPageId = false, $editable = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             global $webObject;
             global $dbObject;
             global $loginObject;
@@ -248,7 +248,7 @@
          *
          */
         public function showEditForm($showNotSelectedError = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             global $webObject;
             global $dbObject;
             global $loginObject;

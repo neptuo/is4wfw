@@ -19,7 +19,7 @@
         }
 
         private function parseUserValue($column, $value) {
-            $type = self::getTableColumnTypes($column);
+            $type = $this->getTableColumnTypes($column);
             if ($type == NULL) {
                 return NULL;
             }
@@ -28,7 +28,7 @@
         }
 
         private function parseDbValue($column, $value) {
-            $type = self::getTableColumnTypes($column);
+            $type = $this->getTableColumnTypes($column);
             if ($type == NULL) {
                 return NULL;
             }
@@ -52,12 +52,12 @@
                     if (is_array($value) && array_key_exists("type", $value)) {
                         $extras[$columnName] = $value;
                     } else {
-                        $typeDefinition = self::getTableColumnTypes($column);
+                        $typeDefinition = $this->getTableColumnTypes($column);
                         if ($typeDefinition["hasColumn"]) {
-                            $value = self::parseUserValue($column, $value);
+                            $value = $this->parseUserValue($column, $value);
                             $columns[$columnName] = $value;
                         } else {
-                            $value = self::parseUserValue($column, $value);
+                            $value = $this->parseUserValue($column, $value);
                             if ($columnType == "multireference-jointable") {
                                 $external[$columnName] = array(
                                     "type" => $columnType,
@@ -94,7 +94,7 @@
                                 $value = $value();
                             }
 
-                            $value = self::parseUserValue($column, $value);
+                            $value = $this->parseUserValue($column, $value);
                             $columns[$columnName] = $value;
                         }
                     }
@@ -111,33 +111,33 @@
         private function updateExternals($values, $xml, $model) {
             foreach ($values["external"] as $columnName => $external) {
                 if ($external["type"] == "multireference-jointable") {
-                    $column = self::findColumn($xml, $columnName);
-                    self::updateJoinTable($xml, $column, $model);
+                    $column = $this->findColumn($xml, $columnName);
+                    $this->updateJoinTable($xml, $column, $model);
                 }
             }
         }
 
         private function updateLocalized($tableName, $xml, $model, $primaryKeys, $langIds, $isNewRecord = false) {
-            $langs = self::prepareLocalizedValuesFromModel($xml, $model, $langIds);
+            $langs = $this->prepareLocalizedValuesFromModel($xml, $model, $langIds);
             foreach ($langs as $langId => $lang) {
                 // Check if update is possible.
                 if ($isNewRecord) {
                     $count["count"] = 0;
                 } else {
-                    $count = self::dataAccess()->fetchSingle(self::sql()->count($tableName, $primaryKeys));
+                    $count = $this->dataAccess()->fetchSingle($this->sql()->count($tableName, $primaryKeys));
                 }
 
                 // Insert or Update.
                 if ($count["count"] == 0) {
                     $lang["lang_id"] = $langId;
                     $lang = array_merge($lang, $primaryKeys);
-                    $sql = self::sql()->insert($tableName, $lang);
+                    $sql = $this->sql()->insert($tableName, $lang);
                 } else {
                     $primaryKeys["lang_id"] = $langId;
-                    $sql = self::sql()->update($tableName, $lang, $primaryKeys);
+                    $sql = $this->sql()->update($tableName, $lang, $primaryKeys);
                 }
 
-                self::dataAccess()->execute($sql);
+                $this->dataAccess()->execute($sql);
             }
         }
 
@@ -149,7 +149,7 @@
             $directoryName = StringUtils::format($directoryName, $primaryKeys);
             $directory = $fa->createDirectory($extra['parentDirId'], $directoryName);
             
-            $sql = self::sql()->update($tableName, array($columnName => $directory['id']), $primaryKeys);
+            $sql = $this->sql()->update($tableName, array($columnName => $directory['id']), $primaryKeys);
             $da->execute($sql);
         }
 
@@ -175,7 +175,7 @@
             }
             
             if ($newId != 0) {
-                $sql = self::sql()->update($tableName, array($columnName => $newId), $primaryKeys);
+                $sql = $this->sql()->update($tableName, array($columnName => $newId), $primaryKeys);
                 $da->execute($sql);
             }
         }
@@ -185,10 +185,10 @@
             $keysModel = new EditModel();
             $keysModel->copyFrom($keys);
 
-            $values = self::prepareValuesFromModel($xml, $model);
-            $primaryKeys = self::prepareValuesFromModel($xml, $keysModel)["columns"];
+            $values = $this->prepareValuesFromModel($xml, $model);
+            $primaryKeys = $this->prepareValuesFromModel($xml, $keysModel)["columns"];
 
-            if ($deleteIfEmpty && self::isEmpty($values["columns"])) {
+            if ($deleteIfEmpty && $this->isEmpty($values["columns"])) {
                 return;
             }
 
@@ -196,13 +196,13 @@
                 $values["columns"][$key] = $value;
             }
 
-            $sql = self::sql()->insert($tableName, $values["columns"]);
+            $sql = $this->sql()->insert($tableName, $values["columns"]);
 
             // Execute insert.
             $da->execute($sql);
             
             // Get last identity value if inserted.
-            $identity = self::findIdentityColumn($xml);
+            $identity = $this->findIdentityColumn($xml);
             if ($identity != NULL) {
                 $id = $da->getLastId();
                 $model[(string)$identity->name] = $id;
@@ -219,20 +219,20 @@
             // Process extras.
             foreach ($values["extras"] as $columnName => $extra) {
                 if ($extra["type"] == "emptyDirectory") {
-                    self::executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys);
+                    $this->executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys);
                 } else if ($extra["type"] == "createIfEmpty") {
-                    self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
+                    $this->executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
                 }
             }
 
             // Process external tables.
-            self::updateExternals($values, $xml, $model);
+            $this->updateExternals($values, $xml, $model);
 
             // Process localization.
-            self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
+            $this->updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
 
-            if (self::hasAuditLog($xml)) {
-                self::audit($tableName, "insert", $primaryKeys);
+            if ($this->hasAuditLog($xml)) {
+                $this->audit($tableName, "insert", $primaryKeys);
             }
         }
 
@@ -266,24 +266,24 @@
             $keysModel = new EditModel();
             $keysModel->copyFrom($keys);
 
-            $values = self::prepareValuesFromModel($xml, $model);
-            $primaryKeys = self::prepareValuesFromModel($xml, $keysModel)["columns"];
+            $values = $this->prepareValuesFromModel($xml, $model);
+            $primaryKeys = $this->prepareValuesFromModel($xml, $keysModel)["columns"];
 
             // If we have chnaged columns.
-            if (count($values["columns"]) > 0 && self::isChanged($model, $values["columns"])) {
-                if ($deleteIfEmpty && self::isEmpty($values["columns"])) {
-                    $sql = self::sql()->delete($tableName, $primaryKeys);
+            if (count($values["columns"]) > 0 && $this->isChanged($model, $values["columns"])) {
+                if ($deleteIfEmpty && $this->isEmpty($values["columns"])) {
+                    $sql = $this->sql()->delete($tableName, $primaryKeys);
                     $da->execute($sql);
 
-                    if (self::hasAuditLog($xml)) {
-                        self::audit($tableName, "delete", $primaryKeys);
+                    if ($this->hasAuditLog($xml)) {
+                        $this->audit($tableName, "delete", $primaryKeys);
                     }
 
                     return;
                 }
                 
                 // Execute update.
-                $sql = self::sql()->update($tableName, $values["columns"], $primaryKeys);
+                $sql = $this->sql()->update($tableName, $values["columns"], $primaryKeys);
                 $da->execute($sql);
             }
             
@@ -293,7 +293,7 @@
                     $directorySql = parent::sql()->select($tableName, [$columnName], $primaryKeys);
                     $directory = $da->fetchSingle($directorySql);
                     if (empty($directory[$columnName])) {
-                        self::executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys);
+                        $this->executeEmptyDirectory($model, $tableName, $columnName, $extra, $primaryKeys);
                     } else if(array_key_exists("renameOnUpdate", $extra) && $extra["renameOnUpdate"]) {
                         $directoryName = StringUtils::format($extra['nameFormat'], $model);
                         $directoryName = StringUtils::format($directoryName, $primaryKeys);
@@ -301,18 +301,18 @@
                         $da->execute($directoryNameSql);
                     }
                 } else if ($extra["type"] == "createIfEmpty") {
-                    self::executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
+                    $this->executeCreateIfEmpty($tableName, $columnName, $extra, $primaryKeys);
                 }
             }
 
             // Process external tables.
-            self::updateExternals($values, $xml, $model);
+            $this->updateExternals($values, $xml, $model);
 
             // Process localization.
-            self::updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
+            $this->updateLocalized($tableLocalizationName, $xml, $model, $primaryKeys, $langIds);
 
-            if (self::hasAuditLog($xml)) {
-                self::audit($tableName, "update", $primaryKeys);
+            if ($this->hasAuditLog($xml)) {
+                $this->audit($tableName, "update", $primaryKeys);
             }
         }
 
@@ -323,10 +323,10 @@
                 $columnName = (string)$column->name;
                 $columnType = (string)$column->type;
                 if ($model->hasKey($columnName)) {
-                    $typeDefinition = self::getTableColumnTypes($column);
+                    $typeDefinition = $this->getTableColumnTypes($column);
                     if (!$typeDefinition["hasColumn"]) {
                         if ($columnType == "multireference-jointable") {
-                            self::registerPrimaryKeysToModel($xml, $model);
+                            $this->registerPrimaryKeysToModel($xml, $model);
 
                             $external[$columnName] = array(
                                 "type" => $columnType
@@ -340,7 +340,7 @@
                 $columnName = (string)$column->name;
                 $columnType = (string)$column->type;
                 if ($model->hasKey($columnName)) {
-                    $typeDefinition = self::getTableColumnTypes($column);
+                    $typeDefinition = $this->getTableColumnTypes($column);
                     if ($typeDefinition["hasColumn"]) {
                         $columns[] = $columnName;
                     }
@@ -359,7 +359,7 @@
             foreach ($data as $key => $value) {
                 $column = parent::findColumn($xml, $key);
                 if ($column != null) {
-                    $data[$key] = self::parseDbValue($column, $value);
+                    $data[$key] = $this->parseDbValue($column, $value);
                 }
             }
             
@@ -371,7 +371,7 @@
             // Load externals.
             foreach ($external as $columnName => $item) {
                 if ($item["type"] == "multireference-jointable") {
-                    $value = self::loadJoinTableData($xml, $model, $columnName);
+                    $value = $this->loadJoinTableData($xml, $model, $columnName);
                     $model[$columnName] = $value;
                 }
             }
@@ -400,8 +400,8 @@
                 foreach ($langIds as $langId) {
                     $localizableKeys = $keys;
                     $localizableKeys["lang_id"] = $langId;
-                    $sql = self::sql()->select($tableName, $columns, $localizableKeys);
-                    $data = self::dataAccess()->fetchSingle($sql);
+                    $sql = $this->sql()->select($tableName, $columns, $localizableKeys);
+                    $data = $this->dataAccess()->fetchSingle($sql);
                     foreach ($columns as $column) {
                         $model["$column:$langId"] = $data[$column];
                     }
@@ -410,13 +410,13 @@
         }
 
         private function getDeleteSql($name, $params) {
-            return self::sql()->delete($name, $params);
+            return $this->sql()->delete($name, $params);
         }
 
 		public function form($template, $name, $deleteIfEmpty = false, $langIds = "", $keys = array()) {
             $model = parent::getEditModel();
-            $tableName = self::ensureTableName($name, $model);
-            $tableLocalizationName = self::ensureTableLocalizationName($name, $model);
+            $tableName = $this->ensureTableName($name, $model);
+            $tableLocalizationName = $this->ensureTableLocalizationName($name, $model);
             $xml = parent::getDefinition($name, $model);
             $langIds = explode(",", $langIds);
             $keys = ArrayUtils::removeKeysWithEmptyValues($keys);
@@ -433,9 +433,9 @@
                 $template();
                 $model->registration(false);
 
-                $exists = self::loadModel($tableName, $xml, $keys, $model, $langIds);
+                $exists = $this->loadModel($tableName, $xml, $keys, $model, $langIds);
                 if ($exists) {
-                    self::loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
+                    $this->loadLocalizedModel($tableLocalizationName, $xml, $keys, $model, $langIds);
                 } else {
                     $model->metadata("isUpdate", false);
                 }
@@ -449,9 +449,9 @@
             // Save if model is leased or isSubmit.
             if ($model->isSave()) {
                 if ($model->metadata("isUpdate")) {
-                    self::update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, $deleteIfEmpty);
+                    $this->update($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, $deleteIfEmpty);
                 } else {
-                    self::insert($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, $deleteIfEmpty);
+                    $this->insert($tableName, $tableLocalizationName, $xml, $keys, $model, $langIds, $deleteIfEmpty);
                 }
             }
 
@@ -555,14 +555,14 @@
         }
 
         public function getListData() {
-            return self::peekListModel();
+            return $this->peekListModel();
         }
 
         public function getList($template, $name, $filter = array(), $orderBy = array(), $paging = null) {
-            $tableName = self::ensureTableName($name);
+            $tableName = $this->ensureTableName($name);
 
             $model = new ListModel();
-            self::pushListModel($model);
+            $this->pushListModel($model);
 
             $model->registration();
             $template([$this->tagPrefix => "register"]);
@@ -624,27 +624,27 @@
             $count = null;
             $offset = null;
             if ($paging instanceof PagingModel) {
-                $sql = self::sql()->count($tableName, $filter);
-                $totalCount = self::dataAccess()->fetchScalar($sql);
+                $sql = $this->sql()->count($tableName, $filter);
+                $totalCount = $this->dataAccess()->fetchScalar($sql);
                 $paging->setTotalCount($totalCount);
 
                 $count = $paging->getSize();
                 $offset = $paging->getOffset();
             }
 
-            $sql = self::sql()->select($tableName, $fields, $filter, $orderBy, $count, $offset);
-            $data = self::dataAccess()->fetchAll($sql);
+            $sql = $this->sql()->select($tableName, $fields, $filter, $orderBy, $count, $offset);
+            $data = $this->dataAccess()->fetchAll($sql);
 
             $model->render();
             $model->items($data);
             $result .= $template();
 
-            self::popListModel();
+            $this->popListModel();
             return $result;
         }
 
         public function register($name) {
-            self::getProperty($name);
+            $this->getProperty($name);
         }
 
 		public function getProperty($name) {
@@ -706,14 +706,14 @@
         }
         
         public function deleter($template, $name, $params = array()) {
-            $tableName = self::ensureTableName($name);
-            $xml = self::getDefinition($name);
+            $tableName = $this->ensureTableName($name);
+            $xml = $this->getDefinition($name);
 
-            $sql = self::getDeleteSql($tableName, $params);
-            self::dataAccess()->execute($sql);
+            $sql = $this->getDeleteSql($tableName, $params);
+            $this->dataAccess()->execute($sql);
             
-            if (self::hasAuditLog($xml)) {
-                self::audit($tableName, "delete", $params);
+            if ($this->hasAuditLog($xml)) {
+                $this->audit($tableName, "delete", $params);
             }
 
             $template();

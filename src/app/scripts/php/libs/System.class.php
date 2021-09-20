@@ -552,7 +552,7 @@
 			$return = '';
 			
 			if($_POST['db-connection-save'] == "Save") {
-				$msg = self::editConnectionvalidate();
+				$msg = $this->editConnectionvalidate();
 				
 				if(strlen($msg) == 0) {
 					$id = $_POST['db-connection-id'];
@@ -570,22 +570,22 @@
 						$dbObject->execute('UPDATE `db_connection` set `name` = "'.$name.'", `hostname` = "'.$hostname.'", `user` = "'.$user.'", `password` = "'.$password.'", `database` = "'.$database.'" where `id` = '.$id.';');
 						$return .= '<h4 class="success">Connection successfuly updated!</h4>';
 					}
-					$return .= self::generateEditConnectionForm($id, $name, $hostname, $user, $password, $database);
+					$return .= $this->generateEditConnectionForm($id, $name, $hostname, $user, $password, $database);
 				} else {
 					if($showMsg == "true") {
 						$return .= $msg;
-						$return .= self::generateEditConnectionForm("", $_POST['db-connection-name'], $_POST['db-connection-hostname'], $_POST['db-connection-user'], $_POST['db-connection-password'], $_POST['db-connection-database']);
+						$return .= $this->generateEditConnectionForm("", $_POST['db-connection-name'], $_POST['db-connection-hostname'], $_POST['db-connection-user'], $_POST['db-connection-password'], $_POST['db-connection-database']);
 					}
 				}
 			}
 			
 			if($_POST['db-connection-conn-new'] == 'Create connection') {
-				$return .= self::generateEditConnectionForm("", "", "", "", "", "");
+				$return .= $this->generateEditConnectionForm("", "", "", "", "", "");
 			} else if($_POST['db-connection-conn-edit'] == 'Edit connection') {
 				$id = $_POST['db-connection-conn-id'];
 				$conn = $dbObject->fetchAll('select `name`, `hostname`, `user`, `password`, `database` from `db_connection` where `id` = '.$id.';', true, true);
 				if(count($conn) == 1) {
-					$return .= self::generateEditConnectionForm($id, $conn[0]['name'], $conn[0]['hostname'], $conn[0]['user'], $conn[0]['password'], $conn[0]['database']);
+					$return .= $this->generateEditConnectionForm($id, $conn[0]['name'], $conn[0]['hostname'], $conn[0]['user'], $conn[0]['password'], $conn[0]['database']);
 				} else {
 					if($showMsg == "true") {
 						$return .= '<h4 class="error">No such connection!</h4>';
@@ -689,7 +689,7 @@
 		private function mapReleaseToGrid($release, $type, $provider) {
 			$release['version'] = Version::toString($release['version'], true);
 			$release['published_at'] = substr(str_replace("T", " ", str_replace("Z", "", $release['published_at'])), 0, 19);
-			$release['form'] = self::getUpdateFormHtml($release['version'], $provider);
+			$release['form'] = $this->getUpdateFormHtml($release['version'], $provider);
 			$release['version'] = '<a href="' . $release['html_url'] . '" target="_blank">' . $release['version'] . '</a>';
 
 			if ($type == 'patch') {
@@ -821,7 +821,7 @@
 			$html = "";
 
 			if (count($data) == 0) {
-				$html .= self::getSuccess($emptyMessage);
+				$html .= $this->getSuccess($emptyMessage);
 			} else {
 				$grid = new BaseGrid();
 				$grid->addClass('clickable');
@@ -836,7 +836,7 @@
 				);
 
 				foreach ($data as $release) {
-					$release = self::mapReleaseToGrid($release, $type, $provider);
+					$release = $this->mapReleaseToGrid($release, $type, $provider);
 					$grid->addRow($release);
 				}
 					
@@ -880,8 +880,8 @@
 					}
 
 					$targetPath = INSTANCE_PATH;
-					$currentFileName = $targetPath . self::getUpdateFileName($current);
-					$targetFileName = $targetPath . self::getUpdateFileName($target);
+					$currentFileName = $targetPath . $this->getUpdateFileName($current);
+					$targetFileName = $targetPath . $this->getUpdateFileName($target);
 					
 					if ($type == 'full') {
 						$zip = new RecursiveZipArchive();
@@ -1018,7 +1018,7 @@
 		}
 		
 		public function getCmsWindowsStyle() {
-			$val = self::getPropertyValue("System.cms.windowsstyle");
+			$val = $this->getPropertyValue("System.cms.windowsstyle");
 			if ($val == "true") {
 				return true;
 			} else {

@@ -108,7 +108,7 @@
 				$this->IsSystem = $isSystem;
 			}
 
-			$filePath = self::getFilePath();
+			$filePath = $this->getFilePath();
 			if (strlen($filePath) > 0 && is_file($filePath) && is_readable($filePath)) {
 				return true;
 			} else {
@@ -133,7 +133,7 @@
 				$this->Language = $lang;
 			}
 			
-			$filePath = self::getFilePath();
+			$filePath = $this->getFilePath();
 			if (strlen($filePath) > 0 && is_file($filePath) && is_readable($filePath)) {
 				$content = file_get_contents($filePath);
 				$pairs = explode(PHP_EOL, $content);
@@ -162,7 +162,7 @@
 				}
 			}
 
-			$filePath = self::getFilePath();
+			$filePath = $this->getFilePath();
 			if (strlen($filePath)) {
 				$content = "";
 				foreach ($this->Items as $key => $value) {

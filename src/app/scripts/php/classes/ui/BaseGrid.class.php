@@ -41,7 +41,7 @@
 		 */		 		 		 		
 		public function addRows($rows) {
 			foreach($rows as $row) {
-				self::addRow($row);
+				$this->addRow($row);
 			}
 		}
 		

@@ -80,13 +80,13 @@
 			*/		 		 		     
 		public function useConnection($name) {
 			if ($name == 'default') {
-				self::close();
-				self::connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE);
+				$this->close();
+				$this->connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE);
 			} elseif (strlen($name) != 0) {
-				$conn = self::fetchSingle('select `hostname`, `user`, `password`, `database`, `fs_root` from `db_connection` where `name` = "'.$name.'"');
+				$conn = $this->fetchSingle('select `hostname`, `user`, `password`, `database`, `fs_root` from `db_connection` where `name` = "'.$name.'"');
 				if($conn != array()) {
-					self::close();
-					self::connect($conn['hostname'], $conn['user'], $conn['password'], $conn['database']);
+					$this->close();
+					$this->connect($conn['hostname'], $conn['user'], $conn['password'], $conn['database']);
 				} else {
 					// bad conn name!
 				}
@@ -151,7 +151,7 @@
 			 */                    		
 		public function fetch($query, $template = false) {
 			if ($this->IsOpen) {
-				$data = self::fetchAll($query);
+				$data = $this->fetchAll($query);
 			
 				if ($template) {
 					if (is_file(APP_SCRIPTS_PHP_PATH . $template)) {

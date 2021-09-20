@@ -50,7 +50,7 @@ class ExtensionParser {
 				$this->DataItem = $item;
 				$this->GlobalI++;
 				$this->I = $i;
-				$result .= self::parseExtensions($content);
+				$result .= $this->parseExtensions($content);
 			
 				$this->DataItem = $current;
 			}
@@ -78,7 +78,7 @@ class ExtensionParser {
 			$this->DataItem = $data;
 			$this->GlobalI++;
 			$this->I = $i;
-			$result .= self::parseExtensions($content);
+			$result .= $this->parseExtensions($content);
 			
 			$this->DataItem = $current;
 		}
@@ -126,28 +126,28 @@ class ExtensionParser {
 		} else if($name == 'Request') {
 			return $_REQUEST[$param];
 		} else if($name == 'Binding') {
-			return self::getBindingValue($param);
+			return $this->getBindingValue($param);
 		} else if($name == 'DateBinding') {
 			$params = explode(' ', $param);
-			return date($params[1], self::getBindingValue($params[0]));
+			return date($params[1], $this->getBindingValue($params[0]));
 		} else if($name == 'BindingCondition') {
 			return preg_replace_callback($this->BindingConditionRE, array(&$this, 'parsecondition'), $param);
 		} else if($name == 'ForEach') {
 			$params = explode(' ', $param);
 			if(count($params) > 1) {
-				return self::foreachDataItems($params[1], $this->DataItem[$params[0]], $params[2]);
+				return $this->foreachDataItems($params[1], $this->DataItem[$params[0]], $params[2]);
 			} else {
-				return self::foreachDataItems($param, $this->DataItem);
+				return $this->foreachDataItems($param, $this->DataItem);
 			}
 		} else if($name == 'Template') {
 			$params = explode(' ', $param);
 			if(count($params) > 1) {
-				return self::template($params[1], $params[0] == 'this' ? $this->DataItem : $this->DataItem[$params[0]], $params[2]);
+				return $this->template($params[1], $params[0] == 'this' ? $this->DataItem : $this->DataItem[$params[0]], $params[2]);
 			} else {
-				return self::template($param, $this->DataItem);
+				return $this->template($param, $this->DataItem);
 			}
 		} else if($name == 'Function') {
-			return self::evalFunc($param);
+			return $this->evalFunc($param);
 		} else if($name == 'IdleEven') {
 			return ($this->I % 2) == 0 ? 'idle' : 'even';
 		} else if($name == 'GlobalIdleEven') {
@@ -166,12 +166,12 @@ class ExtensionParser {
 	}
 
     public function startParsing() {
-        $this->Result = self::parseExtensions($this->Content);
+        $this->Result = $this->parseExtensions($this->Content);
     }
 	
 	public function parse() {
-		self::startParsing();
-		return self::getResult();
+		$this->startParsing();
+		return $this->getResult();
 	}
 
 	

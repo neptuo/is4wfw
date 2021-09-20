@@ -39,7 +39,7 @@ class AppVeyorReleaseManager extends BaseHttpManager {
             ];
             
             $buildNumber = $build->buildNumber;
-            $jobId = self::getJobId($buildNumber);
+            $jobId = $this->getJobId($buildNumber);
             if ($jobId == null) {
                 continue;
             }

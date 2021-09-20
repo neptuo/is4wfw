@@ -467,7 +467,7 @@
          *
          */                                            
         public function selectClassPath($useFrames = false, $showMsg = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
             
             if ($_POST['select-class-path-submit'] == $rb->get('select-class-path.submit')) {
@@ -516,7 +516,7 @@
             
             
         public function getPropertyList($useFrames = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             
             $return = ''
             .'<div class="gray-box">'
@@ -554,7 +554,7 @@
         }
 
         public function getAutoRegistered($useFrames = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             
             $grid = new BaseGrid();
             $grid->setHeader([

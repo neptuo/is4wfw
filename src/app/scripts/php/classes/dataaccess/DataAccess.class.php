@@ -31,7 +31,7 @@ class DataAccess {
 		$this->connection = mysqli_connect($hostname, $user, $passwd);
 		$query = "use " . $database;
 		mysqli_query($this->connection, $query);
-		self::tryToProcessError($query);
+		$this->tryToProcessError($query);
 		
 		if ($this->connection) {
 			$this->isOpened = true;
@@ -40,7 +40,7 @@ class DataAccess {
 		}
 
 		if ($checkCharset) {
-			self::checkCharset();
+			$this->checkCharset();
 		}
 		
 		return $this->isOpened;
@@ -57,16 +57,16 @@ class DataAccess {
 	}
 	
 	public function disconnect(){
-		if (self::inTransaction()) {
-			self::commit();
+		if ($this->inTransaction()) {
+			$this->commit();
 		}
-		if (self::isOpened()) {
+		if ($this->isOpened()) {
 			mysqli_close($this->connection);
 		}
 	}
 	
 	private function startTransaction() {
-		if (!self::inTransaction()) {
+		if (!$this->inTransaction()) {
 			$sql = "start transaction";
 			$this->inTransaction = true;
 			return $this->execute($sql);  	
@@ -76,7 +76,7 @@ class DataAccess {
 	}
 
 	public function transaction($handler = NULL){
-		$isStarted = self::startTransaction();
+		$isStarted = $this->startTransaction();
 		if ($handler == NULL) {
 			return $isStarted;
 		} else {
@@ -86,9 +86,9 @@ class DataAccess {
 			} else {
 				try {
 					$handler($this);
-					self::commit();
+					$this->commit();
 				} catch (Exception $e) {
-					self::rollback();
+					$this->rollback();
 					throw $e;
 				}
 			}
@@ -97,7 +97,7 @@ class DataAccess {
 	}
 	
 	public function commit(){
-		if (self::inTransaction()) {
+		if ($this->inTransaction()) {
 			$sql = "commit";
 			$this->inTransaction = false;
 			return $this->execute($sql); 
@@ -105,7 +105,7 @@ class DataAccess {
 	}
 	
 	public function rollback(){
-		if (self::inTransaction()) {
+		if ($this->inTransaction()) {
 			$sql = "rollback";
 			$this->inTransaction = false;
 			return $this->execute($sql); 
@@ -163,7 +163,7 @@ class DataAccess {
 					array_push($this->measures, $endTime - $startTime);
 				}
 
-				self::tryToProcessError($query);
+				$this->tryToProcessError($query);
 			}
 			
 			return $result;
@@ -222,7 +222,7 @@ class DataAccess {
 				// Execute the query.
 				$result = mysqli_query($this->connection, $query);
   				
-  				self::tryToProcessError($query);
+				$this->tryToProcessError($query);
   				
 				if ($this->errorCode == 0) {
 					$this->rowsCount = mysqli_num_rows($result);
@@ -277,7 +277,7 @@ class DataAccess {
      *
      */                   
     public function fetchSingle($query, $showQuery = false, $printOutput = false, $forceImmediateOutput = false, $notExecuteQuery = false) {
-    	$data = self::fetchAll($query, $showQuery, $printOutput, $forceImmediateOutput, $notExecuteQuery);
+    	$data = $this->fetchAll($query, $showQuery, $printOutput, $forceImmediateOutput, $notExecuteQuery);
     	if (count($data) > 0) {
     		return $data[0];
     	} else {

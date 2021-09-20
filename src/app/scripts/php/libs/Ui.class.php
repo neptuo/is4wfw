@@ -40,7 +40,7 @@
 
 		private function appendId($params) {
 			if (!array_key_exists("id", $params)) {
-				$id = self::peekId();
+				$id = $this->peekId();
 				if ($id != "") {
 					$params["id"] = $id;
 				}
@@ -89,7 +89,7 @@
 		}
 
 		private function singleListModel($template, $model, $indexGetter) {
-			self::pushListModel($model);
+			$this->pushListModel($model);
 			$result = "";
 			
 			if ($model->isRegistration()) {
@@ -105,7 +105,7 @@
 				}
 			}
 
-			self::popListModel();
+			$this->popListModel();
 			return $result;
 		}
 
@@ -114,11 +114,11 @@
 		}
 
 		public function firstListModel($template, $model) {
-			return self::singleListModel($template, $model, function($items) { return 0; });
+			return $this->singleListModel($template, $model, function($items) { return 0; });
 		}
 
 		public function lastListModel($template, $model) {
-			return self::singleListModel($template, $model, function($items) { return count($items) - 1; });
+			return $this->singleListModel($template, $model, function($items) { return count($items) - 1; });
 		}
 
 		public function emptyListModel($template, $model) {
@@ -183,7 +183,7 @@
 
 				$items = $model->items();
 				if (count($items) > 0) {
-					$attributes = self::joinAttributes($params);
+					$attributes = $this->joinAttributes($params);
 
 					// Header
 					$this->gridPhase = "header";
@@ -259,7 +259,7 @@
 		}
 
 		public function gridColumnBoolean($header, $value, $trueText = "Yes", $falseText = "", $th = array(), $td = array()) {
-			return self::gridColumn($header, $value ? $trueText : $falseText, $th, $td);
+			return $this->gridColumn($header, $value ? $trueText : $falseText, $th, $td);
 		}
 
 		public function gridColumnDateTime($header, $value, $format, $th = array(), $td = array()) {
@@ -268,7 +268,7 @@
 				return "<th$thAttributes>$header</th>";
 			} else if ($this->gridPhase == "body") {
 				$tdAttributes = parent::joinAttributes($td);
-				$value = self::formatDateTime($value, $format);
+				$value = $this->formatDateTime($value, $format);
 				return "<td$tdAttributes>$value</td>";
 			}
 
@@ -310,12 +310,12 @@
 				if ($pageId == NULL) {
 					$action = $_SERVER['REQUEST_URI'];
 				} else {
-					$action = self::web()->composeUrl($pageId);
+					$action = $this->web()->composeUrl($pageId);
 				}
 
 				$params["method"] = $method;
 				$params["action"] = $action;
-				$attributes = self::joinAttributes($params);
+				$attributes = $this->joinAttributes($params);
 
 				$result = "<form$attributes>$beforeBody" . $template() . "$afterBody</form>";
 				$this->isInsideForm = false;
@@ -324,7 +324,7 @@
 		}
 
 		private function input($params) {
-			$attributes = self::joinAttributes($params);
+			$attributes = $this->joinAttributes($params);
             return "<input$attributes />";
 		}
 
@@ -332,13 +332,13 @@
 			$params["type"] = "hidden";
 			$params["name"] = $name;
 			$params["value"] = $value;
-			return self::input($params);
+			return $this->input($params);
 		}
 
 		public function inputImage($src, $params = array()) {
 			$params["type"] = "image";
 			$params["src"] = $src;
-			return self::input($params);
+			return $this->input($params);
 		}
 
 		public function filter($template, $session = "", $pageId = "") {
@@ -381,7 +381,7 @@
 					}
 				}
 
-				self::redirectToUrl($url);
+				$this->redirectToUrl($url);
 				return;
 			}
 			
@@ -432,7 +432,7 @@
 			}
 
 			if ($model->isSubmit()) {
-				self::setModelValueFromRequest($model, $name, $name, $nameIndex);
+				$this->setModelValueFromRequest($model, $name, $name, $nameIndex);
 			}
 
 			if ($model->isRender()) {
@@ -448,8 +448,8 @@
 					}
 				}
 				
-				$params = self::appendId($params);
-				$attributes = self::joinAttributes($params);
+				$params = $this->appendId($params);
+				$attributes = $this->joinAttributes($params);
 				
 				$result = "<select name='$formName'$attributes>";
 
@@ -458,7 +458,7 @@
 				} else if ($source instanceof ListModel) {
 					$data = $source->items();
 				} else {
-					$data = self::dataAccess()->fetchAll(parent::sql()->select($source, array($id, $display), array(), array($display => "asc")));
+					$data = $this->dataAccess()->fetchAll(parent::sql()->select($source, array($id, $display), array(), array($display => "asc")));
 				}
 
 				if (!empty($emptyText)) {
@@ -505,11 +505,11 @@
 				} else if ($source instanceof ListModel) {
 					$data = $source->items();
 				} else {
-					$data = self::dataAccess()->fetchAll(parent::sql()->select($source, array($id, $display), array(), array($display => "asc")));
+					$data = $this->dataAccess()->fetchAll(parent::sql()->select($source, array($id, $display), array(), array($display => "asc")));
 				}
 				
 				$itemContainerTagName = $repeat == "vertical" ? "div" : "span";
-				$attributes = self::joinAttributes($params);
+				$attributes = $this->joinAttributes($params);
 
 				$result = "";
 				foreach ($data as $item) {
@@ -534,7 +534,7 @@
 			}
 
 			if ($model->isSubmit()) {
-				self::setModelValueFromRequest($model, $name, $name, $nameIndex);
+				$this->setModelValueFromRequest($model, $name, $name, $nameIndex);
 			}
 
 			if ($model->isRender()) {
@@ -545,24 +545,24 @@
 					$modelValue = $default;
 				}
 				
-				$params = self::appendId($params);
+				$params = $this->appendId($params);
 				$params["name"] = $formName;
 				$params["type"] = $type;
 				$params["value"] = $modelValue;
-				return self::input($params);
+				return $this->input($params);
 			}
 		}
 
 		public function textbox($name, $nameIndex = -1, $default = "", $params = array()) {
-			return self::inputbox("text", $name, $nameIndex, $default, $params);
+			return $this->inputbox("text", $name, $nameIndex, $default, $params);
 		}
 
 		public function passwordbox($name, $nameIndex = -1, $default = "", $params = array()) {
-			return self::inputbox("password", $name, $nameIndex, $default, $params);
+			return $this->inputbox("password", $name, $nameIndex, $default, $params);
 		}
 
 		public function rangebox($name, $nameIndex = -1, $default = "", $params = array()) {
-			return self::inputbox("range", $name, $nameIndex, $default, $params);
+			return $this->inputbox("range", $name, $nameIndex, $default, $params);
 		}
 
 		public function filebox($name, $isMulti = false, $params = array()) {
@@ -618,7 +618,7 @@
 			}
 			
 			if ($model->isSubmit()) {
-				self::setModelValueFromRequest($model, $name, $name, $nameIndex);
+				$this->setModelValueFromRequest($model, $name, $name, $nameIndex);
 			}
 			
 			if ($model->isRender()) {
@@ -629,8 +629,8 @@
 					$modelValue = $default;
 				}
 
-				$params = self::appendId($params);
-				$attributes = self::joinAttributes($params);
+				$params = $this->appendId($params);
+				$attributes = $this->joinAttributes($params);
 				return "<textarea name='$formName'$attributes>$modelValue</textarea>";
 			}
 		}
@@ -653,8 +653,8 @@
 					$modelValue = $default;
 				}
 
-				$params = self::appendId($params);
-				$attributes = self::joinAttributes($params);
+				$params = $this->appendId($params);
+				$attributes = $this->joinAttributes($params);
 				return "<input name='$formName' type='checkbox'" . ($modelValue === TRUE || $modelValue === 1 || $modelValue === "1" ? " checked='checked'" : '') . "$attributes />";
 			}
 		}
@@ -687,7 +687,7 @@
 
             if ($model->isSubmit()) {
 				$template();
-				self::ensureModelDefaultValue($model, $name, $format);
+				$this->ensureModelDefaultValue($model, $name, $format);
             }
 
             if ($model->isRender()) {
@@ -771,7 +771,7 @@
 			}
 			
             if ($model->isSubmit()) {
-				self::ensureModelDefaultValue($model, $name, $format);
+				$this->ensureModelDefaultValue($model, $name, $format);
             }
 		}
 		
@@ -806,7 +806,7 @@
 					$modelValue = $default;
 				}
 
-				$modelValue = self::formatDateTime($modelValue, $format);
+				$modelValue = $this->formatDateTime($modelValue, $format);
 				$model->set($name, $nameIndex, $modelValue);
 
 				return $template();
@@ -869,8 +869,8 @@
 
 		private function ensureLangIds($langIds) {
 			if (empty($langIds)) {
-				$sql = self::sql()->select("language", array("id"));
-				$langIds = self::dataAccess()->fetchAll($sql);
+				$sql = $this->sql()->select("language", array("id"));
+				$langIds = $this->dataAccess()->fetchAll($sql);
 			}
 
 			return $langIds;
@@ -879,9 +879,9 @@
 		public function localizable($template, $name, $langIds = "") {
 			$langIds = explode(",", $langIds);
 
-			$model = self::getEditModel();
+			$model = $this->getEditModel();
             if ($model->isRegistration()) {
-				$langIds = self::ensureLangIds($langIds);
+				$langIds = $this->ensureLangIds($langIds);
 				foreach ($langIds as $langId) {
 					$this->localizableName = "$name:$langId";
 					$template();
@@ -889,7 +889,7 @@
 			}
 			
             if ($model->isSubmit()) {
-				$langIds = self::ensureLangIds($langIds);
+				$langIds = $this->ensureLangIds($langIds);
 				foreach ($langIds as $langId) {
 					$this->localizableName = "$name:$langId";
 					$template();
@@ -897,8 +897,8 @@
             }
 
             if ($model->isRender()) {
-				$sql = self::sql()->select("language", array("id", "name", "language"), array("id" => $langIds));
-				$data = self::dataAccess()->fetchAll($sql);
+				$sql = $this->sql()->select("language", array("id", "name", "language"), array("id" => $langIds));
+				$data = $this->dataAccess()->fetchAll($sql);
 				
 				$result = "";
 				foreach ($data as $lang) {

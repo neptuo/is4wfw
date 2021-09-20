@@ -20,7 +20,7 @@
         private $urlResolvers;
 
         public function __construct() {
-            self::setLocalizationBundle("user");
+            $this->setLocalizationBundle("user");
 
             $this->urlProperties = [];
             $this->urlResolvers = [];
@@ -34,7 +34,7 @@
             global $dbObject;
             global $loginObject;
             $return = '';
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($_POST['user-edit-save'] == $rb->get('management.save')) {
                 $uid = $_POST['user-edit-uid'];
@@ -88,7 +88,7 @@
                         $maxUid = $dbObject->fetchAll("SELECT MAX(`uid`) AS `muid` FROM `user`;");
                         $uid = $maxUid[0]['muid'] + 1;
                         $dbObject->execute("INSERT INTO `user`(`uid`, `login`, `name`, `surname`, `password`, `enable`, `group_id`) VALUES (" . $uid . ", \"" . $login . "\", \"" . $name . "\", \"" . $surname . "\", \"" . User::hashPassword($login, $password) . "\", " . $enable . ", " . $mainGroup . ");");
-                        self::insertDefaultProperties($uid);
+                        $this->insertDefaultProperties($uid);
                         foreach ($groups as $group) {
                             $dbObject->execute("INSERT INTO `user_in_group`(`uid`, `gid`) VALUES (" . $uid . ", " . $group . ");");
                         }
@@ -101,7 +101,7 @@
                     $return .= parent::getFrame($rb->get('management.error.title'), $errorList, "", true);
 
                     $user = array('uid' => "", 'login' => $login, 'name' => $name, 'surname' => $surname);
-                    $return .= parent::getFrame($rb->get('management.edit'), self::editForm($user, $groups, $defaultMainGroupId == ''), '');
+                    $return .= parent::getFrame($rb->get('management.edit'), $this->editForm($user, $groups, $defaultMainGroupId == ''), '');
                 }
             }
 
@@ -115,7 +115,7 @@
                 if (RoleHelper::canCurrentEditUser($uid)) {
                     $user = $dbObject->fetchAll("SELECT `uid`, `login`, `name`,`surname`, `enable`, `group_id` FROM `user` WHERE `uid` = " . $uid . " ORDER BY `uid`;");
                     $groups = $dbObject->fetchAll("SELECT `group`.`gid` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `user_in_group`.`uid` = " . $user[0]['uid'] . ";");
-                    $return .= parent::getFrame($rb->get('management.edittitle'), self::editForm($user[0], $groups, $defaultMainGroupId == ''), '');
+                    $return .= parent::getFrame($rb->get('management.edittitle'), $this->editForm($user[0], $groups, $defaultMainGroupId == ''), '');
                 } else {
                     $return .= parent::getFrame($rb->get('management.edittitle'), parent::getError($rb->get('management.permdenied')), '');
                 }
@@ -132,7 +132,7 @@
             }
 
             if ($_POST['new-user'] == $rb->get('management.new')) {
-                $return .= parent::getFrame($rb->get('management.edittitle'), self::editForm(array('enable' => 1), array(), $defaultMainGroupId == ''), '');
+                $return .= parent::getFrame($rb->get('management.edittitle'), $this->editForm(array('enable' => 1), array(), $defaultMainGroupId == ''), '');
             }
 
             if ($attUserId == false) {
@@ -219,7 +219,7 @@
         private function editForm($user, $groups, $showMain) {
             global $dbObject;
             global $loginObject;
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $allGroups = $dbObject->fetchAll('SELECT `gid`, `name` FROM `group` WHERE `group`.`gid` IN (' . implode(',', RoleHelper::getCurrentRoles()) . ') ORDER BY `value`;');
             $groupSelect = '<select id="user-edit-groups" name="user-edit-groups[]" multiple="multiple" size="6">';
@@ -502,7 +502,7 @@
         }
 
         public function editGroupPerms($useFrames = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = '';
 
             if ($_POST['group-perm-save'] == $rb->get('gperm.save')) {
@@ -721,7 +721,7 @@
 
         public function registerUser($groups, $disableUser = false, $pageId = false) {
             global $webObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $user = array();
             $ok = true;
             $messages = array();
@@ -925,7 +925,7 @@
 			}
 
 			$sql = parent::sql()->select($tableName, array("uid", "name", "surname", "login", "enable"), $filter, $orderBy);
-            $data = self::dataAccess()->fetchAll($sql);
+            $data = $this->dataAccess()->fetchAll($sql);
             
             $dataAccessible = array();
             foreach ($data as $item) {

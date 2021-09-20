@@ -22,7 +22,7 @@ class SystemProperty extends BaseTagLib {
 
         $entity = $this->db->fetchSingle('select `value` from `system_property` where `key` = "' . $this->db->escape($name) . '";');
         $value = $entity['value'];
-        if (self::canCreateFile($path)) {
+        if ($this->canCreateFile($path)) {
             file_put_contents($path, $value);
         }
 
@@ -37,7 +37,7 @@ class SystemProperty extends BaseTagLib {
         }
         
         $path = CACHE_SYSTEMPROPERTY_PATH . $name . '.txt';
-        if (self::canCreateFile($path)) {
+        if ($this->canCreateFile($path)) {
             file_put_contents($path, $value);
         }
     }

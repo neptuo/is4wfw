@@ -29,14 +29,14 @@ class RoleCacheDao extends AbstractDao {
 	
 	public function getBySource($sourceId) {
 		parent::dataAccess()->disableCache();
-		$result = parent::select(Select::factory(self::dataAccess())->tableAlias($this->getTableAlias())->where('source_id', '=', $sourceId));
+		$result = parent::select(Select::factory($this->dataAccess())->tableAlias($this->getTableAlias())->where('source_id', '=', $sourceId));
 		parent::dataAccess()->enableCache();
 		return $result;
 	}
 	
 	public function getBySourceTarget($sourceId, $targetId) {
 		parent::dataAccess()->disableCache();
-		$result = parent::selectSingle(Select::factory(self::dataAccess())->tableAlias($this->getTableAlias())->where('source_id', '=', $sourceId)->conjunct('target_id', '=', $targetId));
+		$result = parent::selectSingle(Select::factory($this->dataAccess())->tableAlias($this->getTableAlias())->where('source_id', '=', $sourceId)->conjunct('target_id', '=', $targetId));
 		parent::dataAccess()->enableCache();
 		return $result;
 	}

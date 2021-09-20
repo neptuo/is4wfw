@@ -10,10 +10,10 @@
 
         protected function ensureTableName($name, $model = null) {
             if ($model == null || !$model->hasMetadataKey("tableName")) {
-                if (!StringUtils::startsWith($name, self::TablePrefix)) {
+                if (!StringUtils::startsWith($name, $this->TablePrefix)) {
                     $tableName = self::TablePrefix . $name;
                     $sql = parent::sql()->select("custom_entity", array("name"), array("name" => $name));
-                    $table = self::dataAccess()->fetchAll($sql);
+                    $table = $this->dataAccess()->fetchAll($sql);
                     if (count($table) == 0) {
                         throw new Exception("Table name '$name' must be custom entity.");
                     }
@@ -52,7 +52,7 @@
         protected function getDefinition($name, $model = null) {
             if ($model == null || !$model->hasMetadataKey("xml")) {
                 $sql = parent::sql()->select("custom_entity", array("definition"), array("name" => $name));
-                $definition = self::dataAccess()->fetchSingle($sql);
+                $definition = $this->dataAccess()->fetchSingle($sql);
                 $xml = null;
 
                 if (!empty($definition)) {
@@ -70,7 +70,7 @@
         }
 
         protected function getUpdateDefinitionSql($name, $xml) {
-            return self::sql()->update("custom_entity", array("definition" => $xml->asXml()), array("name" => $name));
+            return $this->sql()->update("custom_entity", array("definition" => $xml->asXml()), array("name" => $name));
         }
 
         protected function findIdentityColumn($xml) {
@@ -105,7 +105,7 @@
         }
 
         protected function loadJoinTableData($xml, $model, $columnName) {
-            $column = self::findColumn($xml, $columnName);
+            $column = $this->findColumn($xml, $columnName);
 
             $primaryKeyMappings = array();
             foreach ($column->primaryKeyMappings as $mapping) {
@@ -113,7 +113,7 @@
             }
 
             $primaryKeyNames = array();
-            $primaryKeys = self::getPrimaryKeyColumns($xml);
+            $primaryKeys = $this->getPrimaryKeyColumns($xml);
             foreach ($primaryKeys as $primaryKey) {
                 $primaryKeyNames[] = (string)$primaryKey->name;
             }
@@ -127,8 +127,8 @@
             }
 
             $targetColumn = (string)$column->targetColumn;
-            $sql = self::sql()->select((string)$column->joinTable, array($targetColumn), $filter);
-            $items = self::dataAccess()->fetchAll($sql);
+            $sql = $this->sql()->select((string)$column->joinTable, array($targetColumn), $filter);
+            $items = $this->dataAccess()->fetchAll($sql);
             $value = array();
             foreach ($items as $item) {
                 $value[] = $item[$targetColumn];
@@ -139,11 +139,11 @@
 
         protected function updateJoinTable($xml, $column, $model) {
             $columnName = (string)$column->name;
-            $primaryKeys = self::getPrimaryKeyColumns($xml);
+            $primaryKeys = $this->getPrimaryKeyColumns($xml);
 
             // 1) Select current values;
             $newValues = $model[$columnName];
-            $currentValues = self::loadJoinTableData($xml, $model, $columnName);
+            $currentValues = $this->loadJoinTableData($xml, $model, $columnName);
 
             // 2) Execute deletes for removed;
             foreach ($currentValues as $item) {
@@ -153,8 +153,8 @@
                         $filter[(string)$column->primaryKeyMappings[$i]->mappedTo] = $model[(string)$primaryKeys[$i]->name];
                     }
                     $filter[(string)$column->targetColumn] = $item;
-                    $deleteSql = self::sql()->delete((string)$column->joinTable, $filter);
-                    self::dataAccess()->execute($deleteSql);
+                    $deleteSql = $this->sql()->delete((string)$column->joinTable, $filter);
+                    $this->dataAccess()->execute($deleteSql);
                 }
             }
 
@@ -166,14 +166,14 @@
                         $itemModel[(string)$column->primaryKeyMappings[$i]->mappedTo] = $model[(string)$primaryKeys[$i]->name];
                     }
                     $itemModel[(string)$column->targetColumn] = $item;
-                    $insertItemSql = self::sql()->insert((string)$column->joinTable, $itemModel);
-                    self::dataAccess()->execute($insertItemSql);
+                    $insertItemSql = $this->sql()->insert((string)$column->joinTable, $itemModel);
+                    $this->dataAccess()->execute($insertItemSql);
                 }
             }
         }
 
         protected function registerPrimaryKeysToModel($xml, $model) {
-            $primaryKeys = self::getPrimaryKeyColumns($xml);
+            $primaryKeys = $this->getPrimaryKeyColumns($xml);
             foreach ($primaryKeys as $primaryKey) {
                 $primaryKeyName = (string)$primaryKey->name;
                 $model[$primaryKeyName] = null;
@@ -182,7 +182,7 @@
 
         protected function mapPrimaryKeyValues($xml, $model) {
             $result = array();
-            $primaryKeys = self::getPrimaryKeyColumns($xml);
+            $primaryKeys = $this->getPrimaryKeyColumns($xml);
             foreach ($primaryKeys as $primaryKey) {
                 $primaryKeyColumnName = (string)$primaryKey->name;
                 $result[$primaryKeyColumnName] = $model[$primaryKeyColumnName];
@@ -416,7 +416,7 @@
                         "db" => "tinytext", 
                         "hasColumn" => true,
                         "isLocalizable" => false,
-                        "fromUser" => function($value) { return self::parseMultiReferenceSingleColumn($value); },
+                        "fromUser" => function($value) { return $this->parseMultiReferenceSingleColumn($value); },
                         "fromDb" => function($value) { return $value; }
                     ),
                     array(
@@ -425,7 +425,7 @@
                         "db" => "tinytext", 
                         "hasColumn" => false,
                         "isLocalizable" => false,
-                        "fromUser" => function($value) { return self::parseMultiReferenceSingleColumn($value); },
+                        "fromUser" => function($value) { return $this->parseMultiReferenceSingleColumn($value); },
                         "fromDb" => function($value) { return $value; }
                     ),
                     array(
@@ -446,7 +446,7 @@
                     if ($item["key"] == $columnType) {
                         if ($key != null) {
                             if ($key == "db") {
-                                return self::getTableColumnDbType($item, $column);
+                                return $this->getTableColumnDbType($item, $column);
                             }
 
                             return $item[$key];

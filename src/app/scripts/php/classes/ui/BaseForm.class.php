@@ -94,7 +94,7 @@
 				if($field['label'] != '') {
 					$return .= '<label for="'.$field['id'].'" class="'.$field['labelClassName'].'">'.$field['label'].'</label>'; 
 				}
-				$return .= self::renderField($field);
+				$return .= $this->renderField($field);
 				if($field['type'] != 'hidden') {
 					$return .= '</div>';
 				}
@@ -152,7 +152,7 @@
 		 *
 		 */		 		 		 		
 		public function getValue($name) {
-			if(self::isSubmited()) {
+			if($this->isSubmited()) {
 				if($this->formAttrs['method'] == 'post') {
 					return $_POST[$this->formAttrs['name'].'-'.$name];
 				} else {

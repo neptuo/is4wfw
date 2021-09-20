@@ -7,7 +7,7 @@ class RoleCacheHelper extends BaseTagLib {
 	
 	public function refresh() {
 		parent::dao('RoleCache')->truncate();
-		self::createFrom(1, 1);
+		$this->createFrom(1, 1);
 	}
 	
 	public function is($sourceId, $targetId) {
@@ -35,8 +35,8 @@ class RoleCacheHelper extends BaseTagLib {
 			if(parent::dao('RoleCache')->getBySourceTarget($sourceId, $role['gid']) == array()) {
 				parent::dao('RoleCache')->insert(array('source_id' => $sourceId, 'target_id' => $role['gid']));
 			}
-			self::createFrom($sourceId, $role['gid']);
-			self::createFrom($role['gid'], $role['gid']);
+			$this->createFrom($sourceId, $role['gid']);
+			$this->createFrom($role['gid'], $role['gid']);
 		}
 	}
 }

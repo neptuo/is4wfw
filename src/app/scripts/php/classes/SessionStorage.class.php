@@ -15,7 +15,7 @@
 		}
 		
 		public function get($key, $storage = 'default') {
-			if (self::exists($key, $storage)) {
+			if ($this->exists($key, $storage)) {
 				return $_SESSION['session-storage'][$storage][$key];
 			} else {
 				return null;

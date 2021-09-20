@@ -43,7 +43,7 @@
                     $valueString = "";
                     foreach ($value as $item) {
                         if (!empty($item)) {
-                            $valueString = StringUtils::join($valueString, self::escape($item));
+                            $valueString = StringUtils::join($valueString, $this->escape($item));
                         }
                     }
 
@@ -51,7 +51,7 @@
                         $assignValue = " IN ($valueString)";
                     }
                 } else {
-                    $value = self::escape($value);
+                    $value = $this->escape($value);
 
                     if ($field != "") {
                         $assignValue = " = $value";
@@ -108,7 +108,7 @@
             $values = "";
             foreach ($item as $field => $value) {
                 $columns = StringUtils::join($columns, "`$field`");
-                $values = StringUtils::join($values, self::escape($value));
+                $values = StringUtils::join($values, $this->escape($value));
             }
 
             $updateString = "";
@@ -127,12 +127,12 @@
         }
 
         public function update($tableName, $item, $filter) {
-            $condition = self::condition($filter, "AND ");
-            $condition = self::appendWhere($condition);
+            $condition = $this->condition($filter, "AND ");
+            $condition = $this->appendWhere($condition);
 
             $values = "";
             foreach ($item as $field => $value) {
-                $value = self::escape($value);
+                $value = $this->escape($value);
                 $values = StringUtils::join($values, "`$field` = $value");
             }
 
@@ -141,18 +141,18 @@
         }
 
         public function delete($tableName, $filter) {
-            $condition = self::condition($filter, "AND ");
-            $condition = self::appendWhere($condition);
+            $condition = $this->condition($filter, "AND ");
+            $condition = $this->appendWhere($condition);
 
             $sql = "DELETE FROM `$tableName`$condition;";
             return $sql;
         }
 
         public function select($tableName, $fields, $filter = array(), $orderBy = array(), $count = null, $offset = null) {
-            $condition = self::condition($filter, "AND ");
-            $condition = self::appendWhere($condition);
-            $order = self::orderBy($orderBy);
-            $order = self::appendOrderBy($order);
+            $condition = $this->condition($filter, "AND ");
+            $condition = $this->appendWhere($condition);
+            $order = $this->orderBy($orderBy);
+            $order = $this->appendOrderBy($order);
 
             $alias = "";
             if (is_array($tableName)) {
@@ -172,7 +172,7 @@
             $wildcardIndex = array_search("*", $fields);
             $hasWildcard = $wildcardIndex !== false;
             if ($hasWildcard) {
-                $field = self::field($alias, "*");
+                $field = $this->field($alias, "*");
                 $columns = StringUtils::join($columns, $field);
                 unset($fields[$wildcardIndex]);
             }
@@ -185,9 +185,9 @@
 
                         $fieldTableAlias = $leftjoin["alias"];
                         if (!array_key_exists($fieldTableAlias, $joins)) {
-                            $source = self::field($alias, $leftjoin["source"]);
+                            $source = $this->field($alias, $leftjoin["source"]);
                             $table = $leftjoin["table"];
-                            $target = self::field($fieldTableAlias, $leftjoin["target"]);
+                            $target = $this->field($fieldTableAlias, $leftjoin["target"]);
                             $joins[$fieldTableAlias] = "LEFT JOIN `$table` as $fieldTableAlias ON $source = $target";
                         }
                     }
@@ -195,13 +195,13 @@
                     if (array_key_exists("select", $field)) {
                         $column = $field["select"]["column"];
                         $as = $field["select"]["alias"];
-                        $field = self::field($fieldTableAlias, $column) . " AS `$as`";
+                        $field = $this->field($fieldTableAlias, $column) . " AS `$as`";
                     }
 
                     $columns = StringUtils::join($columns, $field);
                 }
                 else if (!$hasWildcard) {
-                    $field = self::field($fieldTableAlias, $field);
+                    $field = $this->field($fieldTableAlias, $field);
                     $columns = StringUtils::join($columns, $field);
                 }
             }
@@ -228,8 +228,8 @@
         }
 
         public function count($tableName, $filter = array()) {
-            $condition = self::condition($filter, "AND");
-            $condition = self::appendWhere($condition);
+            $condition = $this->condition($filter, "AND");
+            $condition = $this->appendWhere($condition);
 
             $alias = "";
             if (is_array($tableName)) {

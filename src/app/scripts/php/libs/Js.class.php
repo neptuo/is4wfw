@@ -119,58 +119,58 @@
 
             if ($useWindows) {
                 $return .= ''
-                    . self::formatStyle('~/css/editor.css')
-                    . self::formatStyle('~/css/edit-area.css')
-                    . self::formatStyle('~/css/window.css')
-                    . self::formatStyle('~/css/jquery-autocomplete.css')
-                    . self::formatStyle('~/css/jquery-wysiwyg.css')
-                    . self::formatStyle('~/css/demo_table.css')
-                    . self::formatScript('~/edit_area/edit_area_full.js')
-                    . self::formatScript('~/js/jquery/jquery.js')
-                    . self::formatScript('~/js/jquery/jquery-autocomplete-pack.js')
-                    . self::formatScript('~/js/jquery/jquery-blockui.js')
-                    . self::formatScript('~/js/jquery/jquery-dataTables-min.js')
-                    . self::formatScript('~/js/jquery/jquery-wysiwyg.js')
-                    . self::formatScript('~/js/cookies.js')
-                    . self::formatScript('~/js/functions.js')
-                    . self::formatScript('~/js/window.js')
-                    . self::formatScript('~/js/domready.js')
-                    . self::formatScript('~/js/rxmlhttp.js')
-                    . self::formatScript('~/js/links.js')
-                    . self::formatScript('~/js/processform.js')
-                    . self::formatScript('~/js/Closer.js')
-                    . self::formatScript('~/js/Confirm.js')
-                    . self::formatScript('~/js/Editor.js')
-                    . self::formatScript('~/js/FileName.js')
-                    . self::formatScript('~/js/CountDown.js')
-                    . self::formatScript('~/js/formFieldEffect.js')
-                    . self::formatScript('~/js/init.js')
-                    . self::formatScript('~/tiny-mce/tinymce.min.js')
-                    . self::formatScript('~/js/initTiny.js');
+                    . $this->formatStyle('~/css/editor.css')
+                    . $this->formatStyle('~/css/edit-area.css')
+                    . $this->formatStyle('~/css/window.css')
+                    . $this->formatStyle('~/css/jquery-autocomplete.css')
+                    . $this->formatStyle('~/css/jquery-wysiwyg.css')
+                    . $this->formatStyle('~/css/demo_table.css')
+                    . $this->formatScript('~/edit_area/edit_area_full.js')
+                    . $this->formatScript('~/js/jquery/jquery.js')
+                    . $this->formatScript('~/js/jquery/jquery-autocomplete-pack.js')
+                    . $this->formatScript('~/js/jquery/jquery-blockui.js')
+                    . $this->formatScript('~/js/jquery/jquery-dataTables-min.js')
+                    . $this->formatScript('~/js/jquery/jquery-wysiwyg.js')
+                    . $this->formatScript('~/js/cookies.js')
+                    . $this->formatScript('~/js/functions.js')
+                    . $this->formatScript('~/js/window.js')
+                    . $this->formatScript('~/js/domready.js')
+                    . $this->formatScript('~/js/rxmlhttp.js')
+                    . $this->formatScript('~/js/links.js')
+                    . $this->formatScript('~/js/processform.js')
+                    . $this->formatScript('~/js/Closer.js')
+                    . $this->formatScript('~/js/Confirm.js')
+                    . $this->formatScript('~/js/Editor.js')
+                    . $this->formatScript('~/js/FileName.js')
+                    . $this->formatScript('~/js/CountDown.js')
+                    . $this->formatScript('~/js/formFieldEffect.js')
+                    . $this->formatScript('~/js/init.js')
+                    . $this->formatScript('~/tiny-mce/tinymce.min.js')
+                    . $this->formatScript('~/js/initTiny.js');
             } else {
                 $return .= ''
-                    . self::formatStyle('~/css/cms_nowindows.css')
-                    . self::formatStyle('~/css/editor.css')
-                    . self::formatStyle('~/css/edit-area.css')
-                    . self::formatStyle('~/css/jquery-wysiwyg.css')
-                    . self::formatScript('~/edit_area/edit_area_full.js')
-                    . self::formatScript('~/js/jquery/jquery.js')
-                    . self::formatScript('~/js/jquery/jquery-wysiwyg.js')
-                    . self::formatScript('~/js/cookies.js')
-                    . self::formatScript('~/js/functions.js')
-                    . self::formatScript('~/js/domready.js')
-                    . self::formatScript('~/js/rxmlhttp.js')
-                    . self::formatScript('~/js/links.js')
-                    . self::formatScript('~/js/processform.js')
-                    . self::formatScript('~/js/Closer.js')
-                    . self::formatScript('~/js/Confirm.js')
-                    . self::formatScript('~/js/Editor.js')
-                    . self::formatScript('~/js/FileName.js')
-                    . self::formatScript('~/js/CountDown.js')
-                    . self::formatScript('~/js/formFieldEffect.js')
-                    . self::formatScript('~/js/init_nowindows.js')
-                    . self::formatScript('~/tiny-mce/tinymce.min.js')
-                    . self::formatScript('~/js/initTiny.js');
+                    . $this->formatStyle('~/css/cms_nowindows.css')
+                    . $this->formatStyle('~/css/editor.css')
+                    . $this->formatStyle('~/css/edit-area.css')
+                    . $this->formatStyle('~/css/jquery-wysiwyg.css')
+                    . $this->formatScript('~/edit_area/edit_area_full.js')
+                    . $this->formatScript('~/js/jquery/jquery.js')
+                    . $this->formatScript('~/js/jquery/jquery-wysiwyg.js')
+                    . $this->formatScript('~/js/cookies.js')
+                    . $this->formatScript('~/js/functions.js')
+                    . $this->formatScript('~/js/domready.js')
+                    . $this->formatScript('~/js/rxmlhttp.js')
+                    . $this->formatScript('~/js/links.js')
+                    . $this->formatScript('~/js/processform.js')
+                    . $this->formatScript('~/js/Closer.js')
+                    . $this->formatScript('~/js/Confirm.js')
+                    . $this->formatScript('~/js/Editor.js')
+                    . $this->formatScript('~/js/FileName.js')
+                    . $this->formatScript('~/js/CountDown.js')
+                    . $this->formatScript('~/js/formFieldEffect.js')
+                    . $this->formatScript('~/js/init_nowindows.js')
+                    . $this->formatScript('~/tiny-mce/tinymce.min.js')
+                    . $this->formatScript('~/js/initTiny.js');
             }
             if (strpos($_SERVER['REQUEST_URI'], ".view") == -1) {
                 $return = str_replace("~/", INSTANCE_URL, $return);
@@ -188,9 +188,9 @@
                 $ajaxMessage = 'Loading ...';
             }
 
-            $return .= self::formatScript('~/js/domready.js');
-            $return .= self::formatScript('~/js/rxmlhttp.js');
-            $return .= self::formatScript('~/js/links.js');
+            $return .= $this->formatScript('~/js/domready.js');
+            $return .= $this->formatScript('~/js/rxmlhttp.js');
+            $return .= $this->formatScript('~/js/links.js');
 
             $content = file_get_contents("js/web/ajaxWebInit.js");
             $content = str_replace("{web-content}", $webContentRootElId, $content);
@@ -219,7 +219,7 @@
                     if ($as == 'inline') {
                         $return .= ($type == "js") ? '<script type="text/javascript">' . "\n" . file_get_contents($path) . "\n" . '</script>' : '<style type="text/css">' . "\n" . file_get_contents($path) . "\n" . '</style>';
                     } else {
-                        $return .= ($type == "js") ? self::formatScript($virtualPath) : self::formatStyle($virtualPath);
+                        $return .= ($type == "js") ? $this->formatScript($virtualPath) : $this->formatStyle($virtualPath);
                     }
                 }
             }

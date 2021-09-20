@@ -206,7 +206,7 @@
             if (array_key_exists('__TEMPLATE', $_REQUEST)) {
                 $this->Template = strtolower($_REQUEST['__TEMPLATE']);
             } else {
-                $headers = self::requestHeaders();
+                $headers = $this->requestHeaders();
                 if(array_key_exists('X-Template', $headers)) {
                     $this->Template = strtolower($headers['X-Template']);
                 }
@@ -215,7 +215,7 @@
             if (array_key_exists('__START_ID', $_REQUEST)) {
                 $this->StartPageId = strtolower($_REQUEST['__START_ID']);
             } else {
-                $headers = self::requestHeaders();
+                $headers = $this->requestHeaders();
                 if (array_key_exists('X-Parent-Page-Id', $headers)) {
                     $this->ParentPageId = strtolower($headers['X-Parent-Page-Id']);
                 }
@@ -247,7 +247,7 @@
                 $this->debugMode(true);
             }
 
-            if (self::getDebugMode()) {
+            if ($this->getDebugMode()) {
                 if (array_key_exists('query-list', $_GET)) {
                     parent::db()->getDataAccess()->saveQueries(true);
                     parent::db()->getDataAccess()->saveMeasures(true);
@@ -283,12 +283,12 @@
             $this->FullUrl = $fullUrl;
             
             // Projit Forwardy s Always
-            self::processForwards(self::findForward(array('Always')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'));
+            $this->processForwards($this->findForward(array('Always')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'));
 
             if ($item != array()) {
                 if ($item["language_id"] != 0) {
                     // Stranka jiz je v urlcache
-                    $this->UrlResolver->setPagesId(self::parsePagesId($item['pages_id']));
+                    $this->UrlResolver->setPagesId($this->parsePagesId($item['pages_id']));
                     $this->UrlResolver->selectLanguage($item['language_id']);
                 } else {
                     $this->SelectedEntrypoint = $item["pages_id"];
@@ -303,7 +303,7 @@
                     if ($item['cachetime'] == 0 || $item['cachetime'] + $item['lastcache'] >= time()) {
                         if (file_exists(CACHE_PAGES_PATH . $this->CacheFile)) {
                             $cacheUsed = true;
-                            self::tryToComprimeContent(file_get_contents(CACHE_PAGES_PATH . $this->CacheFile));
+                            $this->tryToComprimeContent(file_get_contents(CACHE_PAGES_PATH . $this->CacheFile));
                         }
                     } 
 
@@ -314,34 +314,34 @@
                     }
                 }
 
-                self::loadPageData();
-                $found = self::parseSingleUrlParts($domainUrl, $rootUrl, $virtualUrl);
+                $this->loadPageData();
+                $found = $this->parseSingleUrlParts($domainUrl, $rootUrl, $virtualUrl);
             } else {
                 //echo $domainUrl.', '.$rootUrl.', '.$virtualUrl.'<br />';
                 if ($this->UrlResolver->resolveUrl($domainUrl, $rootUrl, $virtualUrl)) {
                     // Stranka existuje
-                    self::loadPageData();
+                    $this->loadPageData();
 
                     // Ulozit do urlcache
-                    $this->UrlCache->write($fullUrl, $this->UrlResolver->getWebProject(), $this->SelectedEntrypoint ?? self::pagesIdAsString('-'), $this->UrlResolver->getLanguage(), self::findCachetime());
+                    $this->UrlCache->write($fullUrl, $this->UrlResolver->getWebProject(), $this->SelectedEntrypoint ?? $this->pagesIdAsString('-'), $this->UrlResolver->getLanguage(), $this->findCachetime());
                     $found = true;
                 }
             }
 
             if ($found) {
-                self::doOldSetup();
-                $this->PageContent = self::getContent();
-                self::flush();
+                $this->doOldSetup();
+                $this->PageContent = $this->getContent();
+                $this->flush();
             } else {
                 // Stranka neexistuje -> Projit Forwardy s 404 nebo All Errors
-                self::generateErrorPage('404');
+                $this->generateErrorPage('404');
             }
         }
 
         public function substituteRequestFor($pageId, $langId) {
             $this->IsSubstituting = true;
 
-            $pageUrl = self::composeUrl($pageId, $langId, false);
+            $pageUrl = $this->composeUrl($pageId, $langId, false);
             $url = parent::db()->fetchSingle('select `http`, `https`, `domain_url`, `root_url`, `virtual_url` from `web_url` join `page` on `web_url`.`project_id` = `page`.`wp` where `page`.`id` = '.$pageId.' order by `web_url`.`default` desc, `web_url`.`id`;');
             
             if (strpos($pageUrl, 'http://') != -1 || strpos($pageUrl, 'https://') != -1) {
@@ -366,7 +366,7 @@
                 $_SERVER['https'] = 'on';
             }
 
-            self::processRequestNG();
+            $this->processRequestNG();
         }
 
         private function loadPageData() {
@@ -381,10 +381,10 @@
                         . "LEFT JOIN `content` cd ON p.`id` = cd.`page_id` AND cd.`language_id` = (SELECT `id` FROM `language` WHERE `language` = '') " 
                     . "WHERE i.`is_visible` = 1 "
                         . "AND i.`language_id` = " . $this->UrlResolver->getLanguageId() . " "
-                        . "AND p.`id` IN (" . self::pagesIdAsString() . ") "
+                        . "AND p.`id` IN (" . $this->pagesIdAsString() . ") "
                         . "AND p.`wp` = " . $this->UrlResolver->getWebProjectId() . ";";
                 
-                $this->TempLoadedContent = self::sortPages(parent::db()->fetchAll($selectSql), $this->UrlResolver->getPagesId());
+                $this->TempLoadedContent = $this->sortPages(parent::db()->fetchAll($selectSql), $this->UrlResolver->getPagesId());
             } else {
                 $this->SelectedEntrypoint = $entrypoint;
             }
@@ -442,8 +442,8 @@
 
             //echo $virtualUrl;
             $reqVirs = StringUtils::explode($virtualUrl, '/');
-            $prjVirs = self::prepareVirtualPathAsArray($webProject, $lang);
-            self::parseAllPagesTagLib('tag_lib_start');
+            $prjVirs = $this->prepareVirtualPathAsArray($webProject, $lang);
+            $this->parseAllPagesTagLib('tag_lib_start');
             $lastIndex = 0;
             foreach ($prjVirs as $key => $prj) {
                 $vir = $reqVirs[$key];
@@ -455,7 +455,7 @@
 
                 $lastIndex = $key;
             }
-            self::parseAllPagesTagLib('tag_lib_end');
+            $this->parseAllPagesTagLib('tag_lib_end');
 
             
             return true;
@@ -558,14 +558,14 @@
             foreach($forwards as $forward) {
                 $rule = '/'.  str_replace('/', '\/', $forward->getRule()).'/';
                 $match = preg_match($rule, $fullUrl);
-                // self::log(array('rule' => $rule, 'url' => $fullUrl, 'match' => $match));
+                // $this->log(array('rule' => $rule, 'url' => $fullUrl, 'match' => $match));
                 if ($match > 0) {
                     // Presmerovat
                     if ($forward->getType() == 'Substitute' && !$this->IsSubstituting) {
-                        self::substituteRequestFor($forward->getPageId(), $forward->getLangId());
+                        $this->substituteRequestFor($forward->getPageId(), $forward->getLangId());
                         return true;
                     } elseif($forward->getType() == 'Forward') {
-                        self::redirectTo($forward->getPageId(), $forward->getLangId());
+                        $this->redirectTo($forward->getPageId(), $forward->getLangId());
                     }
                 }
             }
@@ -757,7 +757,7 @@
                     }
                 }
 
-                self::parsePages($this->Path, 0);
+                $this->parsePages($this->Path, 0);
 
                 $pcache = '';
                 for ($i = 0; $i < count($this->PagesId); $i++) {
@@ -800,7 +800,7 @@
                 $this->CacheInfo['lastcache'] = $ucache[0]['lastcache'];
                 $this->CacheInfo['path'] = "cache/pages/page-" . $ucache[0]['page-ids'] . ".cache.html";
                 if ($ucache[0]['cachetime'] != -1 && ($ucache[0]['cachetime'] == 0 || $ucache[0]['lastcache'] > time()) && is_file($this->CacheInfo['path'])) {
-                    self::tryToComprimeContent(file_get_contents($this->CacheInfo['path']));
+                    $this->tryToComprimeContent(file_get_contents($this->CacheInfo['path']));
                 } else {
                     $pages = $ucache[0]['page-ids'];
                     $this->PagesId = StringUtils::explode($pages, '-');
@@ -846,7 +846,7 @@
                 }
             }
 
-            $this->TempLoadedContent = self::sortPages($dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `title`, `tag_lib_start`, `tag_lib_end`, `head`, `content`, `info`.`timestamp` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`id` IN (" . $str . ") AND `page`.`wp` = " . $this->ProjectId . ";"), $this->PagesId);
+            $this->TempLoadedContent = $this->sortPages($dbObject->fetchAll("SELECT `id`, `name`, `href`, `in_title`, `keywords`, `title`, `tag_lib_start`, `tag_lib_end`, `head`, `content`, `info`.`timestamp` FROM `content` LEFT JOIN `page` ON `content`.`page_id` = `page`.`id` LEFT JOIN `info` ON `content`.`page_id` = `info`.`page_id` AND `content`.`language_id` = `info`.`language_id` WHERE `info`.`is_visible` = 1 AND `info`.`language_id` = " . $this->LanguageId . " AND `page`.`id` IN (" . $str . ") AND `page`.`wp` = " . $this->ProjectId . ";"), $this->PagesId);
             $this->CurrentPageTimestamp = $this->TempLoadedContent[count($this->TempLoadedContent) - 1]['timestamp'];
             if (count($this->TempLoadedContent) == count($this->PagesId)) {
                 $this->parseAllPagesTagLib("tag_lib_start");
@@ -886,12 +886,12 @@
 
                 $this->parseAllPagesTagLib("tag_lib_end");
 
-                $this->PageContent = self::getContent();
+                $this->PageContent = $this->getContent();
             } else {
-                self::generateErrorPage('404');
+                $this->generateErrorPage('404');
             }
 
-            self::flush();
+            $this->flush();
         }
 
         /**
@@ -943,14 +943,14 @@
                 if ($_REQUEST['temp-stop'] != 'stop') {
                     //echo 'Generate err page!';
                     $_REQUEST['temp-stop'] = 'stop';
-                    self::generateErrorPage('404');
+                    $this->generateErrorPage('404');
                 } else {
                     echo 'Bad!';
                     parent::close();
                 }
             } elseif (count($return) == 0 && $path[0] == "" && $path[1] == "") {
                 if (count($this->PagesId) == 0) {
-                    self::generateErrorPage('404');
+                    $this->generateErrorPage('404');
                 } else {
                     return;
                 }
@@ -993,7 +993,7 @@
                                 $this->CacheTime = $return[$i]['cachetime'];
                             }
                         }
-                        self::parsePages($path[0] . '/' . $path[1], $return[$i]['page_id']);
+                        $this->parsePages($path[0] . '/' . $path[1], $return[$i]['page_id']);
 
                         $this->executeTemplateContent(TemplateCacheKeys::page($return[$i]["page_id"], $this->LanguageId, "tag_lib_end"), $return[$i]['tag_lib_end']);
 
@@ -1017,7 +1017,7 @@
                             }
                         }
 
-                        self::parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0] . '/' . $path[1], $return[$i]['page_id']);
+                        $this->parsePages(($tmp_path == $path[0]) ? $path[1] : $path[0] . '/' . $path[1], $return[$i]['page_id']);
 
                         $this->executeTemplateContent(TemplateCacheKeys::page($return[$i]["page_id"], $this->LanguageId, "tag_lib_start"), $return[$i]['tag_lib_end']);
 
@@ -1026,7 +1026,7 @@
                     }
                 }
 
-                self::generateErrorPage('404');
+                $this->generateErrorPage('404');
             }
         }
 
@@ -1339,7 +1339,7 @@
         }
 
         private function parseproperties($values) {
-            $path = self::composeUrl($values[1], $this->LanguageId);
+            $path = $this->composeUrl($values[1], $this->LanguageId);
             return $path;
         }
 
@@ -1419,10 +1419,10 @@
             if (count($props) > 0) {
                 $parser = $this->createParser();
                 foreach ($props as $prop) {
-                    $currentValue = self::getProperty($prop['name']);
+                    $currentValue = $this->getProperty($prop['name']);
                     if (!$currentValue || $forceDefProp) {
                         $prop['value'] = $parser->parsePropertyExactly($prop['value']);
-                        self::setProperty($prop['name'], $prop['value']);
+                        $this->setProperty($prop['name'], $prop['value']);
                         $currentValues[$prop['name']] = $currentValue;
                     }
                 }
@@ -1441,7 +1441,7 @@
                             if ($copyParameters) {
                                 $url = UrlUtils::addCurrentQueryString($url);
                             }
-                            return self::addSpecialParams($url);
+                            return $this->addSpecialParams($url);
                         }
                         
                         if (strlen($return[0]['href']) > 0) {
@@ -1460,7 +1460,7 @@
             }
             
             foreach ($currentValues as $key => $item) {
-                self::setProperty($key, $item);
+                $this->setProperty($key, $item);
             }
 
             $return = parent::db()->fetchAll("SELECT `language` FROM `language` WHERE `id` = " . $languageId . ";");
@@ -1474,20 +1474,20 @@
 
             if ($pageProjectId == $this->ProjectId) {
                 // Dosestav url z dat v urlResolveru
-                $url = self::composeUrlProjectPart($tmpPath, $this->UrlResolver->getWebProject(), $absolutePath);
+                $url = $this->composeUrlProjectPart($tmpPath, $this->UrlResolver->getWebProject(), $absolutePath);
                 if ($copyParameters) {
                     $url = UrlUtils::addCurrentQueryString($url);
                 }
-                return self::addSpecialParams($url);
+                return $this->addSpecialParams($url);
             } else {
                 // Najdi project url a dosestav url
                 $project = array('alias' => parent::db()->fetchSingle('select `domain_url`, `root_url`, `virtual_url`, `http`, `https` from `web_url` where `project_id` = ' . $pageProjectId . ' and `enabled` = 1 order by `web_url`.`default` desc, `web_url`.`id`;'));
                 if ($project['alias'] != array()) {
-                    $url = self::composeUrlProjectPart($tmpPath, $project, true);
+                    $url = $this->composeUrlProjectPart($tmpPath, $project, true);
                     if ($copyParameters) {
                         $url = UrlUtils::addCurrentQueryString($url);
                     }
-                    return self::addSpecialParams($url);
+                    return $this->addSpecialParams($url);
                 } else {
                     $message = parent::getError('Project doesn\' have url adress!!');
                     trigger_error($message, E_USER_WARNING);
@@ -1501,7 +1501,7 @@
             $pageUrl = UrlResolver::combinePath($project['alias']['root_url'], $pageUrl);
 
             if ($project['alias']['domain_url'] == "*") {
-                $project['alias']['domain_url'] = self::getHttpHost();
+                $project['alias']['domain_url'] = $this->getHttpHost();
             }
 
             if ($absolute) {
@@ -1643,9 +1643,9 @@
             $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "tag_lib_start"), $page['tag_lib_start']);
 
             if (count($this->PagesId) > ($this->PagesIdIndex + 1)) {
-                self::setChildPage($this->PagesId[$this->PagesIdIndex + 1]);
+                $this->setChildPage($this->PagesId[$this->PagesIdIndex + 1]);
             } else {
-                self::setChildPage(-1);
+                $this->setChildPage(-1);
             }
 
             $this->CurrentDynamicPath = $path[0];
@@ -1678,9 +1678,9 @@
             $this->PagesIdIndex--;
 
             if ($this->PagesIdIndex > 0) {
-                self::setChildPage($this->PagesId[$this->PagesIdIndex]);
+                $this->setChildPage($this->PagesId[$this->PagesIdIndex]);
             } else {
-                self::setChildPage(-1);
+                $this->setChildPage(-1);
             }
 
             return $pageContent;
@@ -1724,15 +1724,15 @@
             }
             $content = "";
             $parentId = (!$parentId) ? 0 : $parentId;
-            $return = self::getMenuItems($parentId, $display);
+            $return = $this->getMenuItems($parentId, $display);
             if (count($return) > 0) {
                 $content .= '<div class="menu menu-' . $inn . ((strlen($classes) > 0) ? ' ' . $classes : '') . '"><ul class="ul-' . $inn . '">';
                 $i = 1;
                 foreach ($return as $lnk) {
-                    if (!self::canUserReadPage($lnk['id'])) {
+                    if (!$this->canUserReadPage($lnk['id'])) {
                         continue;
                     }
-                    $href = self::composeUrl($lnk['id'], $this->LanguageId, false, true, $copyParameters);
+                    $href = $this->composeUrl($lnk['id'], $this->LanguageId, false, true, $copyParameters);
                     $parent = (in_array($lnk['id'], $this->PagesId)) ? true : false;
 
                     $active = false;
@@ -1744,7 +1744,7 @@
                     if ($inner > 1) {
                         $innerParentId = $lnk['id'];
                         $innerClasses = ($parent || $active) ? 'active-submenu' : '';
-                        $tmpContent = self::getMenu($innerParentId, $inner, $innerClasses, false, false, $copyParameters, $display, $inn + 1);
+                        $tmpContent = $this->getMenu($innerParentId, $inner, $innerClasses, false, false, $copyParameters, $display, $inn + 1);
                     }
 
                     $lnkName = $lnk[$display];
@@ -1802,7 +1802,7 @@
             $model->items($items);
             $result = $template();
 
-            self::popListModel();
+            $this->popListModel();
             return $result;
         }
 
@@ -1863,7 +1863,7 @@
                 $pageId = $this->PagesId[count($this->PagesId) - 1];
                 $return = $dbObject->fetchAll("SELECT `info`.`language_id` FROM `info` WHERE `info`.`page_id` = " . $pageId . ";");
                 foreach ($return as $ln) {
-                    $langs[$ln['language_id']] = self::composeUrl($pageId, $ln['language_id']);
+                    $langs[$ln['language_id']] = $this->composeUrl($pageId, $ln['language_id']);
                 }
 
                 $ret = "<div class=\"languages\">";
@@ -1908,7 +1908,7 @@
             $isAbsolute = (!$isAbsolute) ? false : true;
 
             if (is_numeric($pageId)) {
-                $url = self::composeUrl($pageId, $languageId, $isAbsolute);
+                $url = $this->composeUrl($pageId, $languageId, $isAbsolute);
             } else {
                 $url = $pageId;
             }
@@ -1961,7 +1961,7 @@
             global $dbObject;
             $languageId = (!$languageId) ? $this->LanguageId : $languageId;
 
-            if (strlen($activeClass) > 0 && $pageId == self::getLastPageId() && $this->LanguageId == $languageId) {
+            if (strlen($activeClass) > 0 && $pageId == $this->getLastPageId() && $this->LanguageId == $languageId) {
                 if(strlen($class) > 0) {
                     $class .= ' ' . $activeClass;
                 } else {
@@ -1978,7 +1978,7 @@
             }
 
             if (count($sql_return) == 1 || !is_numeric($pageId)) {
-                $url = self::composeUrl($pageId, $languageId);
+                $url = $this->composeUrl($pageId, $languageId);
     
                 foreach ($params as $key => $value) {
                     $url = UrlUtils::addParameter($url, $key, $value);
@@ -2258,7 +2258,7 @@
         public function composeTextFileUrl() {
             global $phpObject;
             global $dbObject;
-            $cdp = self::getCurrentDynamicPath();
+            $cdp = $this->getCurrentDynamicPath();
 
             $id = StringUtils::explode($cdp, "-", 1);
 
@@ -2438,7 +2438,7 @@
         }
 
         public function getDatabaseVersion() {
-            return self::getSystemProperty("db_version");
+            return $this->getSystemProperty("db_version");
         }
 
         /**
@@ -2607,7 +2607,7 @@
                 return;
             }
 
-            if (self::processForwards(self::findForward(array($errorCode, 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'))) {
+            if ($this->processForwards($this->findForward(array($errorCode, 'All Errors')), UrlResolver::combinePath($this->Protocol, $fullUrl, '://'))) {
                 return;
             }
 

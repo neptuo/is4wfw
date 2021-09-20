@@ -16,7 +16,7 @@
 		}
 		
 		public function get($key, $storage = 'default') {
-			if(self::exists($key, $storage)) {
+			if($this->exists($key, $storage)) {
 				return $this->data[$storage][$key];
 			} else {
 				return null;

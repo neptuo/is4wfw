@@ -22,9 +22,9 @@
 
 		public function container($template, $fluid = false, $params = array()) {
 			if ($fluid) {
-				$params = self::appendClass($params, "container-fluid");
+				$params = $this->appendClass($params, "container-fluid");
 			} else {
-				$params = self::appendClass($params, "container");
+				$params = $this->appendClass($params, "container");
 			}
 
 			$attributes = parent::joinAttributes($params);
@@ -33,21 +33,21 @@
 		}
 
 		public function row($template, $horizontal = "", $vertical = "", $params = array()) {
-			$params = self::appendClass($params, "row");
+			$params = $this->appendClass($params, "row");
 			if ($horizontal == "left") {
-				$params = self::appendClass($params, "justify-content-start");
+				$params = $this->appendClass($params, "justify-content-start");
 			} else if ($horizontal == "center") {
-				$params = self::appendClass($params, "justify-content-center");
+				$params = $this->appendClass($params, "justify-content-center");
 			} else if ($horizontal == "right") {
-				$params = self::appendClass($params, "justify-content-end");
+				$params = $this->appendClass($params, "justify-content-end");
 			}
 
 			if ($vertical == "top") {
-				$params = self::appendClass($params, "align-items-start");
+				$params = $this->appendClass($params, "align-items-start");
 			} else if ($vertical == "center") {
-				$params = self::appendClass($params, "align-items-center");
+				$params = $this->appendClass($params, "align-items-center");
 			} else if ($vertical == "bottom") {
-				$params = self::appendClass($params, "align-items-end");
+				$params = $this->appendClass($params, "align-items-end");
 			}
 
 			$attributes = parent::joinAttributes($params);
@@ -58,28 +58,28 @@
 		public function column($template, $default = "", $small = "", $medium = "", $large = "", $extraLarge = "", $params = array()) {
 			$hasColumn = false;
 			if ($default != "") {
-				$params = self::appendClass($params, "col-$default");
+				$params = $this->appendClass($params, "col-$default");
 				$hasColumn = true;
 			}
 			if ($small != "") {
-				$params = self::appendClass($params, "col-sm-$small");
+				$params = $this->appendClass($params, "col-sm-$small");
 				$hasColumn = true;
 			}
 			if ($medium != "") {
-				$params = self::appendClass($params, "col-md-$medium");
+				$params = $this->appendClass($params, "col-md-$medium");
 				$hasColumn = true;
 			}
 			if ($large != "") {
-				$params = self::appendClass($params, "col-lg-$large");
+				$params = $this->appendClass($params, "col-lg-$large");
 				$hasColumn = true;
 			}
 			if ($extraLarge != "") {
-				$params = self::appendClass($params, "col-xl-$extraLarge");
+				$params = $this->appendClass($params, "col-xl-$extraLarge");
 				$hasColumn = true;
 			}
 			
 			if (!$hasColumn) {
-				$params = self::appendClass($params, "col");
+				$params = $this->appendClass($params, "col");
 			}
 			
 			$attributes = parent::joinAttributes($params);
@@ -91,7 +91,7 @@
 			$html = "";
 
 			if ($defaultClass != "") {
-				$params = self::appendClass($params, $defaultClass);
+				$params = $this->appendClass($params, $defaultClass);
 			}
 
 			if (array_key_exists("", $params)) {
@@ -112,14 +112,14 @@
 		}
 
 		public function alert($template, $header = array(), $color = "primary", $isDismissible = false, $params = array()) {
-			$headerHtml = self::getTagHtml($header, "h4", "alert-heading");
+			$headerHtml = $this->getTagHtml($header, "h4", "alert-heading");
 
 			$params["role"] = "alert";
-			$params = self::appendClass($params, "alert");
-			$params = self::appendClass($params, "alert-$color");
+			$params = $this->appendClass($params, "alert");
+			$params = $this->appendClass($params, "alert-$color");
 			$dismissHtml = "";
 			if ($isDismissible) {
-				$params = self::appendClass($params, "alert-dismissible fade show");
+				$params = $this->appendClass($params, "alert-dismissible fade show");
 				$dismissHtml = ""
 				. "<button type='button' class='close' data-dismiss='alert'>"
 					. "<span aria-hidden='true'>&times;</span>"
@@ -133,33 +133,33 @@
 
 		public function buttonFullTag($template, $color = "primary", $isOutline = false, $size = "", $isBlock = false, $isActive = false, $params = []) {
 			$content = $template();
-			return self::button($content, $color, $isOutline, $size, $isBlock, $isActive, $params);
+			return $this->button($content, $color, $isOutline, $size, $isBlock, $isActive, $params);
 		}
 
 		public function button($text, $color = "primary", $isOutline = false, $size = "", $isBlock = false, $isActive = false, $params = []) {
-			$params = self::appendClass($params, "btn");
+			$params = $this->appendClass($params, "btn");
 			$outline = "";
 			if ($isOutline) {
 				$outline = "-outline";
 			}
 
-			$params = self::appendClass($params, "btn");
-			$params = self::appendClass($params, "btn$outline-$color");
+			$params = $this->appendClass($params, "btn");
+			$params = $this->appendClass($params, "btn$outline-$color");
 
 			if ($size == "large") {
-				$params = self::appendClass($params, "btn-lg");
+				$params = $this->appendClass($params, "btn-lg");
 			} else if ($size == "small") {
-				$params = self::appendClass($params, "btn-sm");
+				$params = $this->appendClass($params, "btn-sm");
 			} else if (!empty($size)) {
-				$params = self::appendClass($params, "btn-$size");
+				$params = $this->appendClass($params, "btn-$size");
 			}
 
 			if ($isBlock) {
-				$params = self::appendClass($params, "btn-block");
+				$params = $this->appendClass($params, "btn-block");
 			}
 			
 			if ($isActive) {
-				$params = self::appendClass($params, "active");
+				$params = $this->appendClass($params, "active");
 			}
 
 			$attributes = parent::joinAttributes($params);
@@ -167,10 +167,10 @@
 		}
 
 		public function card($template, $header = array(), $title = array(), $params = array()) {
-			$headerHtml = self::getTagHtml($header, "div", "card-header");
-			$titleHtml = self::getTagHtml($title, "h5", "card-title");
+			$headerHtml = $this->getTagHtml($header, "div", "card-header");
+			$titleHtml = $this->getTagHtml($title, "h5", "card-title");
 
-			$params = self::appendClass($params, "card");
+			$params = $this->appendClass($params, "card");
 			$attributes = parent::joinAttributes($params);
 			$content = $template();
 			return "<div$attributes>$headerHtml<div class='card-body'>$titleHtml$content</div></div>";
@@ -186,11 +186,11 @@
 			if (array_key_exists("for", $label)) {
 				$labelId = $label["for"];
 			} else {
-				$labelId = self::newId();
+				$labelId = $this->newId();
 				$label["for"] = $labelId;
 			}
 
-			$labelHtml = self::getTagHtml($label, "label");
+			$labelHtml = $this->getTagHtml($label, "label");
 			
 			parent::ui()->pushId($labelId);
 
@@ -198,7 +198,7 @@
 				$template = function() use($template, $field, $fieldCssClass) { return $this->fieldValidator($template, $field, $fieldCssClass); };
 			}
 
-			$params = self::appendClass($params, "form-group");
+			$params = $this->appendClass($params, "form-group");
 			$attributes = parent::joinAttributes($params);
 			$content = $template();
 			$result = "<div$attributes>$labelHtml$content</div>";
@@ -213,16 +213,16 @@
 			$oldNavTag = $this->navTag;
 			$this->navTag = $tag;
 
-			$params = self::appendClass($params, "nav");
+			$params = $this->appendClass($params, "nav");
 
 			if ($mode == "pills") {
-				$params = self::appendClass($params, "nav-pills");
+				$params = $this->appendClass($params, "nav-pills");
 			} else if ($mode == "tabs") {
-				$params = self::appendClass($params, "nav-tabs");
+				$params = $this->appendClass($params, "nav-tabs");
 			}
 
 			if ($fill) {
-				$params = self::appendClass($params, "nav-fill");
+				$params = $this->appendClass($params, "nav-fill");
 			}
 
 			$attributes = parent::joinAttributes($params);

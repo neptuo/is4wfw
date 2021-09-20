@@ -16,7 +16,7 @@
         private $GuestbookId = 0;
 
         public function __construct() {
-            self::setLocalizationBundle("guestbook");
+            $this->setLocalizationBundle("guestbook");
         }
         
         /**
@@ -34,7 +34,7 @@
             global $webObject;
             global $dbObject;
             
-            $rb = self::rb();
+            $rb = $this->rb();
             
             $return = "";
             $message = "";
@@ -53,7 +53,7 @@
             
             if($_POST['guestbook-send'] == $rb->get('gb.label.send')) {
                 if ($_POST['guestbook-name'] != "" && $_POST['guestbook-content'] != "" && sha1($_POST['guestbook-formula']) == $_POST['guestbook-formularesult']) {
-                    self::processInput();
+                    $this->processInput();
                 
                     $message .= ''
                     .'<div class="guestbook-message">'
@@ -144,7 +144,7 @@
                 $return .= '<h4 class="success">Messages from guestbook.id='.$id.' has been deleted!</h4>';
             }
             
-            $ids = self::selectDistinctGuestbookIds();
+            $ids = $this->selectDistinctGuestbookIds();
             
             if(count($ids) > 0) {
                 $return .= ''
@@ -228,7 +228,7 @@
             global $webObject;
             global $dbObject;
             
-            $rb = self::rb();
+            $rb = $this->rb();
             
             $return = "";
             if($guestbookId == 'false') {
@@ -236,7 +236,7 @@
             }
             
             if($_POST['guestbook-editable-delete'] == "Delete Entry") {
-                self::processDeleteEntry();
+                $this->processDeleteEntry();
             }
             
             if($answerPageId == false) {
@@ -246,7 +246,7 @@
             }
             
             $return .= '<div class="guestbook-show">';
-            $return .= self::printRows($guestbookId, $editable, $answer, $answerPageId, 0);
+            $return .= $this->printRows($guestbookId, $editable, $answer, $answerPageId, 0);
             $return .= '</div>';
             
             if($useFrame == "true") {
@@ -260,7 +260,7 @@
             global $webObject;
             global $dbObject;
             
-            $rb = self::rb();
+            $rb = $this->rb();
             
             $rows = $dbObject->fetchAll("SELECT `id`, `name`, `content`, `timestamp` FROM `guestbook` WHERE `guestbook_id` = ".$guestbookId." AND `parent_id` = ".$parentId." ORDER BY `timestamp` DESC;");
             
@@ -309,7 +309,7 @@
                     .'<div class="guestbook-clear clear"></div>'
                     //.(($answer == "true") ? ''
                     .'<div class="guestbook-answers">'
-                    .self::printRows($guestbookId, $editable, $answer, $answerPageId, $row['id'])
+                    .$this->printRows($guestbookId, $editable, $answer, $answerPageId, $row['id'])
                     .'</div>'
                     //: '')
                 .'</div>';

@@ -52,7 +52,7 @@
                 } else {
                     $ok = true;
                     foreach ($projDoms as $key => $dom) {
-                        $fdom = self::parseSingleUrlPart($dom, $reqDoms[$key]);
+                        $fdom = $this->parseSingleUrlPart($dom, $reqDoms[$key]);
                         if ($fdom != $reqDoms[$key]) {
                             $ok = false;
                             break;
@@ -81,7 +81,7 @@
                     } else {
                         $ok = true;
                         foreach ($projRoots as $key => $root) {
-                            $froot = self::parseSingleUrlPart($root, $reqRoots[$key]);
+                            $froot = $this->parseSingleUrlPart($root, $reqRoots[$key]);
                             if ($froot != $reqRoots[$key]) {
                                 $ok = false;
                                 break;
@@ -102,9 +102,9 @@
             foreach ($selected2 as $url) {
                 if ($url['virtual_url'] == '') {
                     // prejit na parsovani url stranek
-                    if (self::parsePageUrl($pageUrls, $url['project_id'])) {
+                    if ($this->parsePageUrl($pageUrls, $url['project_id'])) {
                         // mame viteze
-                        self::selectProject($url);
+                        $this->selectProject($url);
                         return true;
                     } else {
                         continue;
@@ -117,7 +117,7 @@
                         $ok = true;
                         $key = 0;
                         foreach ($virUrls as $key => $vir) {
-                            $fvir = self::parseSingleUrlPart($vir, $pageUrls[$key]);
+                            $fvir = $this->parseSingleUrlPart($vir, $pageUrls[$key]);
                             if ($fvir != $pageUrls[$key]) {
                                 $ok = false;
                                 break;
@@ -128,16 +128,16 @@
                             if (empty($url['entrypoint'])) {
                                 // prejit na parsovani url stranek
                                 $key++;
-                                if (self::parsePageUrl(self::subarray($pageUrls, $key), $url['project_id'])) {
+                                if ($this->parsePageUrl($this->subarray($pageUrls, $key), $url['project_id'])) {
                                     // mame viteze
-                                    self::selectProject($url);
+                                    $this->selectProject($url);
                                     return true;
                                 } else {
                                     continue;
                                 }
                             } else {
                                 // First matched project with entrypoint is the winner.
-                                self::selectProject($url);
+                                $this->selectProject($url);
                                 return true;
                             }
                         } else {
@@ -159,11 +159,11 @@
                 if ($lang['language'] == $pageUrls[0] || $lang['language'] == '') {
                     // Nalezen jazyk, zkusit najit stranky, jinak se vratit, a projit i dalsi jazyky
                     $found = true;
-                    $curPageUrls = $lang['language'] == '' ? $pageUrls : self::subarray($pageUrls, 1);
+                    $curPageUrls = $lang['language'] == '' ? $pageUrls : $this->subarray($pageUrls, 1);
                     $parentId = 0;
                     parent::request()->set('language-id', $lang['id'], 'web');
-                    if (self::parsePageUrlWithLang($curPageUrls, $projectId, $parentId, $lang['id'])) {
-                        self::setLanguage($lang);
+                    if ($this->parsePageUrlWithLang($curPageUrls, $projectId, $parentId, $lang['id'])) {
+                        $this->setLanguage($lang);
                         return true;
                     }
                 }
@@ -187,7 +187,7 @@
                 if ($page['href'] != '') {
                     $hrefs = StringUtils::explode($page['href'], '/');
                     foreach ($hrefs as $key => $href) {
-                        $fhref = self::parseSingleUrlPart($href, $pageUrls[$key]);
+                        $fhref = $this->parseSingleUrlPart($href, $pageUrls[$key]);
                         if ($fhref != $pageUrls[$key]) {
                             $this->parseContentForCustomTags(TemplateCacheKeys::page($page["id"], $langId, "tag_lib_end"), $page['tag_lib_end']);
                             $found = false;
@@ -205,12 +205,12 @@
                     $this->PagesId[] = $page['id'];
                     //print_r($this->PagesId);
                     // rekurze
-                    if (self::parsePageUrlWithLang(self::subarray($pageUrls, $key + 1), $projectId, $page['id'], $langId)) {
+                    if ($this->parsePageUrlWithLang($this->subarray($pageUrls, $key + 1), $projectId, $page['id'], $langId)) {
                         $this->parseContentForCustomTags(TemplateCacheKeys::page($page["id"], $langId, "tag_lib_end"), $page['tag_lib_end']);
                         return true;
                     } else {
                         //echo 'PagesCount: '.count($this->PagesId).'<br />';
-                        $this->PagesId = self::subarray($this->PagesId, 0, count($this->PagesId) - 1);
+                        $this->PagesId = $this->subarray($this->PagesId, 0, count($this->PagesId) - 1);
                     }
                 }
 
@@ -261,13 +261,13 @@
         }
 
         public function selectProject($url) {
-            self::loadProjectById($url['project_id']);
+            $this->loadProjectById($url['project_id']);
             $this->WebProject['alias'] = $url;
             $this->WebProject['entrypoint'] = $url["entrypoint"];
         }
 
         public function selectProjectById($cacheItem) {
-            self::loadProjectById($cacheItem['project_id']);
+            $this->loadProjectById($cacheItem['project_id']);
             $this->WebProject['alias'] = array(
                 'project_id' => $cacheItem['project_id'],
                 'domain_url' => $cacheItem['domain_url'],
@@ -284,7 +284,7 @@
 
         public function selectLanguage($id) {
             $language = parent::db()->fetchSingle('select `id`, `language` from `language` where `id` = ' . $id . ';');
-            self::setLanguage($language);
+            $this->setLanguage($language);
         }
 
         public function subarray($origin, $fromIndex, $toIndex = -1) {

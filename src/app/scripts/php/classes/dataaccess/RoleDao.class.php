@@ -24,7 +24,7 @@ class RoleDao extends AbstractDao {
 	
 	
 	public function getChilds($parentId) {
-		return parent::getList(Select::factory(self::dataAccess())->where('parent_gid', '=', $parentId));
+		return parent::getList(Select::factory($this->dataAccess())->where('parent_gid', '=', $parentId));
 	}
 }
 

@@ -14,7 +14,7 @@
 	class PageNG extends BaseTagLib {
 
 		public function __construct() {
-			self::setLocalizationBundle("pageng");
+			$this->setLocalizationBundle("pageng");
 			
 			if($_GET['clear'] == 'session') {
 				unset($_SESSION['pageng']);
@@ -25,11 +25,11 @@
 		public function selectLanguage($useFrames = false, $showMsg = false) {
 			global $dbObject;
 			global $webObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			$return = '';
 			
 			if($_POST['page-ng-select-language-submit'] == $rb->get('selectlang.submit')) {
-				self::setLanguage($_POST['page-ng-select-language-select']);
+				$this->setLanguage($_POST['page-ng-select-language-select']);
 				$return .= '<h4 class="success">'.$rb->get('selectlang.success').'</h4>';
 			}
 			
@@ -41,7 +41,7 @@
 					.'<select name="page-ng-select-language-select" id="page-ng-select-language-select"> ';
 			foreach($langs as $lang) {
 				$return .= ''
-				.'<option value="'.$lang['id'].'"'.((self::getLanguage() == $lang['id']) ? ' selected="selected"' : '').'>'.$lang['language'].'</option>';
+				.'<option value="'.$lang['id'].'"'.(($this->getLanguage() == $lang['id']) ? ' selected="selected"' : '').'>'.$lang['language'].'</option>';
 			}	
 			$return .= ''
 					.'</select> '
@@ -149,7 +149,7 @@
 			global $dbObject;
 			global $loginObject;
 			
-			$sqlWhere = '`info`.`language_id` = '.self::getLanguage().' AND `page`.`wp` = '.$_SESSION['selected-project'].' AND `page_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'))';
+			$sqlWhere = '`info`.`language_id` = '.$this->getLanguage().' AND `page`.`wp` = '.$_SESSION['selected-project'].' AND `page_right`.`type` = '.WEB_R_WRITE.' AND (`group`.`gid` IN ('.$loginObject->getGroupsIdsAsString().') OR `group`.`parent_gid` IN ('.$loginObject->getGroupsIdsAsString().'))';
 			
 			if($_SESSION['pageng']['field']['name'] != '') {
 				$sqlWhere .= ' AND `info`.`name` like "'.$_SESSION['pageng']['field']['name'].'%"';
@@ -197,7 +197,7 @@
 		public function searchFilter($templateId, $useFrames = false, $showMsg = false) {
 			global $webObject;
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			$return = '';
 			
 			if($_POST['search-filter-submit'] == $rb->get('searchfilter.submit')) {
@@ -269,7 +269,7 @@
 		
 		public function pageName($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['name'] = $_POST['pageng-page-field-name'];
@@ -313,7 +313,7 @@
 		
 		public function pageId($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['id'] = $_POST['pageng-page-field-id'];
@@ -355,7 +355,7 @@
 		
 		public function pageUrl($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['pageurl'] = $_POST['pageng-page-field-pageurl'];
@@ -397,7 +397,7 @@
 		
 		public function pageKeywords($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['keywords'] = $_POST['pageng-page-field-keywords'];
@@ -439,7 +439,7 @@
 		
 		public function pageTimestamp($type, $pageId = false, $langId = false, $ignore = false, $format = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['timestamp'] = $_POST['pageng-page-field-timestamp'];
@@ -487,7 +487,7 @@
 		
 		public function pageCachetime($type, $pageId = false, $langId = false, $ignore = false, $verbous = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['cachetime'] = $_POST['pageng-page-field-cachetime'];
@@ -551,14 +551,14 @@
 		
 		public function pageTagLibStart($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['tlstart'] = $_POST['pageng-page-field-tlstart'];
 			} elseif($_POST['page-detail-form-close'] == $rb->get('pagedetail.close')) {
 				
 			} elseif($_SESSION['pageng']['search-filter']['post'] == true && array_key_exists('pageng-page-field-tlstart', $_POST)) {
-				$value = self::contentCorrectionsPost($_POST['pageng-page-field-tlstart']);
+				$value = $this->contentCorrectionsPost($_POST['pageng-page-field-tlstart']);
 				$_SESSION['pageng']['field']['tlstart'] = $value;
 			}
 			
@@ -574,7 +574,7 @@
 			}
 			
 			if(strtolower($type) == 'input' || strtolower($type) == 'edit') {
-				$value = self::contentCorrectionsPre($value);
+				$value = $this->contentCorrectionsPre($value);
 				$return .= ''
 				.'<div class="page-field-tlstart">'
 					.'<label for="pageng-page-field-tlstart">'.$rb->get('pagefield.tlstart.label').'</label> '
@@ -595,14 +595,14 @@
 		
 		public function pageTagLibEnd($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['tlend'] = $_POST['pageng-page-field-tlend'];
 			} elseif($_POST['page-detail-form-close'] == $rb->get('pagedetail.close')) {
 				
 			} elseif($_SESSION['pageng']['search-filter']['post'] == true && array_key_exists('pageng-page-field-tlend', $_POST)) {
-				$value = self::contentCorrectionsPost($_POST['pageng-page-field-tlend']);
+				$value = $this->contentCorrectionsPost($_POST['pageng-page-field-tlend']);
 				$_SESSION['pageng']['field']['tlend'] = $value;
 			}
 			
@@ -618,7 +618,7 @@
 			}
 			
 			if(strtolower($type) == 'input' || strtolower($type) == 'edit') {
-				$value = self::contentCorrectionsPre($value);
+				$value = $this->contentCorrectionsPre($value);
 				$return .= ''
 				.'<div class="page-field-tlend">'
 					.'<label for="pageng-page-field-tlend">'.$rb->get('pagefield.tlend.label').'</label> '
@@ -639,14 +639,14 @@
 		
 		public function pageHead($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['head'] = $_POST['pageng-page-field-head'];
 			} elseif($_POST['page-detail-form-close'] == $rb->get('pagedetail.close')) {
 				
 			} elseif($_SESSION['pageng']['search-filter']['post'] == true && array_key_exists('pageng-page-field-head', $_POST)) {
-				$value = self::contentCorrectionsPost($_POST['pageng-page-field-head']);
+				$value = $this->contentCorrectionsPost($_POST['pageng-page-field-head']);
 				$_SESSION['pageng']['field']['head'] = $value;
 			}
 			
@@ -662,7 +662,7 @@
 			}
 			
 			if(strtolower($type) == 'input' || strtolower($type) == 'edit') {
-				$value = self::contentCorrectionsPre($value);
+				$value = $this->contentCorrectionsPre($value);
 				$return .= ''
 				.'<div class="page-field-head">'
 					.'<label for="pageng-page-field-head">'.$rb->get('pagefield.head.label').'</label> '
@@ -683,14 +683,14 @@
 		
 		public function pageContent($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['action-field']['content'] = $_POST['pageng-page-field-content'];
 			} elseif($_POST['page-detail-form-close'] == $rb->get('pagedetail.close')) {
 				
 			} elseif($_SESSION['pageng']['search-filter']['post'] == true && array_key_exists('pageng-page-field-content', $_POST)) {
-				$value = self::contentCorrectionsPost($_POST['pageng-page-field-content']);
+				$value = $this->contentCorrectionsPost($_POST['pageng-page-field-content']);
 				$_SESSION['pageng']['field']['content'] = $value;
 			}
 			
@@ -706,7 +706,7 @@
 			}
 			
 			if(strtolower($type) == 'input' || strtolower($type) == 'edit') {
-				$value = self::contentCorrectionsPre($value);
+				$value = $this->contentCorrectionsPre($value);
 				$return .= ''
 				.'<div class="page-field-content">'
 					.'<label for="pageng-page-field-content">'.$rb->get('pagefield.content.label').'</label> '
@@ -727,7 +727,7 @@
 		
 		public function pageInTitle($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['intitle'] = ($_POST['pageng-page-field-intitle'] == 'on' ? 1 : 0);
@@ -773,7 +773,7 @@
 		
 		public function pageInMenu($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['inmenu'] = ($_POST['pageng-page-field-inmenu'] == 'on' ? 1 : 0);
@@ -819,7 +819,7 @@
 		
 		public function pageIsVisible($type, $pageId = false, $langId = false, $ignore = false) {
 			global $dbObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['isvisible'] = ($_POST['pageng-page-field-isvisible'] == 'on' ? 1 : 0);
@@ -866,7 +866,7 @@
 		public function pageRightRead($type, $pageId = false, $langId = false, $verbous = false) {
 			global $dbObject;
 			global $loginObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['rightread'] = $_POST['pageng-page-field-rightread'];
@@ -940,7 +940,7 @@
 		public function pageRightWrite($type, $pageId = false, $langId = false, $verbous = false) {
 			global $dbObject;
 			global $loginObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['rightwrite'] = $_POST['pageng-page-field-rightwrite'];
@@ -1015,7 +1015,7 @@
 		public function pageRightDelete($type, $pageId = false, $langId = false, $verbous = false) {
 			global $dbObject;
 			global $loginObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			
 			if($_POST['page-detail-form-save'] == $rb->get('pagedetail.save') || $_POST['page-detail-form-save-and-close'] == $rb->get('pagedetail.saveandclose')) {
 				$_SESSION['pageng']['field']['rightdelete'] = $_POST['pageng-page-field-rightdelete'];
@@ -1089,7 +1089,7 @@
 		
 		public function pageActionEdit($pageId, $langId, $type, $detailPageId = false) {
 			global $webObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			$return = '';
 			
 			if($_POST['pagengpageedit'] == $rb->get('pageaction.pageedit')) {
@@ -1118,7 +1118,7 @@
 		}
 		
 		public function pageActionDelete($pageId, $langId, $type) {
-			$rb = self::rb();
+			$rb = $this->rb();
 			$return = '';
 			
 			if($_POST['pagengpagedelete'] == $rb->get('pageaction.pagedelete')) {
@@ -1144,7 +1144,7 @@
 		
 		public function pageActionAddsub($pageId, $langId, $type, $detailPageId = false) {
 			global $webObject;
-			$rb = self::rb();
+			$rb = $this->rb();
 			$return = '';
 			
 			if($_POST['pagengpageaddsub'] == $rb->get('pageaction.pageaddsub')) {

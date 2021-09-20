@@ -15,7 +15,7 @@
     class Menu extends BaseTagLib {
 
         public function __construct() {
-            self::setLocalizationBundle("view");
+            $this->setLocalizationBundle("view");
         }
 
         /* ======================= TAGS ========================================= */

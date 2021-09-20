@@ -36,7 +36,7 @@
 			$model = parent::getEditModel();
 			if ($model->isSaved()) {
 				$this->setSuccessMessage($message);
-				self::redirectAfterSave($saveName, $saveParam, $closePageId, $closeParam);
+				$this->redirectAfterSave($saveName, $saveParam, $closePageId, $closeParam);
 			}
 			
 			if ($model->isRender()) {
@@ -183,7 +183,7 @@
 		}
 
 		public function isNew() {
-			return self::isEdit() && $this->edit["id"] == 0;
+			return $this->isEdit() && $this->edit["id"] == 0;
 		}
 		
 		public function getEditId() {

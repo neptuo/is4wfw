@@ -42,11 +42,11 @@
 
         public function listRows($formId, $templateId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = -1, $noDataMessage = false, $params = false) {
             $template = parent::getTemplateById($templateId);
-            return self::listRowsFullTag($template, $formId, $rowId, $filter, $sortBy, $desc, $limit, $noDataMessage, $params);
+            return $this->listRowsFullTag($template, $formId, $rowId, $filter, $sortBy, $desc, $limit, $noDataMessage, $params);
         }
 
         public function listRowsFullTag($template, $formId, $rowId = false, $filter = false, $sortBy = false, $desc = false, $limit = -1, $noDataMessage = false, $params = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
             $rules = "";
 
@@ -55,16 +55,16 @@
             $this->FormId = $formId;
 
             if ($rowId != "") {
-                $rules = self::listAddToRules($rules, 'id', $rowId, 'number');
+                $rules = $this->listAddToRules($rules, 'id', $rowId, 'number');
             }
 
             foreach($params as $paramName => $paramValue) {
-                $rules = self::listAddToRules($rules, $paramName, $paramValue);
+                $rules = $this->listAddToRules($rules, $paramName, $paramValue);
             }
 
             $isRendered = false;
-            if (self::listFindFieldsInTemplate($formId, $template)) {
-                $rules = self::listParseFilter($rules, $filter);
+            if ($this->listFindFieldsInTemplate($formId, $template)) {
+                $rules = $this->listParseFilter($rules, $filter);
                 //print_r($rules);
             
                 $sql = 'select ';
@@ -83,7 +83,7 @@
                 
                 $sortByParsed = explode(",", $sortBy);
                 foreach($sortByParsed as $sBy) {
-                    $sBy = self::listChooseSortBy($sBy);
+                    $sBy = $this->listChooseSortBy($sBy);
                     if(strrpos($sql, 'order by') == '') {
                         $sql .= ' order by ';
                     } else {
@@ -102,7 +102,7 @@
                 if (count($data) > 0) {
                     $isRendered = true;
                     $lastIndex = parent::request()->get('i', 'custom-form');
-                    $lastRowId = self::getRowId();
+                    $lastRowId = $this->getRowId();
                     $lastViewDataRow = $this->ViewDataRow;
 
                     $this->ViewPhase = 2;
@@ -111,7 +111,7 @@
                     foreach ($data as $row) {
                         parent::request()->set('i', $i, 'custom-form');
                         $this->ViewDataRow = $row;
-                        self::setRowId($row['id']);
+                        $this->setRowId($row['id']);
 
                         $return .= $template();
                         $i++;
@@ -119,7 +119,7 @@
                     
                     parent::request()->set('i', $lastIndex, 'custom-form');
                     $this->ViewDataRow = $lastViewDataRow;
-                    self::setRowId($lastRowId);
+                    $this->setRowId($lastRowId);
                 } else {
                     $return .= $noDataMessage;
                 }
@@ -138,7 +138,7 @@
             foreach($filterParsed as $item) {
                 $f = explode(':', $item, 2);
                 if(count($f) == 2) {
-                    $rules = self::listAddToRules($rules, $f[0], $f[1]);
+                    $rules = $this->listAddToRules($rules, $f[0], $f[1]);
                 }
             }
             return $rules;
@@ -180,7 +180,7 @@
             //print_r($this->ViewFieldsFound);
             $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');
             if (count($formInfo) == 1) {
-                $fields = self::parseFieldsFromString($formInfo[0]['fields']);
+                $fields = $this->parseFieldsFromString($formInfo[0]['fields']);
                 $fields[] = array('id', 'number');
                 $this->ViewAllFields = $fields;
                 $ok = true;
@@ -217,7 +217,7 @@
             $rules = "";
 
             foreach($params as $paramName => $paramValue) {
-                $rules = self::listAddToRules($rules, $paramName, $paramValue);
+                $rules = $this->listAddToRules($rules, $paramName, $paramValue);
             }
 
             $sql = 'select count(`id`) as `count` from `cf_' . $formId . '`';
@@ -237,7 +237,7 @@
                     $this->ViewFieldsFound[] = array($fieldName, $type);
                 }
             } else {
-                self::setCustomProperty($this->ViewDataRow[$fieldName]);
+                $this->setCustomProperty($this->ViewDataRow[$fieldName]);
             }
         }
         
@@ -255,7 +255,7 @@
 
         public function formFullTag($template, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false) {
             global $webObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
             
             if (is_array($rowId)) {
@@ -309,13 +309,13 @@
                                     $value['value'] = $value['value'];
                                     break;
                                 case 'bool':
-                                    $value['value'] = self::getBoolValue($value['value']) ? '1' : '0';
+                                    $value['value'] = $this->getBoolValue($value['value']) ? '1' : '0';
                                     break;
                                 case 'file':
                                     if($rowId != '' && $value['value'] == array()) {
                                         $editedValue = false;
                                     } else {
-                                        $value['value'] = self::formProcessFileUpload($value['value']['file'], $value['value']['dirId']);
+                                        $value['value'] = $this->formProcessFileUpload($value['value']['file'], $value['value']['dirId']);
                                     }
                             }
 
@@ -419,7 +419,7 @@
                 }
             }
 
-            //parent::logVar(self::formValidateAgainstTemplate($formId, $templateContent));
+            //parent::logVar($this->formValidateAgainstTemplate($formId, $templateContent));
             if ($type == 'db' && $this->formValidateAgainstTemplate($formId, $template)) {
                 if (is_numeric($rowId)) {
                     $names = "";
@@ -468,7 +468,7 @@
         }
 
         private function formValidateAgainstTemplate($formId, $template) {
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $this->FormPhase = 1;
             $this->FormFieldsFound = array();
@@ -477,7 +477,7 @@
 
             $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');
             if (count($formInfo) == 1) {
-                $fields = self::parseFieldsFromString($formInfo[0]['fields']);
+                $fields = $this->parseFieldsFromString($formInfo[0]['fields']);
                 // parent::logVar(array('Found' => $this->FormFieldsFound, 'Additional' => $this->AdditionalKeys[$formId], 'Fields' => $fields));
                 if (count($this->FormFieldsFound) + count($this->AdditionalKeys[$formId]) == count($fields)) {
                     $ok = true;
@@ -514,7 +514,7 @@
             $this->FormPhase = 2;
 
             $this->FormId = $formId;
-            $this->GeneratedFormId = self::creatorChooseValue($_POST['cf_gen-id'], 'cf_' . rand());
+            $this->GeneratedFormId = $this->creatorChooseValue($_POST['cf_gen-id'], 'cf_' . rand());
             $this->ResourcesToAdd = '';
 
             if (!parent::web()->getIsInsideForm()) {
@@ -589,11 +589,11 @@
         // pro date -> formatovac!!!
         public function field($name, $viewType = false, $type = false, $required = false, $validation = false, $elementId = false, $transformation = false, $default = false, $errorMessage = false, $requiredValue = false, $transient = false, $data = false, $cssClass = false, $dirId = false, $referenceFormId = false, $referenceCaptionField = false) {
             global $webObject;
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
             
             if ($this->EmailPhase == 1) {
-                $fname = $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $name);
+                $fname = $this->GeneratedFormId . '_' . $this->creatorChooseValue($elementId, $name);
                 return $_POST[$fname];
             } elseif ($this->FormPhase == 1) {
                 if ($transient != 'true') {
@@ -601,9 +601,9 @@
                     $this->FormFieldsFound[] = array($name, $type);
                 }
             } elseif ($this->FormPhase == 2) {
-                $fname = $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $name);
-                $id = self::creatorChooseValue($elementId, $name);
-                $value = self::fieldGetValue($name, $type, $fname, $default);
+                $fname = $this->GeneratedFormId . '_' . $this->creatorChooseValue($elementId, $name);
+                $id = $this->creatorChooseValue($elementId, $name);
+                $value = $this->fieldGetValue($name, $type, $fname, $default);
                 if($requiredValue != '') {
                     parent::session()->set($fname.'-req', $requiredValue, 'cf');
                 }
@@ -635,7 +635,7 @@
                         case 'number':
                             $return .= ''
                                     . '<input type="text" name="' . $fname . '" id="' . $id . '" value="' . $value . '" class="'.$cssClass.'" /> ';
-                            //.self::fieldScripts('mask')
+                            //.$this->fieldScripts('mask')
                             //.'<script type="text/javascript"> $("#'.$id.'").mask("", {placeholder:" "});</script>';
                             if ($validation != '') {
                                 // parse validation on client side
@@ -655,8 +655,8 @@
                             $return .= ''
                                     //.'<span id="'.$id.'" class="like-input"></span>'
                                     . '<input type="text" name="' . $fname . '" id="' . $id . '" value="' . $value . '" class="'.$cssClass.'" /> '
-                                    //.self::fieldScripts('date')
-                                    //.self::fieldScripts('mask')
+                                    //.$this->fieldScripts('date')
+                                    //.$this->fieldScripts('mask')
                                     //.'<script type="text/javascript"> $("#'.$id.'").mask("99.99.9999", {placeholder:" "});</script>';
                                     //.'<script type="text/javascript"> $("#'.$id.'").datepicker(); </script>'
                                     //.'<style type="text/css"> .like-input { width: 100px; border: 1px solid #cccccc; } </style>';
@@ -668,13 +668,13 @@
                                     . ($webObject->LanguageName != '' ? '$.datepicker.setDefaults($.datepicker.regional["' . $webObject->LanguageName . '"]);' : '')
                                     . ' });'
                                     . '</script>';
-                            self::fieldAddToResource('style', "~/scripts/js/jquery-ui/css/jquery.ui.all.css");
-                            self::fieldAddToResource('script', "~/scripts/js/jquery/jquery.js");
-                            self::fieldAddToResource('script', "~/scripts/js/jquery-ui/jquery.ui.core.min.js");
-                            self::fieldAddToResource('script', "~/scripts/js/jquery-ui/jquery.ui.widget.min.js");
-                            self::fieldAddToResource('script', "~/scripts/js/jquery-ui/jquery.ui.datepicker.min.js");
+                                    $this->fieldAddToResource('style', "~/scripts/js/jquery-ui/css/jquery.ui.all.css");
+                                    $this->fieldAddToResource('script', "~/scripts/js/jquery/jquery.js");
+                                    $this->fieldAddToResource('script', "~/scripts/js/jquery-ui/jquery.ui.core.min.js");
+                                    $this->fieldAddToResource('script', "~/scripts/js/jquery-ui/jquery.ui.widget.min.js");
+                                    $this->fieldAddToResource('script', "~/scripts/js/jquery-ui/jquery.ui.datepicker.min.js");
                             if ($webObject->LanguageName != '') {
-                                self::fieldAddToResource('script', "~/scripts/js/jquery-ui/i18n/jquery.ui.datepicker-" . $webObject->LanguageName . ".js");
+                                $this->fieldAddToResource('script', "~/scripts/js/jquery-ui/i18n/jquery.ui.datepicker-" . $webObject->LanguageName . ".js");
                             }
                             if ($validation != '') {
                                 // parse validation on client side
@@ -684,7 +684,7 @@
                             $return .= '<input type="file" name="' . $fname . '" id="' . $id . '" value="' . $value . '" class="'.$cssClass.'" /> ';
                             break;
                         case 'reference':
-                            $return .= self::fieldGenerateReferenceDropDown($referenceFormId, $referenceCaptionField, $fname, $id, $value, $cssClass);
+                            $return .= $this->fieldGenerateReferenceDropDown($referenceFormId, $referenceCaptionField, $fname, $id, $value, $cssClass);
                             break;
                         
                     }
@@ -699,7 +699,7 @@
                 }
             } elseif ($this->FormPhase == 3) {
                 $error = false;
-                $fname = $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $name);
+                $fname = $this->GeneratedFormId . '_' . $this->creatorChooseValue($elementId, $name);
                 $value = $_POST[$fname];
                 
                 $editingWithoutFile = (array_key_exists($fname, $_FILES) && $type == 'file' && array_key_exists('cf_row-id', $_POST) && $_FILES[$fname]['error'] == 4);
@@ -713,10 +713,10 @@
                 
                 if ($viewType == 'edit' || $viewType == '') {
                     if (($type != 'file' && $type != 'bool' && $required == 'true' && $value == '') 
-                    || ($type == 'file' && $required == 'true' && (!$fileOk || !self::fieldDirExists($dirId)))
+                    || ($type == 'file' && $required == 'true' && (!$fileOk || !$this->fieldDirExists($dirId)))
                     || ($type == 'date' && strtotime($value) == '') 
                     || ($type == 'number' && !is_numeric($value)) 
-                    || !self::fieldCustomValidation($value, $type, $validation) 
+                    || !$this->fieldCustomValidation($value, $type, $validation) 
                     || ($requiredValue != '' && parent::session()->get($fname.'-req', 'cf') != $value)
                     ) {
                         $error = true;
@@ -750,7 +750,7 @@
             } elseif ($this->ViewPhase == 2) {
                 // Return data
                 if ($transformation != '') {
-                    $return .= self::fieldTransformations($name, $this->ViewDataRow[$name], $transformation);
+                    $return .= $this->fieldTransformations($name, $this->ViewDataRow[$name], $transformation);
                 } else {
                     if ($type == 'reference') {
                         $sql = 'select `'.$referenceCaptionField.'` from `cf_'.$referenceFormId.'` where `id` = '.$this->ViewDataRow[$name].';';
@@ -778,7 +778,7 @@
                 if ($type == 'date') {
                     $val = date('d.m.Y', $this->ViewDataRow[$name]);
                 } else if($type == 'bool') {
-                    $val = self::getBoolValue($this->ViewDataRow[$name]);
+                    $val = $this->getBoolValue($this->ViewDataRow[$name]);
                 }
                 return $val;
             } else {
@@ -888,12 +888,12 @@
 
             if ($_POST['cf-delete-row-button'] == $value) {
                 $id = $_POST['cf-delete-row-id'];
-                self::delete($_POST['cf-delete-form-id'], $id);
+                $this->delete($_POST['cf-delete-form-id'], $id);
                 unset($_POST['cf-delete-row-button']);
                 parent::web()->redirect($_SERVER['REQUEST_URI']);
             }
 
-            $id = self::creatorChooseValue($elementId, $this->GeneratedFormId . '_' . self::creatorChooseValue($elementId, $type));
+            $id = $this->creatorChooseValue($elementId, $this->GeneratedFormId . '_' . $this->creatorChooseValue($elementId, $type));
             if ($this->FormPhase == 2 || $this->ViewPhase == 2) {
                 // Generate form button
                 switch ($type) {
@@ -978,7 +978,7 @@
         /* ===================== LIST =========================================== */
 
         public function formList($userFrames = false) {
-            $rb = self::rb();
+            $rb = $this->rb();
             $return = "";
 
             if ($_POST['list-delete'] == $rb->get('cf.list.delete')) {
@@ -1014,7 +1014,7 @@
                             . '<tr class="' . ((($i % 2) == 0) ? 'idle' : 'even') . '">'
                             . '<td class="id">' . $form['id'] . '</td>'
                             . '<td>' . $form['name'] . '</td>'
-                            . '<td>' . self::listFormatFields($form['fields']) . '</td>'
+                            . '<td>' . $this->listFormatFields($form['fields']) . '</td>'
                             . '<td>'
                             . '<form name="list-delete" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                             . '<input type="hidden" name="list-id" value="' . $form['name'] . '" />'
@@ -1054,8 +1054,8 @@
         /* ===================== CREATOR ======================================== */
 
         public function formCreator($useFrames = false) {
-            $rb = self::rb();
-            $step = self::creatorSetStep();
+            $rb = $this->rb();
+            $step = $this->creatorSetStep();
             $return = "";
 
             if ($_POST['creator-clear'] == $rb->get('cf.creator.clear')) {
@@ -1072,11 +1072,11 @@
             }
 
             switch ($step) {
-                case 0: $return .= self::creatorStep0();
+                case 0: $return .= $this->creatorStep0();
                     break;
-                case 1: $return .= self::creatorStep1();
+                case 1: $return .= $this->creatorStep1();
                     break;
-                case 2: $return .= self::creatorStep2();
+                case 2: $return .= $this->creatorStep2();
                     break;
                 default:
                     $return .= parent::getWarning("Here goes Custom Form Creator.");
@@ -1092,25 +1092,25 @@
         }
 
         private function creatorSetStep() {
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($_POST['creator-submit'] == $rb->get('cf.creator.step0.button')) {
-                if (self::creatorValidate0()) {
-                    self::creatorSaveData0();
+                if ($this->creatorValidate0()) {
+                    $this->creatorSaveData0();
                     return 1;
                 } else {
                     return 0;
                 }
             } elseif ($_POST['creator-submit'] == $rb->get('cf.creator.step1.button')) {
-                if (self::creatorValidate1()) {
-                    self::creatorSaveData1();
+                if ($this->creatorValidate1()) {
+                    $this->creatorSaveData1();
                     return 2;
                 } else {
                     return 1;
                 }
             } elseif ($_POST['creator-submit'] == $rb->get('cf.creator.step2.button')) {
-                if (self::creatorValidate2()) {
-                    self::creatorSaveData2();
+                if ($this->creatorValidate2()) {
+                    $this->creatorSaveData2();
                     $http = $_SERVER['SERVER_PROTOCOL'];
                     $url = substr($http, 0, stripos($http, '/')) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                     parent::redirectToUrl($url);
@@ -1126,7 +1126,7 @@
         /*     * ********************* STEP 0 **************************************** */
 
         private function creatorStep0() {
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $return = ''
             . '<form name="creator-step-0" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
@@ -1135,12 +1135,12 @@
                 . '</div>'
                 . '<div class="gray-box">'
                     . '<label for="creator-id" class="w160">' . $rb->get('cf.creator.step0.id-label') . ':</label>'
-                    . '<input type="text" name="creator-id" id="creator-id" value="' . self::creatorChooseValue($_SESSION['cf']['creator']['form-id'], $_POST['creator-id']) . '" class="w200" />'
+                    . '<input type="text" name="creator-id" id="creator-id" value="' . $this->creatorChooseValue($_SESSION['cf']['creator']['form-id'], $_POST['creator-id']) . '" class="w200" />'
                 . '</div>'
                 . '<div class="gray-box">'
                     . '<label for="creator-fields" class="w160">' . $rb->get('cf.creator.step0.fields-label') . ':</label>'
                     . '<select name="creator-fields" id="creator-fields" class="w100">'
-                        . self::creatorGetOptionsForFields()
+                        . $this->creatorGetOptionsForFields()
                     . '</select>'
                 . '</div>'
                 . '<div class="gray-box">'
@@ -1153,13 +1153,13 @@
         }
 
         private function creatorValidate0() {
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $formId = $_POST['creator-id'];
             $fields = $_POST['creator-fields'];
 
             // Taky testovat volnost Id
-            if (strlen($formId) > 0 && is_numeric($fields) && $fields > 0 && $fields <= 50 && self::isFormIdFree($formId)) {
+            if (strlen($formId) > 0 && is_numeric($fields) && $fields > 0 && $fields <= 50 && $this->isFormIdFree($formId)) {
                 return true;
             } else {
                 $this->CreatorError = $rb->get('cf.creator.step0.error');
@@ -1176,7 +1176,7 @@
             $return = '';
 
             for ($i = 1; $i < 51; $i++) {
-                $return .= '<option value="' . $i . '"' . ($i == self::creatorChooseValue($_SESSION['cf']['creator']['fields'], $_POST['creator-fields']) ? ' selected="selected"' : '') . '>' . $i . '</option>';
+                $return .= '<option value="' . $i . '"' . ($i == $this->creatorChooseValue($_SESSION['cf']['creator']['fields'], $_POST['creator-fields']) ? ' selected="selected"' : '') . '>' . $i . '</option>';
             }
 
             return $return;
@@ -1185,7 +1185,7 @@
         /*     * ********************* STEP 1 **************************************** */
 
         private function creatorStep1() {
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $return .= ''
             . '<form name="creator-step-1" method="post" ation="' . $_SERVER['REQUEST_URI'] . '">'
@@ -1202,11 +1202,11 @@
                 $return .= ''
                 . '<div class="gray-box">'
                     . '<label for="creator-step-1-i' . $i . '-name" class="w160">' . $rb->get('cf.creator.step1.name-label') . ':</label>'
-                    . '<input type="text" name="creator-step-1-i' . $i . '-name" id="creator-step-1-i' . $i . '-name" value="' . self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['name'], $_POST['creator-step-1-i' . $i . '-name']) . '" class="w200" />'
+                    . '<input type="text" name="creator-step-1-i' . $i . '-name" id="creator-step-1-i' . $i . '-name" value="' . $this->creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['name'], $_POST['creator-step-1-i' . $i . '-name']) . '" class="w200" />'
                     . '<br />'
                     . '<label for="creator-step-1-i' . $i . '-type" class="w160">' . $rb->get('cf.creator.step1.type-label') . ':</label>'
                     . '<select name="creator-step-1-i' . $i . '-type" id="creator-step-1-i' . $i . '-type">'
-                        . self::creatorGetDataTypes($i)
+                        . $this->creatorGetDataTypes($i)
                     . '</select>'
                     . '<input type="checkbox" name="creator-step-1-i' . $i . '-primary" id="creator-step-1-i' . $i . '-primary"' . ($_SESSION['cf']['creator']['field']['i' . $i]['primary'] == 'on' ? ' checked="checked"' : '') . ' />'
                     . '<label for="creator-step-1-i' . $i . '-primary" >' . $rb->get('cf.creator.step1.primary-label') . '</label>'
@@ -1226,7 +1226,7 @@
         }
 
         private function creatorValidate1() {
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $ok = true;
             $names = array();
@@ -1257,14 +1257,14 @@
 
         private function creatorGetDataTypes($i) {
             $return = ''
-                    . '<option' . ('number' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>number</option>'
-                    . '<option' . ('string' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>string</option>'
-                    . '<option' . ('dropdown' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>dropdown</option>'
-                    . '<option' . ('longstring' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>longstring</option>'
-                    . '<option' . ('date' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>date</option>'
-                    . '<option' . ('bool' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>bool</option>'
-                    . '<option' . ('file' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>file</option>'
-                    . '<option' . ('reference' == self::creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>reference</option>';
+                    . '<option' . ('number' == $this->creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>number</option>'
+                    . '<option' . ('string' == $this->creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>string</option>'
+                    . '<option' . ('dropdown' == $this->creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>dropdown</option>'
+                    . '<option' . ('longstring' == $this->creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>longstring</option>'
+                    . '<option' . ('date' == $this->creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>date</option>'
+                    . '<option' . ('bool' == $this->creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>bool</option>'
+                    . '<option' . ('file' == $this->creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>file</option>'
+                    . '<option' . ('reference' == $this->creatorChooseValue($_SESSION['cf']['creator']['field']['i' . $i]['type'], $_POST['creator-step-1-i' . $i . '-type']) ? ' selected="selected"' : '') . '>reference</option>';
 
             return $return;
         }
@@ -1293,7 +1293,7 @@
         /*     * ********************* STEP 2 **************************************** */
 
         private function creatorStep2() {
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $return .= ''
             . '<form name="creator-step-2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
@@ -1322,11 +1322,11 @@
             $return .=''
                 . '<div class="gray-box">'
                     . '<label for="creator-overview">' . $rb->get('cr.creator.step2.formoverview1-label') . '</label>'
-                    . '<textarea id="creator-overview" rows="1">' . self::creatorFormOverview1() . '</textarea>'
+                    . '<textarea id="creator-overview" rows="1">' . $this->creatorFormOverview1() . '</textarea>'
                 . '</div>'
                 . '<div class="gray-box">'
                     . '<label for="creator-overview">' . $rb->get('cr.creator.step2.formoverview2-label') . '</label>'
-                    . '<textarea id="creator-overview" rows="15">' . self::creatorFormOverview2() . '</textarea>'
+                    . '<textarea id="creator-overview" rows="15">' . $this->creatorFormOverview2() . '</textarea>'
                 . '</div>'
                 . '<div class="gray-box">'
                     . '<input type="submit" name="creator-submit" value="' . $rb->get('cf.creator.step2.button') . '" /> '
@@ -1354,7 +1354,7 @@
                 if ($_SESSION['cf']['creator']['field']['i' . $i]['primary'] == 'on') {
                     $primary .= ', `' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '`';
                 }
-                $create .= ', `' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '` ' . self::creatorTranslateType($_SESSION['cf']['creator']['field']['i' . $i]['type']) . ' NOT NULL';
+                $create .= ', `' . $_SESSION['cf']['creator']['field']['i' . $i]['name'] . '` ' . $this->creatorTranslateType($_SESSION['cf']['creator']['field']['i' . $i]['type']) . ' NOT NULL';
             }
             $primary .= ')';
             parent::db()->execute('insert into `customform`(`name`, `fields`) values("' . $name . '", "' . $fields . '");');
@@ -1442,7 +1442,7 @@
                 $data = parent::db()->fetchAll($sql);
                 foreach($data as $item) {
                     if (UrlUtils::toValidUrl($item[$fieldName]) == $value) {
-                        self::setRowId($item['id']);
+                        $this->setRowId($item['id']);
                         return $value;
                     }
                 }

@@ -24,7 +24,7 @@ class PagePropertyDao extends AbstractDao {
 	
 	
 	public function getPage($pageId) {
-		return parent::getList(Select::factory(self::dataAccess())->where('page_id', '=', $pageId));
+		return parent::getList(Select::factory($this->dataAccess())->where('page_id', '=', $pageId));
 	}
 }
 

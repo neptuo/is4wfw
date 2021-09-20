@@ -141,7 +141,7 @@
         }
 
         private function inGroup($groupName) {
-            $groups = self::getGroups();
+            $groups = $this->getGroups();
             foreach ($groups as $assignedGroup) {
                 if ($groupName == $assignedGroup["name"]) {
                     return true;
@@ -162,7 +162,7 @@
          *
          */
         public function showLoginForm($group, $pageId, $autoLoginUser = false, $autoLoginPasswd = false) {
-            if (!self::isLogged()) {
+            if (!$this->isLogged()) {
                 if ($_POST['login'] != "Log in" && !array_key_exists('auto-login-ignore', $_REQUEST) && $autoLoginUser != false && $autoLoginPasswd != false) {
                     $_POST['username'] = $autoLoginUser;
                     $_POST['password'] = $autoLoginPasswd;
@@ -171,7 +171,7 @@
 
                 $message = "";
                 if ($_POST['login'] == "Log in") {
-                    $message = self::loginPrivate($group, $_POST['username'], $_POST['password']);
+                    $message = $this->loginPrivate($group, $_POST['username'], $_POST['password']);
                     if ($message === true) {
                         parent::web()->redirectTo($pageId);
                     }
@@ -276,7 +276,7 @@
          *          
          */
         public function showLogoutForm($group, $pageId) {
-            if (!self::refreshPrivate($group)) {
+            if (!$this->refreshPrivate($group)) {
                 parent::web()->redirectTo($pageId);
             }
 
@@ -309,7 +309,7 @@
         }
 
         public function refresh($template, $group) {
-            if (!self::refreshPrivate($group)) {
+            if (!$this->refreshPrivate($group)) {
                 $template();
             }
         }
@@ -358,7 +358,7 @@
             if ($all != "") {
                 $all = explode(",", $all);
                 foreach ($all as $group) {
-                    if (!self::inGroup($group)) {
+                    if (!$this->inGroup($group)) {
                         return "";
                     }
                 }
@@ -369,7 +369,7 @@
             if ($any != "") {
                 $any = explode(",", $any);
                 foreach ($any as $group) {
-                    if (self::inGroup($group)) {
+                    if ($this->inGroup($group)) {
                         return $template();
                     }
                 }
@@ -380,7 +380,7 @@
             if ($none != "") {
                 $none = explode(",", $none);
                 foreach ($none as $group) {
-                    if (self::inGroup($group)) {
+                    if ($this->inGroup($group)) {
                         return "";
                     }
                 }
@@ -396,7 +396,7 @@
          *
          */
         public function loggedUserInfo($field = '') {
-            if (self::isLogged()) {
+            if ($this->isLogged()) {
                 $login = $this->UserLogin . '@' . $_SERVER['HTTP_HOST'];
 
                 if ($field == "name") {
@@ -426,7 +426,7 @@
          *
          */
         public function redirectWhenLogged($pageId) {
-            if (self::isLogged()) {
+            if ($this->isLogged()) {
                 parent::web()->redirectTo($pageId);
             }
         }
@@ -441,7 +441,7 @@
          *     
          */
         public function redirectWhenNotLogged($pageId) {
-            if (!self::isLogged()) {
+            if (!$this->isLogged()) {
                 parent::web()->redirectTo($pageId);
             }
         }

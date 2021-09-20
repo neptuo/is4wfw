@@ -31,7 +31,7 @@
         private $BundleLang = 'cs';
 
         public function __construct() {
-            self::setLocalizationBundle('article');
+            $this->setLocalizationBundle('article');
         }
         
         protected function canUser($objectId, $rightType) {
@@ -77,7 +77,7 @@
             $return = '';
             $detail = false;
             $link = "";
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($lineId == '') {
                 if (parent::request()->exists('line-url')) {
@@ -126,7 +126,7 @@
             $pageSize = 0;
             if($pageable) {
                 $pageSize = $limit;
-                $limit = ' limit ' . (self::getArticlePage() * $limit).', '.$limit;
+                $limit = ' limit ' . ($this->getArticlePage() * $limit).', '.$limit;
             } elseif ($limit != '') {
                 $limit = ' limit ' . $limit;
             }
@@ -162,20 +162,20 @@
             $fromWhere = "FROM `article_content` LEFT JOIN `article` ON `article_content`.`article_id` = `article`.`id` " . $labelsJoin . " WHERE `article`.`line_id` = " . $lineId . " AND `article_content`.`language_id` = " . $articleLangId . " " . $visible . $labelsWhere . " ORDER BY " . $sortBy . " " . $sort;
             
             $articles = $dbObject->fetchAll("SELECT distinct `article`.`id`, `article_content`.`name`, `article_content`.`url`, `article_content`.`head`, `article_content`.`content`, `article_content`.`author`, `article_content`.`timestamp`, `article_content`.`datetime`, `article`.`visible`, `article`.`directory_id` ".$fromWhere . $limit . ";");
-            if (count($articles) > 0 && self::canUser($lineId, WEB_R_READ)) {
+            if (count($articles) > 0 && $this->canUser($lineId, WEB_R_READ)) {
                 $flink = '';
                 parent::request()->set('line-url', $lineInfo['url']);
-                $articleOldId = self::getArticleId();
-                $articleDirectoryOldId = self::getArticleDirectoryId();
-                $lastArticleLanguageIdId = self::getArticleLanguageId();
+                $articleOldId = $this->getArticleId();
+                $articleDirectoryOldId = $this->getArticleDirectoryId();
+                $lastArticleLanguageIdId = $this->getArticleLanguageId();
                 foreach ($articles as $article) {
-                    self::setArticleId($article['id']);
-                    self::setIsActiveArticle($article['id'] == $articleOldId);
-                    self::setArticleDirectoryId($article['directory_id']);
-                    self::setHasHead(strlen($article['head']) > 0);
-                    self::setHasContent(strlen($article['content']) > 0);
-                    self::setIsExternalUrl(strpos($article['url'], '://') !== false);
-                    self::setArticleLanguageId($articleLangId);
+                    $this->setArticleId($article['id']);
+                    $this->setIsActiveArticle($article['id'] == $articleOldId);
+                    $this->setArticleDirectoryId($article['directory_id']);
+                    $this->setHasHead(strlen($article['head']) > 0);
+                    $this->setHasContent(strlen($article['content']) > 0);
+                    $this->setIsExternalUrl(strpos($article['url'], '://') !== false);
+                    $this->setArticleLanguageId($articleLangId);
                     parent::request()->set('id', $article['id'], 'current-article');
                     parent::request()->set('date', $article['timestamp'], 'current-article');
                     parent::request()->set('time', $article['timestamp'], 'current-article');
@@ -186,7 +186,7 @@
                     parent::request()->set('content', $article['content'], 'current-article');
                     parent::request()->set('visible', $rb->get('articles.visible.' . $article['visible']), 'current-article');
 
-                    self::setUrl($article['url']);
+                    $this->setUrl($article['url']);
                     if ($detail) {
                         if ($method == "static") {
                             $flink = $link . '?article-id=' . $article['id'];
@@ -201,12 +201,12 @@
                 }
                 if($pageable) {
                     $total = parent::db()->fetchSingle('select count(`article`.`id`) as `id` '.$fromWhere.';');
-                    $return .= self::getPaging($total['id'], $pageSize, self::getArticlePage(), $pageId, $pageLangId);
+                    $return .= $this->getPaging($total['id'], $pageSize, $this->getArticlePage(), $pageId, $pageLangId);
                 }
                 
-                self::setArticleId($articleOldId);
-                self::setArticleDirectoryId($articleDirectoryOldId);
-                self::setArticleLanguageId($lastArticleLanguageIdId);
+                $this->setArticleId($articleOldId);
+                $this->setArticleDirectoryId($articleDirectoryOldId);
+                $this->setArticleLanguageId($lastArticleLanguageIdId);
                 unset($_SESSION['article-id']);
                 unset($_SESSION['current-article']);
             } else {
@@ -240,9 +240,9 @@
             $url = parent::web()->composeUrl($pageId, $pageLangId);
             for($i = 0; $i < $pages; $i ++) {
                 if($i != 0) {
-                    $return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . UrlUtils::addParameter($url, 'article-page', $i + 1) . '">['.($i + 1).']</a> ';
+                    $return .= '<a class="'.($i == $this->getArticlePage() ? 'current' : '').'" href="' . UrlUtils::addParameter($url, 'article-page', $i + 1) . '">['.($i + 1).']</a> ';
                 } else {
-                    $return .= '<a class="'.($i == self::getArticlePage() ? 'current' : '').'" href="' . UrlUtils::removeParameter($url, 'article-page') . '">['.($i + 1).']</a> ';
+                    $return .= '<a class="'.($i == $this->getArticlePage() ? 'current' : '').'" href="' . UrlUtils::removeParameter($url, 'article-page') . '">['.($i + 1).']</a> ';
                 }
             }
             
@@ -363,7 +363,7 @@
             global $loginObject;
             $langId = $webObject->LanguageId;
             $return = '';
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $articleLangId = ($articleLangId != false) ? $articleLangId : $webObject->LanguageId;
 
@@ -376,8 +376,8 @@
                     $articleId = $defaultArticleId;
                 } elseif ($this->CurrentId != 0) {
                     $articleId = $this->CurrentId;
-                } elseif (self::getUrl() != '') {
-                    $url = self::getUrl();
+                } elseif ($this->getUrl() != '') {
+                    $url = $this->getUrl();
                     $sql = 'select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "' . $url . '"' . ($lineId != 0 && is_numeric($lineId) ? ' and `line_id` = ' . $lineId : '') . ';';
                     $arid = parent::db()->fetchAll($sql);
                     if (count($arid) == 1) {
@@ -402,13 +402,13 @@
 
             $article = $dbObject->fetchAll("SELECT `name`, `keywords`, `head`, `content`, `author`, `timestamp`, `datetime`, `article`.`directory_id` FROM `article_content` JOIN `article` ON `article_content`.`article_id` = `article`.`id` WHERE `article_id` = " . $articleId . " AND `language_id` = " . $articleLangId . ";");
             if (count($article) == 1) {
-                $lastDirectoryId = self::getArticleDirectoryId();
-                $lastArticleLanguageId = self::getArticleLanguageId();
-                self::setArticleDirectoryId($article[0]['directory_id']);
-                self::setArticleLanguageId($articleLangId);
-                self::setHasHead(strlen($article[0]['head']) > 0);
-                self::setHasContent(strlen($article[0]['content']) > 0);
-                self::setIsExternalUrl(strpos($article[0]['url'], '://') !== false);
+                $lastDirectoryId = $this->getArticleDirectoryId();
+                $lastArticleLanguageId = $this->getArticleLanguageId();
+                $this->setArticleDirectoryId($article[0]['directory_id']);
+                $this->setArticleLanguageId($articleLangId);
+                $this->setHasHead(strlen($article[0]['head']) > 0);
+                $this->setHasContent(strlen($article[0]['content']) > 0);
+                $this->setIsExternalUrl(strpos($article[0]['url'], '://') !== false);
 
                 parent::request()->set('id', $articleId, 'current-article');
                 parent::request()->set('directoryid', $article[0]['directory_id'], 'current-article');
@@ -422,10 +422,10 @@
                 parent::request()->set('content', $article[0]['content'], 'current-article');
 
                 $return .= $template();
-                $return .= self::nextPrevNavigation($articleId, $lineId, $webObject->getPageId(), $nextLinkText, $prevLinkText);
+                $return .= $this->nextPrevNavigation($articleId, $lineId, $webObject->getPageId(), $nextLinkText, $prevLinkText);
                 
-                self::setArticleDirectoryId($lastDirectoryId);
-                self::setArticleLanguageId($lastArticleLanguageId);
+                $this->setArticleDirectoryId($lastDirectoryId);
+                $this->setArticleLanguageId($lastArticleLanguageId);
             } else {
                 $return .= '<div class="no-article">' . $rb->get('articles.notselected') . '</div>';
             }
@@ -436,7 +436,7 @@
             
             $result = '';
             if(($nextLinkText != '' || $prevLinkText != '') && $lineId != 0) {
-                $oldId = self::getArticleId();
+                $oldId = $this->getArticleId();
                 $prevId = 0;
                 $nextId = 0;
                 
@@ -453,11 +453,11 @@
                 }
                 //echo $articleId.'>'.$prevId.'--'.$nextId;
                 
-                self::setArticleId($prevId);
-                self::setIsActiveArticle($prevId == $oldId);
+                $this->setArticleId($prevId);
+                $this->setIsActiveArticle($prevId == $oldId);
                 $prevUrl = parent::web()->composeUrl($pageId);
-                self::setArticleId($nextId);
-                self::setIsActiveArticle($nextId == $oldId);
+                $this->setArticleId($nextId);
+                $this->setIsActiveArticle($nextId == $oldId);
                 $nextUrl = parent::web()->composeUrl($pageId);
                 
                 $result .= ''
@@ -467,7 +467,7 @@
                     .'<div class="clear"></div>'
                 .'</div>';
                 
-                self::setArticleId($oldId);
+                $this->setArticleId($oldId);
             }
             return $result;
         }
@@ -527,7 +527,7 @@
                 $sortBy = '`all`.' . $sortBy;
             }
 
-            $oldLabelId = self::getLabelId();
+            $oldLabelId = $this->getLabelId();
 
             $labels = parent::db()->fetchAll('SELECT' . $columnSql . ' FROM `article_label` AS al' . $joinSql . $whereSql . ' ORDER BY ' . $sortBy . ' ' . $sort . ' ' . $limit . ';');
             if (count($labels) > 0) {
@@ -544,8 +544,8 @@
 
                     parent::request()->set('i', $i, 'current-label');
                     parent::request()->set('label', $item, 'current-label');
-                    self::setIsActiveLabel($label['id'] == $oldLabelId);
-                    self::setLabelId($item['id']);
+                    $this->setIsActiveLabel($label['id'] == $oldLabelId);
+                    $this->setLabelId($item['id']);
                     $return .= $template();
                     $i++;
                 }
@@ -555,7 +555,7 @@
                 }
             }
 
-            self::setLabelId($oldLabelId);
+            $this->setLabelId($oldLabelId);
             return $return;
         }
 
@@ -608,7 +608,7 @@
             if (count($file) == 1 && $cdp == $id[0]) {
                 $this->CurrentId = $id[0];
                 $_SESSION['article']['current_id'] = $id[0];
-                self::setArticleId($id[0]);
+                $this->setArticleId($id[0]);
                 return $cdp;
             } else {
                 return 'false.false';
@@ -633,7 +633,7 @@
             global $webObject;
             $return = '';
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($detailPageId != false) {
                 $actionUrl = $webObject->composeUrl($detailPageId);
@@ -649,7 +649,7 @@
                 }
             }
 
-            if(!self::canUser($lineId, WEB_R_WRITE)) {
+            if(!$this->canUser($lineId, WEB_R_WRITE)) {
                 $return .= parent::getError(parent::rb('articles.selectline'));
                 if ($useFrames != "false") {
                     return parent::getFrame($rb->get('articles.inlinetitle'), $return, '');
@@ -779,7 +779,7 @@
                 $options = '';
                 foreach($labels as $label) {
                     $options .= ''
-                        .'<input type="checkbox" name="label-filter['.$label['id'].']" id="label-filter-'.$label['id'].'"'.(self::isLabelFiltered($label['id']) ? ' checked="checked"' : '').' />'
+                        .'<input type="checkbox" name="label-filter['.$label['id'].']" id="label-filter-'.$label['id'].'"'.($this->isLabelFiltered($label['id']) ? ' checked="checked"' : '').' />'
                         .'<label for="label-filter-'.$label['id'].'">'.$label['name'].'</label>';
                 }
             
@@ -799,12 +799,12 @@
                 $sql = 'SELECT `id` FROM `article` WHERE `line_id` = ' . $lineId;
                 $countSql = 'SELECT count(`id`) as `id` FROM `article` WHERE `line_id` = ' . $lineId . ' order by `order` desc';
             } else {
-                $sql = 'SELECT `id` FROM `article` left join `article_attached_label` on `article`.`id` = `article_attached_label`.`article_id` WHERE `line_id` = ' . $lineId . ' and `label_id` in ('.self::filteredLabelsSql().')';
-                $countSql = 'SELECT count(`id`) as `id` FROM `article` left join `article_attached_label` on `article`.`id` = `article_attached_label`.`article_id` WHERE `line_id` = ' . $lineId . ' and `label_id` in ('.self::filteredLabelsSql().') order by `order` desc';
+                $sql = 'SELECT `id` FROM `article` left join `article_attached_label` on `article`.`id` = `article_attached_label`.`article_id` WHERE `line_id` = ' . $lineId . ' and `label_id` in ('.$this->filteredLabelsSql().')';
+                $countSql = 'SELECT count(`id`) as `id` FROM `article` left join `article_attached_label` on `article`.`id` = `article_attached_label`.`article_id` WHERE `line_id` = ' . $lineId . ' and `label_id` in ('.$this->filteredLabelsSql().') order by `order` desc';
             }
             
             
-            $articles = $dbObject->fetchAll($sql . " order by `order` desc".($pageable ? ' limit '.(self::getArticlePage() * self::getArticlePageSize()).','.self::getArticlePageSize() : '').";");
+            $articles = $dbObject->fetchAll($sql . " order by `order` desc".($pageable ? ' limit '.($this->getArticlePage() * $this->getArticlePageSize()).','.$this->getArticlePageSize() : '').";");
             if (count($articles) > 0) {
                 $returnTmp .= ''
                     . '<table class="article-mgm-table">'
@@ -894,7 +894,7 @@
             
             if($pageable) {
                 $total = $dbObject->fetchSingle($countSql);
-                $paging = self::getPaging($total['id'], self::getArticlePageSize(), self::getArticlePage(), $_SERVER['REQUEST_URI'], 0);
+                $paging = $this->getPaging($total['id'], $this->getArticlePageSize(), $this->getArticlePage(), $_SERVER['REQUEST_URI'], 0);
                 
                 if(strlen($paging) > 0) {
                     $returnTmp .= '<div class="gray-box">' . $paging . '</div>';
@@ -902,7 +902,7 @@
             }
 
             if ($newArticleButton == 'true') {
-                $returnTmp .= self::createArticle($lineId, $detailPageId, $method, "false", false);
+                $returnTmp .= $this->createArticle($lineId, $detailPageId, $method, "false", false);
             }
 
             if ($useFrames != "false") {
@@ -964,7 +964,7 @@
             global $webObject;
             $return = '';
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($lineId == false) {
                 if ($method == "get" || $method == "post") {
@@ -990,7 +990,7 @@
                 return;
             }
 
-            if (self::canUser($lineId, WEB_R_WRITE)) {
+            if ($this->canUser($lineId, WEB_R_WRITE)) {
                 $return .= ''
                 . '<div class="article-new gray-box">'
                     . '<form name="article-new" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
@@ -1032,12 +1032,12 @@
             global $loginObject;
             $return = '';
             $actionUrl = '';
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($_POST['article-line-delete'] == $rb->get('lines.delete')) {
                 $lineId = $_POST['delete-line-id'];
                 // test na prava pro delete!
-                if (self::canUser($lineId, WEB_R_DELETE)) {
+                if ($this->canUser($lineId, WEB_R_DELETE)) {
                     $pages = $dbObject->fetchAll('SELECT `id` FROM `article` WHERE `line_id` = ' . $lineId . ';');
                     if (count($pages) == 0) {
                         $dbObject->execute('DELETE FROM `article_line_right` WHERE `line_id` = ' . $lineId . ';');
@@ -1056,7 +1056,7 @@
                 $actionUrl = $webObject->composeUrl($detailPageId);
             }
 
-            $lines = self::getLinesWithWriteRight();
+            $lines = $this->getLinesWithWriteRight();
             if (count($lines) > 0) {
                 $return .= ''
                         . '<div class="show-lines standart clickable"> '
@@ -1112,7 +1112,7 @@
             if ($newLineButton == 'true') {
                 $return .= ''
                         . '<hr />'
-                        . self::createLine($detailPageId, "false");
+                        . $this->createLine($detailPageId, "false");
             }
 
             if ($useFrames != "false") {
@@ -1137,12 +1137,12 @@
             global $dbObject;
             global $loginObject;
             $return = '';
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($_POST['select-article-line'] == $rb->get('lines.select')) {
                 $lineId = $_POST['line-id'];
                 // test na prava pro zapis do rady clanku.
-                if (self::canUser($lineId, WEB_R_WRITE)) {
+                if ($this->canUser($lineId, WEB_R_WRITE)) {
                     if ($method == 'session') {
                         $_SESSION['article-line-id'] = $lineId;
                     }
@@ -1210,7 +1210,7 @@
             global $webObject;
             $return = '';
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($detailPageId != false) {
                 $actionUrl = $webObject->composeUrl($detailPageId);
@@ -1247,7 +1247,7 @@
             $article = array();
             $articleContent = array();
             $usedLangs = array();
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $isClosing = $_POST['article-save-close'] == $rb->get('articles.saveandclose') || $_POST['article-close'] == $rb->get('articles.close');
             $hasCustomForm = $customFormId != '' && $customFormTemplateId != '';
@@ -1300,9 +1300,9 @@
                 $urls = parent::db()->fetchAll('select `article_id` from `article_content` left join `article` on `article_content`.`article_id` = `article`.`id` where `url` = "' . $articleContent['url'] . '" and `line_id` = ' . $article['line_id'] . $idSql . $langId . ';');
                 if (count($urls) == 0 || (count($urls) == 1 && $urls[0]['article_id'] == $article['id'])) {
                     $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $article['line_id'] . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
-                    if (self::canUser($article['line_id'], WEB_R_WRITE)) {
+                    if ($this->canUser($article['line_id'], WEB_R_WRITE)) {
                         $permission = $dbObject->fetchAll('SELECT `value` FROM `article_line_right` LEFT JOIN `group` ON `article_line_right`.`gid` = `group`.`gid` WHERE `article_line_right`.`line_id` = ' . $articleContent['line_old_id'] . ' AND `article_line_right`.`type` = ' . WEB_R_WRITE . ' ORDER BY `value` DESC;');
-                        if (self::canUser($articleContent['line_old_id'], WEB_R_WRITE)) {
+                        if ($this->canUser($articleContent['line_old_id'], WEB_R_WRITE)) {
                             if ($articleContent['language_old_id'] == "") {
                                 $artc = array();
                             } else {
@@ -1569,12 +1569,12 @@
                 $return .= ''
                         . '<div id="editors" class="editors edit-area-editors">'
                         . '<div id="editors-tab" class="editors-tab"></div>'
-                        . ((self::getGroupPermCached('Article.Head')) ? ''
+                        . (($this->getGroupPermCached('Article.Head')) ? ''
                         . '<div id="cover-article-head">'
                         . '<label for="article-head">' . $rb->get('articles.head2') . ':</label>'
                         . '<textarea id="article-head" class="edit-area html" name="article-head" rows="' . ($editAreaHeadRows > 0 ? $editAreaHeadRows : 10) . '">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $article['head']))) . '</textarea>'
                         . '</div>' : '')
-                        . ((self::getGroupPermCached('Article.Content')) ? ''
+                        . (($this->getGroupPermCached('Article.Content')) ? ''
                         . '<div id="cover-article-content">'
                             . '<label for="article-content">' . $rb->get('articles.content2') . ':</label>'
                             . '<textarea id="article-content" class="edit-area html" name="article-content" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . str_replace("<", "&lt;", str_replace(">", "&gt;", str_replace("&", "&amp;", $article['content']))) . '</textarea>'
@@ -1582,7 +1582,7 @@
                         . '</div>';
             } elseif (($propertyEditors == 'tiny')) {
                 $return .= ''
-                        . ((self::getGroupPermCached('Article.Head')) ? ''
+                        . (($this->getGroupPermCached('Article.Head')) ? ''
                         . '<div class="article-head">'
                         . '<label for="article-head">' . $rb->get('articles.head2') . ':</label> '
                         . '<div class="editor-cover">'
@@ -1592,7 +1592,7 @@
                         . '<div class="clear"></div>'
                         . '</div>'
                         . '</div>' : '')
-                        . ((self::getGroupPermCached('Article.Content')) ? ''
+                        . (($this->getGroupPermCached('Article.Content')) ? ''
                         . '<div class="article-content">'
                         . '<label for="article-content">' . $rb->get('articles.content2') . ':</label> '
                         . '<div class="editor-cover">'
@@ -1604,11 +1604,11 @@
                         . '</div>' : '');
 
                 $js = parent::autolib('js');
-                $return .= $js->tinyMce("article-head", self::web()->LanguageName);
-                $return .= $js->tinyMce("article-content", self::web()->LanguageName);
+                $return .= $js->tinyMce("article-head", $this->web()->LanguageName);
+                $return .= $js->tinyMce("article-content", $this->web()->LanguageName);
             } else {
                 $return .= ''
-                        . ((self::getGroupPermCached('Article.Head')) ? ''
+                        . (($this->getGroupPermCached('Article.Head')) ? ''
                         . '<div class="article-head">'
                         . '<label for="article-head">' . $rb->get('articles.head2') . ':</label> '
                         . '<div class="editor-cover">'
@@ -1619,7 +1619,7 @@
                         . '</div>'
                         . '</div>'
                         : '')
-                        . ((self::getGroupPermCached('Article.Content')) ? ''
+                        . (($this->getGroupPermCached('Article.Content')) ? ''
                         . '<div class="article-content">'
                         . '<label for="article-content">' . $rb->get('articles.content2') . ':</label> '
                         . '<div class="editor-cover">'
@@ -1681,11 +1681,11 @@
             $return = '';
             $ok = true;
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $lineId = ((array_key_exists('edit-line-id', $_POST)) ? $_POST['edit-line-id'] : 0);
             // test na prava zapisu do rady clanku
-            if (self::canUser($lineId, WEB_R_WRITE)) {
+            if ($this->canUser($lineId, WEB_R_WRITE)) {
                 $ok = true;
             } else {
                 if($lineId != 0) {
@@ -1927,7 +1927,7 @@
         public function showEditLabels($useFrames = false) {
             $return = '';
             $actionUrl = $_SERVER['REQUEST_URI'];
-            $rb = self::rb();
+            $rb = $this->rb();
 
             $labels = parent::db()->fetchAll('select `id`, `name`, `url`, `order` from `article_label` order by `order`;');
 
@@ -1994,7 +1994,7 @@
             $actionUrl = $_SERVER['REQUEST_URI'];
             $label = array();
             $ok = true;
-            $rb = self::rb();
+            $rb = $this->rb();
 
             if ($_POST['label-edit-save'] == $rb->get('label.save')) {
                 $label['id'] = $_POST['label-edit-id'];
@@ -2097,7 +2097,7 @@
                         . '</div>';
                 }
                 
-                $lines = self::getLinesWithWriteRight();
+                $lines = $this->getLinesWithWriteRight();
                 $lineList = '';
                 foreach ($lines as $line) {
                     $used = false;
@@ -2230,7 +2230,7 @@
         
         public function setArticleLanguageId($value) {
             parent::request()->set('article-language-id', $value);
-            return $labelId;
+            return $value;
         }
 
         public function getArticleLanguageId() {
@@ -2241,7 +2241,7 @@
             if (strpos($url, '://') === false) {
                 $article = parent::db()->fetchSingle('select `article_id` from `article_content` where `url` = "' . $url . '";');
                 if ($article != array()) {
-                    self::setArticleId($article['article_id']);
+                    $this->setArticleId($article['article_id']);
                     parent::request()->set('article-url', $url);
                     return $url;
                 } else {
@@ -2251,11 +2251,11 @@
         }
 
         public function getUrl() {
-            if (!self::getArticleId()) {
+            if (!$this->getArticleId()) {
                 return 'false.false';
             }
 
-            $article = parent::db()->fetchSingle('select `url` from `article_content` where `article_id` = ' . self::getArticleId() . ';');
+            $article = parent::db()->fetchSingle('select `url` from `article_content` where `article_id` = ' . $this->getArticleId() . ';');
             $url = $article['url'];
             return $url;
         }
@@ -2319,14 +2319,14 @@
             if(!is_null($languageId)) {
                 $label = parent::db()->fetchSingle('select `label_id` as `id` from `article_label_language` where `url` = "' . $url . '" and `language_id` = ' . $languageId . ';');
                 if ($label != array()) {
-                    self::setLabelId($label['id']);
+                    $this->setLabelId($label['id']);
                     return $url;
                 }
             }
 
             $label = parent::db()->fetchSingle('select `id` from `article_label` where `url` = "' . $url . '" and not exists(select * from `article_label_language` where `label_id` = `label_id` and `language_id` = ' . parent::web()->LanguageId . ');');
             if ($label != array()) {
-                self::setLabelId($label['id']);
+                $this->setLabelId($label['id']);
                 return $url;
             }
 
@@ -2334,12 +2334,12 @@
         }
 
         public function getLabelUrl() {
-            $label = parent::db()->fetchSingle('select `url` from `article_label_language` where `label_id` = "' . self::getLabelId() . '" and `language_id` = ' . parent::web()->LanguageId . ';');
+            $label = parent::db()->fetchSingle('select `url` from `article_label_language` where `label_id` = "' . $this->getLabelId() . '" and `language_id` = ' . parent::web()->LanguageId . ';');
             if ($label != array()) {
                 return $label['url'];
             }
 
-            $label = parent::db()->fetchSingle('select `url` from `article_label` where `id` = "' . self::getLabelId() . '";');
+            $label = parent::db()->fetchSingle('select `url` from `article_label` where `id` = "' . $this->getLabelId() . '";');
             return $label['url'];
         }
 

@@ -34,11 +34,11 @@ abstract class AbstractDao {
 	 * @param object - objekt vkládaný do db
 	 */
 	protected function insertSql($object){
-		$fields = self::arrayToString(array_keys($object));
-		$values = self::arrayToString($object, true);
+		$fields = $this->arrayToString(array_keys($object));
+		$values = $this->arrayToString($object, true);
 		$pom = array($this->getDatabase(), $this->getTableName(), $fields, $values);
 		
-		return self::setString($this->insertSQL, $pom);
+		return $this->setString($this->insertSQL, $pom);
 	}
 	
 	/*
@@ -61,7 +61,7 @@ abstract class AbstractDao {
 			}
 		}
 		$param = array($this->getDatabase(), $this->getTableName(), $set, $this->getIdField(), $this->dataAccess->escape($object[$this->getIdField()]));
-		return self::setString($this->updateSQL, $param);
+		return $this->setString($this->updateSQL, $param);
 	}
 	
 	/*
@@ -71,7 +71,7 @@ abstract class AbstractDao {
 	 */
 	protected function deleteSql($id){
 		$param = array($this->getDatabase(), $this->getTableName(), $this->getIdField(), $this->dataAccess->escape($id));
-		return self::setString($this->deleteSQL, $param);
+		return $this->setString($this->deleteSQL, $param);
 	}
 	
 	/*
@@ -87,7 +87,7 @@ abstract class AbstractDao {
 			} else {
 				$params = array('`'.$this->getTableAlias().'`.*', $this->getDatabase(), $this->getTableName(), $this->getTableAlias());
 			}
-			$return = self::setString($this->selectSQL, $params);	
+			$return = $this->setString($this->selectSQL, $params);	
 		} else {
 			if ($distinct == true){
 				$fieldsString = "DISTINCT ";
@@ -102,7 +102,7 @@ abstract class AbstractDao {
 				}
 				
 				$params = array($fieldsString, $this->getDatabase(), $this->getTableName(), $this->getTableAlias());
-				$return = self::setString($this->selectSQL, $params); 
+				$return = $this->setString($this->selectSQL, $params); 
 			}
 		}		 
 		
@@ -119,7 +119,7 @@ abstract class AbstractDao {
 
 	protected function countSql($select = null) {
 		$params = array($this->getDatabase(), $this->getTableName(), $this->getTableAlias());
-		$return = self::setString($this->countSQL, $params); 
+		$return = $this->setString($this->countSQL, $params); 
 		
 		if ($select == null){
 			return $return . ";";
@@ -163,17 +163,17 @@ abstract class AbstractDao {
 	}
 	
 	public function select($selectObject = null, $distinct = false, $fields = null) {
-		$sql = self::selectSql(self::selectObjectToResult($selectObject), $distinct, $fields);
+		$sql = $this->selectSql($this->selectObjectToResult($selectObject), $distinct, $fields);
 		return $this->dataAccess->fetchAll($sql);
 	}
 	
 	public function selectSingle($selectObject = null, $distinct = false, $fields = null) {
-		$sql = self::selectSql(self::selectObjectToResult($selectObject), $distinct, $fields);
+		$sql = $this->selectSql($this->selectObjectToResult($selectObject), $distinct, $fields);
 		return $this->dataAccess->fetchSingle($sql);
 	}
 	
 	public function get($id) {
-		$select = self::createSelect();
+		$select = $this->createSelect();
 		$select->tableAlias($this->getTableAlias());
 		$idField = $this->getIdField();
 		if(is_array($idField)) {
@@ -190,23 +190,23 @@ abstract class AbstractDao {
 			$select->where($this->getIdField(), '=', $id);
 		}
 		
-		$sql = self::selectSql($select->result(), true);
+		$sql = $this->selectSql($select->result(), true);
 		return $this->dataAccess->fetchSingle($sql);
 	}
 	
 	public function getList($selectObject = null, $distinct = false) {
-		$sql = self::selectSql(self::selectObjectToResult($selectObject), $distinct);
+		$sql = $this->selectSql($this->selectObjectToResult($selectObject), $distinct);
 		return $this->dataAccess->fetchAll($sql);
 	}
 
 	public function count($selectObject = null) {
-		$sql = self::countSql(self::selectObjectToResult($selectObject));
+		$sql = $this->countSql($this->selectObjectToResult($selectObject));
 		$data = $this->dataAccess->fetchSingle($sql);
 		return $data['count'];
 	}
 
 	public function exists($selectObject = null) {
-		return self::count($selectObject) > 0;
+		return $this->count($selectObject) > 0;
 	}
 	
 	public function setDataAccess($dataAccess) {
@@ -223,9 +223,9 @@ abstract class AbstractDao {
 	
 	public function getLastId() {
 		$sql = 'select max(`'.$this->getIdField().'`) as `'.$this->getIdField().'` from `'.$this->getTableName().'`;';
-		self::dataAccess()->disableCache();
-		$result = self::dataAccess()->fetchSingle($sql);
-		self::dataAccess()->enableCache();
+		$this->dataAccess()->disableCache();
+		$result = $this->dataAccess()->fetchSingle($sql);
+		$this->dataAccess()->enableCache();
 		return $result[$this->getIdField()];
 	}
   
