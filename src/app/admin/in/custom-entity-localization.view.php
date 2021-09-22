@@ -1,6 +1,8 @@
 <v:template src="~/templates/in-template.view">
 	<web:a pageId="~/in/custom-entities.view" text="&laquo; Custom Entities" />
-	<web:frame title="query:table">
+	
+	<utils:concat output="title" value1="Custom Entity Localization" value2=" :: " value3="query:table" />
+	<web:frame title="utils:title">
 		<edit:form submit="ced-localizable-save">
 			<ced:tableLocalizationEditor name="query:table" />
 		</edit:form>

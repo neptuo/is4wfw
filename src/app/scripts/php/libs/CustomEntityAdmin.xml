@@ -212,5 +212,57 @@
         Vrací zda hodnoty aktuálního sloupce při průchodu přes "ce:listTableColumns" jsou unikátní.
     </comment>
   </property>
+  <fulltag>
+    <name>listTableAudit</name>
+    <function>listTableAudit</function>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Název entity, pro kterou se má zobrazit audit.</comment>
+    </attribute>
+    <comment>
+      Vypíše audit vybrané uživatelké entity.
+    </comment>
+  </fulltag>
+  <property>
+    <name>listTableAudit</name>
+    <getFunction>getListTableAudit</getFunction>
+    <comment>
+      Vrací audit uvnitř "ced:listTableAudit".
+    </comment>
+  </property>
+  <property>
+    <name>tableAuditTimestamp</name>
+    <getFunction>getTableAuditTimestamp</getFunction>
+    <comment>
+        Vrací timestamp při průchodu "ced:listTableAudit".
+    </comment>
+  </property>
+  <property>
+    <name>tableAuditSql</name>
+    <getFunction>getTableAuditSql</getFunction>
+    <comment>
+        Vrací sql příkaz při průchodu "ced:listTableAudit".
+    </comment>
+  </property>
+  <fulltag>
+    <name>tableAuditSql</name>
+    <function>tableAuditSql</function>
+    <attribute>
+      <name>name</name>
+      <required />
+      <type>string</type>
+      <comment>Název entity, pro kterou se má zobrazit audit.</comment>
+    </attribute>
+    <attribute>
+      <name>timestamp</name>
+      <type>string</type>
+      <comment>Začátek datumu (včetně), od kdy se mají zahrnout audit záznamy.</comment>
+    </attribute>
+    <comment>
+      Vygeneruje SQL pro audit entity "name", případně od datumu "timestamp".
+    </comment>
+  </fulltag>
 </taglib>
 

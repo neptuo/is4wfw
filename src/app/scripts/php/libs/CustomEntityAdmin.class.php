@@ -630,6 +630,76 @@
         public function getTableEngines() {
             return $this->tableEngines;
         }
+
+        public function listTableAudit($template, $name) {
+            $xml = $this->getDefinition($name);
+            if ($xml == null) {
+                return;
+            }
+            
+			$model = new ListModel();
+			$this->pushListModel($model);
+
+            $sql = $this->sql()->select("custom_entity_audit", ["timestamp", "sql"], ["entity" => $name]);
+            $data = $this->dataAccess()->fetchAll($sql);
+            
+            $model->render();
+            $model->items($data);
+
+            $result = $template();
+            
+			$this->popListModel();
+			return $result;
+        }
+
+        public function getListTableAudit() {
+			return $this->peekListModel();
+        }
+
+        public function getTableAuditTimestamp() {
+            return $this->peekListModel()->field("timestamp");
+        }
+
+        public function getTableAuditSql() {
+			if ($this->hasListModel()) {
+                return $this->peekListModel()->field("sql");
+            }
+
+            return $this->tableAuditSql;
+        }
+
+        private $tableAuditSql = "";
+
+        public function tableAuditSql($template, $name, $timestamp) {
+            $xml = $this->getDefinition($name);
+            if ($xml == null) {
+                return;
+            }
+            
+            $da = $this->dataAccess();
+            $sql = $this->sql()->select("custom_entity_audit", ["sql"], "`entity` = '" . $da->escape($name) . "'" . (!empty($timestamp) ? " AND `timestamp` >= " . $da->escape($timestamp) : ""));
+            $data = $da->fetchAll($sql);
+
+            $xml = $xml->asXml();
+            $data[] = ["sql" => $this->sql()->insertOrUpdate("custom_entity", ["name" => $name, "definition" => $xml], ["definition"])];
+
+            $result = "";
+            foreach ($data as $item) {
+                if (!empty($result)) {
+                    $result .= PHP_EOL;
+                }
+
+                $result .= $item["sql"];
+            }
+
+            $old = $this->tableAuditSql;
+            $this->tableAuditSql = $result;
+
+            $result = $template();
+
+            $this->tableAuditSql = $old;
+            return $result;
+        }
 	}
 
 ?>

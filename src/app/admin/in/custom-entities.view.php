@@ -58,6 +58,9 @@
 						<web:a pageId="~/in/custom-entity-localization.view" param-table="ced:tableName" class="image-button" title="Entity localized columns">
 							<img src="~/images/lang.png" />
 						</web:a>
+						<web:a pageId="~/in/custom-entity-audit.view" param-table="ced:tableName" class="image-button" title="Entity audit">
+							<img src="~/images/page_find.png" />
+						</web:a>
     					<admin:deleteButton hiddenField="delete" confirmValue="ced:tableName" hidden-table="ced:tableName" />
 					</ui:columnTemplate>
 				</ui:grid>
