@@ -677,20 +677,26 @@
             }
             
             $da = $this->dataAccess();
-            $sql = $this->sql()->select("custom_entity_audit", ["sql"], "`entity` = '" . $da->escape($name) . "'" . (!empty($timestamp) ? " AND `timestamp` >= " . $da->escape($timestamp) : ""));
+            $sql = $this->sql()->select("custom_entity_audit", ["sql", "timestamp"], "`entity` = '" . $da->escape($name) . "'" . (!empty($timestamp) ? " AND `timestamp` >= " . $da->escape($timestamp) : ""));
             $data = $da->fetchAll($sql);
-
-            $xml = $xml->asXml();
-            $data[] = ["sql" => $this->sql()->insertOrUpdate("custom_entity", ["name" => $name, "definition" => $xml], ["definition"])];
 
             $result = "";
             foreach ($data as $item) {
                 if (!empty($result)) {
                     $result .= PHP_EOL;
                 }
-
+                
                 $result .= $item["sql"];
+                $result .= PHP_EOL;
+                $result .= $this->getAuditSql($name, $item["sql"], $item["timestamp"]);
             }
+            
+            if (!empty($result)) {
+                $result .= PHP_EOL;
+            }
+
+            $xml = $xml->asXml();
+            $result .= $this->sql()->insertOrUpdate("custom_entity", ["name" => $name, "definition" => $xml], ["definition"]);
 
             $old = $this->tableAuditSql;
             $this->tableAuditSql = $result;
