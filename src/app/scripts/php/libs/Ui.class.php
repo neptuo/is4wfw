@@ -741,6 +741,29 @@
             }
         }
 
+        public function toTrimmedValue($template, $name) {
+            $model = parent::getEditModel();
+            if ($model->isRegistration()) {
+				$model->set($name, null, null);
+			}
+
+            if ($model->isSubmit()) {
+				$template();
+				$value = $model[$name];
+				$model[$name] = function() use ($value) { 
+					if (is_callable($value)) {
+						$value = $value();
+					}
+
+					return trim($value); 
+				};
+            }
+
+            if ($model->isRender()) {
+                return $template();
+            }
+        }
+
         public function toUrlValue($template, $name) {
             $model = parent::getEditModel();
             if ($model->isRegistration()) {

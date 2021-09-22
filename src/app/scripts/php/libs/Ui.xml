@@ -602,6 +602,18 @@
     </comment>
   </fulltag>
   <fulltag>
+    <name>toTrimmedValue</name>
+    <function>toTrimmedValue</function>
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název fieldu, do kterého se má vložit hodnota.</comment>
+    </attribute>
+    <comment>
+      Obaluje libovolný editační tag a hodnotu v něm ("name") ořízne o bílé znaky na krajích.
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>toUrlValue</name>
     <function>toUrlValue</function>
     <attribute>
