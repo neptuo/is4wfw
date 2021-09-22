@@ -10,7 +10,7 @@
 
         protected function ensureTableName($name, $model = null) {
             if ($model == null || !$model->hasMetadataKey("tableName")) {
-                if (!StringUtils::startsWith($name, $this->TablePrefix)) {
+                if (!StringUtils::startsWith($name, self::TablePrefix)) {
                     $tableName = self::TablePrefix . $name;
                     $sql = parent::sql()->select("custom_entity", array("name"), array("name" => $name));
                     $table = $this->dataAccess()->fetchAll($sql);

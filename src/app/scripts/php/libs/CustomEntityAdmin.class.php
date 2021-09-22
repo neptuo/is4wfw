@@ -82,7 +82,7 @@
             $xml = new SimpleXMLElement("<definition />");
             $name = $model["entity-name"];
             $engine = $model["entity-engine"];
-            $tableName = $this->TablePrefix . $name;
+            $tableName = self::TablePrefix . $name;
 
             $xml->engine = $engine;
             if ($model["entity-audit-log"]) {
