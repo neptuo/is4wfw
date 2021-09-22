@@ -123,7 +123,7 @@
             $insertSql = $this->sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"], "definition" => $xml->asXml()));
 
             try {
-                $this->executeSql($insertSql, $createSql);
+                $this->executeSql($insertSql, $this->getAuditSql($name, $createSql), $createSql);
             } catch(DataAccessException $e) {
                 return false;
             }
@@ -182,7 +182,7 @@
             $typeDefinition = $this->getTableColumnTypes($column);
             $dbType = $this->getTableColumnDbType($typeDefinition, $column);
 
-            $sql = array();
+            $ddlSql = array();
 
             if ($typeDefinition["hasColumn"]) {
                 $alterSql = "ALTER TABLE `$tableName` ADD COLUMN `" . $columnName . "` $dbType";
@@ -197,7 +197,7 @@
                 }
 
                 $alterSql .= ";";
-                $sql[] = $alterSql;
+                $ddlSql[] = $alterSql;
             }
 
             if ($columnType == "singlereference") {
@@ -206,7 +206,7 @@
                 $column->addChild("targetTable", $referenceTable);
                 $column->addChild("targetColumn", $referenceColumn);
 
-                $sql[] = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$columnName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
+                $ddlSql[] = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$columnName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
             } else if ($columnType == "multireference-jointable") {
                 $joinTable = $model["column-multireference-table"];
                 $targetColumn = $model["column-multireference-targetcolumn"];
@@ -226,19 +226,23 @@
                     $mappedColumnName = $model["column-multireference-primarykey" . ($i + 1) . "-column"];
                     $primaryKeysElements->addChild("mappedTo", $mappedColumnName);
                     
-                    $sql[] = "ALTER TABLE `$joinTable` ADD FOREIGN KEY (`$mappedColumnName`) REFERENCES `$tableName`(`$primaryKeyColumnName`)$cascade;";
+                    $ddlSql[] = "ALTER TABLE `$joinTable` ADD FOREIGN KEY (`$mappedColumnName`) REFERENCES `$tableName`(`$primaryKeyColumnName`)$cascade;";
                 }
             }
 
-            $sql[] = $this->getUpdateDefinitionSql($name, $xml);
+            $dmlSql = $this->getUpdateDefinitionSql($name, $xml);
             
             try {
-                $this->dataAccess()->transaction(function($da) use ($sql) {
-                    foreach ($sql as $item) {
+                $timestamp = time();
+                $this->dataAccess()->transaction(function($da) use ($ddlSql, $dmlSql, $name, $timestamp) {
+                    foreach ($ddlSql as $item) {
                         if (!empty($item)) {
+                            $da->execute($this->getAuditSql($name, $item, $timestamp));
                             $da->execute($item);
                         }
                     }
+
+                    $da->execute($dmlSql);
                 });
 
                 return true;
@@ -322,8 +326,10 @@
         public function tableDeleter($template, $name) {
             $tableName = $this->ensureTableName($name);
 
+            $deleteSql = "DROP TABLE `$tableName`;";
             $this->executeSql(
-                "DROP TABLE `$tableName`;", 
+                $deleteSql, 
+                $this->getAuditSql($name, $deleteSql),
                 $this->sql()->delete("custom_entity", array("name" => $name))
             );
             $template();
@@ -493,7 +499,7 @@
                 $alterSql = "ALTER TABLE `$tableName` DROP COLUMN `$columnName`;";
             }
 
-            $this->executeSql($updateSql, $alterSql);
+            $this->executeSql($updateSql, $this->getAuditSql($entityName, $alterSql), $alterSql);
             $template();
         }
 
@@ -579,8 +585,10 @@
                     }
                 }
 
-                $this->dataAccess()->transaction(function($da) use ($sql) {
+                $timestamp = time();
+                $this->dataAccess()->transaction(function($da) use ($sql, $name, $timestamp) {
                     foreach ($sql as $item) {
+                        $da->execute($this->getAuditSql($name, $item, $timestamp));
                         $da->execute($item);
                     }
                 });

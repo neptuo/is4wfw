@@ -73,6 +73,14 @@
             return $this->sql()->update("custom_entity", array("definition" => $xml->asXml()), array("name" => $name));
         }
 
+        protected function getAuditSql($name, $sql, $timestamp = 0) {
+            if ($timestamp == 0) {
+                $timestamp = time();
+            }
+
+            return $this->sql()->insert("custom_entity_audit", ["entity" => $name, "sql" => $sql, "timestamp" => $timestamp]);
+        }
+
         protected function findIdentityColumn($xml) {
             foreach ($xml->column as $column) {
                 if ($column->identity == TRUE) {
