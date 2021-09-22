@@ -68,7 +68,7 @@
         <hr />
     </div>
     <div class="gray-box">
-        <input type="hidden" name="save" value="create" />
-        <button type="submit" name="save" value="create">Create Table</button>
+        <input type="hidden" name="save" value="save-close" />
+        <button type="submit" name="save" value="save-close">Create Table</button>
     </div>
 </ui:form>
