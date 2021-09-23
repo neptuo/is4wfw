@@ -35,9 +35,14 @@
             <div class="border-right shadow main-menu main-menu-background">
                 <nav class="py-3 px-2">
                     <template:declare identifier="menuContainer">
+                        <var:declare name="menuContainerCookie" value="template:cookie" />
+                        <web:condition when="var:menuContainerCookie" isInverted="true">
+                            <var:declare name="menuContainerCookie" value="template:defaultState" />
+                        </web:condition>
+
                         <utils:concat output="menuContainerCssClass" separator=" " value1="mb-3 cms-menu" value2="template:class" />
                         <utils:concat output="menuContainerTogglerTitle" separator=" " value1="Collapse/Expand" value2="template:title" />
-                        <web:condition when="template:cookie" is="collapsed">
+                        <web:condition when="var:menuContainerCookie" is="collapsed">
                             <utils:concat output="menuContainerCssClass" separator=" " value1="utils:menuContainerCssClass" value2="cms-menu-collapsed" />
                         </web:condition>
                         <v:panel class="utils:menuContainerCssClass" data-menu="template:name" security:requirePerm="template:permission"> 
@@ -73,7 +78,7 @@
                         </div>
                     </v:panel>
                     <template:menuContainer name="web" title="Web" permission="CMS.Web" rootUrl="~/in/pages.view" cookie="cookie:cmsMenu-web" menu="~/templates/menus/web.xml" />
-                    <template:menuContainer name="floorball" title="Floorball" permission="CMS.Floorball" rootUrl="~/in/floorball/seasons.view" cookie="cookie:cmsMenu-floorball" menu="~/templates/menus/floorball.xml" class="cms-menu-2" />
+                    <template:menuContainer name="floorball" title="Floorball" permission="CMS.Floorball" rootUrl="~/in/floorball/seasons.view" cookie="cookie:cmsMenu-floorball" menu="~/templates/menus/floorball.xml" defaultState="collapsed" class="cms-menu-2" />
                     <template:menuContainer name="settings" title="Settings" permission="CMS.Settings" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-settings" menu="~/templates/menus/settings.xml" class="cms-menu-4" />
                     <web:condition when="sys:hasAdminMenu">
                         <template:menuContainer name="custom" title="Custom" permission="CMS.AdminMenu" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-custom" class="cms-menu-5">

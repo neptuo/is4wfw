@@ -47,7 +47,7 @@
         const name = $root.attr("data-menu");
         if ($root.hasClass("cms-menu-collapsed")) {
             $root.removeClass("cms-menu-collapsed");
-            cookies.create("cmsMenu-" + name, null);
+            cookies.create("cmsMenu-" + name, "opened");
         } else {
             $root.addClass("cms-menu-collapsed");
             cookies.create("cmsMenu-" + name, "collapsed");
