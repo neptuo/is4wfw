@@ -41,6 +41,13 @@
                             </div>
                         </div>
                     </ui:columnTemplate>
+                    <ui:columnTemplate>
+                        <web:condition when="p:searchType" is="Template">
+                            <web:a pageId="~/in/templates.view" param-id="p:searchId">
+                                <img src="~/images/page_edi.png" title="Edit template" />
+                            </web:a>
+                        </web:condition>
+                    </ui:columnTemplate>
                 </ui:grid>
             </p:search>
         </web:condition>

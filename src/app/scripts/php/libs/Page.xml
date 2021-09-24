@@ -124,8 +124,12 @@
     <attribute>
       <name>showError</name>
     </attribute>
+    <attribute>
+      <name>id</name>
+      <comment>Id šablony k editaci.</comment>
+    </attribute>
     <comment>
-      Zobrazí editaci jednotlivého templatu.
+      Zobrazí editaci jedné šablony.
     </comment>
   </tag>
   <tag>

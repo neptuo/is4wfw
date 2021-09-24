@@ -2448,7 +2448,7 @@
             global $loginObject;
             global $dbObject;
             $return = '';
-            $actionUrl = '';
+            $actionUrl = $_SERVER['REDIRECT_URL'];
             if ($detailPageId != false) {
                 $actionUrl = $webObject->composeUrl($detailPageId);
             }
@@ -2562,11 +2562,9 @@
                             . '<div class="file-content-in"><div class="foo">' . substr($template['content'], 0, 130) . '</div></div>'
                         . '</td>'
                         . '<td class="template-edit">'
-                            . '<form name="template-edit1" method="post" action="' . $actionUrl . '">'
-                                . '<input type="hidden" name="template-id" value="' . $template['id'] . '" />'
-                                . '<input type="hidden" name="template-edit" value="Edit" />'
-                                . '<input type="image" src="~/images/page_edi.png" name="template-edit" value="Edit" title="Edit template" />'
-                            . '</form> '
+                            . '<a href="' . $actionUrl . '?id=' . $template['id'] . '" class="image-button button-edit">'
+                                . '<img src="~/images/page_edi.png" title="Edit template" />'
+                            . '</a> '
                             . '<form name="template-edit2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                                 . '<input type="hidden" name="template-id" value="' . $template['id'] . '" />'
                                 . '<input type="hidden" name="template-delete" value="Delete" />'
@@ -2590,9 +2588,7 @@
                 $return .= ''
                         . '<hr />'
                         . '<div class="gray-box">'
-                        . '<form name="template-new" method="post" action="' . $actionUrl . '">'
-                        . '<input type="submit" name="template-new" value="New Template" />'
-                        . '</form>'
+                        . '<a href="' . $actionUrl . '?id=new" class="button">New Template</a>'
                         . '</div>';
             }
 
@@ -2613,7 +2609,7 @@
          * 	@return	html form form editing template
          *
          */
-        public function showEditTemplateForm($submitPageId = false, $useFrames = false, $showError = false) {
+        public function showEditTemplateForm($submitPageId = false, $useFrames = false, $showError = false, $id = "") {
             global $webObject;
             global $loginObject;
             global $dbObject;
@@ -2725,13 +2721,13 @@
                 }
             }
 
-            if ($_POST['template-edit'] != 'Edit' && $_POST['template-submit'] != "Save" && $_POST['template-new'] != "New Template") {
+            if ($_POST['template-edit'] != 'Edit' && $_POST['template-submit'] != "Save" && empty($id)) {
                 return '';
             }
 
             // Pokud je v postu template-id, vyber template, testuj prava, pokud, testuj prava pro template-id 0
             if ($entity == null) {
-                $templateId = ((array_key_exists('template-id', $_POST)) ? $_POST['template-id'] : 0);
+                $templateId = ((array_key_exists('template-id', $_POST)) ? $_POST['template-id'] : $id == "new" ? 0 : $id);
                 $template = $dbObject->fetchAll('SELECT `template`.`name`, `identifier`, `group`, `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
             } else {
                 $template = [0 => $entity];
