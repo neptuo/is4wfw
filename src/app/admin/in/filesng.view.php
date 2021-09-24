@@ -25,12 +25,39 @@
 				<div class="gray-box">
 					<ui:form>
 						<input type="hidden" name="dir-id" value="<web:out text="var:dirId" />" />
-						<input type="submit" name="new-file" value="<web:out text="loc:button.newfile" />" />
 						<input type="submit" name="new-directory" value="<web:out text="loc:button.newdirectory" />" />
-						|
+						<input type="submit" name="new-file" value="<web:out text="loc:button.newfile" />" />
+					</ui:form>
+					<edit:form submit="bulk-upload">
+						<input type="hidden" name="dir-id" value="<web:out text="var:dirId" />" />
+						<fa:upload dirId="var:dirId">
+							<ui:filebox name="bulkFiles" isMulti="true" class="d-none" />
+							<button name="bulk-upload" value="bulk-upload" class="d-none">XX</button>
+							<button id="bulk-upload-button" type="button">Bulk upload</button>
+						</fa:upload>
+					</edit:form>
+					<js:script placement="tail">
+						
+						$(function() {
+							var $submit = $("button[name='bulk-upload']");
+							var $filebox = $("input[name='bulkFiles[]']");
+							$filebox.change(function() {
+								$submit.click();
+							});
+							$("#bulk-upload-button").click(function(e) {
+								e.preventDefault();
+								$filebox.click();
+							})
+						})
+						
+					</js:script>
+					|
+					<ui:form>
+						<input type="hidden" name="dir-id" value="<web:out text="var:dirId" />" />
 						<input type="submit" name="new-zipfile" value="<web:out text="loc:button.newzipfile" />" class="new-zipfile" />
 						<input type="submit" name="new-import" value="<web:out text="loc:button.import" />" class="confirm new-import" />
 					</ui:form>
+
 				</div>
 
 				<fa:browser dirId="var:dirId" orderBy="order" parentName="..">
