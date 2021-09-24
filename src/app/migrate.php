@@ -21,4 +21,8 @@
     
     $db->getDataAccess()->disconnect();
 
+    if (array_key_exists("return", $_GET)) {
+        echo '<a href="' . $_GET["return"] . '">Return back</a>';
+    }
+
 ?>
