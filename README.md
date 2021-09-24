@@ -8,4 +8,4 @@ From releases, download `install.php` and open it in web browser. Latest version
 
 ## Appveyor
 
-Nightly tag builds can be grabbed at [AppVeyor](https://ci.appveyor.com/project/maraf/php-webframework).
+Nightly tag builds can be grabbed at [AppVeyor](https://ci.appveyor.com/project/neptuo/is4wfw).

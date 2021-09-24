@@ -2,7 +2,7 @@
 
 $targetDirectoryPath = 'app/scripts/php/includes';
 
-$url = 'https://api.github.com/repos/maraf/PHP-WebFramework/releases';
+$url = 'https://api.github.com/repos/neptuo/is4wfw/releases';
 
 if (file_exists($targetDirectoryPath)) {
     header("Location: /"); 
