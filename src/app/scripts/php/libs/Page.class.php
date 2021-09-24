@@ -661,30 +661,32 @@
                         $returnTmp .= ''
                         . '</div>'
                         . (($this->getGroupPermCached('Page.ManageRights')) ? ''
-                                . '<div class="edit edit-rights">'
+                                . '<div class="gray-box-float" style="min-width:650px;">'
+                                . '<details>'
+                                . '<summary>' . $rb->get('page.field.permissions') . '</summary>'
                                 . (($show['read']) ? ''
-                                        . '<div class="edit edit-right-read">'
-                                        . '<label for="right-edit-groups-r">' . $rb->get('page.field.rreadlabel') . ':</label>'
+                                        . '<div class="float-left mr-1">'
+                                        . '<label for="right-edit-groups-r" class="d-block">' . $rb->get('page.field.rreadlabel') . ':</label>'
                                         . $groupSelectR
                                         . '</div>' : '')
                                 . (($show['write']) ? ''
-                                        . '<div class="edit edit-right-write">'
-                                        . '<label for="right-edit-groups-w">' . $rb->get('page.field.rwritelabel') . ':</label>'
+                                        . '<div class="float-left mr-1">'
+                                        . '<label for="right-edit-groups-w" class="d-block">' . $rb->get('page.field.rwritelabel') . ':</label>'
                                         . $groupSelectW
                                         . '</div>' : '')
                                 . (($show['delete']) ? ''
-                                        . '<div class="edit edit-right-delete">'
-                                        . '<label for="right-edit-groups-d">' . $rb->get('page.field.rdeletelabel') . ':</label>'
+                                        . '<div class="float-left mr-1">'
+                                        . '<label for="right-edit-groups-d" class="d-block">' . $rb->get('page.field.rdeletelabel') . ':</label>'
                                         . $groupSelectD
                                         . '</div>' : '')
                                 . (($show['addchild']) ? ''
-                                        . '<div class="edit edit-right-addchild">'
-                                        . '<label for="right-edit-groups-a">' . $rb->get('page.field.raddchildlabel') . ':</label>'
+                                        . '<div class="float-left mr-1">'
+                                        . '<label for="right-edit-groups-a" class="d-block">' . $rb->get('page.field.raddchildlabel') . ':</label>'
                                         . $groupSelectA
                                         . '</div>' : '')
                                 . '<div class="clear"></div>'
-                                . '</div>'
-                                . '<div class="clear"></div>' : '')
+                                . '</details>'
+                                . '</div>' : '')
                         . '</div>'
                         . '<div class="clear"></div>';
 
@@ -2793,23 +2795,26 @@
                             . '<input class="w435" type="text" name="template-identifier" id="template-identifier" value="' . $template['identifier'] . '" />'
                         . '</div>'
                         . '<div class="clear"></div>'
-                        . '<div class="template-rights">'
+                        . '<div class="gray-box-float">'
+                        . '<details>'
+                        . '<summary>Permissions</summary>'
                         . (($show['read']) ? ''
-                                . '<div class="template-right-r">'
-                                . '<label for="template-right-edit-groups-r">Read:</label>'
+                                . '<div class="float-left mr-1">'
+                                . '<label for="template-right-edit-groups-r" class="d-block">Read:</label>'
                                 . $groupSelectR
                                 . '</div>' : '')
                         . (($show['write']) ? ''
-                                . '<div class="template-right-w">'
-                                . '<label for="template-right-edit-groups-w">Write:</label>'
+                                . '<div class="float-left mr-1">'
+                                . '<label for="template-right-edit-groups-w" class="d-block">Write:</label>'
                                 . $groupSelectW
                                 . '</div>' : '')
                         . (($show['delete']) ? ''
-                                . '<div class="template-right-d">'
-                                . '<label for="template-right-edit-groups-d">Delete:</label>'
+                                . '<div class="float-left mr-1">'
+                                . '<label for="template-right-edit-groups-d" class="d-block">Delete:</label>'
                                 . $groupSelectD
                                 . '</div>' : '')
                         . '<div class="clear"></div>'
+                        . '</details>'
                         . '</div>'
                         . '<div class="clear"></div>';
 
