@@ -6,8 +6,8 @@ require_once("Version.class.php");
 
 class AppVeyorReleaseManager extends BaseHttpManager {
     private static $BaseUrl = 'https://ci.appveyor.com/api';
-    private static $Url = 'https://ci.appveyor.com/api/projects/maraf/php-webframework';
-    private static $WebUrl = 'https://ci.appveyor.com/project/maraf/php-webframework';
+    private static $Url = 'https://ci.appveyor.com/api/projects/neptuo/is4wfw';
+    private static $WebUrl = 'https://ci.appveyor.com/project/neptuo/is4wfw';
 
     public function getList($count = 3) {
         $result = array('result' => false, 'log' => '', 'data' => array());

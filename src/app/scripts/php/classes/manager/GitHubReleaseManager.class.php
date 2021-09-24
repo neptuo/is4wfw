@@ -5,7 +5,7 @@ require_once("BaseHttpManager.class.php");
 require_once("Version.class.php");
 
 class GitHubReleaseManager extends BaseHttpManager {
-    private static $Url = 'https://api.github.com/repos/maraf/PHP-WebFramework/releases';
+    private static $Url = 'https://api.github.com/repos/neptuo/is4wfw/releases';
 
     public function getList() {
         $result = array('result' => false, 'log' => '', 'data' => array());

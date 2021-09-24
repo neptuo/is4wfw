@@ -996,11 +996,11 @@
 		}
 
 		public function repositoryLink($linkText) {
-			return '<a target="_blank" href="https://github.com/maraf/PHP-WebFramework">' . $linkText . '</a>';
+			return '<a target="_blank" href="https://github.com/neptuo/is4wfw">' . $linkText . '</a>';
 		}
 
 		public function repositoryIssueCreateLink($linkText) {
-			return '<a target="_blank" href="https://github.com/maraf/PHP-WebFramework/issues/new">' . $linkText . '</a>';
+			return '<a target="_blank" href="https://github.com/neptuo/is4wfw/issues/new">' . $linkText . '</a>';
 		}
 
 		public function clearTemplateCache($template = null) {
