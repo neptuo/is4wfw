@@ -594,8 +594,30 @@
         }
 
         public function getPropClassPath() {
+            if ($this->hasListModel()) {
+                return $this->peekListModel()->data();
+            }
+
             return $_SESSION['select-class-path'];
         }
+
+        public function libraryList($template) {
+            $libraries = $this->libraryLoader->all();
+			
+			$model = new ListModel();
+			$this->pushListModel($model);
+			
+			$model->render();
+			$model->items($libraries);
+			$result = $template();
+			
+			$this->popListModel();
+			return $result;
+        }
+
+		public function getLibraryList() {
+			return $this->peekListModel();
+		}
     }
 
 ?>

@@ -60,5 +60,20 @@
       Vlastnost classPath pro výběr knihovny.
     </comment>
   </property>
+  <fulltag>
+    <name>libraryList</name>
+    <function>libraryList</function>
+    <comment>
+      Seznam všech dostupných libraries.
+      Uvnitř seznamu je možné použít "hint:classPath" pro aktuální položku.
+    </comment>
+  </fulltag>
+  <property>
+  	<name>libraryList</name>
+  	<getFunction>getLibraryList</getFunction>
+    <comment>
+      Vrátí seznam všech dostupných libraries uvnitř "hint:libraryList".
+    </comment>
+  </property>
 </taglib>
 
