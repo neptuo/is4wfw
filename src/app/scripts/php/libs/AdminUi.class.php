@@ -128,8 +128,10 @@
 			$this->edit["id"] = $id;
 			$this->edit["isEdit"] = true;
 			if ($id == "new") {
+				$this->edit["isNew"] = true;
 				$this->edit["title"] = "Create";
 			} else {
+				$this->edit["isNew"] = false;
 				$this->edit["title"] = "Edit";
 			}
 
@@ -183,7 +185,7 @@
 		}
 
 		public function isNew() {
-			return $this->isEdit() && $this->edit["id"] == 0;
+			return $this->isEdit() && $this->edit["isNew"] == true;
 		}
 		
 		public function getEditId() {
