@@ -96,7 +96,7 @@ if (array_key_exists('fid', $_REQUEST)) {
 
     if (count($file) == 1) {
         $filePath = $flObject->getPhysicalPathTo($file[0]['dir_id']) . $file[0][FileAdmin::$FileSystemItemPath] . "." . FileAdmin::$FileExtensions[$file[0]['type']];
-        if (!file_exists($filePath) || is_readable($filePath)) {
+        if (!file_exists($filePath)) {
             header("HTTP/1.1 404 Not Found");
             echo '<h1 class="error">Error 404</h1><p class="error">Requested file doesn\'t exists.</p>';
             exit;
