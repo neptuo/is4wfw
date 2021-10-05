@@ -156,7 +156,7 @@
 		public function edit($template, $id) {
 			$model = parent::getEditModel();
 
-			$isEdit = $id != "new";
+			$isEdit = !empty($id);
 
 			if ($model->isLoad()) {
 				if ($isEdit) {
