@@ -128,6 +128,7 @@
 			$this->edit["id"] = $id;
 			$this->edit["isEdit"] = true;
 			if ($id == "new") {
+				$this->edit["id"] = 0;
 				$this->edit["isNew"] = true;
 				$this->edit["title"] = "Create";
 			} else {

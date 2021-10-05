@@ -85,7 +85,7 @@
 			$model = parent::getEditModel();
 
 			if (!$model->hasMetadataKey("isUpdate")) {
-				$isUpdate = !empty($id) && $id != "new";
+				$isUpdate = !empty($id);
 				$model->metadata("isUpdate", $isUpdate);
 			} else {
 				$isUpdate = $model->metadata("isUpdate");
