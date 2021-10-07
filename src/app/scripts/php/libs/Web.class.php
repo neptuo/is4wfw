@@ -1500,8 +1500,14 @@
             $pageUrl = UrlResolver::combinePath($project['alias']['virtual_url'], $pageUrl);
             $pageUrl = UrlResolver::combinePath($project['alias']['root_url'], $pageUrl);
 
-            if ($project['alias']['domain_url'] == "*") {
+            $isEmptyProject = empty($project);
+
+            if ($isEmptyProject || $project['alias']['domain_url'] == "*") {
                 $project['alias']['domain_url'] = $this->getHttpHost();
+            }
+
+            if ($isEmptyProject) {
+                $project['alias'][$this->Protocol] = 1;
             }
 
             if ($absolute) {
