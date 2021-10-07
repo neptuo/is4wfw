@@ -579,10 +579,10 @@
                         . '<label class="w80" for="entrypoint">' . $rb->get('project.entrypoint') . ':</label> '
                         . '<select id="entrypoint" name="project-entrypoint" class="w200">'
                             . '<option value="">---</option>'
-                            . implode("", (array_map(function($e) use($lastModuleId, $project) {
+                            . implode("", (array_map(function($e) use(&$lastModuleId, $project) {
                                 $result = "";
                                 if ($lastModuleId !== $e["moduleId"]) {
-                                    if ($lastModuleId === null) {
+                                    if ($lastModuleId !== null) {
                                         $result .= "</optgroup>";    
                                     }
 
