@@ -45,8 +45,12 @@
 			return strcasecmp($currentPath, $parsed) == 0;
 		}
 
-		public function fromPath($template) {
-			$virtualUrl = parent::web()->getVirtualUrl();
+		public function fromPath($template, $path = "x-invalid.path-x") {
+			if ($path != "x-invalid.path-x") {
+				$virtualUrl = trim($path, "/");
+			} else {
+				$virtualUrl = parent::web()->getVirtualUrl();
+			}
 			$this->virtualUrlParts = StringUtils::explode($virtualUrl, '/');
 			$this->virtualUrlPartsIndex = 0;
 			$this->canMatch = true;

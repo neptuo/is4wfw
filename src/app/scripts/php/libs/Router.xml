@@ -7,8 +7,16 @@
     <name>fromPath</name>
     <function>fromPath</function>
     <lookless />
+    <attribute>
+      <name>path</name>
+      <type>string</type>
+      <default>x-invalid.path-x</default>
+      <comment>URL, která se má vyhodnotit.</comment>
+    </attribute>
     <comment>
-      Router...
+      Router založený na path části URL.
+      Standartně router pracuje s aktuální path.
+      Pomocí atributu "path" je možné přesvědčit router, že má použít tuto místo aktuální.
     </comment>
   </fulltag>
   <fulltag>
