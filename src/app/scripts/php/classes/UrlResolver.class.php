@@ -102,13 +102,19 @@
             foreach ($selected2 as $url) {
                 if ($url['virtual_url'] == '') {
                     // prejit na parsovani url stranek
-                    if ($this->parsePageUrl($pageUrls, $url['project_id'])) {
-                        // mame viteze
-                        $this->selectProject($url);
-                        return true;
-                    } else {
-                        continue;
+                    if (empty($url['entrypoint'])) {
+                        if ($this->parsePageUrl($pageUrls, $url['project_id'])) {
+                            // mame viteze
+                            $this->selectProject($url);
+                            return true;
+                        } else {
+                            continue;
+                        }
                     }
+                    
+                    // First matched project with entrypoint is the winner.
+                    $this->selectProject($url);
+                    return true;
                 } else {
                     $virUrls = StringUtils::explode($url['virtual_url'], '/');
                     if (count($virUrls) > count($pageUrls)) {
