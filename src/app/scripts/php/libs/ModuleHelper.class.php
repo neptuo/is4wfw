@@ -256,7 +256,7 @@
 
 				ModuleXml::write($modules);
 
-				$extractPath = MODULES_PATH . $model["alias"];
+				$extractPath = MODULES_PATH . $xml->alias;
 				mkdir($extractPath);
 
 				ZipUtils::extract($fileName, $extractPath);
