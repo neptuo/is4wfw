@@ -662,19 +662,16 @@
 		private function ensureModelDefaultValue($model, $name, $format) {
 			$value = $model[$name];
             if (empty($value)) {
-				$model[$name] = function() use ($model, $name, $format) { 
-					$items = [];
-					foreach ($model as $key => $value) {
-						if ($name != $key) {
-							if (is_callable($value)) {
-								$value = $value();
-							}
-
-							$items[$key] = $value;
+				$model[$name] = function() use ($model, $format) { 
+					return StringUtils::format($format, function($key) use ($model) {
+						$value = $model[$key];
+						
+						if (is_callable($value)) {
+							$value = $value();
 						}
-					}
 
-					return StringUtils::format($format, $items); 
+						return $value;
+					});
 				};
             }
 		}

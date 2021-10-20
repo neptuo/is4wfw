@@ -52,8 +52,20 @@
             return $base . $item;
         }
 
-        public static function format($format, $model) {
-            foreach ($model as $key => $value) {
+        public static function format($format, $modelOrCallback) {
+            if (is_callable($modelOrCallback)) {
+                $result = preg_replace_callback(
+                    "({([a-zA-Z0-9-_.]*)})", 
+                    function($match) use ($modelOrCallback) {
+                        return $modelOrCallback($match[1]);
+                    }, 
+                    $format
+                );
+
+                return $result;
+            }
+
+            foreach ($modelOrCallback as $key => $value) {
                 $source = "{" . $key . "}";
 
                 if (is_callable($value)) {
