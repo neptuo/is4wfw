@@ -45,10 +45,6 @@
                 $columnType = (string)$column->type;
                 if ($model->hasKey($columnName)) {
                     $value = $model[$columnName];
-                    if (is_callable($value)) {
-                        $value = $value();
-                    }
-
                     if (is_array($value) && array_key_exists("type", $value)) {
                         $extras[$columnName] = $value;
                     } else {
@@ -90,10 +86,6 @@
                         $key = "$columnName:$langId";
                         if ($model->hasKey($key)) {
                             $value = $model[$key];
-                            if (is_callable($value)) {
-                                $value = $value();
-                            }
-
                             $value = $this->parseUserValue($column, $value);
                             $columns[$columnName] = $value;
                         }

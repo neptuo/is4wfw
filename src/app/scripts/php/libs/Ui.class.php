@@ -358,10 +358,6 @@
 				}
 
                 foreach ($model as $key => $value) {
-					if (is_callable($value)) {
-						$value = $value();
-					}
-
 					if (is_array($value)) {
 						$value = implode(",", $value);
 					}
@@ -660,7 +656,7 @@
 		}
 
 		private function ensureModelDefaultValue($model, $name, $format) {
-			$value = $model[$name];
+			$value = $model->getUnevaluatedValue($name);
             if (empty($value)) {
 				$model[$name] = function() use ($model, $format) { 
 					return StringUtils::format($format, function($key) use ($model) {
@@ -700,7 +696,7 @@
 
             if ($model->isSubmit()) {
 				$template();
-				$value = $model[$name];
+				$value = $model->getUnevaluatedValue($name);
 				$model[$name] = function() use ($value) { 
 					if (is_callable($value)) {
 						$value = $value();
@@ -723,7 +719,7 @@
 
             if ($model->isSubmit()) {
 				$template();
-				$value = $model[$name];
+				$value = $model->getUnevaluatedValue($name);
 				$model[$name] = function() use ($value) { 
 					if (is_callable($value)) {
 						$value = $value();
@@ -746,7 +742,7 @@
 
             if ($model->isSubmit()) {
 				$template();
-				$value = $model[$name];
+				$value = $model->getUnevaluatedValue($name);
 				$model[$name] = function() use ($value) { 
 					if (is_callable($value)) {
 						$value = $value();
@@ -769,7 +765,7 @@
 
             if ($model->isSubmit()) {
 				$template();
-				$value = $model[$name];
+				$value = $model->getUnevaluatedValue($name);
 				$model[$name] = function() use ($value) { 
 					if (is_callable($value)) {
 						$value = $value();

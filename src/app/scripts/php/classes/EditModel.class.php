@@ -69,12 +69,21 @@
             unset($this->container[$this->prefix][$offset]);
         }
     
-        public function offsetGet($offset) {
+        public function offsetGet($offset, $evaluate = true) {
             if ($this->offsetExists($offset)) {
-                return $this->container[$this->prefix][$offset];
+                $value = $this->container[$this->prefix][$offset];
+                if ($evaluate && is_callable($value)) {
+                    $value = $value();
+                }
+
+                return $value;
             } else {
                 return null;
             }
+        }
+
+        public function getUnevaluatedValue($offset) {
+            return $this->offsetGet($offset, false);
         }
 
         // ------- Iterator ---------------------------------------------------
