@@ -1,0 +1,38 @@
+FROM php:7.4-apache
+
+RUN sh -c 'apt-get update \
+    && apt-get install -y libjpeg62-turbo-dev libfreetype6-dev libpng-dev \
+    && apt-get install -y libzip-dev zip \
+    && docker-php-ext-install zip \
+    && a2enmod rewrite \
+    && docker-php-ext-install mysqli \
+    && docker-php-ext-configure gd \
+    && docker-php-ext-install gd'
+
+EXPOSE 80
+
+ENV IS4WFW_DEVELOPMENT=true
+
+COPY ./src/.htaccess /var/www/html/.htaccess
+COPY ./src/app /var/www/html/app
+
+COPY ./docker/php.conf /usr/local/etc/php-fpm.d/zz-log.conf
+COPY ./docker/php.ini /usr/local/etc/php/conf.d/php-my.ini
+
+RUN curl -fsSL 'https://xdebug.org/files/xdebug-2.9.7.tgz' -o xdebug.tar.gz \
+    && mkdir -p xdebug \
+    && tar -xf xdebug.tar.gz -C xdebug --strip-components=1 \
+    && rm xdebug.tar.gz \
+    && ( \
+    cd xdebug \
+    && phpize \
+    && ./configure --enable-xdebug \
+    && make -j$(nproc) \
+    && make install \
+    ) \
+    && rm -r xdebug \
+    && docker-php-ext-enable xdebug
+    
+EXPOSE 9000
+
+COPY ./docker/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

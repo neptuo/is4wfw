@@ -17,15 +17,18 @@ Push-Location $PSScriptRoot;
 Invoke-Expression ".\Update-Version.ps1 $versionName";
 
 $versionName = $versionName.Substring(1);
-$tagName = "neptuo/is4wfw:$versionName";
+$tag = "neptuo/is4wfw:$versionName";
+$tagDev = "$tag-dev";
 
 # Build docker image
-Invoke-Expression "docker build .. -f ..\docker\is4wfw\dockerfile -t $tagName";
+Invoke-Expression "docker build .. -f ..\docker\is4wfw\dockerfile -t $tag";
+Invoke-Expression "docker build .. -f ..\docker\is4wfw-dev\dockerfile -t $tagDev";
 
-Write-Host "Docker image built and tagged as '$tagName'.";
+Write-Host "Docker image built and tagged as '$tag' and '$tagDev'.";
 
 if ($push) {
-    Invoke-Expression "docker push $tagName";
+    Invoke-Expression "docker push $tag";
+    Invoke-Expression "docker push $tagDev";
     Write-Host "Docker image pushed.";
 }
 
