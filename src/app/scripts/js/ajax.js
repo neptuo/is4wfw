@@ -1,5 +1,6 @@
-Ajax = function(selector, parentPageId) {
+Ajax = function({ selector, parentPageId, modifyUrl }) {
     this.Selector = selector;
+    this.ModifyUrl = modifyUrl;
     this.LoadingHandlers = [];
     this.CompletedHandlers = [];
     this.FailedHandlers = [];
@@ -10,7 +11,9 @@ Ajax = function(selector, parentPageId) {
         this.ParentPageId = null;
     }
 
-    window.addEventListener("popstate", this._OnPopState.bind(this));
+    if (this.ModifyUrl) {
+        window.addEventListener("popstate", this._OnPopState.bind(this));
+    }
 }
 
 Ajax.prototype = Object.create(Ajax.prototype);
@@ -122,7 +125,7 @@ Ajax.prototype._ObserveRequest = function(request) {
 };
 
 Ajax.prototype._UpdateHistory = function(url, replace) {
-    if (window.history) {
+    if (this.ModifyUrl && window.history) {
         if (replace === true) {
             window.history.replaceState(url, document.title, url);
         } else {

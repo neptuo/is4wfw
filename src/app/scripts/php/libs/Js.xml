@@ -234,6 +234,12 @@
       <default>true</default>
       <comment>Pokud je "true", vloží se do stránky jQuery v1.4.2.</comment>
     </attribute>
+    <attribute>
+      <name>modifyUrl</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda se má při přechodu mezi stránky modifikovat URL pomocí History API.</comment>
+    </attribute>
     <comment>
       Převede web do ajaxového formátu.
       Všechny linky s target="_blank" nebo data-ajax="false" jsou ignorovány.

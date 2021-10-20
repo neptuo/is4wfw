@@ -297,7 +297,7 @@
             $this->addScriptInline("(function() { $('$selector').datepicker($optionsString); })();", "tail");
         }
 
-        public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false, $jQuery = true) {
+        public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false, $jQuery = true, $modifyUrl = true) {
             if (parent::web()->isXmlTemplate()) {
                 return;
             }
@@ -319,6 +319,12 @@
             if ($varName) {
                 $init .= 'window["' . $varName . '"] = ajax; ';
             }
+
+            $params = [];
+            $params[] = 'selector: "' . $selector . '"';
+            $params[] = 'parentPageId: ' . $parentPageId;
+            $params[] = 'modifyUrl: ' . ($modifyUrl ? "true" : "false");
+
             $init .= 'ajax.Initialize($(document.body)); ';
             
             if ($jQuery) {
@@ -326,7 +332,7 @@
             }
 
             $this->addScript('~/js/ajax.js');
-            $this->addScriptInline('(function() { var ajax = new Ajax("' . $selector . '", ' . $parentPageId . '); ' . $init . '})();', "tail");
+            $this->addScriptInline('(function() { var ajax = new Ajax({ ' . implode(', ', $params) . ' }); ' . $init . '})();', "tail");
         }
 
         public function dataDuplicators($jQuery = true) {
