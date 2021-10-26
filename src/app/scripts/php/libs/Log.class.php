@@ -77,7 +77,7 @@
             global $webObject;
             if ($webObject->getDebugMode()) {
                 return ''
-                . '<error style="position: relative;">'
+                . '<error style="position: relative; z-index: 1000">'
                     . '<error-header style="padding: 4px 8px; color: red; font-weight: bold; display: inline-block; cursor: pointer; background: yellow;" title="Custom tag error" onclick="this.nextSibling.style.display = this.nextSibling.style.display == \'block\' ? \'none\' : \'block\'">!</error-header>'
                     . '<error-body style="position: absolute; top: 24px; left: 0; overflow: auto; width: 800px; max-height: 600px; background: yellow; display: none; padding: 4px 8px; white-space: pre; font-family: monospace;">'
                         . $message
