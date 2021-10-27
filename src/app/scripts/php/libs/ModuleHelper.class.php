@@ -261,6 +261,7 @@
 
 				ZipUtils::extract($fileName, $extractPath);
 				ModuleGenerator::all();
+				Module::reload();
 				
 				$postScript = FileUtils::combinePath($extractPath, $isEdit ? "postupdate.inc.php" : "postinstall.inc.php");
 				$this->runScriptIsolated($postScript);

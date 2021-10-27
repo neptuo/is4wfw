@@ -5,12 +5,21 @@
     class Module {
         private static $modules = null;
 
+        public static function reload() {
+            Module::$modules = null;
+            return Module::all();
+        }
+
         public static function all(): array {
             if (Module::$modules == null) {
                 $loaderPath = MODULES_PATH . ModuleGenerator::loaderFileName;
                 if (file_exists($loaderPath)) {
-                    include_once($loaderPath);
-                    if (function_exists("__loadModules")) {
+                    include($loaderPath);
+                    
+                    global $__loadModules;
+                    if (is_callable($__loadModules)) {
+                        Module::$modules = $__loadModules();
+                    } else if (function_exists("__loadModules")) {
                         Module::$modules = __loadModules();
                     }
                 }
@@ -141,7 +150,7 @@
             $code->addLine("// Generated content", true);
             $code->addLine("");
 
-            $code->addLine("function __loadModules() {");
+            $code->addLine('$' . "GLOBALS['__loadModules'] = function() {");
             $code->addIndent();
             
             $code->addLine("return [");
