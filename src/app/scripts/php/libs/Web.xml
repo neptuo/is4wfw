@@ -493,10 +493,24 @@
       <default>false</default>
       <comment>Zda má být hodnota rozparsována jako property.</comment>
     </attribute>
+    <attribute>
+      <name>encode</name>
+      <type>string</type>
+      <comment>Zda má výstup property enkódovat. Podporované hodnoty 'none', 'html'.</comment>
+    </attribute>
     <comment>
       Vrátí text z atributu "text". 
       Vhodné pro vypsání proměnné.
     </comment>
+  </tag>
+  <tag>
+    <name>outDefaults</name>
+    <function>outDefaults</function>
+    <attribute>
+      <name>encode</name>
+      <type>string</type>
+      <comment>Zda má výstup property enkódovat. Podporované hodnoty 'none', 'html'.</comment>
+    </attribute>
   </tag>
   <tag>
     <name>getProperty</name>

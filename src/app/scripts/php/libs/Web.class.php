@@ -2506,13 +2506,28 @@
             preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $prop);
         }
 
-        public function getProperty($prop, $isEvaluated = true) {
+        public function getProperty($prop, $isEvaluated = true, $encode = "none") {
+            $value = $prop;
             if ($isEvaluated) {
                 $this->PropertyUse = 'get';
-                return preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $prop);
-            } else {
-                return $prop;
+                $value = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $prop);
             }
+
+            if (empty($encode)) {
+                $encode = $this->outEncode;
+            }
+
+            if ($encode == "html") {
+                $value = htmlspecialchars($value);
+            }
+
+            return $value;
+        }
+
+        private $outEncode = "";
+
+        public function outDefaults($encode) {
+            $this->outEncode = $encode;
         }
 
         // min, max, scope + property pro jeho vypsani!!!!
