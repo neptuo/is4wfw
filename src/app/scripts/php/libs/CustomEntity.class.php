@@ -593,6 +593,12 @@
             $fields = $model->fields();
             $xml = null;
             $isAliasRequired = false;
+            if (!empty($langIds)) {
+                $xml = parent::getDefinition($name);
+                $isAliasRequired = true;
+                $primaryKeys = $this->getPrimaryKeyColumns($xml);
+            }
+
             foreach ($fields as $key => $value) {
                 if (strpos($value, ".") !== false) {
                     $parts = explode(".", $value, 2);
@@ -621,40 +627,38 @@
 
                     $isAliasRequired = true;
                 } else if (!empty($langIds)) {
-                    if ($xml == null) {
-                        $xml = parent::getDefinition($name);
-                    }
-                    
-                    $primaryKeys = $this->getPrimaryKeyColumns($xml);
-                    $isAliasRequired = true;
+                    $column = $this->findColumn($xml, $value);
+                    if ($column->localized) {
+                        foreach ($langIds as $langId) {
+                            $keys = [];
+                            foreach ($primaryKeys as $primaryKey) {
+                                $keys[] = [
+                                    "source" => (string)$primaryKey->name,
+                                    "target" => (string)$primaryKey->name
+                                ];
+                            }
 
-                    foreach ($langIds as $langId) {
-                        $keys = [];
-                        foreach ($primaryKeys as $primaryKey) {
                             $keys[] = [
-                                "source" => (string)$primaryKey->name,
-                                "target" => (string)$primaryKey->name
+                                "target" => "lang_id",
+                                "value" => $langId
+                            ];
+
+                            $fields[$key . $langId] = [
+                                "select" => [
+                                    "column" => $value,
+                                    "alias" => $value . ":" . $langId
+                                ],
+                                "leftjoin" => [
+                                    "keys" => $keys,
+                                    "table" => $this->ensureTableLocalizationName($name),
+                                    "alias" => "lang$langId"
+                                ]
                             ];
                         }
-
-                        $keys[] = [
-                            "target" => "lang_id",
-                            "value" => $langId
-                        ];
-
-                        $fields[$key . $langId] = [
-                            "select" => [
-                                "column" => $value,
-                                "alias" => $value . ":" . $langId
-                            ],
-                            "leftjoin" => [
-                                "keys" => $keys,
-                                "table" => $this->ensureTableLocalizationName($name),
-                                "alias" => "lang$langId"
-                            ]
-                        ];
                     }
-
+                    
+                    $fields[$key] = $value;
+                } else {
                     $fields[$key] = $value;
                 }
             }
