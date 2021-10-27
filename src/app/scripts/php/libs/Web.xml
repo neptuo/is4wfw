@@ -731,6 +731,42 @@
     <lookless />
     <comment>Přidá tělo tagu do hlavičky generované stránky.</comment>
   </fulltag>
+  <fulltag>
+    <name>cacheOutput</name>
+    <function>cacheOutput</function>
+    <attribute>
+      <name>key1</name>
+      <type>string</type>
+      <required />
+      <comment>Část klíče cache.</comment>
+    </attribute>
+    <attribute>
+      <name>key2</name>
+      <type>string</type>
+      <comment>Část klíče cache.</comment>
+    </attribute>
+    <attribute>
+      <name>key3</name>
+      <type>string</type>
+      <comment>Část klíče cache.</comment>
+    </attribute>
+    <attribute>
+      <name>key4</name>
+      <type>string</type>
+      <comment>Část klíče cache.</comment>
+    </attribute>
+    <attribute>
+      <name>key5</name>
+      <type>string</type>
+      <comment>Část klíče cache.</comment>
+    </attribute>
+    <comment>
+      Předané klíče slouží jako klíč do cache. 
+      Pokud je nalezen v cache, pak se tělo nespustí a místo toho se vrátí obsah cache. 
+      V opačném případě se tělo spustí a výsledek se uloží do cache a vrátí se.
+      Cache se ukládá do souborů ve složce "cache/output".
+    </comment>
+  </fulltag>
   <property>
   	<name>pageTitle</name>
   	<setFunction>setPageTitle</setFunction>

@@ -2886,6 +2886,26 @@
             $this->PageHead .= $template();
         }
 
+        private $cacheOutput = [];
+
+        public function cacheOutput($template, $key1, $key2, $key3, $key4, $key5) {
+            FileUtils::ensureDirectory(CACHE_OUTPUT_PATH);
+
+            $key = sha1("$key1-$key2-$key3-$key4-$key5");
+
+            $path = FileUtils::combinePath(CACHE_OUTPUT_PATH, "$key.output");
+            if (array_key_exists($key, $this->cacheOutput)) {
+                return $this->cacheOutput[$key];
+            } else if (file_exists($path)) {
+                $this->cacheOutput[$key] = $content = file_get_contents($path);
+            } else {
+                $this->cacheOutput[$key] = $content = $template();
+                file_put_contents($path, $content);
+            }
+
+            return $content;
+        }
+
         private $hooks = [];
 
         private function runHook($name, $params) {

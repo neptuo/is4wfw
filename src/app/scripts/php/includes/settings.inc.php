@@ -13,6 +13,7 @@
     
     define("CACHE_PATH", INSTANCE_PATH . "cache/");
     define("CACHE_IMAGES_PATH", CACHE_PATH . "images/");
+    define("CACHE_OUTPUT_PATH", CACHE_PATH . "output/");
     define("CACHE_PAGES_PATH", CACHE_PATH . "pages/");
     define("CACHE_TEMPLATES_PATH", CACHE_PATH . "templates/");
     define("CACHE_SYSTEMPROPERTY_PATH", CACHE_PATH . "systemproperty/");

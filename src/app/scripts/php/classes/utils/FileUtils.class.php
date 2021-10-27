@@ -23,6 +23,12 @@
             } 
         }
 
+        public static function ensureDirectory($path) {
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+        }
+
         public static function tail($filepath, $lines = 1, &$startReached = false) {
             // Open file
             $f = @fopen($filepath, "rb");
