@@ -1037,7 +1037,7 @@ function initClickableGrid() {
 		$(rows[i]).click(function(e) {
 			var el = e.target ? e.target : e.srcElement;
 
-			$tr = $(el).parent('tr');
+			$tr = $(el).parents('tr');
 			$buttonEdit = $tr.find('.button-edit');
 			if ($buttonEdit.length != 0) {
 				$button = $buttonEdit[0];

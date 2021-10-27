@@ -2491,7 +2491,7 @@
 
             if (parent::getUserProperty('Templates.showFilter', 'true') == 'true') {
                 $return .= ''
-                . '<form name="template-search" method="post" action"' . $_SERVER['REQUEST_URI'] . '">'
+                . '<form name="template-search" method="post" action="' . UrlUtils::removeQueryString($_SERVER['REQUEST_URI']) . '">'
                     . '<div class="gray-box">'
                         . '<label for="template-search-name" class="w100">Name:</label>'
                         . '<input class="w300" type="text" name="template-search-name" id="template-search-name" value="' . parent::session()->get('name', 'template-search') . '" />'
@@ -2620,10 +2620,12 @@
             if ($submitPageId != false) {
                 $actionUrl = $webObject->composeUrl($submitPageId);
             }
+            
+            $closeUrl = UrlUtils::removeQueryString($_SERVER["REQUEST_URI"]);
 
             $entity = null;
             $hasError = false;
-            if ($_POST['template-submit'] == "Save") {
+            if (array_key_exists('template-submit', $_POST)) {
                 $templateId = $_POST['template-id'];
                 $entity = [
                     "name" => $_POST['template-name'], 
@@ -2715,6 +2717,13 @@
                                 }
                             }
                         }
+
+                        if ($_POST['template-submit'] == "Save and close") {
+                            $this->redirectToUrl($closeUrl);
+                        } else if ($id == "new") {
+                            $redirectUrl = UrlUtils::addParameter($closeUrl, "id", $templateId);
+                            $this->redirectToUrl($redirectUrl);
+                        }
                     }
                 } else {
                     if ($showError != 'false') {
@@ -2723,13 +2732,13 @@
                 }
             }
 
-            if ($_POST['template-edit'] != 'Edit' && $_POST['template-submit'] != "Save" && empty($id)) {
+            if ($_POST['template-edit'] != 'Edit' && $_POST["template-submit"] != "Save" && empty($id)) {
                 return '';
             }
 
             // Pokud je v postu template-id, vyber template, testuj prava, pokud, testuj prava pro template-id 0
             if ($entity == null) {
-                $templateId = ((array_key_exists('template-id', $_POST)) ? $_POST['template-id'] : $id == "new" ? 0 : $id);
+                $templateId = ((array_key_exists('template-id', $_POST)) ? $_POST['template-id'] : ($id == "new" ? 0 : $id));
                 $template = $dbObject->fetchAll('SELECT `template`.`name`, `identifier`, `group`, `content` FROM `template` LEFT JOIN `template_right` ON `template`.`id` = `template_right`.`tid` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = ' . $templateId . ' AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
             } else {
                 $template = [0 => $entity];
@@ -2841,10 +2850,13 @@
                             . '</div>'
                             . '</div>';
                 }
+
                 $return .= ''
                         . '<div class="template-submit">'
-                        . '<input type="hidden" name="template-id" value="' . $templateId . '" />'
-                        . '<input type="submit" name="template-submit" value="Save" />'
+                            . '<input type="hidden" name="template-id" value="' . $templateId . '" />'
+                            . '<input type="submit" name="template-submit" value="Save" /> '
+                            . '<input type="submit" name="template-submit" value="Save and close" /> '
+                            . '<a href="' . $closeUrl . '" class="button">Close</a>'
                         . '</div>'
                         . '</form>';
             } else {
