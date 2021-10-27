@@ -8,6 +8,8 @@
         private $fields;
         private $items;
         private $data;
+        
+        private $metadata = [];
 
         public function __construct() {
             $this->fields = array();
@@ -69,6 +71,20 @@
 
         public function hasDataItem() {
             return $this->hasDataItem;
+        }
+
+        // ------- Metadata ---------------------------------------------------
+
+        public function metadata($key, $value = "0.0-def") {
+            if ($value === "0.0-def") {
+                return $this->metadata[$key];
+            } else {
+                $this->metadata[$key] = $value;
+            }
+        }
+
+        public function hasMetadataKey($key) {
+            return array_key_exists($key, $this->metadata);
         }
     }
 

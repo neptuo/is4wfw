@@ -550,7 +550,19 @@
             return $this->peekListModel();
         }
 
-        public function getList($template, $name, $filter = array(), $orderBy = array(), $paging = null) {
+        private function ensureListLangIds($langIds, $model) {
+            if (!is_array($langIds)) {
+                $langIds = empty($langIds) ? [] : explode(",", $langIds);
+            }
+
+            if (!empty($langIds)) {
+                $model->metadata("langIds", $langIds);
+            }
+
+            return $langIds;
+        }
+
+        public function getList($template, $name, $filter = array(), $orderBy = array(), $paging = null, $langIds = "") {
             $tableName = $this->ensureTableName($name);
 
             $model = new ListModel();
@@ -559,6 +571,8 @@
             $model->registration();
             $template([$this->tagPrefix => "register"]);
             $model->registration(false);
+
+            $langIds = $this->ensureListLangIds($langIds, $model);
             
             $result = "";
 
@@ -606,6 +620,42 @@
                     }
 
                     $isAliasRequired = true;
+                } else if (!empty($langIds)) {
+                    if ($xml == null) {
+                        $xml = parent::getDefinition($name);
+                    }
+                    
+                    $primaryKeys = $this->getPrimaryKeyColumns($xml);
+                    $isAliasRequired = true;
+
+                    foreach ($langIds as $langId) {
+                        $keys = [];
+                        foreach ($primaryKeys as $primaryKey) {
+                            $keys[] = [
+                                "source" => (string)$primaryKey->name,
+                                "target" => (string)$primaryKey->name
+                            ];
+                        }
+
+                        $keys[] = [
+                            "target" => "lang_id",
+                            "value" => $langId
+                        ];
+
+                        $fields[$key . $langId] = [
+                            "select" => [
+                                "column" => $value,
+                                "alias" => $value . ":" . $langId
+                            ],
+                            "leftjoin" => [
+                                "keys" => $keys,
+                                "table" => $this->ensureTableLocalizationName($name),
+                                "alias" => "lang$langId"
+                            ]
+                        ];
+                    }
+
+                    $fields[$key] = $value;
                 }
             }
 
@@ -645,6 +695,16 @@
 			if ($model != null && (array_key_exists($name, $model->data()) || $name == "_" || !$model->isRender())) {
                 if ($name == "_") {
                     return $model->data();
+                }
+
+                if ($model->hasMetadataKey("langIds")) {
+                    $langIds = $model->metadata("langIds");
+                    foreach ($langIds as $langId) {
+                        $value = $model->field("$name:$langId");
+                        if (!empty($value)) {
+                            return $value;
+                        }
+                    }
                 }
     
                 return $model->field($name);

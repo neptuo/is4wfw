@@ -167,9 +167,14 @@
       <name>paging</name>
       <comment>Nastavení stránkování pomocí knihovny "Paging".</comment>
     </attribute>
+    <attribute>
+      <name>langIds</name>
+      <comment>Id jazyků, pro které se má načíst lokalizované hodnoty.</comment>
+    </attribute>
     <comment>
       Vypíše seznam dat z entity "name".
       List model se nastaví do "ce:list", vypisovat pak lze pomocí "ce:*" (atribut) nebo "ce:_" (celá položka).
+      Pokud je vyplněn "langIds", pak je pro tyto jazyky přijoinuje lokalizovaná varianta a při výpisu se bere první neprázdná hodnota.
     </comment>
   </fulltag>
   <fulltag>

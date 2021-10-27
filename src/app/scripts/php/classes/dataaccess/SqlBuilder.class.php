@@ -29,7 +29,7 @@
             return $value;
         }
 
-        private function condition($filter, $operator = "AND ") {
+        private function condition($filter, $operator = "AND ", $tableAlias = null) {
             if (is_string($filter)) {
                 return $filter;
             }
@@ -38,7 +38,7 @@
 
             foreach ($filter as $field => $value) {
                 $assignValue = null;
-                $name = "`$field`";
+                $name = $this->field($tableAlias, $field);
                 if (is_array($value)) {
                     $valueString = "";
                     foreach ($value as $item) {
@@ -149,8 +149,6 @@
         }
 
         public function select($tableName, $fields, $filter = array(), $orderBy = array(), $count = null, $offset = null) {
-            $condition = $this->condition($filter, "AND ");
-            $condition = $this->appendWhere($condition);
             $order = $this->orderBy($orderBy);
             $order = $this->appendOrderBy($order);
 
@@ -165,6 +163,9 @@
             } else {
                 $tableName = "`$tableName`";
             }
+
+            $condition = $this->condition($filter, "AND ", $alias);
+            $condition = $this->appendWhere($condition);
             
             $joins = array();
             $columns = "";
@@ -185,10 +186,29 @@
 
                         $fieldTableAlias = $leftjoin["alias"];
                         if (!array_key_exists($fieldTableAlias, $joins)) {
-                            $source = $this->field($alias, $leftjoin["source"]);
+                            $onClause = "";
+                            if (array_key_exists("keys", $leftjoin)) {
+                                $onParts = [];
+                                foreach ($leftjoin["keys"] as $key) {
+                                    if (array_key_exists("source", $key)) {
+                                        $source = $this->field($alias, $key["source"]);
+                                    } else {
+                                        $source = $this->escape($key["value"]);
+                                    }
+
+                                    $target = $this->field($fieldTableAlias, $key["target"]);
+                                    $onParts[] = "$source = $target";
+                                }
+
+                                $onClause = implode(" AND ", $onParts);
+                            } else {
+                                $source = $this->field($alias, $leftjoin["source"]);
+                                $target = $this->field($fieldTableAlias, $leftjoin["target"]);
+                                $onClause = "$source = $target";
+                            }
+
                             $table = $leftjoin["table"];
-                            $target = $this->field($fieldTableAlias, $leftjoin["target"]);
-                            $joins[$fieldTableAlias] = "LEFT JOIN `$table` as $fieldTableAlias ON $source = $target";
+                            $joins[$fieldTableAlias] = "LEFT JOIN `$table` as $fieldTableAlias ON $onClause";
                         }
                     }
                     
