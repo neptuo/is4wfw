@@ -20,7 +20,6 @@
   <fulltag>
     <name>use</name>
     <function>useBundle</function>
-    <lookless />
     <attribute>
       <name>name</name>
       <required />
@@ -43,6 +42,38 @@
       Nedává smysl kombinovat "system" a "moduleId".
     </comment>
   </fulltag>
+  <tag>
+    <name>load</name>
+    <function>load</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <required />
+      <type>string</type>
+      <comment>Název bundlu, který se má načíst.</comment>
+    </attribute>
+    <attribute>
+      <name>lang</name>
+      <required />
+      <type>string</type>
+      <comment>Název jazyku.</comment>
+    </attribute>
+    <attribute>
+      <name>system</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda se jedná o systémový bundle.</comment>
+    </attribute>
+    <attribute>
+      <name>moduleId</name>
+      <type>string</type>
+      <comment>Id modulu, pokud se má načíst bundle z module.</comment>
+    </attribute>
+    <comment>
+      Načte bundle.
+      Pomocí tohoto tagu je možné načíst více bundlů i s různými jazyky. Při překladu se pak prochází postupně všechny (v pořadí načtení).
+    </comment>
+  </tag>
   <tag>
     <name>edit</name>
     <function>edit</function>

@@ -12,8 +12,17 @@
 	 */
 	class Localization extends BaseTagLib {
 
+		private $loaded = [];
+
 		public function setLanguage($name) {
 			$this->web()->LanguageName = $name;
+		}
+
+		public function load($name, $lang, $system = true, $moduleId = "") {
+			$bundle = LocalizationBundle::create($name, $lang, $system, $moduleId);
+			if ($bundle != null) {
+				$this->loaded[] = $bundle;
+			}
 		}
 
 		public function useBundle($template, $name, $system = true, $moduleId = "") {
@@ -22,6 +31,13 @@
 		}
 
 		public function getProperty($name) {
+			foreach ($this->loaded as $bundle) {
+				$result = $bundle->find($name);
+				if ($result !== false) {
+					return $result;
+				}
+			}
+
 			return $this->rb($name);
 		}
 

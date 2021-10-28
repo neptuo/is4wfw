@@ -189,6 +189,15 @@
 			}
 		}
 
+		// Vrátí asociovaný text nebo false.
+		public function find($key) {
+			if (array_key_exists($key , $this->Items)) {
+				return $this->Items[$key];
+			}
+
+			return false;
+		}
+
 		/**
 		 *
 		 *	Assignes value to a key.
@@ -220,6 +229,30 @@
 		public function getKeys() {
 			return array_keys($this->Items);
 		}
+
+
+		// Vrací null, pokud bundle požadovaného jazyku neexistuje.
+		public static function create($name, $lang, $system = true, $moduleId = "") {
+            if ($lang == '') {
+                return null;
+            }
+
+            $rb = new LocalizationBundle();
+            if (!$system) {
+                $rb->setIsSystem(false);
+            }
+
+            if (!empty($moduleId)) {
+                $rb->setModuleId($moduleId);
+            }
+
+            if (!$rb->exists($name, $lang)) {
+                return null;
+            }
+
+            $rb->load($name, $lang);
+            return $rb;
+        }
 	}
 
 ?>

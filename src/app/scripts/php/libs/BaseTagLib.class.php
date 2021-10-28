@@ -287,31 +287,11 @@
         
         public function rb($key = false) {
             if ($this->LocalizationBundle == null) {
-                if ($this->web()->LanguageName != '') {
-                    $rb = new LocalizationBundle();
-                    if (!$this->BundleIsSystem) {
-                        $rb->setIsSystem(false);
-                    }
-
-                    if (!empty($this->BundleModuleId)) {
-                        $rb->setModuleId($this->BundleModuleId);
-                    }
-
-                    if ($rb->exists($this->BundleName, $this->web()->LanguageName)) {
-                        $this->BundleLang = $this->web()->LanguageName;
-                    }
-                }
-
-                $this->LocalizationBundle = new LocalizationBundle();
-                if (!$this->BundleIsSystem) {
-                    $this->LocalizationBundle->setIsSystem(false);
-                }
-
-                if (!empty($this->BundleModuleId)) {
-                    $this->LocalizationBundle->setModuleId($this->BundleModuleId);
-                }
+                $this->LocalizationBundle = LocalizationBundle::create($this->BundleName, $this->web()->LanguageName, $this->BundleIsSystem, $this->BundleModuleId);
                 
-                $this->LocalizationBundle->load($this->BundleName, $this->BundleLang);
+                if ($this->LocalizationBundle == null) {
+                    $this->LocalizationBundle = LocalizationBundle::create($this->BundleName, $this->BundleLang, $this->BundleIsSystem, $this->BundleModuleId);
+                }
             }
 
             if ($key == false) {
@@ -320,7 +300,7 @@
                 return $this->LocalizationBundle->get($key);
             }
         }
-        
+
         public function view($name, $data) {
             $parser = ExtensionParser::initialize($name, $this->rb(), $data);
             return $parser->parse();
