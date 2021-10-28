@@ -33,7 +33,7 @@
 		public function getProperty($name) {
 			foreach ($this->loaded as $bundle) {
 				$result = $bundle->find($name);
-				if ($result !== false) {
+				if (!empty($result)) {
 					return $result;
 				}
 			}
