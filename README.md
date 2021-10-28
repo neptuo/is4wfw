@@ -9,3 +9,8 @@ From releases, download `install.php` and open it in web browser. Latest version
 ## Appveyor
 
 Nightly tag builds can be grabbed at [AppVeyor](https://ci.appveyor.com/project/neptuo/is4wfw).
+
+## Docker
+
+Prebuilt docker images are in our docker hub repository [neptuo/is4wfw](https://hub.docker.com/r/neptuo/is4wfw).
+We are producing two types of images, one is production ready and the second one (with `-dev` suffix) has xdebug installed and configured, so it intended for development purposes.
