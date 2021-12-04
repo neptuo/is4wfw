@@ -274,6 +274,14 @@
         public function getNull() {
             return null;
         }
+
+        public function getTrue() {
+            return true;
+        }
+
+        public function getFalse() {
+            return false;
+        }
     }
 
 ?>

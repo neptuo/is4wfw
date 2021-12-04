@@ -87,6 +87,23 @@
   <property>
     <name>null</name>
     <getFunction>getNull</getFunction>
+    <comment>
+      Vrací "null".
+    </comment>
+  </property>
+  <property>
+    <name>true</name>
+    <getFunction>getTrue</getFunction>
+    <comment>
+      Vrací "true".
+    </comment>
+  </property>
+  <property>
+    <name>false</name>
+    <getFunction>getFalse</getFunction>
+    <comment>
+      Vrací "false".
+    </comment>
   </property>
 </taglib>
 
