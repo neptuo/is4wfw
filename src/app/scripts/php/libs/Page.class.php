@@ -2450,7 +2450,7 @@
             global $loginObject;
             global $dbObject;
             $return = '';
-            $actionUrl = $_SERVER['REDIRECT_URL'];
+            $actionUrl = $_SERVER['REQUEST_URI'];
             if ($detailPageId != false) {
                 $actionUrl = $webObject->composeUrl($detailPageId);
             }
