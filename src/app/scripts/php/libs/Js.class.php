@@ -21,6 +21,16 @@
         private $includedInlineStyles = [];
 
         public function formatScript($path, $checkExistence = false) {
+            if (is_array($path)) {
+                $parameters = $path;
+                unset($parameters[""]);
+
+                $path = $path[""];
+                foreach ($parameters as $key => $value) {
+                    $path = UrlUtils::addParameter($path, $key, $value);
+                }
+            }
+
             if (in_array($path, $this->includedScripts)) {
                 return null;
             }
@@ -41,6 +51,16 @@
         }
         
         public function formatStyle($path) {
+            if (is_array($path)) {
+                $parameters = $path;
+                unset($parameters[""]);
+
+                $path = $path[""];
+                foreach ($parameters as $key => $value) {
+                    $path = UrlUtils::addParameter($path, $key, $value);
+                }
+            }
+
             if (in_array($path, $this->includedStyles)) {
                 return null;
             }

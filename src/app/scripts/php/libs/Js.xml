@@ -29,7 +29,9 @@
     <attribute>
       <name>path</name>
       <required />
+      <prefix />
       <type>string</type>
+      <comment>Výchozí atribut je cesta k souboru. Všechny další se přidají jako query parametery.</comment>
     </attribute>
     <attribute>
       <name>placement</name>
@@ -66,7 +68,9 @@
     <attribute>
       <name>path</name>
       <required />
+      <prefix />
       <type>string</type>
+      <comment>Výchozí atribut je cesta k souboru. Všechny další se přidají jako query parametery.</comment>
     </attribute>
     <comment>
       Vloží do stránky style s virtuální (nebo absolutní) url "path", pokud takový ještě není vložen.
