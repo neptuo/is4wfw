@@ -98,6 +98,10 @@
 				$text = $params[""];
 				unset($params[""]);
 
+				if ($text == "" || $text == null) {
+					return "";
+				}
+
 				$tag = $defaultTag;
 				if (array_key_exists("tag", $params)) {
 					$tag = $params["tag"];
