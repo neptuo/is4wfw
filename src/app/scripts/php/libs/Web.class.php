@@ -2387,6 +2387,10 @@
             return $_SERVER['HTTP_HOST'];
         }
 
+        public function getProtocol() {
+            return $this->Protocol;
+        }
+
         public function getRequestPath() {
             return $_SERVER['REQUEST_URI'];
         }

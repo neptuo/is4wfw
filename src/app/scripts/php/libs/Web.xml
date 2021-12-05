@@ -848,6 +848,13 @@
     </comment>
   </property>
   <property>
+  	<name>currentProtocol</name>
+  	<getFunction>getProtocol</getFunction>
+    <comment>
+      Vrácí protokol aktuálního requestu (http/https).
+    </comment>
+  </property>
+  <property>
   	<name>currentPath</name>
   	<getFunction>getRequestPath</getFunction>
     <comment>
