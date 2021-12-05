@@ -2205,6 +2205,14 @@
             }
         }
 
+        public function redirectToHttps() {
+            if ($this->Protocol != "https") {
+                $url = "https://" . $this->getHttpHost() . $this->getRequestPath();
+                $url = UrlUtils::addCurrentQueryString($url);
+                $this->redirectToUrl($url);
+            }
+        }
+
         /**
          *
          *  Function returns text files in binary representation.

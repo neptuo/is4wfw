@@ -377,6 +377,10 @@
     <function>redirectToSelf</function>
   </tag>
   <tag>
+    <name>redirectToHttps</name>
+    <function>redirectToHttps</function>
+  </tag>
+  <tag>
     <name>lang</name>
     <function>getLanguages</function>
     <attribute>
