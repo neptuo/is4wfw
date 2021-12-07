@@ -1,6 +1,10 @@
 <?php
 
-    class TemplateCacheKeys {
+class TemplateCacheKeys {
+        
+        public static function webProject(int $projectId) {
+            return ["webproject", $projectId];
+        }
 
         public static function page(int $pageId, int $langId, string $contentPart) {
             return ["page", $pageId, $langId, $contentPart];

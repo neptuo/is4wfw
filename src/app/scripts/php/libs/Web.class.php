@@ -68,6 +68,7 @@
             return $this->PageStyles;
         }
         
+        private $ProjectContent;
 
         public $PageLog = "";
         /**
@@ -295,7 +296,8 @@
                 }
 
                 $this->UrlResolver->selectProjectById($item);
-                
+                $this->ProjectContent = $item["project_content"];
+
                 if ($item['cachetime'] != -1) {
                     // Pouzijeme cache
                     $this->CacheFile = sha1($this->FullUrl).'.cache.html';
@@ -320,7 +322,10 @@
                 //echo $domainUrl.', '.$rootUrl.', '.$virtualUrl.'<br />';
                 if ($this->UrlResolver->resolveUrl($domainUrl, $rootUrl, $virtualUrl)) {
                     // Stranka existuje
+
                     $this->loadPageData();
+
+                    $this->ProjectContent = $this->dataAccess()->fetchScalar($this->sql()->select("web_project", ["content"], ["id" => $this->UrlResolver->getWebProjectId()]));
 
                     // Ulozit do urlcache
                     $this->UrlCache->write($fullUrl, $this->UrlResolver->getWebProject(), $this->SelectedEntrypoint ?? $this->pagesIdAsString('-'), $this->UrlResolver->getLanguage(), $this->findCachetime());
@@ -330,7 +335,7 @@
 
             if ($found) {
                 $this->doOldSetup();
-                $this->PageContent = $this->getContent();
+                $this->PageContent = $this->getProjectContent();
                 $this->flush();
             } else {
                 // Stranka neexistuje -> Projit Forwardy s 404 nebo All Errors
@@ -1618,6 +1623,10 @@
             }
 
             throw new MissingEntrypointException($moduleId, $entrypointId);
+        }
+
+        private function getProjectContent() {
+            return $this->executeTemplateContent(TemplateCacheKeys::webProject($this->UrlResolver->getWebProjectId()), $this->ProjectContent);
         }
 
         /**

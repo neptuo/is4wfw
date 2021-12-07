@@ -87,4 +87,6 @@
     <script build="362">INSERT INTO `group_perms` (`group_id`, `name`, `value`, `type`) VALUES (1, 'CMS.Settings.Modules', 'true', 'bool');</script>
     <script build="363">ALTER TABLE `web_project` ADD `entrypoint` TINYTEXT NULL AFTER `name`;</script>
     <script build="364">CREATE TABLE `custom_entity_audit` ( `id` INT NOT NULL AUTO_INCREMENT , `entity` TINYTEXT NOT NULL , `sql` TEXT NOT NULL , `timestamp` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
+    <script build="365">ALTER TABLE `web_project` ADD `content` TEXT NULL AFTER `entrypoint`;</script>
+    <script build="366"><![CDATA[UPDATE `web_project` SET `content` = '<web:content />';]]></script>
 </autoupdate>

@@ -14,7 +14,7 @@
         
         public function read($url) {
             if (WEB_USE_URLCACHE) {
-                return parent::db()->fetchSingle('select `url`, `http`, `https`, `domain_url`, `root_url`, `virtual_url`, `project_id`, `pages_id`, `language_id`, `cachetime`, `lastcache` from `urlcache` where `url` = "'.$url.'";');
+                return parent::db()->fetchSingle('select `url`, `http`, `https`, `domain_url`, `root_url`, `virtual_url`, `project_id`, wp.`content` as `project_content`, `pages_id`, `language_id`, `cachetime`, `lastcache` from `urlcache` c join `web_project` wp on c.`project_id` = wp.`id` where `url` = "'.$url.'";');
             }
             return array();
         }
