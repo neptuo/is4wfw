@@ -142,7 +142,7 @@
                 $actionUrl = $webObject->composeUrl($detailPageId);
             }
 
-            $projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `id`;');
+            $projects = $dbObject->fetchAll('SELECT DISTINCT `web_project`.`id`, `web_project`.`name`, `web_project`.`entrypoint` FROM `web_project` LEFT JOIN `web_project_right` ON `web_project`.`id` = `web_project_right`.`wp` LEFT JOIN `group` ON `web_project_right`.`gid` = `group`.`gid` WHERE `web_project_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `id`;');
 
             if (count($projects) == 0) {
                 $return .= parent::getWarning($rb->get('project.nodata'));
@@ -154,6 +154,7 @@
                             . '<th class="th-id">' . $rb->get('project.id') . ':</th>'
                             . '<th class="th-name">' . $rb->get('project.name') . ':</th>'
                             . '<th class="th-url">' . $rb->get('project.url') . ':</th>'
+                            . '<th class="th-entrypoint">' . $rb->get('project.entrypoint') . ':</th>'
                             . (($editable == "true") ? '' . '<th class="th-edit"></th>' : '')
                         . '</tr>'
                     . '</thead>'
@@ -189,6 +190,16 @@
                     $project['url'] = UrlResolver::combinePath($project['url'], $url['root_url']);
                     $project['url'] = UrlResolver::combinePath($project['url'], $url['virtual_url']);
 
+                    if (!empty($project["entrypoint"])) {
+                        $parts = explode(":", $project["entrypoint"], 2);
+                        $module = Module::findById($parts[0]);
+                        if ($module != null) {
+                            $parts[0] = $module->alias;
+                        }
+
+                        $project["entrypoint"] = implode(":", $parts);
+                    }
+
                     $pages = $dbObject->fetchAll('SELECT `id` FROM `page` WHERE `wp` = ' . $project['id'] . ' LIMIT 1;');
                     if ($ok == true) {
                         $return .= ''
@@ -196,7 +207,7 @@
                                 . '<td class="td-id">' . $project['id'] . '</td>'
                                 . '<td class="td-name">' . $project['name'] . '</td>'
                                 . '<td class="td-url"><a target="_blank" href="' . $project['url'] . '">' . $project['url'] . '</a></td>'
-                                //. '<td class="td-url">' . '<a target="_blank" href="' . (($project['http'] == 1) ? 'http://' : 'https://') . $project['url'] . '">view</a>' . '</td>'
+                                . '<td class="td-entrypoint">' . $project["entrypoint"] . '</td>'
                                 . '<td class="td-edit">'
                                 . (($editable == "true") ? ''
                                     . '<form name="edit-projects1" method="post" action="' . $actionUrl . '"> '
