@@ -23,6 +23,10 @@
   
 	$phpObject = new PhpRuntime();
 	$webObject = new Web();
+
+	if (defined("IS_ADMIN_HTTPS") && constant("IS_ADMIN_HTTPS") === true) {
+		$webObject->redirectToHttps();
+	}
   
 	$phpObject->register('v', 'php.libs.View');
 	$phpObject->register('m', 'php.libs.Menu');

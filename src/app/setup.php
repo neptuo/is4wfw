@@ -66,6 +66,9 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         'login' => $_POST['user-login'],
         'password' => sha1($_POST['user-login'] . $_POST['user-password']) // Duplicated in User.class.php
     );
+    $administration = [
+        'https' => array_key_exists('admin-https', $_POST) && $_POST['admin-https'] == 'on'
+    ];
 
     if (array_key_exists('filesystem-path-override', $_POST) && $_POST['filesystem-path-override'] == 'on') {
         $filesystem['root'] = '"' . $filesystem['path'] . '"';
@@ -82,6 +85,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     $targetFileContent = str_replace("{database-database}", $database['database'], $targetFileContent);
     $targetFileContent = str_replace('$_SERVER["DOCUMENT_ROOT"]', $filesystem['root'], $targetFileContent);
     $targetFileContent = str_replace("{filesystem-path}", $filesystem['path'], $targetFileContent);
+    $targetFileContent = str_replace("{admin-https}", $administration['https'] ? "true" : "false", $targetFileContent);
     
     ensureDirectory("../user");
 
@@ -274,6 +278,12 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
                                 <div class="gray-box">
                                     <label class="w110" for="instance-name">Name:</label>
                                     <input type="text" name="instance-name" id="instance-name" value="<?php echo $_POST['instance-name'] ?>" class="w200" />
+                                </div>
+                                <div class="gray-box">
+                                    <label>
+                                        <input type="checkbox" name="admin-https" />
+                                        Always redirect to HTTPS in administration
+                                    </label>
                                 </div>
 
                                 <hr />

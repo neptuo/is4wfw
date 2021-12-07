@@ -1324,8 +1324,8 @@
 
                 if ($absolute) {
                     $domainUrl = $this->getHttpHost();
-                    if ($_ENV["IS4WFW_PORT"] && $useIs4wfwPort) {
-                        $domainUrl .= ":" . $_ENV["IS4WFW_PORT"];
+                    if ($useIs4wfwPort) {
+                        $domainUrl .= $this->getDevelopmentPortWithSeparator();
                     }
 
                     $rootUrl = UrlResolver::combinePath($domainUrl, $rootUrl);
@@ -2207,7 +2207,7 @@
 
         public function redirectToHttps() {
             if ($this->Protocol != "https") {
-                $url = "https://" . $this->getHttpHost() . $this->getRequestPath();
+                $url = "https://" . $this->getHttpHost() . $this->getDevelopmentPortWithSeparator() . $this->getRequestPath();
                 $url = UrlUtils::addCurrentQueryString($url);
                 $this->redirectToUrl($url);
             }
