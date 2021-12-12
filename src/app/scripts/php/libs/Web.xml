@@ -866,6 +866,14 @@
     </comment>
   </property>
   <property>
+  	<name>currentAllPagesRelativePath</name>
+  	<getFunction>getAllPagesRelativePath</getFunction>
+    <comment>
+      Vrácí relativní path aktuálního requestu po odebrání části virtualUrl z projektu.
+      Vhodné pro relativní routování pro "pageless" projekty.
+    </comment>
+  </property>
+  <property>
   	<name>currentProjectId</name>
   	<getFunction>getProjectId</getFunction>
     <comment>

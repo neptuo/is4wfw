@@ -420,7 +420,7 @@
 
         private function findCachetime() {
             $cachetime = 10000000000;
-            if (!empty($this->SelectedEntrypoint)) {
+            if (!empty($this->SelectedEntrypoint) || empty($this->TempLoadedContent)) {
                 return -1;
             }
 
@@ -474,7 +474,8 @@
             return true;
         }
 
-        private function getEntrypointTrailingUrl($virtualUrl) {
+        public function getAllPagesRelativePath() {
+            $virtualUrl = $this->getVirtualUrl();
             $webProject = $this->UrlResolver->getWebProject();
 
             $reqVirs = StringUtils::explode($virtualUrl, '/');
@@ -1648,7 +1649,7 @@
             if (!empty($this->SelectedEntrypoint)) {
                 try {
                     $entrypoint = explode(":", $this->SelectedEntrypoint);
-                    $trailingUrl = $this->getEntrypointTrailingUrl($this->getVirtualUrl());
+                    $trailingUrl = $this->getAllPagesRelativePath();
                     return $this->renderEntrypoint($entrypoint[0], $entrypoint[1], ["relativeUrl" => $trailingUrl]);
                 }
                 catch (MissingEntrypointException $e) {
