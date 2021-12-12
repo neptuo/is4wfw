@@ -29,7 +29,7 @@
                 $domainProtocol = "http";
             }
 
-            $urls = parent::db()->fetchAll('select wu.`id`, wu.`project_id`, wu.`domain_url`, wu.`root_url`, wu.`virtual_url`, wu.`http`, wu.`https`, wp.`entrypoint` from `web_url` wu join `web_project` wp on wu.`project_id` = wp.`id` where `enabled` = 1;');
+            $urls = parent::db()->fetchAll('select wu.`id`, wu.`project_id`, wu.`domain_url`, wu.`root_url`, wu.`virtual_url`, wu.`http`, wu.`https`, wp.`entrypoint`, wp.`pageless` from `web_url` wu join `web_project` wp on wu.`project_id` = wp.`id` where `enabled` = 1;');
 
             // Domains
             $selected = array();
@@ -102,7 +102,7 @@
             foreach ($selected2 as $url) {
                 if ($url['virtual_url'] == '') {
                     // prejit na parsovani url stranek
-                    if (empty($url['entrypoint'])) {
+                    if (empty($url['entrypoint']) || $url['pageless']) {
                         if ($this->parsePageUrl($pageUrls, $url['project_id'])) {
                             // mame viteze
                             $this->selectProject($url);
@@ -131,7 +131,7 @@
                         }
 
                         if ($ok) {
-                            if (empty($url['entrypoint'])) {
+                            if (empty($url['entrypoint']) && !$url['pageless']) {
                                 // prejit na parsovani url stranek
                                 $key++;
                                 if ($this->parsePageUrl($this->subarray($pageUrls, $key), $url['project_id'])) {
@@ -270,6 +270,7 @@
             $this->loadProjectById($url['project_id']);
             $this->WebProject['alias'] = $url;
             $this->WebProject['entrypoint'] = $url["entrypoint"];
+            $this->WebProject['pageless'] = $url["pageless"];
         }
 
         public function selectProjectById($cacheItem) {
@@ -282,9 +283,14 @@
                 'http' => $cacheItem['http'],
                 'https' => $cacheItem['https'],
             );
-
+            
+            $this->WebProject['pageless'] = false;
             if ($cacheItem["language_id"] == 0) {
-                $this->WebProject['entrypoint'] = $cacheItem["pages_id"];
+                if (empty($cacheItem["pages_id"])) {
+                    $this->WebProject['pageless'] = true;
+                } else {
+                    $this->WebProject['entrypoint'] = $cacheItem["pages_id"];
+                }
             }
         }
 

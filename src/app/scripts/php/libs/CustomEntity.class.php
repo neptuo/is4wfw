@@ -11,11 +11,16 @@
         private $tagPrefix;
         private $urlProperties;
         private $urlResolvers;
+        private $defaultName;
 
-		public function __construct($tagPrefix) {
+		public function __construct($tagPrefix, $params = []) {
             $this->tagPrefix = $tagPrefix;
             $this->urlProperties = [];
             $this->urlResolvers = [];
+            
+			if (array_key_exists("name", $params)) {
+				$this->defaultName = $params["name"];
+			}
         }
 
         private function parseUserValue($column, $value) {

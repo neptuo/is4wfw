@@ -288,7 +288,9 @@
                     $this->UrlResolver->setPagesId($this->parsePagesId($item['pages_id']));
                     $this->UrlResolver->selectLanguage($item['language_id']);
                 } else {
-                    $this->SelectedEntrypoint = $item["pages_id"];
+                    if (!empty($item["pages_id"])) {
+                        $this->SelectedEntrypoint = $item["pages_id"];
+                    }
                 }
 
                 $this->UrlResolver->selectProjectById($item);
@@ -381,8 +383,8 @@
         }
 
         private function loadPageData() {
-            $entrypoint = $this->UrlResolver->getWebProject()["entrypoint"];
-            if (empty($entrypoint)) {
+            $wp = $this->UrlResolver->getWebProject();
+            if (empty($wp["entrypoint"]) && !$wp["pageless"]) {
                 $selectSql = ""
                     . "SELECT p.`id`, i.`name`, i.`href`, i.`in_title`, i.`keywords`, i.`title`, i.`timestamp`, i.`cachetime`, "
                     . "IFNULL(c.`tag_lib_start`, cd.`tag_lib_start`) AS `tag_lib_start`, IFNULL(c.`tag_lib_end`, cd.`tag_lib_end`) AS `tag_lib_end`, IFNULL(c.`head`, cd.`head`) AS `head`, IFNULL(c.`content`, cd.`content`) AS `content` "
@@ -396,8 +398,8 @@
                         . "AND p.`wp` = " . $this->UrlResolver->getWebProjectId() . ";";
                 
                 $this->TempLoadedContent = $this->sortPages(parent::db()->fetchAll($selectSql), $this->UrlResolver->getPagesId());
-            } else {
-                $this->SelectedEntrypoint = $entrypoint;
+            } else if (!empty($wp["entrypoint"])) {
+                $this->SelectedEntrypoint = $wp["entrypoint"];
             }
         }
 
@@ -1161,7 +1163,7 @@
          *
          */
         public function flush() {
-            if (empty($this->SelectedEntrypoint)) {
+            if (empty($this->SelectedEntrypoint) && !$this->UrlResolver->getWebProject()["pageless"]) {
                 $_SESSION['last-request']['pages-id'] = $this->PagesId;
 
                 if (!RoleHelper::canUser(Web::$PageRightDesc, $this->PagesId, WEB_R_READ)) {
