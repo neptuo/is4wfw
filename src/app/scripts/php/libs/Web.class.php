@@ -275,11 +275,7 @@
 
             $item = $this->UrlCache->read($fullUrl);
             
-            if ($_SERVER['HTTPS'] == "on") {
-                $this->Protocol = 'https';
-            } else {
-                $this->Protocol = 'http';
-            }
+            $this->ensureProtocol();
 
             $this->FullUrl = $fullUrl;
             
@@ -340,6 +336,16 @@
             } else {
                 // Stranka neexistuje -> Projit Forwardy s 404 nebo All Errors
                 $this->generateErrorPage('404');
+            }
+        }
+
+        private function ensureProtocol() {
+            if (empty($this->Protocol)) {
+                if ($_SERVER['HTTPS'] == "on") {
+                    $this->Protocol = 'https';
+                } else {
+                    $this->Protocol = 'http';
+                }
             }
         }
 
@@ -2215,6 +2221,7 @@
         }
 
         public function redirectToHttps() {
+            $this->ensureProtocol();
             if ($this->Protocol != "https") {
                 $url = "https://" . $this->getHttpHost() . $this->getDevelopmentPortWithSeparator() . $this->getRequestPath();
                 $url = UrlUtils::addCurrentQueryString($url);
