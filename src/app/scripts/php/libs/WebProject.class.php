@@ -276,6 +276,7 @@
                     'name' => $_POST['project-name'], 
                     'entrypoint' => $_POST['project-entrypoint'], 
                     'content' => $_POST['project-edit-content'],
+                    'pageless' => $_POST['project-edit-pageless'],
                     'read' => $_POST['project-right-edit-groups-r'], 
                     'write' => $_POST['project-right-edit-groups-w'], 
                     'delete' => $_POST['project-right-edit-groups-d'], 
@@ -302,7 +303,7 @@
                     if (count($errors) == 0) {
                         if ($project['id'] == 0) {
                             // vlozit novy projekt
-                            parent::db()->execute($this->sql()->insert("web_project", ["name" => $project["name"], "entrypoint" => $project["entrypoint"], "content" => $project["content"]]));
+                            parent::db()->execute($this->sql()->insert("web_project", ["name" => $project["name"], "entrypoint" => $project["entrypoint"], "content" => $project["content"], "pageless" => $project["pageless"]]));
                             $projectId = parent::db()->getLastId();
                             $project['id'] = $projectId;
 
@@ -345,7 +346,7 @@
                             }
                         } else {
                             // update stavajiciho projektu
-                            parent::db()->execute($this->sql()->update("web_project", ["name" => $project["name"], "entrypoint" => $project["entrypoint"], "content" => $project["content"]], ["id" => $project['id']]));
+                            parent::db()->execute($this->sql()->update("web_project", ["name" => $project["name"], "entrypoint" => $project["entrypoint"], "content" => $project["content"], "pageless" => $project["pageless"]], ["id" => $project['id']]));
 
                             parent::db()->execute('delete from `web_url` where `project_id` = ' . $project['id'] . ';');
                             foreach ($urls['domain'] as $key => $domainUrl) {
@@ -467,7 +468,7 @@
                     $projectId = $project['id'];
                 } elseif ($_POST['edit'] == $rb->get('project.edit')) {
                     $projectId = $_POST['wp'];
-                    $project = parent::db()->fetchSingle('SELECT `id`, `name`, `entrypoint`, `content` FROM `web_project` WHERE `id` = ' . $projectId . ';');
+                    $project = parent::db()->fetchSingle('SELECT `id`, `name`, `entrypoint`, `content`, `pageless` FROM `web_project` WHERE `id` = ' . $projectId . ';');
                     if ($project != array()) {
                         $aliases = parent::db()->fetchAll('select `id`, `domain_url`, `root_url`, `virtual_url`, `http`, `https`, `default`, `enabled` from `web_url` where `project_id` = ' . $projectId . ' order by `id`;');
                         $project['aliases'] = $aliases;
@@ -648,6 +649,12 @@
                     . '<div class="gray-box">'
                         . '<span class="red">' . $rb->get('project.urlstitle') . ':</span> '
                         . '<span class="small-note">' . $rb->get('project.urldeletenote') . '</span>'
+                    . '</div>'
+                    . '<div class="gray-box">'
+                        . '<label title="' . $rb->get('project.pageless.title') . '">'
+                            . '<input name="project-edit-pageless" type="checkbox" ' . ($project["pageless"] ? 'checked="checked"' : '') . ' /> '
+                            . $rb->get('project.pageless')
+                        . '</label>'
                     . '</div>'
                     . '<table class="gray-box">'
                         . '<tr>'

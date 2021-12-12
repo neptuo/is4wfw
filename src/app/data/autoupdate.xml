@@ -89,4 +89,5 @@
     <script build="364">CREATE TABLE `custom_entity_audit` ( `id` INT NOT NULL AUTO_INCREMENT , `entity` TINYTEXT NOT NULL , `sql` TEXT NOT NULL , `timestamp` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_czech_ci;</script>
     <script build="365">ALTER TABLE `web_project` ADD `content` TEXT NULL AFTER `entrypoint`;</script>
     <script build="366"><![CDATA[UPDATE `web_project` SET `content` = '<web:content />';]]></script>
+    <script build="367">ALTER TABLE `web_project` ADD `pageless` BIT NOT NULL DEFAULT b'0' AFTER `content`;</script>
 </autoupdate>
