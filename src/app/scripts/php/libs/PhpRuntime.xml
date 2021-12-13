@@ -40,6 +40,16 @@
     </comment>
   </tag>
   <tag>
+    <name>create</name>
+    <function>create</function>
+    <anyAttribute />
+    <comment>
+      Registruje instance knihoven k prefixům.
+      Každý prefixovaný atribut registruje instanci knihovny.
+      Všechny další atributy v daném prefixu jsou pak předány knihovny jako parametry konstruktoru.
+    </comment>
+  </tag>
+  <tag>
     <name>unregister</name>
     <function>unregister</function>
     <attribute>

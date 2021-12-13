@@ -144,6 +144,33 @@
             
             return "";
         }
+
+        public function create($attributes) {
+            foreach ($this->groupAttributesByPrefix($attributes) as $prefix => $values) {
+                $classPath = $values[""];
+                if (empty($classPath)) {
+                    throw new Exception("Missing class to instantiate for prefix '$prefix'.");
+                }
+
+                unset($values[""]);
+
+                $this->register($prefix, $classPath, $values);
+            }
+        }
+
+        protected function groupAttributesByPrefix($attributes) {
+            $result = array();
+            foreach ($attributes as $key => $value) {
+                $keyParts = explode("-", $key, 2);
+                if (count($keyParts) == 2) {
+                    $result[$keyParts[0]][$keyParts[1]] = $value;
+                } else {
+                    $result[$keyParts[0]][""] = $value;
+                }
+            }
+
+            return $result;
+        }
     
         /**
          *
