@@ -2,7 +2,6 @@
 <taglib>
   <comment>
     Knihovna pro práci s uživatelskými entitami.
-    Při registraci možné nutné zadat parametr "name" (param-name), který je pak použit jako výchozí název entity (pokud není přepsát na entitě).
   </comment>
   <fulltag>
     <name>form</name>
