@@ -5,6 +5,7 @@
 
     class LibraryDefinition {
         private $prefix;
+        private $className;
         private $xmlPath;
         private $xml;
 
@@ -25,6 +26,17 @@
         public function triggerFail($message, $errorType = E_USER_WARNING) {
             trigger_error($message, $errorType);
             return false;
+        }
+
+        public function getClassName() {
+            if (!$this->className) {
+                $this->className = basename($this->xmlPath, ".xml");
+                if ($this->xml->namespace) {
+                    $this->className = $this->xml->namespace . "\\" . $this->className;
+                }
+            }
+
+            return $this->className;
         }
 
         public function isDisposable() {

@@ -124,7 +124,7 @@
                     $xmlPath = $this->libraryLoader->getXmlPath($classPath);
                     $library = $this->libraries->add($tagPrefix, $xmlPath);
                     if ($this->isCountOfInstances($classPath, $library)) {
-                        $className = $this->libraryLoader->getClassName($classPath);
+                        $className = $library->getClassName($classPath);
                         $GLOBALS[$tagPrefix . "Object"] = new $className($tagPrefix, $params);
                         $this->addInstanceToCounter($classPath);
 
