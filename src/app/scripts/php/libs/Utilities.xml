@@ -278,6 +278,17 @@
     <comment>Vygeneruje následující (sekvenční) unikátní identifikátor.</comment>
   </tag>
   <tag>
+    <name>guid</name>
+    <function>guid</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <comment>Vygeneruje GUID-v4.</comment>
+  </tag>
+  <tag>
     <name>formatBytes</name>
     <function>formatBytes</function>
     <lookless />
