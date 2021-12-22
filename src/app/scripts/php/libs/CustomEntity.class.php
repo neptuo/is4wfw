@@ -562,16 +562,17 @@
             return $langIds;
         }
 
-        private $fieldMetadataByName = [];
-        private $fieldMetadataByAlias = [];
+        private $fieldMetadata = [];
 
-        public function getList($template, $name, $filter = array(), $orderBy = array(), $paging = null, $langIds = "") {
+        private function setFieldMetadata($name, $key, $value) {
+            $this->fieldMetadata[$name][$key] = $value;
+        }
+
+        public function getList($template, $name, $filter = [], $groupBy = "", $having = [], $orderBy = [], $paging = null, $langIds = "") {
             $tableName = $this->ensureTableName($name);
 
-            $oldFieldMetadataByName = $this->fieldMetadataByName;
-            $this->fieldMetadataByName = [];
-            $oldFieldMetadataByAlias = $this->fieldMetadataByAlias;
-            $this->fieldMetadataByAlias = [];
+            $oldFieldMetadata = $this->fieldMetadata;
+            $this->fieldMetadata = [];
 
             $model = new ListModel();
             $this->pushListModel($model);
@@ -582,6 +583,14 @@
 
             $langIds = $this->ensureListLangIds($langIds, $model);
             
+            if (empty($groupBy)) {
+                $groupBy = null;
+            } else {
+                $groupBy = explode(",", $groupBy);
+            }
+
+            $isPagingModel = $paging instanceof PagingModel;
+            
             $result = "";
 
             if (parent::isFilterModel($filter)) {
@@ -590,6 +599,13 @@
                 $filter = $filter->toSql();
             } else {
                 $filter = ArrayUtils::removeKeysWithEmptyValues($filter);
+            }
+
+            if ($this->isFilterModel($having)) {
+                $having = $having[""];
+                $having = $having->toSql();
+            } else {
+                $having = ArrayUtils::removeKeysWithEmptyValues($having);
             }
             
             if ($this->isSortModel($orderBy)) {
@@ -609,9 +625,19 @@
 
             foreach ($fields as $key => $value) {
                 $isProcessed = false;
+                
+                $columnName = null;
+                $columnAlias = null;
+                if (array_key_exists($value, $this->fieldMetadata)) {
+                    $metadata = $this->fieldMetadata[$value];
+                    if (array_key_exists("alias", $metadata)) {
+                        $columnName = $metadata["column"];
+                        $columnAlias = $metadata["alias"];
+                    }
+                }
 
-                if (strpos($value, ".") !== false) {
-                    $parts = explode(".", $value, 2);
+                if (strpos($columnName ?? $value, ".") !== false) {
+                    $parts = explode(".", $columnName ?? $value, 2);
                     if ($xml == null) {
                         $xml = parent::getDefinition($name);
                     }
@@ -624,7 +650,7 @@
                         $fields[$key] = array(
                             "select" => array(
                                 "column" => $parts[1],
-                                "alias" => $value
+                                "alias" => $columnAlias ?? $value
                             ),
                             "leftjoin" => array(
                                 "source" => $parts[0],
@@ -672,16 +698,28 @@
                     $isProcessed = true;
                 }
 
-                if (array_key_exists($value, $this->fieldMetadataByName)) {
-                    $metadata = $this->fieldMetadataByName[$value];
+                if (array_key_exists($value, $this->fieldMetadata)) {
+                    $metadata = $this->fieldMetadata[$value];
                     if (array_key_exists("alias", $metadata)) {
+                        if (!$isProcessed) {
+                            $fields[$key] = [
+                                "select" => [
+                                    "column" => $metadata["column"],
+                                    "alias" => $metadata["alias"]
+                                ]
+                            ];
+                            $isProcessed = true;
+                        }
+                    }
+
+                    if (array_key_exists("aggregation", $metadata)) {
                         if ($isProcessed) {
-                            $fields[$key]["select"]["alias"] = $metadata["alias"];
+                            $fields[$key]["select"]["aggregation"] = $metadata["aggregation"];
                         } else {
                             $fields[$key] = [
                                 "select" => [
                                     "column" => $value,
-                                    "alias" => $metadata["alias"]
+                                    "aggregation" => $metadata["aggregation"]
                                 ]
                             ];
                             $isProcessed = true;
@@ -700,19 +738,17 @@
 
             $count = null;
             $offset = null;
-            if ($paging instanceof PagingModel || empty($fieds)) {
-                $sql = $this->sql()->count($tableName, $filter);
-                $totalCount = $this->dataAccess()->fetchScalar($sql);
-            }
-
-            if ($paging instanceof PagingModel) {
-                $paging->setTotalCount($totalCount);
-
+            if ($isPagingModel) {
                 $count = $paging->getSize();
                 $offset = $paging->getOffset();
             }
 
             if (empty($fields)) {
+                if ($isPagingModel) {
+                    $sql = $this->sql()->count($tableName, $filter);
+                    $totalCount = $this->dataAccess()->fetchScalar($sql);
+                }
+
                 if ($count != null) {
                     $dataCount = min($totalCount - $offset, $count);
                 } else {
@@ -724,8 +760,35 @@
                     $data[] = [];
                 }
             } else {
-                $sql = $this->sql()->select($tableName, $fields, $filter, $orderBy, $count, $offset);
+                $sql = $this->sql()->select2([
+                    "table" => $tableName, 
+                    "fields" => $fields, 
+                    "filter" => $filter, 
+                    "groupBy" => $groupBy,
+                    "having" => $having,
+                    "orderBy" => $orderBy, 
+                    "count" => $count, 
+                    "offset" => $offset
+                ]);
+
                 $data = $this->dataAccess()->fetchAll($sql);
+
+                if ($isPagingModel) {
+                    $sql = $this->sql()->select2([
+                        "table" => $tableName, 
+                        "fields" => $fields, 
+                        "filter" => $filter, 
+                        "groupBy" => $groupBy,
+                        "having" => $having
+                    ]);
+                    $sql = substr($sql, 0, strlen($sql) - 1);
+                    $sql = "SELECT COUNT(*) FROM ($sql) AS q;";
+                    $totalCount = $this->dataAccess()->fetchScalar($sql);
+                }
+            }
+
+            if ($isPagingModel) {
+                $paging->setTotalCount($totalCount);
             }
 
             $model->render();
@@ -733,18 +796,26 @@
             $result .= $template();
 
             $this->popListModel();
-            $this->fieldMetadataByName = $oldFieldMetadataByName;
-            $this->fieldMetadataByAlias = $oldFieldMetadataByAlias;
+            $this->fieldMetadata = $oldFieldMetadata;
 
             return $result;
         }
 
-        public function register($name, $alias = "") {
-            $this->getProperty($name);
+        public function register($name, $alias = "", $aggregation = "") {
             if ($alias != "") {
-                $this->fieldMetadataByName[$name] = $this->fieldMetadataByAlias[$alias] = [
-                    "alias" => $alias
-                ];
+                $this->getProperty($alias);
+                $this->setFieldMetadata($alias, "alias", $alias);
+                $this->setFieldMetadata($alias, "column", $name);
+            } else {
+                $this->getProperty($name);
+            }
+
+            if ($alias == "") {
+                $alias = $name;
+            }
+            
+            if ($aggregation != "") {
+                $this->setFieldMetadata($alias, "aggregation", $aggregation);
             }
         }
 
@@ -756,10 +827,8 @@
                     return $model->data();
                 }
                 
-                if ($model->isRegistration()) {
-                    if (array_key_exists($name, $this->fieldMetadataByName) || array_key_exists($name, $this->fieldMetadataByAlias)) {
-                        return;
-                    }
+                if ($model->isRegistration() && array_key_exists($name, $this->fieldMetadata)) {
+                    return;
                 }
 
                 if ($model->hasMetadataKey("langIds")) {

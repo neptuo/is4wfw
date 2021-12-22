@@ -75,6 +75,32 @@
             
             return $value;
         }
+        
+        private function appendHaving($value) {
+            if (!empty($value)) {
+                $value = " HAVING $value";
+            }
+            
+            return $value;
+        }
+
+        private function groupBy($tableAlias, $groupBy) {
+            $result = "";
+            foreach ($groupBy as $field) {
+                $field = $this->field($tableAlias, $field);
+                $result = StringUtils::join($result, $field, ", ");
+            }
+
+            return $result;
+        }
+
+        private function appendGroupBy($value) {
+            if (!empty($value)) {
+                $value = " GROUP BY $value";
+            }
+
+            return $value;
+        }
 
         private function orderBy($orderBy) {
             $result = "";
@@ -147,8 +173,25 @@
             $sql = "DELETE FROM `$tableName`$condition;";
             return $sql;
         }
-
+        
         public function select($tableName, $fields, $filter = array(), $orderBy = array(), $count = null, $offset = null) {
+            return $this->selectInternal($tableName, $fields, $filter, [], [], $orderBy, $count, $offset);
+        }
+
+        public function select2($data) {
+            return $this->selectInternal(
+                $data["table"], 
+                $data["fields"], 
+                $data["filter"], 
+                $data["groupBy"] ?? [], 
+                $data["having"] ?? [], 
+                $data["orderBy"] ?? [], 
+                $data["count"] ?? null, 
+                $data["offset"] ?? null
+            );
+        }
+
+        private function selectInternal($tableName, $fields, $filter = [], $groupBy = [], $having = [], $orderBy = [], $count = null, $offset = null) {
             $order = $this->orderBy($orderBy);
             $order = $this->appendOrderBy($order);
 
@@ -164,9 +207,15 @@
                 $tableName = "`$tableName`";
             }
 
+            $group = $this->groupBy($alias, $groupBy);
+            $group = $this->appendGroupBy($group);
+
             $condition = $this->condition($filter, "AND ", $alias);
             $condition = $this->appendWhere($condition);
             
+            $having = $this->condition($having, "AND ");
+            $having = $this->appendHaving($having);
+
             $joins = array();
             $columns = "";
 
@@ -214,8 +263,16 @@
                     
                     if (array_key_exists("select", $field)) {
                         $column = $field["select"]["column"];
-                        $as = $field["select"]["alias"];
-                        $field = $this->field($fieldTableAlias, $column) . " AS `$as`";
+                        $as = $field["select"]["alias"] ?? $column;
+                        $aggregation = $field["select"]["aggregation"] ?? null;
+
+                        $preColumn = null;
+                        $postColumn = null;
+                        if ($aggregation) {
+                            $preColumn = strtoupper($aggregation) . "(";
+                            $postColumn = ")";
+                        }
+                        $field = $preColumn . $this->field($fieldTableAlias, $column) . $postColumn . " AS `$as`";
                     }
 
                     $columns = StringUtils::join($columns, $field);
@@ -243,7 +300,7 @@
                 $limit .= "$count";
             }
 
-            $sql = "SELECT $columns FROM $tableName$joins$condition$order$limit;";
+            $sql = "SELECT $columns FROM $tableName$joins$condition$group$having$order$limit;";
             return $sql;
         }
 

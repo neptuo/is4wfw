@@ -70,6 +70,10 @@
       <name>alias</name>
       <comment>Alias pro sloupec v dotazu.</comment>
     </attribute>
+    <attribute>
+      <name>aggregation</name>
+      <comment>Agregační funkce (count, min, max, sum, avg).</comment>
+    </attribute>
     <comment>
       Zaregistruje do dotazu sloupec podle "name" i přesto, že se pomocí custom property nikde nevypisuje.
       Je možné použít "*" pro výběr vše sloupců z tabulky.
@@ -163,6 +167,15 @@
       <comment>Filtry, kterým data musí vyhovovat.</comment>
     </attribute>
     <attribute>
+      <name>groupBy</name>
+      <comment>Seznam čárkou oddělených fieldů, podle kterých se má grupovat.</comment>
+    </attribute>
+    <attribute>
+      <name>having</name>
+      <prefix />
+      <comment>Having filtry, kterým data musí vyhovovat.</comment>
+    </attribute>
+    <attribute>
       <name>orderBy</name>
       <prefix />
       <comment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</comment>
@@ -177,7 +190,7 @@
     </attribute>
     <comment>
       Vypíše seznam dat z entity "name".
-      List model se nastaví do "ce:list", vypisovat pak lze pomocí "ce:*" (atribut) nebo "ce:_" (celá položka).
+      List model se nastaví do "ce:list", vypisovat pak lze pomocí "ce:*" (atribut/sloupec) nebo "ce:_" (celá položka).
       Pokud je vyplněn "langIds", pak je pro tyto jazyky přijoinuje lokalizovaná varianta a při výpisu se bere první neprázdná hodnota.
     </comment>
   </fulltag>
