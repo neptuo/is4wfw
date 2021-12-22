@@ -7,6 +7,7 @@ function initConfirm() {
 
         if (!confirm(title + "?")) {
             event.preventDefault();
+            event.stopPropagation();
         }
     });
 }
