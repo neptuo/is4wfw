@@ -684,7 +684,7 @@
       <comment>Formátovací řetězec pro datum (a čas).</comment>
     </attribute>
     <comment>
-      Vypíše hodnota časového razítka z "value" ve formátu "format".
+      Vypíše hodnotu časového razítka z "value" ve formátu "format".
     </comment>
   </tag>
   <tag>
