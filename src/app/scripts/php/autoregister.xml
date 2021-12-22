@@ -9,6 +9,7 @@
 	<reg prefix="ce" class="php.libs.CustomEntity" />
 	<reg prefix="ced" class="php.libs.CustomEntityAdmin" />
 	<reg prefix="db" class="php.libs.Database" />
+	<reg prefix="dt" class="php.libs.DateTime" />
 	<reg prefix="edit" class="php.libs.Editor" />
 	<reg prefix="email" class="php.libs.Email" />
 	<reg prefix="error" class="php.libs.ErrorHandler" />

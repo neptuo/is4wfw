@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <comment>
+    Knihovna pro s datumem a časem.
+  </comment>
+  <namespace>php\libs</namespace>
+  <tag>
+    <name>declare</name>
+    <function>declare</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název, pod kterým se má hodnota uložit.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>Výchozí hodnota datumu a času.</comment>
+    </attribute>
+    <attribute>
+      <name>setYear</name>
+      <comment>Nastaví rok.</comment>
+    </attribute>
+    <attribute>
+      <name>setMonth</name>
+      <comment>Nastaví měsíc.</comment>
+    </attribute>
+    <attribute>
+      <name>setDay</name>
+      <comment>Nastaví den v měsíci.</comment>
+    </attribute>
+    <attribute>
+      <name>setHour</name>
+      <comment>Nastaví hodiny.</comment>
+    </attribute>
+    <attribute>
+      <name>setMinute</name>
+      <comment>Nastaví minuty.</comment>
+    </attribute>
+    <attribute>
+      <name>setSecond</name>
+      <comment>Nastaví vteřiny.</comment>
+    </attribute>
+    <attribute>
+      <name>setWeekDay</name>
+      <comment>Nastaví den v týdnu.</comment>
+    </attribute>
+    <attribute>
+      <name>addYear</name>
+      <comment>Přidá rok.</comment>
+    </attribute>
+    <attribute>
+      <name>addMonth</name>
+      <comment>Přidá měsíc.</comment>
+    </attribute>
+    <attribute>
+      <name>addDay</name>
+      <comment>Přidá den v měsíci.</comment>
+    </attribute>
+    <attribute>
+      <name>addHour</name>
+      <comment>Přidá hodiny.</comment>
+    </attribute>
+    <attribute>
+      <name>addMinute</name>
+      <comment>Přidá minuty.</comment>
+    </attribute>
+    <attribute>
+      <name>addSecond</name>
+      <comment>Přidá vteřiny.</comment>
+    </attribute>
+    <comment>
+      Nastaví hodnotu "value" do pole "name".
+      Nejprve se použijí "set*" a poté "add*".
+    </comment>
+  </tag>
+  <tag>
+    <name>set</name>
+    <function>set</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název, který se má modifikovat.</comment>
+    </attribute>
+    <attribute>
+      <name>year</name>
+      <comment>Rok.</comment>
+    </attribute>
+    <attribute>
+      <name>month</name>
+      <comment>Měsíc.</comment>
+    </attribute>
+    <attribute>
+      <name>day</name>
+      <comment>Den v měsíci.</comment>
+    </attribute>
+    <attribute>
+      <name>hour</name>
+      <comment>Hodiny.</comment>
+    </attribute>
+    <attribute>
+      <name>minute</name>
+      <comment>Minuty.</comment>
+    </attribute>
+    <attribute>
+      <name>second</name>
+      <comment>Vteřiny.</comment>
+    </attribute>
+    <attribute>
+      <name>weekDay</name>
+      <comment>Den v týdnu.</comment>
+    </attribute>
+    <comment>
+      Nastaví hodnotu datumu a času pro "name".
+    </comment>
+  </tag>
+  <tag>
+    <name>add</name>
+    <function>add</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název, který se má modifikovat.</comment>
+    </attribute>
+    <attribute>
+      <name>year</name>
+      <comment>Rok.</comment>
+    </attribute>
+    <attribute>
+      <name>month</name>
+      <comment>Měsíc.</comment>
+    </attribute>
+    <attribute>
+      <name>day</name>
+      <comment>Den v měsíci.</comment>
+    </attribute>
+    <attribute>
+      <name>hour</name>
+      <comment>Hodiny.</comment>
+    </attribute>
+    <attribute>
+      <name>minute</name>
+      <comment>Minuty.</comment>
+    </attribute>
+    <attribute>
+      <name>second</name>
+      <comment>Vteřiny.</comment>
+    </attribute>
+    <comment>
+      Přidá hodnotu datumu a času pro "name".
+    </comment>
+  </tag>
+  <tag>
+    <name>format</name>
+    <function>format</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <comment>Název formátovací řetězce. Pokud není zadán, nastavuje se výchozí formát.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>Formátovací řetězec</comment>
+    </attribute>
+    <comment>
+      Nastaví formátovací řetězec, dostupný pod názvem "name".
+    </comment>
+  </tag>
+  <tag>
+    <name>clear</name>
+    <function>removeValue</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název, který se má zrušit.</comment>
+    </attribute>
+    <comment>
+      Smaže hodnotu.
+    </comment>
+  </tag>
+  <anyProperty>
+    <comment>
+      Vrací hodnotu datumu a času podle názvu.
+      Předdefinované názvy: now (nyní), today (dnes).
+      Pokud neobsahuje "-", vrací timestamp. Druhá část názvu za "-" určuje formát.
+      Předdefinované frakce "year/Y" (rok), "month/m" (měsíc), "day/d" (den), "hour/H" (hodiny 0-24), "minute/i" (minuty), "second/s" (vteřiny).
+      Následně "format" formátuje podle výchozího (nejmenovaného) formátovacího řetězce.
+      Ostatní hodnoty hledají pojmenovaná formátovací řetězec.
+    </comment>
+  </anyProperty>
+</taglib>
+
