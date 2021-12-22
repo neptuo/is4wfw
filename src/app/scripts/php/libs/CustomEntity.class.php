@@ -562,8 +562,16 @@
             return $langIds;
         }
 
+        private $fieldMetadataByName = [];
+        private $fieldMetadataByAlias = [];
+
         public function getList($template, $name, $filter = array(), $orderBy = array(), $paging = null, $langIds = "") {
             $tableName = $this->ensureTableName($name);
+
+            $oldFieldMetadataByName = $this->fieldMetadataByName;
+            $this->fieldMetadataByName = [];
+            $oldFieldMetadataByAlias = $this->fieldMetadataByAlias;
+            $this->fieldMetadataByAlias = [];
 
             $model = new ListModel();
             $this->pushListModel($model);
@@ -600,6 +608,8 @@
             }
 
             foreach ($fields as $key => $value) {
+                $isProcessed = false;
+
                 if (strpos($value, ".") !== false) {
                     $parts = explode(".", $value, 2);
                     if ($xml == null) {
@@ -626,6 +636,7 @@
                     }
 
                     $isAliasRequired = true;
+                    $isProcessed = true;
                 } else if (!empty($langIds)) {
                     $column = $this->findColumn($xml, $value);
                     if ($column->localized) {
@@ -658,7 +669,27 @@
                     }
                     
                     $fields[$key] = $value;
-                } else {
+                    $isProcessed = true;
+                }
+
+                if (array_key_exists($value, $this->fieldMetadataByName)) {
+                    $metadata = $this->fieldMetadataByName[$value];
+                    if (array_key_exists("alias", $metadata)) {
+                        if ($isProcessed) {
+                            $fields[$key]["select"]["alias"] = $metadata["alias"];
+                        } else {
+                            $fields[$key] = [
+                                "select" => [
+                                    "column" => $value,
+                                    "alias" => $metadata["alias"]
+                                ]
+                            ];
+                            $isProcessed = true;
+                        }
+                    }
+                }
+
+                if (!$isProcessed) {
                     $fields[$key] = $value;
                 }
             }
@@ -702,11 +733,19 @@
             $result .= $template();
 
             $this->popListModel();
+            $this->fieldMetadataByName = $oldFieldMetadataByName;
+            $this->fieldMetadataByAlias = $oldFieldMetadataByAlias;
+
             return $result;
         }
 
-        public function register($name) {
+        public function register($name, $alias = "") {
             $this->getProperty($name);
+            if ($alias != "") {
+                $this->fieldMetadataByName[$name] = $this->fieldMetadataByAlias[$alias] = [
+                    "alias" => $alias
+                ];
+            }
         }
 
 		public function getProperty($name) {
@@ -715,6 +754,12 @@
 			if ($model != null && (array_key_exists($name, $model->data()) || $name == "_" || !$model->isRender())) {
                 if ($name == "_") {
                     return $model->data();
+                }
+                
+                if ($model->isRegistration()) {
+                    if (array_key_exists($name, $this->fieldMetadataByName) || array_key_exists($name, $this->fieldMetadataByAlias)) {
+                        return;
+                    }
                 }
 
                 if ($model->hasMetadataKey("langIds")) {
