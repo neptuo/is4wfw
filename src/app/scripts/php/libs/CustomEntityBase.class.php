@@ -235,8 +235,8 @@
 
         public function getTableColumnTypes($column = null, $key = null) {
             if ($this->types == null) {
-                $this->types = array(
-                    array(
+                $this->types = [
+                    [
                         "key" => "int", 
                         "name" => "Integer", 
                         "db" => "int",
@@ -263,8 +263,8 @@
                             
                             return intval($value); 
                         }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "float", 
                         "name" => "Float", 
                         "db" => "float",
@@ -293,8 +293,8 @@
 
                             return floatval($value); 
                         }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "double", 
                         "name" => "Double", 
                         "db" => "double",
@@ -323,8 +323,8 @@
 
                             return doubleval($value); 
                         }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "shorttext", 
                         "name" => "Short Text", 
                         "db" => "tinytext", 
@@ -332,8 +332,8 @@
                         "isLocalizable" => true,
                         "fromUser" => function($value) { return $value; },
                         "fromDb" => function($value) { return $value; }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "longtext", 
                         "name" => "Long Text", 
                         "db" => "text", 
@@ -341,8 +341,8 @@
                         "isLocalizable" => true,
                         "fromUser" => function($value) { return $value; },
                         "fromDb" => function($value) { return $value; }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "varchar", 
                         "name" => "Fixed-size text", 
                         "db" => "varchar", 
@@ -358,8 +358,8 @@
                         "isLocalizable" => true,
                         "fromUser" => function($value) { return $value; },
                         "fromDb" => function($value) { return $value; }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "url", 
                         "name" => "URL path", 
                         "db" => "varchar", 
@@ -375,8 +375,8 @@
                         "isLocalizable" => true,
                         "fromUser" => function($value) { return UrlUtils::toValidUrl($value); },
                         "fromDb" => function($value) { return $value; }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "bool", 
                         "name" => "Boolean", 
                         "db" => "bit(1)", 
@@ -396,8 +396,8 @@
 
                             return boolval($value); 
                         }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "singlereference", 
                         "name" => "Single Reference", 
                         "db" => "int(11)", 
@@ -417,8 +417,8 @@
                             }
                             return $value; 
                         }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "multireference-singlecolumn", 
                         "name" => "Multi Reference in Single Column", 
                         "db" => "tinytext", 
@@ -426,8 +426,8 @@
                         "isLocalizable" => false,
                         "fromUser" => function($value) { return $this->parseMultiReferenceSingleColumn($value); },
                         "fromDb" => function($value) { return $value; }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "multireference-jointable", 
                         "name" => "Multi Reference with Join Table", 
                         "db" => "tinytext", 
@@ -435,8 +435,8 @@
                         "isLocalizable" => false,
                         "fromUser" => function($value) { return $this->parseMultiReferenceSingleColumn($value); },
                         "fromDb" => function($value) { return $value; }
-                    ),
-                    array(
+                    ],
+                    [
                         "key" => "directory", 
                         "name" => "Directory in FileSystem", 
                         "db" => "int(11)", 
@@ -444,8 +444,8 @@
                         "isLocalizable" => false,
                         "fromUser" => function($value) { return intval($value); },
                         "fromDb" => function($value) { return $value; }
-                    )
-                );
+                    ]
+                ];
             }
 
             if ($column != null) {
@@ -468,6 +468,14 @@
             }
 
             return $this->types;
+        }
+
+        private static $primaryKeyTypes = ["int", "float", "double", "varchar", "singlereference"];
+
+        public function getTablePrimaryKeyTypes() {
+            $types = $this->getTableColumnTypes();
+            $types = array_filter($types, function($t) { return in_array($t["key"], CustomEntityBase::$primaryKeyTypes); });
+            return $types;
         }
 
         public function getTableColumnDbType($type, $column) {

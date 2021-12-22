@@ -136,6 +136,13 @@
     </comment>
   </property>
   <property>
+    <name>tablePrimaryKeyTypes</name>
+    <getFunction>getTablePrimaryKeyTypes</getFunction>
+    <comment>
+        Vrací pole podporovaných typů primárních klíčů pro table / column creator ('key', 'name', 'db').
+    </comment>
+  </property>
+  <property>
     <name>tableEngines</name>
     <getFunction>getTableEngines</getFunction>
     <comment>

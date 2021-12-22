@@ -41,7 +41,9 @@
             foreach ($xml->column as $column) {
                 if ($column->primaryKey == true) {
                     $columnName = (string)$column->name;
-                    $dbType = $this->getTableColumnTypes($column, "db");
+
+                    $typeDefinition = $this->getTableColumnTypes($column);
+                    $dbType = $this->getTableColumnDbType($typeDefinition, $column);
                     $columns = StringUtils::join($columns, "`$columnName` $dbType NOT NULL");
 
                     if ($column->identity == true) {
@@ -90,15 +92,22 @@
                 $audit->log = true;
             }
 
+            $ddlSql = [];
+            $ddlSql[] = "create";
+
             $columnName = $model["primary-key-1-name"];
             $keyElement = $xml->addChild("column");
             $keyElement->addChild("name", $columnName);
             $keyElement->addChild("type", $model["primary-key-1-type"]);
             $keyElement->addChild("primaryKey", true);
             $keyElement->addChild("required", true);
+            $this->setColumnTypeOptions($keyElement, $model, "primary-key-1");
+            $this->setColumnAdditionalSqls($xml, $tableName, $keyElement, $model, "primary-key-1", $ddlSql);
             
-            if ($model["primary-key-1-identity"]) {
-                $keyElement->addChild("identity", true);
+            if ($model["primary-key-1-type"] == "int") {
+                if ($model["primary-key-1-int-identity"]) {
+                    $keyElement->addChild("identity", true);
+                }
             }
 
             $columnName = $model["primary-key-2-name"];
@@ -108,6 +117,8 @@
                 $keyElement->addChild("type", $model["primary-key-2-type"]);
                 $keyElement->addChild("primaryKey", true);
                 $keyElement->addChild("required", true);
+                $this->setColumnTypeOptions($keyElement, $model, "primary-key-2");
+                $this->setColumnAdditionalSqls($xml, $tableName, $keyElement, $model, "primary-key-2", $ddlSql);
             }
             
             $columnName = $model["primary-key-3-name"];
@@ -117,18 +128,88 @@
                 $keyElement->addChild("type", $model["primary-key-3-type"]);
                 $keyElement->addChild("primaryKey", true);
                 $keyElement->addChild("required", true);
+                $this->setColumnTypeOptions($keyElement, $model, "primary-key-3");
+                $this->setColumnAdditionalSqls($xml, $tableName, $keyElement, $model, "primary-key-3", $ddlSql);
             }
 
-            $createSql = $this->getCreateSql($tableName, $xml);
-            $insertSql = $this->sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"], "definition" => $xml->asXml()));
+            $ddlSql[0] = $this->getCreateSql($tableName, $xml);
+            $dmlSql = $this->sql()->insert("custom_entity", array("name" => $name, "description" => $model["entity-description"], "definition" => $xml->asXml()));
 
             try {
-                $this->executeSql($insertSql, $this->getAuditSql($name, $createSql), $createSql);
-            } catch(DataAccessException $e) {
+                $timestamp = time();
+                $this->dataAccess()->transaction(function($da) use ($ddlSql, $dmlSql, $name, $timestamp) {
+                    foreach ($ddlSql as $item) {
+                        if (!empty($item)) {
+                            $da->execute($this->getAuditSql($name, $item, $timestamp));
+                            $da->execute($item);
+                        }
+                    }
+
+                    $da->execute($dmlSql);
+                });
+
+                return true;
+            } catch (DataAccessException $e) {
                 return false;
             }
-            
-            return true;
+        }
+
+        private function setColumnTypeOptions($column, $model, $prefix) {
+            if ($column->type == "int") {
+                $size = $model["$prefix-int-size"];
+                if (!empty($size)) {
+                    $column->size = $size;
+                }
+            } else if ($column->type == "float") {
+                $size = $model["$prefix-float-size"];
+                $decimals = $model["$prefix-float-decimals"];
+                if (!empty($size) && !empty($decimals)) {
+                    $column->size = $size;
+                    $column->decimals = $decimals;
+                }
+            } else if ($column->type == "varchar") {
+                $size = $model["$prefix-varchar-size"];
+                if (!empty($size)) {
+                    $column->size = $size;
+                }
+            } else if ($column->type == "url") {
+                $size = $model["$prefix-url-size"];
+                if (!empty($size)) {
+                    $column->size = $size;
+                }
+            }
+        }
+
+        private function setColumnAdditionalSqls($xml, $tableName, $column, $model, $prefix, &$ddlSql) {
+            if ($column->type == "singlereference") {
+                $referenceTable = $model["$prefix-singlerefence-table"];
+                $referenceColumn = $model["$prefix-singlerefence-column"];
+                $column->addChild("targetTable", $referenceTable);
+                $column->addChild("targetColumn", $referenceColumn);
+
+                $ddlSql[] = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$column->name`) REFERENCES `$referenceTable`(`$referenceColumn`);";
+            } else if ($column->type == "multireference-jointable") {
+                $joinTable = $model["$prefix-multireference-table"];
+                $targetColumn = $model["$prefix-multireference-targetcolumn"];
+                $column->addChild("joinTable", $joinTable);
+                $column->addChild("targetColumn", $targetColumn);
+                $primaryKeysElements = $column->addChild("primaryKeyMappings");
+                
+                $cascade = "";
+                if ($xml->engine == "InnoDB") {
+                    $cascade = " ON DELETE CASCADE";
+                }
+
+                $primaryKeys = $this->getPrimaryKeyColumns($xml);
+                for ($i=0; $i < count($primaryKeys); $i++) { 
+                    $primaryKey = $primaryKeys[$i];
+                    $primaryKeyColumnName = (string)$primaryKey->name;
+                    $mappedColumnName = $model["$prefix-multireference-primarykey" . ($i + 1) . "-column"];
+                    $primaryKeysElements->addChild("mappedTo", $mappedColumnName);
+                    
+                    $ddlSql[] = "ALTER TABLE `$joinTable` ADD FOREIGN KEY (`$mappedColumnName`) REFERENCES `$tableName`(`$primaryKeyColumnName`)$cascade;";
+                }
+            }
         }
 
         private function createTableColumn($name, $tableName, $model) {
@@ -155,29 +236,7 @@
             }
 
             // Set precision if needed.
-            if ($columnType == "int") {
-                $size = $model["column-int-size"];
-                if (!empty($size)) {
-                    $column->size = $size;
-                }
-            } else if ($columnType == "float") {
-                $size = $model["column-float-size"];
-                $decimals = $model["column-float-decimals"];
-                if (!empty($size) && !empty($decimals)) {
-                    $column->size = $size;
-                    $column->decimals = $decimals;
-                }
-            } else if ($columnType == "varchar") {
-                $size = $model["column-varchar-size"];
-                if (!empty($size)) {
-                    $column->size = $size;
-                }
-            } else if ($columnType == "url") {
-                $size = $model["column-url-size"];
-                if (!empty($size)) {
-                    $column->size = $size;
-                }
-            }
+            $this->setColumnTypeOptions($column, $model, "column");
 
             $typeDefinition = $this->getTableColumnTypes($column);
             $dbType = $this->getTableColumnDbType($typeDefinition, $column);
@@ -200,35 +259,7 @@
                 $ddlSql[] = $alterSql;
             }
 
-            if ($columnType == "singlereference") {
-                $referenceTable = $model["column-singlerefence-table"];
-                $referenceColumn = $model["column-singlerefence-column"];
-                $column->addChild("targetTable", $referenceTable);
-                $column->addChild("targetColumn", $referenceColumn);
-
-                $ddlSql[] = "ALTER TABLE `$tableName` ADD FOREIGN KEY (`$columnName`) REFERENCES `$referenceTable`(`$referenceColumn`);";
-            } else if ($columnType == "multireference-jointable") {
-                $joinTable = $model["column-multireference-table"];
-                $targetColumn = $model["column-multireference-targetcolumn"];
-                $column->addChild("joinTable", $joinTable);
-                $column->addChild("targetColumn", $targetColumn);
-                $primaryKeysElements = $column->addChild("primaryKeyMappings");
-                
-                $cascade = "";
-                if ($xml->engine == "InnoDB") {
-                    $cascade = " ON DELETE CASCADE";
-                }
-
-                $primaryKeys = $this->getPrimaryKeyColumns($xml);
-                for ($i=0; $i < count($primaryKeys); $i++) { 
-                    $primaryKey = $primaryKeys[$i];
-                    $primaryKeyColumnName = (string)$primaryKey->name;
-                    $mappedColumnName = $model["column-multireference-primarykey" . ($i + 1) . "-column"];
-                    $primaryKeysElements->addChild("mappedTo", $mappedColumnName);
-                    
-                    $ddlSql[] = "ALTER TABLE `$joinTable` ADD FOREIGN KEY (`$mappedColumnName`) REFERENCES `$tableName`(`$primaryKeyColumnName`)$cascade;";
-                }
-            }
+            $this->setColumnAdditionalSqls($xml, $tableName, $column, $model, "column", $ddlSql);
 
             $dmlSql = $this->getUpdateDefinitionSql($name, $xml);
             
