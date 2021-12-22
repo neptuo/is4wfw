@@ -669,17 +669,33 @@
 
             $count = null;
             $offset = null;
-            if ($paging instanceof PagingModel) {
+            if ($paging instanceof PagingModel || empty($fieds)) {
                 $sql = $this->sql()->count($tableName, $filter);
                 $totalCount = $this->dataAccess()->fetchScalar($sql);
+            }
+
+            if ($paging instanceof PagingModel) {
                 $paging->setTotalCount($totalCount);
 
                 $count = $paging->getSize();
                 $offset = $paging->getOffset();
             }
 
-            $sql = $this->sql()->select($tableName, $fields, $filter, $orderBy, $count, $offset);
-            $data = $this->dataAccess()->fetchAll($sql);
+            if (empty($fields)) {
+                if ($count != null) {
+                    $dataCount = min($totalCount - $offset, $count);
+                } else {
+                    $dataCount = $totalCount;
+                }
+
+                $data = [];
+                for ($i=0; $i < $dataCount; $i++) { 
+                    $data[] = [];
+                }
+            } else {
+                $sql = $this->sql()->select($tableName, $fields, $filter, $orderBy, $count, $offset);
+                $data = $this->dataAccess()->fetchAll($sql);
+            }
 
             $model->render();
             $model->items($data);
