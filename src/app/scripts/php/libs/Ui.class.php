@@ -78,6 +78,10 @@
 			return $result;
 		}
 
+		public function getForEachIndex() {
+			return $this->forEachIndex;
+		}
+
 		private function isPassedByWhere($item, $where) {
 			foreach ($where as $key => $value) {
 				if ($item[$key] != $value) {
@@ -86,6 +90,36 @@
 			}
 
 			return true;
+		}
+
+		private $numberIterator = 0;
+		private $numberIteratorIndex = 0;
+
+		public function numberIterator($template, $from, $to, $step) {
+			$result = "";
+			
+			$oldIterator = $this->numberIterator;
+			$oldIteratorIndex = $this->numberIteratorIndex;
+			
+			$this->numberIteratorIndex = 0;
+			for ($i = $from; $i < $to; $i += $step) { 
+				$this->numberIterator = $i;
+				$result .= $template();
+				
+				$this->numberIteratorIndex++;
+			}
+			
+			$this->numberIterator = $oldIterator;
+			$this->numberIteratorIndex = $oldIteratorIndex;
+			return $result;
+		}
+
+		public function getNumberIterator() {
+			return $this->numberIterator;
+		}
+
+		public function getNumberIteratorIndex() {
+			return $this->numberIteratorIndex;
 		}
 
 		private function singleListModel($template, $model, $indexGetter) {
@@ -107,10 +141,6 @@
 
 			$this->popListModel();
 			return $result;
-		}
-
-		public function getForEachIndex() {
-			return $this->forEachIndex;
 		}
 
 		public function firstListModel($template, $model) {

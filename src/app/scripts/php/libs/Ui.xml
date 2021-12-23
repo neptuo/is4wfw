@@ -28,6 +28,45 @@
     </comment>
   </property>
   <fulltag>
+    <name>numberIterator</name>
+    <function>numberIterator</function>
+    <attribute>
+      <name>from</name>
+      <type>number</type>
+      <default>0</default>
+      <comment>Od (první číslo).</comment>
+    </attribute>
+    <attribute>
+      <name>to</name>
+      <type>number</type>
+      <required />
+      <comment>Do (menší rovno).</comment>
+    </attribute>
+    <attribute>
+      <name>step</name>
+      <type>number</type>
+      <default>1</default>
+      <comment>Krok.</comment>
+    </attribute>
+    <comment>
+      Realizuje cyklus od "from" do "to" s krokem "step".
+    </comment>
+  </fulltag>
+  <property>
+    <name>numberIterator</name>
+    <getFunction>getNumberIterator</getFunction>
+    <comment>
+      Vrací aktuální položku při průchodu v "ui:numberIterator".
+    </comment>
+  </property>
+  <property>
+    <name>numberIteratorIndex</name>
+    <getFunction>getNumberIteratorIndex</getFunction>
+    <comment>
+      Vrací aktuální index při průchodu v "ui:numberIterator".
+    </comment>
+  </property>
+  <fulltag>
     <name>first</name>
     <function>firstListModel</function>
     <attribute>
