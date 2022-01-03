@@ -2564,7 +2564,7 @@
                             . '<div class="file-content-in"><div class="foo">' . substr($template['content'], 0, 130) . '</div></div>'
                         . '</td>'
                         . '<td class="template-edit">'
-                            . '<a href="' . $actionUrl . '?id=' . $template['id'] . '" class="image-button button-edit">'
+                            . '<a href="' . UrlUtils::addParameter($actionUrl, "id", $template['id']) . '" class="image-button button-edit">'
                                 . '<img src="~/images/page_edi.png" title="Edit template" />'
                             . '</a> '
                             . '<form name="template-edit2" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
@@ -2588,10 +2588,10 @@
             $newTemplate = $dbObject->fetchAll('SELECT `value` FROM `template_right` LEFT JOIN `group` ON `template_right`.`gid` = `group`.`gid` WHERE `template_right`.`tid` = 0 AND `template_right`.`type` = ' . WEB_R_WRITE . ' AND (`group`.`gid` IN (' . $loginObject->getGroupsIdsAsString() . ') OR `group`.`parent_gid` IN (' . $loginObject->getGroupsIdsAsString() . ')) ORDER BY `value` DESC;');
             if (count($newTemplate) > 0) {
                 $return .= ''
-                        . '<hr />'
-                        . '<div class="gray-box">'
-                        . '<a href="' . $actionUrl . '?id=new" class="button">New Template</a>'
-                        . '</div>';
+                . '<hr />'
+                . '<div class="gray-box">'
+                    . '<a href="' . UrlUtils::addParameter($actionUrl, "id", "new") . '" class="button">New Template</a>'
+                . '</div>';
             }
 
             if ($useFrames != "false") {
