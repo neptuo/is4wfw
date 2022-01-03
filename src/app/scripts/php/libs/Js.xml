@@ -244,6 +244,12 @@
       <default>true</default>
       <comment>Zda se má při přechodu mezi stránky modifikovat URL pomocí History API.</comment>
     </attribute>
+    <attribute>
+      <name>includeCredentials</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda se mají při volání cross origin přikládat cookies.</comment>
+    </attribute>
     <comment>
       Převede web do ajaxového formátu.
       Všechny linky s target="_blank" nebo data-ajax="false" jsou ignorovány.

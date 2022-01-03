@@ -1,6 +1,7 @@
-Ajax = function({ selector, parentPageId, modifyUrl }) {
+Ajax = function({ selector, parentPageId, modifyUrl, includeCredentials }) {
     this.Selector = selector;
     this.ModifyUrl = modifyUrl;
+    this.IncludeCredentials = includeCredentials;
     this.LoadingHandlers = [];
     this.CompletedHandlers = [];
     this.FailedHandlers = [];
@@ -77,12 +78,47 @@ Ajax.prototype._OnButtonClick = function(e) {
     };
 };
 
+Ajax.prototype._Fetch = function(url, method, data) {
+    var fetchOptions = {
+        method: method,
+        headers: {}
+    };
+
+    if (data) {
+        fetchOptions.body = data;
+    }
+
+    if (this.IncludeCredentials === true) {
+        fetchOptions.credentials = "include";
+    } else if (this.IncludeCredentials === false) {
+        fetchOptions.credentials = "omit";
+    }
+
+    this._ObserveRequest(fetchOptions);
+
+    fetch(url, fetchOptions)
+        .then(response => { 
+            if (!response.ok) {
+                throw new Error("Network error");
+            }
+
+            url = response.url;
+            return response.text(); 
+        })
+        .then(result => {
+            this._OnLoadCompleted(result, url);
+        })
+        .catch(error => {
+            this._RaiseEvent("failed", error);
+        });
+}
+
 Ajax.prototype._OnFormSubmit = function(e) {
     var form = e.currentTarget;
     var url = form.action;
     var method = form.method;
     
-    this._RaiseEvent('loading');
+    this._RaiseEvent("loading");
 
     var data = new FormData(form);
 
@@ -91,36 +127,19 @@ Ajax.prototype._OnFormSubmit = function(e) {
         this._submitButton = null;
     }
 
-    var request = new XMLHttpRequest();
-    request.addEventListener("readystatechange", this._OnFormReadyStateChanged.bind(this));
-    request.open(method, url);
-    this._ObserveRequest(request);
-    request.send(data);
-    
+    this._Fetch(url, method, data);
     this._StopEvent(e);
 };
 
-Ajax.prototype._OnFormReadyStateChanged = function(e) {
-    var request = e.currentTarget;
-    if (request.readyState == 4){
-        this._OnLoadCompleted(request, "success");
-    }
-};
-
 Ajax.prototype.Load = function(url) {
-    this._RaiseEvent('loading');
-    $.ajax({
-        url: url,
-        type: 'GET',
-        beforeSend: this._ObserveRequest.bind(this),
-        complete: this._OnLoadCompleted.bind(this)
-    });
+    this._RaiseEvent("loading");
+    this._Fetch(url, "GET");
 };
 
 Ajax.prototype._ObserveRequest = function(request) {
-    request.setRequestHeader('X-Template', 'xml');
+    request.headers["X-Template"] = "xml";
     if (this.ParentPageId != null) {
-        request.setRequestHeader('X-Parent-Page-Id', this.ParentPageId);
+        request.headers["X-Parent-Page-Id"] = this.ParentPageId;
     }
 };
 
@@ -134,18 +153,10 @@ Ajax.prototype._UpdateHistory = function(url, replace) {
     }
 };
 
-Ajax.prototype._OnLoadCompleted = function(xhr, statusText) {
-    if (statusText == "error" || statusText == "timeout" || statusText == "abort" || statusText == "parsererror") {
-        this._RaiseEvent('failed');
-        return;
+Ajax.prototype._OnLoadCompleted = function(responseText, responseUrl) {
+    if (responseUrl != window.location.href) {
+        this._UpdateHistory(responseUrl, true);
     }
-
-    var url = xhr.responseURL;
-    if (url != window.location.href) {
-        this._UpdateHistory(url, true);
-    }
-
-    var responseText = xhr.responseText;
 
     var response = document.createElement("document");
     response.innerHTML = responseText;

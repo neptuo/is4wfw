@@ -317,7 +317,7 @@
             $this->addScriptInline("(function() { $('$selector').datepicker($optionsString); })();", "tail");
         }
 
-        public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false, $jQuery = true, $modifyUrl = true) {
+        public function ajax($selector, $parentPageId = false, $onLoading = false, $onCompleted = false, $onFailed = false, $varName = false, $jQuery = true, $modifyUrl = true, $includeCredentials = false) {
             if (parent::web()->isXmlTemplate()) {
                 return;
             }
@@ -344,6 +344,10 @@
             $params[] = 'selector: "' . $selector . '"';
             $params[] = 'parentPageId: ' . $parentPageId;
             $params[] = 'modifyUrl: ' . ($modifyUrl ? "true" : "false");
+            
+            if ($includeCredentials) {
+                $init .= 'includeCredentials: true';
+            }
 
             $init .= 'ajax.Initialize($(document.body)); ';
             
