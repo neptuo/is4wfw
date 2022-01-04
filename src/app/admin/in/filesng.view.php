@@ -6,6 +6,9 @@
 		</web:condition>
 
 
+		<web:condition when="post:delete-file">
+			<fa:fileDeleter id="post:file-id" />
+		</web:condition>
 		<web:condition when="post:new-import">
 			<fa:importFileSystem dirId="var:dirId" />
 		</web:condition>
