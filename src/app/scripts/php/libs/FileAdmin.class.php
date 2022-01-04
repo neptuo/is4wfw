@@ -244,7 +244,7 @@
 					//echo $path;
 					rmdir($path);
 					RoleHelper::deleteRights(FileAdmin::$DirectoryRightDesc, $directoryId);
-					return parent::getSuccess(parent::rb('dir.deleted'));
+					return true;
 				} else {
 					return parent::getError(parent::dao('Directory')->getErrorMessage());
 				}
@@ -386,9 +386,12 @@
 				$return .= $message;
 			}
 			
-			if($_POST['delete-dir']  == parent::rb('dir.delete')) {
+			if ($_POST['delete-dir']  == parent::rb('dir.delete')) {
 				$directoryId = $_POST['directory-id'];
-				$return .= $this->deleteDirectory($directoryId, true);
+
+				if ($this->deleteDirectory($directoryId, true) === true) {
+					$return .= parent::getSuccess(parent::rb('dir.deleted'));
+				}
 			}
 
 			if ($_POST['new-import'] == parent::rb('button.import')) {
@@ -976,7 +979,12 @@
 			}
 		}
 
-		//C-fulltag
+		public function directoryDeleter($template, $id) {
+			if ($this->deleteDirectory($id) === true) {
+				$template();
+			}
+		}
+
 		public function fileDeleter($template, $id) {
 			if ($this->deleteFile($id) === true) {
 				$template();

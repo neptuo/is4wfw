@@ -319,6 +319,20 @@
     </comment>
   </tag>
   <fulltag>
+    <name>directoryDeleter</name>
+    <function>directoryDeleter</function>
+    <lookless />
+    <attribute>
+      <name>id</name>
+      <required />
+	    <type>number</type>
+      <comment>Id složky, která se má smazat.</comment>
+    </attribute>
+    <comment>
+      Smaže složku podle "id".
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>fileDeleter</name>
     <function>fileDeleter</function>
     <lookless />
@@ -326,7 +340,7 @@
       <name>id</name>
       <required />
 	    <type>number</type>
-      <comment>Id souboru, která se má smazat.</comment>
+      <comment>Id souboru, který se má smazat.</comment>
     </attribute>
     <comment>
       Smaže soubor podle "id".
