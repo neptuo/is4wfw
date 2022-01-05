@@ -92,6 +92,12 @@
         private $Token = "";
 
         private $cookieName;
+        
+        private static $cookieParams = [];
+
+        public static function setCookieParameters($params) {
+            self::$cookieParams = array_merge(self::$cookieParams, $params);
+        }
 
         /**
          *
@@ -262,7 +268,9 @@
         }
 
         private function setAuthCookie($token, $sessionTimeout) {
-            setcookie($this->cookieName, $token, time() + $sessionTimeout, "", "", false, true);
+            $params = self::$cookieParams;
+            $params["expires"] = time() + $sessionTimeout;
+            setcookie($this->cookieName, $token, $params);
         }
 
         /**
