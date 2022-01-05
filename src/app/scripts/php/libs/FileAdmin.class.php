@@ -568,9 +568,9 @@
 		}
 		
 		public function processFileUploadBasic($dataItem, $fileTmpName) {
-			$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_READ);
-			$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_WRITE);
-			$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_DELETE);
+			$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_READ, FileAdmin::$DirectoryRightDesc, 0);
+			$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_WRITE, FileAdmin::$DirectoryRightDesc, 0);
+			$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_DELETE, FileAdmin::$DirectoryRightDesc, 0);
 			
 			return $this->processFileUpload($dataItem, $fileTmpName, $read, $write, $delete);
 		}

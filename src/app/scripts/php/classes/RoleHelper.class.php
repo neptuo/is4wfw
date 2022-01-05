@@ -202,7 +202,7 @@ class RoleHelper {
 		if ($objectId != '' && $objectId != 0 && $objectId > 0) {
 			$sql = 'select `'.$objectColumn.'`, `'.$groupColumn.'`, `'.$typeColumn.'` from `'.$table.'` where `'.$objectColumn.'` = '.$objectId.' and `'.$typeColumn.'` = '.$type.';';
 			$result = $instance->db()->getDataAccess()->fetchAll($sql);
-		} elseif ($altObjectId != null && $altObjectId != '') {
+		} elseif ($altObjectId !== null && $altObjectId !== '') {
 			$sql = 'select `'.$altObjectColumn.'`, `'.$altGroupColumn.'`, `'.$altTypeColumn.'` from `'.$altTable.'` where `'.$altObjectColumn.'` = '.$altObjectId.' and `'.$altTypeColumn.'` = '.$type.';';
 			$result = $instance->db()->getDataAccess()->fetchAll($sql);
 		}
