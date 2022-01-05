@@ -28,7 +28,7 @@
         }
 
         private function getCurrentVirtualUrlWithoutExtension() {
-            return '~/' . $_REQUEST['WEB_PAGE_PATH'];
+            return '~/' . $_REQUEST['VIEW_PAGE_PATH'];
         }
 
         public function getCurrentVirtualUrl() {
