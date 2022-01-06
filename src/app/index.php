@@ -12,6 +12,10 @@
     require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
 
+    $userCors = "../user/preinit.inc.php";
+    if (file_exists($userCors)) {
+        require_once($userCors);
+    }
 
     if (array_key_exists("WEB_PAGE_PATH", $_GET)) {
         // Public web.
