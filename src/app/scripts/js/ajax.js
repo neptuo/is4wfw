@@ -162,13 +162,12 @@ Ajax.prototype._OnLoadCompleted = function(responseText, responseUrl) {
     response.innerHTML = responseText;
 
     var scriptInlines = null;
-    var styleInlines = null;
 
     var head = this._FindElement(response, "rssmm:head");
     if (head != null) {
         var title = this._FindElement(head, "rssmm:title");
         if (title != null) {
-            document.title = title.innerHTML;
+            this._UpdateHtmlTitle(title.innerHTML);
         }
 
         var styles = this._FindElement(head, "rssmm:styles");
@@ -176,22 +175,13 @@ Ajax.prototype._OnLoadCompleted = function(responseText, responseUrl) {
             var styleReferences = styles.getElementsByTagName("rssmm:link-ref");
             for (var i = 0, count = styleReferences.length; i < count; i++) {
                 var linkUrl = styleReferences[i].innerHTML;
-                if (document.querySelector("link[href='" + linkUrl + "']") == null) {
-                    var link = document.createElement("link");
-                    link.rel = "stylesheet";
-                    link.href = linkUrl;
-                    link.type = "text/css";
-                    document.head.appendChild(link);
-                }
+                this._IncludeUrlStyle(linkUrl);
             }
 
             var styleInlines = styles.getElementsByTagName("rssmm:style");
             for (var i = 0, count = styleInlines.length; i < count; i++) {
                 var style = styleInlines[i].innerHTML;
-                var link = document.createElement("style");
-                link.type = "text/css";
-                link.innerHTML = style;
-                document.head.appendChild(link);
+                this._IncludeInlineStyle(style);
             }
         }
         
@@ -199,13 +189,8 @@ Ajax.prototype._OnLoadCompleted = function(responseText, responseUrl) {
         if (scripts != null) {
             var scriptReferences = scripts.getElementsByTagName("rssmm:script-ref");
             for (var i = 0, count = scriptReferences.length; i < count; i++) {
-                var linkUrl = scriptReferences[i].innerHTML;
-                if (document.querySelector("script[src='" + linkUrl + "']") == null) {
-                    var link = document.createElement("script");
-                    link.src = linkUrl;
-                    link.type = "text/javascript";
-                    document.head.appendChild(link);
-                }
+                var scriptUrl = scriptReferences[i].innerHTML;
+                this._IncludeUrlScript(scriptUrl);
             }
 
             scriptInlines = scripts.getElementsByTagName("rssmm:script");
@@ -217,34 +202,80 @@ Ajax.prototype._OnLoadCompleted = function(responseText, responseUrl) {
         var html = content.innerHTML;
         html = html.replace(/\?__TEMPLATE=xml/g, '').replace(/\&__TEMPLATE=xml/g, '');
 
-        var oldContent = $(this.Selector);
-        
-        var newHtml = $(html);
-        var newContent = newHtml.filter(this.Selector);
-        if (newContent.length == 0) {
-            newContent = newHtml.find(this.Selector);
-        }
-
-        if (newContent.length == 1) {
-            oldContent.replaceWith(newContent);
-            this.Initialize(newContent);
-            newContent.find("[autofocus]").focus();
-        } else {
-            oldContent.html(html)
-            this.Initialize(oldContent); 
-            oldContent.find("[autofocus]").focus();
-        }
+        this._UpdateHtmlContent(html);
     }
 
     if (scriptInlines != null) {
         for (var i = 0, count = scriptInlines.length; i < count; i++) {
             var script = scriptInlines[i].innerHTML;
-            eval(script);
+            this._IncludeInlineScript(script);
         }
     }
 
     this._RaiseEvent('completed');
 };
+
+Ajax.prototype._IncludeUrlStyle = function(linkUrl) {
+    if (!this._IsStyleIncluded(linkUrl)) {
+        var element = document.createElement("link");
+        element.rel = "stylesheet";
+        element.href = linkUrl;
+        element.type = "text/css";
+        document.head.appendChild(element);
+    }
+};
+
+Ajax.prototype._IsUrlStyleIncluded = function(linkUrl) {
+    return document.querySelector("link[href='" + linkUrl + "']") != null;
+};
+
+Ajax.prototype._IncludeInlineStyle = function(style) {
+    var element = document.createElement("style");
+    element.type = "text/css";
+    element.innerHTML = style;
+    document.head.appendChild(element);
+};
+
+Ajax.prototype._IncludeUrlScript = function(scriptUrl) {
+    if (!this._IsUrlScriptIncluded(scriptUrl)) {
+        var element = document.createElement("script");
+        element.src = scriptUrl;
+        element.type = "text/javascript";
+        document.head.appendChild(element);
+    }
+};
+
+Ajax.prototype._IsUrlScriptIncluded = function(scriptUrl) {
+    return document.querySelector("script[src='" + scriptUrl + "']") != null;
+};
+
+Ajax.prototype._IncludeInlineScript = function(script) {
+    eval(script);
+};
+
+Ajax.prototype._UpdateHtmlTitle = function(title) {
+    document.title = title;
+};
+
+Ajax.prototype._UpdateHtmlContent = function(html) {
+    var oldContent = $(this.Selector);
+        
+    var newHtml = $(html);
+    var newContent = newHtml.filter(this.Selector);
+    if (newContent.length == 0) {
+        newContent = newHtml.find(this.Selector);
+    }
+
+    if (newContent.length == 1) {
+        oldContent.replaceWith(newContent);
+        this.Initialize(newContent);
+        newContent.find("[autofocus]").focus();
+    } else {
+        oldContent.html(html)
+        this.Initialize(oldContent); 
+        oldContent.find("[autofocus]").focus();
+    }
+}
 
 Ajax.prototype._FindElement = function(container, name) {
     var elements = container.getElementsByTagName(name);
