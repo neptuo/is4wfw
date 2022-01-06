@@ -92,10 +92,10 @@
         private $Token = "";
 
         private $cookieName;
-        
+
         private static $cookieParams = [];
 
-        public static function setCookieParameters($params) {
+        public static function setDefaultCookieParameters($params) {
             self::$cookieParams = array_merge(self::$cookieParams, $params);
         }
 
