@@ -216,7 +216,7 @@ Ajax.prototype._OnLoadCompleted = function(responseText, responseUrl) {
 };
 
 Ajax.prototype._IncludeUrlStyle = function(linkUrl) {
-    if (!this._IsStyleIncluded(linkUrl)) {
+    if (!this._IsUrlStyleIncluded(linkUrl)) {
         var element = document.createElement("link");
         element.rel = "stylesheet";
         element.href = linkUrl;
