@@ -744,10 +744,8 @@
             }
 
             if (empty($fields)) {
-                if ($isPagingModel) {
-                    $sql = $this->sql()->count($tableName, $filter);
-                    $totalCount = $this->dataAccess()->fetchScalar($sql);
-                }
+                $sql = $this->sql()->count($tableName, $filter);
+                $totalCount = $this->dataAccess()->fetchScalar($sql);
 
                 if ($count != null) {
                     $dataCount = min($totalCount - $offset, $count);
