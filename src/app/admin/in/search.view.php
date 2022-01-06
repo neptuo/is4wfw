@@ -47,6 +47,13 @@
                                 <img src="~/images/page_edi.png" title="Edit template" />
                             </web:a>
                         </web:condition>
+                        <web:condition when="p:searchType" is="Text File">
+                            <ui:form pageId="~/in/text-files.view">
+                                <input type="hidden" name="file-id" value="<web:out text="p:searchId" />" />
+                                <input type="hidden" name="edit-file" value="Edit" />
+                                <input type="image" src="~/images/page_edi.png" name="edit-file" value="Edit" title="Edit file" />
+                            </ui:form>
+                        </web:condition>
                     </ui:columnTemplate>
                 </ui:grid>
             </p:search>
