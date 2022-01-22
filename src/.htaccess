@@ -42,3 +42,6 @@ RewriteRule ^app/(.*) - [L,R=404]
 RewriteRule ^cache/(.*) - [L,R=404]
 RewriteRule ^logs/(.*) - [L,R=404]
 RewriteRule ^user/(.*) - [L,R=404]
+
+# Fallback route
+RewriteRule ^(.*)$ app/index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING} [END]
