@@ -2,6 +2,7 @@
 
     require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ParsedTemplate.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/PropertyReference.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateAttributeCollection.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateCache.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParserBase.class.php");
@@ -136,6 +137,9 @@
         // Output of this function can't contain ' (apostrophe), as the output is evaluated as PHP code wrapped in ' (apostrophe).
         private function parsefulltag($ctag) {
             $object = explode(":", $ctag[1]);
+
+            $prevProperties = $this->propertyFunctionsToGenerate;
+            $this->propertyFunctionsToGenerate = [];
             
             $isFullTag = count($ctag) != 4;
             $attributes = $this->tryParseAttributes($isFullTag ? $ctag[4] : $ctag[3]);
@@ -199,6 +203,7 @@
                         $hasBodyTemplate = true;
                         
                         if (!$this->sortFullAttributes($object[0], $object[1], $attributes, $content, $uniqueIdentifier)) {
+                            $this->propertyFunctionsToGenerate = $prevProperties;
                             return "";
                         }
                     } else if ($library->isAnyFullTag($object[1])) {
@@ -210,8 +215,9 @@
                         $this->Code->closeBlock();
                         $content = "function(" . '$' . "tagsToParse = null) { return " . '$' . "this->$templateMethodName(" . '$' . "tagsToParse); }";
                         $hasBodyTemplate = true;
-
+                        
                         if (!$this->sortAnyTagAttributes($object[1], $attributes, $content)) {
+                            $this->propertyFunctionsToGenerate = $prevProperties;
                             return "";
                         }
                     }
@@ -219,11 +225,13 @@
                     if ($isRegisteredTag) {
                         $functionName = $library->getFuncToTag($object[1]);
                         if (!$this->sortAttributes($object[0], $object[1], $attributes, $uniqueIdentifier)) {
+                            $this->propertyFunctionsToGenerate = $prevProperties;
                             return "";
                         }
                     } else if ($library->isAnyTag($object[1])) {
                         $functionName = $library->getFuncToTag($object[1]);
                         if (!$this->sortAnyTagAttributes($object[1], $attributes)) {
+                            $this->propertyFunctionsToGenerate = $prevProperties;
                             return "";
                         }
                     }
@@ -235,17 +243,32 @@
                         $this->libraries->remove($attributes->Attributes["tagPrefix"]["value"]);
                     }
                 }
-
+                
                 if ($attributes->HasDecorators) {
                     $this->generateDecorators($object[0], $object[1], $attributes);
                 }
-
+                
                 if ($functionName != null) {
+                    $this->generateAttributePropertyFunctions($attributes->Attributes);
+                    $this->propertyFunctionsToGenerate = $prevProperties;
                     return $this->generateFunctionOutput($uniqueIdentifier, $object[0], $object[1], $hasBodyTemplate, $functionName, $attributes);
                 }
             }
             
             throw new Exception("Tag '$object[0]:$object[1]' is not registered!");
+        }
+
+        private function generateAttributePropertyFunctions($attributes) {
+            foreach ($attributes as $attributeValue) {
+                if ($attributeValue["content"] == "template" && array_key_exists($attributeValue["propertyIdentifier"], $this->propertyFunctionsToGenerate)) {
+                    $property = $this->propertyFunctionsToGenerate[$attributeValue["propertyIdentifier"]];
+                    $this->generatePropertyOutput($attributeValue["propertyIdentifier"], $property, $attributeValue);
+                }
+
+                if (is_array($attributeValue["value"])) {
+                    $this->generateAttributePropertyFunctions($attributeValue["value"]);
+                }
+            }
         }
 
         protected function parseDecorators(TemplateAttributeCollection $tagAttributes) {
@@ -280,6 +303,8 @@
                         $defaultReturnValue = '$parameters';
                     }
 
+                    $this->generateAttributePropertyFunctions($attributes->Attributes);
+
                     $call = $this->generateFunctionOutput($identifier, $prefix, null, false, $decorator["function"], $attributes, false, $defaultReturnValue);
                     if (!$tagAttributes->HasAttributeModifyingDecorators && $decorator["providesFullTagBody"]) {
                         $tagAttributes->Attributes[PhpRuntime::$FullTagTemplateName] = array("value" => $call . "['" . PhpRuntime::$FullTagTemplateName . "']", "type" => "eval");
@@ -289,6 +314,8 @@
                 }
             }
         }
+
+        private $propertyFunctionsToGenerate = [];
 
         /**
          *
@@ -304,19 +331,39 @@
 
             if ($this->libraries->exists($object[0])) {
                 $library = $this->libraries->get($object[0]);
-                if ($library->isProperty($object[1])) {
-                    $functionName = $library->getFuncToProperty($object[1], $this->PropertyUse);
-
+                if ($library->isProperty($object[1]) || $library->isAnyProperty()) {
                     $attributes = new TemplateAttributeCollection();
-                    $identifier = $this->generateRandomString();
-                    return $this->generateFunctionOutput($identifier, $object[0], null, false, $functionName, $attributes, false);
-                } else if($library->isAnyProperty()) {
-                    $functionName = 'getProperty';
+                    $metadata = ["property" => [
+                        "prefix" => $object[0],
+                        "name" => $object[1],
+                    ]];
                     
-                    $attributes = new TemplateAttributeCollection();
-                    $attributes->Attributes[] = array('value' => $object[1], 'type' => 'raw');
                     $identifier = $this->generateRandomString();
-                    return $this->generateFunctionOutput($identifier, $object[0], null, false, $functionName, $attributes, false);
+                    $property = [
+                        "prefix" => $object[0],
+                        "name" => $object[1],
+                        "attributes" => $attributes,
+                    ];
+
+                    if ($library->isProperty($object[1])) {
+                        $functionName = $library->getFuncToProperty($object[1], $this->PropertyUse);
+                        $property["any"] = false;
+                        $property["get"] = $library->getFuncToProperty($object[1], "get");
+                        $property["set"] = $library->getFuncToProperty($object[1], "set");
+
+                    } else if ($library->isAnyProperty()) {
+                        $functionName = 'getProperty';
+                        $attributes->Attributes[] = array('value' => $object[1], 'type' => 'raw');
+
+                        $property["any"] = true;
+                        $property["get"] = "getProperty";
+                        $property["set"] = "setProperty";
+                    }
+
+                    $this->propertyFunctionsToGenerate[$identifier] = $property;
+                    // TODO We can't return an array here (because preg replace)
+                    return $identifier;
+                    // return $this->generateFunctionOutput($identifier, $object[0], null, false, $functionName, $attributes, false);
                 }
             }
 
@@ -402,6 +449,7 @@
                     
                     $valueType = 'raw';
                     $contentType = null;
+                    $propertyIdentifier = null;
                     if (strlen($attributeValue) > 1) {
                         $attributeValue = substr($attributeValue, 1, strlen($attributeValue) - 2);
                         $isEscapedProperty = false;
@@ -418,10 +466,11 @@
                             $evaluated = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $attributeValue);
 
                             if ($attributeValue != $evaluated) {
-                                $attributeValue = $evaluated;
+                                $attributeValue = '$this->' . 'property_' . $this->propertyFunctionsToGenerate[$evaluated]["prefix"] . '_' . $this->propertyFunctionsToGenerate[$evaluated]["get"] . '_' . $evaluated . "()";
 
                                 $valueType = 'eval';
                                 $contentType = 'template';
+                                $propertyIdentifier = $evaluated;
                             }
                         }
                     } else {
@@ -433,6 +482,9 @@
                     $attributeValue = ['value' => $attributeValue, 'type' => $valueType];
                     if ($contentType != null) {
                         $attributeValue['content'] = $contentType;
+                    }
+                    if ($propertyIdentifier != null) {
+                        $attributeValue['propertyIdentifier'] = $propertyIdentifier;
                     }
 
                     $decorator = explode(":", $attributeName);
@@ -654,6 +706,35 @@
             return $result;
         }
 
+        private function generatePropertyOutput($identifier, $property, $value) {
+            $tagPrefix = $property["prefix"];
+            $tagName = $property["name"];
+            $functionName = $property["get"];
+            $identifier = 'property_' . $tagPrefix . '_' . $functionName . '_' . $identifier;
+
+            $targetObject = '$' . $tagPrefix . 'Object';
+            $logObject = '$' . 'log' . 'Object';
+            $attributesString = $this->concatAttributesToString($property["attributes"]->Attributes);
+            
+            $this->Code->addMethod($identifier, "private", []);
+            $this->Code->addTry();
+            $this->Code->addLine("global " . '$' . "phpObject;");
+            $this->Code->addLine("$targetObject = " . '$' . "phpObject->autolib('$tagPrefix');");
+
+            if (array_key_exists("preferPropertyReference", $value) && $value["preferPropertyReference"]) {
+                $this->Code->addLine("return new PropertyReference($targetObject, '$functionName', '{$property["set"]}', '{$property["name"]}');");
+            } else {
+                $this->Code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
+            }
+
+            $this->Code->addCatch(["Exception", "e"]);
+            $this->Code->addLine("global $logObject;");
+            $this->Code->addLine("return " . $logObject . "->exception(" . '$e' . ", '$tagPrefix', '$tagName');");
+            $this->Code->closeBlock();
+            $this->Code->addLine("return '';");
+            $this->Code->closeBlock();
+        }
+
         private function sortAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes, string $uniqueIdentifier): bool {
             return $this->sortAttributesInternal("tag", $tagPrefix, $tagName, $attributes, $uniqueIdentifier);
         }
@@ -726,6 +807,11 @@
                     $processValue = $this->processParsedAttributeValue($attribute, $att);
                     if ($processValue != null) {
                         $processedAtts[] = $attName;
+
+                        if (isset($att->preferPropertyReference)) {
+                            $processValue["preferPropertyReference"] = true;
+                        }
+
                         if (array_key_exists($attName, $return)) {
                             if (empty($return[$attName]["value"])) {
                                 if ($att->prefix["default"] == "merge") {
@@ -805,11 +891,9 @@
                     $attributeValueType = 'eval';
                 }
 
-                $result = ['value' => $attributeValue['value'], 'type' => $attributeValueType];
-                if (array_key_exists("content", $attribute)) {
-                    $result["content"] = $attribute["content"];
-                }
-                return $result;
+                $attribute['value'] = $attributeValue['value'];
+                $attribute['type'] = $attributeValueType;
+                return $attribute;
             }
 
             return null;
@@ -819,7 +903,7 @@
             $convert = isset($att->default);
             
             if (isset($att->type)) {
-                if (StringUtils::startsWith($val, '$this->template_') && StringUtils::endsWith($val, '()')) {
+                if (StringUtils::startsWith($val, '$this->property_') && StringUtils::endsWith($val, '()')) {
                     return ['value' => $val, 'type' => 'eval', 'content' => 'template'];
                 }
 
