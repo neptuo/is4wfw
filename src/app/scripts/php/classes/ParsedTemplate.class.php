@@ -3,6 +3,7 @@
 abstract class ParsedTemplate 
 {
     private static $tagsToParse;
+    private static $propertyReferences;
 
     public function __construct() {
         if (self::$tagsToParse == null) {
@@ -20,6 +21,16 @@ abstract class ParsedTemplate
 
     protected function popTagsToParse() {
         self::$tagsToParse->pop();
+    }
+
+    protected function getPropertyReference(string $prefix, string $name, callable $factory) {
+        if (array_key_exists($prefix, self::$propertyReferences) && array_key_exists($name, self::$propertyReferences[$prefix])) {
+            return self::$propertyReferences[$prefix][$name];
+        }
+
+        $ref = $factory();
+        self::$propertyReferences[$prefix][$name] = $ref;
+        return $ref;
     }
 
     protected abstract function evaluateInternal();

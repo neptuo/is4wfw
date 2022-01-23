@@ -718,12 +718,18 @@
             
             $this->Code->addMethod($identifier, "private", []);
             $this->Code->addTry();
-            $this->Code->addLine("global " . '$' . "phpObject;");
-            $this->Code->addLine("$targetObject = " . '$' . "phpObject->autolib('$tagPrefix');");
-
+            
             if (array_key_exists("preferPropertyReference", $value) && $value["preferPropertyReference"]) {
+                $this->Code->addLine("return " . '$' . "this->getPropertyReference('$tagPrefix', '$tagName', function() { ");
+                $this->Code->addIndent();
+                $this->Code->addLine("global " . '$' . "phpObject;");
+                $this->Code->addLine("$targetObject = " . '$' . "phpObject->autolib('$tagPrefix');");
                 $this->Code->addLine("return new PropertyReference($targetObject, '$functionName', '{$property["set"]}', '{$property["name"]}');");
+                $this->Code->removeIndent();
+                $this->Code->addLine("});");
             } else {
+                $this->Code->addLine("global " . '$' . "phpObject;");
+                $this->Code->addLine("$targetObject = " . '$' . "phpObject->autolib('$tagPrefix');");
                 $this->Code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
             }
 
