@@ -16,6 +16,14 @@
         private $OutputValues = [];
         private $Identifiers = [];
 
+        private function setOutput($output, $value) {
+            if ($output instanceof PropertyReference) {
+                $output->set($value);
+            } else {
+                $this->OutputValues[$output] = $value;
+            }
+        }
+
         public function concatValues($output, $separator, $value1, $value2, $value3 = false, $value4 = false, $value5 = false, $value6 = false, $value7 = false, $value8 = false, 
             $value9 = false, $value10 = false, $value11 = false, $value12 = false, $value13 = false, $value14 = false, $value15 = false) {
             
@@ -48,7 +56,8 @@
             $values = $exploded;
 
             $result = implode($separator, $values);
-            $this->OutputValues[$output] = $result;
+
+            $this->setOutput($output, $result);
             return "";
         }
 
@@ -58,28 +67,42 @@
             }
 
             if (is_string($key) && $value != "x-x.y-y") {
-                $this->OutputValues[$output][$key] = $value;
+                if ($output instanceof PropertyReference) {
+                    $array = $output->get();
+                    $array[$key] = $value;
+                    $output->set($array);
+                } else {
+                    $this->OutputValues[$output][$key] = $value;
+                }
             } else {
-                $this->OutputValues[$output][] = $key;
+                if ($output instanceof PropertyReference) {
+                    $array = $output->get();
+                    $array[] = $key;
+                    $output->set($array);
+                } else {
+                    $this->OutputValues[$output][] = $key;
+                }
             }
         }
 
         public function createArray($output, $key = array()) {
-            $this->OutputValues[$output] = $key;
+            $this->setOutput($output, $key);
         }
         
         public function splitToArray($output, $value, $separator, $limit = -1) {
             if ($limit == -1) {
-                $this->OutputValues[$output] = explode($separator, $value);
+                $result = explode($separator, $value);
             } else {
-                $this->OutputValues[$output] = explode($separator, $value, $limit);
+                $result = explode($separator, $value, $limit);
             }
-        }
 
+            $this->setOutput($output, $result);
+        }
+        
         public function replaceHtmlNewLines($output, $input) {
             $isXhtml = parent::web()->getDoctype() == "xhtml";
-            $replaced = nl2br($input, $isXhtml);
-            $this->OutputValues[$output] = $replaced;
+            $result = nl2br($input, $isXhtml);
+            $this->setOutput($output, $result);
         }
 
         public function dateTimeToTimestamp($output, $value, $format, $trimTime = false) {
@@ -89,16 +112,16 @@
                     $date->setTime(0, 0);
                 }
 
-                $this->OutputValues[$output] = $date->getTimestamp();
+                $this->setOutput($output, $date->getTimestamp());
             }
         }
 
         public function timestampToDateTime($output, $value, $format) {
-            $this->OutputValues[$output] = $this->autolib("ui")->formatDateTime($value, $format);
+            $this->setOutput($output, $this->autolib("ui")->formatDateTime($value, $format));
         }
 
         public function escapeHtml($output, $value) {
-            $this->OutputValues[$output] = htmlspecialchars($value);
+            $this->setOutput($output, htmlspecialchars($value));
         }
 
 		public function nextIdentifier($output, $prefix = 'id-') {
@@ -107,11 +130,11 @@
             }
 
             $this->Identifiers[$prefix]++;
-            $this->OutputValues[$output] = $prefix . $this->Identifiers[$prefix];
+            $this->setOutput($output, $prefix . $this->Identifiers[$prefix]);
 		}
 
         public function guid($output) {
-            $this->OutputValues[$output] = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            $this->setOutput($output, sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
                 // 32 bits for "time_low"
                 mt_rand(0, 0xffff), mt_rand(0, 0xffff),
         
@@ -129,11 +152,11 @@
         
                 // 48 bits for "node"
                 mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-            );
+            ));
         }
 
         public function formatBytes($output, $value) {
-            $this->OutputValues[$output] = Formatter::toByteString($value);
+            $this->setOutput($output, Formatter::toByteString($value));
         }
 
         public function clear($output) {
