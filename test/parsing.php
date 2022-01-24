@@ -40,31 +40,11 @@ if (array_key_exists("clear", $_GET)) {
 
 
 $content = '
-<php:register tagPrefix="ce2" classPath="php.libs.CustomEntity" />
-<php:using prefix="test" class="php.libs.test.TestLibrary">
-    <web:a pageId="~/index.view" test:a="Hello" test:b="5" />
-    <web:a pageId="~/index.view" test:attributeAsBody="Hi" />
-    <template:one />
-    <bs:button>
-        Test
-    </bs:button>
-    <web:a pageId="~/index.view" test:a="Hello" test:b="5" test:attributeAsBody="Hi" test:if="f" test:if-is="f" />
-    <web:a pageId="~/index.view" test:cool="Baf" />
-    <web:a pageId="~/index.view" test:optionalBody="test" />
-    <div>
-        <ce2:list name="person">
-            <ui:forEach items="ce2:list">
-                <div>
-                    <web:getProperty name="ce2:id" />
-                    <web:getProperty name="ce2:first_name" />
-                    <web:getProperty name="ce2:last_name" />
-                    <template:one text="ce2:age" />
-                </div>
-            </ui:forEach>
-        </ce2:list>
-    </div>
-</php:using>
-<php:unregister tagPrefix="ce2" />
+<var:declare name="x" value="x" />
+<utils:concat output="var:x" value1="A" value2="B" separator="-" />
+utils:x <web:out text="utils:x" />
+<br />
+var:x <web:out text="var:x" />
 ';
 
     function measure($func) {
@@ -91,9 +71,11 @@ $content = '
         }
     }
 
+    $cache->delete($keys);
     measure(function() use ($keys) {
         global $content;
-        $parser = new TemplateParser();
+        global $phpObject;
+        $parser = new TemplateParser($phpObject->getCurrentRegistrations());
         parse($parser, $keys, $content, 1, true);
     });
 
