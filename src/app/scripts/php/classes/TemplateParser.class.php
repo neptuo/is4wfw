@@ -236,11 +236,20 @@
                         }
                     }
                     
-                    if ($object[0] == "php" && $object[1] == "register") {
-                        $xmlPath = $this->libraryLoader->getXmlPath($attributes->Attributes["classPath"]["value"]);
-                        $this->libraries->add($attributes->Attributes["tagPrefix"]["value"], $xmlPath);
-                    } else if ($object[0] == "php" && $object[1] == "unregister") {
-                        $this->libraries->remove($attributes->Attributes["tagPrefix"]["value"]);
+                    if ($object[0] == "php") {
+                        if ($object[1] == "register") {
+                            $xmlPath = $this->libraryLoader->getXmlPath($attributes->Attributes["classPath"]["value"]);
+                            $this->libraries->add($attributes->Attributes["tagPrefix"]["value"], $xmlPath);
+                        } else if ($object[1] == "create") {
+                            foreach ($attributes->Attributes["params"]["value"] as $prefix => $classPath) {
+                                if (strpos($prefix, "-") === false) {
+                                    $xmlPath = $this->libraryLoader->getXmlPath($classPath["value"]);
+                                    $this->libraries->add($prefix, $xmlPath);
+                                }
+                            }
+                        } else if ($object[1] == "unregister") {
+                            $this->libraries->remove($attributes->Attributes["tagPrefix"]["value"]);
+                        }
                     }
                 }
                 
