@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+  <comment>
+    Knihovna pro matematické operace.
+  </comment>
+  <tag>
+    <name>number</name>
+    <function>number</function>
+    <lookless />
+    <attribute>
+      <name>out</name>
+      <type>propertyReference</type>
+      <required />
+      <comment>Proměnná, která se má nastavit.</comment>
+    </attribute>
+    <attribute>
+      <name>set</name>
+      <comment>Nová hodnota proměnné.</comment>
+    </attribute>
+    <attribute>
+      <name>add</name>
+      <comment>Hodnota k přičtení k hodnotě proměnné.</comment>
+    </attribute>
+    <attribute>
+      <name>multiply</name>
+      <comment>Hodnota k vynásobění s hodnotou proměnné.</comment>
+    </attribute>
+    <attribute>
+      <name>divide</name>
+      <comment>Hodnota k vydělení hodnoty proměnné.</comment>
+    </attribute>
+    <comment>
+      Provede matematickou operaci nad hodnotou proměnné a nastaví ji zpět.
+      Pořadí operací "set", "add", "multiplty" a "divide".
+      Hodnoty "NAN" a "INF" se přeloži na "null".
+    </comment>
+  </tag>
+</taglib>
+
