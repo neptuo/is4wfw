@@ -823,7 +823,7 @@
                     if ($processValue != null) {
                         $processedAtts[] = $attName;
 
-                        if (isset($att->preferPropertyReference)) {
+                        if (isset($att->type) && ($att->type == "propertyReference" || $att->type["preferPropertyReference"])) {
                             $processValue["preferPropertyReference"] = true;
                         }
 
@@ -923,6 +923,9 @@
                 }
 
                 switch ($att->type) {
+                    case 'propertyReference':
+                        // All properties catched few lines above, as they are not converted here.
+                        return null;
                     case 'string':
                         return array('value' => $val, 'type' => 'raw');
                     case 'number':
