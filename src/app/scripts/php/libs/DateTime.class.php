@@ -21,15 +21,20 @@ class DateTime extends BaseTagLib {
 
 	private $formats = [];
 	private $values = [];
+	private $diff;
 
-	public function declare($name, $value, $setYear = "", $setMonth = "", $setDay = "", $setHour = "", $setMinute = "", $setSecond = "", $setWeekDay = "", $addYear = "", $addMonth = "", $addDay = "", $addHour = "", $addMinute = "", $addSecond = "") {
+	private function getGlobalDateTime($value) {
 		if (!($value instanceof GlobalDateTime)) {
 			$timestamp = $value;
 			$value = new GlobalDateTime();
 			$value->setTimestamp($timestamp);
 		}
 
-		$this->values[$name] = $value;
+		return $value;
+	}
+
+	public function declare($name, $value, $setYear = "", $setMonth = "", $setDay = "", $setHour = "", $setMinute = "", $setSecond = "", $setWeekDay = "", $addYear = "", $addMonth = "", $addDay = "", $addHour = "", $addMinute = "", $addSecond = "") {
+		$this->values[$name] = $this->getGlobalDateTime($value);
 
 		$this->set(
 			$name, 
@@ -147,6 +152,13 @@ class DateTime extends BaseTagLib {
 		throw new Exception("Missing date time with name '$name'.");
 	}
 
+	public function diff($start, $end) {
+		$end = $this->getGlobalDateTime($end);
+		$start = $this->getGlobalDateTime($start);
+
+		$this->diff = $start->diff($end);
+	}
+
 	public function getProperty($name) {
 		$parts = explode("-", $name, 2);
 		$name = $parts[0];
@@ -162,6 +174,13 @@ class DateTime extends BaseTagLib {
 			case "today":
 				$value = new GlobalDateTime();
 				$value->setTime(0, 0, 0);
+				break;
+			case "diff":
+				if (count($parts) == 2) {
+					return $this->getDiffPart($parts[1]);
+				} else {
+					return $this->diff;
+				}
 				break;
 			default:
 				if (!array_key_exists($name, $this->values)) {
@@ -217,6 +236,43 @@ class DateTime extends BaseTagLib {
 		}
 
 		return $value->getTimestamp();
+	}
+
+	private function getDiffPart($format) {
+		if ($this->diff == null) {
+			return "";
+		}
+
+		$diff = $this->diff;
+		switch ($format) {
+			case "positive":
+				return ;
+			case "y":
+				return $diff->y;
+			case "m":
+				return $diff->m;
+			case "d":
+				return $diff->d;
+			case "h":
+				return $diff->h;
+			case "i":
+				return $diff->i;
+			case "s":
+				return $diff->s;
+			case "total-m":
+				return $diff->y * 12 + $diff->m;
+			case "total-d":
+				return $diff->days;
+			case "total-h":
+				return $diff->days * 24 + $diff->h;
+			case "total-i":
+				return ($diff->days * 24 + $diff->h) * 60 + $diff->i;
+			case "total-s":
+				return (($diff->days * 24 + $diff->h) * 60 + $diff->i) * 60 + $diff->s;
+			
+			default:
+				return "";
+		}
 	}
 }
 

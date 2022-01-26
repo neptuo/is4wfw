@@ -183,6 +183,25 @@
       Smaže hodnotu.
     </comment>
   </tag>
+  <tag>
+    <name>diff</name>
+    <function>diff</function>
+    <lookless />
+    <attribute>
+      <name>start</name>
+      <required />
+      <comment>Datum, které je odečte od "end".</comment>
+    </attribute>
+    <attribute>
+      <name>end</name>
+      <required />
+      <comment>Datum od kterého je odečteno "start".</comment>
+    </attribute>
+    <comment>
+      Poskytuje rozdíl mezi "end" a "start".
+      Výsledek je dostupný v "diff" prefix property (součást any).
+    </comment>
+  </tag>
   <anyProperty>
     <comment>
       Vrací hodnotu datumu a času podle názvu.
@@ -191,6 +210,10 @@
       Předdefinované frakce "year/Y" (rok), "month/m" (měsíc), "day/d" (den), "hour/H" (hodiny 0-24), "minute/i" (minuty), "second/s" (vteřiny).
       Následně "format" formátuje podle výchozího (nepojmenovaného) formátovacího řetězce.
       Ostatní hodnoty hledají pojmenované formátovací řetězec.
+      ---
+      Vrací hodnotu pro "dt:diff", základní název je "diff".
+      Předdefinované frakce "y" (roky), "m" (měsíce), "d" (dny), "h" (hodiny), "m" (minuty) a "s" (vteřiny). Speciální "positive" vrací "php:true" pokud bylo "start" menší než "end", v opračném případě "php:false".
+      Pro absolutní hodnoty (roky převedené na měsíce, měsíce převedené na dny atd) s prefixem "total-" ("dt:diff-total-h").
     </comment>
   </anyProperty>
 </taglib>
