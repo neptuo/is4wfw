@@ -23,6 +23,13 @@
             $this->setLocalizationBundle("hint");
         }
 
+        private function formatComment($value) {
+            $value = trim($value);
+            $value = str_replace(PHP_EOL, '<br />', $value);
+            $value = str_replace("---", '</p><hr /><p>', $value);
+            return $value;
+        }
+
         /**
          *
          *    Generates hint for selected library.
@@ -60,7 +67,7 @@
                             $obsolete = (string)$xml->anyTag->obsolete;
                         }
 
-                        $links .= ' - <a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#anytag">any</a> ';
+                        $links .= (count($xml->tag) > 0 ? " - " : "") . '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#anytag">any</a> ';
                     }
 
                     $links .= '</div>';
@@ -82,13 +89,13 @@
                             $obsolete = (string)$xml->anyFulltag->obsolete;
                         }
 
-                        $links .= ' - <a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#anyfulltag">any</a> ';
+                        $links .= (count($xml->fulltag) > 0 ? " - " : "") . '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#anyfulltag">any</a> ';
                     }
                     
                     $links .= '</div>';
                 }
 
-                if (count($xml->property) > 0) {
+                if (count($xml->property) > 0 || isset($xml->anyProperty)) {
                     $links .= '<div>'.$rb->get('lib.properties').': ';
                     foreach($xml->property as $prop) {
                         $obsolete = null;
@@ -97,6 +104,16 @@
                         }
                         $links .= '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#property-'.$prop->name.'">'.$prop->name.'</a> ';
                     }
+
+                    if (isset($xml->anyProperty)) {
+                        $obsolete = null;
+                        if (isset($xml->anyProperty->obsolete)) {
+                            $obsolete = (string)$xml->anyProperty->obsolete;
+                        }
+
+                        $links .= (count($xml->property) > 0 ? " - " : "") . '<a ' . (($obsolete != null) ? 'class="obsolete" title="Obsolete: ' . htmlspecialchars($obsolete) . '"' : '') . 'href="#anyproperty">any</a> ';
+                    }
+
                     $links .= '</div>';
                 }
 
@@ -191,7 +208,7 @@
                             .'<div class="lib-tag-head">'
                                 .'<h3 id="tag-'.$tag->name.'">'.$tag->name.'</h3>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
-                                .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                                .'<p>' . $this->formatComment($tag->comment) . '</p>'
                                 . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                                 .'<div class="clear"></div>'
                             .'</div>'
@@ -226,7 +243,7 @@
                             .'<div class="lib-tag-head">'
                                 .'<h3 id="anytag">(any other tag)</h3>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
-                                .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                                .'<p>' . $this->formatComment($tag->comment) . '</p>'
                                 . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                                 .'<div class="clear"></div>'
                             .'</div>'
@@ -280,7 +297,7 @@
                             $attributes .= ''
                             .'<tr>'
                                 .'<td colspan="5">'.$rb->get('lib.attparams').'</td>'
-                                .'<td class="att-comment">'. str_replace(PHP_EOL, '<br />', trim($tag->anyAttribute->comment)) .'</td>'
+                                .'<td class="att-comment">'. $this->formatComment($tag->anyAttribute->comment) .'</td>'
                             .'</tr>';
                         }
                         
@@ -294,7 +311,7 @@
                             .'<div class="lib-tag-head">'
                                 .'<h3 id="fulltag-'.$tag->name.'">'.$tag->name.'</h3>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
-                                .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                                .'<p>' . $this->formatComment($tag->comment) . '</p>'
                                 . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                                 .'<div class="clear"></div>'
                             .'</div>'
@@ -329,7 +346,7 @@
                             .'<div class="lib-tag-head">'
                                 .'<h3 id="anyfulltag">(any other full tag)</h3>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
-                                .'<p>' . str_replace(PHP_EOL, '<br />', trim($tag->comment)) . '</p>'
+                                .'<p>' . $this->formatComment($tag->comment) . '</p>'
                                 . (isset($tag->lookless) ? '<p><strong>' . $rb->get('lib.taglookless') . '</strong></p>' : '')
                                 .'<div class="clear"></div>'
                             .'</div>'
@@ -354,7 +371,7 @@
                             .'<div class="lib-tag-head">'
                                 .'<h3 id="property-'.$prop->name.'">'.$prop->name.'</h3>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
-                                .'<p>' . str_replace(PHP_EOL, '<br />', trim($prop->comment)) . '</p>'
+                                .'<p>' . $this->formatComment($prop->comment) . '</p>'
                                 .'<div class="clear"></div>'
                             .'</div>'
                         .'</div>';
@@ -363,8 +380,8 @@
                     if (isset($xml->anyProperty)) {
                         $return .= ''
                         . '<div class="lib-tag">'
-                            . '<h3>' . $rb->get('lib.anyproperties') . '</h3>'
-                            . '<p>' . str_replace(PHP_EOL, '<br />', trim($xml->anyProperty->comment)) . '</p>'
+                            . '<h3 id="anyproperty">' . $rb->get('lib.anyproperties') . '</h3>'
+                            . '<p>' . $this->formatComment($xml->anyProperty->comment) . '</p>'
                         . '</div>';
                     }
                 }
@@ -423,7 +440,7 @@
                             .'<div class="lib-tag-head">'
                                 .'<h3 id="decorator-' . implode("-", $attributeNames) . '">' . implode(", ", $attributeNames) . '</h3>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
-                                .'<p>' . str_replace(PHP_EOL, '<br />', trim($decorator->comment)) . '</p>'
+                                .'<p>' . $this->formatComment($decorator->comment) . '</p>'
                                 .'<div class="clear"></div>'
                             .'</div>'
                             .'<div class="lib-tag-attrs">'
