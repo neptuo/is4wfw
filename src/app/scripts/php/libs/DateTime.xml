@@ -189,8 +189,8 @@
       Předdefinované názvy: now (nyní), today (dnes).
       Pokud neobsahuje "-", vrací timestamp. Druhá část názvu za "-" určuje formát.
       Předdefinované frakce "year/Y" (rok), "month/m" (měsíc), "day/d" (den), "hour/H" (hodiny 0-24), "minute/i" (minuty), "second/s" (vteřiny).
-      Následně "format" formátuje podle výchozího (nejmenovaného) formátovacího řetězce.
-      Ostatní hodnoty hledají pojmenovaná formátovací řetězec.
+      Následně "format" formátuje podle výchozího (nepojmenovaného) formátovacího řetězce.
+      Ostatní hodnoty hledají pojmenované formátovací řetězec.
     </comment>
   </anyProperty>
 </taglib>
