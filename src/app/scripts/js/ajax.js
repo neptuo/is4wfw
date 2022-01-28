@@ -188,7 +188,7 @@ Ajax.prototype._OnLoadCompleted = function(responseText, responseUrl) {
 
             var styleInlines = styles.getElementsByTagName("rssmm:style");
             for (var i = 0, count = styleInlines.length; i < count; i++) {
-                var style = styleInlines[i].innerHTML;
+                var style = styleInlines[i].innerText;
                 this._IncludeInlineStyle(style);
             }
         }
