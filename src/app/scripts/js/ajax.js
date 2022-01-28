@@ -215,7 +215,7 @@ Ajax.prototype._OnLoadCompleted = function(responseText, responseUrl) {
 
     if (scriptInlines != null) {
         for (var i = 0, count = scriptInlines.length; i < count; i++) {
-            var script = scriptInlines[i].innerHTML;
+            var script = scriptInlines[i].innerText;
             this._IncludeInlineScript(script);
         }
     }
