@@ -355,8 +355,11 @@
                 $this->addjQuery("1.4.2");
             }
 
+            $params = implode(', ', $params);
+            $key = sha1("ajax" . $params . $init);
+
             $this->addScript('~/js/ajax.js');
-            $this->addScriptInline('(function() { var ajax = new Ajax({ ' . implode(', ', $params) . ' }); ' . $init . '})();', "tail");
+            $this->addScriptInline('(function() { var ajax = new Ajax({ ' . $params . ' }); ' . $init . '})();', "tail", $key);
         }
 
         public function dataDuplicators($jQuery = true) {

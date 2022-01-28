@@ -66,8 +66,8 @@ Ajax.prototype._RaiseEvent = function(eventName) {
 Ajax.prototype._OnLinkClick = function(e) {
     var url = e.currentTarget.href;
 
-    this.Load(url);
     this._UpdateHistory(url);
+    this.Load(url, true);
     this._StopEvent(e);
 };
 
@@ -127,13 +127,20 @@ Ajax.prototype._OnFormSubmit = function(e) {
         this._submitButton = null;
     }
 
-    this._Fetch(url, method, data);
+    this._Fetch(url, method, data, false);
     this._StopEvent(e);
 };
 
-Ajax.prototype.Load = function(url) {
+Ajax.prototype._ScrollTop = function(isNewPage) {
+    if (isNewPage) {
+        window.scrollTo(0, 0);
+    }
+};
+
+Ajax.prototype.Load = function(url, isNewPage) {
     this._RaiseEvent("loading");
-    this._Fetch(url, "GET");
+    this._ScrollTop(isNewPage);
+    this._Fetch(url, "GET", null, isNewPage);
 };
 
 Ajax.prototype._ObserveRequest = function(request) {
@@ -155,7 +162,8 @@ Ajax.prototype._UpdateHistory = function(url, replace) {
 
 Ajax.prototype._OnLoadCompleted = function(responseText, responseUrl) {
     if (responseUrl != window.location.href) {
-        this._UpdateHistory(responseUrl, true);
+        this._ScrollTop(true);
+        this._UpdateHistory(responseUrl);
     }
 
     var response = document.createElement("document");
@@ -292,6 +300,6 @@ Ajax.prototype._OnPopState = function(e) {
         url = window.location.href;
     }
 
-    this.Load(url);
+    this.Load(url, false);
     this._StopEvent(e);
 };
