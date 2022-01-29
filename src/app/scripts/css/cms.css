@@ -47,6 +47,10 @@ body {
     color: unset;
 }
 
+.bg-primary {
+    background-color: #04601C !important;
+}
+
 .btn-primary, 
 .btn-outline-primary {
     border-color: #04601C;
@@ -1897,7 +1901,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 .cms-menu a {
     width: 100%;
     display: block;
-    padding: 2px 0 2px 24px;
+    padding: 2px 4px;
     color: #04601C;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1906,6 +1910,11 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 .cms-menu a:hover {
     background-color: #ccc !important;
+}
+
+.cms-menu img {
+    display: inline-block;
+    margin-top: -2px;
 }
 
 .cms-menu ul {
@@ -1949,8 +1958,12 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     background: none;
 }
 
-.cms-menu li.menu-item .link {
+.cms-menu li .link {
     white-space: nowrap;
+}
+
+.cms-menu li.menu-item a {
+    padding-left: 24px;
 }
 
 .cms-menu li.menu-item.li-1 a {

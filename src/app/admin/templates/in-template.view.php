@@ -55,7 +55,26 @@
                                 <button class="menu-toggler" title="<web:out text="utils:menuContainerTogglerTitle" />"></button>
                             </div>
                             <web:condition when="template:menu">
-                                <m:xmlMenu file="template:menu" />
+                                <div class="menu">
+                                    <ul class="ul-1">
+                                        <ui:forEach items="list:menu" filter-parentId="template:menu">
+                                            <web:out security:requirePerm="list:menu-perm">
+                                                <li>
+                                                    <div class="link">
+                                                        <web:a pageId="list:menu-url" title="list:menu-text">
+                                                            <web:condition when="list:menu-icon">
+                                                                <img src="<web:out text="list:menu-icon" />" />
+                                                            </web:condition>
+                                                            <span>
+                                                                <web:out text="list:menu-text" />
+                                                            </span>
+                                                        </web:a>
+                                                    </div>
+                                                </li>
+                                            </web:out>
+                                        </ui:forEach>
+                                    </ul>
+                                </div>
                             </web:condition>
                             <web:condition when="template:menu" isInverted="true">
                                 <template:content />
@@ -77,9 +96,11 @@
                             </web:a>
                         </div>
                     </v:panel>
-                    <template:menuContainer name="web" title="Web" permission="CMS.Web" rootUrl="~/in/pages.view" cookie="cookie:cmsMenu-web" menu="~/templates/menus/web.xml" />
-                    <template:menuContainer name="floorball" title="Floorball" permission="CMS.Floorball" rootUrl="~/in/floorball/seasons.view" cookie="cookie:cmsMenu-floorball" menu="~/templates/menus/floorball.xml" defaultState="collapsed" class="cms-menu-2" />
-                    <template:menuContainer name="settings" title="Settings" permission="CMS.Settings" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-settings" menu="~/templates/menus/settings.xml" class="cms-menu-4" />
+
+                    <controls:menuDefinition />
+                    <template:menuContainer name="web" title="Web" permission="CMS.Web" rootUrl="~/in/pages.view" cookie="cookie:cmsMenu-web" menu="web" />
+                    <template:menuContainer name="floorball" title="Floorball" permission="CMS.Floorball" rootUrl="~/in/floorball/seasons.view" cookie="cookie:cmsMenu-floorball" defaultState="collapsed" class="cms-menu-2" menu="floorball" />
+                    <template:menuContainer name="settings" title="Settings" permission="CMS.Settings" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-settings" class="cms-menu-4" menu="settings" />
                     <web:condition when="sys:hasAdminMenu">
                         <template:menuContainer name="custom" title="Custom" permission="CMS.AdminMenu" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-custom" class="cms-menu-5">
                             <sys:adminMenu url="~/in/admin-menu.view" />
