@@ -95,18 +95,6 @@
       Vloží stránky link tag pro definici favicony.
     </comment>
   </tag>
-  <fulltag>
-    <name>size</name>
-    <function>size</function>
-    <attribute>
-      <name>id</name>
-      <required />
-      <comment>Id obrázku</comment>
-    </attribute>
-    <comment>
-      Poskytuje velikost obrázku v "img:sizeWidth" a "img:sizeHeight".
-    </comment>
-  </fulltag>
   
   <property>
   	<name>name</name>
