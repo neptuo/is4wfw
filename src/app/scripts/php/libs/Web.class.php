@@ -2555,6 +2555,20 @@
             return $value;
         }
 
+        public function getOut($template, $encode = "none") {
+            $value = $template();
+
+            if (empty($encode)) {
+                $encode = $this->outEncode;
+            }
+
+            if ($encode == "html") {
+                $value = htmlspecialchars($value);
+            }
+
+            return $value;
+        }
+
         private $outEncode = "";
 
         public function outDefaults($encode) {

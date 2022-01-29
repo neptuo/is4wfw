@@ -506,6 +506,18 @@
       Vhodné pro vypsání proměnné.
     </comment>
   </tag>
+  <fulltag>
+    <name>out</name>
+    <function>getOut</function>
+    <attribute>
+      <name>encode</name>
+      <type>string</type>
+      <comment>Zda má výstup property enkódovat. Podporované hodnoty 'none', 'html'.</comment>
+    </attribute>
+    <comment>
+      Vrátí text z těla. 
+    </comment>
+  </fulltag>
   <tag>
     <name>outDefaults</name>
     <function>outDefaults</function>
