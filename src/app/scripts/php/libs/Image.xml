@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro lepší zobrazování galerií.
   </comment>
@@ -95,6 +95,18 @@
       Vloží stránky link tag pro definici favicony.
     </comment>
   </tag>
+  <fulltag>
+    <name>size</name>
+    <function>size</function>
+    <attribute>
+      <name>id</name>
+      <required />
+      <comment>Id obrázku</comment>
+    </attribute>
+    <comment>
+      Poskytuje velikost obrázku v "img:sizeWidth" a "img:sizeHeight".
+    </comment>
+  </fulltag>
   
   <property>
   	<name>name</name>
@@ -133,16 +145,16 @@
   </property>
   <property>
   	<name>fileId</name>
-  	<setFunction>setFileId</setFunction>
   	<getFunction>getFileId</getFunction>
+  	<setFunction>setFileId</setFunction>
     <comment>
       Vlastnost ID aktuálního souboru.
     </comment>
   </property>
   <property>
   	<name>fileUrl</name>
-  	<setFunction>setFileUrl</setFunction>
   	<getFunction>getFileUrl</getFunction>
+  	<setFunction>setFileUrl</setFunction>
     <comment>
       Vlastnost URL aktuálního souboru.
     </comment>
@@ -164,4 +176,3 @@
     </comment>
   </property>
 </taglib>
-

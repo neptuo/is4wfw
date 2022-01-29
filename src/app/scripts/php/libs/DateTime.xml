@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
+  <namespace>php\libs</namespace>
   <comment>
     Knihovna pro s datumem a časem.
   </comment>
-  <namespace>php\libs</namespace>
   <tag>
     <name>declare</name>
     <function>declare</function>
@@ -217,4 +217,3 @@
     </comment>
   </anyProperty>
 </taglib>
-

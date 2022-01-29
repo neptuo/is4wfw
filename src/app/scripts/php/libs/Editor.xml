@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro realizaci edit formuláře bez pevné struktury. Tedy uživatelsky definovaného.
   </comment>
@@ -8,8 +8,8 @@
     <function>form</function>
     <attribute>
       <name>submit</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název klíče z requestu, který říká že jde o odeslání formuláře.</comment>
     </attribute>
     <attribute>
@@ -45,8 +45,8 @@
     <function>prefix</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název prefixu, který bude přidán všem klíčům ve formuláři.</comment>
     </attribute>
     <comment>
@@ -58,14 +58,14 @@
     <function>setValue</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název klíče, který se má nastavit.</comment>
     </attribute>
     <attribute>
       <name>value</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Hodnota klíče.</comment>
     </attribute>
     <comment>Nastaví položku modelu.</comment>
@@ -104,4 +104,3 @@
     <comment>Vrací libovolnou hodnotu z edit modelu podle názvu property.</comment>
   </anyProperty>
 </taglib>
-

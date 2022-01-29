@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Třída pro správu webových projektů. 
 		System property "WebProject.defaultProjectId" může uchovávat id projekt zobrazeného po přihlášení
@@ -49,11 +48,10 @@
   </tag>
   <property>
   	<name>selectedProject</name>
-  	<setFunction>setSelectedProject</setFunction>
   	<getFunction>getSelectedProject</getFunction>
+  	<setFunction>setSelectedProject</setFunction>
     <comment>
       Aktuálně vybraný projekt.
     </comment>
   </property>
 </taglib>
-

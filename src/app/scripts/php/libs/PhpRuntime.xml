@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <count>1</count>
   <comment>
     Defaultní třída pro registrování a rušení c tag libs.
@@ -10,8 +10,8 @@
     <function>register</function>
     <attribute>
       <name>tagPrefix</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>
         Prefix pod kterým bude objekt zaregistrován. 
         Může obsahovat pouze statické hodnoty (konstanty). Nikdy né proměnné a pod.
@@ -19,8 +19,8 @@
     </attribute>
     <attribute>
       <name>classPath</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>
         Jméno třídy. 
         Může obsahovat pouze statické hodnoty (konstanty). Nikdy né proměnné a pod.
@@ -63,7 +63,6 @@
   <tag>
     <name>cache</name>
     <function>cache</function>
-    <obsolete>Eh...</obsolete>
     <attribute>
       <name>allow</name>
       <required />
@@ -71,6 +70,7 @@
     <comment>
       Nastaví cachování v aplikaci.
     </comment>
+    <obsolete>Eh...</obsolete>
   </tag>
   <fulltag>
     <name>using</name>
@@ -116,4 +116,3 @@
     </comment>
   </property>
 </taglib>
-

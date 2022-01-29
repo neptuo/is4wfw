@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro generování prvků uživatelského rozhraní kompatibilních s administrační částí aplikace.
   </comment>
@@ -9,8 +9,8 @@
     <lookless />
     <attribute>
       <name>message</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Hláška po úspěšném dokončení akce.</comment>
     </attribute>
     <comment>
@@ -22,8 +22,8 @@
     <function>deleteButton</function>
     <attribute>
       <name>hiddenField</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název a hodnota hidden inputu, kterým se pozná odeslání formuláře.</comment>
     </attribute>
     <attribute>
@@ -48,14 +48,14 @@
     <function>newButton</function>
     <attribute>
       <name>pageId</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Id stránky, kam má odkaz vést.</comment>
     </attribute>
     <attribute>
       <name>text</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Text odkazu.</comment>
     </attribute>
     <attribute>
@@ -91,8 +91,8 @@
     </attribute>
     <attribute>
       <name>closePageId</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Id stránky, kam má vést odkaz pro zavření.</comment>
     </attribute>
     <attribute>
@@ -116,8 +116,8 @@
     <function>redirectAfterSave</function>
     <attribute>
       <name>saveName</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název ukládacích tlačítek (hodí se při více formulářích na jedné stránce).</comment>
     </attribute>
     <attribute>
@@ -128,8 +128,8 @@
     </attribute>
     <attribute>
       <name>closePageId</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Id stránky, kam má vést odkaz pro zavření.</comment>
     </attribute>
     <attribute>
@@ -147,9 +147,9 @@
     <function>field</function>
     <attribute>
       <name>label</name>
-      <required />
       <type>string</type>
       <prefix />
+      <required />
       <comment>Popisek (dvojtečka je přidána automaticky). Všechny prefix jsou použity jako HTML atributy elementu label.</comment>
     </attribute>
     <anyAttribute />
@@ -163,8 +163,8 @@
     <function>edit</function>
     <attribute>
       <name>id</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Hodnota id, podle které se má rozhodovat.</comment>
     </attribute>
     <comment>

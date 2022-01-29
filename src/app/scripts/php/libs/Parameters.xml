@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro nastavování parametrů při generování odkazů.
   </comment>
@@ -118,4 +118,3 @@
     </comment>
   </anyProperty>
 </taglib>
-

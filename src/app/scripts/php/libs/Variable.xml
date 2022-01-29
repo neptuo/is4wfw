@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro správu proměnných systému.
   </comment>
@@ -43,9 +43,9 @@
     </attribute>
     <attribute>
       <name>scope</name>
-      <required />
       <type>string</type>
       <default>request</default>
+      <required />
       <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie', 'user' a 'application'.</comment>
     </attribute>
     <comment>
@@ -67,4 +67,3 @@
   </tag>
   <anyProperty />
 </taglib>
-

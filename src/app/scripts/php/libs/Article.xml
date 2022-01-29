@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Třída pro články.
   </comment>
@@ -472,99 +471,98 @@
   </tag>
   <property>
   	<name>url</name>
-  	<setFunction>setUrl</setFunction>
   	<getFunction>getUrl</getFunction>
+  	<setFunction>setUrl</setFunction>
     <comment>
       Vrací / Nastavuje url článku
     </comment>
   </property>
   <property>
   	<name>languageId</name>
-  	<setFunction>setArticleLanguageId</setFunction>
   	<getFunction>getArticleLanguageId</getFunction>
+  	<setFunction>setArticleLanguageId</setFunction>
     <comment>
       Vrací / Nastavuje id jazyku článku
     </comment>
   </property>
   <property>
   	<name>id</name>
-  	<setFunction>setArticleId</setFunction>
   	<getFunction>getArticleId</getFunction>
+  	<setFunction>setArticleId</setFunction>
     <comment>
       Vrací / Nastavuje id článku
     </comment>
   </property>
   <property>
   	<name>isActive</name>
-  	<setFunction>setIsActiveArticle</setFunction>
   	<getFunction>getIsActiveArticle</getFunction>
+  	<setFunction>setIsActiveArticle</setFunction>
     <comment>
       Vrací / Nastavuje zda aktuální článek je shodný si aktuální a:id pro daný request.
     </comment>
   </property>
   <property>
   	<name>directoryId</name>
-  	<setFunction>setArticleDirectoryId</setFunction>
   	<getFunction>getArticleDirectoryId</getFunction>
+  	<setFunction>setArticleDirectoryId</setFunction>
     <comment>
       Vrací / Nastavuje id složky pro soubory článku
     </comment>
   </property>
   <property>
   	<name>lineUrl</name>
-  	<setFunction>setLineUrl</setFunction>
   	<getFunction>getLineUrl</getFunction>
+  	<setFunction>setLineUrl</setFunction>
     <comment>
       Vrací / Nastavuje url řady článků
     </comment>
   </property>
   <property>
   	<name>labelId</name>
-  	<setFunction>setLabelId</setFunction>
   	<getFunction>getLabelId</getFunction>
+  	<setFunction>setLabelId</setFunction>
     <comment>
       Vrací / Nastavuje id štítku
     </comment>
   </property>
   <property>
   	<name>labelUrl</name>
-  	<setFunction>setLabelUrl</setFunction>
   	<getFunction>getLabelUrl</getFunction>
+  	<setFunction>setLabelUrl</setFunction>
     <comment>
       Vrací / Nastavuje url štítku
     </comment>
   </property>
   <property>
   	<name>labelIsActive</name>
-  	<setFunction>setIsActiveLabel</setFunction>
   	<getFunction>getIsActiveLabel</getFunction>
+  	<setFunction>setIsActiveLabel</setFunction>
     <comment>
       Vrací / Nastavuje zda aktuální štítek (uvnitř a:labels) je shodný si aktuální a:labelId pro daný request.
     </comment>
   </property>
   <property>
   	<name>hasHead</name>
-  	<setFunction>setHasHead</setFunction>
   	<getFunction>getHasHead</getFunction>
+  	<setFunction>setHasHead</setFunction>
     <comment>
       Vrací / Nastavuje, zda článek má vyplněnou hlavičku (strlen > 0)
     </comment>
   </property>
   <property>
   	<name>hasContent</name>
-  	<setFunction>setHasContent</setFunction>
   	<getFunction>getHasContent</getFunction>
+  	<setFunction>setHasContent</setFunction>
     <comment>
       Vrací / Nastavuje, zda článek má vyplněný obsah (strlen > 0)
     </comment>
   </property>
   <property>
   	<name>isExternalUrl</name>
-  	<setFunction>setIsExternalUrl</setFunction>
   	<getFunction>getIsExternalUrl</getFunction>
+  	<setFunction>setIsExternalUrl</setFunction>
     <comment>
       Vrací / Nastavuje, zda URL článku odkazuje na externí web.
     </comment>
   </property>
 </taglib>
-

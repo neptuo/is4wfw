@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro správu a práci s lokalizačními bundly.
   </comment>
@@ -9,8 +9,8 @@
     <lookless />
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název jazyku.</comment>
     </attribute>
     <comment>
@@ -22,8 +22,8 @@
     <function>useBundle</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název bundlu, který se má načíst.</comment>
     </attribute>
     <attribute>
@@ -48,14 +48,14 @@
     <lookless />
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název bundlu, který se má načíst.</comment>
     </attribute>
     <attribute>
       <name>lang</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název jazyku.</comment>
     </attribute>
     <attribute>
@@ -79,14 +79,14 @@
     <function>edit</function>
     <attribute>
       <name>bundleName</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <name>languageName</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
@@ -103,14 +103,14 @@
     <function>editFullTag</function>
     <attribute>
       <name>bundleName</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <name>languageName</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
@@ -141,14 +141,14 @@
     <function>download</function>
     <attribute>
       <name>bundleName</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <attribute>
       <name>languageName</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název uživatelského bundlu, který se má editovat.</comment>
     </attribute>
     <comment>
@@ -157,4 +157,3 @@
   </tag>
   <anyProperty />
 </taglib>
-

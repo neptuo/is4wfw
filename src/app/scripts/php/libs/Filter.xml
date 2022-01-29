@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro tvorbu pokročilých SQL filtrů.
   </comment>
@@ -9,8 +9,8 @@
     <lookless />
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název filtru. Pod tímto názvem je pak možné ho získat pomocí anyProperty.</comment>
     </attribute>
     <attribute>
@@ -34,24 +34,24 @@
     <function>exists</function>
     <attribute>
       <name>from</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název název tabulky, na kterou se exists vztahuje.</comment>
     </attribute>
     <attribute>
       <name>alias</name>
-      <required />
       <type>string</type>
+      <required />
     </attribute>
     <attribute>
       <name>outerColumn</name>
-      <required />
       <type>string</type>
+      <required />
     </attribute>
     <attribute>
       <name>innerColumn</name>
-      <required />
       <type>string</type>
+      <required />
     </attribute>
   </fulltag>
   <tag>
@@ -59,8 +59,8 @@
     <function>emptyValue</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
@@ -76,8 +76,8 @@
     <function>nullValue</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
@@ -93,8 +93,8 @@
     <function>equals</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
@@ -114,8 +114,8 @@
     <function>in</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
@@ -135,8 +135,8 @@
     <function>like</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
@@ -160,14 +160,14 @@
     <function>greater</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
       <name>than</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Sloupec musí být větší než.</comment>
     </attribute>
     <attribute>
@@ -182,14 +182,14 @@
     <function>lower</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název sloupce, pro který bude filtr platit.</comment>
     </attribute>
     <attribute>
       <name>than</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Sloupec musí být menší než.</comment>
     </attribute>
     <attribute>
@@ -202,19 +202,19 @@
   <fulltag>
     <name>geoContains</name>
     <function>geoContains</function>
-    <comment>Volání funkce ST_CONTAINS. V těle je možné používat "filter:geoPolygon".</comment>
     <attribute>
       <name>latitudeName</name>
       <type>string</type>
-      <comment>Název sloupce obsahující "latitude" hodnotu záznamu.</comment>
       <required />
+      <comment>Název sloupce obsahující "latitude" hodnotu záznamu.</comment>
     </attribute>
     <attribute>
       <name>longitudeName</name>
       <type>string</type>
-      <comment>Název sloupce obsahující "longitude" hodnotu záznamu.</comment>
       <required />
+      <comment>Název sloupce obsahující "longitude" hodnotu záznamu.</comment>
     </attribute>
+    <comment>Volání funkce ST_CONTAINS. V těle je možné používat "filter:geoPolygon".</comment>
   </fulltag>
   <fulltag>
     <name>geoPolygon</name>
@@ -224,22 +224,21 @@
   <tag>
     <name>geoPoint</name>
     <function>geoPoint</function>
-    <comment>Přidá do aktuální kolekce points nové souřadnice.</comment>
     <attribute>
       <name>latitude</name>
       <type>string</type>
-      <comment>Hodnota "latitude".</comment>
       <required />
+      <comment>Hodnota "latitude".</comment>
     </attribute>
     <attribute>
       <name>longitude</name>
       <type>string</type>
-      <comment>Hodnota "longitude".</comment>
       <required />
+      <comment>Hodnota "longitude".</comment>
     </attribute>
+    <comment>Přidá do aktuální kolekce points nové souřadnice.</comment>
   </tag>
   <anyProperty>
     <comment>Slouží k získání dříve deklarovaného filtru. Název proměnné odpovídá názvu při deklaraci.</comment>
   </anyProperty>
 </taglib>
-

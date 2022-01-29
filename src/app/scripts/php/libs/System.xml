@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Třída pro správu webového frameworku.
   </comment>
@@ -163,8 +162,8 @@
   </fulltag>
   <property>
   	<name>cmsWindowsStyle</name>
-  	<setFunction>setCmsWindowsStyle</setFunction>
   	<getFunction>getCmsWindowsStyle</getFunction>
+  	<setFunction>setCmsWindowsStyle</setFunction>
     <comment>
       Vlastnost cmsWindowsStyle, v system.properties s klicem System.cms.windowsstyle.
     </comment>
@@ -184,4 +183,3 @@
     </comment>
   </property>
 </taglib>
-

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro manipulaci s moduly.
   </comment>
@@ -152,10 +152,6 @@
   <tag>
     <name>entrypoint</name>
     <function>entrypoint</function>
-    <comment>
-      Vykreslí entrypoint z modulu.
-      Možno použít uvnitř "module:use".
-    </comment>
     <attribute>
       <name>id</name>
       <type>string</type>
@@ -168,6 +164,10 @@
       <prefix />
       <comment>Seznam parametrů předaných entrypointu.</comment>
     </attribute>
+    <comment>
+      Vykreslí entrypoint z modulu.
+      Možno použít uvnitř "module:use".
+    </comment>
   </tag>
   <fulltag>
     <name>gitHubUpdateList</name>
@@ -251,4 +251,3 @@
     </comment>
   </fulltag>
 </taglib>
-

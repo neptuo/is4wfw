@@ -1503,7 +1503,7 @@
                     }
                     return $this->addSpecialParams($url);
                 } else {
-                    $message = parent::getError('Project doesn\' have url adress!!');
+                    $message = parent::getError("Project doesn't have an url adress!");
                     trigger_error($message, E_USER_WARNING);
                     return '#';
                 }

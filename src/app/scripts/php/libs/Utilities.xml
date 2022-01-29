@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna obshaující různé pomocné metody.
   </comment>
@@ -113,9 +113,9 @@
     </attribute>
     <attribute>
       <name>key</name>
-      <required />
       <type>string</type>
       <prefix default="merge" />
+      <required />
       <comment>Klíč-hodnota, které budou předány jako položky nově vytvořené položce v hlavním poli.</comment>
     </attribute>
     <attribute>
@@ -141,9 +141,9 @@
     </attribute>
     <attribute>
       <name>key</name>
-      <required />
       <type>string</type>
       <prefix default="merge" />
+      <required />
       <comment>Klíč-hodnota, které budou nastaveny do pole.</comment>
     </attribute>
     <comment>
@@ -162,14 +162,14 @@
     </attribute>
     <attribute>
       <name>value</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Stringová hodnota.</comment>
     </attribute>
     <attribute>
       <name>separator</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Oddělovač, podle kterého se má dělit.</comment>
     </attribute>
     <attribute>
@@ -192,8 +192,8 @@
     </attribute>
     <attribute>
       <name>input</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Hodnota, v níž se mají nahradit nové řádky za "br".</comment>
     </attribute>
     <comment>Nahradí v "input" nové řádky za "br".</comment>
@@ -215,8 +215,8 @@
     </attribute>
     <attribute>
       <name>format</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>PHP formát string pro rozparsování "value".</comment>
     </attribute>
     <attribute>
@@ -244,8 +244,8 @@
     </attribute>
     <attribute>
       <name>format</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Formátovací řetězec pro datum (a čas).</comment>
     </attribute>
     <comment>Vrátí naformátovaný datum (a čas) pro zadaný timestamp.</comment>

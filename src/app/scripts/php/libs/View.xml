@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     "View"
   </comment>
@@ -112,4 +111,3 @@
     <comment>Poskytuje obsah těla pro párový tag ze šablony.</comment>
   </decorator>
 </taglib>
-

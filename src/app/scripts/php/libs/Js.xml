@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Třída pro systémové javascripty.
   </comment>
@@ -28,15 +28,15 @@
     <function>addScript</function>
     <attribute>
       <name>path</name>
-      <required />
-      <prefix />
       <type>string</type>
+      <prefix />
+      <required />
       <comment>Výchozí atribut je cesta k souboru. Všechny další se přidají jako query parametery.</comment>
     </attribute>
     <attribute>
       <name>placement</name>
-      <default>head</default>
       <type>string</type>
+      <default>head</default>
       <comment>Umístění skriptu: "head" do hlavičky stránky; "tail" na konec těla.</comment>
     </attribute>
     <comment>
@@ -48,8 +48,8 @@
     <function>addScriptInline</function>
     <attribute>
       <name>placement</name>
-      <default>head</default>
       <type>string</type>
+      <default>head</default>
       <comment>Umístění skriptu: "head" do hlavičky stránky; "tail" na konec těla.</comment>
     </attribute>
     <attribute>
@@ -67,9 +67,9 @@
     <function>addStyle</function>
     <attribute>
       <name>path</name>
-      <required />
-      <prefix />
       <type>string</type>
+      <prefix />
+      <required />
       <comment>Výchozí atribut je cesta k souboru. Všechny další se přidají jako query parametery.</comment>
     </attribute>
     <comment>
@@ -266,4 +266,3 @@
     </attribute>
   </tag>
 </taglib>
-

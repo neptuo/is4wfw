@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro jazyků.
   </comment>
@@ -40,9 +40,9 @@
     <lookless />
     <attribute>
       <name>id</name>
-      <required />
       <type>number</type>
       <default>0</default>
+      <required />
       <comment>Id záznamu, který se má smazat.</comment>
     </attribute>
     <comment>
@@ -85,4 +85,3 @@
     </comment>
   </property>
 </taglib>
-

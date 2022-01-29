@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro práci s GET hodnotami.
   </comment>
@@ -7,4 +7,3 @@
     <comment>Vrátí hodnotu GET parametru.</comment>
   </anyProperty>
 </taglib>
-

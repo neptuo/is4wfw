@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Třída pro počítající uživatelské přístupy.
   </comment>
@@ -8,13 +8,13 @@
     <function>countAccess</function>
     <attribute>
       <name>id</name>
-      <type>text</type>
+      <type>string</type>
       <default>1</default>
       <comment>ID počítadla (max 15 znaků).</comment>
     </attribute>
     <attribute>
       <name>every</name>
-      <type>text</type>
+      <type>string</type>
       <default>day</default>
       <comment>Po jaké době má být znovu připočítán přístup z jedné ip, možné hodnoty ("every", "minute", "hour", "day", "week").</comment>
     </attribute>
@@ -155,4 +155,3 @@
     </comment>
   </tag>
 </taglib>
-

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Třída pro "sport".
   </comment>
@@ -730,99 +729,98 @@
   </tag>
   <property>
   	<name>projectId</name>
-  	<setFunction>setProjectId</setFunction>
   	<getFunction>getProjectId</getFunction>
+  	<setFunction>setProjectId</setFunction>
     <comment>
       Vrácí / Nastavuje projekt id
     </comment>
   </property>
   <property>
   	<name>seasonId</name>
-  	<setFunction>setSeasonId</setFunction>
   	<getFunction>getSeasonId</getFunction>
+  	<setFunction>setSeasonId</setFunction>
     <comment>
       Vrácí / Nastavuje season id
     </comment>
   </property>
   <property>
   	<name>teamId</name>
-  	<setFunction>setTeamId</setFunction>
   	<getFunction>getTeamId</getFunction>
+  	<setFunction>setTeamId</setFunction>
     <comment>
       Vrácí / Nastavuje team id
     </comment>
   </property>
   <property>
   	<name>homeTeamId</name>
-  	<setFunction>setHomeTeamId</setFunction>
   	<getFunction>getHomeTeamId</getFunction>
+  	<setFunction>setHomeTeamId</setFunction>
     <comment>
       Vrácí / Nastavuje home team id v zápase
     </comment>
   </property>
   <property>
   	<name>awayTeamId</name>
-  	<setFunction>setAwayTeamId</setFunction>
   	<getFunction>getAwayTeamId</getFunction>
+  	<setFunction>setAwayTeamId</setFunction>
     <comment>
       Vrácí / Nastavuje away team id v zápase
     </comment>
   </property>
   <property>
   	<name>playerId</name>
-  	<setFunction>setPlayerId</setFunction>
   	<getFunction>getPlayerId</getFunction>
+  	<setFunction>setPlayerId</setFunction>
     <comment>
       Vrácí / Nastavuje player id
     </comment>
   </property>
   <property>
   	<name>matchId</name>
-  	<setFunction>setMatchId</setFunction>
   	<getFunction>getMatchId</getFunction>
+  	<setFunction>setMatchId</setFunction>
     <comment>
       Vrácí / Nastavuje match id
     </comment>
   </property>
   <property>
   	<name>roundId</name>
-  	<setFunction>setRoundId</setFunction>
   	<getFunction>getRoundId</getFunction>
+  	<setFunction>setRoundId</setFunction>
     <comment>
       Vrácí / Nastavuje round id
     </comment>
   </property>
   <property>
   	<name>projectUrl</name>
-  	<setFunction>setProjectUrl</setFunction>
   	<getFunction>getProjectUrl</getFunction>
+  	<setFunction>setProjectUrl</setFunction>
     <comment>
       Vrácí / Nastavuje project id z url
     </comment>
   </property>
   <property>
   	<name>seasonUrl</name>
-  	<setFunction>setseasonUrl</setFunction>
   	<getFunction>getseasonUrl</getFunction>
+  	<setFunction>setseasonUrl</setFunction>
     <comment>
       Vrácí / Nastavuje season id z url ve tvaru 'start_year-end_year'
     </comment>
   </property>
   <property>
   	<name>teamUrl</name>
-  	<setFunction>setteamUrl</setFunction>
   	<getFunction>getteamUrl</getFunction>
+  	<setFunction>setteamUrl</setFunction>
     <comment>
       Vrácí / Nastavuje team id z url
     </comment>
   </property>
   <property>
   	<name>playerUrl</name>
-  	<setFunction>setplayerUrl</setFunction>
   	<getFunction>getplayerUrl</getFunction>
+  	<setFunction>setplayerUrl</setFunction>
     <comment>
       Vrácí / Nastavuje player id z url
     </comment>
   </property>
 </taglib>
-

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro správu souborového systému, náhrada za admin funkce z File class.
   </comment>
   <tag>
     <name>browser</name>
     <function>fileBrowser</function>
-    <obsolete>Použijte šablonový "fa:browser".</obsolete>
     <attribute>
       <name>dirId</name>
 	    <default>0</default>
@@ -28,14 +27,15 @@
     <comment>
       Zobrazí browser souborovým systémem
     </comment>
+    <obsolete>Použijte šablonový "fa:browser".</obsolete>
   </tag>
   <fulltag>
     <name>browser</name>
     <function>fileBrowserWithTemplate</function>
     <attribute>
       <name>dirId</name>
-      <required />
 	    <type>number</type>
+      <required />
       <comment>Id složky, jejíž obsah se má zobrazit.</comment>
     </attribute>
     <attribute>
@@ -86,10 +86,6 @@
   <fulltag>
     <name>fileSwapOrder</name>
     <function>fileSwapOrder</function>
-    <comment>
-      Prohodí pořadí souborů s "id1" a "id2". 
-      Šablona se spustí, pokud se prohození podaří.
-    </comment>
     <lookless />
     <attribute>
       <name>id1</name>
@@ -103,14 +99,14 @@
       <required />
       <comment>Id druhého souboru.</comment>
     </attribute>
+    <comment>
+      Prohodí pořadí souborů s "id1" a "id2". 
+      Šablona se spustí, pokud se prohození podaří.
+    </comment>
   </fulltag>
   <fulltag>
     <name>directorySwapOrder</name>
     <function>directorySwapOrder</function>
-    <comment>
-      Prohodí pořadí složek s "id1" a "id2". 
-      Šablona se spustí, pokud se prohození podaří.
-    </comment>
     <lookless />
     <attribute>
       <name>id1</name>
@@ -124,6 +120,10 @@
       <required />
       <comment>Id druhé složky.</comment>
     </attribute>
+    <comment>
+      Prohodí pořadí složek s "id1" a "id2". 
+      Šablona se spustí, pokud se prohození podaří.
+    </comment>
   </fulltag>
   <property>
     <name>browserList</name>
@@ -324,8 +324,8 @@
     <lookless />
     <attribute>
       <name>id</name>
-      <required />
 	    <type>number</type>
+      <required />
       <comment>Id složky, která se má smazat.</comment>
     </attribute>
     <comment>
@@ -338,8 +338,8 @@
     <lookless />
     <attribute>
       <name>id</name>
-      <required />
 	    <type>number</type>
+      <required />
       <comment>Id souboru, který se má smazat.</comment>
     </attribute>
     <comment>
@@ -347,4 +347,3 @@
     </comment>
   </fulltag>
 </taglib>
-

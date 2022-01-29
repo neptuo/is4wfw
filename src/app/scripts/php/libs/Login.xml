@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <count>1</count>
   <comment>
     Třída pro logování užívatelů, je defaultním objektem a maximálně jedna instance.
@@ -11,8 +10,8 @@
     <function>initLogin</function>
     <attribute>
       <name>group</name>
+      <type>string</type>
       <required />
-      <atttype>string</atttype>
     </attribute>
     <attribute>
       <name>cookieName</name>
@@ -52,20 +51,20 @@
     <lookless />
     <attribute>
       <name>group</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název skupiny, pro kterou se má přihlášení provést.</comment>
     </attribute>
     <attribute>
       <name>username</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Uživatelské jméno.</comment>
     </attribute>
     <attribute>
       <name>password</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Heslo.</comment>
     </attribute>
     <attribute>

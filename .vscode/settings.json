@@ -1,0 +1,8 @@
+{
+    "xml.fileAssociations": [
+        {
+            "pattern": "libs/*.xml",
+            "systemId": "http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd"
+        }
+     ]
+}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro zpracování JSON vstupu a generování JSON výstupu.
   </comment>
@@ -47,8 +47,8 @@
     <function>processKey</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Název JSON klíče.</comment>
     </attribute>
     <attribute>
@@ -72,8 +72,8 @@
     <function>processKeyWithBody</function>
     <attribute>
       <name>name</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Hodnota JSON klíče.</comment>
     </attribute>
     <comment>
@@ -98,4 +98,3 @@
     </comment>
   </property>
 </taglib>
-

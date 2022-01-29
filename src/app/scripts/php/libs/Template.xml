@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro vkládání šablon do stránek.
   </comment>
@@ -8,8 +8,8 @@
     <function>includeById</function>
     <attribute>
       <name>id</name>
-      <required />
       <type>number</type>
+      <required />
       <comment>ID šablony, která se má vložit.</comment>
     </attribute>
     <anyAttribute />
@@ -24,8 +24,8 @@
     <function>includeWithBodyById</function>
     <attribute>
       <name>id</name>
-      <required />
       <type>number</type>
+      <required />
       <comment>ID šablony, která se má vložit.</comment>
     </attribute>
     <anyAttribute />
@@ -62,8 +62,8 @@
     <function>declareInline</function>
     <attribute>
       <name>identifier</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Unikátní identifikátor šablony. Přebíjí uložené šabloné v DB.</comment>
     </attribute>
     <comment>
@@ -103,4 +103,3 @@
     <comment>Poskytuje obsah těla pro párový tag ze šablony.</comment>
   </decorator>
 </taglib>
-

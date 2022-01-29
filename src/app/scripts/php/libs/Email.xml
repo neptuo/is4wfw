@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro odesílání emailů.
   </comment>
@@ -14,8 +14,8 @@
     </attribute>
     <attribute>
       <name>to</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Adresy oddělené čárkou, kam má zpráva být odeslána.</comment>
     </attribute>
     <attribute>
@@ -35,8 +35,8 @@
     </attribute>
     <attribute>
       <name>subject</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Předmět zprávy.</comment>
     </attribute>
     <attribute>
@@ -72,4 +72,3 @@
     </comment>
   </tag>
 </taglib>
-

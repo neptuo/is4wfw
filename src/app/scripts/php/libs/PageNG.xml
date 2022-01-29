@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Třída pro správu obsahu jednotlivých stránek.
   </comment>
@@ -491,24 +491,24 @@
   </tag>
   <property>
   	<name>language</name>
-  	<setFunction>setLanguage</setFunction>
   	<getFunction>getLanguage</getFunction>
+  	<setFunction>setLanguage</setFunction>
     <comment>
       Aktuálně vybraný jazyk.
     </comment>
   </property>
   <property>
   	<name>pageId</name>
-  	<setFunction>setPageId</setFunction>
   	<getFunction>getPageId</getFunction>
+  	<setFunction>setPageId</setFunction>
     <comment>
       Aktuálně vybraná stránka ve filtru.
     </comment>
   </property>
   <property>
   	<name>actionPageId</name>
-  	<setFunction>setActionPageId</setFunction>
   	<getFunction>getActionPageId</getFunction>
+  	<setFunction>setActionPageId</setFunction>
     <comment>
       Aktuálně vybraná stránka z odeslané akce.
     </comment>

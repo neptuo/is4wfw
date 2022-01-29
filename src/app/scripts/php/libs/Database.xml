@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Třída pro práci s databází.
     Defaultní objekt.
@@ -35,4 +35,3 @@
     </comment>
   </tag>
 </taglib>
-

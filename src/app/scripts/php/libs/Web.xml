@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <count>1</count>
   <comment>
     Základní třída aplikace.
@@ -130,7 +129,6 @@
   <tag>
     <name>incTemplate</name>
     <function>includeTemplate</function>
-    <obsolete>Použijte knihovnu "template".</obsolete>
     <attribute>
       <name>templateId</name>
       <required />
@@ -147,6 +145,7 @@
     <comment>
       Vloží do stránky template.  
     </comment>
+    <obsolete>Použijte knihovnu "template".</obsolete>
   </tag>
   <tag>
     <name>includeUrl</name>
@@ -519,7 +518,6 @@
   <tag>
     <name>getProperty</name>
     <function>getProperty</function>
-    <obsolete>Používat "web:out". Je to kratší.</obsolete>
     <attribute>
       <name>name</name>
       <required />
@@ -533,6 +531,7 @@
     <comment>
       Vrátí hodnotu dané proměnné.
     </comment>
+    <obsolete>Používat "web:out". Je to kratší.</obsolete>
   </tag>
   <tag>
     <name>setProperty</name>
@@ -693,14 +692,14 @@
     <function>getFavicon</function>
     <attribute>
       <name>url</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Cesta k obrázku.</comment>
     </attribute>
     <attribute>
       <name>contentType</name>
-      <required />
       <type>string</type>
+      <required />
       <comment>Content-type pro daný obrázek.</comment>
     </attribute>
     <comment>
@@ -714,8 +713,8 @@
     <lookless />
     <attribute>
       <name>isEnabled</name>
-      <required />
       <type>bool</type>
+      <required />
       <comment>Zda má být debug mód zapnutý nebo vypnutý.</comment>
     </attribute>
     <comment>
@@ -773,8 +772,8 @@
   </fulltag>
   <property>
   	<name>pageTitle</name>
-  	<setFunction>setPageTitle</setFunction>
   	<getFunction>getPageTitle</getFunction>
+  	<setFunction>setPageTitle</setFunction>
     <comment>
       Vrací nebo nastavuje HTML titulek stránky. 
       Přepisuje aktuální hodnotu.
@@ -838,8 +837,8 @@
   </property>
   <property>
   	<name>randNum</name>
-  	<setFunction>setRandomNumber</setFunction>
   	<getFunction>getRandomNumber</getFunction>
+  	<setFunction>setRandomNumber</setFunction>
     <comment>
       Vrácí / Nastavuje náhodné číslo v session, pro nastavení lépe použít web:genRandNum
     </comment>
@@ -889,8 +888,8 @@
   </property>
   <property>
   	<name>isInsideForm</name>
-  	<setFunction>setIsInsideForm</setFunction>
   	<getFunction>getIsInsideForm</getFunction>
+  	<setFunction>setIsInsideForm</setFunction>
     <comment>
       Vrácí / Nastavuje zda se aktuálně nacházíme uvnitř formuláře (při generování obsahu, například uvnitř šablony a pod).
     </comment>
@@ -945,4 +944,3 @@
     </comment>
   </property>
 </taglib>
-

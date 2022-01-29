@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Knihovna pro tvorbu anket a dotazníků
   </comment>
@@ -46,7 +46,6 @@
   <tag>
     <name>setCurrentId</name>
     <function>setCurrentId</function>
-    <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
     <attribute>
       <name>label</name>
     </attribute>
@@ -59,8 +58,8 @@
     <comment>
       Zobrazí výběr aktuální ankety
     </comment>
+    <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
   </tag>
-  
   <tag>
     <name>view</name>
     <function>renderView</function>
@@ -72,24 +71,22 @@
       Zobrazí anketu
     </comment>
   </tag>
-  
   <property>
   	<name>currentId</name>
-  	<setFunction>setCurrentInquiryId</setFunction>
   	<getFunction>getCurrentInquiryId</getFunction>
-    <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
+  	<setFunction>setCurrentInquiryId</setFunction>
     <comment>
       Vratí hodnotu vybrané ankety
     </comment>
+    <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
   </property>
   <property>
   	<name>currentId2</name>
-  	<setFunction>setCurrentInquiryId2</setFunction>
   	<getFunction>getCurrentInquiryId2</getFunction>
-    <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
+  	<setFunction>setCurrentInquiryId2</setFunction>
     <comment>
       Vratí hodnotu vybrané ankety 2
     </comment>
+    <obsolete>Používat knihovnu 'php.libs.Variable' a aplikační proměnné.</obsolete>
   </property>
 </taglib>
-

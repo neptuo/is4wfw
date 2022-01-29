@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<taglib>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
     Uživatelská kniha návštěv.
   </comment>
@@ -65,11 +65,10 @@
   </tag>
   <property>
   	<name>id</name>
-  	<setFunction>setGuestbookId</setFunction>
   	<getFunction>getGuestbookId</getFunction>
+  	<setFunction>setGuestbookId</setFunction>
     <comment>
       Vrací id vybrané knihy.
     </comment>
   </property>
 </taglib>
-
