@@ -14,9 +14,14 @@
 	class Security extends BaseTagLib {
 
 		public function requirePerm($name) {
-			$login = $this->login();
-			$perm = $login->getGroupPerm($name, $login->getMainGroupId(), false, 'false');
-			$hasPerm = $perm['value'] == 'true';
+			if ($name) {
+				$login = $this->login();
+				$perm = $login->getGroupPerm($name, $login->getMainGroupId(), false, 'false');
+				$hasPerm = $perm['value'] == 'true';
+			} else {
+				$hasPerm = true;
+			}
+
 			return [PhpRuntime::$DecoratorExecuteName => $hasPerm];
 		}
 		
