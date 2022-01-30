@@ -34,77 +34,14 @@
                 
             <div class="border-right shadow main-menu main-menu-background">
                 <nav class="py-3 px-2">
-                    <template:declare identifier="menuContainer">
-                        <var:declare name="menuContainerCookie" value="template:cookie" />
-                        <web:condition when="var:menuContainerCookie" isInverted="true">
-                            <var:declare name="menuContainerCookie" value="template:defaultState" />
-                        </web:condition>
-
-                        <utils:concat output="menuContainerCssClass" separator=" " value1="mb-3 cms-menu" value2="template:class" />
-                        <utils:concat output="menuContainerTogglerTitle" separator=" " value1="Collapse/Expand" value2="template:title" />
-                        <web:condition when="var:menuContainerCookie" is="collapsed">
-                            <utils:concat output="menuContainerCssClass" separator=" " value1="utils:menuContainerCssClass" value2="cms-menu-collapsed" />
-                        </web:condition>
-                        <v:panel class="utils:menuContainerCssClass" data-menu="template:name" security:requirePerm="template:permission"> 
-                            <div class="menu-root">
-                                <web:a pageId="template:rootUrl" title="template:title">
-                                    <span>
-                                        <web:out text="template:title" />
-                                    </span>
-                                </web:a>
-                                <button class="menu-toggler" title="<web:out text="utils:menuContainerTogglerTitle" />"></button>
-                            </div>
-                            <web:condition when="template:menu">
-                                <div class="menu">
-                                    <ul class="ul-1">
-                                        <ui:forEach items="list:menu" filter-parentId="template:menu">
-                                            <web:out security:requirePerm="list:menu-perm">
-                                                <li>
-                                                    <div class="link">
-                                                        <web:a pageId="list:menu-url" title="list:menu-text">
-                                                            <web:condition when="list:menu-icon">
-                                                                <img src="<web:out text="list:menu-icon" />" />
-                                                            </web:condition>
-                                                            <span>
-                                                                <web:out text="list:menu-text" />
-                                                            </span>
-                                                        </web:a>
-                                                    </div>
-                                                </li>
-                                            </web:out>
-                                        </ui:forEach>
-                                    </ul>
-                                </div>
-                            </web:condition>
-                            <web:condition when="template:menu" isInverted="true">
-                                <template:content />
-                            </web:condition>
-                        </v:panel>
-                    </template:declare>
-
-                    <v:panel class="mb-3 cms-menu cms-menu-6 d-block d-md-none cms-menu-home">
-                        <div class="menu-root">
-                            <web:a pageId="~/in/index.view" title="Home">
-                                <span>Home</span>
-                            </web:a>
-                        </div>
-                    </v:panel>
-                    <v:panel class="mb-3 cms-menu cms-menu-3" security:requirePerm="CMS.Hint">
-                        <div class="menu-root">
-                            <web:a pageId="~/in/hint.view" title="Documentation">
-                                <span>Documentation</span>
-                            </web:a>
-                        </div>
-                    </v:panel>
-
                     <controls:menuDefinition />
-                    <template:menuContainer name="web" title="Web" permission="CMS.Web" rootUrl="~/in/pages.view" cookie="cookie:cmsMenu-web" menu="web" />
-                    <template:menuContainer name="floorball" title="Floorball" permission="CMS.Floorball" rootUrl="~/in/floorball/seasons.view" cookie="cookie:cmsMenu-floorball" defaultState="collapsed" class="cms-menu-2" menu="floorball" />
-                    <template:menuContainer name="settings" title="Settings" permission="CMS.Settings" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-settings" class="cms-menu-4" menu="settings" />
+                    <ui:forEach items="list:menu" filter-parentId="php:null">
+                        <controls:menu name="list:menu-id" title="list:menu-text" icon="list:menu-icon" permission="list:menu-perm" rootUrl="list:menu-url" cookie="list:menu-cookie" menu="list:menu-id" defaultState="list:menu-defaultState" toggler="list:menu-id" class="list:menu-class" />
+                    </ui:forEach>
                     <web:condition when="sys:hasAdminMenu">
-                        <template:menuContainer name="custom" title="Custom" permission="CMS.AdminMenu" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-custom" class="cms-menu-5">
+                        <controls:menu name="custom" title="Custom" permission="CMS.AdminMenu" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-custom" icon="~/images/icons/cog.png" toggler="true">
                             <sys:adminMenu url="~/in/admin-menu.view" />
-                        </template:menuContainer>
+                        </controls:menu>
                     </web:condition>
                 </nav>
             </div>

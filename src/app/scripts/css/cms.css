@@ -129,7 +129,7 @@ body {
 
 .main-menu-collapsed .menu span, 
 .main-menu-collapsed .menu-root span {
-    visibility: hidden;
+    display: none;
 }
 
 .menu-root {
@@ -139,7 +139,7 @@ body {
 .menu-toggler {
     position: absolute;
     right: 5px;
-    top: 5px;
+    top: 6px;
     width: 15px;
     height: 15px;
     outline: none !important;
@@ -1912,10 +1912,15 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     background-color: #ccc !important;
 }
 
-.cms-menu img {
+.cms-menu img, .menu-root img {
     display: inline-block;
     margin-top: -2px;
 }
+
+.cms-menu img, .menu-root img {
+    margin-top: -4px;
+}
+    
 
 .cms-menu ul {
     padding: 0;
@@ -1924,9 +1929,8 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu .menu-root a {
-    padding: 1px 0 1px 24px;
+    padding: 2px 4px;
     color: white;
-    background: url('/images/icons/at.png') no-repeat 4px;
 }
 
 .cms-menu.cms-menu-2 .menu-root a {

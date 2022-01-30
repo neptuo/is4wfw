@@ -1,9 +1,9 @@
 <list:declare name="menu">
-    <list:add key-text="Home" key-url="~/in/index.view" key-icon="~/images/icons/house.png" />
+    <list:add key-text="Home" key-url="~/in/index.view" key-icon="~/images/icons/house.png" key-class="d-block d-md-none cms-menu-home" />
 
-    <list:add key-text="Documentation" key-url="~/in/hint.view" key-icon="~/images/icons/anchor.png" />
+    <list:add key-text="Documentation" key-url="~/in/hint.view" key-icon="~/images/icons/anchor.png" key-perm="CMS.Hint" />
 
-    <list:add key-text="Web" key-url="~/in/pages.view" key-icon="~/images/icons/at.png" key-perm="CMS.Web" key-id="web" />
+    <list:add key-text="Web" key-url="~/in/pages.view" key-icon="~/images/icons/at.png" key-perm="CMS.Web" key-id="web" key-cookie="cookie:cmsMenu-web" />
     <list:add key-text="Pages" key-url="~/in/pages.view" key-icon="~/images/icons/page_tag_red.gif" key-perm="CMS.Web.Pages" key-parentId="web" />
     <list:add key-text="Text files" key-url="~/in/text-files.view" key-icon="~/images/icons/page_script.gif" key-perm="CMS.Web.TextFiles" key-parentId="web" />
     <list:add key-text="Templates" key-url="~/in/templates.view" key-icon="~/images/icons/page_code.png" key-perm="CMS.Web.Templates" key-parentId="web" />
@@ -18,7 +18,7 @@
     <list:add key-text="Web forwards" key-url="~/in/web-forwards.view" key-icon="~/images/icons/arrow_branch.png" key-perm="CMS.Web.WebForwards" key-parentId="web" />
     <list:add key-text="Web projects" key-url="~/in/web-projects.view" key-icon="~/images/icons/building.png" key-perm="CMS.Web.WebProjects" key-parentId="web" />
 
-    <list:add key-text="Floorball" key-url="~/in/floorball/seasons.view" key-icon="~/images/icons/floorball/ball.png" key-perm="CMS.Floorball" key-id="floorball" />
+    <list:add key-text="Floorball" key-url="~/in/floorball/seasons.view" key-icon="~/images/icons/floorball/ball.png" key-perm="CMS.Floorball" key-id="floorball" key-cookie="cookie:cmsMenu-floorball" key-defaultState="collapsed" />
     <list:add key-text="Projects" key-url="~/in/floorball/projects.view" key-icon="~/images/icons/floorball/projects.gif" key-perm="CMS.Floorball.Projects" key-parentId="floorball" />
     <list:add key-text="Seasons" key-url="~/in/floorball/seasons.view" key-icon="~/images/icons/floorball/seasons.png" key-perm="CMS.Floorball.Seasons" key-parentId="floorball" />
     <list:add key-text="Tables" key-url="~/in/floorball/tables.view" key-icon="~/images/icons/floorball/table.png" key-perm="CMS.Floorball.Tables" key-parentId="floorball" />
@@ -28,7 +28,7 @@
     <list:add key-text="Matches" key-url="~/in/floorball/matches.view" key-icon="~/images/icons/floorball/matches.png" key-perm="CMS.Floorball.Matches" key-parentId="floorball" />
     <list:add key-text="Tables Content" key-url="~/in/floorball/tables-content.view" key-icon="~/images/icons/floorball/table.png" key-perm="CMS.Floorball.TablesContent" key-parentId="floorball" />
 
-    <list:add key-text="Settings" key-url="~/in/personal-notes.view" key-icon="~/images/icons/radioactive.png" key-perm="CMS.Settings" key-id="settings" />
+    <list:add key-text="Settings" key-url="~/in/personal-notes.view" key-icon="~/images/icons/radioactive.png" key-perm="CMS.Settings" key-id="settings" key-cookie="cookie:cmsMenu-settings" />
     <list:add key-text="Url cache" key-url="~/in/url-cache.view" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.UrlCache" key-parentId="settings" />
     <list:add key-text="Role cache" key-url="~/in/role-cache.view" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.RoleCache" key-parentId="settings" />
     <list:add key-text="Languages" key-url="~/in/languages.view" key-icon="~/images/lang_add.png" key-perm="CMS.Settings.Languages" key-parentId="settings" />
