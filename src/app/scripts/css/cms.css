@@ -1933,35 +1933,6 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
     color: white;
 }
 
-.cms-menu.cms-menu-2 .menu-root a {
-    padding: 1px 0 1px 24px;
-    background: url('/images/icons/floorball/ball.png') no-repeat 4px;
-}
-
-.cms-menu.cms-menu-3 .menu-root a {
-    padding: 1px 0 1px 24px;
-    background: url('/images/icons/anchor.png') no-repeat 4px;
-}
-
-.cms-menu.cms-menu-4 .menu-root a {
-    padding: 1px 0 1px 24px;
-    background: url('/images/icons/radioactive.png') no-repeat 4px;
-}
-
-.cms-menu.cms-menu-5 .menu-root a {
-    padding: 1px 0 1px 24px;
-    background: url('/images/icons/cog.png') no-repeat 4px;
-}
-
-.cms-menu.cms-menu-6 .menu-root a {
-    background: url('/images/icons/house.png') no-repeat 4px;
-}
-
-.cms .head .cms-menu.cms-menu-5 .menu-root a {
-    padding: 1px 0 1px 24px;
-    background: none;
-}
-
 .cms-menu li .link {
     white-space: nowrap;
 }
