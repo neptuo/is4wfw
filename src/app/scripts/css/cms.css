@@ -127,8 +127,16 @@ body {
     display: block !important;
 }
 
-.main-menu-collapsed .menu span, 
-.main-menu-collapsed .menu-root span {
+.main-menu-collapsed .menu-root a {
+    padding: 3px !important;
+}
+
+.main-menu-collapsed .menu a {
+    padding: 4px !important;
+}
+
+.main-menu-collapsed .menu .text, 
+.main-menu-collapsed .menu-root .text {
     display: none;
 }
 
@@ -138,28 +146,51 @@ body {
 
 .menu-toggler {
     position: absolute;
-    right: 5px;
-    top: 6px;
+    right: 12px;
+    top: 12px;
     width: 15px;
     height: 15px;
+    padding: 0;
     outline: none !important;
     border: none;
-    background: url(/images/minus.png);
+    /* background: url(/images/minus.png); */
+    background: transparent;
 }
 
-.cms-menu-collapsed .menu-toggler {
-    background: url(/images/plus.png);
+.menu-toggler .fa {
+    color: white;
+    display: block;
 }
+
+.menu-toggler .fa.menu-toggler-expand {
+    display: none;
+}
+
+.cms-menu-collapsed .menu-toggler .fa.menu-toggler-expand {
+    display: block;
+}
+
+.cms-menu-collapsed .menu-toggler .fa.menu-toggler-collapse {
+    display: none;
+}
+
+/* .cms-menu-collapsed .menu-toggler {
+    background: url(/images/plus.png);
+} */
 
 .cms-menu-collapsed .menu {
     display: none;
 }
 
 .main-menu-collapsed .menu-toggler {
-    right: 4px;
-    width: 16px;
-    height: 16px;
-    background: none;
+    right: 3px;
+    top: 7px;
+    width: 18px;
+    height: 18px;
+}
+
+.main-menu-collapsed .menu-toggler .fa {
+    display: none !important;
 }
 
 .home .warning {
@@ -1898,17 +1929,17 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 
 /* ---------------------- CMS MENU ------------------------------------------- */
 
-.cms-menu a {
+.cms-menu .link a {
     width: 100%;
     display: block;
-    padding: 2px 4px;
+    padding: 3px 12px;
     color: #04601C;
     overflow: hidden;
     text-overflow: ellipsis;
     text-decoration: none;
 }
 
-.cms-menu a:hover {
+.cms-menu .link a:hover {
     background-color: #ccc !important;
 }
 
@@ -1929,8 +1960,8 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .cms-menu .menu-root a {
-    padding: 2px 4px;
     color: white;
+    text-align: left;
 }
 
 .cms-menu li .link {
