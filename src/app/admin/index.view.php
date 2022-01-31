@@ -11,6 +11,7 @@
             <var:declare name="templatePath" value="~/templates/in-template.view" />
         </web:condition>
         
+        <!-- General -->
         <router:file path="index.view" name="index">
             <views:index />
         </router:file>
@@ -20,8 +21,19 @@
         <router:file path="hint-properties.view" name="hintProperties">
             <views:hintProperties />
         </router:file>
-        <router:file path="modules.view" name="modules">
-            <views:modules />
+
+        <!-- Web -->
+        <router:file path="pages.view" name="pages">
+            <views:pages />
+        </router:file>
+        <router:file path="text-files.view" name="textFiles">
+            <views:textFiles />
+        </router:file>
+        <router:file path="templates.view" name="templates">
+            <views:templates />
+        </router:file>
+        <router:file path="search.view" name="search">
+            <views:search />
         </router:file>
         
         <router:file path="custom-entities.view" name="customEntities">
@@ -38,6 +50,11 @@
         </router:file>
         <router:file path="custom-forms.view" name="customForms">
             <views:customForms />
+        </router:file>
+        
+        <!-- Settings -->
+        <router:file path="modules.view" name="modules">
+            <views:modules />
         </router:file>
     </router:directory>
 </router:fromPath>

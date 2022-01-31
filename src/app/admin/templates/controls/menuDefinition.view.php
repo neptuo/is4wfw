@@ -4,10 +4,10 @@
     <list:add key-text="Documentation" key-url="route:hint" key-icon="question-circle" key-iconPrefix="fas" key-perm="CMS.Hint" />
 
     <list:add key-text="Web" key-url="~/in/pages.view" key-icon="globe" key-iconPrefix="fas" key-perm="CMS.Web" key-id="web" key-cookie="cookie:cmsMenu-web" />
-    <list:add key-text="Pages" key-url="~/in/pages.view" key-icon="~/images/icons/page_tag_red.gif" key-perm="CMS.Web.Pages" key-parentId="web" />
-    <list:add key-text="Text files" key-url="~/in/text-files.view" key-icon="~/images/icons/page_script.gif" key-perm="CMS.Web.TextFiles" key-parentId="web" />
-    <list:add key-text="Templates" key-url="~/in/templates.view" key-icon="~/images/icons/page_code.png" key-perm="CMS.Web.Templates" key-parentId="web" />
-    <list:add key-text="Search" key-url="~/in/search.view" key-icon="~/images/icons/magnifier.png" key-perm="CMS.Web.Search" key-parentId="web" />
+    <list:add key-text="Pages" key-url="route:pages" key-icon="~/images/icons/page_tag_red.gif" key-perm="CMS.Web.Pages" key-parentId="web" />
+    <list:add key-text="Text files" key-url="route:textFiles" key-icon="~/images/icons/page_script.gif" key-perm="CMS.Web.TextFiles" key-parentId="web" />
+    <list:add key-text="Templates" key-url="route:templates" key-icon="~/images/icons/page_code.png" key-perm="CMS.Web.Templates" key-parentId="web" />
+    <list:add key-text="Search" key-url="route:search" key-icon="~/images/icons/magnifier.png" key-perm="CMS.Web.Search" key-parentId="web" />
     <list:add key-text="Embedded Resources" key-url="~/in/embedded-resources.view" key-icon="~/images/icons/script_link.png" key-perm="CMS.Web.EmbeddedResources" key-parentId="web" />
     <list:add key-text="Custom forms" key-url="route:customForms" key-icon="~/images/icons/page_attachment.gif" key-perm="CMS.Web.CustomForms" key-parentId="web" />
     <list:add key-text="Custom entities" key-url="route:customEntities" key-icon="~/images/icons/database.png" key-perm="CMS.Web.CustomEntities" key-parentId="web" />
