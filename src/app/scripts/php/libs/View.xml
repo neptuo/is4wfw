@@ -8,11 +8,10 @@
     <function>processView</function>
     <attribute>
       <name>path</name>
-      <required />
       <obsolete>Nedělá nic. Nikdy nedělal.</obsolete>
     </attribute>
     <comment>
-      Zpracuje pohled.
+      Zpracuje aktuální view.
     </comment>
   </tag>
   <fulltag>
@@ -54,6 +53,7 @@
     <comment>
       Přidá hlavičku.
     </comment>
+    <obsolete>Nedělá nic. Nikdy nedělal.</obsolete>
   </tag>
   <tag>
     <name>resource</name>

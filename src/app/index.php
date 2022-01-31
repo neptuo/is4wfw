@@ -60,8 +60,15 @@
         require_once(APP_SCRIPTS_PHP_PATH . "includes/postinitview.inc.php");
     
         $phpObject->register("controls", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/templates/controls")]);
+        $phpObject->register("views", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/views")]);
+        $phpObject->autolib("var")->setValue("virtualUrl", substr($phpObject->autolib("v")->getCurrentVirtualUrl(), 2));
       
-        $vObject->processView();
+        $indexContent = file_get_contents(APP_ADMIN_PATH . "index.view.php");
+        $pageContent = $webObject->executeTemplateContent(["admin", "views", "index", sha1($indexContent)], $indexContent);
+        $webObject->setContent($pageContent);
+        $webObject->flushContent(null, null, "/");
+        
+        // $vObject->processView();
     } else {
         // Files.
 

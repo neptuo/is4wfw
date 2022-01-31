@@ -36,7 +36,7 @@
 			return $this->autolib("route");
 		}
 
-		private function hasMatch() {
+		public function hasMatch() {
 			return $this->selectedName !== null;
 		}
 

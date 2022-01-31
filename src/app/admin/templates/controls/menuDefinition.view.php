@@ -1,7 +1,7 @@
 <list:declare name="menu">
-    <list:add key-text="Home" key-url="~/in/index.view" key-icon="home" key-iconPrefix="fas" key-class="d-block d-md-none cms-menu-home" />
+    <list:add key-text="Home" key-url="route:index" key-icon="home" key-iconPrefix="fas" key-class="d-block d-md-none cms-menu-home" />
 
-    <list:add key-text="Documentation" key-url="~/in/hint.view" key-icon="question-circle" key-iconPrefix="fas" key-perm="CMS.Hint" />
+    <list:add key-text="Documentation" key-url="route:hint" key-icon="question-circle" key-iconPrefix="fas" key-perm="CMS.Hint" />
 
     <list:add key-text="Web" key-url="~/in/pages.view" key-icon="globe" key-iconPrefix="fas" key-perm="CMS.Web" key-id="web" key-cookie="cookie:cmsMenu-web" />
     <list:add key-text="Pages" key-url="~/in/pages.view" key-icon="~/images/icons/page_tag_red.gif" key-perm="CMS.Web.Pages" key-parentId="web" />

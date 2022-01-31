@@ -1,12 +1,12 @@
 <login:init group="web-admins" />
 <login:refresh group="web-admins">
     <var:declare name="adminLastPage" value="web:currentPath" scope="session" />
-    <web:redirectTo pageId="~/login.view" />
+    <web:redirectTo pageId="route:login" />
 </login:refresh>
 <web:condition when="post:logout" is="logout">
     <login:logout group="web-admins">
         <var:declare name="adminLastPage" value="web:currentPath" scope="session" />
-        <web:redirectTo pageId="~/login.view" />
+        <web:redirectTo pageId="route:login" />
     </login:logout>
 </web:condition>
 <v:head>
@@ -26,9 +26,9 @@
         </web:condition>
         <bs:column default="3" large="2" class="var:mainMenuColCssClass">
             <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
-                <a href="~/in/index.view" class="navbar-brand d-none d-md-block mr-auto">
+                <web:a pageId="route:index" class="navbar-brand d-none d-md-block mr-auto">
                     &lt;is4wfw /&gt;
-                </a>
+                </web:a>
                 <button class="navbar-toggler" type="button"><span class="navbar-toggler-icon"></span></button>
             </nav>
                 

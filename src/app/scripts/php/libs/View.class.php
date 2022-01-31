@@ -15,13 +15,8 @@
      */
     class View extends BaseTagLib {
 
-        private $Resources;
-        private $Content;
-        private $Log;
-        private $Title;
         private $CurrentTemplateContent;
-        private $CurrentTemplatePointer;
-        private $Header = "";
+        private $CurrentTemplatePointer = 0;
 
         public function __construct() {
             $this->setLocalizationBundle("view");
@@ -73,13 +68,13 @@
                 $result = $template();
             } catch (Exception $e) {
                 if (IS_DEVELOPMENT_MODE) {
-                    echo "<pre>" . $e->getMessage() . PHP_EOL . $e->getTraceAsString() . "</pre>";
+                    return "<pre>" . $e->getMessage() . PHP_EOL . $e->getTraceAsString() . "</pre>";
                 } else {
-                    echo parent::getError($e->getMessage());
+                    return parent::getError($e->getMessage());
                 }
             }
 
-            $this->flush($result);
+            return $result;
         }
 
         public function useTemplate($template, $src) {
@@ -98,7 +93,7 @@
         }
 
         public function head($template) {
-            $this->Header .= $template();
+            $this->web()->appendToHead($template);
         }
 
         public function getContent() {
@@ -115,8 +110,14 @@
         }
 
         public function addResource($type, $src) {
-            if (!in_array($src, $this->Resources[$type])) {
-                $this->Resources[$type][] = $src;
+            switch ($type) {
+                case "js":
+                    $this->js()->addScript($src);
+                    break;
+
+                case "css":
+                    $this->js()->addStyle($src);
+                    break;
             }
         }
 
@@ -145,98 +146,6 @@
 			$parameters = [PhpRuntime::$FullTagTemplateName => $template];
 			return $parameters;
 		}
-
-        /* ============================= FUNCTIONS =========================================== */
-
-        private function flush($content) {
-            global $webObject;
-            
-            if (strtolower($_REQUEST['__TEMPLATE']) == 'xml') {
-                $styles = '';
-                foreach ($this->Resources['css'] as $res) {
-                    $styles .= '<rssmm:link-ref>' . ViewHelper :: resolveUrl($res) . '</rssmm:link-ref>';
-                }
-                $scripts = '';
-                foreach ($this->Resources['js'] as $res) {
-                    $scripts .= '<rssmm:script-ref>' . ViewHelper :: resolveUrl($res) . '</rssmm:script-ref>';
-                }
-
-                $return = '' .
-                        '<rssmm:response>' .
-                        ((strlen($this->Log) != 0) ? '' .
-                                '<rssmm:log>' .
-                                $this->Log .
-                                '</rssmm:log>' : '') .
-                        '<rssmm:head>' .
-                        '<rssmm:title>' . $this->Title . '</rssmm:title>' .
-                        '<rssmm:styles>' . $styles . '</rssmm:styles>' .
-                        '<rssmm:scripts>' . $scripts . '</rssmm:scripts>' .
-                        '</rssmm:head>' .
-                        '<rssmm:content>' . $content . '</rssmm:content>' .
-                        '</rssmm:response>';
-            } else {
-                $styles = '';
-                $styles .= ViewHelper::resolveUrl(parent::web()->getPageStyles());
-                foreach ($this->Resources['css'] as $res) {
-                    $styles .= '<link rel="stylesheet" href="' . ViewHelper :: resolveUrl($res) . '" type="text/css" />';
-                }
-
-                $scripts = '';
-                $scripts .= ViewHelper::resolveUrl(parent::web()->getPageHeadScripts());
-                $scripts .= ViewHelper::resolveUrl(parent::web()->getPageTailScripts());
-                foreach ($this->Resources['js'] as $res) {
-                    echo $res;
-                    $scripts .= '<script type="text/javascript" src="' . ViewHelper :: resolveUrl($res) . '"></script>';
-                }
-
-
-                $content = ViewHelper::resolveUrl($content);
-
-                $diacont = "";
-                if (array_key_exists('mem-stats', $_GET)) {
-                    $diacont = $webObject->Diagnostics->printMemoryStats();
-                }
-                if (array_key_exists('duration-stats', $_GET)) {
-                    $diacont .= $webObject->Diagnostics->printDuration();
-                }
-                if (array_key_exists('query-stats', $_GET)) {
-                    $diacont .= parent::debugFrame('Database queries', parent::db()->getQueriesPerRequest());
-                }
-                if (array_key_exists('query-list', $_GET)) {
-                    foreach (parent::db()->getDataAccess()->getQueries() as $key => $query) {
-                        $diacont .= parent::debugFrame('Query ' . $key, $query, 'code');
-                    }
-                }
-                if (strlen($this->PageLog) != 0) {
-                    $diacont .= parent::debugFrame('Page Log', $webObject->PageLog);
-                }
-
-                $return = '' .
-                '<!DOCTYPE html>' .
-                '<html>' .
-                    '<head>' .
-                        '<meta http-equiv="content-type" content="text/html; charset=utf-8" />' .
-                        '<meta name="description" content="' . $this->Title . '" />' .
-                        '<meta name="robots" content="all, index, follow" />' .
-                        '<meta name="author" content="Marek Fišera" />' .
-                        '<title>' . $this->Title . '</title>' .
-                        $this->Header .
-                        $styles .
-                    '</head>' .
-                    '<body>' . $content . $scripts . $diacont . '</body>' .
-                '</html>';
-            }
-
-            $return = preg_replace_callback(
-                '(<web:frame( title="([^"]*)")*( open="(true|false)")*>(((\s*)|(.*))*)</web:frame>)', 
-                array(&$this, 'parsepostframes'), 
-                $return
-            );
-            
-            echo $return;
-            parent::close();
-        }
-
     }
 
 ?>

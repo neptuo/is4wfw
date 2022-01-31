@@ -71,7 +71,7 @@
     <name>isEvaluate</name>
     <getFunction>getIsEvaluate</getFunction>
     <comment>
-      Vrací true/false zda je aktuálně evaluate fáze routeru.
+      Vrací true/false zda je aktuálně evaluate fáze routeru (tzn. našla se route a spouští se directory, které jsou pro ní relevantní).
     </comment>
   </property>
   <property>
@@ -79,6 +79,13 @@
     <getFunction>getIsRender</getFunction>
     <comment>
       Vrací true/false zda je aktuálně render fáze routeru.
+    </comment>
+  </property>
+  <property>
+    <name>hasMatch</name>
+    <getFunction>hasMatch</getFunction>
+    <comment>
+      Vrací true/false podle toho, zda router našel routu odpovídající URL.
     </comment>
   </property>
 </taglib>
