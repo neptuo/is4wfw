@@ -135,6 +135,10 @@ body {
     padding: 4px !important;
 }
 
+.main-menu-collapsed .cms-menu img {
+    margin: 0 !important;
+}
+
 .main-menu-collapsed .menu .text, 
 .main-menu-collapsed .menu-root .text {
     display: none;
