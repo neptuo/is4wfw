@@ -67,8 +67,6 @@
         $pageContent = $webObject->executeTemplateContent(["admin", "views", "index", sha1($indexContent)], $indexContent);
         $webObject->setContent($pageContent);
         $webObject->flushContent(null, null, "/");
-        
-        // $vObject->processView();
     } else {
         // Files.
 

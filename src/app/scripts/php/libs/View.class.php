@@ -122,7 +122,7 @@
         }
 
         public function setTitle($title) {
-            $this->Title = $title;
+            $this->web()->setPageTitle($title);
         }
 
         public function showPanel($template, $id = false, $class = false, $attributes = []) {

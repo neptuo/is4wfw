@@ -9,8 +9,8 @@
     <list:add key-text="Templates" key-url="~/in/templates.view" key-icon="~/images/icons/page_code.png" key-perm="CMS.Web.Templates" key-parentId="web" />
     <list:add key-text="Search" key-url="~/in/search.view" key-icon="~/images/icons/magnifier.png" key-perm="CMS.Web.Search" key-parentId="web" />
     <list:add key-text="Embedded Resources" key-url="~/in/embedded-resources.view" key-icon="~/images/icons/script_link.png" key-perm="CMS.Web.EmbeddedResources" key-parentId="web" />
-    <list:add key-text="Custom forms" key-url="~/in/custom-forms.view" key-icon="~/images/icons/page_attachment.gif" key-perm="CMS.Web.CustomForms" key-parentId="web" />
-    <list:add key-text="Custom entities" key-url="~/in/custom-entities.view" key-icon="~/images/icons/database.png" key-perm="CMS.Web.CustomEntities" key-parentId="web" />
+    <list:add key-text="Custom forms" key-url="route:customForms" key-icon="~/images/icons/page_attachment.gif" key-perm="CMS.Web.CustomForms" key-parentId="web" />
+    <list:add key-text="Custom entities" key-url="route:customEntities" key-icon="~/images/icons/database.png" key-perm="CMS.Web.CustomEntities" key-parentId="web" />
     <list:add key-text="File manager" key-url="~/in/filesng.view" key-icon="~/images/icons/drive.png" key-perm="CMS.Web.FileManager" key-parentId="web" />
     <list:add key-text="Articles" key-url="~/in/articles.view" key-icon="~/images/icons/book_open.png" key-perm="CMS.Web.Articles" key-parentId="web" />
     <list:add key-text="Guestbooks" key-url="~/in/guestbooks.view" key-icon="~/images/icons/comment.png" key-perm="CMS.Web.Guestbooks" key-parentId="web" />
@@ -41,6 +41,6 @@
     <list:add key-text="Personal properties" key-url="~/in/personal-properties.view" key-icon="~/images/icons/properties.png" key-perm="CMS.Settings.PersonalProperties" key-parentId="settings" />
     <list:add key-text="Personal notes" key-url="~/in/personal-notes.view" key-icon="~/images/page_edi.png" key-perm="CMS.Settings.PersonalNotes" key-parentId="settings" />
     <list:add key-text="Available updates" key-url="~/in/update.view" key-icon="~/images/icons/brick.png" key-perm="CMS.Settings.Update" key-parentId="settings" />
-    <list:add key-text="Modules" key-url="~/in/modules.view" key-icon="~/images/icons/plugin.png" key-perm="CMS.Settings.Modules" key-parentId="settings" />
+    <list:add key-text="Modules" key-url="route:modules" key-icon="~/images/icons/plugin.png" key-perm="CMS.Settings.Modules" key-parentId="settings" />
     <list:add key-text="Admin menu" key-url="~/in/edit-admin-menu.view" key-icon="~/images/icons/building.png" key-perm="CMS.Settings.AdminMenu" key-parentId="settings" />
 </list:declare>
