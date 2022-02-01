@@ -35,7 +35,25 @@
         <router:file path="search.view" name="search">
             <views:search />
         </router:file>
+
+        <!-- Articles -->
+        <router:file path="articles.view" name="articles">
+            <views:articles />
+        </router:file>
+        <router:file path="article-detail.view" name="articleDetail">
+            <views:articleDetail />
+        </router:file>
+        <router:file path="article-labels.view" name="articleLabels">
+            <views:articleLabels />
+        </router:file>
+        <router:file path="article-lines.view" name="articleLines">
+            <views:articleLines />
+        </router:file>
+        <router:file path="article-line-detail.view" name="articleLinesDetail">
+            <views:articleLinesDetail />
+        </router:file>
         
+        <!-- Custom entities -->
         <router:file path="custom-entities.view" name="customEntities">
             <views:customEntities />
         </router:file>
