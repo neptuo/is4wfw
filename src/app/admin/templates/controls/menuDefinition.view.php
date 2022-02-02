@@ -18,15 +18,15 @@
     <list:add key-text="Web forwards" key-url="route:webForwards" key-icon="~/images/icons/arrow_branch.png" key-perm="CMS.Web.WebForwards" key-parentId="web" />
     <list:add key-text="Web projects" key-url="route:webProjects" key-icon="~/images/icons/building.png" key-perm="CMS.Web.WebProjects" key-parentId="web" />
 
-    <list:add key-text="Floorball" key-url="~/in/floorball/seasons.view" key-icon="futbol" key-iconPrefix="far" key-perm="CMS.Floorball" key-id="floorball" key-cookie="cookie:cmsMenu-floorball" key-defaultState="collapsed" />
-    <list:add key-text="Projects" key-url="~/in/floorball/projects.view" key-icon="~/images/icons/floorball/projects.gif" key-perm="CMS.Floorball.Projects" key-parentId="floorball" />
-    <list:add key-text="Seasons" key-url="~/in/floorball/seasons.view" key-icon="~/images/icons/floorball/seasons.png" key-perm="CMS.Floorball.Seasons" key-parentId="floorball" />
-    <list:add key-text="Tables" key-url="~/in/floorball/tables.view" key-icon="~/images/icons/floorball/table.png" key-perm="CMS.Floorball.Tables" key-parentId="floorball" />
-    <list:add key-text="Rounds" key-url="~/in/floorball/rounds.view" key-icon="~/images/icons/floorball/rounds.gif" key-perm="CMS.Floorball.Rounds" key-parentId="floorball" />
-    <list:add key-text="Teams" key-url="~/in/floorball/teams.view" key-icon="~/images/icons/floorball/teams.png" key-perm="CMS.Floorball.Teams" key-parentId="floorball" />
-    <list:add key-text="Players" key-url="~/in/floorball/players.view" key-icon="~/images/icons/floorball/players.png" key-perm="CMS.Floorball.Players" key-parentId="floorball" />
-    <list:add key-text="Matches" key-url="~/in/floorball/matches.view" key-icon="~/images/icons/floorball/matches.png" key-perm="CMS.Floorball.Matches" key-parentId="floorball" />
-    <list:add key-text="Tables Content" key-url="~/in/floorball/tables-content.view" key-icon="~/images/icons/floorball/table.png" key-perm="CMS.Floorball.TablesContent" key-parentId="floorball" />
+    <list:add key-text="Floorball" key-url="route:floorballSeasons" key-icon="futbol" key-iconPrefix="far" key-perm="CMS.Floorball" key-id="floorball" key-cookie="cookie:cmsMenu-floorball" key-defaultState="collapsed" />
+    <list:add key-text="Projects" key-url="route:floorballProjects" key-icon="~/images/icons/floorball/projects.gif" key-perm="CMS.Floorball.Projects" key-parentId="floorball" />
+    <list:add key-text="Seasons" key-url="route:floorballSeasons" key-icon="~/images/icons/floorball/seasons.png" key-perm="CMS.Floorball.Seasons" key-parentId="floorball" />
+    <list:add key-text="Tables" key-url="route:floorballTables" key-icon="~/images/icons/floorball/table.png" key-perm="CMS.Floorball.Tables" key-parentId="floorball" />
+    <list:add key-text="Rounds" key-url="route:floorballRounds" key-icon="~/images/icons/floorball/rounds.gif" key-perm="CMS.Floorball.Rounds" key-parentId="floorball" />
+    <list:add key-text="Teams" key-url="route:floorballTeams" key-icon="~/images/icons/floorball/teams.png" key-perm="CMS.Floorball.Teams" key-parentId="floorball" />
+    <list:add key-text="Players" key-url="route:floorballPlayers" key-icon="~/images/icons/floorball/players.png" key-perm="CMS.Floorball.Players" key-parentId="floorball" />
+    <list:add key-text="Matches" key-url="route:floorballMatches" key-icon="~/images/icons/floorball/matches.png" key-perm="CMS.Floorball.Matches" key-parentId="floorball" />
+    <list:add key-text="Tables Content" key-url="route:floorballTablesContent" key-icon="~/images/icons/floorball/table.png" key-perm="CMS.Floorball.TablesContent" key-parentId="floorball" />
 
     <list:add key-text="Settings" key-url="route:personalNotes" key-icon="tools" key-iconPrefix="fas" key-perm="CMS.Settings" key-id="settings" key-cookie="cookie:cmsMenu-settings" />
     <list:add key-text="Url cache" key-url="route:urlCache" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.UrlCache" key-parentId="settings" />

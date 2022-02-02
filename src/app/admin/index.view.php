@@ -153,6 +153,38 @@
         <router:file path="default-properties.view" name="defaultProperties">
             <views:defaultProperties />
         </router:file>
+
+        <!-- Floorball -->
+        <router:directory path="floorball">
+            <web:condition when="router:isEvaluate">
+                <var:declare name="templatePath" value="~/templates/floorball-template.view" />
+            </web:condition>
+        
+            <router:file path="projects.view" name="floorballProjects">
+                <floorball:projects />
+            </router:file>
+            <router:file path="seasons.view" name="floorballSeasons">
+                <floorball:seasons />
+            </router:file>
+            <router:file path="tables.view" name="floorballTables">
+                <floorball:tables />
+            </router:file>
+            <router:file path="tables-content.view" name="floorballTablesContent">
+                <floorball:tablesContent />
+            </router:file>
+            <router:file path="rounds.view" name="floorballRounds">
+                <floorball:rounds />
+            </router:file>
+            <router:file path="teams.view" name="floorballTeams">
+                <floorball:teams />
+            </router:file>
+            <router:file path="matches.view" name="floorballMatches">
+                <floorball:matches />
+            </router:file>
+            <router:file path="players.view" name="floorballPlayers">
+                <floorball:players />
+            </router:file>
+        </router:directory>
     </router:directory>
 </router:fromPath>
 

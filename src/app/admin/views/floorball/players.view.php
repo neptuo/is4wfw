@@ -1,0 +1,2 @@
+<s:editPlayerForm />
+<s:editPlayers />

@@ -61,6 +61,7 @@
     
         $phpObject->register("controls", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/templates/controls")]);
         $phpObject->register("views", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/views")]);
+        $phpObject->register("floorball", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/views/floorball")]);
         $phpObject->autolib("var")->setValue("virtualUrl", substr($phpObject->autolib("v")->getCurrentVirtualUrl(), 2));
       
         $indexContent = file_get_contents(APP_ADMIN_PATH . "index.view.php");
