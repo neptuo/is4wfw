@@ -83,6 +83,23 @@
         <router:file path="modules.view" name="modules">
             <views:modules />
         </router:file>
+        
+        <!-- Users -->
+        <router:file path="users.view" name="users">
+            <views:users />
+        </router:file>
+        <router:file path="user-properties.view" name="userProperties">
+            <views:userProperties />
+        </router:file>
+        <router:file path="user-groups.view" name="userGroups">
+            <views:userGroups />
+        </router:file>
+        <router:file path="user-group-perms-hint.view" name="userGroupPermsHint">
+            <views:userGroupPermsHint />
+        </router:file>
+        <router:file path="user-log.view" name="userLog">
+            <views:userLog />
+        </router:file>
     </router:directory>
 </router:fromPath>
 
