@@ -83,6 +83,18 @@
         <router:file path="modules.view" name="modules">
             <views:modules />
         </router:file>
+        <router:file path="application-log.view" name="applicationLog">
+            <views:applicationLog />
+        </router:file>
+        <router:file path="database-connections.view" name="databaseConnections">
+            <views:databaseConnections />
+        </router:file>
+        <router:file path="keywords.view" name="keywords">
+            <views:keywords />
+        </router:file>
+        <router:file path="role-cache.view" name="roleCache">
+            <views:roleCache />
+        </router:file>
         
         <!-- Languages -->
         <router:file path="languages.view" name="languages">
