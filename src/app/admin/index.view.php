@@ -44,6 +44,18 @@
         <router:file path="files.view" name="files">
             <views:files />
         </router:file>
+        <router:file path="embedded-resources.view" name="embeddedResources">
+            <views:embeddedResources />
+        </router:file>
+        <router:file path="guestbooks.view" name="guestbooks">
+            <views:guestbooks />
+        </router:file>
+        <router:file path="inquiries.view" name="inquiries">
+            <views:inquiries />
+        </router:file>
+        <router:file path="url-cache.view" name="urlCache">
+            <views:urlCache />
+        </router:file>
 
         <!-- Articles -->
         <router:file path="articles.view" name="articles">
@@ -80,6 +92,9 @@
         </router:file>
         
         <!-- Settings -->
+        <router:file path="update.view" name="update">
+            <views:update />
+        </router:file>
         <router:file path="modules.view" name="modules">
             <views:modules />
         </router:file>
@@ -94,6 +109,12 @@
         </router:file>
         <router:file path="role-cache.view" name="roleCache">
             <views:roleCache />
+        </router:file>
+        <router:file path="admin-menu.view" name="adminMenu">
+            <views:adminMenu />
+        </router:file>
+        <router:file path="edit-admin-menu.view" name="editAdminMenu">
+            <views:editAdminMenu />
         </router:file>
         
         <!-- Languages -->
