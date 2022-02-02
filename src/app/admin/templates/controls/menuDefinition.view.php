@@ -32,11 +32,11 @@
     <list:add key-text="Url cache" key-url="~/in/url-cache.view" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.UrlCache" key-parentId="settings" />
     <list:add key-text="Role cache" key-url="~/in/role-cache.view" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.RoleCache" key-parentId="settings" />
     <list:add key-text="Languages" key-url="~/in/languages.view" key-icon="~/images/lang_add.png" key-perm="CMS.Settings.Languages" key-parentId="settings" />
+    <list:add key-text="Localization bundles" key-url="~/in/localization-bundles.view" key-icon="~/images/lang.png" key-perm="CMS.Settings.LocalizationBundles" key-parentId="settings" />
     <list:add key-text="Keywords &amp; robots.txt" key-url="~/in/keywords.view" key-icon="~/images/icons/book_open.png" key-perm="CMS.Settings.Keywords" key-parentId="settings" />
     <list:add key-text="Users &amp; Roles" key-url="~/in/users.view" key-icon="~/images/icons/user.png" key-perm="CMS.Settings.Users" key-parentId="settings" />
     <list:add key-text="User log" key-url="~/in/user-log.view" key-icon="~/images/icons/userlog.png" key-perm="CMS.Settings.UserLog" key-parentId="settings" />
     <list:add key-text="Application log" key-url="~/in/application-log.view" key-icon="~/images/icons/log.png" key-perm="CMS.Settings.ApplicationLog" key-parentId="settings" />
-    <list:add key-text="Localization bundles" key-url="~/in/localization-bundles.view" key-icon="~/images/lang.png" key-perm="CMS.Settings.LocalizationBundles" key-parentId="settings" />
     <list:add key-text="Database connections" key-url="~/in/database-connections.view" key-icon="~/images/icons/page_code.png" key-perm="CMS.Settings.DatabaseConnections" key-parentId="settings" />
     <list:add key-text="Personal properties" key-url="~/in/personal-properties.view" key-icon="~/images/icons/properties.png" key-perm="CMS.Settings.PersonalProperties" key-parentId="settings" />
     <list:add key-text="Personal notes" key-url="~/in/personal-notes.view" key-icon="~/images/page_edi.png" key-perm="CMS.Settings.PersonalNotes" key-parentId="settings" />

@@ -84,6 +84,17 @@
             <views:modules />
         </router:file>
         
+        <!-- Languages -->
+        <router:file path="languages.view" name="languages">
+            <views:languages />
+        </router:file>
+        <router:file path="localization-bundles.view" name="localizationBundles">
+            <views:localizationBundles />
+        </router:file>
+        <router:file path="localization-bundle-download.view" name="localizationBundleDownload">
+            <views:localizationBundleDownload />
+        </router:file>
+        
         <!-- Users -->
         <router:file path="users.view" name="users">
             <views:users />
@@ -99,6 +110,15 @@
         </router:file>
         <router:file path="user-log.view" name="userLog">
             <views:userLog />
+        </router:file>
+        <router:file path="personal-notes.view" name="personalNotes">
+            <views:personalNotes />
+        </router:file>
+        <router:file path="personal-properties.view" name="personalProperties">
+            <views:personalProperties />
+        </router:file>
+        <router:file path="default-properties.view" name="defaultProperties">
+            <views:defaultProperties />
         </router:file>
     </router:directory>
 </router:fromPath>
