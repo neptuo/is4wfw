@@ -11,12 +11,12 @@
     <list:add key-text="Embedded Resources" key-url="~/in/embedded-resources.view" key-icon="~/images/icons/script_link.png" key-perm="CMS.Web.EmbeddedResources" key-parentId="web" />
     <list:add key-text="Custom forms" key-url="route:customForms" key-icon="~/images/icons/page_attachment.gif" key-perm="CMS.Web.CustomForms" key-parentId="web" />
     <list:add key-text="Custom entities" key-url="route:customEntities" key-icon="~/images/icons/database.png" key-perm="CMS.Web.CustomEntities" key-parentId="web" />
-    <list:add key-text="File manager" key-url="~/in/filesng.view" key-icon="~/images/icons/drive.png" key-perm="CMS.Web.FileManager" key-parentId="web" />
+    <list:add key-text="File manager" key-url="route:files" key-icon="~/images/icons/drive.png" key-perm="CMS.Web.FileManager" key-parentId="web" />
     <list:add key-text="Articles" key-url="route:articles" key-icon="~/images/icons/book_open.png" key-perm="CMS.Web.Articles" key-parentId="web" />
     <list:add key-text="Guestbooks" key-url="~/in/guestbooks.view" key-icon="~/images/icons/comment.png" key-perm="CMS.Web.Guestbooks" key-parentId="web" />
     <list:add key-text="Inquiries" key-url="~/in/inquiries.view" key-icon="~/images/icons/magnifier.png" key-perm="CMS.Web.Inquiries" key-parentId="web" />
-    <list:add key-text="Web forwards" key-url="~/in/web-forwards.view" key-icon="~/images/icons/arrow_branch.png" key-perm="CMS.Web.WebForwards" key-parentId="web" />
-    <list:add key-text="Web projects" key-url="~/in/web-projects.view" key-icon="~/images/icons/building.png" key-perm="CMS.Web.WebProjects" key-parentId="web" />
+    <list:add key-text="Web forwards" key-url="route:webForwards" key-icon="~/images/icons/arrow_branch.png" key-perm="CMS.Web.WebForwards" key-parentId="web" />
+    <list:add key-text="Web projects" key-url="route:webProjects" key-icon="~/images/icons/building.png" key-perm="CMS.Web.WebProjects" key-parentId="web" />
 
     <list:add key-text="Floorball" key-url="~/in/floorball/seasons.view" key-icon="futbol" key-iconPrefix="far" key-perm="CMS.Floorball" key-id="floorball" key-cookie="cookie:cmsMenu-floorball" key-defaultState="collapsed" />
     <list:add key-text="Projects" key-url="~/in/floorball/projects.view" key-icon="~/images/icons/floorball/projects.gif" key-perm="CMS.Floorball.Projects" key-parentId="floorball" />

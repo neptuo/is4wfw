@@ -23,6 +23,12 @@
         </router:file>
 
         <!-- Web -->
+        <router:file path="web-projects.view" name="webProjects">
+            <views:webProjects />
+        </router:file>
+        <router:file path="web-forwards.view" name="webForwards">
+            <views:webForwards />
+        </router:file>
         <router:file path="pages.view" name="pages">
             <views:pages />
         </router:file>
@@ -34,6 +40,9 @@
         </router:file>
         <router:file path="search.view" name="search">
             <views:search />
+        </router:file>
+        <router:file path="files.view" name="files">
+            <views:files />
         </router:file>
 
         <!-- Articles -->
