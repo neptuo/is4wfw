@@ -7,7 +7,7 @@
 
 <v:title value="is4wfw" />
 <login:init group="web-admins" />
-<login:redirectWhenLogged pageId="~/in/index.view" />
+<login:redirectWhenLogged pageId="route:index" />
 
 <bs:container class="is4wfw">
     <bs:row vertical="center" class="justify-content-center">
@@ -17,7 +17,7 @@
                     <web:condition when="edit:save">
                         <login:login group="web-admins" username="edit:username" password="edit:password">
                             <web:condition when="var:adminLastPage" isInverted="true">
-                                <var:declare name="adminLastPage" value="~/in/index.view" />
+                                <var:declare name="adminLastPage" value="route:index" />
                             </web:condition>
                             <web:redirectTo pageId="var:adminLastPage" />
                         </login:login>

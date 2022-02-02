@@ -9,7 +9,7 @@
 		<web:frame title="utils:editTitle">
 			<edit:form submit="save">
 				<web:condition when="edit:saved">
-					<admin:redirectAfterSave saveName="save" closePageId="~/in/custom-entities.view" saveParam-table="query:table" />
+					<admin:redirectAfterSave saveName="save" closePageId="route:customEntities" saveParam-table="query:table" />
 				</web:condition>
 
 				<web:condition when="query:table" is="new">
@@ -29,7 +29,7 @@
 							</label>
 						</div>
 						<div class="gray-box">
-							<admin:saveButtons closePageId="~/in/custom-entities.view" />
+							<admin:saveButtons closePageId="route:customEntities" />
 						</div>
 					</ced:tableEditor>
 				</web:condition>
@@ -48,16 +48,16 @@
 				<ui:column header="loc:tablelist.description" value="ced:tableDescription" />
 				<ui:columnBoolean header="Audit log" value="ced:tableAuditLog" />
 				<ui:columnTemplate header="">
-					<web:a pageId="~/in/custom-entities.view" param-table="ced:tableName" class="image-button" title="Edit entity">
+					<web:a pageId="route:customEntities" param-table="ced:tableName" class="image-button" title="Edit entity">
 						<img src="~/images/page_edi.png" />
 					</web:a>
-					<web:a pageId="~/in/custom-entity-columns.view" param-table="ced:tableName" class="image-button button-edit" title="Entity columns">
+					<web:a pageId="route:customEntityColumns" param-table="ced:tableName" class="image-button button-edit" title="Entity columns">
 						<img src="~/images/page_pro.png" />
 					</web:a>
-					<web:a pageId="~/in/custom-entity-localization.view" param-table="ced:tableName" class="image-button" title="Entity localized columns">
+					<web:a pageId="route:customEntityLocalization" param-table="ced:tableName" class="image-button" title="Entity localized columns">
 						<img src="~/images/lang.png" />
 					</web:a>
-					<web:a pageId="~/in/custom-entity-audit.view" param-table="ced:tableName" class="image-button" title="Entity audit">
+					<web:a pageId="route:customEntityAudit" param-table="ced:tableName" class="image-button" title="Entity audit">
 						<img src="~/images/page_find.png" />
 					</web:a>
 					<admin:deleteButton hiddenField="delete" confirmValue="ced:tableName" hidden-table="ced:tableName" />
@@ -66,7 +66,7 @@
 		</ced:listTables>
 		<hr />
 		<div class="gray-box">
-			<admin:newButton pageId="~/in/custom-entities.view" paramName="table" text="loc:tablelist.create" />
+			<admin:newButton pageId="route:customEntities" paramName="table" text="loc:tablelist.create" />
 		</div>
 	</web:frame>
 </loc:use>

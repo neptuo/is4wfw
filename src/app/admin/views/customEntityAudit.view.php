@@ -1,4 +1,4 @@
-<web:a pageId="~/in/custom-entities.view" text="&laquo; Custom Entities" />
+<web:a pageId="route:customEntities" text="&laquo; Custom Entities" />
 
 <utils:concat output="title" value1="Custom Entity Audit" value2=" :: " value3="query:table" />
 <web:frame title="utils:title">
@@ -12,7 +12,7 @@
 			<ui:columnDateTime header="Timestamp" value="ced:tableAuditTimestamp" format="d.m.Y H:m:s" td-title="ced:tableAuditTimestamp" />
 			<ui:column header="Sql" value="ced:tableAuditSql" />
 			<ui:columnTemplate>
-				<web:a pageId="~/in/custom-entity-audit.view" param-table="query:table" param-timestamp="ced:tableAuditTimestamp">
+				<web:a pageId="route:customEntityAudit" param-table="query:table" param-timestamp="ced:tableAuditTimestamp">
 					Generate
 				</web:a>
 			</ui:columnTemplate>

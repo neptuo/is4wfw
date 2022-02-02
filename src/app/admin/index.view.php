@@ -188,20 +188,13 @@
     </router:directory>
 </router:fromPath>
 
-<web:switch when="router:hasMatch">
-    <web:case is="php:true">
-        <web:switch when="var:templatePath">
-            <web:case is="php:null">
-                <router:render />
-            </web:case>
-            <web:case>
-                <v:template src="var:templatePath">
-                    <router:render />
-                </v:template>
-            </web:case>
-        </web:switch>
+<web:switch when="var:templatePath">
+    <web:case is="php:null">
+        <router:render />
     </web:case>
     <web:case>
-        <v:process />
+        <v:template src="var:templatePath">
+            <router:render />
+        </v:template>
     </web:case>
 </web:switch>

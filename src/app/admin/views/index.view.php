@@ -3,7 +3,7 @@
 		<sys:printNotes useFrames="false" />
 
 		<div class="mt-2">
-			<web:a pageId="~/in/personal-notes.view">
+			<web:a pageId="route:personalNotes">
 				Edit your notes &raquo;
 			</web:a>
 		</div>

@@ -9,7 +9,7 @@
     </module:delete>
 </web:condition>
 
-<var:declare name="selfUrl" value="~/in/modules.view" />
+<var:declare name="selfUrl" value="route:modules" />
 
 <div class="m-md-2 m-lg-4">
     <admin:edit id="query:id">

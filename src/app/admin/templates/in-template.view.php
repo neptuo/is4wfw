@@ -39,8 +39,8 @@
                         <controls:menu name="list:menu-id" title="list:menu-text" icon="list:menu-icon" permission="list:menu-perm" rootUrl="list:menu-url" cookie="list:menu-cookie" menu="list:menu-id" defaultState="list:menu-defaultState" toggler="list:menu-id" class="list:menu-class" />
                     </ui:forEach>
                     <web:condition when="sys:hasAdminMenu">
-                        <controls:menu name="custom" title="Custom" permission="CMS.AdminMenu" rootUrl="~/in/personal-notes.view" cookie="cookie:cmsMenu-custom" icon="ellipsis-h" iconPrefix="fas" toggler="true">
-                            <sys:adminMenu url="~/in/admin-menu.view" />
+                        <controls:menu name="custom" title="Custom" permission="CMS.AdminMenu" rootUrl="route:personalNotes" cookie="cookie:cmsMenu-custom" icon="ellipsis-h" iconPrefix="fas" toggler="true">
+                            <sys:adminMenu url="route:adminMenu" />
                         </controls:menu>
                     </web:condition>
                 </nav>

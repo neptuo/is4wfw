@@ -42,12 +42,12 @@
                 </ui:columnTemplate>
                 <ui:columnTemplate>
                     <web:condition when="p:searchType" is="Template">
-                        <web:a pageId="~/in/templates.view" param-id="p:searchId">
+                        <web:a pageId="route:templates" param-id="p:searchId">
                             <img src="~/images/page_edi.png" title="Edit template" />
                         </web:a>
                     </web:condition>
                     <web:condition when="p:searchType" is="Text File">
-                        <ui:form pageId="~/in/text-files.view">
+                        <ui:form pageId="route:textFiles">
                             <input type="hidden" name="file-id" value="<web:out text="p:searchId" />" />
                             <input type="hidden" name="edit-file" value="Edit" />
                             <input type="image" src="~/images/page_edi.png" name="edit-file" value="Edit" title="Edit file" />

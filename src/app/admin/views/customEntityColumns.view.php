@@ -6,7 +6,7 @@
 	</web:condition>
 		
 	<utils:concat output="backButtonText" value1="&laquo;" value2=" " value3="loc:tablelist.title" />
-	<web:a pageId="~/in/custom-entities.view" text="utils:backButtonText" />
+	<web:a pageId="route:customEntities" text="utils:backButtonText" />
 	
 	<admin:edit id="query:column">
 		<utils:concat output="editTitle" value1="loc:columnlist.edit.title" value2=" :: " value3="query:column" />
@@ -14,9 +14,9 @@
 			<edit:form submit="save">
 				<web:condition when="edit:saved">
 					<web:condition when="query:column" is="new">
-						<web:redirectTo pageId="~/in/custom-entity-columns.view" param-table="query:table" />
+						<web:redirectTo pageId="route:customEntityColumns" param-table="query:table" />
 					</web:condition>
-					<admin:redirectAfterSave saveName="save" saveParam-table="query:table" saveParam-column="query:column" closePageId="~/in/custom-entity-columns.view" closeParam-table="query:table" /> 
+					<admin:redirectAfterSave saveName="save" saveParam-table="query:table" saveParam-column="query:column" closePageId="route:customEntityColumns" closeParam-table="query:table" /> 
 				</web:condition>
 
 				<web:condition when="query:column" is="new">
@@ -29,7 +29,7 @@
 							<ui:textarea name="column-description" class="w700 h100" />
 						</div>
 						<div class="gray-box">
-							<admin:saveButtons closePageId="~/in/custom-entity-columns.view" closeParam-table="query:table" />
+							<admin:saveButtons closePageId="route:customEntityColumns" closeParam-table="query:table" />
 						</div>
 					</ced:tableColumnEditor>
 				</web:condition>
@@ -48,7 +48,7 @@
 				<ui:columnBoolean header="loc:columnlist.required" value="ced:tableColumnRequired" />
 				<ui:columnBoolean header="loc:columnlist.unique" value="ced:tableColumnUnique" />
 				<ui:columnTemplate header="">
-					<web:a pageId="~/in/custom-entity-columns.view" param-table="query:table" param-column="ced:tableColumnName" class="image-button button-edit">
+					<web:a pageId="route:customEntityColumns" param-table="query:table" param-column="ced:tableColumnName" class="image-button button-edit">
 						<img src="~/images/page_edi.png" />
 					</web:a>
 					<web:condition when="ced:tableColumnPrimaryKey" is="false">
@@ -59,7 +59,7 @@
 		</ced:listTableColumns>
 		<hr />
 		<div class="gray-box">
-			<admin:newButton pageId="~/in/custom-entity-columns.view" paramName="column" param-table="query:table" text="loc:columnlist.create" />
+			<admin:newButton pageId="route:customEntityColumns" paramName="column" param-table="query:table" text="loc:columnlist.create" />
 		</div>
 	</web:frame>
 </loc:use>
