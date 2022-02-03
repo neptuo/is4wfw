@@ -1,6 +1,7 @@
 <?php
 
 	require_once("BaseTagLib.class.php");
+	require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
 	/**
 	 * 
@@ -42,17 +43,25 @@
 			return $this->includeFinal($template, $contentTemplate, $params);
 		}
 
+		private function ensureStack($key) {
+			$storage = parent::request()->get($key, 'template:include');
+			if ($storage == null) {
+				parent::request()->set($key, $storage = new Stack(), 'template:include');
+			}
+
+			return $storage;
+		}
+
 		protected function includeFinal(callable $template, ?callable $contentTemplate, $params) {
-			$oldContent = parent::request()->get('content', 'template:include');
-			$oldParams = parent::request()->get('params', 'template:include');
-			parent::request()->set('params', $params, 'template:include');
-			parent::request()->set('content', $contentTemplate, 'template:include');
+			$paramsStorage = $this->ensureStack("params");
+			$contentStorage = $this->ensureStack("content");
 
+			$paramsStorage->push($params);
+			$contentStorage->push($contentTemplate);
 			$result = $template();
+			$paramsStorage->pop();
+			$contentStorage->pop();
 			
-			parent::request()->set('params', $oldParams, 'template:include');
-			parent::request()->set('content', $oldContent, 'template:include');
-
 			return $result;
 		}
 		
@@ -84,29 +93,37 @@
 		}
 
 		public function content($params) {
-			return $this->contentWithBody(function() { }, $params);
+			return $this->contentWithBody(null, $params);
 		}
 
 		public function contentWithBody($template, $params) {
-			$oldContent = parent::request()->get('content', 'template:include');
+			$paramsStorage = $this->ensureStack("params");
+			$contentStorage = $this->ensureStack("content");
+
+			$oldContent = $contentStorage->pop();
 			if ($oldContent != null && is_callable($oldContent)) {
-				$oldParams = parent::request()->get('params', 'template:include');
-				parent::request()->set('params', $params, 'template:include');
-				parent::request()->set('content', $template, 'template:include');
+				$paramsStorage->push($params);
+				if ($template != null) {
+					$contentStorage->push($template);
+				}
 				
 				$result = $oldContent();
-
-				parent::request()->set('params', $oldParams, 'template:include');
-				parent::request()->set('content', $oldContent, 'template:include');
+				
+				$paramsStorage->pop();
+				if ($template != null) {
+					$contentStorage->pop();
+				}
 
 				return $result;
 			}
+
+			$contentStorage->push($oldContent);
 			
 			return "";
 		}
 
 		public function getProperty($name) {
-			$params = parent::request()->get('params', 'template:include');
+			$params = $this->ensureStack("params")->peek();
 			if ($params != null && array_key_exists($name, $params)) {
 				return $params[$name];
 			}
