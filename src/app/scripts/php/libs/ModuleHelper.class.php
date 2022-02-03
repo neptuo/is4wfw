@@ -191,7 +191,9 @@
 									Validator::addUnique($model, "zip");
 								}
 								
-								// TODO: Check version.
+								if (!$this->isSupportedVersion($xml->is4wfw->minVersion)) {
+									Validator::addInvalidValue($model, "zip");
+								}
 							} else {
 								Validator::addInvalidValue($model, "zip");
 							}
@@ -220,6 +222,13 @@
 				$result = $template();
 				return $result;
 			}
+		}
+
+		public function isSupportedVersion($minVersion) {
+			$currentVersion = Version::parse(WEB_VERSION);
+			$moduleVersion = Version::parse($minVersion);
+
+			return $currentVersion["major"] == $moduleVersion["major"] && $currentVersion["patch"] >= $moduleVersion["patch"];
 		}
 
 		private function installFromZip(EditModel $model, string $moduleId, string $fileName, bool $isEdit) {
