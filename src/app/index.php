@@ -54,12 +54,10 @@
             $webObject->redirectToHttps();
         }
       
-        $phpObject->register('v', 'php.libs.View');
-        $phpObject->register('m', 'php.libs.Menu');
-      
         require_once(APP_SCRIPTS_PHP_PATH . "includes/postinitview.inc.php");
     
         $phpObject->register("controls", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/templates/controls")]);
+        $phpObject->register("layouts", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/templates/layouts")]);
         $phpObject->register("views", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/views")]);
         $phpObject->register("floorball", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/views/floorball")]);
         $phpObject->autolib("var")->setValue("virtualUrl", substr($phpObject->autolib("v")->getCurrentVirtualUrl(), 2));

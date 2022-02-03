@@ -1,4 +1,4 @@
-<var:declare name="templatePath" value="php:null" />
+<var:declare name="templateName" value="php:null" />
 <router:fromPath path="var:virtualUrl">
     <router:file path="login.view" name="login">
         <views:login />
@@ -8,7 +8,7 @@
     </router:file>
     <router:directory path="in">
         <web:condition when="router:isEvaluate">
-            <var:declare name="templatePath" value="~/templates/in-template.view" />
+            <var:declare name="templateName" value="main" />
         </web:condition>
         
         <!-- General -->
@@ -157,7 +157,7 @@
         <!-- Floorball -->
         <router:directory path="floorball">
             <web:condition when="router:isEvaluate">
-                <var:declare name="templatePath" value="~/templates/floorball-template.view" />
+                <var:declare name="templateName" value="floorball" />
             </web:condition>
         
             <router:file path="projects.view" name="floorballProjects">
@@ -188,13 +188,13 @@
     </router:directory>
 </router:fromPath>
 
-<web:switch when="var:templatePath">
+<web:switch when="var:templateName">
     <web:case is="php:null">
         <router:render />
     </web:case>
     <web:case>
-        <v:template src="var:templatePath">
+        <layouts:include identifier="var:templateName">
             <router:render />
-        </v:template>
+        </layouts:include>
     </web:case>
 </web:switch>

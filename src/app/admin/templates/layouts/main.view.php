@@ -9,15 +9,15 @@
         <web:redirectTo pageId="route:login" />
     </login:logout>
 </web:condition>
-<v:head>
+<web:head>
 	<meta name="viewport" content="width=device-width" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
     <bs:resources />
     <fa5:resources />
     <js:cmsResources />
     <js:script placement="tail" path="~/js/Admin.js" />
-</v:head>
-<v:template src="~/templates/template.view">
+</web:head>
+<layouts:base>
     <bs:row class="no-gutters main-layout">
         <var:declare name="mainMenuColCssClass" value="main-menu-col" />
         <web:condition when="cookie:mainMenu" is="collapsed">
@@ -93,11 +93,11 @@
 
             <div class="p-3 cms">
                 <div id="cms-body" class="body">
-                    <v:content />
+                    <template:content />
                 </div>
             </div>
         </bs:column>
     </bs:row>
 
 	<controls:instanceName />
-</v:template>
+</layouts:base>

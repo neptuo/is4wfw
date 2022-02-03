@@ -13,9 +13,6 @@
     $phpObject = new PhpRuntime();
     $webObject = new Web();
 
-    $phpObject->register('v', 'php.libs.View');
-    $phpObject->register('m', 'php.libs.Menu');
-
     $files = FileUtils::searchDirectoryRecursive(APP_ADMIN_PATH, ".php");
     var_dump($files);
     

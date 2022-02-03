@@ -1,11 +1,11 @@
-<v:head>
+<web:head>
 	<meta name="viewport" content="width=device-width" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 	<js:style path="~/css/login.css" />
 	<bs:resources />
-</v:head>
+</web:head>
 
-<v:title value="is4wfw" />
+<controls:title value="is4wfw" />
 <login:init group="web-admins" />
 <login:redirectWhenLogged pageId="route:index" />
 

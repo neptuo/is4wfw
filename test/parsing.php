@@ -21,7 +21,6 @@
     $phpObject->register("template", "php.libs.Template");
     $phpObject->register("ui", "php.libs.Ui");
     $phpObject->register("var", "php.libs.Variable");
-    $phpObject->register("view", "php.libs.View");
     // $phpObject->register("test", "php.libs.test.TestLibrary");
 
 //     $Content = '<hr />
