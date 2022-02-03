@@ -4,6 +4,47 @@
     Knihovna pro vkládání šablon, které jsou definované jako soubory ve složce.
     Při registraci je nutné zadat parametr "path" (param-path).
   </comment>
+  <tag>
+    <name>include</name>
+    <function>includeByFileName</function>
+    <attribute>
+      <name>identifier</name>
+      <required />
+      <comment>
+        Identifikátor souboru, v "anyTag" by byl použit jako název tagu.
+      </comment>
+    </attribute>
+    <anyAttribute>
+      <comment>
+        Všechny atributy jsou předány šabloně.
+      </comment>
+    </anyAttribute>
+    <comment>
+      Vloží obsah šablony, kde hodnota "identifier" musí odpovídat názvu souboru.
+      Všechny atributy jsou parametry šablony.
+    </comment>
+  </tag>
+  <fulltag>
+    <name>include</name>
+    <function>includeByIdentifierWithBody</function>
+    <attribute>
+      <name>identifier</name>
+      <required />
+      <comment>
+        Identifikátor souboru, v "anyTag" by byl použit jako název tagu.
+      </comment>
+    </attribute>
+    <anyAttribute>
+      <comment>
+        Všechny atributy jsou předány šabloně.
+      </comment>
+    </anyAttribute>
+    <comment>
+      Vloží obsah šablony, kde hodnota "identifier" musí odpovídat názvu souboru.
+      Všechny atributy jsou parametry šablony.
+      Tělo je použito pro "template:content".
+    </comment>
+  </fulltag>
   <anyTag>
     <function>includeByFileName</function>
     <comment>

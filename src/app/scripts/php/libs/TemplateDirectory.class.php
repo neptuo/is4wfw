@@ -42,6 +42,10 @@ require_once("Template.class.php");
 
 			return $this->includeFinal($parsedTemplate, $template, $params);
 		}
+
+		public function includeByIdentifierWithBody($template, $fileName, $params) {
+			return $this->includeWithBodyByFileName($fileName, $template, $params);
+		}
 	}
 
 ?>
