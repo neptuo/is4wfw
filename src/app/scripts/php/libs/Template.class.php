@@ -100,6 +100,7 @@
 			$paramsStorage = $this->ensureStack("params");
 			$contentStorage = $this->ensureStack("content");
 
+			$result = "";
 			$oldContent = $contentStorage->pop();
 			if ($oldContent != null && is_callable($oldContent)) {
 				$paramsStorage->push($params);
@@ -113,13 +114,10 @@
 				if ($template != null) {
 					$contentStorage->pop();
 				}
-
-				return $result;
 			}
 
 			$contentStorage->push($oldContent);
-			
-			return "";
+			return $result;
 		}
 
 		public function getProperty($name) {
