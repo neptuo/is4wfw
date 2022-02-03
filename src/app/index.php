@@ -35,15 +35,16 @@
         $webObject->processRequestNG();
     } else if (array_key_exists("VIEW_PAGE_PATH", $_GET)) {
         // Administration.
-
+        
         if (IS_ADMIN_STOPPED) {
             echo file_get_contents("stopped.html");
             exit;
         }
 
+        $_GET['VIEW_VIRTUAL_URL'] = $virtualUrl = '~/' . $_GET['VIEW_PAGE_PATH'] . ".view";
+
         require_once(APP_SCRIPTS_PHP_PATH . "libs/PhpRuntime.class.php");
         require_once(APP_SCRIPTS_PHP_PATH . "libs/Web.class.php");
-        require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewHelper.class.php");
     
         session_start();
   
@@ -55,12 +56,12 @@
         }
       
         require_once(APP_SCRIPTS_PHP_PATH . "includes/postinitview.inc.php");
-    
-        $phpObject->register("controls", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/templates/controls")]);
-        $phpObject->register("layouts", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/templates/layouts")]);
-        $phpObject->register("views", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/views")]);
-        $phpObject->register("floorball", "php.libs.TemplateDirectory", ["path" => ViewHelper::resolveViewRoot("~/views/floorball")]);
-        $phpObject->autolib("var")->setValue("virtualUrl", substr($phpObject->autolib("v")->getCurrentVirtualUrl(), 2));
+
+        $phpObject->register("controls", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/controls"]);
+        $phpObject->register("layouts", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/layouts"]);
+        $phpObject->register("views", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views"]);
+        $phpObject->register("floorball", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views/floorball"]);
+        $phpObject->autolib("var")->setValue("virtualUrl", substr($virtualUrl, 2));
       
         $indexContent = file_get_contents(APP_ADMIN_PATH . "index.view.php");
         $pageContent = $webObject->executeTemplateContent(["admin", "views", "index", sha1($indexContent)], $indexContent);
