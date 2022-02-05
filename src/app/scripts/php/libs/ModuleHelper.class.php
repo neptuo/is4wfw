@@ -79,7 +79,7 @@
 		}
 
 		public function list($template) {
-			$modules = Module::all();
+			$modules = Module::all(false);
 			
 			$model = new ListModel();
 			$this->pushListModel($model);

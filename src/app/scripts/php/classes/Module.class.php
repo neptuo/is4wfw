@@ -3,37 +3,50 @@
     require_once("CodeWriter.class.php");
 
     class Module {
-        private static $modules = null;
+        private static $all = null;
+        private static $active = null;
 
         public static function reload() {
-            Module::$modules = null;
+            Module::$all = null;
+            Module::$active = null;
             return Module::all();
         }
 
-        public static function all(): array {
-            if (Module::$modules == null) {
+        private static function ensure() {
+            if (Module::$all == null) {
                 $loaderPath = MODULES_PATH . ModuleGenerator::loaderFileName;
                 if (file_exists($loaderPath)) {
                     include($loaderPath);
                     
                     global $__loadModules;
                     if (is_callable($__loadModules)) {
-                        Module::$modules = $__loadModules();
+                        Module::$all = $__loadModules();
                     } else if (function_exists("__loadModules")) {
-                        Module::$modules = __loadModules();
+                        Module::$all = __loadModules();
                     }
                 }
             }
 
-            if (!is_array(Module::$modules)) {
-                Module::$modules = [];
+            if (!is_array(Module::$all)) {
+                Module::$all = [];
             }
 
-            return Module::$modules;
+            if (Module::$active == null) {
+                Module::$active = array_filter(Module::$all, function($module) { return !$module->is4wfw || Module::isSupportedVersion($module); });
+            }
         }
 
-        public static function findById($id): ?Module {
-            $modules = array_filter(Module::all(), function ($module) use ($id) { return $module->id == $id; });
+        public static function all($activeOnly = true): array {
+            Module::ensure();
+            if ($activeOnly) {
+                return Module::$active;
+            }
+
+            return Module::$all;
+        }
+
+        public static function findById($id, $activeOnly = true): ?Module {
+            $modules = array_filter(Module::all($activeOnly), function ($module) use ($id) { return $module->id == $id; });
             if (count($modules) == 1) {
                 return $modules[ArrayUtils::firstKey($modules)];
             }
@@ -41,8 +54,8 @@
             return null;
         }
 
-        public static function findByAlias($alias): ?Module {
-            $modules = array_filter(Module::all(), function ($module) use ($alias) { return $module->alias == $alias; });
+        public static function findByAlias($alias, $activeOnly = true): ?Module {
+            $modules = array_filter(Module::all($activeOnly), function ($module) use ($alias) { return $module->alias == $alias; });
             if (count($modules) == 1) {
                 return $modules[0];
             }
@@ -50,8 +63,8 @@
             return null;
         }
         
-        public static function getById($id): Module {
-            $module = Module::findById($id);
+        public static function getById($id, $activeOnly = true): Module {
+            $module = Module::findById($id, $activeOnly);
             if ($module == null) {
                 throw new Exception("Missing module '$id'.");
             }
@@ -59,14 +72,31 @@
             return $module;
         }
         
-        public static function getByAlias($alias): Module {
-            $module = Module::findByAlias($alias);
+        public static function getByAlias($alias, $activeOnly = true): Module {
+            $module = Module::findByAlias($alias, $activeOnly);
             if ($module == null) {
                 throw new Exception("Missing module with alias '$alias'.");
             }
 
             return $module;
         }
+
+		public static function isSupportedVersion($moduleOrMinVersion) {
+            if ($moduleOrMinVersion instanceof Module) {
+                if (!$moduleOrMinVersion->is4wfw) {
+                    return true;
+                }
+
+                $minVersion = $moduleOrMinVersion->is4wfw->minVersion;
+            } else {
+                $minVersion = $moduleOrMinVersion;
+            }
+
+			$currentVersion = Version::parse(WEB_VERSION);
+			$moduleVersion = Version::parse($minVersion);
+
+			return $currentVersion["major"] == $moduleVersion["major"] && $currentVersion["patch"] >= $moduleVersion["patch"];
+		}
 
         // --- Instance members -----------------------------------------------
 
@@ -75,13 +105,15 @@
         public $name;
         public $version;
         public $gitHub;
+        public $is4wfw;
 
-        public function __construct($id, $alias, $name, $version = null, $gitHub = null) {
+        public function __construct($id, $alias, $name, $version = null, $gitHub = null, $is4wfw = null) {
             $this->id = $id;
             $this->alias = $alias;
             $this->name = $name;
             $this->version = $version;
             $this->gitHub = $gitHub;
+            $this->is4wfw = $is4wfw;
         }
 
         public function getRootPath() {
@@ -102,6 +134,14 @@
 
         public function getBundlesPath() {
             return MODULES_PATH . $this->alias . "/bundles/";
+        }
+    }
+
+    class ModuleIs4wfw {
+        public $minVersion;
+
+        public function __construct($minVersion) {
+            $this->minVersion = $minVersion;
         }
     }
 
@@ -167,6 +207,12 @@
 
                 if ($module->gitHub) {
                     $args[] = "new ModuleGitHub('" . $module->gitHub->repository->name . "', " . ($module->gitHub->repository->private ? 'false' : 'true') . ", '" . $module->gitHub->pat . "')";
+                } else {
+                    $args[] = "null";
+                }
+
+                if ($module->is4wfw) {
+                    $args[] = "new ModuleIs4wfw('" . $module->is4wfw->minVersion . "')";
                 } else {
                     $args[] = "null";
                 }
