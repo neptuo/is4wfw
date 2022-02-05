@@ -57,7 +57,8 @@
         public static function findByAlias($alias, $activeOnly = true): ?Module {
             $modules = array_filter(Module::all($activeOnly), function ($module) use ($alias) { return $module->alias == $alias; });
             if (count($modules) == 1) {
-                return $modules[0];
+                $key = ArrayUtils::firstKey($modules);
+                return $modules[$key];
             }
 
             return null;

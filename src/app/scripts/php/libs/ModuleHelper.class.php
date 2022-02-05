@@ -242,31 +242,35 @@
 			}
 		}
 
+		private function validateXml(EditModel $model, SimpleXMLElement $xml, ?string $moduleId = null) {
+			if (!isset($xml->is4wfw->minVersion)) {
+				Validator::addInvalidValue($model, "zip");
+			} else {
+				if (!Module::isSupportedVersion($xml->is4wfw->minVersion)) {
+					Validator::addInvalidValue($model, "zip");
+				}
+			}
+			
+			if ($moduleId != null) {
+				$module = Module::getById($moduleId);
+				if ($module->id != $xml->id) {
+					Validator::addInvalidValue($model, "zip");
+				}
+			}
+		}
+
 		private function installFromZip(EditModel $model, string $moduleId, string $fileName, bool $isEdit) {
 			$xml = ZipUtils::getFileContent($fileName, "module.xml");
+			$xml = new SimpleXMLElement($xml);
 			if ($xml) {
-				$xml = new SimpleXMLElement($xml);
-				if (!isset($xml->is4wfw->minVersion)) {
-					Validator::addInvalidValue($model, "zip");
-				} else {
-					if (!Module::isSupportedVersion($xml->is4wfw->minVersion)) {
-						Validator::addInvalidValue($model, "zip");
-					}
-				}
-				
-				if ($isEdit) {
-					$module = Module::getById($moduleId);
-					if ($module->id != $xml->id) {
-						Validator::addInvalidValue($model, "zip");
-					}
-					
-				}
+				$this->validateXml($model, $xml, $moduleId);
 			} else {
 				Validator::addInvalidValue($model, "zip");
 			}
 
 			if ($model->isValid()) {
 				$modules = ModuleXml::read();
+				$module = Module::getById($moduleId);
 
 				if ($isEdit) {
 					$xml->alias = $module->alias;
@@ -300,6 +304,48 @@
 		public function rebuildInitializers($template) {
 			ModuleGenerator::all();
 			$template();
+		}
+
+		public function importExisting($template) {
+			if ($handle = opendir(MODULES_PATH)) {
+				$items = array();
+				while (false !== ($entry = readdir($handle))) {
+					if ($entry != "." && $entry != ".." && is_dir(MODULES_PATH . $entry)) {
+						$items[] = $entry;
+					}
+				}
+				closedir($handle);
+
+				$hasAny = false;
+				foreach ($items as $alias) {
+					if (Module::findByAlias($alias, false) == null) {
+						$xml = file_get_contents(MODULES_PATH . $alias . "/module.xml");
+						if ($xml) {
+							$xml = new SimpleXMLElement($xml);
+							$validation = new EditModel();
+							$this->validateXml($validation, $xml);
+							if ($validation->isValid()) {
+								$modules = ModuleXml::read();
+
+								$xml->alias = $alias;
+
+								$toDom = dom_import_simplexml($modules);
+								$fromDom = dom_import_simplexml($xml);
+								$toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
+
+								ModuleXml::write($modules);
+								$hasAny = true;
+							}
+						}
+					}
+				}
+
+				if ($hasAny) {
+					ModuleGenerator::all();
+				}
+
+				$template();
+			}
 		}
 
 		public function delete($template, $id) {

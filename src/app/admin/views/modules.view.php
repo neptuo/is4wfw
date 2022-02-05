@@ -3,6 +3,11 @@
         <web:redirectToSelf />
     </module:rebuildInitializers>
 </web:condition>
+<web:condition when="post:import">
+    <module:importExisting>
+        <web:redirectToSelf />
+    </module:importExisting>
+</web:condition>
 <web:condition when="post:delete">
     <module:delete id="post:id">
         <web:redirectToSelf />
@@ -139,9 +144,14 @@
             </ui:grid>
         </module:list>
 
-        <ui:form class="mt-3">
-            <bs:button name="rebuild" value="rebuild" text="Rebuild initializers" class="confirm" title="Rebuild initializers" />
-            <web:a pageId="var:selfUrl" param-id="new" text="New module" class="btn btn-outline-primary" />
+        <ui:form class="d-flex justify-content-between mt-3">
+            <div>
+                <web:a pageId="var:selfUrl" param-id="new" text="New module" class="btn btn-primary" />
+            </div>
+            <div>
+                <bs:button name="rebuild" value="rebuild" text="Rebuild initializers" class="confirm" isOutline="true" title="Rebuild initializers" />
+                <bs:button name="import" value="import" text="Import from file system" class="confirm" isOutline="true" title="Import modules from file system" />
+            </div>
         </ui:form>
     </bs:card>
 </div>

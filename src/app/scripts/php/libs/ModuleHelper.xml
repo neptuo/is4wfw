@@ -142,6 +142,16 @@
     </comment>
   </fulltag>
   <fulltag>
+    <name>importExisting</name>
+    <function>importExisting</function>
+    <lookless />
+    <comment>
+      Naimportuje existující moduly ve FS, které ještě nejsou registrované.
+      Název složky vezme jako alias.
+      Vykoná tělo, pokud se vše povede.
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>delete</name>
     <function>delete</function>
     <lookless />
