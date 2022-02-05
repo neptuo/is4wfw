@@ -106,6 +106,13 @@
     </comment>
   </property>
   <property>
+    <name>isSupported</name>
+    <getFunction>getIsSupported</getFunction>
+    <comment>
+      Vrací, zda je module na aktuální verzi instance podporovaný, uvnitř "module:list" (preferovaný) nebo "module:use" tagu.
+    </comment>
+  </property>
+  <property>
     <name>gitHubRepositoryName</name>
     <getFunction>getGitHubRepositoryName</getFunction>
     <comment>

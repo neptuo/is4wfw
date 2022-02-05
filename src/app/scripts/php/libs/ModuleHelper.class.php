@@ -136,6 +136,24 @@
 			}
 		}
 
+		public function getIsSupported() {
+			$version = null;
+
+			if ($this->hasListModel()) {
+				$version = $this->peekListModel()->data()->is4wfw->minVersion;
+			}
+
+			if ($this->current) {
+				$version = $this->current->is4wfw->minVersion;
+			}
+
+			if ($version == null) {
+				return true;
+			}
+
+			return Module::isSupportedVersion($version);
+		}
+
 		public function getGitHubRepositoryName() {
 			$module = null;
 			if ($this->hasListModel()) {
@@ -191,7 +209,7 @@
 									Validator::addUnique($model, "zip");
 								}
 								
-								if (!$this->isSupportedVersion($xml->is4wfw->minVersion)) {
+								if (!Module::isSupportedVersion($xml->is4wfw->minVersion)) {
 									Validator::addInvalidValue($model, "zip");
 								}
 							} else {
@@ -224,19 +242,16 @@
 			}
 		}
 
-		public function isSupportedVersion($minVersion) {
-			$currentVersion = Version::parse(WEB_VERSION);
-			$moduleVersion = Version::parse($minVersion);
-
-			return $currentVersion["major"] == $moduleVersion["major"] && $currentVersion["patch"] >= $moduleVersion["patch"];
-		}
-
 		private function installFromZip(EditModel $model, string $moduleId, string $fileName, bool $isEdit) {
 			$xml = ZipUtils::getFileContent($fileName, "module.xml");
 			if ($xml) {
 				$xml = new SimpleXMLElement($xml);
 				if (!isset($xml->is4wfw->minVersion)) {
 					Validator::addInvalidValue($model, "zip");
+				} else {
+					if (!Module::isSupportedVersion($xml->is4wfw->minVersion)) {
+						Validator::addInvalidValue($model, "zip");
+					}
 				}
 				
 				if ($isEdit) {
@@ -244,6 +259,7 @@
 					if ($module->id != $xml->id) {
 						Validator::addInvalidValue($model, "zip");
 					}
+					
 				}
 			} else {
 				Validator::addInvalidValue($model, "zip");

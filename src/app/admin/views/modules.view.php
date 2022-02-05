@@ -109,7 +109,12 @@
                 </bs:alert>
             </ui:empty>
             <ui:grid class="table table-striped" thead-class="table-dark" items="module:list">
-                <ui:column header="Alias" value="module:alias" />
+                <ui:columnTemplate header="Alias">
+                    <web:condition when="module:isSupported" is="php:false">
+                        <fa5:icon name="times" class="text-danger" title="Module is not supported on current version of instance" />
+                    </web:condition>
+                    <web:out text="module:alias" />
+                </ui:columnTemplate>
                 <ui:column header="Id" value="module:id" />
                 <ui:column header="Name" value="module:name" />
                 <ui:column header="Version" value="module:version" />
