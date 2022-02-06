@@ -239,7 +239,17 @@
                 $alias = $module->alias;
                 $path = MODULES_PATH . $alias . "/" . ModuleGenerator::postInitFileName;
                 if (file_exists($path)) {
+                    $log = $code->var("logObject");
+
+                    $code->addLine("try {");
+                    $code->addIndent();
                     $code->addLine("require(MODULES_PATH . '$alias' . '/' . '" . ModuleGenerator::postInitFileName . "');");
+                    $code->removeIndent();
+                    $code->addLine("} catch (Exception {$code->var("e")}) {");
+                    $code->addIndent();
+                    $code->addLine("global $log;");
+                    $code->addLine("{$log}->exception(" . '$' . "e);");
+                    $code->closeBlock();
                 }
             }
 

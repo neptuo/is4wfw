@@ -78,6 +78,10 @@
             $this->indent -= $size;
         }
 
+        public function var($name) {
+            return '$' . $name;
+        }
+
         private function getArgument($argument) {
             if (is_array($argument) && count($argument) >= 2) {
                 $result = $argument[0];
