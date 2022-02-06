@@ -9,7 +9,7 @@
                     <web:redirectToSelf />
                 </sys:clearTemplateCache>
             </web:condition>
-            <button name="clearTemplateCache">
+            <button name="clearTemplateCache" class="confirm">
                 Clear compiled templates cache
             </button>
         </edit:form>
@@ -24,7 +24,7 @@
                     <web:redirectToSelf />
                 </module:rebuildInitializers>
             </web:condition>
-            <button name="rebuildModuleInitializers">
+            <button name="rebuildModuleInitializers" class="confirm">
                 Rebuild module initializers
             </button>
         </edit:form>
