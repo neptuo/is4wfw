@@ -57,10 +57,10 @@
       
         require_once(APP_SCRIPTS_PHP_PATH . "includes/postinitview.inc.php");
 
-        $phpObject->register("controls", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/controls"]);
-        $phpObject->register("layouts", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/layouts"]);
-        $phpObject->register("views", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views"]);
-        $phpObject->register("floorball", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views/floorball"]);
+        $phpObject->autoRegistration("controls", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/controls"]);
+        $phpObject->autoRegistration("layouts", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/layouts"]);
+        $phpObject->autoRegistration("views", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views"]);
+        $phpObject->autoRegistration("floorball", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views/floorball"]);
         $phpObject->autolib("var")->setValue("virtualUrl", substr($virtualUrl, 2));
       
         $indexContent = file_get_contents(APP_ADMIN_PATH . "index.view.php");

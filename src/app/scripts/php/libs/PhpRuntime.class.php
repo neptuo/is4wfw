@@ -70,6 +70,7 @@
 
         private $libraries;
         private $libraryLoader;
+        private $autoRegister = [];
                                                             
         /**
          *
@@ -210,6 +211,12 @@
         }
         
         public function autoRegisterPrefix($prefix) {
+            if (array_key_exists($prefix, $this->autoRegister)) {
+                ["class" => $classPath, "params" => $params] = $this->autoRegister[$prefix];
+                $this->register($prefix, $classPath, $params);
+                return true;
+            }
+
             $xml = $this->getXml(APP_SCRIPTS_PHP_PATH . 'autoregister.xml');
             foreach ($xml->reg as $reg) {
                 $attrs = $reg->attributes();
@@ -220,6 +227,23 @@
             }
             
             return false;
+        }
+
+        public function autoRegistrationTag($attributes) {
+            foreach ($this->groupAttributesByPrefix($attributes) as $prefix => $values) {
+                $classPath = $values[""];
+                if (empty($classPath)) {
+                    throw new Exception("Missing class to instantiate for prefix '$prefix'.");
+                }
+
+                unset($values[""]);
+
+                $this->autoRegistration($prefix, $classPath, $values);
+            }
+        }
+
+        public function autoRegistration(string $prefix, string $classPath, array $params = []) {
+            $this->autoRegister[$prefix] = ["class" => $classPath, "params" => $params];
         }
         
         /**
