@@ -240,7 +240,7 @@
                         if ($object[1] == "register") {
                             $xmlPath = $this->libraryLoader->getXmlPath($attributes->Attributes["classPath"]["value"]);
                             $this->libraries->add($attributes->Attributes["tagPrefix"]["value"], $xmlPath);
-                        } else if ($object[1] == "create") {
+                        } else if ($object[1] == "create" || $object[1] == "lazy") {
                             foreach ($attributes->Attributes["params"]["value"] as $prefix => $classPath) {
                                 if (strpos($prefix, "-") === false) {
                                     $xmlPath = $this->libraryLoader->getXmlPath($classPath["value"]);
