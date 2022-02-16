@@ -513,7 +513,7 @@
         }
 
         public function createParser() {
-            return new TemplateParser($this->php()->getCurrentRegistrations());
+            return new TemplateParser($this->php()->getCurrentRegistrations(), $this->php()->getDefaultGlobalAttributeNames());
         }
 
         public function deleteParsedTemplate(array $keys, bool $isRecursive = false) {

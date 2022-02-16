@@ -14,6 +14,7 @@
         protected $libraries;
         protected $libraryLoader;
         protected $defaultRegistrations;
+        protected $defaultAttributes;
         
         // Current custom tag attributes.
         protected $Attributes = array();
@@ -31,9 +32,10 @@
         // Regular expression for parsing full tag.     
         protected $FULL_TAG_RE = "#<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)((.*?)(?=\/>)\/>|([^>]*)>((?:[^<]|<(?!/?\\1[^>]*>)|(?R))+)</\\1>)#";
 
-        public function __construct($defaultRegistrations) {
+        public function __construct($defaultRegistrations, $defaultAttributes) {
             $this->TemplateCache = new TemplateCache();
             $this->defaultRegistrations = $defaultRegistrations;
+            $this->defaultAttributes = $defaultAttributes;
         }
 
         public function getCache() {
@@ -249,6 +251,8 @@
                             }
                         } else if ($object[1] == "unregister") {
                             $this->libraries->remove($attributes->Attributes["tagPrefix"]["value"]);
+                        } else if ($object[1] == "attribute") {
+                            $this->defaultAttributes[$attributes->Attributes["prefix"]["value"]][$attributes->Attributes["tag"]["value"]][] = $attributes->Attributes["name"]["value"];
                         }
                     }
                 }
@@ -767,7 +771,7 @@
             $xml = $this->libraries->get($decoratorPrefix)->getXml();
             foreach ($xml->decorator as $decorator) {
                 if ($decorator->function == $decoratorFunctionName) {
-                    return $this->sortAttributesForXmlElement($decorator, $attributes, "Decorator on '$tagPrefix:$tagName'", $uniqueIdentifier);
+                    return $this->sortAttributesForXmlElement($decorator, $attributes, "Decorator on '$tagPrefix:$tagName'", $uniqueIdentifier, null);
                 }
             }
         }
@@ -776,14 +780,37 @@
             $xml = $this->libraries->get($tagPrefix)->getXml();
             foreach ($xml->{$tagListName} as $tag) {
                 if ($tag->name == $tagName) {
-                    return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName, $uniqueIdentifier);
+                    return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName, $uniqueIdentifier, function($att) use ($tagPrefix, $tagName) { return $this->getDefaultGlobalAttribute($tagPrefix, $tagName, $att); });
+                }
+            }
+
+            return false;
+        }
+
+        private function getDefaultGlobalAttribute(string $prefix, string $tag, SimpleXMLElement $attribute) {
+            if (array_key_exists($prefix, $this->defaultAttributes)) {
+                $prefixAttributes = $this->defaultAttributes[$prefix];
+                if (array_key_exists($tag, $prefixAttributes) || ($isWildcard = array_key_exists("*", $prefixAttributes))) {
+                    if ($isWildcard) {
+                        // PhpRuntime counts on that tag will be '*', see `PhpRuntime->getDefaultAttributeValue`.
+                        $tag = "*";
+                    }
+
+                    $tagAttributes = $prefixAttributes[$tag];
+                    $attributeName = (string)$attribute->name;
+                    if (in_array($attributeName, $tagAttributes)) {
+                        return [
+                            'value' => "{$this->Code->var("phpObject")}->getDefaultAttributeValue('$prefix', '$tag', '$attributeName')", 
+                            'type' => "eval"
+                        ];
+                    }
                 }
             }
 
             return false;
         }
         
-        private function sortAttributesForXmlElement(SimpleXMLElement $tag, TemplateAttributeCollection $atts, string $nameForErrorReport, string $uniqueIdentifier) {
+        private function sortAttributesForXmlElement(SimpleXMLElement $tag, TemplateAttributeCollection $atts, string $nameForErrorReport, string $uniqueIdentifier, ?callable $defaultAttributeHandler) {
             $processedAtts = array();
             $return = [];
 
@@ -796,6 +823,8 @@
                 $att = $tag->attribute[$i];
                 $attName = (string)$att->name;
                 $hasDefault = isset($att->default);
+
+                // Prefixed attributes.
                 if (isset($att->prefix)) {
                     $attPrefix = "$attName-";
                     $attributeValue = array();
@@ -813,10 +842,11 @@
                         }
                     }
 
-                    $return[$attName] = array('value' => $attributeValue, 'type' => "eval");
+                    $return[$attName] = ['value' => $attributeValue, 'type' => "eval"];
                     $isProcessed = true;
                 }
                 
+                // Used attributes source template.
                 if (array_key_exists($attName, $atts->Attributes)) {
                     $attribute = $atts->Attributes[$attName];
                     $processValue = $this->processParsedAttributeValue($attribute, $att);
@@ -846,10 +876,21 @@
                     }
                 }
 
+                // Global default attributes.
+                if (!$isProcessed && $defaultAttributeHandler) {
+                    $processValue = $defaultAttributeHandler($att);
+                    if ($processValue != null) {
+                        $return[$attName] = $processValue;
+                        $isProcessed = true;
+                    }
+                }
+                
+                // Attribute is used in source template.
                 if ($isProcessed) {
                     continue;
                 }
                 
+                // Default values.
                 if ($hasDefault) {
                     if ($att->type == 'string') {
                         $attributeValue = "'" . eval('return "'. $att->default.'";') . "'";
@@ -872,6 +913,7 @@
                 }
             }
     
+            // Any attributes
             if (isset($tag->anyAttribute)) {
                 $params = array();
                 foreach ($atts->Attributes as $usedName => $usedValue) {

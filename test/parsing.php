@@ -74,7 +74,7 @@ var:x <web:out text="var:x" />
     measure(function() use ($keys) {
         global $content;
         global $phpObject;
-        $parser = new TemplateParser($phpObject->getCurrentRegistrations());
+        $parser = new TemplateParser($phpObject->getCurrentRegistrations(), []);
         parse($parser, $keys, $content, 1, true);
     });
 

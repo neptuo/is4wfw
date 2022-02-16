@@ -82,6 +82,33 @@
     </comment>
     <obsolete>Eh...</obsolete>
   </tag>
+  <tag>
+    <name>attribute</name>
+    <function>setDefaultGlobalAttribute</function>
+    <attribute>
+      <name>prefix</name>
+      <required />
+      <comment>Prefix na který se má výchozí atribut aplikovat.</comment>
+    </attribute>
+    <attribute>
+      <name>tag</name>
+      <required />
+      <comment>Tag na který se má výchozí atribut aplikovat. Může být '*', pak se aplikuje na všechny tagy.</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název atributu.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>Hodnota atributu.</comment>
+    </attribute>
+    <comment>
+      Nastaví výchozí hodnotu atributu "name" name "prefix":"tag", pokud není přepsán na samotném tagu.
+    </comment>
+  </tag>
   <fulltag>
     <name>using</name>
     <function>usingObject</function>

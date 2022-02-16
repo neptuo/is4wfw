@@ -71,6 +71,9 @@
         private $libraries;
         private $libraryLoader;
         private $autoRegister = [];
+
+        private $defaultGlobalAttributes = [];
+        private $defaultGlobalAttributeNames = [];
                                                             
         /**
          *
@@ -341,6 +344,20 @@
 
         public function getFalse() {
             return false;
+        }
+
+        public function getDefaultGlobalAttributeNames() {
+            return $this->defaultGlobalAttributes;
+        }
+
+        public function setDefaultGlobalAttribute($prefix, $tag, $name, $value) {
+            $this->defaultGlobalAttributes[$prefix][$tag][$name] = $value;
+            $this->defaultGlobalAttributes[$prefix][$tag][] = $name;
+        }
+
+        public function getDefaultAttributeValue($prefix, $tag, $name) {
+            // Tag can also be a '*'. Caused by TemplateParser.
+            return $this->defaultGlobalAttributes[$prefix][$tag][$name];
         }
     }
 
