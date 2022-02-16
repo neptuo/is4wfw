@@ -221,7 +221,16 @@
             foreach ($xml->reg as $reg) {
                 $attrs = $reg->attributes();
                 if ($attrs['prefix'] == $prefix) {
-                    $this->register($prefix, (string)$attrs['class']);
+                    $params = [];
+
+                    foreach ($attrs as $name => $value) {
+                        if (StringUtils::startsWith($name, "param-")) {
+                            $key = substr($name, 6);
+                            $params[$key] = (string)$value;
+                        }
+                    }
+
+                    $this->register($prefix, (string)$attrs['class'], $params);
                     return true;
                 }
             }
