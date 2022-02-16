@@ -50,11 +50,11 @@
     </comment>
   </tag>
   <tag>
-    <name>autoRegistration</name>
-    <function>autoRegistrationTag</function>
+    <name>lazy</name>
+    <function>lazyTag</function>
     <anyAttribute />
     <comment>
-      Doplňuje auto registrační pravidle knihoven k prefixům.
+      Doplňuje auto registrační pravidla knihoven k prefixům.
       Každý prefixovaný atribut registruje instanci knihovny.
       Všechny další atributy v daném prefixu jsou pak předány knihovně jako parametry konstruktoru.
     </comment>

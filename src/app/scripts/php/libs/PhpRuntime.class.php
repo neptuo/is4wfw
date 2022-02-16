@@ -229,7 +229,7 @@
             return false;
         }
 
-        public function autoRegistrationTag($attributes) {
+        public function lazyTag($attributes) {
             foreach ($this->groupAttributesByPrefix($attributes) as $prefix => $values) {
                 $classPath = $values[""];
                 if (empty($classPath)) {
@@ -238,11 +238,11 @@
 
                 unset($values[""]);
 
-                $this->autoRegistration($prefix, $classPath, $values);
+                $this->lazy($prefix, $classPath, $values);
             }
         }
 
-        public function autoRegistration(string $prefix, string $classPath, array $params = []) {
+        public function lazy(string $prefix, string $classPath, array $params = []) {
             $this->autoRegister[$prefix] = ["class" => $classPath, "params" => $params];
         }
         
