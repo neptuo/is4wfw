@@ -244,46 +244,7 @@ function afterMinimizedWindow(id) {
 }
 
 function sendNewWindoProperties(prop) {
-	if((prop.userId != null || prop.userLogin != null) && prop.frameId != null) {
-		xmlHttp = new Rxmlhttp();
-		xmlHttp.setAsync(true);
-		xmlHttp.setMethod('get');
-		xmlHttp.onSuccess(function() {
-			
-		});
-		xmlHttp.onError(function() {
-			log("ERR: Some error occurs during saving window width, height!");
-		});
-		
-		query = "";
-		query = "?request=set";
-		
-		if(prop.userId != null) {
-			query += "&userId=" + prop.userId;
-		} else {
-			query += "&user-login=" + prop.userLogin;
-		}
-		
-		query += "&frame-id=" + prop.frameId;
-		
-		if(prop.width != null) {
-			query += "&frame-width=" + prop.width;
-		}
-		if(prop.height != null) {
-			query += "&frame-height=" + prop.height;
-		}
-		if(prop.left != null) {
-			query += "&frame-left=" + prop.left;
-		}
-		if(prop.top != null) {
-			query += "&frame-top=" + prop.top;
-		}
-		if(prop.maximized != null) {
-			query += "&frame-maximized=" + prop.maximized;
-		}
-		
-		xmlHttp.loadPage("/window-property.php" + query);
-	}
+	// Dropped support in #437.
 }
 
 function initUserLogin(event) {

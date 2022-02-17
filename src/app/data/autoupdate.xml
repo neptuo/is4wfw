@@ -90,8 +90,9 @@
     <script build="365">ALTER TABLE `web_project` ADD `content` TEXT NULL AFTER `entrypoint`;</script>
     <script build="366"><![CDATA[UPDATE `web_project` SET `content` = '<web:content />';]]></script>
     <script build="367">ALTER TABLE `web_project` ADD `pageless` BIT NOT NULL DEFAULT b'0' AFTER `content`;</script>
-    <script build="368">DROP TABLE  `form_order1`;</script>
-    <script build="369">DROP TABLE  `form_order2`;</script>
-    <script build="370">DROP TABLE  `w_projection`;</script>
-    <script build="371">DROP TABLE  `w_reference`;</script>
+    <script build="368">DROP TABLE `form_order1`;</script>
+    <script build="369">DROP TABLE `form_order2`;</script>
+    <script build="370">DROP TABLE `w_projection`;</script>
+    <script build="371">DROP TABLE `w_reference`;</script>
+    <script build="372">DROP TABLE `window_properties`;</script>
 </autoupdate>
