@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
+  <constructor>
+    <attribute>
+      <name>group</name>
+      <required />
+      <comment>Název skupiny, která se má vybrat.</comment>
+    </attribute>
+  </constructor>
   <comment>
     Knihovna pro vkládání šablon, které spadají do jedné skupiny, do stránek.
     Pro výběr skupiny slouží parametr při registraci "group".

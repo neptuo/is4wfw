@@ -109,7 +109,7 @@
             return false;
         }
 
-        public function getFuncToFullTag(string $tagName) : string {
+        public function getFuncToFullTag(string $tagName) : ?string {
             foreach ($this->xml->fulltag as $tag) {
                 if ($tag->name == $tagName) {
                     return (string)$tag->function;
@@ -121,6 +121,7 @@
             }
 
             $this->triggerFail("Unnable to find tag [".$tagName."] in lib [".$this->prefix."]");
+            return null;
         }
 
         // ------- PROPERTY ---------------------------------------------------

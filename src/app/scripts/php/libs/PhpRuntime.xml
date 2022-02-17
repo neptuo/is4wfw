@@ -124,7 +124,7 @@
       <name>param</name>
       <prefix default="merge" />
       <comment>
-        Parametru předané konstruktoru vytvářené třídy.
+        Parametry předané konstruktoru vytvářené třídy.
       </comment>
     </attribute>
     <comment>

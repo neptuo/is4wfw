@@ -181,8 +181,11 @@
                 $uniqueIdentifier = $this->generateRandomString();
                 if ($isFullTag) {
                     if ($object[0] == "php" && $object[1] == "using") {
-                        $xmlPath = $this->libraryLoader->getXmlPath($attributes->Attributes["class"]["value"]);
-                        $this->libraries->add($attributes->Attributes["prefix"]["value"], $xmlPath);
+                        $registrationClassPath = $attributes->Attributes["class"]["value"];
+                        $registrationPrefix = $attributes->Attributes["prefix"]["value"];
+                        $registrationXmlPath = $this->libraryLoader->getXmlPath($registrationClassPath);
+                        $registrationLibrary = $this->libraries->add($registrationPrefix, $registrationXmlPath);
+                        $this->ensureConstructorParameters($registrationLibrary, $attributes->Attributes, $registrationPrefix, $registrationClassPath, "param");
                     }
 
                     $template = $this->parseInternal($content, 'parse', null, false);
@@ -240,13 +243,17 @@
                     
                     if ($object[0] == "php") {
                         if ($object[1] == "register") {
-                            $xmlPath = $this->libraryLoader->getXmlPath($attributes->Attributes["classPath"]["value"]);
-                            $this->libraries->add($attributes->Attributes["tagPrefix"]["value"], $xmlPath);
+                            $registrationClassPath = $attributes->Attributes["classPath"]["value"];
+                            $registrationPrefix = $attributes->Attributes["tagPrefix"]["value"];
+                            $registrationXmlPath = $this->libraryLoader->getXmlPath($registrationClassPath);
+                            $registrationLibrary = $this->libraries->add($registrationPrefix, $registrationXmlPath);
+                            $this->ensureConstructorParameters($registrationLibrary, $attributes->Attributes["param"]["value"], $registrationPrefix, $registrationClassPath);
                         } else if ($object[1] == "create" || $object[1] == "lazy") {
-                            foreach ($attributes->Attributes["params"]["value"] as $prefix => $classPath) {
-                                if (strpos($prefix, "-") === false) {
-                                    $xmlPath = $this->libraryLoader->getXmlPath($classPath["value"]);
-                                    $this->libraries->add($prefix, $xmlPath);
+                            foreach ($attributes->Attributes["params"]["value"] as $registrationPrefix => $registrationClassPath) {
+                                if (strpos($registrationPrefix, "-") === false) {
+                                    $registrationXmlPath = $this->libraryLoader->getXmlPath($registrationClassPath["value"]);
+                                    $registrationLibrary = $this->libraries->add($registrationPrefix, $registrationXmlPath);
+                                    $this->ensureConstructorParameters($registrationLibrary, $attributes->Attributes["params"]["value"], $registrationPrefix, $registrationClassPath["value"], $registrationPrefix);
                                 }
                             }
                         } else if ($object[1] == "unregister") {
@@ -394,6 +401,26 @@
          */
         protected function parseatt($att) {
             $this->Attributes[] = $att[0];
+        }
+
+        private function ensureConstructorParameters(LibraryDefinition $library, $attributes, $prefix, $classPath, $extraAttributePrefix = null) {
+            $xml = $library->getXml();
+            if (!isset($xml->constructor)) {
+                return;
+            }
+
+            foreach ($xml->constructor->attribute as $attribute) {
+                if (isset($attribute->required)) {
+                    $attributeName = (string)$attribute->name;
+                    if ($extraAttributePrefix) {
+                        $extraAttributePrefix .= "-";
+                    }
+
+                    if (!array_key_exists($extraAttributePrefix . $attributeName, $attributes)) {
+                        $this->triggerFail("Missing required constructor parameter '$attributeName' on prefix registration '$prefix' for '$classPath'.");
+                    }
+                }
+            }
         }
 
         protected function sortAnyTagAttributes(string $tagName, TemplateAttributeCollection $attributes, string $content = null) {

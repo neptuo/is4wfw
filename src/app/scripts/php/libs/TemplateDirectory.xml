@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
+  <constructor>
+    <attribute>
+      <name>path</name>
+      <required />
+      <comment>Cesta ke složce, odkud se mají brát soubory.</comment>
+    </attribute>
+  </constructor>
   <comment>
     Knihovna pro vkládání šablon, které jsou definované jako soubory ve složce.
     Při registraci je nutné zadat parametr "path" (param-path).
