@@ -92,4 +92,6 @@
     <script build="367">ALTER TABLE `web_project` ADD `pageless` BIT NOT NULL DEFAULT b'0' AFTER `content`;</script>
     <script build="368">DROP TABLE  `form_order1`;</script>
     <script build="369">DROP TABLE  `form_order2`;</script>
+    <script build="370">DROP TABLE  `w_projection`;</script>
+    <script build="371">DROP TABLE  `w_reference`;</script>
 </autoupdate>
