@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<services>
-    <service name="login" file="LoginService.class.php" class="LoginService" />
-</services>

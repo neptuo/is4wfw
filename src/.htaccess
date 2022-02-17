@@ -5,7 +5,6 @@ RewriteEngine on
 
 # Application rules
 RewriteRule ^setup.php$ app/setup.php [END]
-RewriteRule ^service/.*$ app/service.php [END]
 RewriteRule ^([a-zA-Z0-9/_-]*)$ app/index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING} [END]
 RewriteRule ^(.*)\.view$ app/index.php?VIEW_PAGE_PATH=$1&%{QUERY_STRING} [END]
 RewriteRule ^file\.php$ app/index.php?%{QUERY_STRING} [END]
