@@ -1428,16 +1428,24 @@
                 return $this->addSpecialParams($url);
             }
             
+            $defaultQueryParameters = [];
             $currentValues = array();
             $props = parent::dao('PageProperty')->getPage($pageId);
             if (count($props) > 0) {
                 $parser = $this->createParser();
                 foreach ($props as $prop) {
-                    $currentValue = $this->getProperty($prop['name']);
-                    if (!$currentValue || $forceDefProp) {
-                        $prop['value'] = $parser->parsePropertyExactly($prop['value']);
-                        $this->setProperty($prop['name'], $prop['value']);
-                        $currentValues[$prop['name']] = $currentValue;
+                    if (strpos($prop['name'], ":") === false) {
+                        if ($forceDefProp) {
+                            $prop['value'] = $this->getProperty($prop['value']);
+                            $defaultQueryParameters[$prop['name']] = $prop['value'];
+                        }
+                    } else {
+                        $currentValue = $this->getProperty($prop['name']);
+                        if (!$currentValue || $forceDefProp) {
+                            $prop['value'] = $parser->parsePropertyExactly($prop['value']);
+                            $this->setProperty($prop['name'], $prop['value']);
+                            $currentValues[$prop['name']] = $currentValue;
+                        }
                     }
                 }
             }
@@ -1448,13 +1456,18 @@
                     if (strlen($return[0]['href']) != 0 && !preg_match($this->TAG_RE, $return[0]['href'])) {
                         $this->PropertyUse = 'get';
                         $return[0]['href'] = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $return[0]['href']);
-                        if(strpos($return[0]['href'], "http") === 0) {
+                        if (strpos($return[0]['href'], "http") === 0) {
                             //echo $return[0]['href'];
                             $url = $return[0]['href'] . $this->CurrentPath;
                             $this->CurrentPath = "";
+                            foreach ($defaultQueryParameters as $key => $value) {
+                                $url = UrlUtils::addParameter($url, $key, $value);
+                            }
+
                             if ($copyParameters) {
                                 $url = UrlUtils::addCurrentQueryString($url);
                             }
+
                             return $this->addSpecialParams($url);
                         }
                         
@@ -1489,18 +1502,29 @@
             if ($pageProjectId == $this->ProjectId) {
                 // Dosestav url z dat v urlResolveru
                 $url = $this->composeUrlProjectPart($tmpPath, $this->UrlResolver->getWebProject(), $absolutePath);
+                foreach ($defaultQueryParameters as $key => $value) {
+                    $url = UrlUtils::addParameter($url, $key, $value);
+                }
+                
                 if ($copyParameters) {
                     $url = UrlUtils::addCurrentQueryString($url);
                 }
+
                 return $this->addSpecialParams($url);
             } else {
                 // Najdi project url a dosestav url
                 $project = array('alias' => parent::db()->fetchSingle('select `domain_url`, `root_url`, `virtual_url`, `http`, `https` from `web_url` where `project_id` = ' . $pageProjectId . ' and `enabled` = 1 order by `web_url`.`default` desc, `web_url`.`id`;'));
                 if ($project['alias'] != array()) {
                     $url = $this->composeUrlProjectPart($tmpPath, $project, true);
+
+                    foreach ($defaultQueryParameters as $key => $value) {
+                        $url = UrlUtils::addParameter($url, $key, $value);
+                    }
+
                     if ($copyParameters) {
                         $url = UrlUtils::addCurrentQueryString($url);
                     }
+
                     return $this->addSpecialParams($url);
                 } else {
                     $message = parent::getError("Project doesn't have an url adress!");
