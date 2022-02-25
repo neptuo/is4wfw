@@ -1,7 +1,6 @@
 <?php
 
     require_once("BaseTagLib.class.php");
-    require_once("ErrorHandler.class.php");
     require_once("Log.class.php");
     require_once("Database.class.php");
     require_once("Login.class.php");
@@ -31,7 +30,6 @@
         private $defaultRegistrations = [
             "php" => "php.libs.PhpRuntime", 
             "web" => "php.libs.Web", 
-            "error" => "php.libs.ErrorHandler", 
             "log" => "php.libs.Log", 
             "db" => "php.libs.Database", 
             "login" => "php.libs.Login", 
@@ -61,7 +59,6 @@
         private $instanceCounter = [
             "php.libs.PhpRuntime" => 1, 
             "php.libs.Web" => 1, 
-            "php.libs.ErrorHandler" => 1, 
             "php.libs.Log" => 1, 
             "php.libs.Database" => 1,
             "php.libs.Login" => 1, 
@@ -81,7 +78,6 @@
          *
          */                                                
         public function __construct() {
-            $GLOBALS['errorObject'] = new ErrorHandler();
             $GLOBALS['logObject'] = new Log();
             $GLOBALS['dbObject'] = new Database();
             $GLOBALS['loginObject'] = new Login();
@@ -92,8 +88,6 @@
             foreach ($this->defaultRegistrations as $prefix => $classPath) {
                 $this->libraries->add($prefix, $this->libraryLoader->getXmlPath($classPath));
             }
-            
-            set_error_handler("ErrorHandler::errorHandler");
         }
     
         private $XmlStorage = array();

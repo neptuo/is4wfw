@@ -13,7 +13,6 @@
 	<reg prefix="dt" class="php.libs.DateTime" />
 	<reg prefix="edit" class="php.libs.Editor" />
 	<reg prefix="email" class="php.libs.Email" />
-	<reg prefix="error" class="php.libs.ErrorHandler" />
 	<reg prefix="f" class="php.libs.File" />
 	<reg prefix="fa" class="php.libs.FileAdmin" />
 	<reg prefix="fileUrl" class="php.libs.FileUrl" />
