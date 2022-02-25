@@ -10,7 +10,7 @@
     <function>register</function>
     <attribute>
       <name>tagPrefix</name>
-      <type>string</type>
+      <type source="constant">string</type>
       <required />
       <comment>
         Prefix pod kterým bude objekt zaregistrován. 
@@ -19,7 +19,7 @@
     </attribute>
     <attribute>
       <name>classPath</name>
-      <type>string</type>
+      <type source="constant">string</type>
       <required />
       <comment>
         Jméno třídy. 
@@ -64,6 +64,7 @@
     <function>unregister</function>
     <attribute>
       <name>tagPrefix</name>
+      <type source="constant">string</type>
       <required />
     </attribute>
     <comment>
@@ -92,11 +93,13 @@
     </attribute>
     <attribute>
       <name>tag</name>
+      <type source="constant">string</type>
       <required />
       <comment>Tag na který se má výchozí atribut aplikovat. Může být '*', pak se aplikuje na všechny tagy.</comment>
     </attribute>
     <attribute>
       <name>name</name>
+      <type source="constant">string</type>
       <required />
       <comment>Název atributu.</comment>
     </attribute>
@@ -114,10 +117,12 @@
     <function>usingObject</function>
     <attribute>
       <name>prefix</name>
+      <type source="constant">string</type>
       <required />
     </attribute>
     <attribute>
       <name>class</name>
+      <type source="constant">string</type>
       <required />
     </attribute>
     <attribute>
