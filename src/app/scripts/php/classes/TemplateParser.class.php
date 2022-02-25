@@ -967,12 +967,18 @@
             }
         }
 
-        private function processParsedAttributeValue($attribute, $definition) {
+        private function processParsedAttributeValue(array $attribute, /* Attribute */ SimpleXMLElement $definition) {
             $attributeValue = $this->getConvertValue($attribute['value'], $definition);
             if ($attributeValue != null) {
                 $attributeValueType = 'raw';
                 if (((isset($definition->default) || isset($definition->type)) && $attributeValue['type'] == 'eval') || $attribute['type'] == 'eval') {
                     $attributeValueType = 'eval';
+                }
+
+                if (array_key_exists("content", $attributeValue) && $attributeValue["content"] == "template") {
+                    if (isset($definition->type) && $definition->type["source"] == "constant") {
+                        return null;
+                    }
                 }
 
                 $attribute['value'] = $attributeValue['value'];
@@ -1028,7 +1034,7 @@
             return array('value' => $val, 'type' => 'raw');
         }
 
-        public function triggerFail($message, $errorType = E_USER_WARNING) {
+        public function triggerFail($message, $errorType = E_USER_ERROR) {
             trigger_error($message, $errorType);
             return false;
         }
