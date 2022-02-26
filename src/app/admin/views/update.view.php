@@ -1,5 +1,10 @@
 <web:frame title="Available Updates">
-    <sys:versionList />
+    <web:url pageId="route:update">
+        <var:declare name="selfResolved" value="web:url" />
+    </web:url>
+    <web:url pageId="~/migrate.php" param-return="var:selfResolved">
+        <sys:versionList afterUpdateUrl="web:url" />
+    </web:url>
 </web:frame>
 <web:frame title="Tools" open="true">
     <div class="gray-box-float">

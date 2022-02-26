@@ -1399,6 +1399,18 @@
             parent::close();
         }
 
+        private function resolveUrl($url, $absolutePath) {
+            if ($this->UrlResolver == null) {
+                $url = ViewHelper::resolveUrl($url);
+            } else {
+                $project = $this->UrlResolver->getWebProject();
+                $pageId = str_replace("~/", "/", $url);
+                $url = $this->composeUrlProjectPart($pageId, $project, $absolutePath);
+            }
+
+            return $url;
+        }
+
         /**
          *
          *  Compose url recursivly from passed pageId to root page[0].
@@ -1415,16 +1427,11 @@
             $lastPageId = 0;
             $pageProjectId = 0;
             if (!is_numeric($pageId)) {
-                if ($this->UrlResolver == null) {
-                    $url = ViewHelper::resolveUrl($pageId);
-                } else {
-                    $project = $this->UrlResolver->getWebProject();
-                    $pageId = str_replace("~/", "/", $pageId);
-                    $url = $this->composeUrlProjectPart($pageId, $project, $absolutePath);
-                    if ($copyParameters) {
-                        $url = UrlUtils::addCurrentQueryString($url);
-                    }
+                $url = $this->resolveUrl($pageId, $absolutePath);
+                if ($copyParameters) {
+                    $url = UrlUtils::addCurrentQueryString($url);
                 }
+
                 return $this->addSpecialParams($url);
             }
             
@@ -1957,6 +1964,8 @@
 
             if (is_numeric($pageId)) {
                 $url = $this->composeUrl($pageId, $languageId, $isAbsolute);
+            } else if (StringUtils::startsWith($pageId, "~/")) {
+                $url = $this->resolveUrl($pageId, $isAbsolute);
             } else {
                 $url = $pageId;
             }

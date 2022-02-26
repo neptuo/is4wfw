@@ -124,8 +124,12 @@
   <tag>
     <name>versionList</name>
     <function>versionList</function>
+    <attribute>
+      <name>afterUpdateUrl</name>
+      <comment>URL, kam se má přesměrovat po aktualizaci.</comment>
+    </attribute>
     <comment>
-      Zobrazí verzí frameworku, na které je možné aktualizovat.
+      Zobrazí verze frameworku, na které je možné aktualizovat.
     </comment>
   </tag>
   <tag>

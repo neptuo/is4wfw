@@ -350,13 +350,17 @@
         }
 
         public function redirectUrlWithQueryString() {
-            $actionUrl = $_SERVER['REQUEST_URI'];
+            $actionUrl = $this->getSelfUrl();
             $actionUrl = UrlUtils::addCurrentQueryString($actionUrl);
             return $actionUrl;
         }
 
         public function redirectToSelf() {
-            $this->redirectToUrl($_SERVER['REQUEST_URI']);
+            $this->redirectToUrl($this->getSelfUrl());
+        }
+
+        public function getSelfUrl() {
+            return $_SERVER['REQUEST_URI'];
         }
 
         public function redirectToUrl($url) {

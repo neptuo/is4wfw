@@ -709,7 +709,15 @@
 			return $release;
 		}
 
-		public function versionList() {
+		private function redirectAfterUpdate($afterUpdateUrl) {
+			if ($afterUpdateUrl) {
+				$this->redirectToUrl($afterUpdateUrl);
+			} else {
+				$this->redirectToSelf();
+			}
+		}
+
+		public function versionList($afterUpdateUrl = "") {
 			$current = Version::parse(WEB_VERSION);
 
 			$return = '';
@@ -731,7 +739,7 @@
 				if ($_POST['update'] == 'update' && $_POST['update-provider'] == "gh") {
 					$updated = $this->updateToVersion($_POST['update-version'], $data);
 					if ($updated['result']) {
-						$this->redirectToSelf();
+						$this->redirectAfterUpdate($afterUpdateUrl);
 					} else {
 						$return .= $this->getError('Error occured during update: ' . $updated['log']);
 					}
@@ -782,7 +790,7 @@
 					if ($avUpdate) {
 						$updated = $this->updateToVersion($_POST['update-version'], $data);
 						if ($updated['result']) {
-							$this->redirectToSelf();
+							$this->redirectAfterUpdate($afterUpdateUrl);
 						} else {
 							$return .= $this->getError('Error occured during update: ' . $updated['log']);
 						}
