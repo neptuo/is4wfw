@@ -46,6 +46,11 @@
                 $result[$prefix] = $this->libraries->get($prefix)->getXmlPath();
             }
 
+            foreach ($this->autoRegister as $prefix => $definition) {
+                $xmlPath = $this->libraryLoader->getXmlPath($definition["class"]);
+                $result[$prefix] = $xmlPath;
+            }
+
             return $result;
         }
 
