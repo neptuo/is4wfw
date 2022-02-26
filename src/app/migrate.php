@@ -8,6 +8,8 @@
     require_once("../user/instance.inc.php");
     require_once("scripts/php/includes/settings.inc.php");
 
+    // Migrate DB
+
     require_once(APP_SCRIPTS_PHP_PATH . "libs/Database.class.php");
 
     $db = new Database(false);
@@ -20,6 +22,12 @@
     require_once(APP_SCRIPTS_PHP_PATH . "includes/autoupdate.inc.php");
     
     $db->getDataAccess()->disconnect();
+
+    // Regenerate module scripts
+
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Module.class.php");
+
+    ModuleGenerator::all();
 
     if (array_key_exists("return", $_GET)) {
         echo '<a href="' . $_GET["return"] . '">Return back</a>';
