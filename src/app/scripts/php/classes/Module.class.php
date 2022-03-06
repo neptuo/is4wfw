@@ -109,6 +109,7 @@
         public $is4wfw;
 
         public function __construct($id, $alias, $name, $version = null, $gitHub = null, $is4wfw = null) {
+            // This constructor is also used in AdminModule few lines bellow.
             $this->id = $id;
             $this->alias = $alias;
             $this->name = $name;
@@ -122,11 +123,11 @@
         }
 
         public function getLibsPath() {
-            return MODULES_PATH . $this->alias . "/libs/";
+            return $this->getRootPath() . "libs/";
         }
 
         public function getViewsPath() {
-            return MODULES_PATH . $this->alias . "/views/";
+            return $this->getRootPath() . "views/";
         }
 
         public function getAssetsPath() {
@@ -134,7 +135,24 @@
         }
 
         public function getBundlesPath() {
-            return MODULES_PATH . $this->alias . "/bundles/";
+            return $this->getRootPath() . "bundles/";
+        }
+    }
+
+    class AdminModule extends Module {
+        public function __construct() {
+            parent::__construct(
+                "71b53781-b881-42b3-b39d-14aa18d64d43", 
+                "admin", 
+                "is4wfw administration", 
+                CMS_VERSION, 
+                null, 
+                new ModuleIs4wfw(WEB_VERSION)
+            );
+        }
+
+        public function getRootPath() {
+            return APP_ADMIN_PATH;
         }
     }
 
@@ -197,6 +215,8 @@
             $code->addLine("return [");
             $code->addIndent();
             
+            $code->addLine("new AdminModule(),", true);
+
             $xml = ModuleXml::read();
             foreach ($xml->module as $module) {
                 $args = [
