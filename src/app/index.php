@@ -33,40 +33,6 @@
         require_once(APP_SCRIPTS_PHP_PATH . "includes/postinit.inc.php");
     
         $webObject->processRequestNG();
-    } else if (array_key_exists("VIEW_PAGE_PATH", $_GET)) {
-        // Administration.
-        
-        if (IS_ADMIN_STOPPED) {
-            echo file_get_contents("stopped.html");
-            exit;
-        }
-
-        $_GET['VIEW_VIRTUAL_URL'] = $virtualUrl = '~/' . $_GET['VIEW_PAGE_PATH'] . ".view";
-
-        require_once(APP_SCRIPTS_PHP_PATH . "libs/PhpRuntime.class.php");
-        require_once(APP_SCRIPTS_PHP_PATH . "libs/Web.class.php");
-    
-        session_start();
-  
-        $phpObject = new PhpRuntime();
-        $webObject = new Web();
-    
-        if (defined("IS_ADMIN_HTTPS") && constant("IS_ADMIN_HTTPS") === true) {
-            $webObject->redirectToHttps();
-        }
-      
-        require_once(APP_SCRIPTS_PHP_PATH . "includes/postinitview.inc.php");
-
-        $phpObject->lazy("controls", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/controls"]);
-        $phpObject->lazy("layouts", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/layouts"]);
-        $phpObject->lazy("views", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views"]);
-        $phpObject->lazy("floorball", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views/floorball"]);
-        $phpObject->autolib("var")->setValue("virtualUrl", substr($virtualUrl, 2));
-      
-        $indexContent = file_get_contents(APP_ADMIN_PATH . "index.view.php");
-        $pageContent = $webObject->executeTemplateContent(["admin", "views", "index", sha1($indexContent)], $indexContent);
-        $webObject->setContent($pageContent);
-        $webObject->flushContent(null, null, "/");
     } else {
         // Files.
 

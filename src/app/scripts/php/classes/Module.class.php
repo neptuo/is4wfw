@@ -256,14 +256,13 @@
             $code->addLine("");
 
             foreach (Module::all() as $module) {
-                $alias = $module->alias;
-                $path = MODULES_PATH . $alias . "/" . ModuleGenerator::postInitFileName;
+                $path = $module->getRootPath() . ModuleGenerator::postInitFileName;
                 if (file_exists($path)) {
                     $log = $code->var("logObject");
 
                     $code->addLine("try {");
                     $code->addIndent();
-                    $code->addLine("require(MODULES_PATH . '$alias' . '/' . '" . ModuleGenerator::postInitFileName . "');");
+                    $code->addLine("require('{$path}');");
                     $code->removeIndent();
                     $code->addLine("} catch (Exception {$code->var("e")}) {");
                     $code->addIndent();
