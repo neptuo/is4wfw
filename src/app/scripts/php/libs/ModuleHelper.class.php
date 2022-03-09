@@ -154,6 +154,24 @@
 			return Module::isSupportedVersion($version);
 		}
 
+		public function getCanEdit() {
+			$module = null;
+
+			if ($this->hasListModel()) {
+				$module = $this->peekListModel()->data();
+			}
+
+			if ($this->current) {
+				$module = $this->current->is4wfw->minVersion;
+			}
+
+			if ($module == null) {
+				return false;
+			}
+
+			return $module->canEdit();
+		}
+
 		public function getGitHubRepositoryName() {
 			$module = null;
 			if ($this->hasListModel()) {
@@ -180,6 +198,10 @@
 				if ($isEdit) {
 					$module = Module::findById($id);
 					if ($module) {
+						if (!$module->canEdit()) {
+							throw new Exception("Module '$id' is not editable.");
+						}
+
 						$model["id"] = $module->id;
 						$model["alias"] = $module->alias;
 						$model["name"] = $module->name;
@@ -350,7 +372,7 @@
 
 		public function delete($template, $id) {
 			$module = Module::findById($id);
-			if ($module) {
+			if ($module && $module->canEdit()) {
 				$xml = ModuleXml::read();
 				$this->removeModuleXml($xml, $id);
 

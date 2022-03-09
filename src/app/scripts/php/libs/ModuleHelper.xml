@@ -113,6 +113,13 @@
     </comment>
   </property>
   <property>
+    <name>canEdit</name>
+    <getFunction>getCanEdit</getFunction>
+    <comment>
+      Vrací "true", pokud je možné modul editovat.
+    </comment>
+  </property>
+  <property>
     <name>gitHubRepositoryName</name>
     <getFunction>getGitHubRepositoryName</getFunction>
     <comment>

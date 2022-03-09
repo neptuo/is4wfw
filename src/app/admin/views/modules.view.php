@@ -131,15 +131,17 @@
                     </web:condition>
                 </ui:columnTemplate>
                 <ui:columnTemplate>
-                    <web:a pageId="var:selfUrl" class="icon-button" param-id="module:id">
-                        <fa5:icon name="pencil-alt" class="text-dark" />
-                    </web:a>
-                    <ui:form class="d-inline">
-                        <input type="hidden" name="id" value="<web:out text="module:id" />" />
-                        <button name="delete" value="delete" class="icon-button confirm" title="Delete module '<web:out text="module:alias" />'">
-                            <fa5:icon name="trash-alt" class="text-danger" />
-                        </button>
-                    </ui:form>
+                    <web:condition when="module:canEdit">
+                        <web:a pageId="var:selfUrl" class="icon-button" param-id="module:id">
+                            <fa5:icon name="pencil-alt" class="text-dark" />
+                        </web:a>
+                        <ui:form class="d-inline">
+                            <input type="hidden" name="id" value="<web:out text="module:id" />" />
+                            <button name="delete" value="delete" class="icon-button confirm" title="Delete module '<web:out text="module:alias" />'">
+                                <fa5:icon name="trash-alt" class="text-danger" />
+                            </button>
+                        </ui:form>
+                    </web:condition>
                 </ui:columnTemplate>
             </ui:grid>
         </module:list>

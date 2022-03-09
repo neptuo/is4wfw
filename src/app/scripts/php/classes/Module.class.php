@@ -137,6 +137,10 @@
         public function getBundlesPath() {
             return $this->getRootPath() . "bundles/";
         }
+
+        public function canEdit() {
+            return true;
+        }
     }
 
     class AdminModule extends Module {
@@ -153,6 +157,10 @@
 
         public function getRootPath() {
             return APP_ADMIN_PATH;
+        }
+
+        public function canEdit() {
+            return false;
         }
     }
 
