@@ -15,11 +15,6 @@
     })($webObject, $phpObject, $dbObject, $loginObject);
 
     function processAdministrationRequest(Web $web, PhpRuntime $php, DataAccess $db, Login $login, Module $module, string $virtualUrl) {
-        if (IS_ADMIN_STOPPED) {
-            echo file_get_contents(APP_PATH . "stopped.html");
-            exit;
-        }
-
         if (defined("IS_ADMIN_HTTPS") && constant("IS_ADMIN_HTTPS") === true) {
             $web->redirectToHttps();
         }

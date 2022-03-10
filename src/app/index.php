@@ -7,6 +7,12 @@
     }
 
     require_once($userInstance);
+    
+    if (IS_WEB_STOPPED) {
+        echo file_get_contents("stopped.html");
+        exit;
+    }
+    
     require_once("scripts/php/includes/settings.inc.php");
 
     require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
@@ -15,12 +21,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "includes/preinit.inc.php");
 
     if (array_key_exists("WEB_PAGE_PATH", $_GET)) {
-        // Public web.
-
-        if (IS_WEB_STOPPED) {
-            echo file_get_contents("stopped.html");
-            exit;
-        }
+        // Web.
 
         require_once(APP_SCRIPTS_PHP_PATH . "libs/PhpRuntime.class.php");
         require_once(APP_SCRIPTS_PHP_PATH . "libs/Web.class.php");

@@ -15,7 +15,6 @@ define("INSTANCE_URL", "/");
 define("WEB_USE_URLCACHE", true);
 
 // Stopped instance.
-define("IS_ADMIN_STOPPED", false);
 define("IS_WEB_STOPPED", false);
 
 define("IS_ADMIN_HTTPS", {admin-https});
