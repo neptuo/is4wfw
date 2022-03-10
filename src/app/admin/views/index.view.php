@@ -16,6 +16,9 @@
 		</h5>
 
 		<utils:replaceHtmlNewLines output="readme" input="sys:readme" />
+		<web:condition when="utils:readme" isInverted="true">
+			<i>Empty...</i>
+		</web:condition>
 		<web:out text="utils:readme" />
 	</bs:card>
 	
