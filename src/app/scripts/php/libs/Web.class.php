@@ -2559,8 +2559,8 @@
             return $this->LanguageId;
         }
 
-        public function setProperty($prop, $value, $value2 = null) {
-            if($value2 != null) {
+        public function setProperty($prop, $value, $value2 = "xyz.1-23") {
+            if ($value2 != "xyz.1-23") {
                 $prop = $prop . ':' . $value;
                 $value = $value2;
             }
