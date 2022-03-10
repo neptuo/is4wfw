@@ -27,14 +27,15 @@
         // TODO: Rename and move to admin.
         // require_once(APP_SCRIPTS_PHP_PATH . "includes/postinitview.inc.php");
 
-        $php->lazy("controls", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/controls"]);
-        $php->lazy("layouts", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "templates/layouts"]);
-        $php->lazy("views", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views"]);
-        $php->lazy("floorball", "php.libs.TemplateDirectory", ["path" => APP_ADMIN_PATH . "views/floorball"]);
+        $viewsPath = $module->getViewsPath();
+
+        $php->lazy("controls", "php.libs.TemplateDirectory", ["path" => $viewsPath . "controls"]);
+        $php->lazy("layouts", "php.libs.TemplateDirectory", ["path" => $viewsPath . "layouts"]);
+        $php->lazy("views", "php.libs.TemplateDirectory", ["path" => $viewsPath . "pages"]);
+        $php->lazy("floorball", "php.libs.TemplateDirectory", ["path" => $viewsPath . "/pages/floorball"]);
         $php->autolib("var")->setValue("virtualUrl", substr($virtualUrl, 2));
       
-        // TODO: Remove APP_ADMIN_PATH.
-        $indexContent = file_get_contents(APP_ADMIN_PATH . "index.view.php");
+        $indexContent = file_get_contents($viewsPath . "index.view.php");
         $pageContent = $web->executeTemplateContent(["admin", "views", "index", sha1($indexContent)], $indexContent);
         $web->setContent($pageContent);
         $web->flushContent(null, null, "/");

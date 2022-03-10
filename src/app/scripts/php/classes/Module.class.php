@@ -156,7 +156,7 @@
         }
 
         public function getRootPath() {
-            return APP_ADMIN_PATH;
+            return APP_PATH . "admin/";
         }
 
         public function canEdit() {

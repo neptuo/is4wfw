@@ -6,7 +6,6 @@
 
     // Paths and urls.
     define("APP_PATH", INSTANCE_PATH . "app/");
-    define("APP_ADMIN_PATH", APP_PATH . "admin/");
     define("APP_SCRIPTS_PATH", APP_PATH . "scripts/");
     define("APP_SCRIPTS_PHP_PATH", APP_SCRIPTS_PATH . "php/");
     define("APP_SCRIPTS_BUNDLES_PATH", APP_SCRIPTS_PATH . "bundles/");

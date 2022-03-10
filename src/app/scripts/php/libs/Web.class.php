@@ -9,7 +9,6 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/UniversalPermission.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/UrlResolver.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/UrlCache.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewHelper.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/WebForwardManager.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/HttpClient.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/MissingEntrypointException.class.php");
@@ -1401,7 +1400,7 @@
 
         private function resolveUrl($url, $absolutePath) {
             if ($this->UrlResolver == null) {
-                $url = ViewHelper::resolveUrl($url);
+                $url = str_replace('~/', INSTANCE_URL, $url);
             } else {
                 $project = $this->UrlResolver->getWebProject();
                 $pageId = str_replace("~/", "/", $url);

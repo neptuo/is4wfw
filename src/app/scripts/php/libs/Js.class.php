@@ -2,7 +2,6 @@
 
     require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/UrlResolver.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/ViewHelper.class.php");
 
     /**
      * 
@@ -192,12 +191,8 @@
                     . $this->formatScript('~/tiny-mce/tinymce.min.js')
                     . $this->formatScript('~/js/initTiny.js');
             }
-            if (strpos($_SERVER['REQUEST_URI'], ".view") == -1) {
-                $return = str_replace("~/", INSTANCE_URL, $return);
-            } else {
-                $return = ViewHelper::resolveUrl($return);
-            }
-
+            
+            $return = str_replace("~/", INSTANCE_URL, $return);
             return $return;
         }
 
