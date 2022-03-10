@@ -1060,6 +1060,27 @@
 		public function getDatabaseName() {
 			return WEB_DB_DATABASE;
 		}
+
+		private function getReadmePath() {
+			return USER_PATH . "readme.txt";
+		}
+
+		public function getReadme() {
+			$filePath = $this->getReadmePath();
+			if (file_exists($filePath)) {
+				return file_get_contents($filePath);
+			}
+
+			return "";
+		}
+		
+		public function setReadme($value) {
+			$filePath = $this->getReadmePath();
+			copy($filePath, $filePath . ".backup");
+			file_put_contents($filePath, $value);
+			unlink($filePath . ".backup");
+			return $value;
+		}
 	}
 
 ?>

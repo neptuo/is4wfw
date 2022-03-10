@@ -186,4 +186,12 @@
       Vrací název hlavní databáze aplikace.
     </comment>
   </property>
+  <property>
+  	<name>readme</name>
+  	<getFunction>getReadme</getFunction>
+  	<setFunction>setReadme</setFunction>
+    <comment>
+      Vrací nebo nastavuje obsah readme.txt.
+    </comment>
+  </property>
 </taglib>

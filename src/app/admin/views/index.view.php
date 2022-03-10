@@ -8,6 +8,16 @@
 			</web:a>
 		</div>
 	</bs:card>
+
+	<bs:card class="mb-4">
+		<h5 class="card-title">
+			Readme.txt
+			<fa5:icon name="pen-alt" class="text-secondary h6 ml-1" data-modal="readme-editor" />
+		</h5>
+
+		<utils:replaceHtmlNewLines output="readme" input="sys:readme" />
+		<web:out text="utils:readme" />
+	</bs:card>
 	
 	<bs:card title="Debug mode" class="mb-4">
 		<web:condition when="post:debug">
@@ -73,3 +83,5 @@
 		</bs:column>
 	</bs:row>
 </div>
+
+<controls:readmeEditor />
