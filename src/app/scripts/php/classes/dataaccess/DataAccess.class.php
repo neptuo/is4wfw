@@ -6,6 +6,7 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/ArrayUtils.class.php");
 
 class DataAccess {
 	public static $CharsetSystemProperty = 'DataAccess.Charset';
+	public static $SqlModeSystemProperty = 'DataAccess.SetSqlMode';
 
 	private $isOpened = false;
 	private $connection;
@@ -42,6 +43,8 @@ class DataAccess {
 		if ($checkCharset) {
 			$this->checkCharset();
 		}
+
+		$this->ensureSqlMode();
 		
 		return $this->isOpened;
 	}
@@ -52,6 +55,16 @@ class DataAccess {
 			$charset = $property->getValue(DataAccess::$CharsetSystemProperty);
 			if ($charset != null && strlen($charset) > 0) {
 				mysqli_set_charset($this->connection, $charset);
+			}
+		}
+	}
+
+	private function ensureSqlMode() {
+		if ($this->isOpened) {
+			$property = new SystemProperty($this);
+			$value = $property->getValue(DataAccess::$SqlModeSystemProperty);
+			if ($value == true) {
+				mysqli_query($this->connection, "SET sql_mode = '';");
 			}
 		}
 	}
