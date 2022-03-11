@@ -95,4 +95,8 @@
     <script build="370">DROP TABLE `w_projection`;</script>
     <script build="371">DROP TABLE `w_reference`;</script>
     <script build="372">DROP TABLE `window_properties`;</script>
+    <script build="373">ALTER TABLE `system_property` CHANGE `key` `key` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL;</script>
+    <script build="374">ALTER TABLE `system_property` CHANGE `id` `id` INT NOT NULL;</script>
+    <script build="375">ALTER TABLE `system_property` DROP PRIMARY KEY, ADD PRIMARY KEY (`key`) USING BTREE;</script>
+    <script build="376">ALTER TABLE `system_property` DROP `id`;</script>
 </autoupdate>
