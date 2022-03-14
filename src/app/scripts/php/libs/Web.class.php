@@ -2754,6 +2754,10 @@
             $condition = false;
             if ($is === true) {
                 $condition = $when === true || $when == "true" || ($when != 'false' && (strlen($when) != 0));
+            } else if (is_array($when)) {
+                $condition = in_array($is, $when);
+            } else if (is_array($is)) {
+                $condition = in_array($when, $is);
             } else {
                 $condition = $when == $is;
             }

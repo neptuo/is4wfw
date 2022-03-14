@@ -631,6 +631,7 @@
     <comment>
       Zobrazí svůj obsah pokud je atribut "condition" hodnoty true (bool nebo string).
       Atribut "is" nastavuje hodnotu, proti které se má atribut "when" porovnávat.
+      Jeden z atributů "when" a "is" může být pole a pak se testuje, zda je druhá hodnota jednou z položek pole.
       Pomocí "isInverted" je možné podmínku otočit.
     </comment>
   </fulltag>
