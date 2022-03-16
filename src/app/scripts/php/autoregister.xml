@@ -21,6 +21,7 @@
 	<reg prefix="google" class="php.libs.Google" />
 	<reg prefix="g" class="php.libs.Guestbook" />
 	<reg prefix="i" class="php.libs.Inquiry" />
+	<reg prefix="if" class="php.libs.Condition" />
 	<reg prefix="img" class="php.libs.Image" />
 	<reg prefix="js" class="php.libs.Js" />
 	<reg prefix="json" class="php.libs.Json" />
