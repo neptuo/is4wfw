@@ -104,7 +104,7 @@
     <name>arrayContains</name>
     <function>arrayContains</function>
     <attribute>
-      <name>array</name>
+      <name>value</name>
       <required />
       <comment>Pole, ve kterém se má hledat položka.</comment>
     </attribute>
@@ -113,14 +113,14 @@
       <comment>Položka, která se má hledat v poli.</comment>
     </attribute>
     <comment>
-      Zda je "item" v poli "array".
+      Zda je "item" v poli "value".
     </comment>
   </tag>
   <tag>
     <name>arrayLength</name>
     <function>arrayLength</function>
     <attribute>
-      <name>array</name>
+      <name>value</name>
       <required />
       <comment>Pole, které se testuje.</comment>
     </attribute>
@@ -150,6 +150,64 @@
     </attribute>
     <comment>
       Zda pole "array" odpovídá velikosti.
+    </comment>
+  </tag>
+  <tag>
+    <name>stringContains</name>
+    <function>stringContains</function>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>String, ve kterém se má hledat "part".</comment>
+    </attribute>
+    <attribute>
+      <name>part</name>
+      <comment>Část stringu, která se má hledat v "value".</comment>
+    </attribute>
+    <attribute>
+      <name>caseSensitive</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda má být hledání case-sensitive.</comment>
+    </attribute>
+    <comment>
+      Zda je "part" ve stringu "value".
+    </comment>
+  </tag>
+  <tag>
+    <name>stringLength</name>
+    <function>stringLength</function>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>String, který se testuje.</comment>
+    </attribute>
+    <attribute>
+      <name>min</name>
+      <type>number</type>
+      <default>-1</default>
+      <comment>Minimální délka.</comment>
+    </attribute>
+    <attribute>
+      <name>max</name>
+      <type>number</type>
+      <default>-1</default>
+      <comment>Maximální délka.</comment>
+    </attribute>
+    <attribute>
+      <name>is</name>
+      <type>number</type>
+      <default>-1</default>
+      <comment>Přesná délka.</comment>
+    </attribute>
+    <attribute>
+      <name>orEqual</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
+    </attribute>
+    <comment>
+      Zda string "value" odpovídá velikosti.
     </comment>
   </tag>
   <anyProperty>

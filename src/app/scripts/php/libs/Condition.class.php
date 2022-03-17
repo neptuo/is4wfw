@@ -93,12 +93,29 @@
 			$this->append($result);
 		}
 
-		public function arrayContains($array, $item) {
-			$this->append(in_array($item, $array));
+		public function arrayContains($value, $item) {
+			$this->append(in_array($item, $value));
 		}
 
-		public function arrayLength($array, $min = -1, $max = -1, $is = -1, $orEqual = false) {
-			$length = count($array);
+		public function arrayLength($value, $min = -1, $max = -1, $is = -1, $orEqual = false) {
+			$length = count($value);
+			return $this->testLength($length, $min, $max, $is, $orEqual);
+		}
+
+		public function stringContains($value, $part, $caseSensitive = true) {
+			if ($caseSensitive) {
+				$this->append(strpos($value, $part) !== false);
+			} else {
+				$this->append(stripos($value, $part) !== false);
+			}
+		}
+
+		public function stringLength($value, $min = -1, $max = -1, $is = -1, $orEqual = false) {
+			$length = strlen($value);
+			return $this->testLength($length, $min, $max, $is, $orEqual);
+		}
+
+		public function testLength($length, $min, $max, $is, $orEqual) {
 			if ($min >= 0) {
 				if ($orEqual) {
 					$result = $length >= $min;
