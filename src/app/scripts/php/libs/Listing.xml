@@ -55,6 +55,26 @@
       Přidá položku do list modelu.
     </comment>
   </tag>
+  <tag>
+    <name>sort</name>
+    <function>sort</function>
+    <lookless />
+    <attribute>
+      <name>key</name>
+      <prefix default="merge" />
+      <comment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <comment>
+        Název (property), pod kterým má být list model dostupný.
+        Povinný jen pokud je použitý mimo tělo "list:declare".
+      </comment>
+    </attribute>
+    <comment>
+      Seřadí položky v list modelu.
+    </comment>
+  </tag>
   <anyProperty>
     <comment>
       Pokud je zadán název modelu, vrátí celý list model.

@@ -65,6 +65,28 @@
 			$this->container[$name]->addItem($key);
 		}
 		
+		public function sort($key, $name = "") {
+			$name = $this->ensureName($name);
+			$items = $this->container[$name]->items();
+			usort($items, function($a, $b) use ($key) { 
+				foreach ($key as $name => $direction) {
+					if ($direction == "desc") {
+						$c = $a;
+						$a = $b;
+						$b = $c;
+					}
+
+					$result = strcmp($a[$name], $b[$name]);
+					if ($result !== 0) {
+						return $result;
+					}
+				}
+
+				return 0;
+			});
+			$this->container[$name]->items($items);
+		}
+		
 		public function getProperty($name) {
 			$name = explode("-", $name, 2);
 			$this->ensureDeclaration($name[0], false);
