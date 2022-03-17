@@ -93,6 +93,49 @@
 			$this->append($result);
 		}
 
+		public function arrayContains($array, $item) {
+			$this->append(in_array($item, $array));
+		}
+
+		public function arrayLength($array, $min = -1, $max = -1, $is = -1, $orEqual = false) {
+			$length = count($array);
+			if ($min >= 0) {
+				if ($orEqual) {
+					$result = $length >= $min;
+				} else {
+					$result = $length > $min;
+				}
+
+				if (!$result) {
+					$this->append(false);
+					return;
+				}
+			}
+
+			if ($max >= 0) {
+				if ($orEqual) {
+					$result = $length <= $max;
+				} else {
+					$result = $length < $max;
+				}
+
+				if (!$result) {
+					$this->append(false);
+					return;
+				}
+			}
+
+			if ($is >= 0) {
+				$result = $length == $is;
+				if (!$result) {
+					$this->append(false);
+					return;
+				}
+			}
+
+			$this->append(true);
+		}
+
 		public function getProperty($name) {
 			return $this->instances[$name]->result;
 		}
