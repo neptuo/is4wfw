@@ -59,7 +59,7 @@
 			$this->parenthesis($template, "OR");
 		}
 		
-		public function invert($template) {
+		public function not($template) {
 			$operator = $this->current->peek()->operator;
 			$this->parenthesis($template, $operator, true);
 		}
@@ -112,6 +112,7 @@
 
 		public function __construct($operator) {
 			$this->operator = $operator;
+			$this->result = $operator == "AND"; // true for AND; false for OR.
 		}
 
 		public function append($value) {

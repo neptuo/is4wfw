@@ -13,7 +13,10 @@
       <required />
       <comment>Název podmínky. Pod tímto názvem je pak možné získat výsledek pomocí anyProperty.</comment>
     </attribute>
-    <comment>Vyhodnotí podmínky a výsledek uloží do property s názvem "name".</comment>
+    <comment>
+      Vyhodnotí podmínky a výsledek uloží do property s názvem "name".
+      Výchozí operátor je &amp;&amp;
+    </comment>
   </fulltag>
   <fulltag>
     <name>and</name>
@@ -26,9 +29,13 @@
     <comment>Všechny vnitřní podmínky budou spojeny pomocí "||".</comment>
   </fulltag>
   <fulltag>
-    <name>invert</name>
-    <function>invert</function>
-    <comment>Neguje všechny podmínky v těle.</comment>
+    <name>not</name>
+    <function>not</function>
+    <comment>
+      Neguje všechny podmínky v těle. 
+      Funguje jako negace před závorkou a tělo je v závorce
+      Zachovává operátor z předka.
+    </comment>
   </fulltag>
   <tag>
     <name>equals</name>
