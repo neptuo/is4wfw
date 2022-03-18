@@ -35,6 +35,15 @@
     </comment>
   </fulltag>
   <fulltag>
+    <name>group</name>
+    <function>group</function>
+    <identifiable />
+    <comment>
+      Slouží pro seskupení route a umožňuje pro ně generovat společný výstup, aniž by ovnivňoval URL.
+      Není koncovým uzlem. Vyžaduje soubor uvnitř.
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>file</name>
     <function>file</function>
     <identifiable />

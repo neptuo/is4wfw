@@ -104,6 +104,26 @@
 			}
 		}
 
+		public function group($template, $identifier) {
+			if ($this->routerPhase == "build") {
+				$wasMatch = $this->hasMatch();
+				
+				$template();
+
+				if (!$wasMatch && $this->hasMatch()) {
+					$this->selectedIdentifiers->push($identifier);
+				}
+			} else if ($this->routerPhase == "evaluate") {
+				if (in_array($identifier, $this->selectedIdentifiers->toArray())) {
+					$template();
+				}
+			} else if ($this->routerPhase == "render") {
+				if (in_array($identifier, $this->selectedIdentifiers->toArray())) {
+					return $template();
+				}
+			}
+		}
+
 		public function file($template, $identifier, $path, $name = null) {
 			if ($this->routerPhase == "build") {
 				if ($this->canMatch && !$this->hasMatch()) {
