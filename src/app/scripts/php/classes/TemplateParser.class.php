@@ -593,21 +593,20 @@
             $identifier = 'template_' . $tagPrefix . '_' . $functionName . '_' . $identifier;
 
             $targetObject = '$' . $tagPrefix . 'Object';
-            $logObject = '$' . 'log' . 'Object';
             
-            $this->Code->addMethod($identifier, "private", $attributes->FunctionParameters);
-            $this->Code->addTry();
-            $this->Code->addLine("global " . '$' . "phpObject;");
-            $this->Code->addLine("$targetObject = " . '$' . "phpObject->autolib('$tagPrefix');");
+            $code = $this->Code;
+            $code->addMethod($identifier, "private", $attributes->FunctionParameters);
+            $code->addTry();
+            $code->addLine("$targetObject = {$code->var("this")}->autolib('$tagPrefix');");
 
             $attributesString = "";
             if ($attributes->HasAttributeModifyingDecorators) {
-                $this->Code->addLine('$'. "parameters = [");
-                $this->Code->addIndent();
+                $code->addLine('$'. "parameters = [");
+                $code->addIndent();
                 $attributesString = $this->concatAttributesToString($attributes->Attributes, true, true);
-                $this->Code->addLine($attributesString, true);
-                $this->Code->removeIndent();
-                $this->Code->addLine("];");
+                $code->addLine($attributesString, true);
+                $code->removeIndent();
+                $code->addLine("];");
 
                 $attributeNames = [];
                 foreach (array_keys($attributes->Attributes) as $name) {
@@ -619,8 +618,8 @@
             }
 
             if ($tagName != null) {
-                $this->Code->addLine("if (" . '$' . "this->isTagProcessed('$tagPrefix', '$tagName')) {");
-                $this->Code->addIndent();
+                $code->addLine("if (" . '$' . "this->isTagProcessed('$tagPrefix', '$tagName')) {");
+                $code->addIndent();
             }
 
             if ($attributes->HasDecorators) {
@@ -634,14 +633,14 @@
                         
                         if ($attributes->HasAttributeModifyingDecorators) {
                             if ($decorator["conditionsExecution"] && !$decorator["modifiesAttributes"] && !$decorator["providesFullTagBody"]) {
-                                $this->Code->addLine($returnParametersName . "['" . PhpRuntime::$DecoratorExecuteName . "'] = " . $decorator["call"] . "['" . PhpRuntime::$DecoratorExecuteName . "'];");
-                                $this->Code->addLine("if (" . $returnParametersName . "['" . PhpRuntime::$DecoratorExecuteName . "'] === true) {");
-                                $this->Code->addIndent();
+                                $code->addLine($returnParametersName . "['" . PhpRuntime::$DecoratorExecuteName . "'] = " . $decorator["call"] . "['" . PhpRuntime::$DecoratorExecuteName . "'];");
+                                $code->addLine("if (" . $returnParametersName . "['" . PhpRuntime::$DecoratorExecuteName . "'] === true) {");
+                                $code->addIndent();
                                 continue;
                             }
 
                             if ($decorator["providesFullTagBody"] && !$decorator["modifiesAttributes"] && !$decorator["conditionsExecution"]) {
-                                $this->Code->addLine($returnParametersName. "['" . PhpRuntime::$FullTagTemplateName . "'] = " . $decorator["call"] . "['" . PhpRuntime::$FullTagTemplateName . "'];");
+                                $code->addLine($returnParametersName. "['" . PhpRuntime::$FullTagTemplateName . "'] = " . $decorator["call"] . "['" . PhpRuntime::$FullTagTemplateName . "'];");
                                 continue;
                             }
                             
@@ -650,11 +649,11 @@
                                     $decorator["call"] = "array_merge(" . $returnParametersName . ", " . $decorator["call"] . ")";
                                 }
                                 
-                                $this->Code->addLine($returnParametersName . " = " . $decorator["call"] . ";");
+                                $code->addLine($returnParametersName . " = " . $decorator["call"] . ";");
 
                                 if ($decorator["conditionsExecution"]) {
-                                    $this->Code->addLine("if (" . $returnParametersName . "['" . PhpRuntime::$DecoratorExecuteName . "'] === true) {");
-                                    $this->Code->addIndent();
+                                    $code->addLine("if (" . $returnParametersName . "['" . PhpRuntime::$DecoratorExecuteName . "'] === true) {");
+                                    $code->addIndent();
                                 }
 
                                 continue;
@@ -662,33 +661,33 @@
                         }
                         
                         if ($decorator["conditionsExecution"]) {
-                            $this->Code->addLine("if (" . $decorator["call"] . "['" . PhpRuntime::$DecoratorExecuteName . "'] === true) {");
-                            $this->Code->addIndent();
+                            $code->addLine("if (" . $decorator["call"] . "['" . PhpRuntime::$DecoratorExecuteName . "'] === true) {");
+                            $code->addIndent();
                             continue;
                         }
 
-                        $this->Code->addLine($decorator["call"] . ";");
+                        $code->addLine($decorator["call"] . ";");
                     }
                 }
             }
 
-            $this->Code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
+            $code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
 
             if ($attributes->HasDecorators) {
                 foreach ($attributes->Decorators as $prefix => $decorators) {
                     foreach ($decorators as $decorator) {
                         if ($decorator["conditionsExecution"]) {
-                            $this->Code->closeBlock();
+                            $code->closeBlock();
                         }
                     }
                 }
             }
 
             if ($tagName != null) {
-                $this->Code->closeBlock();
+                $code->closeBlock();
                 if ($hasBodyTemplate || $attributes->HasTemplateAttribute()) {
-                    $this->Code->addLine("else {");
-                    $this->Code->addIndent();
+                    $code->addLine("else {");
+                    $code->addIndent();
 
                     // Call all properties in attributes.
                     foreach ($attributes->Attributes as $attribute) {
@@ -696,11 +695,11 @@
                             if (is_array($attribute["value"])) {
                                 foreach ($attribute["value"] as $value) {
                                     if ($attributes->IsTemplateAttribute($value)) {
-                                        $this->Code->addLine($value["value"] . ";");
+                                        $code->addLine($value["value"] . ";");
                                     }
                                 }
                             } else {
-                                $this->Code->addLine($attribute["value"] . ";");
+                                $code->addLine($attribute["value"] . ";");
                             }
                         }
                     }
@@ -708,13 +707,13 @@
                     // Call template/body function.
                     if ($hasBodyTemplate) {
                         if ($attributes->HasAttributeModifyingDecorators) {
-                            $this->Code->addLine($returnParametersName. "['" . PhpRuntime::$FullTagTemplateName . "']();");
+                            $code->addLine($returnParametersName. "['" . PhpRuntime::$FullTagTemplateName . "']();");
                         } else {
                             $isContentProcessed = false;
                             if ($attributes->HasDecorators) {
                                 foreach ($attributes->Decorators as $prefix => $decorators) {
                                     if ($decorator["providesFullTagBody"]) {
-                                        $this->Code->addLine($attributes->Attributes[PhpRuntime::$FullTagTemplateName]["value"] . "();");
+                                        $code->addLine($attributes->Attributes[PhpRuntime::$FullTagTemplateName]["value"] . "();");
                                         $isContentProcessed = true;
                                         break;
                                     }
@@ -722,21 +721,20 @@
                             }
 
                             if (!$isContentProcessed) {
-                                $this->Code->addLine('$'. "this->" . $identifier . "_body(null);");
+                                $code->addLine('$'. "this->" . $identifier . "_body(null);");
                             }
                         }
                     }
 
-                    $this->Code->closeBlock();
+                    $code->closeBlock();
                 }
             }
 
-            $this->Code->addCatch(["Exception", "e"]);
-            $this->Code->addLine("global $logObject;");
-            $this->Code->addLine("return " . $logObject . "->exception(" . '$e' . ", '$tagPrefix', '$tagName');");
-            $this->Code->closeBlock();
-            $this->Code->addLine("return $defaultReturnValue;");
-            $this->Code->closeBlock();
+            $code->addCatch(["Exception", "e"]);
+            $code->addLine("return {$code->var("this")}->logException(" . '$e' . ", '$tagPrefix', '$tagName');");
+            $code->closeBlock();
+            $code->addLine("return $defaultReturnValue;");
+            $code->closeBlock();
 
             $result = '$this->' . $identifier . "(" . implode(", ", array_map(function($parameter) { return '$' . $parameter; }, $attributes->FunctionParameters)) . ")";
             if ($isWrappedAsString) {
@@ -753,32 +751,30 @@
             $identifier = 'property_' . $tagPrefix . '_' . $functionName . '_' . $identifier;
 
             $targetObject = '$' . $tagPrefix . 'Object';
-            $logObject = '$' . 'log' . 'Object';
             $attributesString = $this->concatAttributesToString($property["attributes"]->Attributes);
             
-            $this->Code->addMethod($identifier, "private", []);
-            $this->Code->addTry();
+            $code = $this->Code;
+
+            $code->addMethod($identifier, "private", []);
+            $code->addTry();
             
             if (array_key_exists("preferPropertyReference", $value) && $value["preferPropertyReference"]) {
-                $this->Code->addLine("return " . '$' . "this->getPropertyReference('$tagPrefix', '$tagName', function() { ");
-                $this->Code->addIndent();
-                $this->Code->addLine("global " . '$' . "phpObject;");
-                $this->Code->addLine("$targetObject = " . '$' . "phpObject->autolib('$tagPrefix');");
-                $this->Code->addLine("return new PropertyReference($targetObject, '$functionName', '{$property["set"]}', '{$property["name"]}');");
-                $this->Code->removeIndent();
-                $this->Code->addLine("});");
+                $code->addLine("return " . '$' . "this->getPropertyReference('$tagPrefix', '$tagName', function() { ");
+                $code->addIndent();
+                $code->addLine("$targetObject = {$code->var("this")}->autolib('$tagPrefix');");
+                $code->addLine("return new PropertyReference($targetObject, '$functionName', '{$property["set"]}', '{$property["name"]}');");
+                $code->removeIndent();
+                $code->addLine("});");
             } else {
-                $this->Code->addLine("global " . '$' . "phpObject;");
-                $this->Code->addLine("$targetObject = " . '$' . "phpObject->autolib('$tagPrefix');");
-                $this->Code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
+                $code->addLine("$targetObject = {$code->var("this")}->autolib('$tagPrefix');");
+                $code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
             }
 
-            $this->Code->addCatch(["Exception", "e"]);
-            $this->Code->addLine("global $logObject;");
-            $this->Code->addLine("return " . $logObject . "->exception(" . '$e' . ", '$tagPrefix', '$tagName');");
-            $this->Code->closeBlock();
-            $this->Code->addLine("return '';");
-            $this->Code->closeBlock();
+            $code->addCatch(["Exception", "e"]);
+            $code->addLine("return {$code->var("this")}->logException(" . '$e' . ", '$tagPrefix', '$tagName');");
+            $code->closeBlock();
+            $code->addLine("return '';");
+            $code->closeBlock();
         }
 
         private function sortAttributes(string $tagPrefix, string $tagName, TemplateAttributeCollection $attributes, string $uniqueIdentifier): bool {
