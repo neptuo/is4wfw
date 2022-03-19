@@ -55,5 +55,5 @@
         <web:condition when="template:menu" isInverted="true">
             <template:content />
         </web:condition>
-</div>
+    </div>
 </web:out>
