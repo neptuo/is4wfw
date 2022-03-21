@@ -20,9 +20,17 @@
 			$this->current = new Stack();
 		}
 
-		public function append($value) {
+		private function appendToCurrent($value) {
 			$instance = $this->current->peek();
 			$instance->append($value);
+		}
+
+		public function append($value, $name) {
+			if ($name) {
+				$this->evaluate(function() use($value) { $this->appendToCurrent($value); }, $name);
+			} else {
+				$this->appendToCurrent($value);
+			}
 		}
 
 		public function evaluate($template, $name) {
@@ -64,58 +72,58 @@
 			$this->parenthesis($template, $operator, true);
 		}
 
-		public function equals($value, $is, $not = false) {
+		public function equals($value, $is, $not = false, $name = "") {
 			$result = $value === $is;
 			if ($not) {
 				$result = !$result;
 			}
 
-			$this->append($result);
+			$this->append($result, $name);
 		}
 		
-		public function greater($value, $than, $orEqual = false) {
+		public function greater($value, $than, $orEqual = false, $name = "") {
 			if ($orEqual) {
 				$result = $value >= $than;
 			} else {
 				$result = $value > $than;
 			}
 
-			$this->append($result);
+			$this->append($result, $name);
 		}
 		
-		public function lower($value, $than, $orEqual = false) {
+		public function lower($value, $than, $orEqual = false, $name = "") {
 			if ($orEqual) {
 				$result = $value <= $than;
 			} else {
 				$result = $value < $than;
 			}
 	
-			$this->append($result);
+			$this->append($result, $name);
 		}
 
-		public function arrayContains($value, $item) {
-			$this->append(in_array($item, $value));
+		public function arrayContains($value, $item, $name = "") {
+			$this->append(in_array($item, $value), $name);
 		}
 
-		public function arrayLength($value, $min = -1, $max = -1, $is = -1, $orEqual = false) {
+		public function arrayLength($value, $min = -1, $max = -1, $is = -1, $orEqual = false, $name = "") {
 			$length = count($value);
-			return $this->testLength($length, $min, $max, $is, $orEqual);
+			return $this->testLength($length, $min, $max, $is, $orEqual, $name);
 		}
 
-		public function stringContains($value, $part, $caseSensitive = true) {
+		public function stringContains($value, $part, $caseSensitive = true, $name = "") {
 			if ($caseSensitive) {
-				$this->append(strpos($value, $part) !== false);
+				$this->append(strpos($value, $part) !== false, $name);
 			} else {
-				$this->append(stripos($value, $part) !== false);
+				$this->append(stripos($value, $part) !== false, $name);
 			}
 		}
 
-		public function stringLength($value, $min = -1, $max = -1, $is = -1, $orEqual = false) {
+		public function stringLength($value, $min = -1, $max = -1, $is = -1, $orEqual = false, $name = "") {
 			$length = strlen($value);
-			return $this->testLength($length, $min, $max, $is, $orEqual);
+			return $this->testLength($length, $min, $max, $is, $orEqual, $name);
 		}
 
-		public function testLength($length, $min, $max, $is, $orEqual) {
+		public function testLength($length, $min, $max, $is, $orEqual, $name = "") {
 			if ($min >= 0) {
 				if ($orEqual) {
 					$result = $length >= $min;
@@ -124,7 +132,7 @@
 				}
 
 				if (!$result) {
-					$this->append(false);
+					$this->append(false, $name);
 					return;
 				}
 			}
@@ -137,7 +145,7 @@
 				}
 
 				if (!$result) {
-					$this->append(false);
+					$this->append(false, $name);
 					return;
 				}
 			}
@@ -145,12 +153,12 @@
 			if ($is >= 0) {
 				$result = $length == $is;
 				if (!$result) {
-					$this->append(false);
+					$this->append(false, $name);
 					return;
 				}
 			}
 
-			$this->append(true);
+			$this->append(true, $name);
 		}
 
 		public function getProperty($name) {

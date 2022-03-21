@@ -11,7 +11,7 @@
       <name>name</name>
       <type>string</type>
       <required />
-      <comment>Název podmínky. Pod tímto názvem je pak možné získat výsledek pomocí anyProperty.</comment>
+      <comment>Pod tímto názvem je možné získat výsledek pomocí anyProperty nebo observerů.</comment>
     </attribute>
     <comment>
       Vyhodnotí podmínky a výsledek uloží do property s názvem "name".
@@ -56,6 +56,11 @@
       <default>false</default>
       <comment>Zda se má podmínka negovat, tedy "nerovná se".</comment>
     </attribute>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>Pod tímto názvem je možné získat výsledek pomocí anyProperty nebo observerů.</comment>
+    </attribute>
     <comment>
       Porovnání dvou hodnot.
     </comment>
@@ -79,6 +84,11 @@
       <default>false</default>
       <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
     </attribute>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>Pod tímto názvem je možné získat výsledek pomocí anyProperty nebo observerů.</comment>
+    </attribute>
   </tag>
   <tag>
     <name>lower</name>
@@ -99,6 +109,11 @@
       <default>false</default>
       <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
     </attribute>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>Pod tímto názvem je možné získat výsledek pomocí anyProperty nebo observerů.</comment>
+    </attribute>
   </tag>
   <tag>
     <name>arrayContains</name>
@@ -111,6 +126,11 @@
     <attribute>
       <name>item</name>
       <comment>Položka, která se má hledat v poli.</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>Pod tímto názvem je možné získat výsledek pomocí anyProperty nebo observerů.</comment>
     </attribute>
     <comment>
       Zda je "item" v poli "value".
@@ -148,6 +168,11 @@
       <default>false</default>
       <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
     </attribute>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>Pod tímto názvem je možné získat výsledek pomocí anyProperty nebo observerů.</comment>
+    </attribute>
     <comment>
       Zda pole "array" odpovídá velikosti.
     </comment>
@@ -157,7 +182,6 @@
     <function>stringContains</function>
     <attribute>
       <name>value</name>
-      <required />
       <comment>String, ve kterém se má hledat "part".</comment>
     </attribute>
     <attribute>
@@ -169,6 +193,11 @@
       <type>bool</type>
       <default>true</default>
       <comment>Zda má být hledání case-sensitive.</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>Pod tímto názvem je možné získat výsledek pomocí anyProperty nebo observerů.</comment>
     </attribute>
     <comment>
       Zda je "part" ve stringu "value".
@@ -205,6 +234,11 @@
       <type>bool</type>
       <default>false</default>
       <comment>Zda stejná hodnota má být zahrnuta ve výsledku.</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>Pod tímto názvem je možné získat výsledek pomocí anyProperty nebo observerů.</comment>
     </attribute>
     <comment>
       Zda string "value" odpovídá velikosti.
