@@ -237,4 +237,16 @@
     </features>
     <comment>Spustí tag, na kterém je použito pouze pokud je vyhodnocená podmínka jako "false".</comment>
   </decorator>
+  <decorator>
+    <function>isTrue</function>
+    <attribute>
+      <name>true</name>
+      <type>bool</type>
+      <comment>Hodnota, který pokud je true, tag se spustí.</comment>
+    </attribute>
+    <features>
+      <conditionsExecution />
+    </features>
+    <comment>Spustí tag, na kterém je použito pouze pokud hodnota atributu je "true".</comment>
+  </decorator>
 </taglib>

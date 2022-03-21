@@ -164,6 +164,10 @@
 		public function isFailed($name) {
 			return [PhpRuntime::$DecoratorExecuteName => !$this->getProperty($name)];
 		}
+
+		public function isTrue($value) {
+			return [PhpRuntime::$DecoratorExecuteName => $value === true];
+		}
 	}
 
 	class ConditionEvaluation {
