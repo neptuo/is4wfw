@@ -26,6 +26,7 @@
         public static $IdentifiableName = 'identifiable';
         public static $FullTagTemplateName = 'full:content';
         public static $DecoratorExecuteName = 'decorator:execute';
+        public const UnusedAttributeValue = '14c8581e-4bb6';
     
         private $defaultRegistrations = [
             "php" => "php.libs.PhpRuntime", 

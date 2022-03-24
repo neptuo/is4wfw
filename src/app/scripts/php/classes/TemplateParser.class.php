@@ -915,10 +915,15 @@
                 
                 // Default values.
                 if ($hasDefault) {
-                    if ($att->type == 'string') {
-                        $attributeValue = "'" . eval('return "'. $att->default.'";') . "'";
+                    if ($att->default && $att->default["as"] == "unused") {
+                        $attributeValue = "PhpRuntime::UnusedAttributeValue";
                     } else {
-                        $attributeValue = eval('return '. $att->default.';');
+                        $defaultValue = (string)$att->default;
+                        if ($att->type == 'string') {
+                            $attributeValue = "'" . eval('return "' . $defaultValue . '";') . "'";
+                        } else {
+                            $attributeValue = eval('return '. $defaultValue . ';');
+                        }
                     }
                     
                     $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
