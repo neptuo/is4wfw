@@ -282,7 +282,12 @@
     <attribute>
       <name>stringEmpty</name>
       <default as="unused" />
-      <comment>String hodnota, která pokud prázdná, tag se spustí.</comment>
+      <comment>String hodnota, která pokud je prázdná, tag se spustí.</comment>
+    </attribute>
+    <attribute>
+      <name>arrayEmpty</name>
+      <default as="unused" />
+      <comment>Pole, které pokud je prázdné, tag se spustí.</comment>
     </attribute>
     <attribute>
       <name>not</name>

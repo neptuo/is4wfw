@@ -173,7 +173,7 @@
 			return [PhpRuntime::$DecoratorExecuteName => !$this->getProperty($name)];
 		}
 
-		public function simpleEvaluation($true = PhpRuntime::UnusedAttributeValue, $stringEmpty = PhpRuntime::UnusedAttributeValue, $not = false) {
+		public function simpleEvaluation($true = PhpRuntime::UnusedAttributeValue, $stringEmpty = PhpRuntime::UnusedAttributeValue, $arrayEmpty = PhpRuntime::UnusedAttributeValue, $not = false) {
 			$result = true;
 			
 			if ($true !== PhpRuntime::UnusedAttributeValue) {
@@ -182,6 +182,10 @@
 			
 			if ($stringEmpty !== PhpRuntime::UnusedAttributeValue) {
 				$result = $result && ($stringEmpty === null || $stringEmpty === "");
+			}
+			
+			if ($arrayEmpty !== PhpRuntime::UnusedAttributeValue) {
+				$result = $result && ($arrayEmpty === null || $arrayEmpty === []);
 			}
 
 			if ($not === true) {
