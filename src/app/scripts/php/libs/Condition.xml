@@ -272,11 +272,18 @@
     <comment>Spustí tag, na kterém je použito pouze pokud je vyhodnocená podmínka jako "false".</comment>
   </decorator>
   <decorator>
-    <function>isTrue</function>
+    <function>simpleEvaluation</function>
     <attribute>
       <name>true</name>
       <type>bool</type>
+      <default as="unused" />
       <comment>Hodnota, který pokud je true, tag se spustí.</comment>
+    </attribute>
+    <attribute>
+      <name>not</name>
+      <type>bool</type>
+      <default>false</default>
+      <comment>Negace podmínky.</comment>
     </attribute>
     <features>
       <conditionsExecution />

@@ -173,8 +173,18 @@
 			return [PhpRuntime::$DecoratorExecuteName => !$this->getProperty($name)];
 		}
 
-		public function isTrue($value) {
-			return [PhpRuntime::$DecoratorExecuteName => $value === true];
+		public function simpleEvaluation($true = PhpRuntime::UnusedAttributeValue, $not = false) {
+			$result = true;
+			
+			if ($true !== PhpRuntime::UnusedAttributeValue) {
+				$result = $result && $true === true;
+			}
+
+			if ($not === true) {
+				$result = !$result;
+			}
+
+			return [PhpRuntime::$DecoratorExecuteName => $result];
 		}
 	}
 
