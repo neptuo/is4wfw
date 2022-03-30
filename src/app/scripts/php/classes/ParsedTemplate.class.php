@@ -16,11 +16,6 @@ abstract class ParsedTemplate
         return $phpObject->autolib($prefix);
     }
 
-    protected function logException($e, $prefix, $tag) {
-        global $logObject;
-        return $logObject->exception($e, $prefix, $tag);
-    }
-
     protected function isTagProcessed(string $prefix, string $name) {
         return self::$tagsToParse->isProcessed($prefix, $name);
     }

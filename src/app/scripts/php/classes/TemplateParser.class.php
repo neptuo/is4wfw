@@ -596,7 +596,6 @@
             
             $code = $this->Code;
             $code->addMethod($identifier, "private", $attributes->FunctionParameters);
-            $code->addTry();
             $code->addLine("$targetObject = {$code->var("this")}->autolib('$tagPrefix');");
 
             $attributesString = "";
@@ -730,10 +729,6 @@
                 }
             }
 
-            $code->addCatch(["Exception", "e"]);
-            $code->addLine("return {$code->var("this")}->logException(" . '$e' . ", '$tagPrefix', '$tagName');");
-            $code->closeBlock();
-            $code->addLine("return $defaultReturnValue;");
             $code->closeBlock();
 
             $result = '$this->' . $identifier . "(" . implode(", ", array_map(function($parameter) { return '$' . $parameter; }, $attributes->FunctionParameters)) . ")";
@@ -756,7 +751,6 @@
             $code = $this->Code;
 
             $code->addMethod($identifier, "private", []);
-            $code->addTry();
             
             if (array_key_exists("preferPropertyReference", $value) && $value["preferPropertyReference"]) {
                 $code->addLine("return " . '$' . "this->getPropertyReference('$tagPrefix', '$tagName', function() { ");
@@ -770,10 +764,6 @@
                 $code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
             }
 
-            $code->addCatch(["Exception", "e"]);
-            $code->addLine("return {$code->var("this")}->logException(" . '$e' . ", '$tagPrefix', '$tagName');");
-            $code->closeBlock();
-            $code->addLine("return '';");
             $code->closeBlock();
         }
 

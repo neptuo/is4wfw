@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
+  <namespace>php\libs</namespace>
+  <comment>
+    Knihovna pro zpracování chyb/výjimek při spouštění tagů.
+  </comment>
+  <fulltag>
+      <name>boundary</name>
+      <function>boundary</function>
+      <attribute>
+          <name>name</name>
+          <comment>Volitelný název. Chycené výjimky je možné podle něj identifikovat.</comment>
+      </attribute>
+      <comment>
+          Try-catch pro chycení výjimek uvnitř těla.
+      </comment>
+  </fulltag>
+  <decorator>
+    <function>isPassed</function>
+    <attribute>
+      <name>boundaryPassed</name>
+      <type>string</type>
+      <comment>Název boundary.</comment>
+    </attribute>
+    <features>
+      <conditionsExecution />
+    </features>
+    <comment>Spustí tag, na kterém je použito, pouze pokud uvnitř boundary nevznikla výjimka.</comment>
+  </decorator>
+  <decorator>
+    <function>isFailed</function>
+    <attribute>
+      <name>boundaryFailed</name>
+      <type>string</type>
+      <comment>Název boundary.</comment>
+    </attribute>
+    <features>
+      <conditionsExecution />
+    </features>
+    <comment>Spustí tag, na kterém je použito, pouze pokud uvnitř boundary vznikla výjimka.</comment>
+  </decorator>
+</taglib>

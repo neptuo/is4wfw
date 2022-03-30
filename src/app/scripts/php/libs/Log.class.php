@@ -59,15 +59,13 @@
             fclose($file);
         }
 
-        public function exception($e, $tagPrefix = null, $tagName = null) {
-            $editModel = parent::getEditModel(false);
-            if ($editModel != null && $editModel->isSave()) {
-                $editModel->exception($e);
-            }
-
+        public function exception($e, $params = []) {
             $message = "An exception of type '" . get_class($e) . "' has occured";
-            if ($tagPrefix != null && $tagName != null) {
-                $message .= " while processing tag '$tagPrefix:$tagName'";
+            if (array_key_exists("tagPrefix", $params) && array_key_exists("tagName", $params)) {
+                $message .= " while processing tag '{$params["tagPrefix"]}:{$params["tagName"]}'";
+            }
+            if (array_key_exists("boundary", $params)) {
+                $message .= " while processing error boundary '{$params["boundary"]}'";
             }
             $message .= ". " . PHP_EOL;
 

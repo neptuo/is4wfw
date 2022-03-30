@@ -12,6 +12,7 @@
 	<reg prefix="db" class="php.libs.Database" />
 	<reg prefix="dt" class="php.libs.DateTime" />
 	<reg prefix="edit" class="php.libs.Editor" />
+	<reg prefix="error" class="php.libs.Error" />
 	<reg prefix="email" class="php.libs.Email" />
 	<reg prefix="f" class="php.libs.File" />
 	<reg prefix="fa" class="php.libs.FileAdmin" />
