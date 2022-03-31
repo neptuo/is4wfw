@@ -41,8 +41,11 @@ class UserVariableDao extends AbstractDao {
 			'type' => 1
 		);
 
-		if (parent::exists(parent::createSelect()->where('user_id', '=', $userId)->conjunct('name', '=', $name)->conjunct('type', '=', 1))) {
-			return parent::update($data);
+		$getIdSql = $this->sql()->select(self::getTableName(), ["id"], ["user_id" => $userId, "name" => $name, "type" => 1]);
+		$existingId = $this->dataAccess()->fetchScalar($getIdSql);
+		if ($existingId) {
+			$updateSql = $this->sql()->update(self::getTableName(), ["value" => $value], ["id" => $existingId]);
+			return $this->dataAccess()->execute($updateSql);
 		} else {
 			return parent::insert($data);
 		}
