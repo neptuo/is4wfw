@@ -27,7 +27,6 @@
     <attribute>
       <name>value2</name>
       <type>string</type>
-      <required />
       <comment>Druhá hodnota.</comment>
     </attribute>
     <attribute>
@@ -97,6 +96,7 @@
     </attribute>
     <comment>
       Spojí hodnoty všech atributů 'value1-15' do jednoho řetězce.
+      Každá položka může být též polem.
       Pokud je vyplněn "separator", odstraně všechny prázdné hodnoty a mezi vyplněné položky vloží zadaný oddělovač.
       Výslednou hodnotu nastaví do proměnné 'output' v této knihovně.
     </comment>
