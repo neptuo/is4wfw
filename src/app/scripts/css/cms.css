@@ -26,9 +26,24 @@ body {
     background: url(/images/cms/design/menu-background.png);
 }
 
+.main-menu .favorites-settings a {
+    cursor: pointer;
+    color: #04601C;
+    padding: 5px;
+    font-size: .8rem;
+}
+
 .cms-menu .menu-root a, .cms-menu .menu-root a:hover {
     background-color: #04601C !important;
 }
+
+nav[data-mode='favorites'] .cms-menu:not([data-menu='favorites']) {
+    display: none;
+}
+nav[data-mode='standard'] [data-menu='favorites'] {
+    display: none;
+}
+
 
 .frame-body {
     font-size: 14px;

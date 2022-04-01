@@ -33,7 +33,13 @@
             </nav>
                 
             <div class="border-right shadow main-menu main-menu-background">
-                <nav class="py-3 px-2">
+                <nav class="pt-2 pb-3 px-2" data-mode="<web:out text="cookie:cmsMenuMode" />">
+                    <div class="d-flex justify-content-between pb-1 favorites-settings">
+                        <a data-mode="all">All</a>
+                        <a data-mode="favorites">Favorites</a>
+                        <a data-mode="standard">Standard</a>
+                        <a data-modal="favorites-editor">Edit</a>
+                    </div>
                     <controls:menuDefinition />
                     <ui:forEach items="list:menu" filter-parentId="php:null">
                         <controls:menu name="list:menu-id" title="list:menu-text" icon="list:menu-icon" permission="list:menu-perm" rootUrl="list:menu-url" cookie="list:menu-cookie" menu="list:menu-id" defaultState="list:menu-defaultState" toggler="list:menu-id" class="list:menu-class" />
@@ -100,4 +106,5 @@
     </bs:row>
 
 	<controls:instanceName />
+	<controls:favoritesMenuEditor />
 </layouts:base>

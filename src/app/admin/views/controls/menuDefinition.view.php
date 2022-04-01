@@ -49,3 +49,17 @@
     <list:add key-text="Admin menu" key-url="route:editAdminMenu" key-icon="~/images/icons/building.png" key-perm="CMS.Settings.AdminMenu" key-parentId="settings" key-id="adminmenu" key-order="709" />
 </list:declare>
 
+<web:condition when="var:userMenu">
+    <utils:splitToArray output="var:userMenu" value="var:userMenu" separator="," />
+    <var:declare name="favoritesOrder" value="0" />
+    <list:add name="menu" key-text="Favorites" key-url="route:index" key-icon="star" key-iconPrefix="fas" key-id="favorites" key-cookie="cookie:cmsMenu-favorites" key-order="var:favoritesOrder" />
+    <ui:forEach items="list:menu">
+        <if:arrayContains name="userMenu" value="var:userMenu" item="list:menu-id" />
+        <web:out if:passed="userMenu">
+            <math:number out="var:favoritesOrder" add="1" />
+            <list:add name="menu" key-text="list:menu-text" key-url="list:menu-url" key-icon="list:menu-icon" key-iconPrefix="list:menu-iconPrefix" key-class="list:menu-class" key-parentId="favorites" key-order="var:favoritesOrder" />
+        </web:out>
+    </ui:forEach>
+
+    <list:sort name="menu" key-order="asc" />
+</web:condition>

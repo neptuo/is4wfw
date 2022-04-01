@@ -56,4 +56,13 @@
         e.preventDefault();
     });
 
+    $(".favorites-settings a[data-mode]").click(function(e) {
+        const $this = $(this);
+        const mode = $this.data("mode");
+
+        $this.parents("nav").attr("data-mode", mode);
+        cookies.create("cmsMenuMode", mode);
+        e.preventDefault();
+    })
+
 })();
