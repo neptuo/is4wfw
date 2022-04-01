@@ -59,7 +59,7 @@
             fclose($file);
         }
 
-        public function exception($e, $params = []) {
+        private function processException($e, $params, $writeToLog = true) {
             $message = "An exception of type '" . get_class($e) . "' has occured";
             if (array_key_exists("tagPrefix", $params) && array_key_exists("tagName", $params)) {
                 $message .= " while processing tag '{$params["tagPrefix"]}:{$params["tagName"]}'";
@@ -70,7 +70,10 @@
             $message .= ". " . PHP_EOL;
 
             $message .= $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . '@ ' . HttpUtils::currentAbsoluteUrl();
-            $this->write($message);
+
+            if ($writeToLog) {
+                $this->write($message);
+            }
 
             global $webObject;
             if ($webObject->getDebugMode()) {
@@ -84,6 +87,14 @@
             } else {
                 return "";
             }
+        }
+
+        public function exception($e, $params = []) {
+            return $this->processException($e, $params, true);
+        }
+        
+        public function getDebugExceptionView($e, $params = []) {
+            return $this->processException($e, $params, false);
         }
     }
 

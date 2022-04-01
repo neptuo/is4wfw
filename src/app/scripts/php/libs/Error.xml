@@ -45,4 +45,36 @@
     </features>
     <comment>Spustí tag, na kterém je použito, pouze pokud uvnitř boundary vznikla výjimka.</comment>
   </decorator>
+  <fulltag>
+    <name>exceptionList</name>
+    <function>exceptionList</function>
+    <attribute>
+      <name>name</name>
+      <comment>Volitelný název, pro filtrování pouze v boundary.</comment>
+    </attribute>
+    <comment>
+      Vypíše se seznam chyb. Možné filtrovat podle boundary "name".
+      V těle je možné použít property "exceptionList".
+    </comment>
+  </fulltag>
+  <property>
+    <name>exceptionList</name>
+    <getFunction>getExceptionList</getFunction>
+    <comment>Vrací list model uvnitř "error:exceptionList".</comment>
+  </property>
+  <property>
+    <name>exceptionType</name>
+    <getFunction>getExceptionType</getFunction>
+    <comment>Vrací typ výjimky uvnitř "error:exceptionList".</comment>
+  </property>
+  <property>
+    <name>exceptionMessage</name>
+    <getFunction>getExceptionMessage</getFunction>
+    <comment>Vrací text výjimky uvnitř "error:exceptionList".</comment>
+  </property>
+  <property>
+    <name>exceptionTrace</name>
+    <getFunction>getExceptionTrace</getFunction>
+    <comment>Vrací stack trace výjimky uvnitř "error:exceptionList".</comment>
+  </property>
 </taglib>
