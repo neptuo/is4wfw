@@ -276,7 +276,7 @@
                     'name' => $_POST['project-name'], 
                     'entrypoint' => $_POST['project-entrypoint'], 
                     'content' => $_POST['project-edit-content'],
-                    'pageless' => $_POST['project-edit-pageless'],
+                    'pageless' => (bool)$_POST['project-edit-pageless'],
                     'read' => $_POST['project-right-edit-groups-r'], 
                     'write' => $_POST['project-right-edit-groups-w'], 
                     'delete' => $_POST['project-right-edit-groups-d'], 

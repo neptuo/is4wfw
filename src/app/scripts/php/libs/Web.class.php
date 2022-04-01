@@ -243,6 +243,22 @@
         }
 
         public function processRequestNG() {
+            $boundaryName = "processRequest";
+
+            $error = $this->autolib("error");
+            $error->boundary(
+                function() { 
+                    $this->processRequestExecute();
+                }, 
+                $boundaryName
+            );
+            if ($error->isFailed($boundaryName)[PhpRuntime::$DecoratorExecuteName]) {
+                $this->generateErrorPage('500');
+            }
+        }
+
+        // Call processRequestNG to ensure error boundary.
+        private function processRequestExecute() {
             if (IS_DEVELOPMENT_MODE) {
                 $this->debugMode(true);
             }
