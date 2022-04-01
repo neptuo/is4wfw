@@ -5,15 +5,21 @@
     Knihovna pro zpracování chyb/výjimek při spouštění tagů.
   </comment>
   <fulltag>
-      <name>boundary</name>
-      <function>boundary</function>
-      <attribute>
-          <name>name</name>
-          <comment>Volitelný název. Chycené výjimky je možné podle něj identifikovat.</comment>
-      </attribute>
-      <comment>
-          Try-catch pro chycení výjimek uvnitř těla.
-      </comment>
+    <name>boundary</name>
+    <function>boundary</function>
+    <attribute>
+      <name>name</name>
+      <comment>Volitelný název. Chycené výjimky je možné podle něj identifikovat.</comment>
+    </attribute>
+    <attribute>
+      <name>logException</name>
+      <type>bool</type>
+      <default>true</default>
+      <comment>Zda se má výjimka zalogovat.</comment>
+    </attribute>
+    <comment>
+      Try-catch pro chycení výjimek uvnitř těla.
+    </comment>
   </fulltag>
   <decorator>
     <function>isPassed</function>

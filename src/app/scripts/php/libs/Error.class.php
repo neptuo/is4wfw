@@ -21,13 +21,17 @@ class Error extends BaseTagLib {
 
     private $storage = [];
 
-    public function boundary(callable $template, ?string $name = null){
+    public function boundary(callable $template, ?string $name = null, bool $logException = true){
         try {
             unset($this->storage[$name]);
             return $template();
         } catch (Exception $e) {
-            $this->storage[$name][] = $e;
-            return $this->logException($e, $name);
+            if ($logException) {
+                $this->storage[$name][] = $e;
+                return $this->logException($e, $name);
+            } else {
+                return "";
+            }
         }
     }
 
