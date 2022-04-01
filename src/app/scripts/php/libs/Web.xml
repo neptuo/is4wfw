@@ -956,4 +956,17 @@
       Vrací ikonu pro položku uvnitř "web:menu".
     </comment>
   </property>
+  <tag>
+    <name>error</name>
+    <function>generateErrorPage</function>
+    <attribute>
+      <name>code</name>
+      <type>number</type>
+      <required />
+      <comment>Kód eroru.</comment>
+    </attribute>
+    <comment>
+      Vygeneruje systémovou chybovou stránku včetně stavového kódu a ukončí zpracování requestu.
+    </comment>
+  </tag>
 </taglib>

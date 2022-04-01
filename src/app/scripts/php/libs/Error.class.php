@@ -53,7 +53,11 @@ class Error extends BaseTagLib {
     }
     
     public function isFailed($name) {
-        $isFailed = array_key_exists($name, $this->storage);
+        if ($name == "*") {
+            $isFailed = !empty($this->storage);
+        } else {
+            $isFailed = array_key_exists($name, $this->storage);
+        }
         return [PhpRuntime::$DecoratorExecuteName => $isFailed];
     }
 

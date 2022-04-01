@@ -2691,11 +2691,10 @@
          *
          * 	Try to find setuped error page or display default.
          * 		 
-         * 	@param		projectId				project id
          * 	@param		errorCode				error code, 403, 404, ... , all		 		 
          *
          */
-        private function generateErrorPage($errorCode) {
+        public function generateErrorPage($errorCode) {
             $domainUrl = $_SERVER['HTTP_HOST'];
             $rootUrl = INSTANCE_URL;
             $virtualUrl = $this->getVirtualUrl();
@@ -2732,6 +2731,13 @@
                     echo file_get_contents($path);
                 } else {
                     echo '<h1 class="error">Permission denied!</h1><p class="error">You can\'t read this page.</p>';
+                }
+            } elseif ($errorCode == 500) {
+                header("HTTP/1.1 500 Internal Server Error");
+                if (file_exists($path)) {
+                    echo file_get_contents($path);
+                } else {
+                    echo '<h1 class="error">Error 500</h1><p class="error">Unexpected internal server error.</p>';
                 }
             } else {
                 if (file_exists($path)) {

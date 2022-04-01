@@ -38,7 +38,7 @@
     <attribute>
       <name>boundaryFailed</name>
       <type>string</type>
-      <comment>Název boundary.</comment>
+      <comment>Název boundary. Případně wildcard ("*").</comment>
     </attribute>
     <features>
       <conditionsExecution />
