@@ -23,10 +23,6 @@
             $model->save();
             $template();
             $model->save(false);
-
-            if ($model->hasException()) {
-                throw new Exception("One or more exceptions raised during save phase of EditModel. All of them should be logged.");
-            }
         }
 		
 		public function form($template, $submit, $isEditable = true, $isTransactional = true, $params = []) {

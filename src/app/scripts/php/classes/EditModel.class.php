@@ -8,7 +8,6 @@
         private $container = [];
         private $validation = [];
         private $index = 0;
-        private $exceptions = [];
         private $editable = true;
 
         public function prefix($name = "1.1-def") {
@@ -29,18 +28,6 @@
 
         public function prefixes() {
             return $this->prefixes;
-        }
-
-        public function exception($e) {
-            $this->exceptions[] = $e;
-        }
-
-        public function hasException() {
-            return count($this->exceptions) > 0;
-        }
-
-        public function exceptions() {
-            return $this->exceptions;
         }
 
         public function editable($value = "0.0-def") {
