@@ -23,20 +23,23 @@ class Error extends BaseTagLib {
 
     private $storage = [];
 
-    public function boundary(callable $template, ?string $name = null, bool $logException = true){
+    public function boundary(callable $template, ?string $name = null, bool $logException = true, array $logParam = []){
         try {
             unset($this->storage[$name]);
             return $template();
         } catch (Exception $e) {
             $this->storage[$name][] = $e;
-            return $this->processException($e, $name, $logException);
+            return $this->processException($e, $name, $logException, $logParam);
         }
     }
 
-    private function processException($e, $boundaryName, $writeToLog) {
+    private function processException($e, $boundaryName, $writeToLog, $logParam) {
         $params = [];
         if ($boundaryName) {
             $params["boundary"] = $boundaryName;
+        }
+        if (count($logParam) > 0) {
+            $params["params"] = $logParam;
         }
 
         global $logObject;

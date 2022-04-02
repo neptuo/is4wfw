@@ -68,6 +68,13 @@
                 $message .= " while processing error boundary '{$params["boundary"]}'";
             }
             $message .= ". " . PHP_EOL;
+            if (array_key_exists("params", $params) && count($params["params"]) > 0) {
+                $strParams = [];
+                foreach ($params["params"] as $key => $value) {
+                    $strParams[] = "'$key' = '$value'";
+                }
+                $message .= "Params: " . implode(", ", $strParams) . PHP_EOL;
+            }
 
             $message .= $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . '@ ' . HttpUtils::currentAbsoluteUrl();
 

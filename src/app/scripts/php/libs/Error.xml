@@ -17,6 +17,11 @@
       <default>true</default>
       <comment>Zda se má výjimka zalogovat.</comment>
     </attribute>
+    <attribute>
+      <name>logParam</name>
+      <prefix />
+      <comment>Seznam parametrů, které budou přidány do logu v případě výjimky.</comment>
+    </attribute>
     <comment>
       Try-catch pro chycení výjimek uvnitř těla.
     </comment>
