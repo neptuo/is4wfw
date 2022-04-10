@@ -30,12 +30,12 @@
     <list:add key-text="Matches" key-url="route:floorballMatches" key-icon="~/images/icons/floorball/matches.png" key-perm="CMS.Floorball.Matches" key-parentId="floorball" key-id="floorball.matches" key-order="507" />
     <list:add key-text="Tables Content" key-url="route:floorballTablesContent" key-icon="~/images/icons/floorball/table.png" key-perm="CMS.Floorball.TablesContent" key-parentId="floorball" key-id="floorball.tablescontent" key-order="508" />
 
-    <list:add key-text="Users" key-url="route:users" key-icon="users" key-iconPrefix="fas" key-perm="CMS.Settings" key-id="users" key-cookie="cookie:cmsMenu-users" key-order="600" />
-    <list:add key-text="Users &amp; Roles" key-url="route:users" key-icon="~/images/icons/user.png" key-perm="CMS.Settings.Users" key-parentId="users" key-id="users" key-order="601" />
-    <list:add key-text="Role cache" key-url="route:roleCache" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.RoleCache" key-parentId="users" key-id="rolecache" key-order="602" />
-    <list:add key-text="User log" key-url="route:userLog" key-icon="~/images/icons/userlog.png" key-perm="CMS.Settings.UserLog" key-parentId="users" key-id="userlog" key-order="603" />
-    <list:add key-text="Personal properties" key-url="route:personalProperties" key-icon="~/images/icons/properties.png" key-perm="CMS.Settings.PersonalProperties" key-parentId="users" key-id="personalproperties" key-order="604" />
-    <list:add key-text="Personal notes" key-url="route:personalNotes" key-icon="~/images/page_edi.png" key-perm="CMS.Settings.PersonalNotes" key-parentId="users" key-id="personalnotes" key-order="605" />
+    <list:add key-text="Users" key-url="route:users" key-icon="users" key-iconPrefix="fas" key-perm="CMS.Settings" key-id="accounts" key-cookie="cookie:cmsMenu-users" key-order="600" />
+    <list:add key-text="Users &amp; Roles" key-url="route:users" key-icon="~/images/icons/user.png" key-perm="CMS.Settings.Users" key-parentId="accounts" key-id="users" key-order="601" />
+    <list:add key-text="Role cache" key-url="route:roleCache" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.RoleCache" key-parentId="accounts" key-id="rolecache" key-order="602" />
+    <list:add key-text="User log" key-url="route:userLog" key-icon="~/images/icons/userlog.png" key-perm="CMS.Settings.UserLog" key-parentId="accounts" key-id="userlog" key-order="603" />
+    <list:add key-text="Personal properties" key-url="route:personalProperties" key-icon="~/images/icons/properties.png" key-perm="CMS.Settings.PersonalProperties" key-parentId="accounts" key-id="personalproperties" key-order="604" />
+    <list:add key-text="Personal notes" key-url="route:personalNotes" key-icon="~/images/page_edi.png" key-perm="CMS.Settings.PersonalNotes" key-parentId="accounts" key-id="personalnotes" key-order="605" />
 
     <list:add key-text="Settings" key-url="route:personalNotes" key-icon="tools" key-iconPrefix="fas" key-perm="CMS.Settings" key-id="settings" key-cookie="cookie:cmsMenu-settings" key-order="0" key-order="700" />
     <list:add key-text="Url cache" key-url="route:urlCache" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.UrlCache" key-parentId="settings" key-id="urlcache" key-order="701" />
@@ -48,13 +48,25 @@
     <list:add key-text="Modules" key-url="route:modules" key-icon="~/images/icons/plugin.png" key-perm="CMS.Settings.Modules" key-parentId="settings" key-id="modules" key-order="708" />
     <list:add key-text="Admin menu" key-url="route:editAdminMenu" key-icon="~/images/icons/building.png" key-perm="CMS.Settings.AdminMenu" key-parentId="settings" key-id="adminmenu" key-order="709" />
 </list:declare>
+<list:declare name="favoritesEditor" />
 
-<web:condition when="var:userMenu">
-    <utils:splitToArray output="var:userMenu" value="var:userMenu" separator="," />
+<ui:forEach items="list:menu">
+    <if:eval name="includeInFavorites">
+        <if:equals value="list:menu-parentId" is="php:null" not="true" />
+        <if:equals value="list:menu-id" is="php:null" not="true" />
+    </if:eval>
+    <web:out if:passed="includeInFavorites">
+        <list:add name="favoritesEditor" key-text="list:menu-text" key-url="list:menu-url" key-icon="list:menu-icon" key-iconPrefix="list:menu-iconPrefix" key-class="list:menu-class" key-parentId="list:menu-parentId" key-id="list:menu-id" key-order="list:menu-order" />
+    </web:out>
+</ui:forEach>
+<list:sort name="favoritesEditor" key-order="asc" />
+
+<web:condition when="var:is4wfw.userMenu">
+    <utils:splitToArray output="var:is4wfw.userMenu" value="var:is4wfw.userMenu" separator="," />
     <var:declare name="favoritesOrder" value="0" />
     <list:add name="menu" key-text="Favorites" key-url="route:index" key-icon="star" key-iconPrefix="fas" key-id="favorites" key-cookie="cookie:cmsMenu-favorites" key-order="var:favoritesOrder" />
     <ui:forEach items="list:menu">
-        <if:arrayContains name="userMenu" value="var:userMenu" item="list:menu-id" />
+        <if:arrayContains name="userMenu" value="var:is4wfw.userMenu" item="list:menu-id" />
         <web:out if:passed="userMenu">
             <math:number out="var:favoritesOrder" add="1" />
             <list:add name="menu" key-text="list:menu-text" key-url="list:menu-url" key-icon="list:menu-icon" key-iconPrefix="list:menu-iconPrefix" key-class="list:menu-class" key-parentId="favorites" key-order="var:favoritesOrder" />

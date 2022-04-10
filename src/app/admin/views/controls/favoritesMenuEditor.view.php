@@ -1,17 +1,17 @@
 <controls:modalForm id="favorites-editor" title="Favorites" size="sm" submit="favorites-save" submitText="Save">
     <web:condition when="edit:load">
-        <edit:set name="value" value="var:userMenu" />
+        <edit:set name="value" value="var:is4wfw.userMenu" />
     </web:condition>
     <web:condition when="edit:save">
         <utils:concat output="userMenu" value1="edit:value" separator="," />
-        <var:declare name="userMenu" value="utils:userMenu" scope="user" />
+        <var:declare name="is4wfw.userMenu" value="utils:userMenu" scope="user" />
     </web:condition>
     <web:condition when="edit:saved">
         <web:redirectToSelf />
     </web:condition>
 
     <bs:formGroup>
-        <ui:checkboxlist name="value" source="list:menu" display="text" value="id" />
+        <ui:checkboxlist name="value" source="list:favoritesEditor" display="text" value="id" />
     </bs:formGroup>
 </controls:modalForm>
 
