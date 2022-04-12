@@ -31,11 +31,12 @@
     <list:add key-text="Tables Content" key-url="route:floorballTablesContent" key-icon="~/images/icons/floorball/table.png" key-perm="CMS.Floorball.TablesContent" key-parentId="floorball" key-id="floorball.tablescontent" key-order="508" />
 
     <list:add key-text="Users" key-url="route:users" key-icon="users" key-iconPrefix="fas" key-perm="CMS.Settings" key-id="accounts" key-cookie="cookie:cmsMenu-users" key-order="600" />
-    <list:add key-text="Users &amp; Roles" key-url="route:users" key-icon="~/images/icons/user.png" key-perm="CMS.Settings.Users" key-parentId="accounts" key-id="users" key-order="601" />
-    <list:add key-text="Role cache" key-url="route:roleCache" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.RoleCache" key-parentId="accounts" key-id="rolecache" key-order="602" />
-    <list:add key-text="User log" key-url="route:userLog" key-icon="~/images/icons/userlog.png" key-perm="CMS.Settings.UserLog" key-parentId="accounts" key-id="userlog" key-order="603" />
-    <list:add key-text="Personal properties" key-url="route:personalProperties" key-icon="~/images/icons/properties.png" key-perm="CMS.Settings.PersonalProperties" key-parentId="accounts" key-id="personalproperties" key-order="604" />
-    <list:add key-text="Personal notes" key-url="route:personalNotes" key-icon="~/images/page_edi.png" key-perm="CMS.Settings.PersonalNotes" key-parentId="accounts" key-id="personalnotes" key-order="605" />
+    <list:add key-text="Users" key-url="route:users" key-icon="~/images/icons/user.png" key-perm="CMS.Settings.Users" key-parentId="accounts" key-id="users" key-order="601" />
+    <list:add key-text="Groups" key-url="route:userGroups" key-icon="~/images/icons/group.png" key-perm="CMS.Settings.Groups" key-parentId="accounts" key-id="groups" key-order="602" />
+    <list:add key-text="Role cache" key-url="route:roleCache" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.RoleCache" key-parentId="accounts" key-id="rolecache" key-order="603" />
+    <list:add key-text="User log" key-url="route:userLog" key-icon="~/images/icons/userlog.png" key-perm="CMS.Settings.UserLog" key-parentId="accounts" key-id="userlog" key-order="604" />
+    <list:add key-text="Personal properties" key-url="route:personalProperties" key-icon="~/images/icons/properties.png" key-perm="CMS.Settings.PersonalProperties" key-parentId="accounts" key-id="personalproperties" key-order="605" />
+    <list:add key-text="Personal notes" key-url="route:personalNotes" key-icon="~/images/page_edi.png" key-perm="CMS.Settings.PersonalNotes" key-parentId="accounts" key-id="personalnotes" key-order="606" />
 
     <list:add key-text="Settings" key-url="route:personalNotes" key-icon="tools" key-iconPrefix="fas" key-perm="CMS.Settings" key-id="settings" key-cookie="cookie:cmsMenu-settings" key-order="0" key-order="700" />
     <list:add key-text="Url cache" key-url="route:urlCache" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.UrlCache" key-parentId="settings" key-id="urlcache" key-order="701" />
