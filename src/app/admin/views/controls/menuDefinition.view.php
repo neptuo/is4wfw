@@ -1,6 +1,7 @@
 <list:declare name="menu">
     <!-- Extra items -->
-    <list:add key-text="Documentation" key-url="route:hint" key-icon="question-circle" key-iconPrefix="fas" key-perm="xyz" key-parentId="extra" key-id="documentation" key-order="001" />
+    <list:add key-text="Home" key-url="route:index" key-icon="home" key-iconPrefix="fas" key-parentId="extra" key-id="home" key-order="001" />
+    <list:add key-text="Documentation" key-url="route:hint" key-icon="question-circle" key-iconPrefix="fas" key-perm="CMS.Hint" key-parentId="extra" key-id="documentation" key-order="002" />
 
     <!-- Standard items -->
     <list:add key-text="Home" key-url="route:index" key-icon="home" key-iconPrefix="fas" key-class="d-block d-md-none cms-menu-home" key-order="100" />
