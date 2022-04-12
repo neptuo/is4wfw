@@ -118,6 +118,14 @@
 			}
 		}
 
+		public function stringStartsWith($value, $part, $name = "") {
+			$this->append(StringUtils::startsWith($value, $part), $name);
+		}
+
+		public function stringEndsWith($value, $part, $name = "") {
+			$this->append(StringUtils::endsWith($value, $part), $name);
+		}
+
 		public function stringLength($value, $min = -1, $max = -1, $is = -1, $orEqual = false, $name = "") {
 			$length = strlen($value);
 			return $this->testLength($length, $min, $max, $is, $orEqual, $name);
