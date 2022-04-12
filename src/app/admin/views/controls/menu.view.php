@@ -38,9 +38,16 @@
                             <li>
                                 <div class="link">
                                     <web:a pageId="list:menu-url" title="list:menu-text" class="rounded">
-                                        <web:condition when="list:menu-icon">
+                                        <web:out if:stringEmpty="list:menu-iconPrefix" if:not="true">
+                                            <fa5:icon prefix="list:menu-iconPrefix" name="list:menu-icon" />
+                                        </web:out>
+                                        <if:eval name="imageIcon">
+                                            <if:equals value="list:menu-iconPrefix" is="php:null" />
+                                            <if:equals value="list:menu-icon" is="" not="true" />
+                                        </if:eval>
+                                        <web:out if:passed="imageIcon">
                                             <img src="<web:out text="list:menu-icon" />" width="16" height="16" />
-                                        </web:condition>
+                                        </web:out>
                                         <span class="text">
                                             <web:out text="list:menu-text" />
                                         </span>
