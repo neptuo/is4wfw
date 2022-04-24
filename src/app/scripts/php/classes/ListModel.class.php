@@ -7,13 +7,12 @@
 
         private $fields;
         private $items;
-        private $data;
+        private $currentIndex = -1;
         
         private $metadata = [];
 
         public function __construct() {
             $this->fields = array();
-            $this->data = array();
         }
 
         public function isRegistration() {
@@ -36,41 +35,47 @@
             return $this->fields;
         }
 
-        public function field($name) {
+        public function field($name, $value = "z.z-def") {
             if ($this->isRegistration) {
                 if (!in_array($name, $this->fields)) {
                     $this->fields[] = $name;
                 }
             } else if ($this->isRender) {
-                return $this->data[$name];
+                if ($value === "z.z-def") {
+                    return $this->items[$this->currentIndex][$name];
+                } else {
+                    $this->items[$this->currentIndex][$name] = $value;
+                }
             }
         }
 
         public function items($items = "z.z-def") {
             if ($items != "z.z-def") {
                 $this->items = $items;
+                $this->currentIndex = -1;
             } else {
                 return $this->items;
             }
+        }
+
+        public function itemCount() {
+            return count($this->items);
         }
 
         public function addItem($item) {
             $this->items[] = $item;
         }
 
-        public function data($item = "z.z-def") {
-            if ($item != "z.z-def") {
-                $this->data = $item;
-                $this->hasDataItem = true;
-            } else {
-                return $this->data;
-            }
+        public function currentIndex($index) {
+            $this->currentIndex = $index;
         }
 
-        private $hasDataItem;
+        public function currentItem() {
+            return $this->items[$this->currentIndex];
+        }
 
-        public function hasDataItem() {
-            return $this->hasDataItem;
+        public function hasCurrentItem() {
+            return $this->currentIndex != -1;
         }
 
         // ------- Metadata ---------------------------------------------------

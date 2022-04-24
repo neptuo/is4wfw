@@ -98,7 +98,7 @@
 
 		public function getId() {
 			if ($this->hasListModel()) {
-				return $this->peekListModel()->data()->id;
+				return $this->peekListModel()->currentItem()->id;
 			}
 
 			if ($this->current) {
@@ -108,7 +108,7 @@
 
 		public function getAlias() {
 			if ($this->hasListModel()) {
-				return $this->peekListModel()->data()->alias;
+				return $this->peekListModel()->currentItem()->alias;
 			}
 
 			if ($this->current) {
@@ -118,7 +118,7 @@
 
 		public function getName() {
 			if ($this->hasListModel()) {
-				return $this->peekListModel()->data()->name;
+				return $this->peekListModel()->currentItem()->name;
 			}
 
 			if ($this->current) {
@@ -128,7 +128,7 @@
 
 		public function getVersion() {
 			if ($this->hasListModel()) {
-				return $this->peekListModel()->data()->version;
+				return $this->peekListModel()->currentItem()->version;
 			}
 
 			if ($this->current) {
@@ -140,7 +140,7 @@
 			$version = null;
 
 			if ($this->hasListModel()) {
-				$version = $this->peekListModel()->data()->is4wfw->minVersion;
+				$version = $this->peekListModel()->currentItem()->is4wfw->minVersion;
 			}
 
 			if ($this->current) {
@@ -158,7 +158,7 @@
 			$module = null;
 
 			if ($this->hasListModel()) {
-				$module = $this->peekListModel()->data();
+				$module = $this->peekListModel()->currentItem();
 			}
 
 			if ($this->current) {
@@ -175,7 +175,7 @@
 		public function getGitHubRepositoryName() {
 			$module = null;
 			if ($this->hasListModel()) {
-				$module = $this->peekListModel()->data();
+				$module = $this->peekListModel()->currentItem();
 			}
 
 			if ($this->current) {
@@ -481,7 +481,7 @@
 		}
 
 		public function getGitHubUpdateSize() {
-			return $this->peekListModel()->data()["download"]["size"];
+			return $this->peekListModel()->currentItem()["download"]["size"];
 		}
 
 		public function gitHubUpdate($template, $moduleId, $updateId, $userName, $accessToken) {

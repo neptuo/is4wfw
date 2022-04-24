@@ -90,15 +90,15 @@ class Error extends BaseTagLib {
     }
 
     public function getExceptionType() {
-        return get_class(parent::peekListModel()->data());
+        return get_class(parent::peekListModel()->currentItem());
     }
 
     public function getExceptionMessage() {
-        return parent::peekListModel()->data()->getMessage();
+        return parent::peekListModel()->currentItem()->getMessage();
     }
 
     public function getExceptionTrace() {
-        return parent::peekListModel()->data()->getTraceAsString();
+        return parent::peekListModel()->currentItem()->getTraceAsString();
     }
 }
 

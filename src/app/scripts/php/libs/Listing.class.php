@@ -98,7 +98,7 @@
 			}
 
 			if ($name[1] == "_") {
-				return $model->data();
+				return $model->currentItem();
 			}
 
 			return $model->field($name[1]);

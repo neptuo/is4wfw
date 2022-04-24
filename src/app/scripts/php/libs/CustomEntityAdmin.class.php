@@ -428,28 +428,28 @@
         }
 
         public function getTableColumnName() {
-            return $this->peekListModel()->data()->name;
+            return $this->peekListModel()->currentItem()->name;
         }
 
         public function getTableColumnDescription() {
-            return $this->peekListModel()->data()->description;
+            return $this->peekListModel()->currentItem()->description;
         }
 
         public function getTableColumnType() {
-            $typeDefinition = $this->getTableColumnTypes($this->peekListModel()->data());
+            $typeDefinition = $this->getTableColumnTypes($this->peekListModel()->currentItem());
             return $typeDefinition["name"];
         }
 
         public function getTableColumnPrimaryKey() {
-            return $this->peekListModel()->data()->primaryKey == TRUE;
+            return $this->peekListModel()->currentItem()->primaryKey == TRUE;
         }
 
         public function getTableColumnRequired() {
-            return $this->peekListModel()->data()->required == TRUE;
+            return $this->peekListModel()->currentItem()->required == TRUE;
         }
 
         public function getTableColumnUnique() {
-            return $this->peekListModel()->data()->unique == TRUE;
+            return $this->peekListModel()->currentItem()->unique == TRUE;
         }
 
         public function tableColumnCreator($name) {

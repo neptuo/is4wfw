@@ -120,7 +120,7 @@
 				};
 			}
 			
-			if ($model->hasDataItem()) {
+			if ($model->hasCurrentItem()) {
 				return $transform($model->field($field));
 			}
 

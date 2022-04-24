@@ -612,7 +612,7 @@
 
         public function getPropClassPath() {
             if ($this->hasListModel()) {
-                return $this->peekListModel()->data();
+                return $this->peekListModel()->currentItem();
             }
 
             return $_SESSION['select-class-path'];

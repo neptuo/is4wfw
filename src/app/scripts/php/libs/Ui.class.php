@@ -64,9 +64,10 @@
 			if ($model->isRender()) {
 				$prevIndex = $this->forEachIndex;
 				$this->forEachIndex = 0;
-				foreach ($model->items() as $item) {
+				for ($i = 0; $i < $model->itemCount(); $i++) { 
+					$model->currentIndex($i);
+					$item = $model->currentItem();
 					if ($this->isPassedByWhere($item, $filter)) {
-						$model->data($item);
 						$result .= $template();
 						$this->forEachIndex++;
 					}
@@ -131,10 +132,8 @@
 			}
 			
 			if ($model->isRender()) {
-				$items = $model->items();
-				if (count($items) > 0) {
-					$item = $items[$indexGetter($items)];
-					$model->data($item);
+				if ($model->itemCount() > 0) {
+					$model->currentIndex($indexGetter($model->itemCount()));
 					$result .= $template();
 				}
 			}
@@ -144,11 +143,11 @@
 		}
 
 		public function firstListModel($template, $model) {
-			return $this->singleListModel($template, $model, function($items) { return 0; });
+			return $this->singleListModel($template, $model, function($i) { return 0; });
 		}
 
 		public function lastListModel($template, $model) {
-			return $this->singleListModel($template, $model, function($items) { return count($items) - 1; });
+			return $this->singleListModel($template, $model, function($i) { return $i - 1; });
 		}
 
 		public function emptyListModel($template, $model) {
@@ -211,8 +210,7 @@
 				$result = "";
 				$isWellStructured = count($thead) > 0 || count($tbody) > 0;
 
-				$items = $model->items();
-				if (count($items) > 0) {
+				if ($model->itemCount() > 0) {
 					$attributes = $this->joinAttributes($params);
 
 					// Header
@@ -242,8 +240,8 @@
 					
 					// Body
 					$this->gridPhase = "body";
-					foreach ($items as $item) {
-						$model->data($item);
+					for ($i = 0; $i < $model->itemCount(); $i++) { 
+						$model->currentIndex($i);
 						
 						$oldGridExplicitRow = $this->gridExplicitRow;
 						$row = $template();
