@@ -334,6 +334,10 @@
 
         }
 
+        public function setProperty(PropertyReference $property, $value) {
+            $property->set($value);
+        }
+
         public function getNull() {
             return null;
         }

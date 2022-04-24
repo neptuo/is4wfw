@@ -136,6 +136,20 @@
       Zaregistruje tag lib, který je možný používat v těle tagu, za ukončovací značkou ho zase zruší.
     </comment>
   </fulltag>
+  <tag>
+    <name>set</name>
+    <function>setProperty</function>
+    <attribute>
+      <name>property</name>
+      <type>propertyReference</type>
+      <comment>Property, která se má nastavit</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <comment>Hodnota, na kterou se má "property" nastavit</comment>
+    </attribute>
+    <comment>Nastaví "value" do "property".</comment>
+  </tag>
   <property>
     <name>null</name>
     <getFunction>getNull</getFunction>
