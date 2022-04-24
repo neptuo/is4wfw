@@ -54,8 +54,8 @@
     <list:add key-text="Modules" key-url="route:modules" key-icon="~/images/icons/plugin.png" key-perm="CMS.Settings.Modules" key-parentId="settings" key-id="modules" key-order="708" />
     <list:add key-text="Admin menu" key-url="route:editAdminMenu" key-icon="~/images/icons/building.png" key-perm="CMS.Settings.AdminMenu" key-parentId="settings" key-id="adminmenu" key-order="709" />
 </list:declare>
-<list:declare name="favoritesEditor" />
 
+<list:declare name="favoritesEditor" />
 <ui:forEach items="list:menu">
     <if:eval name="includeInFavorites">
         <if:equals value="list:menu-parentId" is="php:null" not="true" />

@@ -103,6 +103,19 @@
 
 			return $model->field($name[1]);
 		}
+
+		public function setProperty($name, $value) {
+			$name = explode("-", $name, 2);
+			$this->ensureDeclaration($name[0], false);
+
+			$model = $this->container[$name[0]];
+
+			if (count($name) == 1) {
+				return;
+			}
+
+			$model->field($name[1], $value);
+		}
 	}
 
 ?>

@@ -80,6 +80,8 @@
       Pokud je zadán název modelu, vrátí celý list model.
       Pokud je ve formátu "{model}-{field}", vrátí hodnotu field aktuální položky.
       Pokud název fieldu "_", pak vrací celou položku.
+
+      Setter funguje pro doplnění fieldu. Není možné přenastavit celou položku pomocí "_".
     </comment>
   </anyProperty>
 </taglib>
