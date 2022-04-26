@@ -71,6 +71,31 @@
       Přebíjí uložené šabloné v DB.
     </comment>
   </fulltag>
+  <tag>
+    <name>attribute</name>
+    <function>attribute</function>
+    <attribute>
+      <name>name</name>
+      <comment>Název atributu.</comment>
+      <required />
+    </attribute>
+    <attribute>
+      <name>type</name>
+      <comment>Volitelný typ atributu; provedou se nutné konverze. PropertyReference není podporováno.</comment>
+    </attribute>
+    <attribute>
+      <name>default</name>
+      <comment>Výchozí hodnota atributu, pokud není použit při použití šablony.</comment>
+    </attribute>
+    <attribute>
+      <name>comment</name>
+      <comment>Nedělá nic. Umožňuje dokumentovat, co daný atribut dělá.</comment>
+    </attribute>
+    <comment>
+      Nastaví vlastnosti atributu.
+      Používá se uvnitř šablony, ideálně na jejím začátku.
+    </comment>
+  </tag>
   <anyTag>
     <function>includeByIdentifier</function>
     <comment>

@@ -145,6 +145,28 @@
 			$parameters = [PhpRuntime::$FullTagTemplateName => $template];
 			return $parameters;
 		}
+
+		public function attribute($name, $type = "", $default = null) {
+			$paramsStorage = $this->ensureStack("params");
+			$params = $paramsStorage->pop();
+			if (array_key_exists($name, $params)) {
+				$value = $params[$name];
+			} else {
+				$value = $default;
+			}
+
+			switch ($type) {
+				case 'bool':
+					$value = !empty($value) && $value !== "false";
+					break;
+				case 'number':
+					$value = is_numeric($value) ? $value : 0;
+					break;
+			}
+
+			$params[$name] = $value;
+			$paramsStorage->push($params);
+		}
 	}
 
 ?>
