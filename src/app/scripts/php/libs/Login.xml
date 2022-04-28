@@ -78,6 +78,24 @@
     </comment>
   </fulltag>
   <tag>
+    <name>impersonate</name>
+    <function>impersonate</function>
+    <attribute>
+      <name>userId</name>
+      <type>number</type>
+      <required />
+      <comment>Id uživatele, zda kterého se chceme přihlásit</comment>
+    </attribute>
+    <attribute>
+      <name>group</name>
+      <required />
+      <comment>Skupina, do které chceme uživatele přihlásit</comment>
+    </attribute>
+    <comment>
+      Provede zbytek requestu, jako kdyby byl přihlášen uživatel "userId" do skupiny "group".
+    </comment>
+  </tag>
+  <tag>
     <name>logout</name>
     <function>showLogoutForm</function>
     <attribute>

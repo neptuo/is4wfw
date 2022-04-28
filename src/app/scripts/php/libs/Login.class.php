@@ -88,6 +88,7 @@
          *
          */
         private $IsLogged = false;
+        private $IsImpersonated = false;
 
         private $Token = "";
 
@@ -113,6 +114,7 @@
                     $this->cookieName = $cookieName;
                 }
 
+                // Similar query is used in the impersonate function.
                 $data = null;
                 if (is_numeric($this->SessionId)) {
                     $data = $db->fetchSingle("SELECT `user`.`uid`, `user`.`group_id`, `user`.`login`, `user`.`name`, `user`.`surname`, `user_log`.`timestamp`, `user_log`.`token` FROM `user` LEFT JOIN `user_log` ON `user`.`uid` = `user_log`.`user_id` WHERE `user_log`.`session_id` = " . $db->escape($this->SessionId) . " AND `user_log`.`logout_timestamp` = 0;");
@@ -273,6 +275,32 @@
             setcookie($this->cookieName, $token, $params);
         }
 
+        public function impersonate($userId, $group) {
+            $db = $this->dataAccess();
+            
+            $groupId = $db->fetchScalar($this->sql()->select("group", ["gid"], ["name" => $group]));
+            if ($groupId) {
+                // Similar query is used in the initLogin function.
+                $data = $db->fetchSingle("SELECT `group_id`, `login`, `name`, `surname` FROM `user` LEFT JOIN `user_in_group` ON `user`.`uid` = `user_in_group`.`uid` WHERE `user`.`uid` = " . $db->escape($userId) . " AND `user_in_group`.`gid` = " . $db->escape($groupId) . " AND `enable` = 1;");
+                if ($data != null && !empty($data)) {
+                    $groups = $db->fetchAll("SELECT `group`.`gid`, `group`.`name`, `group`.`value` FROM `user_in_group` LEFT JOIN `group` ON `user_in_group`.`gid` = `group`.`gid` WHERE `uid` = " . $db->escape($userId) . " ORDER BY `group`.`value`;");
+                    $groupMinValue = $db->fetchSingle("SELECT MIN(`group`.`value`) AS `value` FROM `group` LEFT JOIN `user_in_group` ON `group`.`gid` = `user_in_group`.`gid` WHERE `uid` = " . $db->escape($userId) . ";");
+                    $this->UsedGroup['name'] = $group;
+                    foreach ($groups as $group) {
+                        $this->Groups[] = $group;
+                    }
+                    $this->GroupValue = $groupMinValue['value'];
+                    $this->UserLogin = $data['login'];
+                    $this->UserName = $data['name'];
+                    $this->UserSurname = $data['surname'];
+                    $this->UserId = $userId;
+                    $this->UserGroup = $data['group_id'];
+                    $this->IsLogged = true;
+                    $this->IsImpersonated = true;
+                }
+            }
+        }
+
         /**
          *
          *  Shows logout form.
@@ -335,6 +363,10 @@
         }
         
         public function refreshPrivate($group) {
+            if ($this->IsImpersonated) {
+                return true;
+            }
+
             if ($this->isLogged()) {
                 $sessionTimeout = $this->getSessionTimeout();
 
@@ -342,7 +374,6 @@
                     $this->logout(function() { }, $group);
                     return false;
                 } else {
-                    $prevTimestamp = $this->Logtime;
                     $this->Logtime = time();
                     $sql = parent::sql()->update("user_log", array("timestamp" => $this->Logtime), array("session_id" => $this->SessionId));
                     parent::db()->execute($sql);
