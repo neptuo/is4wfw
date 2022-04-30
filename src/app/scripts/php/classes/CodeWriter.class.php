@@ -82,6 +82,10 @@
             return '$' . $name;
         }
 
+        public function varThis() {
+            return $this->var("this");
+        }
+
         private function getArgument($argument) {
             if (is_array($argument) && count($argument) >= 2) {
                 $result = $argument[0];

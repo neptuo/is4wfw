@@ -194,17 +194,19 @@
                         $this->libraries->remove($attributes->Attributes["prefix"]["value"]);
                     }
                     
+                    $code = $this->Code;
                     if ($isRegisteredFullTag) {
                         $functionName = $library->getFuncToFullTag($object[1]);
 
+                        $varConfig = $code->var("config");
                         $templateMethodName = 'template_' . $object[0] . '_' . $functionName . '_' . $uniqueIdentifier . '_body';
-                        $this->Code->addMethod($templateMethodName, "public", ["tagsToParse"]);
-                        $this->Code->addLine('$' . "this->pushTagsToParse(" . '$' . "tagsToParse);");
-                        $this->Code->addLine('$' . "result = '". $template . "';");
-                        $this->Code->addLine('$' . "this->popTagsToParse();");
-                        $this->Code->addLine("return " . '$' . "result;");
-                        $this->Code->closeBlock();
-                        $content = "function(" . '$' . "tagsToParse = null) { return " . '$' . "this->$templateMethodName(" . '$' . "tagsToParse); }";
+                        $code->addMethod($templateMethodName, "public", ["config"]);
+                        $code->addLine("{$code->varThis()}->pushConfig($varConfig);");
+                        $code->addLine("{$code->var("result")} = '". $template . "';");
+                        $code->addLine("{$code->varThis()}->popConfig();");
+                        $code->addLine("return {$code->var("result")};");
+                        $code->closeBlock();
+                        $content = "function(?ParsedTemplateConfig $varConfig = null) { return " . '$' . "this->$templateMethodName($varConfig); }";
                         $hasBodyTemplate = true;
                         
                         if (!$this->sortFullAttributes($object[0], $object[1], $attributes, $content, $uniqueIdentifier)) {
@@ -214,11 +216,12 @@
                     } else if ($library->isAnyFullTag($object[1])) {
                         $functionName = $library->getFuncToFullTag($object[1]);
                         
+                        $varConfig = $code->var("config");
                         $templateMethodName = 'template_' . $object[0] . '_' . $functionName . '_' . $uniqueIdentifier . '_body';
-                        $this->Code->addMethod($templateMethodName, "public", ["tagsToParse"]);
-                        $this->Code->addLine("return '". $template . "';");
-                        $this->Code->closeBlock();
-                        $content = "function(" . '$' . "tagsToParse = null) { return " . '$' . "this->$templateMethodName(" . '$' . "tagsToParse); }";
+                        $code->addMethod($templateMethodName, "public", ["config"]);
+                        $code->addLine("return '". $template . "';");
+                        $code->closeBlock();
+                        $content = "function(?ParsedTemplateConfig $varConfig = null) { return " . '$' . "this->$templateMethodName($varConfig); }";
                         $hasBodyTemplate = true;
                         
                         if (!$this->sortAnyTagAttributes($object[1], $attributes, $content)) {
@@ -617,7 +620,7 @@
             }
 
             if ($tagName != null) {
-                $code->addLine("if (" . '$' . "this->isTagProcessed('$tagPrefix', '$tagName')) {");
+                $code->addLine("if ({$code->varThis()}->isTagProcessed('$tagPrefix', '$tagName')) {");
                 $code->addIndent();
             }
 
@@ -751,19 +754,25 @@
             $code = $this->Code;
 
             $code->addMethod($identifier, "private", []);
-            
+
+            $code->addLine("if ({$code->varThis()}->isPropertyProcessed('$tagPrefix', '$tagName')) {");
+            $code->addIndent();
+
             if (array_key_exists("preferPropertyReference", $value) && $value["preferPropertyReference"]) {
-                $code->addLine("return " . '$' . "this->getPropertyReference('$tagPrefix', '$tagName', function() { ");
+                $code->addLine("return {$code->varThis()}->getPropertyReference('$tagPrefix', '$tagName', function() { ");
                 $code->addIndent();
-                $code->addLine("$targetObject = {$code->var("this")}->autolib('$tagPrefix');");
+                $code->addLine("$targetObject = {$code->varThis()}->autolib('$tagPrefix');");
                 $code->addLine("return new PropertyReference($targetObject, '$functionName', '{$property["set"]}', '{$property["name"]}');");
                 $code->removeIndent();
                 $code->addLine("});");
             } else {
-                $code->addLine("$targetObject = {$code->var("this")}->autolib('$tagPrefix');");
-                $code->addLine("return " . $targetObject . "->" . $functionName . "(" . $attributesString . ");");
+                $code->addLine("$targetObject = {$code->varThis()}->autolib('$tagPrefix');");
+                $code->addLine("return {$targetObject}->{$functionName}({$attributesString});");
             }
 
+            $code->closeBlock();
+
+            $code->addLine("return null;");
             $code->closeBlock();
         }
 

@@ -578,7 +578,7 @@
             $this->pushListModel($model);
 
             $model->registration();
-            $template([$this->tagPrefix => "register"]);
+            $template(ParsedTemplateConfig::filtered($this->tagPrefix, ["register"], ["*"]));
             $model->registration(false);
 
             $langIds = $this->ensureListLangIds($langIds, $model);

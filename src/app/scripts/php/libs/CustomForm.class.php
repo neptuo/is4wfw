@@ -175,7 +175,7 @@
             $this->ViewFieldsFound = array();
             $this->ViewFieldsFound[] = array('id', 'number');
 
-            $template([$this->tagPrefix => ["field", "setFieldAsCustomProperty"]]);
+            $template(ParsedTemplateConfig::filtered($this->tagPrefix, ["field", "setFieldAsCustomProperty"], ["*"]));
 
             //print_r($this->ViewFieldsFound);
             $formInfo = parent::db()->fetchAll('select `fields` from `customform` where `name` = "' . $formId . '";');

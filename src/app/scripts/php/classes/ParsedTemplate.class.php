@@ -2,12 +2,12 @@
 
 abstract class ParsedTemplate 
 {
-    private static $tagsToParse;
+    private static $configs;
     private static $propertyReferences;
 
     public function __construct() {
-        if (self::$tagsToParse == null) {
-            self::$tagsToParse = new TagsToParse();
+        if (self::$configs == null) {
+            self::$configs = new ParsedTemplateConfigStack();
         }
     }
 
@@ -17,15 +17,19 @@ abstract class ParsedTemplate
     }
 
     protected function isTagProcessed(string $prefix, string $name) {
-        return self::$tagsToParse->isProcessed($prefix, $name);
+        return self::$configs->isTagProcessed($prefix, $name);
     }
 
-    protected function pushTagsToParse($tagsToParse) {
-        self::$tagsToParse->push($tagsToParse);
+    protected function isPropertyProcessed(string $prefix, string $name) {
+        return self::$configs->isPropertyProcessed($prefix, $name);
     }
 
-    protected function popTagsToParse() {
-        self::$tagsToParse->pop();
+    protected function pushConfig(?ParsedTemplateConfig $config) {
+        self::$configs->push($config);
+    }
+
+    protected function popConfig() {
+        self::$configs->pop();
     }
 
     protected function getPropertyReference(string $prefix, string $name, callable $factory) {
@@ -40,10 +44,10 @@ abstract class ParsedTemplate
 
     protected abstract function evaluateInternal();
 
-    public function evaluate($tagsToParse = null) {
-        $this->pushTagsToParse($tagsToParse);
+    public function evaluate(?ParsedTemplateConfig $config = null) {
+        $this->pushConfig($config);
         $result = $this->evaluateInternal();
-        $this->popTagsToParse();
+        $this->popConfig();
         return $result;
     }
 
@@ -51,39 +55,54 @@ abstract class ParsedTemplate
         return $this->evaluateInternal();
     }
     
-    public function __invoke($tagsToParse = null) {
-        return $this->evaluate($tagsToParse);
+    public function __invoke(?ParsedTemplateConfig $config = null) {
+        return $this->evaluate($config);
     }
 }
 
-class TagsToParse 
+class ParsedTemplateConfig 
 {
-    private $stack;
+    public $tagsToEvalute = [];
+    public $propertiesToEvaluate = [];
 
-    public function __construct() {
-        $this->stack = new Stack();
+    public static function filtered($prefix, $tagsToEvalute = [], $propertiesToEvaluate = []): ParsedTemplateConfig {
+        $config = new ParsedTemplateConfig();
+        $config[$prefix] = $tagsToEvalute;
+        $config[$prefix] = $propertiesToEvaluate;
+        return $config;
     }
 
-    private function findByPrefix(array $tagsToParse, string $prefix) {
-        if (is_array($tagsToParse) && array_key_exists($prefix, $tagsToParse)) {
-            return $tagsToParse[$prefix];
+    private function findByPrefix(string $prefix, $type) {
+        switch ($type) {
+            case 't':
+                $values = $this->tagsToEvalute;
+                break;
+            case 'p':
+                $values = $this->propertiesToEvaluate;
+                break;
+        }
+
+        if (is_array($values) && array_key_exists($prefix, $values)) {
+            return $values[$prefix];
         }
 
         return null;
     }
 
-    public function isProcessed(string $prefix, string $name) {
-        $tagsToParse = $this->stack->peekNotNull();
+    public function isTagProcessed(string $prefix, string $name) {
+        return $this->isProcessted($prefix, $name, "t");
+    }
 
-        if ($tagsToParse === false) {
-            return true;
-        }
-
-        $value = $this->findByPrefix($tagsToParse, $prefix);
+    public function isPropertyProcessed(string $prefix, string $name) {
+        return $this->isProcessted($prefix, $name, "p");
+    }
+    
+    private function isProcessted(string $prefix, string $name, string $type) {
+        $value = $this->findByPrefix($prefix, $type);
         if ($value == null) {
-            $value = $this->findByPrefix($tagsToParse, "*");
+            $value = $this->findByPrefix("*", $type);
         }
-
+    
         if ($value != null) {
             if (is_string($value)) {
                 return $value == $name || $value == "*";
@@ -91,12 +110,39 @@ class TagsToParse
                 return in_array($name, $value) || in_array("*", $value);
             }
         }
-
+    
         return false;
     }
+}
 
-    public function push($tagsToParse) {
-        $this->stack->push($tagsToParse);
+class ParsedTemplateConfigStack 
+{
+    private $stack;
+
+    public function __construct() {
+        $this->stack = new Stack();
+    }
+
+    public function isTagProcessed(string $prefix, string $name) {
+        $config = $this->stack->peekNotNull();
+        if ($config === false) {
+            return true;
+        }
+    
+        return $config->isTagProcessed($prefix, $name);
+    }
+
+    public function isPropertyProcessed(string $prefix, string $name) {
+        $config = $this->stack->peekNotNull();
+        if ($config === false) {
+            return true;
+        }
+
+        return $config->isPropertyProcessed($prefix, $name);
+    }
+    
+    public function push(?ParsedTemplateConfig $config) {
+        $this->stack->push($config);
     }
 
     public function pop() {
