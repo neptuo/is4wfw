@@ -67,8 +67,8 @@ class ParsedTemplateConfig
 
     public static function filtered($prefix, $tagsToEvalute = [], $propertiesToEvaluate = []): ParsedTemplateConfig {
         $config = new ParsedTemplateConfig();
-        $config[$prefix] = $tagsToEvalute;
-        $config[$prefix] = $propertiesToEvaluate;
+        $config->tagsToEvalute[$prefix] = $tagsToEvalute;
+        $config->propertiesToEvaluate[$prefix] = $propertiesToEvaluate;
         return $config;
     }
 
