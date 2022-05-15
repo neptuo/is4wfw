@@ -6,6 +6,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateAttributeCollection.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateCache.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParserBase.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParserException.class.php");
 
     class TemplateParser extends TemplateParserBase {
 
@@ -278,7 +279,7 @@
                 }
             }
             
-            throw new Exception("Tag '$object[0]:$object[1]' is not registered!");
+            throw new TemplateParserException("Tag '$object[0]:$object[1]' is not registered!");
         }
 
         private function generateAttributePropertyFunctions($attributes) {
@@ -313,9 +314,7 @@
                     $attributes = new TemplateAttributeCollection();
                     $attributes->Attributes = $decorator["attributes"];
 
-                    if (!$this->sortDecoratorAttributes($prefix, $decorator["function"], $attributes, $tagPrefix, $tagName, $identifier)) {
-                        return false;
-                    }
+                    $this->sortDecoratorAttributes($prefix, $decorator["function"], $attributes, $tagPrefix, $tagName, $identifier);
 
                     $defaultReturnValue = "false";
                     if ($decorator["modifiesAttributes"]) {
@@ -420,7 +419,7 @@
                     }
 
                     if (!array_key_exists($extraAttributePrefix . $attributeName, $attributes)) {
-                        $this->triggerFail("Missing required constructor parameter '$attributeName' on prefix registration '$prefix' for '$classPath'.");
+                        throw new TemplateParserException("Missing required constructor parameter '$attributeName' on prefix registration '$prefix' for '$classPath'.");
                     }
                 }
             }
@@ -805,8 +804,6 @@
                     return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName, $uniqueIdentifier, function($att) use ($tagPrefix, $tagName) { return $this->getDefaultGlobalAttribute($tagPrefix, $tagName, $att); });
                 }
             }
-
-            return false;
         }
 
         private function getDefaultGlobalAttribute(string $prefix, string $tag, SimpleXMLElement $attribute) {
@@ -927,7 +924,7 @@
                     
                     $return[$attName] = array('value' => $attributeValue, 'type' => 'eval');
                 } else if (isset($att->required) && !$atts->HasAttributeModifyingDecorators) {
-                    return $this->triggerFail("Missing required attribute '$att->name' on tag '$nameForErrorReport'.");
+                    throw new TemplateParserException("Missing required attribute '$att->name' on tag '$nameForErrorReport'.");
                 } else {
                     $value = false;
                     if ($att->type == "string") {
@@ -959,7 +956,7 @@
             } else {
                 foreach ($atts->Attributes as $name => $value) {
                     if (!in_array($name, $processedAtts)) {
-                        $this->triggerFail("Used undefined attribute! [$name] on [$nameForErrorReport]");
+                        throw new TemplateParserException("Used undefined attribute! [$name] on [$nameForErrorReport]");
                     }
                 }
 
@@ -1032,11 +1029,6 @@
             }
             
             return array('value' => $val, 'type' => 'raw');
-        }
-
-        public function triggerFail($message, $errorType = E_USER_ERROR) {
-            trigger_error($message, $errorType);
-            return false;
         }
     }
 
