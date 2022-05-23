@@ -42,4 +42,5 @@ RewriteRule ^logs/(.*) - [L,R=404]
 RewriteRule ^user/(.*) - [L,R=404]
 
 # Fallback route
+RewriteCond "%{REQUEST_FILENAME}" "!-f"
 RewriteRule ^(.*)$ app/index.php?WEB_PAGE_PATH=$1&%{QUERY_STRING} [END]
