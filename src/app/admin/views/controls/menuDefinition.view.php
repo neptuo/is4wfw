@@ -35,7 +35,7 @@
     <list:add key-text="Matches" key-url="route:floorballMatches" key-icon="~/images/icons/floorball/matches.png" key-perm="CMS.Floorball.Matches" key-parentId="floorball" key-id="floorball.matches" key-order="507" />
     <list:add key-text="Tables Content" key-url="route:floorballTablesContent" key-icon="~/images/icons/floorball/table.png" key-perm="CMS.Floorball.TablesContent" key-parentId="floorball" key-id="floorball.tablescontent" key-order="508" />
 
-    <list:add key-text="Users" key-url="route:users" key-icon="users" key-iconPrefix="fas" key-perm="CMS.Settings" key-id="accounts" key-cookie="cookie:cmsMenu-users" key-order="600" />
+    <list:add key-text="Users" key-url="route:users" key-icon="users" key-iconPrefix="fas" key-perm="CMS.Settings" key-id="accounts" key-cookie="cookie:cmsMenu-accounts" key-order="600" />
     <list:add key-text="Users" key-url="route:users" key-icon="~/images/icons/user.png" key-perm="CMS.Settings.Users" key-parentId="accounts" key-id="users" key-order="601" />
     <list:add key-text="Groups" key-url="route:userGroups" key-icon="~/images/icons/group.png" key-perm="CMS.Settings.Groups" key-parentId="accounts" key-id="groups" key-order="602" />
     <list:add key-text="Role cache" key-url="route:roleCache" key-icon="~/images/icons/cog.png" key-perm="CMS.Settings.RoleCache" key-parentId="accounts" key-id="rolecache" key-order="603" />
