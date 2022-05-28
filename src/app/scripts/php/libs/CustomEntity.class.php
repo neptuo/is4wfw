@@ -568,7 +568,7 @@
             $this->fieldMetadata[$name][$key] = $value;
         }
 
-        public function getList($template, $name, $filter = [], $groupBy = "", $having = [], $orderBy = [], $paging = null, $langIds = "") {
+        public function getList($template, $name, $fields = [], $filter = [], $groupBy = "", $having = [], $orderBy = [], $paging = null, $langIds = "") {
             $tableName = $this->ensureTableName($name);
 
             $oldFieldMetadata = $this->fieldMetadata;
@@ -578,7 +578,13 @@
             $this->pushListModel($model);
 
             $model->registration();
-            $template(ParsedTemplateConfig::filtered($this->tagPrefix, ["register"], ["*"]));
+            if (empty($fields) || !is_array($fields)) {
+                $template(ParsedTemplateConfig::filtered($this->tagPrefix, ["register"], ["*"]));
+            } else {
+                foreach ($fields as $field) {
+                    $this->register($field["name"], $field["alias"], $field["aggregation"]);
+                }
+            }
             $model->registration(false);
 
             $langIds = $this->ensureListLangIds($langIds, $model);

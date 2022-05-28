@@ -161,6 +161,13 @@
       <comment>Název entity, která se má vypsat.</comment>
     </attribute>
     <attribute>
+      <name>fields</name>
+      <comment>
+        Seznam fieldů poskytnutých z "CustomEntityField".
+        V případě použití ušetří jedno vyhodnocení vnitřní šablony.
+      </comment>
+    </attribute>
+    <attribute>
       <name>filter</name>
       <prefix />
       <comment>Filtry, kterým data musí vyhovovat.</comment>
