@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
+  <comment>
+    Knihovna pro explicitní declaraci fieldů pro "CustomEntity".
+  </comment>
+  <fulltag>
+    <name>declare</name>
+    <function>setValue</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <comment>
+        Název (property), pod kterým mají být fieldy dostupné.
+        Pokud není vyplněn, jde o výchozí ("default") sadu.
+      </comment>
+    </attribute>
+    <comment>
+      Zaregistruje sadu fieldů pod názvem "name".
+    </comment>
+  </fulltag>
+  <tag>
+    <name>add</name>
+    <function>add</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <required />
+      <comment>Název sloupce, který se má zaregistrovat do dotazu.</comment>
+    </attribute>
+    <attribute>
+      <name>alias</name>
+      <comment>Alias pro sloupec v dotazu.</comment>
+    </attribute>
+    <attribute>
+      <name>aggregation</name>
+      <comment>Agregační funkce (count, min, max, sum, avg).</comment>
+    </attribute>
+    <comment>
+      Obdoba "ce:register". Přidá sloupec.
+    </comment>
+  </tag>
+  <property>
+    <name>default</name>
+    <getFunction>getDefault</getFunction>
+    <comment>Vrací výchozí sadu fieldů.</comment>
+  </property>
+  <anyProperty>
+    <comment>
+      Vrací pojmenovanou sadu fieldů.
+    </comment>
+  </anyProperty>
+</taglib>
