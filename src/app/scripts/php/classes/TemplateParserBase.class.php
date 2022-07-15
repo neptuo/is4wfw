@@ -1,6 +1,7 @@
 <?php
 
     require_once(APP_SCRIPTS_PHP_PATH . "classes/CodeWriter.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/TemplateParserException.class.php");
 
     abstract class TemplateParserBase {
         
@@ -69,13 +70,8 @@
             }
 
             if ($message != null) {
-                $this->log("TemplateParser '$function': $message, '$value'");
+                throw new TemplateParserException("TemplateParser '$function': $message, '$value'");
             }
-        }
-
-        protected function log($var) {
-            global $phpObject;
-            $phpObject->logVar($var);
         }
     }
 
