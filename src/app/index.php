@@ -23,6 +23,8 @@
     if (array_key_exists("WEB_PAGE_PATH", $_GET)) {
         // Web.
 
+        ini_set('pcre.jit', false);
+
         require_once(APP_SCRIPTS_PHP_PATH . "libs/PhpRuntime.class.php");
         require_once(APP_SCRIPTS_PHP_PATH . "libs/Web.class.php");
     
