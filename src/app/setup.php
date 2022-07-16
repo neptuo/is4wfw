@@ -106,7 +106,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
 
     $db = new Database(false);
     $db->disableCache();
-    $db->getDataAccess()->connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE, false);
+    $db->getDataAccess()->connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE, false, false);
     $db->getDataAccess()->setCharset('utf8');
     
     if (count($db->fetchAll("SHOW TABLES LIKE 'system_property';")) == 0) {

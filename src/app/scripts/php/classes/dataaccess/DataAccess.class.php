@@ -28,7 +28,7 @@ class DataAccess {
 	
 	private $inTransaction = false;
   
-	public function connect($hostname, $user, $passwd, $database, $checkCharset = true){
+	public function connect($hostname, $user, $passwd, $database, $checkCharset = true, $checkSqlMode = true){
 		$this->connection = mysqli_connect($hostname, $user, $passwd);
 		$query = "use " . $database;
 		mysqli_query($this->connection, $query);
@@ -44,7 +44,9 @@ class DataAccess {
 			$this->checkCharset();
 		}
 
-		$this->ensureSqlMode();
+		if ($checkSqlMode) {
+			$this->ensureSqlMode();
+		}
 		
 		return $this->isOpened;
 	}
