@@ -819,7 +819,7 @@
                     $attributeName = (string)$attribute->name;
                     if (in_array($attributeName, $tagAttributes)) {
                         return [
-                            'value' => "{$this->Code->var("phpObject")}->getDefaultAttributeValue('$prefix', '$tag', '$attributeName')", 
+                            'value' => "{$this->Code->varThis()}->php()->getDefaultAttributeValue('$prefix', '$tag', '$attributeName')", 
                             'type' => "eval"
                         ];
                     }

@@ -12,8 +12,12 @@ abstract class ParsedTemplate
     }
 
     protected function autolib($prefix) {
+        return $this->php()->autolib($prefix);
+    }
+    
+    protected function php() {
         global $phpObject;
-        return $phpObject->autolib($prefix);
+        return $phpObject;
     }
 
     protected function isTagProcessed(string $prefix, string $name) {
