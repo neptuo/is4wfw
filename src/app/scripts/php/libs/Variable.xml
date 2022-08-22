@@ -21,8 +21,11 @@
     <attribute>
       <name>scope</name>
       <type>string</type>
-      <default>request</default>
-      <comment>Může nabývat hodnot 'request', 'session', 'temp', 'cookie', 'user' a 'application'.</comment>
+      <default as="unused" />
+      <comment>
+        Může nabývat hodnot 'request', 'session', 'temp', 'cookie', 'user' a 'application'.
+        Výchozí hodnota je 'request'.
+      </comment>
     </attribute>
     <attribute>
       <name>select</name>

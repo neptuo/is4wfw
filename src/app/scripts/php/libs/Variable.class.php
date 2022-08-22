@@ -16,7 +16,7 @@
 		private $tempValues = [];
 		private $nameScopes = [];
 
-		public function setValue($name, $value, $scope = "request", $select = "") {
+		public function setValue($name, $value, $scope = PhpRuntime::UnusedAttributeValue, $select = "") {
 			if ($value instanceof ListModel) {
 				$value = $value->items();
 			}
@@ -29,6 +29,13 @@
 					}
 
 					$value = $result;
+				}
+			}
+
+			if ($scope == PhpRuntime::UnusedAttributeValue) {
+				$scope = $this->findScope($name);
+				if ($scope == null) {
+					$scope = "request";
 				}
 			}
 
@@ -57,6 +64,14 @@
 
 		public function setScope($name, $scope) {
 			$this->nameScopes[$name] = $scope;
+		}
+
+		private function findScope($name) {
+			if (array_key_exists($name, $this->nameScopes)) {
+				return $this->nameScopes[$name];
+			}
+
+			return null;
 		}
 
 		private function isScopeAvailableForName($name, $scope) {
