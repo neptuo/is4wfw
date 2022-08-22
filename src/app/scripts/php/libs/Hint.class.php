@@ -370,6 +370,7 @@
                         .'<div class="lib-tag">'
                             .'<div class="lib-tag-head">'
                                 .'<h3 id="property-'.$prop->name.'">'.$prop->name.'</h3>'
+                                .' <small>' . (($prop->getFunction) ? 'get' : '') . ' ' . (($prop->setFunction) ? 'set' : '') . '</small>'
                                 . (($obsolete != null) ? '<p><strong>Obsolete:</strong> ' . $obsolete . '</p>' : '')
                                 .'<p>' . $this->formatComment($prop->comment) . '</p>'
                                 .'<div class="clear"></div>'

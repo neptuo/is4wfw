@@ -1750,6 +1750,7 @@ td.article-mgm-head, td.article-mgm-edit, td.article-mgm-lang {
 }
 
 .hint-lib h3 {
+    display: inline-block;
     margin: 0;
     font-size: 18px;
     text-decoration: underline;
