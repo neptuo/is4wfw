@@ -57,6 +57,7 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
                     $this->input = new Stack();
                     $this->input->push($value);
 
+                    $prevModel = parent::getEditModel(false);
                     $model = new EditModel();
                     parent::setEditModel($model);
 
@@ -67,15 +68,15 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
 
                     if ($model->isValid()) {
                         // Save data in transaction.
-                        parent::dataAccess()->transaction(function() use ($model, $template) {
-                            $model->save();
-                            $template();
-                            $model->save(false);
-            
-                            if ($model->hasException()) {
-                                $this->internalServerError($model);
-                            }
-                        });
+                        try {
+                            parent::dataAccess()->transaction(function() use ($model, $template) {
+                                $model->save();
+                                $template();
+                                $model->save(false);
+                            });
+                        } catch (Exception $e) {
+                            $this->internalServerError($e);
+                        }
 
                         // Process after save redirects.
                         $model->saved(true);
@@ -85,7 +86,7 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
                         $this->badRequest($model);
                     }
 
-                    parent::clearEditModel();
+                    parent::clearEditModel($prevModel);
 
                     $this->input = null;
                 }
@@ -118,27 +119,25 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
             parent::close();
         }
 
-        private function internalServerError(EditModel $model = null) {
+        private function internalServerError(Exception $e) {
             header("HTTP/1.1 500 Internal Server Error");
 
-            if ($model != null) {
+            if ($e != null) {
                 $response = [
                     "type" => "https://is4wfw.neptuo.com/api-responses/exception",
                     "exceptions" => []
                 ];
 
-                foreach ($model->exceptions() as $e) {
-                    $exResponse = [
-                        "type" => get_class($e),
-                    ];
+                $exResponse = [
+                    "type" => get_class($e),
+                ];
 
-                    if (parent::web()->getDebugMode()) {
-                        $exResponse["message"] = $e->getMessage();
-                        $exResponse["stack"] = $e->getTraceAsString();
-                    }
-
-                    $response["exceptions"][] = (object)$exResponse;
+                if (parent::web()->getDebugMode()) {
+                    $exResponse["message"] = $e->getMessage();
+                    $exResponse["stack"] = $e->getTraceAsString();
                 }
+
+                $response["exceptions"][] = (object)$exResponse;
                 
                 $response["exceptions"] = (object)$response["exceptions"];
                 $responseJson = json_encode((object)$response);

@@ -26,6 +26,7 @@
         }
 		
 		public function form($template, $submit, $isEditable = true, $isTransactional = true, $params = []) {
+            $prevModel = parent::getEditModel(false);
             $model = new EditModel();
             $model->metadata("form", $params);
             parent::setEditModel($model);
@@ -59,11 +60,12 @@
             // Render UI.
             $model->render();
             $result = parent::ui()->form($template, "post", null, $isEditable, $model->metadata("form"));
-            parent::clearEditModel();
+            parent::clearEditModel($prevModel);
             return $result;
         }
 
         public function execute($template) {
+            $prevModel = parent::getEditModel(false);
             $model = new EditModel();
             parent::setEditModel($model);
 
@@ -82,7 +84,7 @@
                 $model->saved(false);
             }
 
-            parent::clearEditModel();
+            parent::clearEditModel($prevModel);
         }
 
         public function prefix($template, $name) {

@@ -426,8 +426,8 @@
             BaseTagLib::$editModel = $model;
         }
 
-        public function clearEditModel() {
-            BaseTagLib::$editModel = null;
+        public function clearEditModel(?EditModel $prevModel = null) {
+            BaseTagLib::$editModel = $prevModel;
         }
         
         private $stacks;
