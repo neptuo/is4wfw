@@ -39,4 +39,23 @@
       Hodnoty "NAN" a "INF" se přeloži na "null".
     </comment>
   </tag>
+  <tag>
+    <name>round</name>
+    <function>round</function>
+    <attribute>
+      <name>out</name>
+      <type>propertyReference</type>
+      <required />
+      <comment>Proměnná, která se má nastavit</comment>
+    </attribute>
+    <attribute>
+      <name>decimals</name>
+      <type>number</type>
+      <comment>Počet desetinných mýst</comment>
+    </attribute>
+    <comment>
+      Zaokrouhlí číslo v "out" na počet desetinných míst "decimals".
+      '.5' se zaokrouhlí nahoru.
+    </comment>
+  </tag>
 </taglib>

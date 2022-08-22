@@ -44,6 +44,12 @@
 
 			$out->set($value);
 		}
+
+		public function round(PropertyReference $out, $decimals = 0) {
+			$value = $out->get();
+			$value = round($value, $decimals, PHP_ROUND_HALF_UP);
+			$out->set($value);
+		}
 	}
 
 ?>
