@@ -65,7 +65,7 @@
 				if ($_POST[$saveName] == "save") {
 					$pageId = parent::web()->getLastPageId();
 					if ($pageId == null) {
-						$pageId = $_GET['VIEW_VIRTUAL_URL'];
+						$pageId = "~/" . $this->web()->getVirtualUrl();
 					}
 					$param = $saveParam;
 				} else if ($_POST[$saveName] == "save-close") {
