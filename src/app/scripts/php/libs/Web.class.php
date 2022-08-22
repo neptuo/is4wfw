@@ -2805,7 +2805,7 @@
             return $this->Doctype;
         }
 
-        public function setFlushOptions($template = false, $contentType = false, $isZipEnabled = true) {
+        public function setFlushOptions($template = false, $contentType = false, $isZipEnabled = true, $statusCode = 0) {
             if ($template == 'null') {
                 $this->Template = null;
             } else if ($template == 'xml') {
@@ -2816,6 +2816,10 @@
 
             if ($contentType != false && $contentType != '') {
                 $this->ContentType = $contentType;
+            }
+
+            if ($statusCode > 0) {
+                http_response_code($statusCode);
             }
 
             $this->setZipOutput($isZipEnabled);
