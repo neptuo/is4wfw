@@ -22,6 +22,10 @@
       <comment>Hodnota k přičtení k hodnotě proměnné.</comment>
     </attribute>
     <attribute>
+      <name>subtract</name>
+      <comment>Hodnota k odečtení od hodnoty proměnné.</comment>
+    </attribute>
+    <attribute>
       <name>multiply</name>
       <comment>Hodnota k vynásobění s hodnotou proměnné.</comment>
     </attribute>

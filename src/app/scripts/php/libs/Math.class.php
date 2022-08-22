@@ -13,7 +13,7 @@
 	 */
 	class Math extends BaseTagLib {
 
-		public function number(PropertyReference $out, $set = "", $add = "", $multiply = "", $divide = "") {
+		public function number(PropertyReference $out, $set = "", $add = "", $subtract = "", $multiply = "", $divide = "") {
 			$value = $out->get();
 
 			if ($set != "") {
@@ -24,6 +24,10 @@
 
 			if ($add != "") {
 				$value += $add;
+			}
+
+			if ($subtract != "") {
+				$value -= $subtract;
 			}
 
 			if ($multiply != "") {
