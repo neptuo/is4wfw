@@ -66,8 +66,13 @@
       <required />
       <comment>Unikátní identifikátor šablony. Přebíjí uložené šabloné v DB.</comment>
     </attribute>
+    <attribute>
+      <name>group</name>
+      <type>string</type>
+      <comment>Název skupiny, do které se má šablona přidat.</comment>
+    </attribute>
     <comment>
-      Definuje šablonu, jako kdyby byla uložení v DB.
+      Definuje šablonu, jako kdyby byla uložená v DB.
       Přebíjí uložené šabloné v DB.
     </comment>
   </fulltag>

@@ -20,11 +20,20 @@
 			}
 		}
 
+		public function declareInlineForGroup(callable $template, string $identifier) {
+			$this->declareInline($template, $identifier, $this->group);
+		}
+
 		public function includeByIdentifier($identifier, $params) {
 			return $this->includeWithBodyByIdentifier($identifier, null, $params);
 		}
 
 		public function includeWithBodyByIdentifier($identifier, $template, $params) {
+			$inline = $this->findInline($identifier, $this->group);
+			if ($inline) {
+				return $this->includeFinal($inline, $template, $params);
+			}
+
 			$filter = ["identifier" => $identifier, "group" => $this->group];
 			$sql = $this->sql()->select("template", ["id"], $filter);
 			$entityId = $this->dataAccess()->fetchScalar($sql);

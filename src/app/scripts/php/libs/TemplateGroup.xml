@@ -11,6 +11,21 @@
     Knihovna pro vkládání šablon, které spadají do jedné skupiny, do stránek.
     Pro výběr skupiny slouží parametr při registraci "group".
   </comment>
+  <fulltag>
+    <name>declare</name>
+    <function>declareInlineForGroup</function>
+    <attribute>
+      <name>identifier</name>
+      <type>string</type>
+      <required />
+      <comment>Unikátní identifikátor šablony. Přebíjí uložené šabloné v DB.</comment>
+    </attribute>
+    <comment>
+      Definuje šablonu, jako kdyby byla uložená v DB.
+      Šablona je součástí aktuální "group".
+      Přebíjí uložené šabloné v DB.
+    </comment>
+  </fulltag>
   <anyTag>
     <function>includeByIdentifier</function>
     <comment>

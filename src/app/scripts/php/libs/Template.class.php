@@ -13,7 +13,7 @@
 	 */
 	class Template extends BaseTagLib {
 
-		private $inline = [];
+		private static $inline = [];
 
 		protected function throwNotFound($filter) {
 			throw new Error("Missing template filtered by '" . http_build_query($filter) . "'.");;
@@ -77,9 +77,16 @@
 			return $this->includeWithBodyByIdentifier($identifier, null, $params);
 		}
 
+		protected function findInline($identifier, $group = "") {
+			if (array_key_exists($group, Template::$inline) && array_key_exists($identifier, Template::$inline[$group])) {
+				return Template::$inline[$group][$identifier];
+			}
+		}
+
 		public function includeWithBodyByIdentifier($identifier, $template, $params) {
-			if (array_key_exists($identifier, $this->inline)) {
-				return $this->includeFinal($this->inline[$identifier], $template, $params);
+			$inline = $this->findInline($identifier);
+			if ($inline) {
+				return $this->includeFinal($inline, $template, $params);
 			}
 
 			$filter = ["identifier" => $identifier, "group" => ""];
@@ -129,8 +136,8 @@
 			return "";
 		}
 
-		public function declareInline(callable $template, string $identifier) {
-			$this->inline[$identifier] = $template;
+		public function declareInline(callable $template, string $identifier, string $group = "") {
+			Template::$inline[$group][$identifier] = $template;
 			return "";
 		}
 
