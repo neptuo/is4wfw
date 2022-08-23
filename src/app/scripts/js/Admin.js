@@ -88,9 +88,7 @@
                         }
                     }
 
-                    skip = e.key !== parts[parts.length - 1];
-
-                    if (skip) {
+                    if (skip || e.key !== parts[parts.length - 1]) {
                         continue;
                     }
 
