@@ -172,7 +172,7 @@ nav[data-mode='standard'] [data-menu='favorites'] {
     padding: 0;
     outline: none !important;
     border: none;
-    background: #04601C;
+    background: transparent;
 }
 
 .menu-toggler .fa {
@@ -203,10 +203,14 @@ nav[data-mode='standard'] [data-menu='favorites'] {
 }
 
 .main-menu-collapsed .menu-toggler {
-    right: 3px;
-    top: 7px;
+    right: 2px;
+    top: 5px;
     width: 18px;
     height: 18px;
+}
+
+.main-menu-collapsed .favorites-settings {
+    display: none !important;
 }
 
 .main-menu-collapsed .menu-toggler .fa {
