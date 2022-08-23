@@ -776,6 +776,11 @@ table.gray-box tr td {
     border-top: 2px solid white;
 }
 
+.gray-box summary,
+.gray-box-float summary {
+    padding: 3px;
+}
+
 .grid-2 {
     width: 50%;
     float: left;
