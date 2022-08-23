@@ -256,6 +256,7 @@ function editorsTabClick(event) {
 					,allow_resize: "y"
 					,replace_tab_by_spaces: 4
 					,min_height: height
+					,plugins: "keybinding"
 				});
 				tas[i].setAttribute('edit-area-init', "true");
 				

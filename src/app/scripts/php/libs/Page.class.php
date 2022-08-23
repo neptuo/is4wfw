@@ -830,7 +830,7 @@
                         }
 
                         $returnTmp .= '<input type="hidden" name="type" value="' . $type . '" />'
-                                . '<input type="submit" name="edit-save" value="' . $rb->get('page.action.save') . '" /> '
+                                . '<input type="submit" name="edit-save" value="' . $rb->get('page.action.save') . '" data-keybinding="ctrl+s" /> '
                                 . '<input type="submit" name="edit-save" value="' . $rb->get('page.action.saveandclose') . '" /> '
                                 . '<input type="submit" name="edit-close" value="' . $rb->get('page.action.close') . '" /> '
                             . '</div>'
@@ -2850,7 +2850,7 @@
                 $return .= ''
                         . '<div class="template-submit">'
                             . '<input type="hidden" name="template-id" value="' . $templateId . '" />'
-                            . '<input type="submit" name="template-submit" value="Save" /> '
+                            . '<input type="submit" name="template-submit" value="Save" data-keybinding="ctrl+s" /> '
                             . '<input type="submit" name="template-submit" value="Save and close" /> '
                             . '<a href="' . $closeUrl . '" class="button">Close</a>'
                         . '</div>'

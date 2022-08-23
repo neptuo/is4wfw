@@ -65,4 +65,47 @@
         e.preventDefault();
     })
 
+    let hasKeybindings = false;
+    const keybindings = {};
+    $("[data-keybinding]").each(function () {
+        const $el = $(this);
+        let binding = $el.data("keybinding");
+        keybindings[binding] = $el;
+        hasKeybindings = true;
+    });
+
+    if (hasKeybindings) {
+        const handler = e => {
+            for (const key in keybindings) {
+                if (Object.hasOwnProperty.call(keybindings, key)) {
+                    let skip = false;
+                    const parts = key.split('+');
+                    for (let i = 0; i < parts.length - 1; i++) {
+                        const modifier = parts[i];
+                        if (!e[modifier + "Key"]) {
+                            skip = true;
+                            continue;
+                        }
+                    }
+
+                    skip = e.key !== parts[parts.length - 1];
+
+                    if (skip) {
+                        continue;
+                    }
+
+                    e.preventDefault();
+
+                    const $el = keybindings[key];
+                    $el.click();
+                    return false;
+                }
+            }
+
+            return true;
+        };
+        document.addEventListener('keydown', handler);
+        window.keybindingHandler = handler;
+    }
+
 })();
