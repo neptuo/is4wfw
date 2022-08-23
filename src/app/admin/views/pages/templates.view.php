@@ -2,3 +2,19 @@
 	<pg:editTemplate id="query:id" />
 	<pg:showTemplates />
 </php:using>
+
+<js:script path="/js/vs/loader.js" placement="tail" />
+<js:script placement="tail">
+	const textarea = document.getElementById("template-edit-detail-content");
+	const container = document.getElementById("template-edit-detail-editor");
+
+	require.config({ paths: { 'vs': '/js/vs' } });
+	require(['vs/editor/editor.main'], function() {
+		let editor = monaco.editor.create(container, {
+			value: textarea.value,
+			scrollBeyondLastLine: false,
+			language: "html"
+		});
+		editor.focus();
+	});
+</js:script>

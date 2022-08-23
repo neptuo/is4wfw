@@ -2830,9 +2830,10 @@
 
                 if ($propertyEditors == "edit_area") {
                     $return .= ''
-                            . '<div id="editors" class="editors edit-area-editors">'
+                            . '<div id="editors" class="gray-box">'
                             . '<div id="template-edit-detail-content-cover">'
-                            . '<textarea id="template-edit-detail-content" class="edit-area html" name="template-content" rows="' . ($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30) . '" wrap="off">' . str_replace('~', '&#126', $template['content']) . '</textarea>'
+                            . '<div id="template-edit-detail-editor" style="height:655px"></div>'
+                            . '<textarea id="template-edit-detail-content" style="display:none" name="template-content" rows="' . ($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30) . '" wrap="off">' . str_replace('~', '&#126', $template['content']) . '</textarea>'
                             . '</div>'
                             . '</div>';
                 } else {
