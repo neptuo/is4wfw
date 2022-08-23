@@ -7,7 +7,6 @@ var EditArea_keybinding = {
 	 * @type boolean	 
 	 */
 	onkeydown: function(e) {
-		console.log('keybinding plugin');
 		if (window.top && window.top.keybindingHandler) {
 			return window.top.keybindingHandler(e);
 		}
