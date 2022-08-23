@@ -165,10 +165,13 @@ function initEditAreas(event) {
 			var button = document.createElement('input');
 			button.type = 'button';
 			button.name = tas[i].id;
-			button.value = $(cover).find('label[for='+tas[i].id+']').get(0).innerHTML.trim().replace(':', '');
+			var $label = $(cover).find('label[for='+tas[i].id+']');
+			if ($label.length > 0) {
+				button.value = $label.get(0).innerHTML.trim().replace(':', '');
+			}
 			//button.value = tas[i].id.replace(/-/g, ' ');
 			addEvent(button, 'click', editorsTabClick, false);
-			if(tabs != null) {
+			if (tabs != null) {
 				tabs.appendChild(button);
 				tabs.appendChild(document.createTextNode(' '));
 			}
