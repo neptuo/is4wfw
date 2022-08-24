@@ -3,6 +3,11 @@
         <web:redirectToSelf />
     </module:rebuildInitializers>
 </web:condition>
+<web:condition when="post:repostupdate">
+    <module:runPostUpdate>
+        <web:redirectToSelf />
+    </module:runPostUpdate>
+</web:condition>
 <web:condition when="post:import">
     <module:importExisting>
         <web:redirectToSelf />
@@ -152,6 +157,7 @@
             </div>
             <div>
                 <bs:button name="rebuild" value="rebuild" text="Rebuild initializers" class="confirm" isOutline="true" title="Rebuild initializers" />
+                <bs:button name="repostupdate" value="repostupdate" text="Re-run post update" class="confirm" isOutline="true" title="Re-run post update on all modules" />
                 <bs:button name="import" value="import" text="Import from file system" class="confirm" isOutline="true" title="Import modules from file system" />
             </div>
         </ui:form>

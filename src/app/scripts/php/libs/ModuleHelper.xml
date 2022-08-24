@@ -149,6 +149,14 @@
     </comment>
   </fulltag>
   <fulltag>
+    <name>runPostUpdate</name>
+    <function>runPostUpdate</function>
+    <lookless />
+    <comment>
+      Spustí postupdate na všech nainstalovaných modulech.
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>importExisting</name>
     <function>importExisting</function>
     <lookless />

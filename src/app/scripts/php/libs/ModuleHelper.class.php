@@ -328,6 +328,18 @@
 			$template();
 		}
 
+		public function runPostUpdate($template) {
+			foreach (Module::all() as $module) {
+				if ($module->canEdit()) {
+					$extractPath = MODULES_PATH . $module->alias;
+					$postScript = FileUtils::combinePath($extractPath, "postupdate.inc.php");
+					$this->runScriptIsolated($postScript);
+				}
+			}
+			
+			$template();
+		}
+
 		public function importExisting($template) {
 			if ($handle = opendir(MODULES_PATH)) {
 				$items = array();
