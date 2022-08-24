@@ -8,7 +8,7 @@
 	const textarea = document.getElementById("template-edit-detail-content");
 	const container = document.getElementById("template-edit-detail-editor");
 
-	require.config({ paths: { 'vs': '/js/vs' } });
+	require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.34.0/min/vs' } });
 	require(['vs/editor/editor.main'], function() {
 		let editor = monaco.editor.create(container, {
 			value: textarea.value,
