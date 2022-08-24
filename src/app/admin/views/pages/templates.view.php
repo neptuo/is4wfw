@@ -16,5 +16,9 @@
 			language: "html"
 		});
 		editor.focus();
+
+		textarea.form.addEventListener("submit", e => {
+			textarea.value = editor.getValue();
+		});
 	});
 </js:script>
