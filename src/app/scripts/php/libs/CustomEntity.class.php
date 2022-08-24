@@ -582,7 +582,7 @@
                 $template(ParsedTemplateConfig::filtered($this->tagPrefix, ["register"], ["*"]));
             } else {
                 foreach ($fields as $field) {
-                    $this->register($field["name"], $field["alias"], $field["aggregation"]);
+                    $this->register($field["name"], $field["alias"], $field["aggregation"], $field["function"]);
                 }
             }
             $model->registration(false);
@@ -731,6 +731,20 @@
                             $isProcessed = true;
                         }
                     }
+
+                    if (array_key_exists("function", $metadata)) {
+                        if ($isProcessed) {
+                            $fields[$key]["select"]["function"] = $metadata["function"];
+                        } else {
+                            $fields[$key] = [
+                                "select" => [
+                                    "column" => $value,
+                                    "function" => $metadata["function"]
+                                ]
+                            ];
+                            $isProcessed = true;
+                        }
+                    }
                 }
 
                 if (!$isProcessed) {
@@ -805,7 +819,10 @@
             return $result;
         }
 
-        public function register($name, $alias = "", $aggregation = "") {
+        private const Aggregations = ["count", "min", "max", "sum", "avg"];
+        private const Functions = ["length", "lower", "upper"];
+
+        public function register($name, $alias = "", $aggregation = "", $function = "") {
             if ($alias != "") {
                 $this->getProperty($alias);
                 $this->setFieldMetadata($alias, "alias", $alias);
@@ -819,7 +836,19 @@
             }
             
             if ($aggregation != "") {
+                if (!in_array($aggregation, CustomEntity::Aggregations)) {
+                    throw new ParameterException("aggregation", "The '$aggregation' is not supported");
+                }
+
                 $this->setFieldMetadata($alias, "aggregation", $aggregation);
+            }
+            
+            if ($function != "") {
+                if (!in_array($function, CustomEntity::Functions)) {
+                    throw new ParameterException("function", "The '$function' is not supported");
+                }
+
+                $this->setFieldMetadata($alias, "function", $function);
             }
         }
 

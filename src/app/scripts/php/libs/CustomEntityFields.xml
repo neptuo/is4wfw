@@ -36,6 +36,10 @@
       <name>aggregation</name>
       <comment>Agregační funkce (count, min, max, sum, avg).</comment>
     </attribute>
+    <attribute>
+      <name>function</name>
+      <comment>Funkce (length, lower, upper).</comment>
+    </attribute>
     <comment>
       Obdoba "ce:register". Přidá sloupec.
     </comment>

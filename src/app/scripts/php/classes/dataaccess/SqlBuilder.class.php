@@ -265,12 +265,17 @@
                         $column = $field["select"]["column"];
                         $as = $field["select"]["alias"] ?? $column;
                         $aggregation = $field["select"]["aggregation"] ?? null;
+                        $function = $field["select"]["function"] ?? null;
 
-                        $preColumn = null;
-                        $postColumn = null;
+                        $preColumn = '';
+                        $postColumn = '';
                         if ($aggregation) {
-                            $preColumn = strtoupper($aggregation) . "(";
-                            $postColumn = ")";
+                            $preColumn .= strtoupper($aggregation) . "(";
+                            $postColumn .= ")";
+                        }
+                        if ($function) {
+                            $preColumn .= strtoupper($function) . "(";
+                            $postColumn .= ")";
                         }
                         $field = $preColumn . $this->field($fieldTableAlias, $column) . $postColumn . " AS `$as`";
                     }
