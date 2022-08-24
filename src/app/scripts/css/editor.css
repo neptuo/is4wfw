@@ -47,7 +47,7 @@
   width: 182px;
 }
 
-.line-numbers {
+.editor-panel .line-numbers {
 	width: 36px;
 	padding: 0 4px 0 0;
 	text-align: right;

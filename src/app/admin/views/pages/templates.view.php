@@ -16,8 +16,19 @@
 			language: "html"
 		});
 		editor.focus();
+		
+		const editorKey = textarea.id + "editorSelection";
+
+		const selectionJson = localStorage.getItem(editorKey);
+		if (selectionJson) {
+			const selection = JSON.parse(selectionJson);
+			editor.setSelection(selection);
+		}
 
 		textarea.form.addEventListener("submit", e => {
+			const selection = editor.getSelection();
+			localStorage.setItem(editorKey, JSON.stringify(selection));
+
 			textarea.value = editor.getValue();
 		});
 	});
