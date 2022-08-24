@@ -274,8 +274,24 @@
                             $postColumn .= ")";
                         }
                         if ($function) {
-                            $preColumn .= strtoupper($function) . "(";
-                            $postColumn .= ")";
+                            if (is_array($function)) {
+                                $functionName = $function[""];
+                                switch ($functionName) {
+                                    case 'substr':
+                                        $preColumn .= strtoupper($functionName) . "(";
+                                        $postColumn .= ", " . $this->escape($function["start"]) . ", " . $this->escape($function["length"]) . ")";
+                                        break;
+                                    
+                                    default:
+                                        $preColumn .= strtoupper($functionName) . "(";
+                                        $postColumn .= ")";
+                                        break;
+                                }
+                            } else {
+                                $preColumn .= strtoupper($function) . "(";
+                                $postColumn .= ")";
+                            }
+
                         }
                         $field = $preColumn . $this->field($fieldTableAlias, $column) . $postColumn . " AS `$as`";
                     }

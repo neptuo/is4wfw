@@ -38,7 +38,14 @@
     </attribute>
     <attribute>
       <name>function</name>
-      <comment>Funkce (length, lower, upper).</comment>
+      <prefix />
+      <comment>
+        Funkce 
+        - length
+        - lower
+        - upper
+        - substr (vyžaduje 'start' (od 1) a 'length')
+      </comment>
     </attribute>
     <comment>
       Obdoba "ce:register". Přidá sloupec.

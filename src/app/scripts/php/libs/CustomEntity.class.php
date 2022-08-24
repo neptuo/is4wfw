@@ -820,9 +820,9 @@
         }
 
         private const Aggregations = ["count", "min", "max", "sum", "avg"];
-        private const Functions = ["length", "lower", "upper"];
+        private const Functions = ["length", "lower", "upper", "substr"];
 
-        public function register($name, $alias = "", $aggregation = "", $function = "") {
+        public function register($name, $alias = "", $aggregation = "", $function = []) {
             if ($alias != "") {
                 $this->getProperty($alias);
                 $this->setFieldMetadata($alias, "alias", $alias);
@@ -843,9 +843,13 @@
                 $this->setFieldMetadata($alias, "aggregation", $aggregation);
             }
             
-            if ($function != "") {
-                if (!in_array($function, CustomEntity::Functions)) {
+            if (!empty($function)) {
+                if (!in_array($function[""], CustomEntity::Functions)) {
                     throw new ParameterException("function", "The '$function' is not supported");
+                }
+
+                if ($function[""] == "substr" && !(array_key_exists("start", $function) && array_key_exists("length", $function))) {
+                    throw new ParameterException("function", "Missing 'start' or 'length' for 'substr' function");
                 }
 
                 $this->setFieldMetadata($alias, "function", $function);

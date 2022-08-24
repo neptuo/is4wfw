@@ -20,7 +20,7 @@
             $this->currentName = $oldCurrentName;
         }
 
-        public function add($name, $alias = "", $aggregation = "", $function = "") {
+        public function add($name, $alias = "", $aggregation = "", $function = []) {
             if (empty($this->currentName)) {
                 throw new Exception("Missing fieldset name.");
             }
