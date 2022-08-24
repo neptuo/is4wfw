@@ -3,7 +3,7 @@
 	<pg:showTemplates />
 </php:using>
 
-<js:script path="/js/vs/loader.js" placement="tail" />
+<js:script path="https://unpkg.com/monaco-editor@0.34.0/min/vs/loader.js" placement="tail" />
 <js:script placement="tail">
 	const textarea = document.getElementById("template-edit-detail-content");
 	const container = document.getElementById("template-edit-detail-editor");
