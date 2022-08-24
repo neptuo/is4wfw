@@ -338,7 +338,7 @@
 				}
 				closedir($handle);
 
-				$hasAny = false;
+				$newModuleAliases = [];
 				foreach ($items as $alias) {
 					if (Module::findByAlias($alias, false) == null) {
 						$xml = file_get_contents(MODULES_PATH . $alias . "/module.xml");
@@ -356,13 +356,19 @@
 								$toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
 
 								ModuleXml::write($modules);
-								$hasAny = true;
+								$newModuleAliases[] = $alias;
 							}
 						}
 					}
 				}
 
-				if ($hasAny) {
+				if (!empty($newModuleAliases)) {
+					foreach ($newModuleAliases as $alias) {
+						$extractPath = MODULES_PATH . $alias;
+						$postScript = FileUtils::combinePath($extractPath, "postinstall.inc.php");
+						$this->runScriptIsolated($postScript);
+					}
+
 					ModuleGenerator::all();
 				}
 
