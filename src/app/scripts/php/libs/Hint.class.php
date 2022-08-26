@@ -536,40 +536,40 @@
         public function getPropertyList($useFrames = false) {
             $rb = $this->rb();
             
-            $return = ''
-            .'<div class="gray-box">'
-                .$rb->get('properties.headline').':'
-            .'</div>'
-            .'<div class="gray-box">'
-                .'<ul>'
-                    .'<li>Admin.Language</li>'
-                    .'<li>Article.author</li>'
-                    .'<li>Article.editAreaHeadRows</li>'
-                    .'<li>Article.editors</li>'
-                    .'<li>Article.languageId</li>'
-                    .'<li>Article.pageSize</li>'
-                    .'<li>Frames.leaveOpened</li>'
-                    .'<li>Login.session</li>'
-                    .'<li>Page.editAreaContentRows</li>'
-                    .'<li>Page.editAreaHeadRows</li>'
-                    .'<li>Page.editAreaTLEndRows</li>'
-                    .'<li>Page.editAreaTLStartRows</li>'
-                    .'<li>Page.editAreaTextFileRows</li>'
-                    .'<li>Page.editors (edit_area, monaco)</li>'
-                    .'<li>Page.monacoHeight (px)</li>'
-                    .'<li>Page.monacoTheme (vs, vs-dark)</li>'
-                    .'<li>System.cms.windowsstyle</li>'
-                    .'<li>TextFiles.showFilter</li>'
-                    .'<li>Templates.showFilter</li>'
-                    .'<li>WebProject.defaultProjectId</li>'
-                .'</ul>'
-            .'</div>';
+            $grid = new BaseGrid();
+            $grid->setHeader([
+                'name' => 'Name', 
+                'description' => 'Description'
+            ]);
             
+            $grid->addRow(['name' => 'Admin.Language', 'description' => '']);
+            $grid->addRow(['name' => 'Article.author', 'description' => '']);
+            $grid->addRow(['name' => 'Article.editAreaHeadRows', 'description' => '']);
+            $grid->addRow(['name' => 'Article.editors', 'description' => '']);
+            $grid->addRow(['name' => 'Article.languageId', 'description' => '']);
+            $grid->addRow(['name' => 'Article.pageSize', 'description' => '']);
+            $grid->addRow(['name' => 'Frames.leaveOpened', 'description' => '']);
+            $grid->addRow(['name' => 'Login.session', 'description' => '']);
+            $grid->addRow(['name' => 'Page.editAreaContentRows', 'description' => '']);
+            $grid->addRow(['name' => 'Page.editAreaHeadRows', 'description' => '']);
+            $grid->addRow(['name' => 'Page.editAreaTLEndRows', 'description' => '']);
+            $grid->addRow(['name' => 'Page.editAreaTLStartRows', 'description' => '']);
+            $grid->addRow(['name' => 'Page.editAreaTextFileRows', 'description' => '']);
+            $grid->addRow(['name' => 'Page.editors', 'description' => 'edit_area, monaco']);
+            $grid->addRow(['name' => 'Page.monacoHeight', 'description' => '(px)']);
+            $grid->addRow(['name' => 'Page.monacoTheme', 'description' => 'vs, vs-dark']);
+            $grid->addRow(['name' => 'System.cms.windowsstyle', 'description' => '']);
+            $grid->addRow(['name' => 'TextFiles.showFilter', 'description' => '']);
+            $grid->addRow(['name' => 'Templates.showFilter', 'description' => '']);
+            $grid->addRow(['name' => 'WebProject.defaultProjectId', 'description' => '']);
             
+            $grid->sortByKey("name");
+            
+            $result = $grid->render();
             if ($useFrames == "false") {
-                return $return;
+                return $result;
             } else {
-                return parent::getFrame($rb->get('properties.title').': ', $return, "", true);
+                return parent::getFrame($rb->get('properties.title').': ', $result, "", true);
             }
         }
 
