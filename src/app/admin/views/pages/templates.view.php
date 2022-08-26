@@ -14,7 +14,8 @@
 				let editor = monaco.editor.create($container[0], {
 					value: $input.val(),
 					scrollBeyondLastLine: false,
-					language: "html"
+					language: "html",
+					theme: $container.data('theme')
 				});
 				editor.focus();
 				

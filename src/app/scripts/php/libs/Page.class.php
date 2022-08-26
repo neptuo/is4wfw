@@ -2838,7 +2838,7 @@
                 } else if ($propertyEditors == "monaco") {
                     $return .= ''
                     . '<div id="editors" class="gray-box">'
-                        . '<div id="template-edit" class="monaco-editor" style="height: ' . parent::system()->getPropertyValue('Page.monacoHeight', 600) . 'px;">'
+                        . '<div id="template-edit" class="monaco-editor" data-theme="' . parent::system()->getPropertyValue('Page.monacoTheme', 'vs') . '" style="height: ' . parent::system()->getPropertyValue('Page.monacoHeight', 600) . 'px;">'
                             . '<textarea name="template-content" class="d-none">' . str_replace('~', '&#126', $template['content']) . '</textarea>'
                         . '</div>'
                     . '</div>';
