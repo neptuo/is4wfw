@@ -20,10 +20,12 @@
 				
 				const editorKey = textarea.id + "editorSelection";
 
-				const selectionJson = localStorage.getItem(editorKey);
-				if (selectionJson) {
-					const selection = JSON.parse(selectionJson);
-					editor.setSelection(selection);
+				const storedJson = localStorage.getItem(editorKey);
+				if (storedJson) {
+					const stored = JSON.parse(storedJson);
+					editor.setSelection(stored.selection);
+					editor.setScrollTop(stored.scroll.top);
+					editor.setScrollLeft(stored.scroll.left);
 
 					localStorage.removeItem(editorKey);
 				}
@@ -34,7 +36,13 @@
 
 				textarea.form.addEventListener("submit", e => {
 					const selection = editor.getSelection();
-					localStorage.setItem(editorKey, JSON.stringify(selection));
+					localStorage.setItem(editorKey, JSON.stringify({
+						selection: selection,
+						scroll: {
+							top: editor.getScrollTop(),
+							left: editor.getScrollLeft(),
+						}
+					}));
 
 					textarea.value = editor.getValue();
 				});
