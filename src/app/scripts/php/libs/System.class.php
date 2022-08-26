@@ -1044,14 +1044,14 @@
 			*	@return			system property value		 		 		 
 			*
 			*/		 		 		 		
-		public function getPropertyValue($name) {
+		public function getPropertyValue($name, $defaultValue = -1) {
 			global $dbObject;
 			global $loginObject;
 			
 			$userId = $loginObject->getUserId();
-			$value = -1;
+			$value = $defaultValue;
 			$values = $dbObject->fetchAll('SELECT `value` FROM `personal_property` WHERE `user_id` = '.$userId.' AND `name` = "'.$name.'";');
-			if(count($values) > 0) {
+			if (count($values) > 0) {
 				$value = $values[0]['value'];
 			}
 			return $value;

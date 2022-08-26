@@ -5,20 +5,20 @@
 
 <js:script path="https://unpkg.com/monaco-editor@0.34.0/min/vs/loader.js" placement="tail" />
 <js:script placement="tail">
-	$(".monaco-container").each(function() {
-		$container = $(this);
-		const textarea = $container.find("textarea")[0];
-		if (textarea) {
+	$(".monaco-editor").each(function() {
+		const $container = $(this);
+		const $input = $container.find("textarea");
+		if ($input.length == 1) {
 			require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.34.0/min/vs' } });
 			require(['vs/editor/editor.main'], function() {
-				let editor = monaco.editor.create($container.find(".monaco-editor")[0], {
-					value: textarea.value,
+				let editor = monaco.editor.create($container[0], {
+					value: $input.val(),
 					scrollBeyondLastLine: false,
 					language: "html"
 				});
 				editor.focus();
 				
-				const editorKey = textarea.id + "editorSelection";
+				const editorKey = this.id + "-editorStoredSettings";
 
 				const storedJson = localStorage.getItem(editorKey);
 				if (storedJson) {
@@ -34,7 +34,7 @@
 					editor.layout();
 				});
 
-				textarea.form.addEventListener("submit", e => {
+				$input[0].form.addEventListener("submit", e => {
 					const selection = editor.getSelection();
 					localStorage.setItem(editorKey, JSON.stringify({
 						selection: selection,
@@ -44,9 +44,11 @@
 						}
 					}));
 
-					textarea.value = editor.getValue();
+					$input.val(editor.getValue());
 				});
 			});
+		} else {
+			$container.append("<h4 class='error'>Can't find an textarea to get value from</h4>");
 		}
 	});
 	

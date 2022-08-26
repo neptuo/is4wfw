@@ -2830,29 +2830,28 @@
                 if ($propertyEditors == "edit_area") {
                     $editAreaTextFileRows = parent::system()->getPropertyValue('Page.editAreaTextFileRows');
                     $return .= ''
-                            . '<div id="editors" class="editors edit-area-editors">'
-                            . '<div id="template-edit-detail-content-cover">'
+                    . '<div id="editors" class="editors edit-area-editors">'
+                        . '<div id="template-edit-detail-content-cover">'
                             . '<textarea id="template-edit-detail-content" class="edit-area html" name="template-content" rows="' . ($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30) . '" wrap="off">' . str_replace('~', '&#126', $template['content']) . '</textarea>'
-                            . '</div>'
-                            . '</div>';
+                        . '</div>'
+                    . '</div>';
                 } else if ($propertyEditors == "monaco") {
                     $return .= ''
-                            . '<div id="editors" class="gray-box">'
-                                . '<div id="template-edit-detail-content-cover" class="monaco-container">'
-                                    . '<div id="template-edit-detail-editor" class="monaco-editor" style="height:655px"></div>'
-                                    . '<textarea id="template-edit-detail-content" style="display:none" name="template-content" wrap="off">' . str_replace('~', '&#126', $template['content']) . '</textarea>'
-                                . '</div>'
-                            . '</div>';
+                    . '<div id="editors" class="gray-box">'
+                        . '<div id="template-edit" class="monaco-editor" style="height: ' . parent::system()->getPropertyValue('Page.monacoHeight', 600) . 'px;">'
+                            . '<textarea name="template-content" class="d-none">' . str_replace('~', '&#126', $template['content']) . '</textarea>'
+                        . '</div>'
+                    . '</div>';
                 } else {
                     $return .= ''
-                            . '<div class="template-edit-content">'
-                            . '<label for="template-edit-detail-content">Content:</label>'
-                            . '<div class="editor-cover">'
-                            . '<div class="textarea-cover">'
-                            . '<textarea id="template-edit-detail-content" class="editor-textarea" name="template-content" rows="15" wrap="off">' . str_replace('~', '&#126', $template['content']) . '</textarea>'
+                    . '<div class="template-edit-content">'
+                        . '<label for="template-edit-detail-content">Content:</label>'
+                        . '<div class="editor-cover">'
+                        .    '<div class="textarea-cover">'
+                                . '<textarea id="template-edit-detail-content" class="editor-textarea" name="template-content" rows="15" wrap="off">' . str_replace('~', '&#126', $template['content']) . '</textarea>'
                             . '</div>'
-                            . '</div>'
-                            . '</div>';
+                        . '</div>'
+                    . '</div>';
                 }
 
                 $return .= ''
