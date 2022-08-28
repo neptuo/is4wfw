@@ -5,6 +5,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Order.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/EmbeddedResourceManager.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/WebForwardManager.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/ui/BaseEditor.class.php");
     require_once("System.class.php");
 
 
@@ -2836,11 +2837,9 @@
                         . '</div>'
                     . '</div>';
                 } else if ($propertyEditors == "monaco") {
-                    $return .= ''
-                    . '<div id="editors" class="gray-box">'
-                        . '<div id="template-edit" class="monaco-editor" data-theme="' . parent::system()->getPropertyValue('Page.monacoTheme', 'vs') . '" style="height: ' . parent::system()->getPropertyValue('Page.monacoHeight', 600) . 'px;">'
-                            . '<textarea name="template-content" class="d-none">' . str_replace('~', '&#126', $template['content']) . '</textarea>'
-                        . '</div>'
+                    $return .= ''        
+                    . '<div class="gray-box">'
+                        . BaseEditor::monaco("template-content", $template['content'])
                     . '</div>';
                 } else {
                     $return .= ''

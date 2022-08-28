@@ -213,7 +213,7 @@
             return $loginObject;
         }
 
-        public function system() {
+        public static function system() {
             global $sysObject;
             return $sysObject;
         }

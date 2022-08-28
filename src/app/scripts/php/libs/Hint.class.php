@@ -555,7 +555,7 @@
             $grid->addRow(['name' => 'Page.editAreaTLEndRows', 'description' => '']);
             $grid->addRow(['name' => 'Page.editAreaTLStartRows', 'description' => '']);
             $grid->addRow(['name' => 'Page.editAreaTextFileRows', 'description' => '']);
-            $grid->addRow(['name' => 'Page.editors', 'description' => 'edit_area, monaco']);
+            $grid->addRow(['name' => 'Page.editors', 'description' => 'edit_area, monaco, tiny']);
             $grid->addRow(['name' => 'Page.monacoHeight', 'description' => '(px)']);
             $grid->addRow(['name' => 'Page.monacoTheme', 'description' => 'vs, vs-dark']);
             $grid->addRow(['name' => 'System.cms.windowsstyle', 'description' => '']);
