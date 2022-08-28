@@ -730,14 +730,29 @@
                             . '</div>';
                         } else if ($propertyEditors == "monaco") {
                             $returnTmp .= ''
-                            . '<div class="gray-box">'
-                                . '<div class="editors-tab mb-2">' 
-                                    . '<input type="button" name="page-edit-tag-lib-start" value="TL Start" class=""> '
-                                    . '<input type="button" name="page-edit-tag-lib-end" value="TL End"> '
-                                    . '<input type="button" name="page-edit-head" value="Head"> '
-                                    . '<input type="button" name="page-edit-content" value="Content"> '
-                                . '</div>'
-                                . BaseEditor::monaco("edit-content", $sql_return[0]['content'])
+                            . '<div class="gray-box editor-list">'
+                                . BaseEditor::monacoList("page", [
+                                    [
+                                        "name" => "edit-tl-start", 
+                                        "title" => $rb->get('page.field.tlstartlabel'),
+                                        "content" => $sql_return[0]['tag_lib_start']
+                                    ],
+                                    [
+                                        "name" => "edit-tl-end", 
+                                        "title" => $rb->get('page.field.tlendlabel'),
+                                        "content" => $sql_return[0]['tag_lib_end']
+                                    ],
+                                    [
+                                        "name" => "edit-head", 
+                                        "title" => $rb->get('page.field.headlabel'),
+                                        "content" => $sql_return[0]['head']
+                                    ],
+                                    [
+                                        "name" => "edit-content", 
+                                        "title" => $rb->get('page.field.contentlabel'),
+                                        "content" => $sql_return[0]['content']
+                                    ]
+                                ])
                             . '</div>';
                         } else if ($propertyEditors == 'tiny') {
                             $returnTmp .= ''

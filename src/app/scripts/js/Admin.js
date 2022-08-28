@@ -106,52 +106,92 @@
         window.keybindingHandler = handler;
     }
 
-    $(".monaco-editor").each(function() {
+    $(".monaco-container").each(function() {
 		const $container = $(this);
 		const $input = $container.find("textarea");
-		if ($input.length == 1) {
-			require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.34.0/min/vs' } });
-			require(['vs/editor/editor.main'], function() {
-				let editor = monaco.editor.create($container[0], {
-					value: $input.val(),
-					scrollBeyondLastLine: false,
-					language: $container.data('language'),
-					theme: $container.data('theme')
-				});
-				editor.focus();
-				
-				const editorKey = this.id + "-editorStoredSettings";
 
-				const storedJson = localStorage.getItem(editorKey);
-				if (storedJson) {
-					const stored = JSON.parse(storedJson);
-					editor.setSelection(stored.selection);
-					editor.setScrollTop(stored.scroll.top);
-					editor.setScrollLeft(stored.scroll.left);
+        require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.34.0/min/vs' } });
+        require(['vs/editor/editor.main'], function() {
+            let editor = null;
+            let editorParent = null
+            let setEditorValue = null;
+            let beforeSubmit = [];
+		    if ($input.length == 1) {
+                // Normal single editor.
+                editorParent = $container[0];
+                setEditorValue = () => editor.setValue($input.val());
+                beforeSubmit.push(() => $input.val(editor.getValue()));
+            } else if ($container.hasClass("monaco-container-list")) {
+                // Page's multi field editor.
+                editorParent = $container.find(".monaco-container-target")[0];
+                setEditorValue = setLastEditorValue;
+                beforeSubmit.push(setLastInputValue);
 
-					localStorage.removeItem(editorKey);
-				}
+                const $buttons = $container.find("button");
+                $buttons.click(e => {
+                    if (lastName) {
+                        setLastInputValue();
+                    }
 
-				window.addEventListener("resize", () => {
-					editor.layout();
-				});
+                    lastName = $(e.currentTarget).data("editor");
+                    setLastEditorValue();
 
-				$input[0].form.addEventListener("submit", e => {
-					const selection = editor.getSelection();
-					localStorage.setItem(editorKey, JSON.stringify({
-						selection: selection,
-						scroll: {
-							top: editor.getScrollTop(),
-							left: editor.getScrollLeft(),
-						}
-					}));
+                    e.preventDefault();
+                });
+                
+                let lastName = $buttons.last().data("editor");
+                function setLastInputValue() {
+                    const $lastInput = $input.filter("[name='" + lastName + "']");
+                    $lastInput.val(editor.getValue());
+                }
 
-					$input.val(editor.getValue());
-				});
-			});
-		} else {
-			$container.append("<h4 class='error'>Can't find an textarea to get value from</h4>");
-		}
+                function setLastEditorValue() {
+                    editor.setValue($input.filter("[name='" + lastName + "']").val());
+                }
+            } else {
+                $container.append("<h4 class='error'>Can't find an textarea to get value from</h4>");
+                return;
+            }
+
+            editor = monaco.editor.create(editorParent, {
+                scrollBeyondLastLine: false,
+                language: $container.data('language'),
+                theme: $container.data('theme')
+            });
+                    
+            const editorKey = this.id + "-editorStoredSettings";
+            
+            setEditorValue();
+
+            const storedJson = localStorage.getItem(editorKey);
+            if (storedJson) {
+                const stored = JSON.parse(storedJson);
+                editor.setSelection(stored.selection);
+                editor.setScrollTop(stored.scroll.top);
+                editor.setScrollLeft(stored.scroll.left);
+
+                localStorage.removeItem(editorKey);
+            }
+
+            window.addEventListener("resize", () => {
+                editor.layout();
+            });
+
+            $input[0].form.addEventListener("submit", e => {
+                const selection = editor.getSelection();
+                localStorage.setItem(editorKey, JSON.stringify({
+                    selection: selection,
+                    scroll: {
+                        top: editor.getScrollTop(),
+                        left: editor.getScrollLeft(),
+                    }
+                }));
+
+                beforeSubmit.forEach(h => h());
+            });
+            
+            editor.focus();
+        });
 	});
 
 })();
