@@ -85,7 +85,7 @@
                 $defaultClosed = false;
             }
 
-            $addAttrs;
+            $addAttrs = "";
             if ($_REQUEST['__TEMPLATE'] == 'xml') {
                 $props = $dbObject->fetchAll('SELECT `left`, `top`, `width`, `height`, `maximized` FROM `window_properties` WHERE `frame_id` = "' . $name . '" AND `user_id` = ' . $loginObject->getUserId() . ';');
                 if (count($props) == 1) {
@@ -151,9 +151,9 @@
             return $template;
         }
 
-        public function autolib($prefix) {
-            if (!$this->php()->isRegistered($prefix)) {
-                if (!$this->php()->autoRegisterPrefix($prefix)) {
+        public static function autolib($prefix) {
+            if (!BaseTagLib::php()->isRegistered($prefix)) {
+                if (!BaseTagLib::php()->autoRegisterPrefix($prefix)) {
                     return null;
                 }
             }
@@ -163,7 +163,7 @@
             return ${$name};
         }
 
-        public function php() {
+        public static function php() {
             global $phpObject;
             return $phpObject;
         }
@@ -188,10 +188,10 @@
             return $uiObject;
         }
         
-        public function js() {
+        public static function js() {
             global $jsObject;
             if ($jsObject == NULL) {
-                return $this->autolib('js');
+                return BaseTagLib::autolib('js');
             }
 
             return $jsObject;

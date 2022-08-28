@@ -1711,7 +1711,7 @@
                 $browsers['Opera'] = 0;
                 $browsers['Safari'] = 0;
 
-                $return .= $this->getFileUpdateForm(-1, '', '', $browsers, $fileTypesOpt, $placementOptions);
+                $return .= $this->getFileUpdateForm(-1, '', '', $browsers, $fileTypesOpt, $placementOptions, 1);
             }
 
             if ($_POST['save'] == $rb->get('tf.save') || $_POST['save'] == $rb->get('tf.saveandclose')) {
@@ -1780,7 +1780,7 @@
                     $browsers['Opera'] = $file['for_opera'];
                     $browsers['Safari'] = $file['for_safari'];
 
-                    $return .= $this->getFileUpdateForm($fileId, $file['name'], $file['content'], $browsers, $fileTypesOpt, $placementOptions);
+                    $return .= $this->getFileUpdateForm($fileId, $file['name'], $file['content'], $browsers, $fileTypesOpt, $placementOptions, $file['type']);
                 } else {
                     $return .= parent::getFrame($rb->get('tf.title'), parent::getError($rb->get('tf.notselected')), '', true);
                 }
@@ -2024,7 +2024,7 @@
          *  Generates form for updating text files.
          *
          */
-        private function getFileUpdateForm($fileId, $fileName, $fileContent, $browsers, $fileTypes, $placementOptions) {
+        private function getFileUpdateForm($fileId, $fileName, $fileContent, $browsers, $fileTypes, $placementOptions, $fileType) {
             $rb = $this->rb();
             $htmlBrowsers = '';
             foreach ($browsers as $browser => $value) {
@@ -2035,7 +2035,7 @@
                 . '</div>';
             }
 
-            $returnTmp = ''
+            $return = ''
             . '<form name="edit-file" method="post" action="' . $_SERVER['REQUEST_URI'] . '">'
                 . '<div class="edit-file-name">'
                     . '<div class="text-file-prop">'
@@ -2067,15 +2067,20 @@
             $editAreaTextFileRows = parent::system()->getPropertyValue('Page.editAreaTextFileRows');
 
             if ($propertyEditors == "edit_area") {
-                $returnTmp .= ''
+                $return .= ''
                         . '<div id="editors" class="editors edit-area-editors">'
                         . '<div id="cover-page-file-content">'
                         . '<label for="file-content">' . $rb->get('tf.name') . ':</label>'
                         . '<textarea id="file-content" class="edit-area html" name="file-content" rows="' . ($editAreaTextFileRows > 0 ? $editAreaTextFileRows : 30) . '" wrap="off">' . str_replace('~', '&#126', $fileContent) . '</textarea>'
                         . '</div>'
                         . '</div>';
+            } else if ($propertyEditors == "monaco") {
+                $return .= ''        
+                . '<div class="gray-box">'
+                    . BaseEditor::monaco("template-content", $fileContent, $fileType == WEB_TYPE_CSS ? "css" : "javascript")
+                . '</div>';
             } else {
-                $returnTmp .= ''
+                $return .= ''
                         . '<label for="file-content">' . $rb->get('tf.name') . ':</label> '
                         . '<div class="editor-cover">'
                         . '<div class="textarea-cover">'
@@ -2084,7 +2089,7 @@
                         . '<div class="clear"></div>'
                         . '</div>';
             }
-            $returnTmp .= ''
+            $return .= ''
                     . '</div>'
                     . '<div class="text-file-submit">'
                     . (($fileId != -1) ? '<input type="hidden" name="file-id" value="' . $fileId . '" />' : '')
@@ -2095,7 +2100,7 @@
                     . '</div>'
                     . '</form>';
 
-            return parent::getFrame($rb->get('tf.editframetitle') . ' :: ' . ((strlen($fileName) != 0) ? $fileName . ' ( ' . $fileId . ' )' : $rb->get('tf.new')), $returnTmp, '');
+            return parent::getFrame($rb->get('tf.editframetitle') . ' :: ' . ((strlen($fileName) != 0) ? $fileName . ' ( ' . $fileId . ' )' : $rb->get('tf.new')), $return, '');
         }
 
         /**
