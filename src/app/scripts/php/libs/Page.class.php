@@ -550,7 +550,7 @@
                     $groupSelectD .= '</select>';
                     $groupSelectA .= '</select>';
 
-                    $return .= '';
+                    $returnTmp = '';
                     if ($this->MessageFromEdit != '') {
                         $returnTmp .= $this->MessageFromEdit;
                         $this->MessageFromEdit = '';
@@ -728,7 +728,18 @@
                                     . '<textarea id="page-edit-content" class="edit-area html" name="edit-content" rows="' . ($editAreaContentRows > 0 ? $editAreaContentRows : 20) . '">' . $sql_return[0]['content'] . '</textarea>'
                                 . '</div>'
                             . '</div>';
-                        } elseif ($propertyEditors == 'tiny') {
+                        } else if ($propertyEditors == "monaco") {
+                            $returnTmp .= ''
+                            . '<div class="gray-box">'
+                                . '<div class="editors-tab mb-2">' 
+                                    . '<input type="button" name="page-edit-tag-lib-start" value="TL Start" class=""> '
+                                    . '<input type="button" name="page-edit-tag-lib-end" value="TL End"> '
+                                    . '<input type="button" name="page-edit-head" value="Head"> '
+                                    . '<input type="button" name="page-edit-content" value="Content"> '
+                                . '</div>'
+                                . BaseEditor::monaco("edit-content", $sql_return[0]['content'])
+                            . '</div>';
+                        } else if ($propertyEditors == 'tiny') {
                             $returnTmp .= ''
                             . (($this->getGroupPermCached('Page.TagLibs')) ? ''
                                 . '<div class="edit edit-tag-lib">'
@@ -2077,7 +2088,7 @@
             } else if ($propertyEditors == "monaco") {
                 $return .= ''        
                 . '<div class="gray-box">'
-                    . BaseEditor::monaco("template-content", $fileContent, $fileType == WEB_TYPE_CSS ? "css" : "javascript")
+                    . BaseEditor::monaco("file-content", $fileContent, $fileType == WEB_TYPE_CSS ? "css" : "javascript")
                 . '</div>';
             } else {
                 $return .= ''
