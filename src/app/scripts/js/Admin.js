@@ -106,92 +106,119 @@
         window.keybindingHandler = handler;
     }
 
-    $(".monaco-container").each(function() {
-		const $container = $(this);
-		const $input = $container.find("textarea");
-
+    const $monaco = $(".monaco-container");
+    if ($monaco.length > 0) {
         require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.34.0/min/vs' } });
         require(['vs/editor/editor.main'], function() {
-            let editor = null;
-            let editorParent = null
-            let setEditorValue = null;
-            let beforeSubmit = [];
-		    if ($input.length == 1) {
-                // Normal single editor.
-                editorParent = $container[0];
-                setEditorValue = () => editor.setValue($input.val());
-                beforeSubmit.push(() => $input.val(editor.getValue()));
-            } else if ($container.hasClass("monaco-container-list")) {
-                // Page's multi field editor.
-                editorParent = $container.find(".monaco-container-target")[0];
-                setEditorValue = setLastEditorValue;
-                beforeSubmit.push(setLastInputValue);
+            $monaco.each(function() {
+                const $container = $(this);
+                const $input = $container.find("textarea");
+        
+                let editor = null;
+                let editorParent = null
+                let setEditorValue = null;
+                let beforeSubmit = [];
 
-                const $buttons = $container.find("button");
-                $buttons.click(e => {
-                    if (lastName) {
-                        setLastInputValue();
+                const settings = {
+                    key: this.id + "-editor-settings",
+                    beforeStore: [],
+                    beforeLoad: [],
+                    load: function () {
+                        const json = localStorage.getItem(this.key);
+                        if (json) {
+                            const model = JSON.parse(json);
+                            this.beforeLoad.forEach(h => h(model));
+                
+                            editor.setSelection(model.selection);
+                            editor.setScrollTop(model.scroll.top);
+                            editor.setScrollLeft(model.scroll.left);
+
+                            localStorage.removeItem(this.key);
+                        }
+                    },
+                    store: function () {
+                        const model = {
+                            selection: editor.getSelection(),
+                            scroll: {
+                                top: editor.getScrollTop(),
+                                left: editor.getScrollLeft(),
+                            }
+                        };
+
+                        this.beforeStore.forEach(h => h(model));
+
+                        localStorage.setItem(this.key, JSON.stringify(model));
+                    }
+                }
+
+                if ($input.length == 1) {
+                    // Normal single editor.
+                    editorParent = $container[0];
+                    setEditorValue = () => editor.setValue($input.val());
+                    beforeSubmit.push(() => $input.val(editor.getValue()));
+                } else if ($container.hasClass("monaco-container-list")) {
+                    // Page's multi field editor.
+                    editorParent = $container.find(".monaco-container-target")[0];
+                    setEditorValue = setLastEditorValue;
+                    beforeSubmit.push(setLastInputValue);
+        
+                    const $buttons = $container.find("button");
+                    $buttons.click(e => {
+                        if (lastName) {
+                            setLastInputValue();
+                        }
+        
+                        lastName = $(e.currentTarget).data("editor");
+                        setLastEditorValue();
+                        editor.focus();
+        
+                        e.preventDefault();
+                    });
+                    
+                    let lastName = $buttons.last().data("editor");
+                    function setLastInputValue() {
+                        const $lastInput = $input.filter("[name='" + lastName + "']");
+                        $lastInput.val(editor.getValue());
+                    }
+        
+                    function setLastEditorValue() {
+                        editor.setValue($input.filter("[name='" + lastName + "']").val());
                     }
 
-                    lastName = $(e.currentTarget).data("editor");
-                    setLastEditorValue();
-
-                    e.preventDefault();
+                    settings.beforeStore.push(m => m.field = lastName);
+                    settings.beforeLoad.push(m => {
+                        if (m.field) {
+                            lastName = m.field;
+                            setLastEditorValue();
+                        }
+                    });
+                } else {
+                    $container.append("<h4 class='error'>Can't find an textarea to get value from</h4>");
+                    return;
+                }
+        
+                // Create editor
+                editor = monaco.editor.create(editorParent, {
+                    scrollBeyondLastLine: false,
+                    language: $container.data('language'),
+                    theme: $container.data('theme')
+                });
+        
+                window.addEventListener("resize", () => {
+                    editor.layout();
+                });
+                        
+                setEditorValue();
+                settings.load();
+        
+                $input[0].form.addEventListener("submit", e => {
+                    settings.store();
+                    beforeSubmit.forEach(h => h());
                 });
                 
-                let lastName = $buttons.last().data("editor");
-                function setLastInputValue() {
-                    const $lastInput = $input.filter("[name='" + lastName + "']");
-                    $lastInput.val(editor.getValue());
-                }
-
-                function setLastEditorValue() {
-                    editor.setValue($input.filter("[name='" + lastName + "']").val());
-                }
-            } else {
-                $container.append("<h4 class='error'>Can't find an textarea to get value from</h4>");
-                return;
-            }
-
-            editor = monaco.editor.create(editorParent, {
-                scrollBeyondLastLine: false,
-                language: $container.data('language'),
-                theme: $container.data('theme')
+                editor.focus();
             });
-                    
-            const editorKey = this.id + "-editorStoredSettings";
-            
-            setEditorValue();
-
-            const storedJson = localStorage.getItem(editorKey);
-            if (storedJson) {
-                const stored = JSON.parse(storedJson);
-                editor.setSelection(stored.selection);
-                editor.setScrollTop(stored.scroll.top);
-                editor.setScrollLeft(stored.scroll.left);
-
-                localStorage.removeItem(editorKey);
-            }
-
-            window.addEventListener("resize", () => {
-                editor.layout();
-            });
-
-            $input[0].form.addEventListener("submit", e => {
-                const selection = editor.getSelection();
-                localStorage.setItem(editorKey, JSON.stringify({
-                    selection: selection,
-                    scroll: {
-                        top: editor.getScrollTop(),
-                        left: editor.getScrollLeft(),
-                    }
-                }));
-
-                beforeSubmit.forEach(h => h());
-            });
-            
-            editor.focus();
         });
-	});
+    }
 
 })();
