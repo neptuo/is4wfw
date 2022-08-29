@@ -108,8 +108,48 @@
 
     const $monaco = $(".monaco-container");
     if ($monaco.length > 0) {
-        require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.34.0/min/vs' } });
+        require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.34.0/dev/vs' } });
         require(['vs/editor/editor.main'], function() {
+
+            monaco.languages.registerCompletionItemProvider('html', 
+            {
+                triggerCharacters: ['>'],
+                provideCompletionItems: (model, position) => 
+                {
+                    const codePre = model.getValueInRange({
+                        startLineNumber: position.lineNumber,
+                        startColumn: 1,
+                        endLineNumber: position.lineNumber,
+                        endColumn: position.column,
+                    });
+                
+                    const tag = codePre.match(/.*<([a-zA-Z0-9:]+)>$/)?.[1];
+                
+                    if (!tag) {
+                        return;
+                    }
+                    
+                    const word = model.getWordUntilPosition(position);
+                
+                    return {
+                        suggestions: [
+                        {
+                            label: `</${tag}>`,
+                            kind: monaco.languages.CompletionItemKind.EnumMember,
+                            insertText: '$0' + `</${tag}>`,
+                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                            range:  {
+                                startLineNumber: position.lineNumber,
+                                endLineNumber: position.lineNumber,
+                                startColumn: word.startColumn,
+                                endColumn: word.endColumn,
+                            },
+                        },
+                        ],
+                    };
+                },
+            });
+
             $monaco.each(function() {
                 const $container = $(this);
                 const $input = $container.find("textarea");
