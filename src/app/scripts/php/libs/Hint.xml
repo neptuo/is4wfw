@@ -34,12 +34,12 @@
   </tag>
   <tag>
     <name>propertyList</name>
-    <function>getPropertyList</function>
+    <function>getAdminPropertyList</function>
     <attribute>
       <name>useFrames</name>
     </attribute>
     <comment>
-      Zobrazí seznam vlastnotí uživatelského rozhraní
+      Zobrazí seznam vlastnotí administračního rozhraní.
     </comment>
   </tag>
   <tag>
@@ -61,6 +61,34 @@
     </comment>
   </property>
   <fulltag>
+    <name>autoRegistered</name>
+    <function>autoRegistered</function>
+    <comment>
+      Poskytuje seznam všech autoregistered libraries.
+    </comment>
+  </fulltag>
+  <property>
+  	<name>autoRegistered</name>
+  	<getFunction>getAutoRegisteredList</getFunction>
+    <comment>
+      Vrací seznam všech autoregistered libraries.
+    </comment>
+  </property>
+  <property>
+  	<name>autoRegisteredPrefix</name>
+  	<getFunction>getAutoRegisteredPrefix</getFunction>
+    <comment>
+      Vrací prefix položky v "hint:autoRegistered".
+    </comment>
+  </property>
+  <property>
+  	<name>autoRegisteredClassPath</name>
+  	<getFunction>getAutoRegisteredClassPath</getFunction>
+    <comment>
+      Vrací classPath položky v "hint:autoRegistered".
+    </comment>
+  </property>
+  <fulltag>
     <name>libraryList</name>
     <function>libraryList</function>
     <comment>
@@ -73,6 +101,180 @@
   	<getFunction>getLibraryList</getFunction>
     <comment>
       Vrátí seznam všech dostupných libraries uvnitř "hint:libraryList".
+    </comment>
+  </property>
+  <fulltag>
+    <name>library</name>
+    <function>library</function>
+    <attribute>
+      <name>classPath</name>
+      <comment>ClassPath jejíž dokumentace se má načíst</comment>
+    </attribute>
+    <comment>
+      Načte dokumentaci k library.
+      Uvnitř těla je možné použít "hint:tagList", "hint:fullTagList", "hint:propertyList", "hint:decoratorList".
+    </comment>
+  </fulltag>
+  <property>
+  	<name>tagList</name>
+  	<getFunction>getTagList</getFunction>
+    <comment>
+      Vrátí seznam všech dostupných tagů uvnitř "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>fulltagList</name>
+  	<getFunction>getFulltagList</getFunction>
+    <comment>
+      Vrátí seznam všech dostupných párových tagů uvnitř "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>tagName</name>
+  	<getFunction>getTagName</getFunction>
+    <comment>
+      Vrátí název tagu v "hint:tagList" a "hint:fullTagList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagComment</name>
+  	<getFunction>getTagComment</getFunction>
+    <comment>
+      Vrátí komentář tagu v "hint:tagList" a "hint:fullTagList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAttributeList</name>
+  	<getFunction>getTagAttributeList</getFunction>
+    <comment>
+      Vrátí seznam atributů v "hint:tagList" a "hint:fullTagList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAttributeName</name>
+  	<getFunction>getTagAttributeName</getFunction>
+    <comment>
+      Vrátí název atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAttributeType</name>
+  	<getFunction>getTagAttributeType</getFunction>
+    <comment>
+      Vrátí typ atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAttributePrefix</name>
+  	<getFunction>getTagAttributePrefix</getFunction>
+    <comment>
+      Vrátí zda je atribut prefixový v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAttributeRequired</name>
+  	<getFunction>getTagAttributeRequired</getFunction>
+    <comment>
+      Vrátí atribut povinný v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAttributeDefault</name>
+  	<getFunction>getTagAttributeDefault</getFunction>
+    <comment>
+      Vrátí výchozí hodnotu atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAttributeObsolete</name>
+  	<getFunction>getTagAttributeObsolete</getFunction>
+    <comment>
+      Vrátí popis, proč je atribut obsolete v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAttributeComment</name>
+  	<getFunction>getTagAttributeComment</getFunction>
+    <comment>
+      Vrátí komentář atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAnyAttribute</name>
+  	<getFunction>getTagAnyAttribute</getFunction>
+    <comment>
+      Vrátí zda má tag any atribut v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+    </comment>
+  </property>
+  <property>
+  	<name>tagAnyAttributeComment</name>
+  	<getFunction>getTagAnyAttributeComment</getFunction>
+    <comment>
+      Vrátí komentář k any atributu v "hint:tagList" a "hint:fullTagList".
+    </comment>
+  </property>
+  <property>
+  	<name>propertyList</name>
+  	<getFunction>getPropertyList</getFunction>
+    <comment>
+      Vrátí seznam všech dostupných property uvnitř "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>propertyName</name>
+  	<getFunction>getPropertyName</getFunction>
+    <comment>
+      Vrátí název property v "hint:propertyList" v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>propertyComment</name>
+  	<getFunction>getPropertyComment</getFunction>
+    <comment>
+      Vrátí komentář property v "hint:propertyList" v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>propertyObsolete</name>
+  	<getFunction>getPropertyObsolete</getFunction>
+    <comment>
+      Vrátí popis, proč je property obsolete v "hint:propertyList" v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>propertyHasGet</name>
+  	<getFunction>getPropertyHasGet</getFunction>
+    <comment>
+      Vrátí zda má property getter obsolete v "hint:propertyList" v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>propertyHasSet</name>
+  	<getFunction>getPropertyHasSet</getFunction>
+    <comment>
+      Vrátí zda má property setter obsolete v "hint:propertyList" v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>decoratorList</name>
+  	<getFunction>getDecoratorList</getFunction>
+    <comment>
+      Vrátí seznam všech dostupných decorator uvnitř "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>decoratorComment</name>
+  	<getFunction>getDecoratorComment</getFunction>
+    <comment>
+      Vrátí komentář decoratoru v "hint:decoratorList" v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>decoratorAttributeList</name>
+  	<getFunction>getDecoratorAttributeList</getFunction>
+    <comment>
+      Vrátí seznam atributů v "hint:decoratorList".
+      Následně se používají jednotlivé "hint:tagAttribute*" property.
     </comment>
   </property>
 </taglib>

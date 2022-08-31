@@ -533,7 +533,7 @@
         }
             
             
-        public function getPropertyList($useFrames = false) {
+        public function getAdminPropertyList($useFrames = false) {
             $rb = $this->rb();
             
             $grid = new BaseGrid();
@@ -608,6 +608,40 @@
             }
         }
 
+        public function autoRegistered(callable $template) {
+            $xml = new SimpleXMLElement(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'));
+            
+            $items = [];
+            foreach ($xml->reg as $reg) {
+                $items[] = $reg;
+            }
+
+            $model = new ListModel();
+            $this->pushListModel($model);
+            $model->items($items);
+            $model->render();
+
+            $result = $template();
+
+            $this->popListModel();
+
+            return $result;
+        }
+
+        public function getAutoRegisteredList() {
+            return $this->peekListModel();
+        }
+
+        public function getAutoRegisteredPrefix() {
+            $attributes = $this->peekListModel()->currentItem()->attributes();
+            return (string)$attributes['prefix'];
+        }
+
+        public function getAutoRegisteredClassPath() {
+            $attributes = $this->peekListModel()->currentItem()->attributes();
+            return (string)$attributes['class'];
+        }
+
         public function setPropClassPath($classPath) {
             $_SESSION['select-class-path'] = $classPath;
             return $classPath;
@@ -638,6 +672,205 @@
 		public function getLibraryList() {
 			return $this->peekListModel();
 		}
+
+        private $library;
+        private $tagModel;
+        private $fulltagModel;
+        private $propertyModel;
+        private $decoratorModel;
+
+        public function library(callable $template, string $classPath) {
+            $xmlPath = $this->libraryLoader->getXmlPath($classPath);
+            
+            if (is_file($xmlPath)) {
+                $oldLibrary = $this->library;
+                $this->library = new SimpleXMLElement(file_get_contents($xmlPath));
+
+                $tags = [];
+                foreach ($this->library->tag as $tag) {
+                    $tags[] = $this->mapTag($tag);
+                }
+                $this->tagModel = ListModel::create($tags);
+
+                $fulltags = [];
+                foreach ($this->library->fulltag as $fulltag) {
+                    $fulltags[] = $this->mapTag($fulltag);
+                }
+                $this->fulltagModel = ListModel::create($fulltags);
+
+                $properties = [];
+                foreach ($this->library->property as $property) {
+                    $properties[] = [
+                        "name" => $property->name,
+                        "hasGet" => isset($property->getFunction),
+                        "hasSet" => isset($property->setFunction),
+                        "comment" => trim($property->comment),
+                        "obsolete" => trim($property->obsolete)
+                    ];
+                }
+                $this->propertyModel = ListModel::create($properties);
+
+                $decorators = [];
+                foreach ($this->library->decorator as $decorator) {
+                    $decorators[] = [
+                        "comment" => trim($decorator->comment),
+                        "attributes" => $this->mapAttributes($decorator)
+                    ];
+                }
+                $this->decoratorModel = ListModel::create($decorators);
+
+                $content = $template();
+                $this->library = $oldLibrary;
+                return $content;
+            }
+        }
+
+        private function mapTag(SimpleXMLElement $tag) {
+            return [
+                "name" => (string)$tag->name,
+                "lookless" => isset($tag->lookless),
+                "identifiable" => isset($tag->identifiable),
+                "obsolete" => trim($tag->obsolete),
+                "comment" => trim($tag->comment),
+                "attributes" => ListModel::create($this->mapAttributes($tag)),
+                "anyAttribute" => isset($tag->anyAttribute),
+                "anyAttributeComment" => trim($tag->anyAttribute->comment)
+            ];
+        }
+
+        private function mapAttributes(SimpleXMLElement $parent) {
+            $attributes = [];
+            foreach ($parent->attribute as $attribute) {
+                $attributes[] = [
+                    "name" => (string)$attribute->name,
+                    "type" => isset($attribute->type) ? (string)$attribute->type : "string",
+                    "prefix" => isset($attribute->prefix),
+                    "required" => isset($attribute->required),
+                    "default" => isset($attribute->default) ? $attribute->default : null,
+                    "obsolete" => trim($attribute->obsolete),
+                    "comment" => trim($attribute->comment)
+                ];
+            }
+
+            return $attributes;
+        }
+
+        private function getFieldOnModel($model, $name1, $name2 = null) {
+            $field = $model->field($name1);
+            if ($name2) {
+                $field = $field->field($name2);
+            }
+
+            return $field;
+        }
+        
+        public function getTagList() {
+            return $this->tagModel;
+        }
+
+        public function getFulltagList() {
+            return $this->fulltagModel;
+        }
+
+        private function getTagField($name1, $name2 = null) {
+            if ($this->tagModel && $this->tagModel->isIterate()) {
+                return $this->getFieldOnModel($this->tagModel, $name1, $name2);
+            }
+
+            if ($this->fulltagModel && $this->fulltagModel->isIterate()) {
+                return $this->getFieldOnModel($this->fulltagModel, $name1, $name2);
+            }
+
+            if ($this->decoratorModel && $this->decoratorModel->isIterate()) {
+                return $this->getFieldOnModel($this->decoratorModel, $name1, $name2);
+            }
+
+            return null;
+        }
+
+        public function getTagName() {
+            return $this->getTagField("name");
+        }
+
+        public function getTagComment() {
+            return $this->getTagField("comment");
+        }
+
+        public function getTagAttributeList() {
+            return $this->getTagField("attributes");
+        }
+
+        public function getTagAttributeName() {
+            return $this->getTagField("attributes", "name");
+        }
+        
+        public function getTagAttributeType() {
+            return $this->getTagField("attributes", "type");
+        }
+
+        public function getTagAttributePrefix() {
+            return $this->getTagField("attributes", "prefix");
+        }
+
+        public function getTagAttributeRequired() {
+            return $this->getTagField("attributes", "required");
+        }
+
+        public function getTagAttributeDefault() {
+            return $this->getTagField("attributes", "default");
+        }
+
+        public function getTagAttributeObsolete() {
+            return $this->getTagField("attributes", "obsolete");
+        }
+
+        public function getTagAttributeComment() {
+            return $this->getTagField("attributes", "comment");
+        }
+
+        public function getTagAnyAttribute() {
+            return $this->getTagField("anyAttribute");
+        }
+
+        public function getTagAnyAttributeComment() {
+            return $this->getTagField("anyAttributeComment");
+        }
+
+        public function getPropertyList() {
+            return $this->propertyModel;
+        }
+
+        public function getPropertyName() {
+            return $this->propertyModel->field("name");
+        }
+
+        public function getPropertyComment() {
+            return $this->propertyModel->field("comment");
+        }
+
+        public function getPropertyObsolete() {
+            return $this->propertyModel->field("obsolete");
+        }
+
+        public function getPropertyHasGet() {
+            return $this->propertyModel->field("hasGet");
+        }
+
+        public function getPropertyHasSet() {
+            return $this->propertyModel->field("hasSet");
+        }
+
+        public function getDecoratorList() {
+            return $this->decoratorModel;
+        }
+
+        public function getDecoratorComment() {
+            return $this->getTagField("comment");
+        }
+
+        public function getDecoratorAttributeList() {
+            return $this->getTagField("attributes");
+        }
     }
 
 ?>
