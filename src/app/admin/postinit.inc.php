@@ -37,6 +37,7 @@
         $php->lazy("layouts", "php.libs.TemplateDirectory", ["path" => $viewsPath . "layouts"]);
         $php->lazy("views", "php.libs.TemplateDirectory", ["path" => $viewsPath . "pages"]);
         $php->lazy("floorball", "php.libs.TemplateDirectory", ["path" => $viewsPath . "/pages/floorball"]);
+        $php->lazy("api", "php.libs.TemplateDirectory", ["path" => $viewsPath . "/pages/api"]);
         $php->autolib("var")->setValue("virtualUrl", substr($virtualUrl, 2));
       
         $indexContent = file_get_contents($viewsPath . "index.view.php");

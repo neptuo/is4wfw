@@ -186,6 +186,12 @@
             </router:file>
         </router:directory>
     </router:directory>
+    
+    <router:directory path="api">
+        <router:file path="intellisense.view">
+            <api:intellisense />
+        </router:file>
+    </router:directory>
 </router:fromPath>
 
 <web:switch when="var:templateName">

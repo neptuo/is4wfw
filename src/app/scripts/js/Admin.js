@@ -109,7 +109,19 @@
     const $monaco = $(".monaco-container");
     if ($monaco.length > 0) {
         require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.34.0/dev/vs' } });
-        require(['vs/editor/editor.main'], function() {
+        require(['vs/editor/editor.main'], async () => {
+
+            var intellisense = await fetch("/api/intellisense.view").then(response => response.json());
+
+            monaco.languages.html.registerHTMLLanguageService('html', {
+                data: {
+                    dataProviders: {
+                        'is4wfw': {
+                            tags: intellisense
+                        }
+                    }
+                }
+            });
 
             monaco.languages.registerCompletionItemProvider('html', 
             {
