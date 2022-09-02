@@ -678,6 +678,7 @@
         private $fulltagModel;
         private $propertyModel;
         private $decoratorModel;
+        private $constructorModel;
 
         public function library(callable $template, string $classPath) {
             $xmlPath = $this->libraryLoader->getXmlPath($classPath);
@@ -719,6 +720,12 @@
                 }
                 $this->decoratorModel = ListModel::create($decorators);
 
+                $constructorModel = [];
+                if (isset($this->library->constructor)) {
+                    $constructorModel["comment"] = trim($this->library->constructor->comment);
+                    $constructorModel["attributes"] = $this->mapAttributes($this->library->constructor);
+                }
+
                 $content = $template();
                 $this->library = $oldLibrary;
                 return $content;
@@ -734,7 +741,7 @@
                 "comment" => trim($tag->comment),
                 "attributes" => ListModel::create($this->mapAttributes($tag)),
                 "anyAttribute" => isset($tag->anyAttribute),
-                "anyAttributeComment" => trim($tag->anyAttribute->comment)
+                "anyAttributeComment" => isset($tag->anyAttribute) ? trim($tag->anyAttribute->comment) : null
             ];
         }
 
@@ -870,6 +877,30 @@
 
         public function getDecoratorAttributeList() {
             return $this->getTagField("attributes");
+        }
+
+        public function getConstructorComment() {
+            return $this->constructorModel["comment"];
+        }
+
+        public function getConstructorAttributeList() {
+            return $this->constructorModel["attributes"];
+        }
+
+        public function getAnyTag() {
+            return isset($this->library->anyTag->anyAttribute);
+        }
+
+        public function getAnyTagComment() {
+            return $this->getAnyTag() ? trim($this->library->anyTag->comment) : null;
+        }
+
+        public function getAnyFulltag() {
+            return isset($this->library->anyFulltag->anyAttribute);
+        }
+
+        public function getAnyFulltagComment() {
+            return $this->getAnyFulltag() ? trim($this->library->anyFulltag->comment) : null;
         }
     }
 

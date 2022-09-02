@@ -154,56 +154,56 @@
   	<name>tagAttributeName</name>
   	<getFunction>getTagAttributeName</getFunction>
     <comment>
-      Vrátí název atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+      Vrátí název atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fulltagList" a "hint:decoratorList" a "hist:constructorAttributeList".
     </comment>
   </property>
   <property>
   	<name>tagAttributeType</name>
   	<getFunction>getTagAttributeType</getFunction>
     <comment>
-      Vrátí typ atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+      Vrátí typ atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fulltagList" a "hint:decoratorList" a "hist:constructorAttributeList".
     </comment>
   </property>
   <property>
   	<name>tagAttributePrefix</name>
   	<getFunction>getTagAttributePrefix</getFunction>
     <comment>
-      Vrátí zda je atribut prefixový v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+      Vrátí zda je atribut prefixový v "hint:tagAttributeList" v "hint:tagList" a "hint:fulltagList" a "hint:decoratorList" a "hist:constructorAttributeList".
     </comment>
   </property>
   <property>
   	<name>tagAttributeRequired</name>
   	<getFunction>getTagAttributeRequired</getFunction>
     <comment>
-      Vrátí atribut povinný v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+      Vrátí atribut povinný v "hint:tagAttributeList" v "hint:tagList" a "hint:fulltagList" a "hint:decoratorList" a "hist:constructorAttributeList".
     </comment>
   </property>
   <property>
   	<name>tagAttributeDefault</name>
   	<getFunction>getTagAttributeDefault</getFunction>
     <comment>
-      Vrátí výchozí hodnotu atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+      Vrátí výchozí hodnotu atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fulltagList" a "hint:decoratorList" a "hist:constructorAttributeList".
     </comment>
   </property>
   <property>
   	<name>tagAttributeObsolete</name>
   	<getFunction>getTagAttributeObsolete</getFunction>
     <comment>
-      Vrátí popis, proč je atribut obsolete v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+      Vrátí popis, proč je atribut obsolete v "hint:tagAttributeList" v "hint:tagList" a "hint:fulltagList" a "hint:decoratorList" a "hist:constructorAttributeList".
     </comment>
   </property>
   <property>
   	<name>tagAttributeComment</name>
   	<getFunction>getTagAttributeComment</getFunction>
     <comment>
-      Vrátí komentář atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+      Vrátí komentář atributu v "hint:tagAttributeList" v "hint:tagList" a "hint:fulltagList" a "hint:decoratorList" a "hist:constructorAttributeList".
     </comment>
   </property>
   <property>
   	<name>tagAnyAttribute</name>
   	<getFunction>getTagAnyAttribute</getFunction>
     <comment>
-      Vrátí zda má tag any atribut v "hint:tagList" a "hint:fullTagList" a "hint:decoratorList".
+      Vrátí zda má tag any atribut v "hint:tagList" a "hint:fulltagList" a "hint:decoratorList" a "hist:constructorAttributeList".
     </comment>
   </property>
   <property>
@@ -275,6 +275,49 @@
     <comment>
       Vrátí seznam atributů v "hint:decoratorList".
       Následně se používají jednotlivé "hint:tagAttribute*" property.
+    </comment>
+  </property>
+  <property>
+  	<name>constructorComment</name>
+  	<getFunction>getConstructorComment</getFunction>
+    <comment>
+      Vrátí komentář konstruktoru v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>constructorAttributeList</name>
+  	<getFunction>getConstructorAttributeList</getFunction>
+    <comment>
+      Vrátí seznam atributů konstruktoru.
+      Následně se používají jednotlivé "hint:tagAttribute*" property.
+    </comment>
+  </property>
+  <property>
+  	<name>anyTag</name>
+  	<getFunction>getAnyTag</getFunction>
+    <comment>
+      Vrátí zda má library definovaná any tag v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>anyTagComment</name>
+  	<getFunction>getAnyTagComment</getFunction>
+    <comment>
+      Vrátí komentář k any tagu v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>anyFulltag</name>
+  	<getFunction>getAnyFulltag</getFunction>
+    <comment>
+      Vrátí zda má library definovaná any fulltag v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>anyFulltagComment</name>
+  	<getFunction>getAnyFulltagComment</getFunction>
+    <comment>
+      Vrátí komentář k any fulltagu v "hint:library".
     </comment>
   </property>
 </taglib>
