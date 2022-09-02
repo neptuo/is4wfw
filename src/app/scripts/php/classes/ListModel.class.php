@@ -4,6 +4,7 @@
     {
         private $isRegistration;
         private $isRender;
+        private $isIterate;
 
         private $fields;
         private $items;
@@ -29,6 +30,13 @@
 
         public function render() {
             $this->isRender = true;
+        }
+        
+        public function iterate($isIterate) {
+            $this->isIterate = $isIterate;
+        }
+        public function isIterate() {
+            return $this->isIterate;
         }
 
         public function fields() {
@@ -79,7 +87,7 @@
         }
 
         // ------- Metadata ---------------------------------------------------
-
+        
         public function metadata($key, $value = "0.0-def") {
             if ($value === "0.0-def") {
                 return $this->metadata[$key];
@@ -87,10 +95,20 @@
                 $this->metadata[$key] = $value;
             }
         }
-
+        
         public function hasMetadataKey($key) {
             return array_key_exists($key, $this->metadata);
         }
+        
+        // ------- Factories --------------------------------------------------
+
+        public static function create($items) : ListModel {
+            $model = new ListModel();
+            $model->items($items);
+            $model->render();
+            return $model;
+        }
+
     }
 
 ?>

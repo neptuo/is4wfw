@@ -62,6 +62,7 @@
 			}
 			
 			if ($model->isRender()) {
+				$model->iterate(true);
 				$prevIndex = $this->forEachIndex;
 				$this->forEachIndex = 0;
 				for ($i = 0; $i < $model->itemCount(); $i++) { 
@@ -73,6 +74,7 @@
 					}
 				}
 				$this->forEachIndex = $prevIndex;
+				$model->iterate(false);
 			}
 
 			$this->popListModel();
@@ -132,10 +134,12 @@
 			}
 			
 			if ($model->isRender()) {
+				$model->iterate(true);
 				if ($model->itemCount() > 0) {
 					$model->currentIndex($indexGetter($model->itemCount()));
 					$result .= $template();
 				}
+				$model->iterate(false);
 			}
 
 			$this->popListModel();
@@ -240,6 +244,7 @@
 					
 					// Body
 					$this->gridPhase = "body";
+					$model->iterate(true);
 					for ($i = 0; $i < $model->itemCount(); $i++) { 
 						$model->currentIndex($i);
 						
@@ -252,7 +257,8 @@
 						}
 						$this->gridExplicitRow = $oldGridExplicitRow;
 					}
-
+					$model->iterate(false);
+					
 					if ($isWellStructured) {
 						$result .= "</tbody>";
 					}
