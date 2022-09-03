@@ -6,7 +6,7 @@
     <!-- Standard items -->
     <list:add key-text="Home" key-url="route:index" key-icon="home" key-iconPrefix="fas" key-class="d-block d-md-none cms-menu-home" key-order="100" />
 
-    <list:add key-text="Documentation" key-url="route:hint" key-icon="question-circle" key-iconPrefix="fas" key-perm="CMS.Hint" key-order="200" />
+    <list:add key-text="Documentation" key-url="route:docs" key-icon="question-circle" key-iconPrefix="fas" key-perm="CMS.Hint" key-order="200" />
 
     <list:add key-text="Web" key-url="route:pages" key-icon="globe" key-iconPrefix="fas" key-perm="CMS.Web" key-id="web" key-cookie="cookie:cmsMenu-web" key-order="300" />
     <list:add key-text="Pages" key-url="route:pages" key-icon="~/images/icons/page_tag_red.gif" key-perm="CMS.Web.Pages" key-parentId="web" key-id="pages" key-order="301" />

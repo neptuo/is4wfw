@@ -33,6 +33,11 @@ body {
     font-size: .8rem;
 }
 
+.row-hover:hover {
+    color: #212529;
+    background-color: rgba(0,0,0,.075);
+}
+
 .cms-menu .menu-root a, .cms-menu .menu-root a:hover {
     background-color: #04601C !important;
 }

@@ -736,7 +736,6 @@
             return [
                 "name" => (string)$tag->name,
                 "lookless" => isset($tag->lookless),
-                "identifiable" => isset($tag->identifiable),
                 "obsolete" => trim($tag->obsolete),
                 "comment" => trim($tag->comment),
                 "attributes" => ListModel::create($this->mapAttributes($tag)),
@@ -797,6 +796,10 @@
 
         public function getTagName() {
             return $this->getTagField("name");
+        }
+
+        public function getTagLookless() {
+            return $this->getTagField("lookless");
         }
 
         public function getTagComment() {
@@ -901,6 +904,10 @@
 
         public function getAnyFulltagComment() {
             return $this->getAnyFulltag() ? trim($this->library->anyFulltag->comment) : null;
+        }
+
+        public function getComment() {
+            return trim($this->library->comment);
         }
     }
 

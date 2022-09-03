@@ -137,6 +137,13 @@
     </comment>
   </property>
   <property>
+  	<name>tagLookless</name>
+  	<getFunction>getTagLookless</getFunction>
+    <comment>
+      Vrátí zda je tag lookless v "hint:tagList" a "hint:fullTagList".
+    </comment>
+  </property>
+  <property>
   	<name>tagComment</name>
   	<getFunction>getTagComment</getFunction>
     <comment>
@@ -318,6 +325,13 @@
   	<getFunction>getAnyFulltagComment</getFunction>
     <comment>
       Vrátí komentář k any fulltagu v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>comment</name>
+  	<getFunction>getComment</getFunction>
+    <comment>
+      Vrátí komentář k library v "hint:library".
     </comment>
   </property>
 </taglib>

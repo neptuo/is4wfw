@@ -95,7 +95,11 @@
                     e.preventDefault();
 
                     const $el = keybindings[key];
-                    $el.click();
+                    if ($el.is("input[type=text]")) {
+                        $el.focus();
+                    } else {
+                        $el.click();
+                    }
                     return false;
                 }
             }

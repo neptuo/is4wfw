@@ -18,6 +18,9 @@
         <router:file path="hint.view" name="hint">
             <views:hint />
         </router:file>
+        <router:file path="docs.view" name="docs">
+            <views:docs />
+        </router:file>
         <router:file path="hint-properties.view" name="hintProperties">
             <views:hintProperties />
         </router:file>
