@@ -151,6 +151,13 @@
     </comment>
   </property>
   <property>
+  	<name>tagObsolete</name>
+  	<getFunction>getTagObsolete</getFunction>
+    <comment>
+      Vrátí popis, proč je tag obsolete v "hint:tagList" a "hint:fulltagList".
+    </comment>
+  </property>
+  <property>
   	<name>tagAttributeList</name>
   	<getFunction>getTagAttributeList</getFunction>
     <comment>

@@ -1,14 +1,28 @@
 <php:lazy docs="php.libs.Hint" />
 
+<template:declare identifier="nameDocs">
+    <web:out if:stringEmpty="template:obsolete" if:not="true">
+        <span class="text-linethrough">
+    </web:out>
+    <web:out text="template:name" />
+    <web:out if:stringEmpty="template:obsolete" if:not="true">
+        </span>
+    </web:out>
+</template:declare>
 <template:declare identifier="tagDocs">
     <utils:concat output="tagId" value1="template:prefix" value2="docs:tagName" separator="-" />
     <bs:card id="utils:tagId" class="mt-2">
-        <h5 class="card-title">
-            <web:out text="docs:tagName" />
-            <web:out if:true="docs:tagLookless">
-                <fa5:icon prefix="fas" name="eye-slash" title="Lookless" class="text-muted" />
-            </web:out>
-        </h5>
+        <div class="d-flex">
+            <h5 class="card-title">
+                <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
+                <web:out if:true="docs:tagLookless">
+                    <fa5:icon prefix="fas" name="eye-slash" title="Lookless" class="text-muted" />
+                </web:out>
+            </h5>
+            <span class="ml-1">
+                <web:out text="docs:tagObsolete" />
+            </span>
+        </div>
         <p>
             <web:out text="docs:tagComment" />
         </p>
@@ -71,7 +85,7 @@
                             <h6 class="mb-0 mt-2">Tags</h6>
                             <ui:forEach items="docs:tagList">
                                 <a href="#tag-<web:out text="docs:tagName" />">
-                                    <web:out text="docs:tagName" />
+                                    <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
                                 </a>
                             </ui:forEach>
                         </div>
@@ -79,7 +93,7 @@
                             <h6 class="mb-0 mt-2">Fulltags</h6>
                             <ui:forEach items="docs:fulltagList">
                                 <a href="#fulltag-<web:out text="docs:tagName" />">
-                                    <web:out text="docs:tagName" />
+                                    <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
                                 </a>
                             </ui:forEach>
                         </div>
@@ -87,7 +101,7 @@
                             <h6 class="mb-0 mt-2">Properties</h6>
                             <ui:forEach items="docs:propertyList">
                                 <a href="#property-<web:out text="docs:propertyName" />">
-                                    <web:out text="docs:propertyName" />
+                                    <template:nameDocs name="docs:propertyName" obsolete="docs:propertyObsolete" />
                                 </a>
                             </ui:forEach>
                         </div>

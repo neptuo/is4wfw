@@ -38,6 +38,10 @@ body {
     background-color: rgba(0,0,0,.075);
 }
 
+.text-linethrough {
+    text-decoration: line-through;
+}
+
 .cms-menu .menu-root a, .cms-menu .menu-root a:hover {
     background-color: #04601C !important;
 }

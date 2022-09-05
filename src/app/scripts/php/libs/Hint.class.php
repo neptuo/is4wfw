@@ -806,6 +806,10 @@
             return $this->getTagField("comment");
         }
 
+        public function getTagObsolete() {
+            return $this->getTagField("obsolete");
+        }
+
         public function getTagAttributeList() {
             return $this->getTagField("attributes");
         }
