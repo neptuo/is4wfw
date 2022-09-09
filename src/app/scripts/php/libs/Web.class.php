@@ -253,7 +253,15 @@
                 $boundaryName
             );
             if ($error->isFailed($boundaryName)[PhpRuntime::$DecoratorExecuteName]) {
-                $this->generateErrorPage('500');
+                $detail = "";
+                if ($this->getDebugMode()) {
+                    $exceptions = $error->getExceptionsForBoundary($boundaryName);
+                    foreach ($exceptions as $ex) {
+                        $detail .= $this->autolib("log")->getDebugExceptionView($ex, [], false);
+                    }
+                }
+
+                $this->generateErrorPage('500', $detail);
             }
         }
 
@@ -2710,7 +2718,7 @@
          * 	@param		errorCode				error code, 403, 404, ... , all		 		 
          *
          */
-        public function generateErrorPage($errorCode) {
+        public function generateErrorPage($errorCode, $detail = null) {
             $domainUrl = $_SERVER['HTTP_HOST'];
             $rootUrl = INSTANCE_URL;
             $virtualUrl = $this->getVirtualUrl();
@@ -2751,7 +2759,11 @@
             } elseif ($errorCode == 500) {
                 header("HTTP/1.1 500 Internal Server Error");
                 if (file_exists($path)) {
-                    echo file_get_contents($path);
+                    $content = file_get_contents($path);
+                    if ($detail !== null) {
+                        $content = str_replace("<!-- Error -->", $detail, $content);
+                    }
+                    echo $content;
                 } else {
                     echo '<h1 class="error">Error 500</h1><p class="error">Unexpected internal server error.</p>';
                 }

@@ -23,6 +23,14 @@ class Error extends BaseTagLib {
 
     private $storage = [];
 
+    public function getExceptionsForBoundary($name) {
+        if (array_key_exists($name, $this->storage)) {
+            return $this->storage[$name];
+        }
+
+        return [];
+    }
+
     public function boundary(callable $template, ?string $name = null, bool $logException = true, array $logParam = []){
         try {
             unset($this->storage[$name]);
