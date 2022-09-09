@@ -105,6 +105,19 @@
             $this->setOutput($output, $result);
         }
 
+        public function replaceString($output, $input, $search, $replace) {
+            if ($input == PhpRuntime::UnusedAttributeValue) {
+                $input = $output->get();
+            }
+
+            $input = str_replace($search, $replace, $input);
+            $this->setOutput($output, $input);
+        }
+
+        public function replaceStringFulltag($template, $output, $input, $search) {
+            $this->replaceString($output, $input, $search, $template());
+        }
+
         public function dateTimeToTimestamp($output, $value, $format, $trimTime = false) {
             $date = DateTime::createFromFormat($format, $value);
             if ($date) {

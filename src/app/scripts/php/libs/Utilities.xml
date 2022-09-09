@@ -199,6 +199,60 @@
     <comment>Nahradí v "input" nové řádky za "br".</comment>
   </tag>
   <tag>
+    <name>replaceString</name>
+    <function>replaceString</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <type preferPropertyReference="true">string</type>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>input</name>
+      <type>string</type>
+      <default as="unused" />
+      <comment>Hodnota, v níž se má provést nahrazení. Pokud není vyplněn, bere "output" též jako vstup</comment>
+    </attribute>
+    <attribute>
+      <name>search</name>
+      <type>string</type>
+      <required />
+      <comment>Hodnota, která se má nahradit.</comment>
+    </attribute>
+    <attribute>
+      <name>replace</name>
+      <type>string</type>
+      <required />
+      <comment>Hodnota, kterou bude "search" nahrazen.</comment>
+    </attribute>
+    <comment>Nahradí v "input" "search" za "replace".</comment>
+  </tag>
+  <fulltag>
+    <name>replaceString</name>
+    <function>replaceStringFulltag</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <type preferPropertyReference="true">string</type>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>input</name>
+      <type>string</type>
+      <default as="unused" />
+      <comment>Hodnota, v níž se má provést nahrazení. Pokud není vyplněn, bere "output" též jako vstup</comment>
+    </attribute>
+    <attribute>
+      <name>search</name>
+      <type>string</type>
+      <required />
+      <comment>Hodnota, která se má nahradit.</comment>
+    </attribute>
+    <comment>Nahradí v "input" "search" za tělo tagu.</comment>
+  </fulltag>
+  <tag>
     <name>dateTimeToTimestamp</name>
     <function>dateTimeToTimestamp</function>
     <lookless />
