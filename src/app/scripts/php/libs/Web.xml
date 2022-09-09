@@ -635,7 +635,7 @@
       Jeden z atributů "when" a "is" může být pole a pak se testuje, zda je druhá hodnota jednou z položek pole.
       Pomocí "isInverted" je možné podmínku otočit.
     </comment>
-    <obsolete>Použijte khnihovnu "php.libs.Condition".</obsolete>
+    <obsolete>Použijte knihovnu "php.libs.Condition".</obsolete>
   </fulltag>
   <fulltag>
     <name>switch</name>

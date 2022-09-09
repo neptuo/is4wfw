@@ -10,14 +10,12 @@
     </web:out>
 </template:declare>
 <template:declare identifier="commentDocs">
-    <var:declare name="commentDocs" value="template:value" />
+    <var:declare name="commentDocs" value="template:text" />
     <utils:replaceHtmlNewLines output="var:commentDocs" input="var:commentDocs" />
     <utils:replaceString output="var:commentDocs" search="---">
         <hr>
     </utils:replaceString>
-    <p>
-        <web:out text="var:commentDocs" />
-    </p>
+    <web:out text="var:commentDocs" />
 </template:declare>
 <template:declare identifier="tagDocs">
     <utils:concat output="tagId" value1="template:prefix" value2="docs:tagName" separator="-" />
@@ -36,7 +34,7 @@
             </span>
         </div>
         <p>
-            <web:out text="docs:tagComment" />
+            <template:commentDocs text="docs:tagComment" />
         </p>
 
         <ui:forEach items="docs:tagAttributeList">
@@ -61,7 +59,7 @@
                     <web:out text="docs:tagAttributeType" />
                 </bs:column>
                 <bs:column default="8">
-                    <web:out text="docs:tagAttributeComment" />
+                    <template:commentDocs text="docs:tagAttributeComment" />
                 </bs:column>
             </bs:row>
         </ui:forEach>
@@ -89,9 +87,9 @@
                         <h3>
                             <web:out text="query:l" />
                         </h3>
-                        <div>
-                            <web:out text="docs:comment" />
-                        </div>
+                        <p>
+                            <template:commentDocs text="docs:comment" />
+                        </p>
                         <hr />
                         <div>
                             <h6 class="mb-0 mt-2">Tags</h6>
@@ -129,6 +127,32 @@
                     </ui:forEach>
                     <ui:forEach items="docs:fulltagList">
                         <template:tagDocs prefix="fulltag" />
+                    </ui:forEach>
+                    <ui:forEach items="docs:propertyList">
+                        <utils:concat output="propertyId" value1="property" value2="docs:propertyName" separator="-" />
+                        <bs:card id="utils:propertyId" class="mt-2">
+                            <div class="d-flex align-items-center mb-3">
+                                <h5 class="card-title mb-0">
+                                    <template:nameDocs name="docs:propertyName" obsolete="docs:propertyObsolete" />
+                                </h5>
+                                <span class="ml-1">
+                                    <web:out text="docs:propertyObsolete" />
+                                </span>
+                                <web:out if:true="docs:propertyHasGet">
+                                    <small class="ml-1">
+                                        get
+                                    </small>
+                                </web:out>
+                                <web:out if:true="docs:propertyHasSet">
+                                    <small class="ml-1">
+                                        set
+                                    </small>
+                                </web:out>
+                            </div>
+                            <p>
+                                <template:commentDocs text="docs:propertyComment" />
+                            </p>
+                        </bs:card>
                     </ui:forEach>
                 </docs:library>
             </web:out>
