@@ -63,6 +63,16 @@
                 </bs:column>
             </bs:row>
         </ui:forEach>
+        <web:out if:true="docs:tagAnyAttribute">
+            <bs:row class="form-row py-2 border-top row-hover">
+                <bs:column default="4">
+                    any
+                </bs:column>
+                <bs:column default="8">
+                    <template:commentDocs text="docs:tagAnyAttributeComment" />
+                </bs:column>
+            </bs:row>
+        </web:out>
     </bs:card>
 </template:declare>
 
@@ -98,6 +108,11 @@
                                     <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
                                 </a>
                             </ui:forEach>
+                            <web:out if:true="docs:anyTag">
+                                <a href="#tag-any">
+                                    <template:nameDocs name="any" />
+                                </a>
+                            </web:out>
                         </div>
                         <div>
                             <h6 class="mb-0 mt-2">Fulltags</h6>
@@ -106,6 +121,11 @@
                                     <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
                                 </a>
                             </ui:forEach>
+                            <web:out if:true="docs:anyFulltag">
+                                <a href="#fulltag-any">
+                                    <template:nameDocs name="any" />
+                                </a>
+                            </web:out>
                         </div>
                         <div>
                             <h6 class="mb-0 mt-2">Properties</h6>
@@ -114,6 +134,11 @@
                                     <template:nameDocs name="docs:propertyName" obsolete="docs:propertyObsolete" />
                                 </a>
                             </ui:forEach>
+                            <web:out if:true="docs:anyProperty">
+                                <a href="#property-any">
+                                    <template:nameDocs name="any" />
+                                </a>
+                            </web:out>
                         </div>
                         <div>
                             <h6 class="mb-0 mt-2">Decorators</h6>
@@ -125,9 +150,33 @@
                     <ui:forEach items="docs:tagList">
                         <template:tagDocs prefix="tag" />
                     </ui:forEach>
+                    <web:out if:true="docs:anyTag">
+                        <bs:card id="fulltag-any" class="mt-2">
+                            <div class="d-flex align-items-center mb-3">
+                                <h5 class="card-title mb-0">
+                                    any
+                                </h5>
+                            </div>
+                            <p>
+                                <template:commentDocs text="docs:anyTagComment" />
+                            </p>
+                        </bs:card>
+                    </web:out>
                     <ui:forEach items="docs:fulltagList">
                         <template:tagDocs prefix="fulltag" />
                     </ui:forEach>
+                    <web:out if:true="docs:anyFulltag">
+                        <bs:card id="tag-any" class="mt-2">
+                            <div class="d-flex align-items-center mb-3">
+                                <h5 class="card-title mb-0">
+                                    any
+                                </h5>
+                            </div>
+                            <p>
+                                <template:commentDocs text="docs:anyFulltagComment" />
+                            </p>
+                        </bs:card>
+                    </web:out>
                     <ui:forEach items="docs:propertyList">
                         <utils:concat output="propertyId" value1="property" value2="docs:propertyName" separator="-" />
                         <bs:card id="utils:propertyId" class="mt-2">
@@ -154,6 +203,28 @@
                             </p>
                         </bs:card>
                     </ui:forEach>
+                    <web:out if:true="docs:anyProperty">
+                        <bs:card id="property-any" class="mt-2">
+                            <div class="d-flex align-items-center mb-3">
+                                <h5 class="card-title mb-0">
+                                    any
+                                </h5>
+                                <web:out if:true="docs:anyPropertyHasGet">
+                                    <small class="ml-1">
+                                        get
+                                    </small>
+                                </web:out>
+                                <web:out if:true="docs:anyPropertyHasSet">
+                                    <small class="ml-1">
+                                        set
+                                    </small>
+                                </web:out>
+                            </div>
+                            <p>
+                                <template:commentDocs text="docs:anyPropertyComment" />
+                            </p>
+                        </bs:card>
+                    </web:out>
                 </docs:library>
             </web:out>
         </bs:column>

@@ -895,7 +895,7 @@
         }
 
         public function getAnyTag() {
-            return isset($this->library->anyTag->anyAttribute);
+            return isset($this->library->anyTag);
         }
 
         public function getAnyTagComment() {
@@ -903,11 +903,27 @@
         }
 
         public function getAnyFulltag() {
-            return isset($this->library->anyFulltag->anyAttribute);
+            return isset($this->library->anyFulltag);
         }
 
         public function getAnyFulltagComment() {
             return $this->getAnyFulltag() ? trim($this->library->anyFulltag->comment) : null;
+        }
+
+        public function getAnyProperty() {
+            return isset($this->library->anyProperty);
+        }
+
+        public function getAnyPropertyComment() {
+            return $this->getAnyProperty() ? trim($this->library->anyProperty->comment) : null;
+        }
+
+        public function getAnyPropertyHasGet() {
+            return $this->getAnyProperty() ? isset($this->library->anyProperty->getFunction) : false;
+        }
+
+        public function getAnyPropertyHasSet() {
+            return $this->getAnyProperty() ? isset($this->library->anyProperty->setFunction) : false;
         }
 
         public function getComment() {

@@ -310,7 +310,7 @@
   	<name>anyTag</name>
   	<getFunction>getAnyTag</getFunction>
     <comment>
-      Vrátí zda má library definovaná any tag v "hint:library".
+      Vrátí zda má library definovaný any tag v "hint:library".
     </comment>
   </property>
   <property>
@@ -324,7 +324,7 @@
   	<name>anyFulltag</name>
   	<getFunction>getAnyFulltag</getFunction>
     <comment>
-      Vrátí zda má library definovaná any fulltag v "hint:library".
+      Vrátí zda má library definovaný any fulltag v "hint:library".
     </comment>
   </property>
   <property>
@@ -332,6 +332,34 @@
   	<getFunction>getAnyFulltagComment</getFunction>
     <comment>
       Vrátí komentář k any fulltagu v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>anyProperty</name>
+  	<getFunction>getAnyProperty</getFunction>
+    <comment>
+      Vrátí zda má library definovanou any property v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>anyPropertyComment</name>
+  	<getFunction>getAnyPropertyComment</getFunction>
+    <comment>
+      Vrátí komentář k any property v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>anyPropertyHasGet</name>
+  	<getFunction>getAnyPropertyHasGet</getFunction>
+    <comment>
+      Vrátí zda má property getter obsolete v "hint:propertyList" v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>anyPropertyHasSet</name>
+  	<getFunction>getAnyPropertyHasSet</getFunction>
+    <comment>
+      Vrátí zda má property setter obsolete v "hint:propertyList" v "hint:library".
     </comment>
   </property>
   <property>
