@@ -938,7 +938,7 @@
             return $this->getAnyProperty() ? isset($this->library->anyProperty->setFunction) : false;
         }
 
-        public function getComment() {
+        public function getLibraryComment() {
             return trim($this->library->comment);
         }
     }

@@ -384,8 +384,8 @@
     </comment>
   </property>
   <property>
-  	<name>comment</name>
-  	<getFunction>getComment</getFunction>
+  	<name>libraryComment</name>
+  	<getFunction>getLibraryComment</getFunction>
     <comment>
       Vrátí komentář k library v "hint:library".
     </comment>

@@ -1,5 +1,12 @@
 <php:lazy docs="php.libs.Hint" />
 
+<template:declare identifier="sectionDocs">
+    <bs:card class="mt-2">
+        <h3 class="m-0">
+            <web:out text="template:name" />
+        </h3>
+    </bs:card>
+</template:declare>
 <template:declare identifier="nameDocs">
     <web:out if:stringEmpty="template:obsolete" if:not="true">
         <span class="text-linethrough">
@@ -124,7 +131,7 @@
                             <web:out text="query:l" />
                         </h3>
                         <p>
-                            <template:commentDocs text="docs:comment" />
+                            <template:commentDocs text="docs:libraryComment" />
                         </p>
                         <hr />
                         <div>
@@ -173,6 +180,7 @@
                             </ui:forEach>
                         </div>
                     </bs:card>
+                    <template:sectionDocs name="Tags" />
                     <ui:forEach items="docs:tagList">
                         <template:tagDocs prefix="tag" />
                     </ui:forEach>
@@ -188,6 +196,7 @@
                             </p>
                         </bs:card>
                     </web:out>
+                    <template:sectionDocs name="Fulltags" />
                     <ui:forEach items="docs:fulltagList">
                         <template:tagDocs prefix="fulltag" />
                     </ui:forEach>
@@ -203,6 +212,7 @@
                             </p>
                         </bs:card>
                     </web:out>
+                    <template:sectionDocs name="Properties" />
                     <ui:forEach items="docs:propertyList">
                         <template:propertyDocs name="docs:propertyName" comment="docs:propertyComment" obsolete="docs:propertyObsolete" hasGet="docs:propertyHasGet" hasSet="docs:propertyHasSet" />
                     </ui:forEach>
