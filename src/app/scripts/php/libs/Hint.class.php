@@ -902,6 +902,10 @@
             return $this->getAnyTag() ? trim($this->library->anyTag->comment) : null;
         }
 
+        public function getAnyTagObsolete() {
+            return $this->getAnyTag() ? trim($this->library->anyTag->obsolete) : null;
+        }
+
         public function getAnyFulltag() {
             return isset($this->library->anyFulltag);
         }
@@ -910,12 +914,20 @@
             return $this->getAnyFulltag() ? trim($this->library->anyFulltag->comment) : null;
         }
 
+        public function getAnyFulltagObsolete() {
+            return $this->getAnyTag() ? trim($this->library->anyFulltag->obsolete) : null;
+        }
+
         public function getAnyProperty() {
             return isset($this->library->anyProperty);
         }
 
         public function getAnyPropertyComment() {
             return $this->getAnyProperty() ? trim($this->library->anyProperty->comment) : null;
+        }
+
+        public function getAnyPropertyObsolete() {
+            return $this->getAnyTag() ? trim($this->library->anyProperty->obsolete) : null;
         }
 
         public function getAnyPropertyHasGet() {

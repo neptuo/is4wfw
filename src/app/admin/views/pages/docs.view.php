@@ -9,6 +9,16 @@
         </span>
     </web:out>
 </template:declare>
+<template:declare identifier="cardTitleDocs">
+    <h5 class="card-title mb-0">
+        <template:nameDocs name="template:name" obsolete="template:obsolete" />
+    </h5>
+    <web:out if:stringEmpty="template:obsolete" if:not="true">
+        <span class="ml-1">
+            <web:out text="template:obsolete" />
+        </span>
+    </web:out>
+</template:declare>
 <template:declare identifier="commentDocs">
     <var:declare name="commentDocs" value="template:text" />
     <utils:replaceHtmlNewLines output="var:commentDocs" input="var:commentDocs" />
@@ -21,17 +31,12 @@
     <utils:concat output="tagId" value1="template:prefix" value2="docs:tagName" separator="-" />
     <bs:card id="utils:tagId" class="mt-2">
         <div class="d-flex align-items-center mb-3">
-            <h5 class="card-title mb-0">
-                <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
-            </h5>
+            <template:cardTitleDocs name="docs:tagName" obsolete="docs:tagObsolete" />
             <web:out if:true="docs:tagLookless">
                 <span class="ml-1">
                     <fa5:icon prefix="fas" name="eye-slash" title="Lookless" class="text-muted" />
                 </span>
             </web:out>
-            <span class="ml-1">
-                <web:out text="docs:tagObsolete" />
-            </span>
         </div>
         <p>
             <template:commentDocs text="docs:tagComment" />
@@ -73,6 +78,27 @@
                 </bs:column>
             </bs:row>
         </web:out>
+    </bs:card>
+</template:declare>
+<template:declare identifier="propertyDocs">
+    <utils:concat output="propertyId" value1="property" value2="template:name" separator="-" />
+    <bs:card id="utils:propertyId" class="mt-2">
+        <div class="d-flex align-items-center mb-3">
+            <template:cardTitleDocs name="template:name" obsolete="template:obsolete" />
+            <web:out if:true="template:hasGet">
+                <small class="ml-1">
+                    get
+                </small>
+            </web:out>
+            <web:out if:true="template:hasSet">
+                <small class="ml-1">
+                    set
+                </small>
+            </web:out>
+        </div>
+        <p>
+            <template:commentDocs text="template:comment" />
+        </p>
     </bs:card>
 </template:declare>
 
@@ -178,52 +204,10 @@
                         </bs:card>
                     </web:out>
                     <ui:forEach items="docs:propertyList">
-                        <utils:concat output="propertyId" value1="property" value2="docs:propertyName" separator="-" />
-                        <bs:card id="utils:propertyId" class="mt-2">
-                            <div class="d-flex align-items-center mb-3">
-                                <h5 class="card-title mb-0">
-                                    <template:nameDocs name="docs:propertyName" obsolete="docs:propertyObsolete" />
-                                </h5>
-                                <span class="ml-1">
-                                    <web:out text="docs:propertyObsolete" />
-                                </span>
-                                <web:out if:true="docs:propertyHasGet">
-                                    <small class="ml-1">
-                                        get
-                                    </small>
-                                </web:out>
-                                <web:out if:true="docs:propertyHasSet">
-                                    <small class="ml-1">
-                                        set
-                                    </small>
-                                </web:out>
-                            </div>
-                            <p>
-                                <template:commentDocs text="docs:propertyComment" />
-                            </p>
-                        </bs:card>
+                        <template:propertyDocs name="docs:propertyName" comment="docs:propertyComment" obsolete="docs:propertyObsolete" hasGet="docs:propertyHasGet" hasSet="docs:propertyHasSet" />
                     </ui:forEach>
                     <web:out if:true="docs:anyProperty">
-                        <bs:card id="property-any" class="mt-2">
-                            <div class="d-flex align-items-center mb-3">
-                                <h5 class="card-title mb-0">
-                                    any
-                                </h5>
-                                <web:out if:true="docs:anyPropertyHasGet">
-                                    <small class="ml-1">
-                                        get
-                                    </small>
-                                </web:out>
-                                <web:out if:true="docs:anyPropertyHasSet">
-                                    <small class="ml-1">
-                                        set
-                                    </small>
-                                </web:out>
-                            </div>
-                            <p>
-                                <template:commentDocs text="docs:anyPropertyComment" />
-                            </p>
-                        </bs:card>
+                        <template:propertyDocs name="any" comment="docs:anyPropertyComment" obsolete="docs:anyPropertyObsolete" hasGet="docs:anyPropertyHasGet" hasSet="docs:anyPropertyHasSet" />    
                     </web:out>
                 </docs:library>
             </web:out>

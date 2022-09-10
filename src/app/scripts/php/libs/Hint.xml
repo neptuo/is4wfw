@@ -321,6 +321,13 @@
     </comment>
   </property>
   <property>
+  	<name>anyTagObsolete</name>
+  	<getFunction>getAnyTagObsolete</getFunction>
+    <comment>
+      Vrátí popis, proč je any tag obsolete "hint:library".
+    </comment>
+  </property>
+  <property>
   	<name>anyFulltag</name>
   	<getFunction>getAnyFulltag</getFunction>
     <comment>
@@ -332,6 +339,13 @@
   	<getFunction>getAnyFulltagComment</getFunction>
     <comment>
       Vrátí komentář k any fulltagu v "hint:library".
+    </comment>
+  </property>
+  <property>
+  	<name>anyFulltagObsolete</name>
+  	<getFunction>getAnyFulltagObsolete</getFunction>
+    <comment>
+      Vrátí popis, proč je any fulltag obsolete "hint:library".
     </comment>
   </property>
   <property>
@@ -349,17 +363,24 @@
     </comment>
   </property>
   <property>
+  	<name>anyPropertyObsolete</name>
+  	<getFunction>getAnyPropertyObsolete</getFunction>
+    <comment>
+      Vrátí popis, proč je any property obsolete "hint:library".
+    </comment>
+  </property>
+  <property>
   	<name>anyPropertyHasGet</name>
   	<getFunction>getAnyPropertyHasGet</getFunction>
     <comment>
-      Vrátí zda má property getter obsolete v "hint:propertyList" v "hint:library".
+      Vrátí zda má property getter v "hint:propertyList" v "hint:library".
     </comment>
   </property>
   <property>
   	<name>anyPropertyHasSet</name>
   	<getFunction>getAnyPropertyHasSet</getFunction>
     <comment>
-      Vrátí zda má property setter obsolete v "hint:propertyList" v "hint:library".
+      Vrátí zda má property setter v "hint:propertyList" v "hint:library".
     </comment>
   </property>
   <property>
