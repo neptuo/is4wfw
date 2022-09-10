@@ -791,6 +791,10 @@
                 return $this->getFieldOnModel($this->decoratorModel, $name1, $name2);
             }
 
+            if ($this->constructorModel && $this->constructorModel->isIterate()) {
+                return $this->getFieldOnModel($this->constructorModel, $name1, $name2);
+            }
+
             return null;
         }
 

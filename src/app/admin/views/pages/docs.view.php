@@ -34,6 +34,34 @@
     </utils:replaceString>
     <web:out text="var:commentDocs" />
 </template:declare>
+<template:declare identifier="tagAttributeList">
+    <ui:forEach items="docs:tagAttributeList">
+        <bs:row class="form-row py-2 border-top row-hover">
+            <bs:column default="3">
+                <web:out if:true="docs:tagAttributeRequired">
+                    <strong>
+                </web:out>
+                <var:declare name="tagAttributeName" value="docs:tagAttributeName" />
+                <web:out if:true="docs:tagAttributePrefix">
+                    <utils:concat output="var:tagAttributeName" value1="var:tagAttributeName" value2="-*" />
+                </web:out>
+                <web:out text="var:tagAttributeName" />
+                <web:out if:true="docs:tagAttributeRequired">
+                    </strong>
+                </web:out>
+                <web:out if:stringEmpty="docs:tagAttributeDefault" if:not="true">
+                    (= <web:out text="docs:tagAttributeDefault" />)
+                </web:out>
+            </bs:column>
+            <bs:column default="1">
+                <web:out text="docs:tagAttributeType" />
+            </bs:column>
+            <bs:column default="8">
+                <template:commentDocs text="docs:tagAttributeComment" />
+            </bs:column>
+        </bs:row>
+    </ui:forEach>
+</template:declare>
 <template:declare identifier="tagDocs">
     <utils:concat output="tagId" value1="template:prefix" value2="docs:tagName" separator="-" />
     <bs:card id="utils:tagId" class="mt-2">
@@ -49,32 +77,7 @@
             <template:commentDocs text="docs:tagComment" />
         </p>
 
-        <ui:forEach items="docs:tagAttributeList">
-            <bs:row class="form-row py-2 border-top row-hover">
-                <bs:column default="3">
-                    <web:out if:true="docs:tagAttributeRequired">
-                        <strong>
-                    </web:out>
-                    <var:declare name="tagAttributeName" value="docs:tagAttributeName" />
-                    <web:out if:true="docs:tagAttributePrefix">
-                        <utils:concat output="var:tagAttributeName" value1="var:tagAttributeName" value2="-*" />
-                    </web:out>
-                    <web:out text="var:tagAttributeName" />
-                    <web:out if:true="docs:tagAttributeRequired">
-                        </strong>
-                    </web:out>
-                    <web:out if:stringEmpty="docs:tagAttributeDefault" if:not="true">
-                        (= <web:out text="docs:tagAttributeDefault" />)
-                    </web:out>
-                </bs:column>
-                <bs:column default="1">
-                    <web:out text="docs:tagAttributeType" />
-                </bs:column>
-                <bs:column default="8">
-                    <template:commentDocs text="docs:tagAttributeComment" />
-                </bs:column>
-            </bs:row>
-        </ui:forEach>
+        <template:tagAttributeList />
         <web:out if:true="docs:tagAnyAttribute">
             <bs:row class="form-row py-2 border-top row-hover">
                 <bs:column default="4">
@@ -180,6 +183,19 @@
                             </ui:forEach>
                         </div>
                     </bs:card>
+                    <bs:card class="mt-2">
+                        <div class="d-flex align-items-center mb-3">
+                            <h5 class="card-title mb-0">
+                                constructor
+                            </h5>
+                        </div>
+                        <p>
+                            <template:commentDocs text="docs:constructorComment" />
+                        </p>
+                        
+                        <template:tagAttributeList />
+                    </bs:card>
+                    
                     <template:sectionDocs name="Tags" />
                     <ui:forEach items="docs:tagList">
                         <template:tagDocs prefix="tag" />
@@ -219,6 +235,7 @@
                     <web:out if:true="docs:anyProperty">
                         <template:propertyDocs name="any" comment="docs:anyPropertyComment" obsolete="docs:anyPropertyObsolete" hasGet="docs:anyPropertyHasGet" hasSet="docs:anyPropertyHasSet" />    
                     </web:out>
+                    <template:sectionDocs name="Decorators" />
                 </docs:library>
             </web:out>
         </bs:column>
