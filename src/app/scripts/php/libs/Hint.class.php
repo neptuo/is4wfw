@@ -725,6 +725,7 @@
                     $constructorModel["comment"] = trim($this->library->constructor->comment);
                     $constructorModel["attributes"] = $this->mapAttributes($this->library->constructor);
                 }
+                $this->constructorModel = ListModel::create($constructorModel);
 
                 $content = $template();
                 $this->library = $oldLibrary;
