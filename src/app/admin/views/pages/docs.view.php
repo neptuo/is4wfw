@@ -137,51 +137,88 @@
                             <template:commentDocs text="docs:libraryComment" />
                         </p>
                         <hr />
-                        <div>
-                            <h6 class="mb-0 mt-2">Tags</h6>
-                            <ui:forEach items="docs:tagList">
-                                <a href="#tag-<web:out text="docs:tagName" />">
-                                    <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
-                                </a>
-                            </ui:forEach>
-                            <web:out if:true="docs:anyTag">
-                                <a href="#tag-any">
-                                    <template:nameDocs name="any" />
-                                </a>
-                            </web:out>
-                        </div>
-                        <div>
-                            <h6 class="mb-0 mt-2">Fulltags</h6>
-                            <ui:forEach items="docs:fulltagList">
-                                <a href="#fulltag-<web:out text="docs:tagName" />">
-                                    <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
-                                </a>
-                            </ui:forEach>
-                            <web:out if:true="docs:anyFulltag">
-                                <a href="#fulltag-any">
-                                    <template:nameDocs name="any" />
-                                </a>
-                            </web:out>
-                        </div>
-                        <div>
-                            <h6 class="mb-0 mt-2">Properties</h6>
-                            <ui:forEach items="docs:propertyList">
-                                <a href="#property-<web:out text="docs:propertyName" />">
-                                    <template:nameDocs name="docs:propertyName" obsolete="docs:propertyObsolete" />
-                                </a>
-                            </ui:forEach>
-                            <web:out if:true="docs:anyProperty">
-                                <a href="#property-any">
-                                    <template:nameDocs name="any" />
-                                </a>
-                            </web:out>
-                        </div>
-                        <div>
-                            <h6 class="mb-0 mt-2">Decorators</h6>
-                            <ui:forEach items="docs:decoratorList">
-                                ...
-                            </ui:forEach>
-                        </div>
+                        <if:eval name="hasTags">
+                            <if:or>
+                                <ui:count items="docs:tagList">
+                                    <if:greater value="ui:count" than="0" />
+                                </ui:count>
+                                <if:equals value="docs:anyTag" is="php:true" />
+                            </if:or>
+                        </if:eval>
+                        <if:eval name="hasFullags">
+                            <if:or>
+                                <ui:count items="docs:fulltagList">
+                                    <if:greater value="ui:count" than="0" />
+                                </ui:count>
+                                <if:equals value="docs:anyFulltag" is="php:true" />
+                            </if:or>
+                        </if:eval>
+                        <if:eval name="hasProperties">
+                            <if:or>
+                                <ui:count items="docs:propertyList">
+                                    <if:greater value="ui:count" than="0" />
+                                </ui:count>
+                                <if:equals value="docs:anyProperty" is="php:true" />
+                            </if:or>
+                        </if:eval>
+                        <if:eval name="hasDecorators">
+                            <ui:count items="docs:decoratorList">
+                                <if:greater value="ui:count" than="0" />
+                            </ui:count>
+                        </if:eval>
+                        <web:out if:passed="hasTags">
+                            <div>
+                                <h6 class="mb-0 mt-2">Tags</h6>
+                                <ui:forEach items="docs:tagList">
+                                    <a href="#tag-<web:out text="docs:tagName" />">
+                                        <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
+                                    </a>
+                                </ui:forEach>
+                                <web:out if:true="docs:anyTag">
+                                    <a href="#tag-any">
+                                        <template:nameDocs name="any" />
+                                    </a>
+                                </web:out>
+                            </div>
+                        </web:out>
+                        <web:out if:passed="hasFullags">
+                            <div>
+                                <h6 class="mb-0 mt-2">Fulltags</h6>
+                                <ui:forEach items="docs:fulltagList">
+                                    <a href="#fulltag-<web:out text="docs:tagName" />">
+                                        <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
+                                    </a>
+                                </ui:forEach>
+                                <web:out if:true="docs:anyFulltag">
+                                    <a href="#fulltag-any">
+                                        <template:nameDocs name="any" />
+                                    </a>
+                                </web:out>
+                            </div>
+                        </web:out>
+                        <web:out if:passed="hasProperties">
+                            <div>
+                                <h6 class="mb-0 mt-2">Properties</h6>
+                                <ui:forEach items="docs:propertyList">
+                                    <a href="#property-<web:out text="docs:propertyName" />">
+                                        <template:nameDocs name="docs:propertyName" obsolete="docs:propertyObsolete" />
+                                    </a>
+                                </ui:forEach>
+                                <web:out if:true="docs:anyProperty">
+                                    <a href="#property-any">
+                                        <template:nameDocs name="any" />
+                                    </a>
+                                </web:out>
+                            </div>
+                        </web:out>
+                        <web:out if:passed="hasDecorators">
+                            <div>
+                                <h6 class="mb-0 mt-2">Decorators</h6>
+                                <ui:forEach items="docs:decoratorList">
+                                    ...
+                                </ui:forEach>
+                            </div>
+                        </web:out>
                     </bs:card>
                     <bs:card class="mt-2" if:true="docs:constructor">
                         <div class="d-flex align-items-center mb-3">
@@ -196,46 +233,54 @@
                         <template:tagAttributeList />
                     </bs:card>
                     
-                    <template:sectionDocs name="Tags" />
-                    <ui:forEach items="docs:tagList">
-                        <template:tagDocs prefix="tag" />
-                    </ui:forEach>
-                    <web:out if:true="docs:anyTag">
-                        <bs:card id="fulltag-any" class="mt-2">
-                            <div class="d-flex align-items-center mb-3">
-                                <h5 class="card-title mb-0">
-                                    any
-                                </h5>
-                            </div>
-                            <p>
-                                <template:commentDocs text="docs:anyTagComment" />
-                            </p>
-                        </bs:card>
+                    <web:out if:passed="hasTags">
+                        <template:sectionDocs name="Tags" />
+                        <ui:forEach items="docs:tagList">
+                            <template:tagDocs prefix="tag" />
+                        </ui:forEach>
+                        <web:out if:true="docs:anyTag">
+                            <bs:card id="fulltag-any" class="mt-2">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h5 class="card-title mb-0">
+                                        any
+                                    </h5>
+                                </div>
+                                <p>
+                                    <template:commentDocs text="docs:anyTagComment" />
+                                </p>
+                            </bs:card>
+                        </web:out>
                     </web:out>
+                    <web:out if:passed="hasFulltags">
                     <template:sectionDocs name="Fulltags" />
-                    <ui:forEach items="docs:fulltagList">
-                        <template:tagDocs prefix="fulltag" />
-                    </ui:forEach>
-                    <web:out if:true="docs:anyFulltag">
-                        <bs:card id="tag-any" class="mt-2">
-                            <div class="d-flex align-items-center mb-3">
-                                <h5 class="card-title mb-0">
-                                    any
-                                </h5>
-                            </div>
-                            <p>
-                                <template:commentDocs text="docs:anyFulltagComment" />
-                            </p>
-                        </bs:card>
+                        <ui:forEach items="docs:fulltagList">
+                            <template:tagDocs prefix="fulltag" />
+                        </ui:forEach>
+                        <web:out if:true="docs:anyFulltag">
+                            <bs:card id="tag-any" class="mt-2">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h5 class="card-title mb-0">
+                                        any
+                                    </h5>
+                                </div>
+                                <p>
+                                    <template:commentDocs text="docs:anyFulltagComment" />
+                                </p>
+                            </bs:card>
+                        </web:out>
                     </web:out>
-                    <template:sectionDocs name="Properties" />
-                    <ui:forEach items="docs:propertyList">
-                        <template:propertyDocs name="docs:propertyName" comment="docs:propertyComment" obsolete="docs:propertyObsolete" hasGet="docs:propertyHasGet" hasSet="docs:propertyHasSet" />
-                    </ui:forEach>
-                    <web:out if:true="docs:anyProperty">
-                        <template:propertyDocs name="any" comment="docs:anyPropertyComment" obsolete="docs:anyPropertyObsolete" hasGet="docs:anyPropertyHasGet" hasSet="docs:anyPropertyHasSet" />    
+                    <web:out if:passed="hasProperties">
+                        <template:sectionDocs name="Properties" />
+                        <ui:forEach items="docs:propertyList">
+                            <template:propertyDocs name="docs:propertyName" comment="docs:propertyComment" obsolete="docs:propertyObsolete" hasGet="docs:propertyHasGet" hasSet="docs:propertyHasSet" />
+                        </ui:forEach>
+                        <web:out if:true="docs:anyProperty">
+                            <template:propertyDocs name="any" comment="docs:anyPropertyComment" obsolete="docs:anyPropertyObsolete" hasGet="docs:anyPropertyHasGet" hasSet="docs:anyPropertyHasSet" />    
+                        </web:out>
                     </web:out>
-                    <template:sectionDocs name="Decorators" />
+                    <web:out if:passed="hasDecorators">
+                        <template:sectionDocs name="Decorators" />
+                    </web:out>
                 </docs:library>
             </web:out>
         </bs:column>
