@@ -292,6 +292,13 @@
     </comment>
   </property>
   <property>
+  	<name>constructor</name>
+  	<getFunction>getConstructor</getFunction>
+    <comment>
+      Vrátí zda má knihovna konstruktor v "hint:library".
+    </comment>
+  </property>
+  <property>
   	<name>constructorComment</name>
   	<getFunction>getConstructorComment</getFunction>
     <comment>

@@ -715,17 +715,17 @@
                 foreach ($this->library->decorator as $decorator) {
                     $decorators[] = [
                         "comment" => trim($decorator->comment),
-                        "attributes" => $this->mapAttributes($decorator)
+                        "attributes" => ListModel::create($this->mapAttributes($decorator))
                     ];
                 }
                 $this->decoratorModel = ListModel::create($decorators);
 
-                $constructorModel = [];
                 if (isset($this->library->constructor)) {
-                    $constructorModel["comment"] = trim($this->library->constructor->comment);
-                    $constructorModel["attributes"] = $this->mapAttributes($this->library->constructor);
+                    $this->constructorModel = [
+                        "comment" => trim($this->library->constructor->comment),
+                        "attributes" => ListModel::create($this->mapAttributes($this->library->constructor)),
+                    ];
                 }
-                $this->constructorModel = ListModel::create($constructorModel);
 
                 $content = $template();
                 $this->library = $oldLibrary;
@@ -792,8 +792,12 @@
                 return $this->getFieldOnModel($this->decoratorModel, $name1, $name2);
             }
 
-            if ($this->constructorModel && $this->constructorModel->isIterate()) {
-                return $this->getFieldOnModel($this->constructorModel, $name1, $name2);
+            if ($this->constructorModel) {
+                $field = $this->constructorModel[$name1];
+                if ($name2) {
+                    $field = $field->field($name2);
+                }
+                return $field;
             }
 
             return null;
@@ -889,6 +893,10 @@
 
         public function getDecoratorAttributeList() {
             return $this->getTagField("attributes");
+        }
+
+        public function getConstructor() {
+            return $this->constructorModel ? true : false;
         }
 
         public function getConstructorComment() {

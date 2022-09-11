@@ -183,7 +183,7 @@
                             </ui:forEach>
                         </div>
                     </bs:card>
-                    <bs:card class="mt-2">
+                    <bs:card class="mt-2" if:true="docs:constructor">
                         <div class="d-flex align-items-center mb-3">
                             <h5 class="card-title mb-0">
                                 constructor
