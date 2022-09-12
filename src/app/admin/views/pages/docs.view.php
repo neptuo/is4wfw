@@ -1,5 +1,12 @@
 <php:lazy docs="php.libs.Hint" />
 
+<template:declare identifier="decoratorNameDocs">
+    <var:declare name="decoratorNameDocs" value="template:prefix" />
+    <ui:forEach items="docs:tagAttributeList">
+        <utils:concat output="var:decoratorNameDocs" value1="var:decoratorNameDocs" value2="docs:tagAttributeName" separator="template:separator" />
+    </ui:forEach>
+    <template:content name="var:decoratorNameDocs" />
+</template:declare> 
 <template:declare identifier="sectionDocs">
     <bs:card class="mt-2">
         <h3 class="m-0">
@@ -215,7 +222,15 @@
                             <div>
                                 <h6 class="mb-0 mt-2">Decorators</h6>
                                 <ui:forEach items="docs:decoratorList">
-                                    ...
+                                    <template:decoratorNameDocs separator=", ">
+                                        <var:declare name="decoratorDisplayName" value="template:name" />
+                                    </template:decoratorNameDocs>
+                                    <template:decoratorNameDocs prefix="decorator" separator="-">
+                                        <var:declare name="decoratorIdName" value="template:name" />
+                                    </template:decoratorNameDocs>
+                                    <a href="#<web:out text="var:decoratorIdName" />">
+                                        <template:nameDocs name="var:decoratorDisplayName" />
+                                    </a>
                                 </ui:forEach>
                             </div>
                         </web:out>
@@ -280,6 +295,26 @@
                     </web:out>
                     <web:out if:passed="hasDecorators">
                         <template:sectionDocs name="Decorators" />
+                        <ui:forEach items="docs:decoratorList">
+                            <template:decoratorNameDocs separator=", ">
+                                <var:declare name="decoratorDisplayName" value="template:name" />
+                            </template:decoratorNameDocs>
+                            <template:decoratorNameDocs prefix="decorator" separator="-">
+                                <var:declare name="decoratorIdName" value="template:name" />
+                            </template:decoratorNameDocs>
+                            <bs:card id="var:decoratorIdName" class="mt-2">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h5 class="card-title mb-0">
+                                        <web:out text="var:decoratorDisplayName" />
+                                    </h5>
+                                </div>
+                                <p>
+                                    <template:commentDocs text="docs:decoratorComment" />
+                                </p>
+                        
+                                <template:tagAttributeList />
+                            </bs:card>
+                        </ui:forEach>
                     </web:out>
                 </docs:library>
             </web:out>
