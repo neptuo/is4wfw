@@ -155,7 +155,7 @@
                                 <if:equals value="docs:anyTag" is="php:true" />
                             </if:or>
                         </if:eval>
-                        <if:eval name="hasFullags">
+                        <if:eval name="hasFulltags">
                             <if:or>
                                 <ui:count items="docs:fulltagList">
                                     <if:greater value="ui:count" than="0" />
