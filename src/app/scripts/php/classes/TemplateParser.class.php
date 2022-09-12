@@ -507,7 +507,7 @@
                         if (!$isEscapedProperty) {
                             $evaluated = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $attributeValue);
 
-                            if ($attributeValue != $evaluated) {
+                            if ("'$attributeValue'" != $evaluated) {
                                 $attributeValue = '$this->' . 'property_' . $this->propertyFunctionsToGenerate[$evaluated]["prefix"] . '_' . $this->propertyFunctionsToGenerate[$evaluated]["get"] . '_' . $evaluated . "()";
 
                                 $valueType = 'eval';
