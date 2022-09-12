@@ -129,12 +129,28 @@
         display: inline-block;
     }
 </js:style>
+<js:script placement="tail">
+    (function() {
+        const $container = $(".library-search");
+        const $input = $container.find("input");
+        const $links = $container.find("a");
+
+        $input.keyup(() => {
+            const filter = $input.val();
+            $links.removeClass("d-none");
+            if (filter) {
+                const regex = new RegExp(filter, "i");
+                $links.filter((i, link) => !link.innerHTML.match(regex)).addClass("d-none");
+            }
+        });
+    })();
+</js:script>
 
 <div class="m-md-2 m-lg-4">
     <bs:row class="form-row">
         <bs:column default="3">
             <bs:card>
-                <div class="list-group list-group-flush">
+                <div class="list-group list-group-flush library-search">
                     <input type="text" placeholder="Search... (ctrl+/)" class="form-control mb-2" data-keybinding="ctrl+/" />
                     <docs:libraryList>
                         <ui:forEach items="docs:libraryList">
