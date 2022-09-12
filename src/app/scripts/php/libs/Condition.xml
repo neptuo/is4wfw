@@ -21,16 +21,19 @@
   <fulltag>
     <name>and</name>
     <function>operatorAnd</function>
+    <lookless />
     <comment>Všechny vnitřní podmínky budou spojeny pomocí "&amp;&amp;".</comment>
   </fulltag>
   <fulltag>
     <name>or</name>
     <function>operatorOr</function>
+    <lookless />
     <comment>Všechny vnitřní podmínky budou spojeny pomocí "||".</comment>
   </fulltag>
   <fulltag>
     <name>not</name>
     <function>not</function>
+    <lookless />
     <comment>
       Neguje všechny podmínky v těle. 
       Funguje jako negace před závorkou a tělo je v závorce
@@ -40,6 +43,7 @@
   <tag>
     <name>equals</name>
     <function>equals</function>
+    <lookless />
     <attribute>
       <name>value</name>
       <required />
@@ -68,6 +72,7 @@
   <tag>
     <name>greater</name>
     <function>greater</function>
+    <lookless />
     <attribute>
       <name>value</name>
       <required />
@@ -96,6 +101,7 @@
   <tag>
     <name>lower</name>
     <function>lower</function>
+    <lookless />
     <attribute>
       <name>value</name>
       <required />
@@ -124,6 +130,7 @@
   <tag>
     <name>arrayContains</name>
     <function>arrayContains</function>
+    <lookless />
     <attribute>
       <name>value</name>
       <required />
@@ -145,6 +152,7 @@
   <tag>
     <name>arrayLength</name>
     <function>arrayLength</function>
+    <lookless />
     <attribute>
       <name>value</name>
       <required />
@@ -186,6 +194,7 @@
   <tag>
     <name>stringContains</name>
     <function>stringContains</function>
+    <lookless />
     <attribute>
       <name>value</name>
       <comment>String, ve kterém se má hledat "part".</comment>
@@ -212,6 +221,7 @@
   <tag>
     <name>stringStartsWith</name>
     <function>stringStartsWith</function>
+    <lookless />
     <attribute>
       <name>value</name>
       <comment>String, ve kterém se má hledat "part".</comment>
@@ -232,6 +242,7 @@
   <tag>
     <name>stringEndsWith</name>
     <function>stringEndsWith</function>
+    <lookless />
     <attribute>
       <name>value</name>
       <comment>String, ve kterém se má hledat "part".</comment>
@@ -252,6 +263,7 @@
   <tag>
     <name>stringLength</name>
     <function>stringLength</function>
+    <lookless />
     <attribute>
       <name>value</name>
       <required />

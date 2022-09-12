@@ -8,11 +8,13 @@
     <template:content name="var:decoratorNameDocs" />
 </template:declare> 
 <template:declare identifier="sectionDocs">
-    <bs:card class="mt-2">
-        <h3 class="m-0">
-            <web:out text="template:name" />
-        </h3>
-    </bs:card>
+    <div class="pt-2 sticky-top" style="top:56px;background:#ccc">
+        <bs:card>
+            <h3 class="m-0">
+                <web:out text="template:name" />
+            </h3>
+        </bs:card>
+    </div>
 </template:declare>
 <template:declare identifier="nameDocs">
     <web:out if:stringEmpty="template:obsolete" if:not="true">
@@ -24,14 +26,17 @@
     </web:out>
 </template:declare>
 <template:declare identifier="cardTitleDocs">
-    <h5 class="card-title mb-0">
-        <template:nameDocs name="template:name" obsolete="template:obsolete" />
-    </h5>
-    <web:out if:stringEmpty="template:obsolete" if:not="true">
-        <span class="ml-1">
-            <web:out text="template:obsolete" />
-        </span>
-    </web:out>
+    <div class="d-flex align-items-center mb-3">
+        <h5 class="card-title mb-0">
+            <template:nameDocs name="template:name" obsolete="template:obsolete" />
+        </h5>
+        <web:out if:stringEmpty="template:obsolete" if:not="true">
+            <span class="ml-1">
+                <web:out text="template:obsolete" />
+            </span>
+        </web:out>
+        <template:content />
+    </div>
 </template:declare>
 <template:declare identifier="commentDocs">
     <var:declare name="commentDocs" value="template:text" />
@@ -72,14 +77,13 @@
 <template:declare identifier="tagDocs">
     <utils:concat output="tagId" value1="template:prefix" value2="docs:tagName" separator="-" />
     <bs:card id="utils:tagId" class="mt-2">
-        <div class="d-flex align-items-center mb-3">
-            <template:cardTitleDocs name="docs:tagName" obsolete="docs:tagObsolete" />
+        <template:cardTitleDocs name="docs:tagName" obsolete="docs:tagObsolete">
             <web:out if:true="docs:tagLookless">
                 <span class="ml-1">
                     <fa5:icon prefix="fas" name="eye-slash" title="Lookless" class="text-muted" />
                 </span>
             </web:out>
-        </div>
+        </template:cardTitleDocs>
         <p>
             <template:commentDocs text="docs:tagComment" />
         </p>
@@ -100,8 +104,7 @@
 <template:declare identifier="propertyDocs">
     <utils:concat output="propertyId" value1="property" value2="template:name" separator="-" />
     <bs:card id="utils:propertyId" class="mt-2">
-        <div class="d-flex align-items-center mb-3">
-            <template:cardTitleDocs name="template:name" obsolete="template:obsolete" />
+        <template:cardTitleDocs name="template:name" obsolete="template:obsolete">
             <web:out if:true="template:hasGet">
                 <small class="ml-1">
                     get
@@ -112,7 +115,7 @@
                     set
                 </small>
             </web:out>
-        </div>
+        </template:cardTitleDocs>
         <p>
             <template:commentDocs text="template:comment" />
         </p>
@@ -188,7 +191,7 @@
                                 </web:out>
                             </div>
                         </web:out>
-                        <web:out if:passed="hasFullags">
+                        <web:out if:passed="hasFulltags">
                             <div>
                                 <h6 class="mb-0 mt-2">Fulltags</h6>
                                 <ui:forEach items="docs:fulltagList">
@@ -236,11 +239,7 @@
                         </web:out>
                     </bs:card>
                     <bs:card class="mt-2" if:true="docs:constructor">
-                        <div class="d-flex align-items-center mb-3">
-                            <h5 class="card-title mb-0">
-                                constructor
-                            </h5>
-                        </div>
+                        <template:cardTitleDocs name="constructor" />
                         <p>
                             <template:commentDocs text="docs:constructorComment" />
                         </p>
@@ -255,11 +254,7 @@
                         </ui:forEach>
                         <web:out if:true="docs:anyTag">
                             <bs:card id="fulltag-any" class="mt-2">
-                                <div class="d-flex align-items-center mb-3">
-                                    <h5 class="card-title mb-0">
-                                        any
-                                    </h5>
-                                </div>
+                                <template:cardTitleDocs name="any" />
                                 <p>
                                     <template:commentDocs text="docs:anyTagComment" />
                                 </p>
@@ -273,11 +268,7 @@
                         </ui:forEach>
                         <web:out if:true="docs:anyFulltag">
                             <bs:card id="tag-any" class="mt-2">
-                                <div class="d-flex align-items-center mb-3">
-                                    <h5 class="card-title mb-0">
-                                        any
-                                    </h5>
-                                </div>
+                                <template:cardTitleDocs name="any" />
                                 <p>
                                     <template:commentDocs text="docs:anyFulltagComment" />
                                 </p>
@@ -303,11 +294,7 @@
                                 <var:declare name="decoratorIdName" value="template:name" />
                             </template:decoratorNameDocs>
                             <bs:card id="var:decoratorIdName" class="mt-2">
-                                <div class="d-flex align-items-center mb-3">
-                                    <h5 class="card-title mb-0">
-                                        <web:out text="var:decoratorDisplayName" />
-                                    </h5>
-                                </div>
+                                <template:cardTitleDocs name="var:decoratorDisplayName" />
                                 <p>
                                     <template:commentDocs text="docs:decoratorComment" />
                                 </p>
