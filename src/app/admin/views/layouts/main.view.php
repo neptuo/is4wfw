@@ -58,6 +58,20 @@
                 <div>
                     <wp:selectProject showMsg="false" useFrames="false" label=" " />
                 </div>
+                <div class="ml-2 d-none d-lg-block">
+                    <edit:form submit="search" class="form-inline">
+                        <ui:filter pageId="route:search">
+                            <div class="input-group">
+                                <ui:textbox name="q" class="form-control form-control-sm" placeholder="Search..." />
+                                <div class="input-group-append">
+                                    <bs:button name="search" size="small">
+                                        <fa5:icon name="search" />
+                                    </bs:button>
+                                </div>
+                            </div>
+                        </ui:filter>
+                    </edit:form>
+                </div>
                 <div class="mx-auto">
                     <web:condition when="var:is4wfw.instance.name">
                         <div class="navbar-text" data-modal="instance-name-editor">
