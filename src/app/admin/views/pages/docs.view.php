@@ -17,13 +17,15 @@
     </div>
 </template:declare>
 <template:declare identifier="nameDocs">
-    <web:out if:stringEmpty="template:obsolete" if:not="true">
-        <span class="text-linethrough">
-    </web:out>
-    <web:out text="template:name" />
-    <web:out if:stringEmpty="template:obsolete" if:not="true">
-        </span>
-    </web:out>
+    <web:lookless>
+        <var:declare name="nameDocsCssClass" value="" />
+        <web:out if:stringEmpty="template:obsolete" if:not="true">
+            <var:declare name="nameDocsCssClass" value="text-linethrough" />
+        </web:out>
+    </web:lookless>
+    <span class="<web:out text="var:nameDocsCssClass" />">
+        <web:out text="template:name" />
+    </span>
 </template:declare>
 <template:declare identifier="cardTitleDocs">
     <div class="d-flex align-items-center mb-3">
@@ -122,6 +124,12 @@
     </bs:card>
 </template:declare>
 
+<js:style>
+    .docs-nav-links a {
+        display: inline-block;
+    }
+</js:style>
+
 <div class="m-md-2 m-lg-4">
     <bs:row class="form-row">
         <bs:column default="3">
@@ -176,67 +184,67 @@
                                 <if:greater value="ui:count" than="0" />
                             </ui:count>
                         </if:eval>
-                        <web:out if:passed="hasTags">
-                            <div>
-                                <h6 class="mb-0 mt-2">Tags</h6>
-                                <ui:forEach items="docs:tagList">
-                                    <a href="#tag-<web:out text="docs:tagName" />">
-                                        <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
-                                    </a>
-                                </ui:forEach>
-                                <web:out if:true="docs:anyTag">
-                                    <a href="#tag-any">
-                                        <template:nameDocs name="any" />
-                                    </a>
-                                </web:out>
-                            </div>
-                        </web:out>
-                        <web:out if:passed="hasFulltags">
-                            <div>
-                                <h6 class="mb-0 mt-2">Fulltags</h6>
-                                <ui:forEach items="docs:fulltagList">
-                                    <a href="#fulltag-<web:out text="docs:tagName" />">
-                                        <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
-                                    </a>
-                                </ui:forEach>
-                                <web:out if:true="docs:anyFulltag">
-                                    <a href="#fulltag-any">
-                                        <template:nameDocs name="any" />
-                                    </a>
-                                </web:out>
-                            </div>
-                        </web:out>
-                        <web:out if:passed="hasProperties">
-                            <div>
-                                <h6 class="mb-0 mt-2">Properties</h6>
-                                <ui:forEach items="docs:propertyList">
-                                    <a href="#property-<web:out text="docs:propertyName" />">
-                                        <template:nameDocs name="docs:propertyName" obsolete="docs:propertyObsolete" />
-                                    </a>
-                                </ui:forEach>
-                                <web:out if:true="docs:anyProperty">
-                                    <a href="#property-any">
-                                        <template:nameDocs name="any" />
-                                    </a>
-                                </web:out>
-                            </div>
-                        </web:out>
-                        <web:out if:passed="hasDecorators">
-                            <div>
-                                <h6 class="mb-0 mt-2">Decorators</h6>
-                                <ui:forEach items="docs:decoratorList">
-                                    <template:decoratorNameDocs separator=", ">
-                                        <var:declare name="decoratorDisplayName" value="template:name" />
-                                    </template:decoratorNameDocs>
-                                    <template:decoratorNameDocs prefix="decorator" separator="-">
-                                        <var:declare name="decoratorIdName" value="template:name" />
-                                    </template:decoratorNameDocs>
-                                    <a href="#<web:out text="var:decoratorIdName" />">
-                                        <template:nameDocs name="var:decoratorDisplayName" />
-                                    </a>
-                                </ui:forEach>
-                            </div>
-                        </web:out>
+                        <div class="docs-nav-links">
+                            <web:out if:passed="hasTags">
+                                <div>
+                                    <h6 class="mb-0 mt-2">Tags</h6>
+                                    <ui:forEach items="docs:tagList">
+                                        <a href="#tag-<web:out text="docs:tagName" />"><template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" /></a>
+                                    </ui:forEach>
+                                    <web:out if:true="docs:anyTag">
+                                        <a href="#tag-any">
+                                            <template:nameDocs name="any" />
+                                        </a>
+                                    </web:out>
+                                </div>
+                            </web:out>
+                            <web:out if:passed="hasFulltags">
+                                <div>
+                                    <h6 class="mb-0 mt-2">Fulltags</h6>
+                                    <ui:forEach items="docs:fulltagList">
+                                        <a href="#fulltag-<web:out text="docs:tagName" />">
+                                            <template:nameDocs name="docs:tagName" obsolete="docs:tagObsolete" />
+                                        </a>
+                                    </ui:forEach>
+                                    <web:out if:true="docs:anyFulltag">
+                                        <a href="#fulltag-any">
+                                            <template:nameDocs name="any" />
+                                        </a>
+                                    </web:out>
+                                </div>
+                            </web:out>
+                            <web:out if:passed="hasProperties">
+                                <div>
+                                    <h6 class="mb-0 mt-2">Properties</h6>
+                                    <ui:forEach items="docs:propertyList">
+                                        <a href="#property-<web:out text="docs:propertyName" />">
+                                            <template:nameDocs name="docs:propertyName" obsolete="docs:propertyObsolete" />
+                                        </a>
+                                    </ui:forEach>
+                                    <web:out if:true="docs:anyProperty">
+                                        <a href="#property-any">
+                                            <template:nameDocs name="any" />
+                                        </a>
+                                    </web:out>
+                                </div>
+                            </web:out>
+                            <web:out if:passed="hasDecorators">
+                                <div>
+                                    <h6 class="mb-0 mt-2">Decorators</h6>
+                                    <ui:forEach items="docs:decoratorList">
+                                        <template:decoratorNameDocs separator=", ">
+                                            <var:declare name="decoratorDisplayName" value="template:name" />
+                                        </template:decoratorNameDocs>
+                                        <template:decoratorNameDocs prefix="decorator" separator="-">
+                                            <var:declare name="decoratorIdName" value="template:name" />
+                                        </template:decoratorNameDocs>
+                                        <a href="#<web:out text="var:decoratorIdName" />">
+                                            <template:nameDocs name="var:decoratorDisplayName" />
+                                        </a>
+                                    </ui:forEach>
+                                </div>
+                            </web:out>
+                        </div>
                     </bs:card>
                     <bs:card class="mt-2" if:true="docs:constructor">
                         <template:cardTitleDocs name="constructor" />
