@@ -3,7 +3,7 @@
 abstract class ParsedTemplate 
 {
     private static $configs;
-    private static $propertyReferences;
+    private static $propertyReferences = [];
 
     public function __construct() {
         if (self::$configs == null) {

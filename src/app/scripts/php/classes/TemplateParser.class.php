@@ -28,7 +28,6 @@
 
         // Regular expression for parsing property value. It requires exact match (no prefix or postfix text).
         protected $ATT_PROPERTY_RE = '(^([a-zA-Z0-9-_]+:[a-zA-Z0-9-_.]+)$)';
-        protected $PropertyUse = '';
 
         // Regular expression for parsing full tag.     
         protected $FULL_TAG_RE = "#<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)((.*?)(?=\/>)\/>|([^>]*)>((?:[^<]|<(?!/?\\1[^>]*>)|(?R))+)</\\1>)#";
@@ -44,17 +43,25 @@
         }
 
         public function parsePropertyExactly($value) {
-            $this->PropertyUse = 'get';
-            
-            $result = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $value);
+            $this->libraries = new AutoLibraryCollection(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'), false);
+            $this->libraryLoader = new LibraryLoader();
+
+            $evaluated = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $value);
             $this->checkPregError("parsecproperty", $value);
 
-            if ($result == NULL) {
+            if ($evaluated == NULL) {
                 return $value;
             }
             
-            $result = eval("return ". $result . ";");
-            return $result;
+            if ($evaluated != $value) {
+                $prefix = $this->propertyFunctionsToGenerate[$evaluated]["prefix"];
+                $get = $this->propertyFunctionsToGenerate[$evaluated]["get"];
+
+                $eval = 'global $' . $prefix . 'Object; return $' . $prefix . 'Object->' . $get . '();';
+                return eval($eval);
+            }
+
+            return $value;
         }
 
         public function run($keys) {
@@ -355,11 +362,6 @@
                 $library = $this->libraries->get($object[0]);
                 if ($library->isProperty($object[1]) || $library->isAnyProperty()) {
                     $attributes = new TemplateAttributeCollection();
-                    $metadata = ["property" => [
-                        "prefix" => $object[0],
-                        "name" => $object[1],
-                    ]];
-                    
                     $identifier = $this->generateRandomString();
                     $property = [
                         "prefix" => $object[0],
@@ -368,13 +370,11 @@
                     ];
 
                     if ($library->isProperty($object[1])) {
-                        $functionName = $library->getFuncToProperty($object[1], $this->PropertyUse);
                         $property["any"] = false;
                         $property["get"] = $library->getFuncToProperty($object[1], "get");
                         $property["set"] = $library->getFuncToProperty($object[1], "set");
 
                     } else if ($library->isAnyProperty()) {
-                        $functionName = 'getProperty';
                         $attributes->Attributes[] = array('value' => $object[1], 'type' => 'raw');
 
                         $property["any"] = true;
@@ -385,12 +385,11 @@
                     $this->propertyFunctionsToGenerate[$identifier] = $property;
                     // TODO We can't return an array here (because preg replace)
                     return $identifier;
-                    // return $this->generateFunctionOutput($identifier, $object[0], null, false, $functionName, $attributes, false);
                 }
             }
 
             // #131 - Apostrophes are later stripped when binding to number attribute.
-            return "'" . addcslashes($cprop[0], "'") . "'";
+            return $cprop[0];
         }
         
         /**
@@ -487,8 +486,6 @@
                 $attributePrefix = null;
                 [$attributeName, $attributeValue] = explode("=", $tmp, 2);
                 if (strlen($attributeName) > 0) {
-                    $this->PropertyUse = 'get';
-                    
                     $valueType = 'raw';
                     $contentType = null;
                     $propertyIdentifier = null;
@@ -507,7 +504,7 @@
                         if (!$isEscapedProperty) {
                             $evaluated = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $attributeValue);
 
-                            if ("'$attributeValue'" != $evaluated) {
+                            if ($attributeValue != $evaluated) {
                                 $attributeValue = '$this->' . 'property_' . $this->propertyFunctionsToGenerate[$evaluated]["prefix"] . '_' . $this->propertyFunctionsToGenerate[$evaluated]["get"] . '_' . $evaluated . "()";
 
                                 $valueType = 'eval';

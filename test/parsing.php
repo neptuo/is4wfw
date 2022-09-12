@@ -70,6 +70,9 @@ var:x <web:out text="var:x" />
         }
     }
 
+    $parser = new TemplateParser($phpObject->getCurrentRegistrations(), []);
+    echo $parser->parsePropertyExactly("web:currentTime") . '<br />';
+
     $cache->delete($keys);
     measure(function() use ($keys) {
         global $content;
