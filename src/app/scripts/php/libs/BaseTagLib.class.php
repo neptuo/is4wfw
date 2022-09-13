@@ -487,25 +487,25 @@
             return $stack->peek() != null;
         }
 
-        public function executeTemplateContent(array $keys, string $content) {
+        public function executeTemplateContent(array $keys, string $content, ?string $relativeClassPathPrefix = null) {
             if (is_callable($content)) {
                 return $content();
             }
 
             $template = $this->getParsedTemplate($keys);
             if ($template == null) {
-                $template = $this->parseTemplate($keys, $content);
+                $template = $this->parseTemplate($keys, $content, $relativeClassPathPrefix);
             }
 
             return $template();
         }
 
-        public function parseTemplate(array $keys, string $content) {
+        public function parseTemplate(array $keys, string $content, ?string $relativeClassPathPrefix = null) {
             if ($content instanceof ParsedTemplate) {
                 return $content;
             }
 
-            $parser = $this->createParser();
+            $parser = $this->createParser($relativeClassPathPrefix);
             $parsedTemplate = $parser->parse($content, $keys);
             return $parsedTemplate;
         }
@@ -516,8 +516,12 @@
             return $parsedTemplate;
         }
 
-        public function createParser() {
-            return new TemplateParser($this->php()->getCurrentRegistrations(), $this->php()->getDefaultGlobalAttributeNames());
+        public function createParser(?string $relativeClassPathPrefix = null) {
+            return new TemplateParser(
+                $this->php()->getCurrentRegistrations(), 
+                $this->php()->getDefaultGlobalAttributeNames(),
+                $relativeClassPathPrefix
+            );
         }
 
         public function deleteParsedTemplate(array $keys, bool $isRecursive = false) {

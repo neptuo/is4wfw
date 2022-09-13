@@ -16,6 +16,7 @@
         protected $libraryLoader;
         protected $defaultRegistrations;
         protected $defaultAttributes;
+        protected $relativeClassPathPrefix;
         
         // Current custom tag attributes.
         protected $Attributes = array();
@@ -32,10 +33,11 @@
         // Regular expression for parsing full tag.     
         protected $FULL_TAG_RE = "#<([a-zA-Z0-9-_]+:[a-zA-Z0-9-_]+)((.*?)(?=\/>)\/>|([^>]*)>((?:[^<]|<(?!/?\\1[^>]*>)|(?R))+)</\\1>)#";
 
-        public function __construct($defaultRegistrations, $defaultAttributes) {
+        public function __construct($defaultRegistrations, $defaultAttributes, $relativeClassPathPrefix = null) {
             $this->TemplateCache = new TemplateCache();
             $this->defaultRegistrations = $defaultRegistrations;
             $this->defaultAttributes = $defaultAttributes;
+            $this->relativeClassPathPrefix = $relativeClassPathPrefix;
         }
 
         public function getCache() {
@@ -44,7 +46,7 @@
 
         public function parsePropertyExactly($value) {
             $this->libraries = new AutoLibraryCollection(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'), false);
-            $this->libraryLoader = new LibraryLoader();
+            $this->libraryLoader = new LibraryLoader($this->relativeClassPathPrefix);
 
             $evaluated = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $value);
             $this->checkPregError("parsecproperty", $value);
@@ -84,7 +86,7 @@
         public function parse($content, $keys) {
             $this->Code = new CodeWriter();
             $this->libraries = new AutoLibraryCollection(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'), false);
-            $this->libraryLoader = new LibraryLoader();
+            $this->libraryLoader = new LibraryLoader($this->relativeClassPathPrefix);
             return $this->parseInternal($content, 'compile', $keys);
         }
 
@@ -142,6 +144,18 @@
             $this->stopMeasure($content);
             return $processed;
         }
+
+        private function ensureAbsoluteClassPath($classPath) {
+            if (StringUtils::startsWith($classPath, ".")) {
+                if ($this->relativeClassPathPrefix) {
+                    $classPath = $this->relativeClassPathPrefix . $classPath;
+                } else {
+                    throw new TemplateParserException("Missing classPath prefix for '$classPath'");
+                }
+            }
+
+            return $classPath;
+        }
         
         // Parses full tag
         // Output of this function can't contain ' (apostrophe), as the output is evaluated as PHP code wrapped in ' (apostrophe).
@@ -189,6 +203,7 @@
                 $uniqueIdentifier = $this->generateRandomString();
                 if ($isFullTag) {
                     if ($object[0] == "php" && $object[1] == "using") {
+                        $attributes->Attributes["class"]["value"] = $this->ensureAbsoluteClassPath($attributes->Attributes["class"]["value"]);
                         $registrationClassPath = $attributes->Attributes["class"]["value"];
                         $registrationPrefix = $attributes->Attributes["prefix"]["value"];
                         $registrationXmlPath = $this->libraryLoader->getXmlPath($registrationClassPath);
@@ -254,14 +269,16 @@
                     
                     if ($object[0] == "php") {
                         if ($object[1] == "register") {
+                            $attributes->Attributes["classPath"]["value"] = $this->ensureAbsoluteClassPath($attributes->Attributes["classPath"]["value"]);
                             $registrationClassPath = $attributes->Attributes["classPath"]["value"];
                             $registrationPrefix = $attributes->Attributes["tagPrefix"]["value"];
                             $registrationXmlPath = $this->libraryLoader->getXmlPath($registrationClassPath);
                             $registrationLibrary = $this->libraries->add($registrationPrefix, $registrationXmlPath);
                             $this->ensureConstructorParameters($registrationLibrary, $attributes->Attributes["param"]["value"], $registrationPrefix, $registrationClassPath);
                         } else if ($object[1] == "create" || $object[1] == "lazy") {
-                            foreach ($attributes->Attributes["params"]["value"] as $registrationPrefix => $registrationClassPath) {
+                            foreach ($attributes->Attributes["params"]["value"] as $registrationPrefix => &$registrationClassPath) {
                                 if (strpos($registrationPrefix, "-") === false) {
+                                    $registrationClassPath["value"] = $this->ensureAbsoluteClassPath($registrationClassPath["value"]);
                                     $registrationXmlPath = $this->libraryLoader->getXmlPath($registrationClassPath["value"]);
                                     $registrationLibrary = $this->libraries->add($registrationPrefix, $registrationXmlPath);
                                     $this->ensureConstructorParameters($registrationLibrary, $attributes->Attributes["params"]["value"], $registrationPrefix, $registrationClassPath["value"], $registrationPrefix);

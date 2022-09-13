@@ -145,8 +145,7 @@
         }
 
         private function listAddToRules($rules, $key, $value, $type = null) {
-            $Parser = $this->createParser();
-            $value = $Parser->parsePropertyExactly($value);
+            $value = $this->createParser()->parsePropertyExactly($value);
         
             if ($type == null) {
                 if (is_numeric($value)) {

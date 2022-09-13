@@ -4,6 +4,10 @@
 
     class LibraryLoader {
         private function getFilePath($classPath, $extension) {
+            if (StringUtils::startsWith($classPath, ".")) {
+                throw new Exception("Relative classPath '$classPath'");
+            }
+
             $cpArray = StringUtils::explode($classPath, '.');
             if ($cpArray[0] == "php") {
                 $xmlPath = APP_SCRIPTS_PHP_PATH . "libs/";
