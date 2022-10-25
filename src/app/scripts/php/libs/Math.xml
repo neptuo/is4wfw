@@ -51,11 +51,36 @@
     <attribute>
       <name>decimals</name>
       <type>number</type>
-      <comment>Počet desetinných mýst</comment>
+      <comment>Počet desetinných míst</comment>
     </attribute>
     <comment>
       Zaokrouhlí číslo v "out" na počet desetinných míst "decimals".
       '.5' se zaokrouhlí nahoru.
+    </comment>
+  </tag>
+  <tag>
+    <name>random</name>
+    <function>random</function>
+    <attribute>
+      <name>out</name>
+      <type>propertyReference</type>
+      <required />
+      <comment>Proměnná, která se má nastavit</comment>
+    </attribute>
+    <attribute>
+      <name>min</name>
+      <type>number</type>
+      <default>0</default>
+      <comment>Minimální hodnota</comment>
+    </attribute>
+    <attribute>
+      <name>max</name>
+      <type>number</type>
+      <required />
+      <comment>Maximální hodnota</comment>
+    </attribute>
+    <comment>
+      Vygeneruje náhodné číslo mezi "min" a "max" do "out".
     </comment>
   </tag>
 </taglib>

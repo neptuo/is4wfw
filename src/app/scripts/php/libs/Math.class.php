@@ -50,6 +50,11 @@
 			$value = round($value, $decimals, PHP_ROUND_HALF_UP);
 			$out->set($value);
 		}
+		
+		public function random(PropertyReference $out, $min = 0, $max) {
+			$value = rand($min, $max);
+			$out->set($value);
+		}
 	}
 
 ?>
