@@ -15,10 +15,20 @@ require_once("Template.class.php");
 	class TemplateDirectory extends Template {
 
 		private $directory = "";
+		private $relativeClassPathPrefix = null;
 
 		public function __construct($prefix, $params = []) {
 			if (array_key_exists("path", $params)) {
 				$this->directory = $params["path"];
+
+				if (StringUtils::startsWith($this->directory, INSTANCE_PATH)) {
+					$userPath = substr($this->directory, strlen(INSTANCE_PATH));
+					$userParts = explode("/", $userPath);
+					if ($userParts[0] == "modules") {
+						$this->relativeClassPathPrefix = $userParts[1];
+					}
+				}
+
 			}
 		}
 
@@ -37,7 +47,7 @@ require_once("Template.class.php");
 
             $parsedTemplate = $this->getParsedTemplate($keys);
 			if ($parsedTemplate == null) {
-				$parsedTemplate = $this->parseTemplate($keys, $templateContent);
+				$parsedTemplate = $this->parseTemplate($keys, $templateContent, $this->relativeClassPathPrefix);
 			}
 
 			return $this->includeFinal($parsedTemplate, $template, $params);
