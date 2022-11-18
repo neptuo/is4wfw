@@ -246,7 +246,7 @@ class DateTime extends BaseTagLib {
 		$diff = $this->diff;
 		switch ($format) {
 			case "positive":
-				return ;
+				return $diff->invert === 0;
 			case "y":
 				return $diff->y;
 			case "m":
