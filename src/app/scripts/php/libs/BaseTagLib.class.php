@@ -519,7 +519,7 @@
         public function createParser(?string $relativeClassPathPrefix = null) {
             return new TemplateParser(
                 $this->php()->getCurrentRegistrations(), 
-                $this->php()->getDefaultGlobalAttributeNames(),
+                $this->php()->getDefaultGlobalAttributes(),
                 $relativeClassPathPrefix
             );
         }

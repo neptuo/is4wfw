@@ -46,7 +46,7 @@
 
         public function parsePropertyExactly($value) {
             $this->libraries = new AutoLibraryCollection(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'), false);
-            $this->libraryLoader = new LibraryLoader($this->relativeClassPathPrefix);
+            $this->libraryLoader = new LibraryLoader();
 
             $evaluated = preg_replace_callback($this->ATT_PROPERTY_RE, array(&$this, 'parsecproperty'), $value);
             $this->checkPregError("parsecproperty", $value);
@@ -87,6 +87,13 @@
             $this->Code = new CodeWriter();
             $this->libraries = new AutoLibraryCollection(file_get_contents(APP_SCRIPTS_PHP_PATH . 'autoregister.xml'), false);
             $this->libraryLoader = new LibraryLoader($this->relativeClassPathPrefix);
+
+            if ($this->defaultRegistrations) {
+                foreach ($this->defaultRegistrations as $prefix => $xmlPath) {
+                    $this->libraries->add($prefix, $xmlPath);
+                }
+            }
+
             return $this->parseInternal($content, 'compile', $keys);
         }
 
@@ -98,12 +105,6 @@
         }
 
         private function parseInternal(string $content, string $mode, array $keys = null, bool $excapeText = true) {
-            if ($this->defaultRegistrations) {
-                foreach ($this->defaultRegistrations as $prefix => $xmlPath) {
-                    $this->libraries->add($prefix, $xmlPath);
-                }
-            }
-
             if ($mode == 'parse') {
                 return $this->parseContentInternal($content, $excapeText);
             } else if($mode == 'compile') {

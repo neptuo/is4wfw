@@ -350,7 +350,7 @@
             return false;
         }
 
-        public function getDefaultGlobalAttributeNames() {
+        public function getDefaultGlobalAttributes() {
             return $this->defaultGlobalAttributes;
         }
 
