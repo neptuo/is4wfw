@@ -14,20 +14,18 @@ if ($null -eq $versionName)
 Push-Location $PSScriptRoot;
 
 # Update version file.
-Invoke-Expression ".\Update-Version.ps1 $versionName";
+# Invoke-Expression ".\Update-Version.ps1 $versionName";
 
-$versionName = $versionName.Substring(1);
-$tag = "neptuo/is4wfw:$versionName";
-$tagDev = "$tag-dev";
+$tagDev = "neptuo/is4wfw:342.2-container-dev-$versionName";
 
 # Build docker image
-Invoke-Expression "docker build .. -f ..\docker\is4wfw\dockerfile -t $tag";
+# Invoke-Expression "docker build .. -f ..\docker\is4wfw\dockerfile -t $tag";
 Invoke-Expression "docker build .. -f ..\docker\is4wfw-dev\dockerfile -t $tagDev";
 
-Write-Host "Docker image built and tagged as '$tag' and '$tagDev'.";
+Write-Host "Docker image built and tagged as '$tagDev'.";
 
 if ($push) {
-    Invoke-Expression "docker push $tag";
+    # Invoke-Expression "docker push $tag";
     Invoke-Expression "docker push $tagDev";
     Write-Host "Docker image pushed.";
 }
