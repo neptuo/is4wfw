@@ -297,6 +297,10 @@
             if ($key == false) {
                 return $this->LocalizationBundle;
             } else {
+                if (!$this->LocalizationBundle) {
+                    return $key;
+                }
+
                 return $this->LocalizationBundle->get($key);
             }
         }
