@@ -19,7 +19,12 @@
                             <web:condition when="var:adminLastPage" isInverted="true">
                                 <var:declare name="adminLastPage" value="route:index" />
                             </web:condition>
-                            <web:redirectTo pageId="var:adminLastPage" />
+                            <!--web:redirectTo pageId="var:adminLastPage" /-->
+                            <web:url pageId="var:adminLastPage" isAbsolute="true">
+                                <js:script placement="tail">
+                                    window.locatin.href = '<web:out text="web:url" />'';
+                                </js:script>
+                            </web:url>
                         </login:login>
                     </web:condition>
 
