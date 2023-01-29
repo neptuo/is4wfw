@@ -167,14 +167,14 @@ class DataAccess {
 				
 				$startTime = 0;
 				if ($this->measureQueries) {
-					$startTime = microtime();
+					$startTime = $this->getCurretMillitime();
 				}
 
 				// Execute the query.
 				$result = @mysqli_query($this->connection, $query);
 				
 				if ($this->measureQueries) {
-					$endTime = microtime();
+					$endTime = $this->getCurretMillitime();
 					array_push($this->measures, $endTime - $startTime);
 				}
 
@@ -185,6 +185,11 @@ class DataAccess {
 		} else {
 			trigger_error("Connection is closed, can't execute query!", E_USER_WARNING);
 		}
+	}
+
+	private function getCurretMillitime() {
+		$microtime = microtime(true);
+		return floor($microtime * 1000);
 	}
     
     /**
@@ -248,7 +253,7 @@ class DataAccess {
 				
 				if ($this->measureQueries) {
 					$endTime = microtime();
-					array_push($this->measures, $endTime - $startTime);
+					array_push($this->measures, max($endTime - $startTime, 0));
 				}
 			}
 			
@@ -404,12 +409,32 @@ class DataAccess {
 		return $this->queries;
 	}
 
+	public function saveProfiles($value) {
+		if ($value) {
+			$this->execute("SET PROFILING_HISTORY_SIZE=100");
+			$this->execute("SET PROFILING=1");
+		} else {
+			$this->execute("SET PROFILING=0");
+		}
+	}
+
 	public function saveMeasures($value) {
 		$this->measureQueries = $value;
 	}
 
 	public function getMeasures() {
 		return $this->measures;
+	}
+
+	public function getProfiles() {
+		$oldSaveQueries = $this->saveQueries;
+		$oldMeasureQueries = $this->measureQueries;
+		$this->saveQueries(false);
+		$this->saveMeasures(false);
+		$profiles = $this->fetchAll("SHOW PROFILES");
+		$this->saveQueries($oldSaveQueries);
+		$this->saveMeasures($oldMeasureQueries);
+		return $profiles;
 	}
 }
 

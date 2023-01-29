@@ -273,6 +273,7 @@
 
             if ($this->getDebugMode()) {
                 if (array_key_exists('query-list', $_GET)) {
+                    parent::db()->getDataAccess()->saveProfiles(true);
                     parent::db()->getDataAccess()->saveQueries(true);
                     parent::db()->getDataAccess()->saveMeasures(true);
                 }
@@ -1222,18 +1223,20 @@
                     $querycont = "";
                     $totalMeasure = 0;
                     $measures = parent::db()->getDataAccess()->getMeasures();
+                    $profiles = parent::db()->getDataAccess()->getProfiles();
                     $worstKey = 0;
                     $worstMeasure = 0;
                     foreach (parent::db()->getDataAccess()->getQueries() as $key => $query) {
                         $totalMeasure += $measures[$key];
-                        $measure = round($measures[$key], 5);
-                        if ($measure > $worstMeasure) {
-                            $worstMeasure = $measure;
+                        $measurePhp = round($measures[$key], 5);
+                        $measureMysql = round($profiles[$key]["Duration"], 5);
+                        if ($measurePhp > $worstMeasure) {
+                            $worstMeasure = $measurePhp;
                             $worstKey = $key;
                         }
 
-                        $header = "Query $key ($measure ms)";
-                        $querycont .= parent::debugFrame($header, $query, 'code');
+                        $header = "Query $key (php $measurePhp ms) (mysql $measureMysql ms)";
+                        $querycont .= parent::debugFrame($header, $query, 'code', false);
                     }
 
                     $queryCount = count($measures);

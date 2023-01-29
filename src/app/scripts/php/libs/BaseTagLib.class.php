@@ -400,9 +400,9 @@
             return null;
         }
         
-        public function debugFrame($title, $content, $contentTag = null) {
+        public function debugFrame($title, $content, $contentTag = null, $contentWhiteSpacePre = true) {
             if ($contentTag !== null && $contentTag !== '') {
-                $content = '<' . $contentTag . ' style="white-space: pre;">' . $content . '</' . $contentTag . '>';
+                $content = '<' . $contentTag . ' style="' . ($contentWhiteSpacePre ? 'white-space: pre;' : '') . '">' . $content . '</' . $contentTag . '>';
             }
 
             return ''
