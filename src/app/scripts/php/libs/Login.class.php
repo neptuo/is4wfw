@@ -244,10 +244,8 @@
                     $userLogData["token"] = $token;
                 }
 
-                $db->transaction(function() use($db, $userLogData) {
-                    $userLogSql = parent::sql()->insert("user_log", $userLogData);
-                    $db->execute($userLogSql);
-                });
+                $userLogSql = parent::sql()->insert("user_log", $userLogData);
+                $db->execute($userLogSql);
                 $return = $db->fetchAll(parent::sql()->select("user_log", array("id", "session_id"), array("user_id" => $uid, "session_id" => $sessionId)));
                 if (count($return) == 1) {
                     $this->LogId = $return[0]['id'];
