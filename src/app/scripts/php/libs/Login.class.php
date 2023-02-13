@@ -234,7 +234,7 @@
                 $this->UserId = $uid;
                 $this->UserLogin = $username;
                 $this->UserName = $return[0]['name'];
-                $this->UserSurame = $return[0]['surname'];
+                $this->UserSurname = $return[0]['surname'];
 
                 $sessionId = rand(100000, 2000000);
                 $token = sha1($sessionId);
@@ -257,8 +257,6 @@
                         $sessionTimeout = $this->getSessionTimeout();
                         $this->setAuthCookie($token, 60 * $sessionTimeout);
                     }
-
-                    $this->LoggedIn = true;
 
                     return true;
                 } else {
@@ -331,7 +329,6 @@
         public function logout($template, $group) {
             $sql = parent::sql()->update("user_log", array("logout_timestamp" => time()), array("session_id" => $this->SessionId));
             parent::db()->execute($sql);
-            $this->LoggedIn = false;
 
             $sessionId = $group . '_session_id';
             $_SESSION[$sessionId] = '';
