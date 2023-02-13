@@ -377,6 +377,7 @@
         }
 
         protected function close() {
+            $this->dataAccess()->disconnect();
             $this->php()->dispose();
             exit;
         }
