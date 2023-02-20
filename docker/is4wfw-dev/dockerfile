@@ -11,6 +11,7 @@ RUN sh -c 'apt-get update \
 
 EXPOSE 80
 
+ENV IS4WFW_IN_DOCKER=true
 ENV IS4WFW_DEVELOPMENT=true
 
 COPY ./src/.htaccess /var/www/html/.htaccess

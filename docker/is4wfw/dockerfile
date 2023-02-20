@@ -11,6 +11,8 @@ RUN sh -c 'apt-get update \
 
 EXPOSE 80
 
+ENV IS4WFW_IN_DOCKER=true
+
 COPY ./src/.htaccess /var/www/html/.htaccess
 COPY ./src/app /var/www/html/app
 COPY ./src/docker/modules /var/www/html/modules

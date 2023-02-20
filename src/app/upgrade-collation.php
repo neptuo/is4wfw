@@ -2,7 +2,6 @@
 
 // This file is by default restricted by .htaccess!
 
-require_once("../user/instance.inc.php");
 require_once("scripts/php/includes/settings.inc.php");
 require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/DataAccess.class.php");
 

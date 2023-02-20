@@ -59,12 +59,12 @@
                     <wp:selectProject showMsg="false" useFrames="false" label=" " />
                 </div>
                 <div class="ml-2 d-none d-lg-block">
-                    <edit:form submit="search" class="form-inline">
+                    <edit:form submit="layout-search" class="form-inline">
                         <ui:filter pageId="route:search">
                             <div class="input-group">
                                 <ui:textbox name="q" class="form-control form-control-sm" placeholder="Search..." />
                                 <div class="input-group-append">
-                                    <bs:button name="search" size="small">
+                                    <bs:button name="layout-search" size="small">
                                         <fa5:icon name="search" />
                                     </bs:button>
                                 </div>
