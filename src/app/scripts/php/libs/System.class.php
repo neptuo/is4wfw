@@ -730,6 +730,10 @@
 				$note .= $this->getWarning('In development mode, app folder is read-only and you can\'t update the application');
 			}
 
+			if (!IS_UPDATEABLE) {
+				return $this->getError('This deployment doesn\'t support updates');
+			}
+
 			$api = new GitHubReleaseManager();
 			$result = $api->getList();
 
