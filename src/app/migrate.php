@@ -1,11 +1,5 @@
 <?php
 
-    if (!file_exists("../user/instance.inc.php")) {
-        header("Location: /setup.php");
-        exit;
-    }
-
-    require_once("../user/instance.inc.php");
     require_once("scripts/php/includes/settings.inc.php");
 
     // Migrate DB

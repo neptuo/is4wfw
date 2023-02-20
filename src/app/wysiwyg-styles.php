@@ -1,6 +1,5 @@
 <?php
 
-	require_once("../user/instance.inc.php");
 	require_once("scripts/php/includes/settings.inc.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/RequestStorage.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/SessionStorage.class.php");

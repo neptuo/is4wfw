@@ -1,20 +1,12 @@
 <?php
 
-    $userInstance = "../user/instance.inc.php";
-    if (!file_exists($userInstance)) {
-        header("Location: /setup.php");
-        exit;
-    }
+    require_once("scripts/php/includes/settings.inc.php");
 
-    require_once($userInstance);
-    
     if (IS_WEB_STOPPED) {
         echo file_get_contents("stopped.html");
         exit;
     }
     
-    require_once("scripts/php/includes/settings.inc.php");
-
     require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
     require_once(APP_SCRIPTS_PHP_PATH . "includes/extensions.inc.php");
 
