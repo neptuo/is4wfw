@@ -27,7 +27,7 @@ define("APP_SCRIPTS_PATH", APP_PATH . "scripts/");
 define("APP_SCRIPTS_PHP_PATH", APP_SCRIPTS_PATH . "php/");
 define("APP_SCRIPTS_BUNDLES_PATH", APP_SCRIPTS_PATH . "bundles/");
 
-define("CACHE_PATH", $instancePath . "cache/");
+define("CACHE_PATH", INSTANCE_PATH . "cache/");
 define("CACHE_IMAGES_PATH", CACHE_PATH . "images/");
 define("CACHE_OUTPUT_PATH", CACHE_PATH . "output/");
 define("CACHE_PAGES_PATH", CACHE_PATH . "pages/");

@@ -1,9 +1,10 @@
-mkdir -p /var/www/html/instance \
-    /var/www/html/instance/cache \
-    /var/www/html/instance/cache/images \
-    /var/www/html/instance/cache/pages \
-    /var/www/html/instance/cache/systemproperty \
-    /var/www/html/instance/cache/templates \
+mkdir -p 
+    /var/www/html/cache \
+    /var/www/html/cache/images \
+    /var/www/html/cache/pages \
+    /var/www/html/cache/systemproperty \
+    /var/www/html/cache/templates \
+    /var/www/html/instance \
     /var/www/html/instance/logs \
     /var/www/html/instance/modules \
     /var/www/html/instance/user \
@@ -11,5 +12,6 @@ mkdir -p /var/www/html/instance \
     /var/www/html/instance/user/filesystem \
     /var/www/html/instance/user/public \
 
+chmod 777 -R /var/www/html/cache
 chmod 777 -R /var/www/html/instance
 apache2-foreground
