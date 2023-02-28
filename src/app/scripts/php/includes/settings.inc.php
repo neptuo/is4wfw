@@ -18,24 +18,27 @@ if (!ini_get('date.timezone')) {
     date_default_timezone_set('GMT');
 }
 
+// Use INSTANCE PATH constant just once to allow to override during docker build.
+$instancePath = INSTANCE_PATH;
+
 // Paths and urls.
-define("APP_PATH", INSTANCE_PATH . "app/");
+define("APP_PATH", $instancePath . "app/");
 define("APP_SCRIPTS_PATH", APP_PATH . "scripts/");
 define("APP_SCRIPTS_PHP_PATH", APP_SCRIPTS_PATH . "php/");
 define("APP_SCRIPTS_BUNDLES_PATH", APP_SCRIPTS_PATH . "bundles/");
 
-define("CACHE_PATH", INSTANCE_PATH . "cache/");
+define("CACHE_PATH", $instancePath . "cache/");
 define("CACHE_IMAGES_PATH", CACHE_PATH . "images/");
 define("CACHE_OUTPUT_PATH", CACHE_PATH . "output/");
 define("CACHE_PAGES_PATH", CACHE_PATH . "pages/");
 define("CACHE_TEMPLATES_PATH", CACHE_PATH . "templates/");
 define("CACHE_SYSTEMPROPERTY_PATH", CACHE_PATH . "systemproperty/");
 
-define("LOGS_PATH", INSTANCE_PATH . "logs/");
+define("LOGS_PATH", $instancePath . "logs/");
 
-define("MODULES_PATH", INSTANCE_PATH . "modules/");
+define("MODULES_PATH", $instancePath . "modules/");
 
-define("USER_PATH", INSTANCE_PATH . "user/");
+define("USER_PATH", $instancePath . "user/");
 define("USER_FILESYSTEM_PATH", USER_PATH . "filesystem/");
 define("USER_FILESYSTEM_URL", INSTANCE_URL . "files/");
 define("USER_BUNDLES_PATH", USER_PATH . "bundles/");

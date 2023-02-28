@@ -16,6 +16,9 @@ Push-Location $PSScriptRoot;
 # Update version file.
 Invoke-Expression ".\Update-Version.ps1 $versionName";
 
+# Update instance path.
+Invoke-Expression ".\Update-InstancePath.ps1 instance";
+
 $versionName = $versionName.Substring(1);
 $tag = "neptuo/is4wfw:$versionName";
 $tagDev = "$tag-dev";
