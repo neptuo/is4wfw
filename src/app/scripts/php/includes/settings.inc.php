@@ -18,11 +18,11 @@ if (!ini_get('date.timezone')) {
     date_default_timezone_set('GMT');
 }
 
-// Use INSTANCE PATH constant just once to allow to override during docker build.
-$instancePath = INSTANCE_PATH;
+// Use 'INSTANCE PATH constant with colon' just once to allow to override during docker build.
+$instancePath = INSTANCE_PATH . "instance/";
 
 // Paths and urls.
-define("APP_PATH", $instancePath . "app/");
+define("APP_PATH", INSTANCE_PATH . "app/");
 define("APP_SCRIPTS_PATH", APP_PATH . "scripts/");
 define("APP_SCRIPTS_PHP_PATH", APP_SCRIPTS_PATH . "php/");
 define("APP_SCRIPTS_BUNDLES_PATH", APP_SCRIPTS_PATH . "bundles/");
