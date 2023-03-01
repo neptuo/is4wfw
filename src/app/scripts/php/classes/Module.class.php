@@ -1,6 +1,7 @@
 <?php
 
     require_once("CodeWriter.class.php");
+    require_once("manager/Version.class.php");
 
     class Module {
         private static $all = null;
@@ -14,7 +15,7 @@
 
         private static function ensure() {
             if (Module::$all == null) {
-                $loaderPath = MODULES_PATH . ModuleGenerator::loaderFileName;
+                $loaderPath = CACHE_MODULES_PATH . ModuleGenerator::loaderFileName;
                 if (file_exists($loaderPath)) {
                     include($loaderPath);
                     
@@ -255,7 +256,7 @@
             $code->removeIndent();
             $code->addLine("}", true);
             
-            $code->writeToFile(MODULES_PATH . ModuleGenerator::loaderFileName);
+            $code->writeToFile(CACHE_MODULES_PATH . ModuleGenerator::loaderFileName);
         }
 
         public static function postInit() {
@@ -280,7 +281,7 @@
                 }
             }
 
-            $code->writeToFile(MODULES_PATH . ModuleGenerator::postInitFileName);
+            $code->writeToFile(CACHE_MODULES_PATH . ModuleGenerator::postInitFileName);
         }
     }
 

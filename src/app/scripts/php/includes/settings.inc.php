@@ -29,6 +29,7 @@ define("APP_SCRIPTS_BUNDLES_PATH", APP_SCRIPTS_PATH . "bundles/");
 
 define("CACHE_PATH", INSTANCE_PATH . "cache/");
 define("CACHE_IMAGES_PATH", CACHE_PATH . "images/");
+define("CACHE_MODULES_PATH", CACHE_PATH . "modules/");
 define("CACHE_OUTPUT_PATH", CACHE_PATH . "output/");
 define("CACHE_PAGES_PATH", CACHE_PATH . "pages/");
 define("CACHE_TEMPLATES_PATH", CACHE_PATH . "templates/");

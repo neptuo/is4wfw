@@ -7,7 +7,7 @@ define("WEB_DB_PASSWORD", $_ENV['IS4WFW_DB_PASSWORD']);
 define("WEB_DB_DATABASE", $_ENV['IS4WFW_DB_DATABASE']);
 
 // Instance paths and urls.
-define("DOCUMENT_ROOT", $_SERVER["DOCUMENT_ROOT"]);
+define("DOCUMENT_ROOT", "/var/www/html");
 define("INSTANCE_PATH", DOCUMENT_ROOT . "" . "/");
 define("INSTANCE_URL", "/");
 

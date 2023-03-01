@@ -16,12 +16,12 @@ ENV IS4WFW_INSTANCE_SETTINGS_PATH=/var/www/html/instance.inc.php
 
 COPY ./src/.htaccess /var/www/html/.htaccess
 COPY ./src/app /var/www/html/app
+COPY ./docker/src/bin /var/www/html/bin
 
 COPY ./docker/php.conf /usr/local/etc/php-fpm.d/zz-log.conf
 COPY ./docker/php.ini /usr/local/etc/php/conf.d/php-my.ini
 
 COPY ./docker/src/instance.inc.php /var/www/html/instance.inc.php
-COPY ./docker/src/modules /var/www/html/instance/modules
 
 COPY ./docker/startup.sh /usr/local/bin
 
