@@ -25,7 +25,7 @@ $tagDev = "$tag-dev";
 
 # Build docker image
 Invoke-Expression "docker build .. -f ..\docker\is4wfw\dockerfile -t $tag";
-Invoke-Expression "docker build .. -f ..\docker\is4wfw-dev\dockerfile -t $tagDev";
+Invoke-Expression "docker build .. -f ..\docker\is4wfw-dev\dockerfile -t $tagDev --build-arg baseversion=$versionName";
 
 Write-Host "Docker image built and tagged as '$tag' and '$tagDev'.";
 
