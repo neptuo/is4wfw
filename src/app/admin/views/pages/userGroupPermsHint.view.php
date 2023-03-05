@@ -97,6 +97,7 @@
                 <li>CMS.Settings.PersonalProperties</li>
                 <li>CMS.Settings.PersonalNotes</li>
                 <li>CMS.Settings.AdminMenu</li>
+                <li>CMS.Settings.Enviroment</li>
             </ul>
         </div>
     </web:frame>

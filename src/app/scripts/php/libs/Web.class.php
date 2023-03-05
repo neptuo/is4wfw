@@ -1267,6 +1267,14 @@
                     $diacont .= parent::debugFrame("Parser stats", "Count: $parserCount<br />Total time: $totalMeasure ms<br />Worst: $worstKey ($worstMeasure ms)", 'code');
                     $diacont .= $parsercont;
                 }
+                if (array_key_exists('debug-environment', $_GET)) {
+                    $diacont .= parent::debugFrame('Environment', $this->system()->debugEnvironment(), "pre");
+                    $diacont .= parent::debugFrame('Server', $this->system()->debugServer(), "pre");
+                }
+                if (array_key_exists('debug-request', $_GET)) {
+                    $diacont .= parent::debugFrame('Request', $this->system()->debugRequest(), "pre");
+                    $diacont .= parent::debugFrame('Headers', $this->system()->debugHttpHeaders(), "pre");
+                }
                 if ($this->getDebugMode() && strlen($this->PageLog) != 0) {
                     $diacont .= parent::debugFrame('Page Log', $this->PageLog);
                 }
@@ -1616,6 +1624,12 @@
             }
             if (array_key_exists('query-list', $_GET)) {
                 $url = UrlUtils::addParameter($url, 'query-list', '');
+            }
+            if (array_key_exists('debug-environment', $_GET)) {
+                $url = UrlUtils::addParameter($url, 'debug-environment', '');
+            }
+            if (array_key_exists('debug-request', $_GET)) {
+                $url = UrlUtils::addParameter($url, 'debug-request', '');
             }
             if (array_key_exists('parser-stats', $_GET)) {
                 $url = UrlUtils::addParameter($url, 'parser-stats', '');

@@ -1,8 +1,8 @@
 <?php
 
-    // Similar code exists in docker migrate.php
+    // Similar code exists in standard migrate.php
 
-    require_once("scripts/php/includes/settings.inc.php");
+    require_once(__DIR__ . "/" . "../app/scripts/php/includes/settings.inc.php");
 
     // Migrate DB
 
@@ -31,9 +31,5 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/SystemProperty.class.php");
 
     unlink(CACHE_SYSTEMPROPERTY_PATH . SystemPropertyGenerator::loaderFileName);
-
-    if (array_key_exists("return", $_GET)) {
-        echo '<a href="' . $_GET["return"] . '">Return back</a>';
-    }
 
 ?>

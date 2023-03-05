@@ -119,6 +119,9 @@
         <router:file path="edit-admin-menu.view" name="editAdminMenu">
             <views:editAdminMenu />
         </router:file>
+        <router:file path="environment.view" name="environment">
+            <views:environment />
+        </router:file>
         
         <!-- Languages -->
         <router:file path="languages.view" name="languages">

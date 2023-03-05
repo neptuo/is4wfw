@@ -1037,7 +1037,23 @@
 				return false;
 			}
 		}
-		
+
+		public function debugEnvironment() {
+			return print_r($_ENV, true);
+		}
+
+		public function debugServer() {
+			return print_r($_SERVER, true);
+		}
+
+		public function debugRequest() {
+			return print_r($_REQUEST, true);
+		}
+
+		public function debugHttpHeaders() {
+			return print_r($this->requestHeaders(), true);
+		}
+
 		/* -------------- HELPERS ---------------------- */
 		
 		/**

@@ -12,6 +12,7 @@ RUN sh -c 'apt-get update \
 EXPOSE 80
 
 ENV IS4WFW_IN_DOCKER=true
+ENV IS4WFW_INSTANCE_SETTINGS_PATH=/var/www/html/instance.inc.php
 
 COPY ./src/.htaccess /var/www/html/.htaccess
 COPY ./src/app /var/www/html/app
@@ -30,3 +31,9 @@ RUN mkdir -p /var/www/html/user/public
 
 COPY ./docker/php.conf /usr/local/etc/php-fpm.d/zz-log.conf
 COPY ./docker/php.ini /usr/local/etc/php/conf.d/php-my.ini
+
+COPY ./docker/src/instance.inc.php /var/www/html/instance.inc.php
+
+COPY ./docker/startup.sh /usr/local/bin
+
+CMD ["startup.sh"]
