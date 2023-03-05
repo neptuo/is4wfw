@@ -366,7 +366,7 @@
 
         private function ensureProtocol() {
             if (empty($this->Protocol)) {
-                if ($_SERVER['HTTPS'] == "on") {
+                if ($_SERVER['HTTPS'] == "on" || $_SERVER["HTTP_X_FORWARDED_PROTO"] == "https") {
                     $this->Protocol = 'https';
                 } else {
                     $this->Protocol = 'http';
