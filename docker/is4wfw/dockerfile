@@ -16,18 +16,7 @@ ENV IS4WFW_INSTANCE_SETTINGS_PATH=/var/www/html/instance.inc.php
 
 COPY ./src/.htaccess /var/www/html/.htaccess
 COPY ./src/app /var/www/html/app
-COPY ./src/docker/modules /var/www/html/modules
-COPY ./src/docker/user /var/www/html/user
-RUN mkdir -p /var/www/html/cache
-RUN mkdir -p /var/www/html/cache/images
-RUN mkdir -p /var/www/html/cache/pages
-RUN mkdir -p /var/www/html/cache/systemproperty
-RUN mkdir -p /var/www/html/cache/templates
-RUN mkdir -p /var/www/html/logs
-RUN mkdir -p /var/www/html/modules
-RUN mkdir -p /var/www/html/user/bundles
-RUN mkdir -p /var/www/html/user/filesystem
-RUN mkdir -p /var/www/html/user/public
+COPY ./docker/src/bin /var/www/html/bin
 
 COPY ./docker/php.conf /usr/local/etc/php-fpm.d/zz-log.conf
 COPY ./docker/php.ini /usr/local/etc/php/conf.d/php-my.ini
