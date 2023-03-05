@@ -13,11 +13,9 @@ if ($null -eq $versionName)
 
 Push-Location $PSScriptRoot;
 
-# Update version file.
 Invoke-Expression ".\Update-Version.ps1 $versionName";
-
-# Update instance path.
 Invoke-Expression ".\Update-InstancePath.ps1 instance";
+Invoke-Expression ".\DockerizeHtaccess.ps1";
 
 $versionName = $versionName.Substring(1);
 $tag = "neptuo/is4wfw:$versionName";
