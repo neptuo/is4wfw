@@ -17,5 +17,5 @@ mkdir -p \
 chmod 777 -R /var/www/html/cache
 chmod 777 -R /var/www/html/instance
 
-php /var/www/html/bin/modules-generator.php
+php /var/www/html/bin/migrate.php
 apache2-foreground
