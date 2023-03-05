@@ -156,6 +156,26 @@
       Zobrazí odkaz pro založení hlášení o chybě.
     </comment>
   </tag>
+  <tag>
+    <name>debugEnvironment</name>
+    <function>debugEnvironment</function>
+    <comment>Debug výpis ENV.</comment>
+  </tag>
+  <tag>
+    <name>debugServer</name>
+    <function>debugServer</function>
+    <comment>Debug výpis SERVER.</comment>
+  </tag>
+  <tag>
+    <name>debugHttpHeaders</name>
+    <function>debugHttpHeaders</function>
+    <comment>Debug výpis HTTP hlaviček requestu.</comment>
+  </tag>
+  <tag>
+    <name>debugRequest</name>
+    <function>debugRequest</function>
+    <comment>Debug výpis REQUEST.</comment>
+  </tag>
   <fulltag>
     <name>clearTemplateCache</name>
     <function>clearTemplateCache</function>

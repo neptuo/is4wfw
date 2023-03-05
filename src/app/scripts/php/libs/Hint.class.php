@@ -522,6 +522,8 @@
                     .'<li><strong>parser-stats</strong> - details about parsing custom tags.</li>'
                     .'<li><strong>query-stats</strong> - counts database queries per one request.</li>'
                     .'<li><strong>query-list</strong> - prints all SQL queries.</li>'
+                    .'<li><strong>debug-environment</strong> - prints all ENV+SERVER variables.</li>'
+                    .'<li><strong>debug-request</strong> - prints all REQUEST variables + HTTP headers.</li>'
                 .'</ul>'
             .'</div>';
             

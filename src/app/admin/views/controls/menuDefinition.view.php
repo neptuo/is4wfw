@@ -55,6 +55,7 @@
     <list:add key-text="Available updates" key-url="route:update" key-icon="~/images/icons/brick.png" key-perm="CMS.Settings.Update" key-parentId="settings" key-id="updates" key-order="707" />
     <list:add key-text="Modules" key-url="route:modules" key-icon="~/images/icons/plugin.png" key-perm="CMS.Settings.Modules" key-parentId="settings" key-id="modules" key-order="708" />
     <list:add key-text="Admin menu" key-url="route:editAdminMenu" key-icon="~/images/icons/building.png" key-perm="CMS.Settings.AdminMenu" key-parentId="settings" key-id="adminmenu" key-order="709" />
+    <list:add key-text="Environment" key-url="route:environment" key-icon="seedling" key-iconPrefix="fas" key-perm="CMS.Settings.Environment" key-parentId="settings" key-id="enviroment" key-order="710" />
 </list:declare>
 
 <list:declare name="favoritesEditor" />

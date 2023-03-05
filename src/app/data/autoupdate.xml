@@ -99,4 +99,5 @@
     <script build="374">ALTER TABLE `system_property` CHANGE `id` `id` INT NOT NULL;</script>
     <script build="375">ALTER TABLE `system_property` DROP PRIMARY KEY, ADD PRIMARY KEY (`key`) USING BTREE;</script>
     <script build="376">ALTER TABLE `system_property` DROP `id`;</script>
+    <script build="377">INSERT INTO `group_perms` (`group_id`, `name`, `value`, `type`) VALUES (1, 'CMS.Settings.Environment', 'true', 'bool');</script>
 </autoupdate>
