@@ -231,7 +231,11 @@
             return preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $part);
         }
 
-        private function parseContentForCustomTags(array $keys, string $content) {
+        private function parseContentForCustomTags(array $keys, ?string $content) {
+            if ($content == null) {
+                return;
+            }
+
             $this->executeTemplateContent($keys, $content);
         }
 
