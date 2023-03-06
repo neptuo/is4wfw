@@ -12,6 +12,14 @@ foreach($line in [System.IO.File]::ReadAllLines($path))
     {
         $line = "# " + $line;
     }
+    elseif ($line.Contains(" user/")) 
+    {
+        $line = $line.Replace(" user/", " instance/user/")
+    }
+    elseif ($line.Contains(" modules/")) 
+    {
+        $line = $line.Replace(" modules/", " instance/modules/")
+    }
 
     $lines.Add($line);
 }
