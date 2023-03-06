@@ -180,12 +180,18 @@
         }
 
         private function parsePageUrlWithLang($pageUrls, $projectId, $parentId, $langId) {
-            //echo 'UrlsCount: '.count($pageUrls).'<br />';
-            $pages = parent::db()->fetchAll('select `id`, `href`, `tag_lib_start`, `tag_lib_end` from `info` left join `page` on `info`.`page_id` = `page`.`id` left join `content` on `info`.`page_id` = `content`.`page_id` and `info`.`language_id` = `content`.`language_id` where `parent_id` = ' . $parentId . ' and `info`.`language_id` = ' . $langId . ' and `wp` = ' . $projectId . ';');
+            $pages = parent::db()->fetchAll('select `page`.`id`, `info`.`href`, `content`.`tag_lib_start`, `content`.`tag_lib_end`, `content_nolang`.`tag_lib_start` as `tag_lib_start_nolang`, `content_nolang`.`tag_lib_end` as `tag_lib_end_nolang` from `info` left join `page` on `info`.`page_id` = `page`.`id` left join `content` on `info`.`page_id` = `content`.`page_id` and `info`.`language_id` = `content`.`language_id` left join `content` as `content_nolang` on `info`.`page_id` = `content_nolang`.`page_id` and `content_nolang`.`language_id` = (select `id` from `language` where `language` = "") where `parent_id` = ' . $parentId . ' and `info`.`language_id` = ' . $langId . ' and `wp` = ' . $projectId . ';');
             if (count($pageUrls) == 0 && count($pages) == 0) {
                 return true;
             }
             foreach ($pages as $page) {
+                if ($page['tag_lib_start'] === null) {
+                    $page['tag_lib_start'] = $page['tag_lib_start_nolang'];
+                }
+                if ($page['tag_lib_end'] === null) {
+                    $page['tag_lib_end'] = $page['tag_lib_end_nolang'];
+                }
+
                 $this->parseContentForCustomTags(TemplateCacheKeys::page($page["id"], $langId, "tag_lib_start"), $page['tag_lib_start']);
 
                 $found = true;
@@ -207,15 +213,11 @@
                 }
                 
                 if ($found) {
-                    //echo 'Page: '.$page['id'].'<br />';
                     $this->PagesId[] = $page['id'];
-                    //print_r($this->PagesId);
-                    // rekurze
                     if ($this->parsePageUrlWithLang($this->subarray($pageUrls, $key + 1), $projectId, $page['id'], $langId)) {
                         $this->parseContentForCustomTags(TemplateCacheKeys::page($page["id"], $langId, "tag_lib_end"), $page['tag_lib_end']);
                         return true;
                     } else {
-                        //echo 'PagesCount: '.count($this->PagesId).'<br />';
                         $this->PagesId = $this->subarray($this->PagesId, 0, count($this->PagesId) - 1);
                     }
                 }
@@ -231,7 +233,7 @@
             return preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $part);
         }
 
-        private function parseContentForCustomTags(array $keys, ?string $content) {
+        private function parseContentForCustomTags(array $keys, string $content) {
             if ($content == null) {
                 return;
             }
