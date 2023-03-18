@@ -6,7 +6,7 @@ RUN sh -c 'apt-get update \
     && docker-php-ext-install zip \
     && a2enmod rewrite \
     && docker-php-ext-install mysqli \
-    && docker-php-ext-configure gd \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --enable-gd \
     && docker-php-ext-install gd'
 
 RUN curl -fsSL 'https://xdebug.org/files/xdebug-2.9.7.tgz' -o xdebug.tar.gz \
