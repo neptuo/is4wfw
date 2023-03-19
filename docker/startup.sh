@@ -17,5 +17,15 @@ mkdir -p \
 chmod 777 -R /var/www/html/cache
 chmod 777 -R /var/www/html/instance
 
+if [ -z "$TZ" ]
+then
+    echo "No timezone defined, use TZ environment variable to change timezone";
+else
+    echo "Using timezone $TZ"
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
+    echo $TZ > /etc/timezone
+    echo "\ndate.timezone = $TZ\n" >> /usr/local/etc/php/conf.d/php-my.ini
+fi
+
 php /var/www/html/bin/migrate.php
 apache2-foreground
