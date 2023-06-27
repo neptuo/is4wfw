@@ -2119,7 +2119,7 @@
                     . '</div>'
                     . '<div class="text-file-submit">'
                     . (($fileId != -1) ? '<input type="hidden" name="file-id" value="' . $fileId . '" />' : '')
-                    . '<input type="submit" name="save" value="' . $rb->get('tf.save') . '" title="' . $rb->get('tf.savetitle') . '" /> '
+                    . '<input type="submit" name="save" value="' . $rb->get('tf.save') . '" title="' . $rb->get('tf.savetitle') . '" data-keybinding="ctrl+s" /> '
                     . '<input type="submit" name="save" value="' . $rb->get('tf.saveandclose') . '" title="' . $rb->get('tf.saveandclosetitle') . '" /> '
                     . '<input type="submit" name="close" value="' . $rb->get('tf.close') . '" title="' . $rb->get('tf.closetitle') . '" /> '
                     . '</div>'
