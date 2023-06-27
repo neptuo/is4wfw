@@ -408,25 +408,33 @@
         private function loadPageData() {
             $wp = $this->UrlResolver->getWebProject();
             if (empty($wp["entrypoint"]) && !$wp["pageless"]) {
-                $selectSql = ""
-                    . "SELECT p.`id`, i.`name`, i.`href`, i.`in_title`, i.`keywords`, i.`title`, i.`timestamp`, i.`cachetime`, "
-                    . "IFNULL(c.`tag_lib_start`, cd.`tag_lib_start`) AS `tag_lib_start`, IFNULL(c.`tag_lib_end`, cd.`tag_lib_end`) AS `tag_lib_end`, IFNULL(c.`head`, cd.`head`) AS `head`, IFNULL(c.`content`, cd.`content`) AS `content` "
-                    . "FROM `page` p "
-                        . "LEFT JOIN `info` i ON p.`id` = i.`page_id` "
-                        . "LEFT JOIN `content` c ON p.`id` = c.`page_id` AND c.`language_id` = " . $this->UrlResolver->getLanguageId() . " " 
-                        . "LEFT JOIN `content` cd ON p.`id` = cd.`page_id` AND cd.`language_id` = (SELECT `id` FROM `language` WHERE `language` = '') " 
-                    . "WHERE i.`is_visible` = 1 "
-                        . "AND i.`language_id` = " . $this->UrlResolver->getLanguageId() . " "
-                        . "AND p.`id` IN (" . $this->pagesIdAsString() . ") "
-                        . "AND p.`wp` = " . $this->UrlResolver->getWebProjectId() . ";";
-                
-                $this->TempLoadedContent = $this->sortPages(parent::db()->fetchAll($selectSql), $this->UrlResolver->getPagesId());
+                if (!empty($this->pagesIdAsString())) {
+                    $selectSql = ""
+                        . "SELECT p.`id`, i.`name`, i.`href`, i.`in_title`, i.`keywords`, i.`title`, i.`timestamp`, i.`cachetime`, "
+                        . "IFNULL(c.`tag_lib_start`, cd.`tag_lib_start`) AS `tag_lib_start`, IFNULL(c.`tag_lib_end`, cd.`tag_lib_end`) AS `tag_lib_end`, IFNULL(c.`head`, cd.`head`) AS `head`, IFNULL(c.`content`, cd.`content`) AS `content` "
+                        . "FROM `page` p "
+                            . "LEFT JOIN `info` i ON p.`id` = i.`page_id` "
+                            . "LEFT JOIN `content` c ON p.`id` = c.`page_id` AND c.`language_id` = " . $this->UrlResolver->getLanguageId() . " " 
+                            . "LEFT JOIN `content` cd ON p.`id` = cd.`page_id` AND cd.`language_id` = (SELECT `id` FROM `language` WHERE `language` = '') " 
+                        . "WHERE i.`is_visible` = 1 "
+                            . "AND i.`language_id` = " . $this->UrlResolver->getLanguageId() . " "
+                            . "AND p.`id` IN (" . $this->pagesIdAsString() . ") "
+                            . "AND p.`wp` = " . $this->UrlResolver->getWebProjectId() . ";";
+                    
+                    $this->TempLoadedContent = $this->sortPages(parent::db()->fetchAll($selectSql), $this->UrlResolver->getPagesId());
+                } else {
+                    $this->TempLoadedContent = [];
+                }
             } else if (!empty($wp["entrypoint"])) {
                 $this->SelectedEntrypoint = $wp["entrypoint"];
             }
         }
 
         private function parsePagesId($item) {
+            if (empty($item)) {
+                return [];
+            }
+
             return StringUtils::explode($item, '-');
         }
 
@@ -1187,7 +1195,7 @@
          *
          */
         public function flush() {
-            if (empty($this->SelectedEntrypoint) && !$this->UrlResolver->getWebProject()["pageless"]) {
+            if (empty($this->SelectedEntrypoint) && !$this->UrlResolver->getWebProject()["pageless"] && count($this->PagesId) > 0) {
                 $_SESSION['last-request']['pages-id'] = $this->PagesId;
 
                 if (!RoleHelper::canUser(Web::$PageRightDesc, $this->PagesId, WEB_R_READ)) {
