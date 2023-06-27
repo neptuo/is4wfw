@@ -671,7 +671,7 @@
                     . '<div class="clear"></div>'
                     . '<div class="gray-box">'
                         . '<input type="hidden" name="project-id" value="' . $project['id'] . '" />'
-                        . '<input type="submit" name="save-project" value="' . $rb->get('project.save') . '" /> '
+                        . '<input type="submit" name="save-project" value="' . $rb->get('project.save') . '" data-keybinding="ctrl+s" /> '
                         . '<input type="submit" name="save-project" value="' . $rb->get('project.saveandclose') . '" /> '
                         . '<input type="submit" name="save-project" value="' . $rb->get('project.close') . '" /> '
                     . '</div>'
