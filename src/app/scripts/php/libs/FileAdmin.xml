@@ -54,7 +54,9 @@
       <prefix />
       <comment>
         Filtrování pomocí prefixových atributů.
-        Jediný nyní podporovaný filtr je "type". Může být seznam čárkou oddělených typů nebo pole ("jpg", "zip" nebo "dir" pro zahrnutí složek).
+        - "type": Seznam čárkou oddělených typů nebo pole ("jpg", "zip" nebo "dir" pro zahrnutí složek). Prázdná hodnota se ignoruje.
+        - "fileId": Seznam čárkou oddělených typů nebo pole id souborů. Prázdná hodnota se ignoruje.
+        - "dirId": Seznam čárkou oddělených typů nebo pole id složek. Prázdná hodnota se ignoruje.
         Není podporovaný filter model.
       </comment>
     </attribute>

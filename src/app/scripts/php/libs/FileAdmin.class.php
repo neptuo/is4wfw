@@ -419,13 +419,25 @@
 			}
 		}
 
-		public function fileBrowserWithTemplate($template, $dirId, $grouped = true, $parentName = "", $filter = null, $orderBy = "name", $paging = null) {
-			$types = null;
-			if (is_array($filter) && array_key_exists("type", $filter)) {
-				$types = $filter["type"];
-				if (is_string($types)) {
-					$types = explode(",", $types);
+		private static function parseFilerBrowserFilter($filter, $key, $defaultValue = null) {
+			$values = $defaultValue;
+			if (is_array($filter) && array_key_exists($key, $filter)) {
+				$values = $filter[$key];
+				if (is_string($values)) {
+					$values = explode(",", $values);
 				}
+			}
+
+			return $values;
+		}
+
+		public function fileBrowserWithTemplate($template, $dirId, $grouped = true, $parentName = "", $filter = null, $orderBy = "name", $paging = null) {
+			$types = $this->parseFilerBrowserFilter($filter, "type");
+			$filterFileIds = $this->parseFilerBrowserFilter($filter, "fileId", []);
+			$filterDirIds = $this->parseFilerBrowserFilter($filter, "dirId", []);
+
+			if (is_array($orderBy) && empty($orderBy)) {
+				$orderBy["name"] = "asc";
 			}
 
 			$areDirsIncluded = $types == null || in_array("dir", $types);
@@ -449,11 +461,13 @@
 				$dirs = parent::dao('Directory')->getFromDirectory($dirId, $orderBy);
 			}
 			
-			$files = parent::dao('File')->getFromDirectory($dirId, $orderBy, $types, $pageIndex, $pageSize);
+			if (count($types) != 1 || $types[0] != "dir") {
+				$files = parent::dao('File')->getFromDirectory($dirId, $orderBy, $types, $pageIndex, $pageSize);
+			}
 
 			$resultDirs = array();
 			foreach ($dirs as $key => $dir) {
-				if ($this->canReadDirectory($dir)) {
+				if ($this->canReadDirectory($dir) && (empty($filterDirIds) || in_array($dir["id"], $filterDirIds))) {
 					$item = array(
 						"id" => $dir["id"],
 						"name" => $dir["name"],
@@ -468,7 +482,7 @@
 
 			$resultFiles = array();
 			foreach ($files as $key => $file) {
-				if ($this->canReadFile($file)) {
+				if ($this->canReadFile($file) && (empty($filterFileIds) || in_array($file["id"], $filterFileIds))) {
 					$item = array(
 						"id" => $file["id"],
 						"name" => $file["name"],
