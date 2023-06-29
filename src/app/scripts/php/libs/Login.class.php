@@ -374,12 +374,14 @@
                     $this->logout(function() { }, $group);
                     return false;
                 } else {
-                    $this->Logtime = time();
-                    $sql = parent::sql()->update("user_log", array("timestamp" => $this->Logtime), array("session_id" => $this->SessionId));
-                    parent::db()->execute($sql);
+                    if (($this->Logtime + (60 * $sessionTimeout / 4)) < time()) {
+                        $this->Logtime = time();
+                        $sql = parent::sql()->update("user_log", array("timestamp" => $this->Logtime), array("session_id" => $this->SessionId));
+                        parent::db()->execute($sql);
 
-                    if (!empty($this->cookieName)) {
-                        $this->setAuthCookie($this->Token, 60 * $sessionTimeout);
+                        if (!empty($this->cookieName)) {
+                            $this->setAuthCookie($this->Token, 60 * $sessionTimeout);
+                        }
                     }
 
                     return true;
