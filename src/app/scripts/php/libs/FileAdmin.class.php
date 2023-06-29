@@ -567,7 +567,7 @@
 			return $this->peekListModel()->field("timestamp");
 		}
 		
-		public function processFileUploadBasic($dataItem, $fileTmpName) {
+		public function processFileUploadBasic(&$dataItem, $fileTmpName) {
 			$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_READ, FileAdmin::$DirectoryRightDesc, 0);
 			$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_WRITE, FileAdmin::$DirectoryRightDesc, 0);
 			$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $dataItem['dir_id'], WEB_R_DELETE, FileAdmin::$DirectoryRightDesc, 0);
@@ -575,7 +575,7 @@
 			return $this->processFileUpload($dataItem, $fileTmpName, $read, $write, $delete);
 		}
 		
-		public function processFileUpload($dataItem, $fileTmpName, $readRights, $writeRights, $deleteRights) {
+		public function processFileUpload(&$dataItem, $fileTmpName, $readRights, $writeRights, $deleteRights) {
 			$new = $dataItem['id'] == '';
 			
 			if ($dataItem['url'] == '') {
@@ -798,19 +798,31 @@
 					}
 				});
 			} else if ($model->isSave()) {
-				$this->forEachModelFile($model, function($file) use ($dirId, $fileId) {
+				$fileIds = [];
+				$this->forEachModelFile($model, function($file) use ($dirId, $fileId, &$fileIds) {
 					$dataItem = $this->mapFileUploadModelToDataItem($file, $dirId, $fileId);
 					$result = $this->processFileUploadBasic($dataItem, $file->TempName);
 					if ($result != null) {
 						throw new Error($result);
 					}
+					$fileIds[] = $dataItem["id"];
 				});
+				$model->metadata("uploadFormTagFileIds", $fileIds);
 			} else if ($model->isRender()) {
 				$result = $template();
 				return $result;
 			} else {
 				$template();
 			}
+		}
+
+		public function getUploadFormTagFileIds() {
+			$model = parent::getEditModel(false);
+			if ($model->hasMetadataKey("uploadFormTagFileIds")) {
+				return implode(",", $model->metadata("uploadFormTagFileIds"));
+			}
+
+			return null;
 		}
 
 		private function forEachModelFile($model, $handler) {

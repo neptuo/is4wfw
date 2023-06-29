@@ -303,6 +303,13 @@
       Pokud je zadán "dirId", nahrává nový soubor(y) do složky a dává smysl odeslat více souborů.
     </comment>
   </fulltag>
+  <property>
+    <name>uploadFileId</name>
+    <getFunction>getUploadFormTagFileIds</getFunction>
+    <comment>
+      Vrací seznam id souborů uvnitř "fa:upload" párového tagu.
+    </comment>
+  </property>
   <tag>
     <name>directoryEditor</name>
     <function>directoryEditor</function>
