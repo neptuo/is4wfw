@@ -328,6 +328,25 @@
     </comment>
   </tag>
   <fulltag>
+    <name>directoryEditor</name>
+    <function>directoryEditorFullTag</function>
+    <attribute>
+      <name>id</name>
+      <type>number</type>
+	    <default>0</default>
+      <comment>Id složky, která se má editor.</comment>
+    </attribute>
+    <attribute>
+      <name>parentId</name>
+	    <type>number</type>
+      <default>0</default>
+      <comment>Id nadřazené složky, do které se má vytvořit nová.</comment>
+    </attribute>
+    <comment>
+      Formulář pro editaci složky. Je potřeba vyplnit 'id' nebo 'parentId'.
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>directoryDeleter</name>
     <function>directoryDeleter</function>
     <lookless />

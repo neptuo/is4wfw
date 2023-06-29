@@ -1000,8 +1000,72 @@
 				if($useFrames) {
 					return parent::getFrame(parent::rb('title.directory'), $return.parent::view('fileadmin-directory', $dataItem), true);
 				} else {
-					return $return.parent::view('fileadmin-fileupload', $dataItem);
+					return $return.parent::view('fileadmin-directory', $dataItem);
 				}	
+			}
+		}
+
+		public function directoryEditorFullTag($template, $id = 0, $parentId = 0) {
+			$model = parent::getEditModel();
+
+			if (!$model->hasMetadataKey("isUpdate")) {
+				$isUpdate = !empty($id);
+				$model->metadata("isUpdate", $isUpdate);
+			} else {
+				$isUpdate = $model->metadata("isUpdate");
+			}
+
+			if ($model->isLoad()) {
+				if ($model->metadata("isUpdate")) {
+					$data = parent::dao('Directory')->get($id);
+					if (empty($data)) {
+						$model->metadata("isError", true);
+					}
+
+					$model->copyFrom($data);
+				} else {
+					$model["parent_id"] = $parentId;
+				}
+			}
+
+			if ($model->isSubmit()) {
+				$template();
+
+				Validator::required($model, "name");
+            }
+				
+			if ($model->isSave()) {
+				$parentId = $model["parent_id"];
+				$permissionObjectId = $isUpdate ? $id : $parentId;
+				$read = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $permissionObjectId, WEB_R_READ);
+				$write = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $permissionObjectId, WEB_R_WRITE);
+				$delete = RoleHelper::getPermissionsOrDefalt(FileAdmin::$DirectoryRightDesc, $permissionObjectId, WEB_R_DELETE);
+				
+				$dataItem = [];
+				$model->copyTo($dataItem);
+				$result = $this->processDirectoryEdit($dataItem, $read, $write, $delete);
+				if ($result != null) {
+					$model->validationMessage(null, $result);
+				}
+
+				if ($isUpdate) {
+					$model["id"] = parent::dataAccess()->getLastId();
+				} else {
+					$model["id"] = $id;
+				}
+			}
+			
+            if ($model->isSaved()) {
+                $template();
+            }
+			
+            if ($model->isRender()) {
+				if ($model->hasMetadataKey("isError") && $model->metadata("isError")) {
+					return "<h4 class='warning'>Such directory doesn't exist.</h4>";
+				}
+
+				$result = $template();
+				return $result;
 			}
 		}
 

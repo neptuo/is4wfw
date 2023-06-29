@@ -283,6 +283,12 @@
             }
         }
 
+        public function copyTo(&$dataItem) {
+            foreach ($this as $key => $value) {
+                $dataItem[$key] = $value;
+            }
+        }
+
         public function fields($ignoredKeys = null) {
             $keys = array();
             foreach ($this as $key => $value) {
