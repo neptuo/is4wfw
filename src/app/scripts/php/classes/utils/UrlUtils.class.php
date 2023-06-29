@@ -3,6 +3,10 @@
     class UrlUtils {
 
         public static function addParameter($url, $name, $value = '') {
+            if (is_array($value)) {
+                $value = implode(",", $value);
+            }
+
             $pair = ($value != '') ? $name . '=' . $value : $name;
         
             $queryIndex = strpos($url, '?');
