@@ -773,10 +773,14 @@
             $code->addIndent();
 
             if (array_key_exists("preferPropertyReference", $value) && $value["preferPropertyReference"]) {
+                $propertyName = $property["any"]
+                    ? "'{$property["name"]}'"
+                    : "null";
+
                 $code->addLine("return {$code->varThis()}->getPropertyReference('$tagPrefix', '$tagName', function() { ");
                 $code->addIndent();
                 $code->addLine("$targetObject = {$code->varThis()}->autolib('$tagPrefix');");
-                $code->addLine("return new PropertyReference($targetObject, '$functionName', '{$property["set"]}', '{$property["name"]}');");
+                $code->addLine("return new PropertyReference($targetObject, '$functionName', '{$property["set"]}', {$propertyName});");
                 $code->removeIndent();
                 $code->addLine("});");
             } else {
