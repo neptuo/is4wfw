@@ -102,6 +102,16 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
 
     FileUtils::clearDirectory(CACHE_SYSTEMPROPERTY_PATH);
 
+    ensureDirectory(CACHE_PATH);
+    ensureDirectory(CACHE_IMAGES_PATH);
+    ensureDirectory(CACHE_PAGES_PATH);
+    ensureDirectory(CACHE_TEMPLATES_PATH);
+    ensureDirectory(CACHE_SYSTEMPROPERTY_PATH);
+    ensureDirectory(LOGS_PATH);
+    ensureDirectory(MODULES_PATH);
+    ensureDirectory(USER_FILESYSTEM_PATH);
+    ensureDirectory(USER_PUBLIC_PATH);
+
     $importFile = fopen($importFilePath, 'r') or die('Cannot open file:  ' . $importFilePath);
 
     $db = new Database(false);
@@ -109,6 +119,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     $db->getDataAccess()->connect(WEB_DB_HOSTNAME, WEB_DB_USER, WEB_DB_PASSWORD, WEB_DB_DATABASE, false, false);
     $db->getDataAccess()->setCharset('utf8');
     
+    $hasDbChange = false;
     if (count($db->fetchAll("SHOW TABLES LIKE 'system_property';")) == 0) {
         $db->getDataAccess()->transaction();
 
@@ -142,34 +153,30 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
         $dbObject = $db;
         require_once(APP_SCRIPTS_PHP_PATH . "includes/version.inc.php");
         require_once(APP_SCRIPTS_PHP_PATH . "includes/autoupdate.inc.php");
-
-        $db->getDataAccess()->commit();
-        $db->close();
+        
+        $hasDbChange = true;
     }
-
-    ensureDirectory(CACHE_PATH);
-    ensureDirectory(CACHE_IMAGES_PATH);
-    ensureDirectory(CACHE_PAGES_PATH);
-    ensureDirectory(CACHE_TEMPLATES_PATH);
-    ensureDirectory(CACHE_SYSTEMPROPERTY_PATH);
-    ensureDirectory(LOGS_PATH);
-    ensureDirectory(MODULES_PATH);
-    ensureDirectory(USER_FILESYSTEM_PATH);
-    ensureDirectory(USER_PUBLIC_PATH);
-
+    
     $readmePath = USER_PATH . 'readme.txt';
     if (!file_exists($readmePath)) {
         file_put_contents($readmePath, '');
     }
-
+    
     if (array_key_exists('instance-name', $_POST) && !empty($_POST['instance-name'])) {
         require_once(APP_SCRIPTS_PHP_PATH . "classes/dataaccess/ApplicationVariableDao.class.php");
-
+        
         $var = new ApplicationVariableDao();
         $var->setDataAccess($db->getDataAccess());
         $var->setValue("is4wfw.instance.name", $_POST['instance-name']);
+        $hasDbChange = true;
+    }
+
+    if ($hasDbChange) {
+        $db->getDataAccess()->commit();
     }
     
+    $db->close();
+
     if (file_exists($targetFilePath)) {
         header("Location: /login.view"); 
         exit;
