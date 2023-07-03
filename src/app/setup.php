@@ -177,6 +177,8 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
     
     $db->close();
 
+    require_once(APP_PATH . "migrate.php");
+
     if (file_exists($targetFilePath)) {
         header("Location: /login.view"); 
         exit;

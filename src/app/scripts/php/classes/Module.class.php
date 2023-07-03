@@ -256,6 +256,7 @@
             $code->removeIndent();
             $code->addLine("}", true);
             
+            FileUtils::ensureDirectory(CACHE_MODULES_PATH);
             $code->writeToFile(CACHE_MODULES_PATH . ModuleGenerator::loaderFileName);
         }
 
@@ -281,6 +282,7 @@
                 }
             }
 
+            FileUtils::ensureDirectory(CACHE_MODULES_PATH);
             $code->writeToFile(CACHE_MODULES_PATH . ModuleGenerator::postInitFileName);
         }
     }
