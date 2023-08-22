@@ -16,6 +16,8 @@
      */
     class Login extends BaseTagLib {
 
+        // All fields are initialized in resetState()
+
         /**
          *
          *  User login.
@@ -27,70 +29,72 @@
          * 	User id.
          *
          */
-        private $UserId = 0;
+        private $UserId;
         /**
          *
          *  User name.
          *
          */
-        private $UserName = "";
+        private $UserName;
         /**
          *
          *  User surname.
          *
          */
-        private $UserSurname = "";
+        private $UserSurname;
         /**
          *
          *  User group name.
          *
          */
-        private $UserGroup = "";
+        private $UserGroup;
         /**
          *
          *  Groups where user is in.
          *
          */
-        private $Groups = array(array('gid' => 3, 'name' => "web"));
+        private $Groups;
         /**
          *
          * 	Used user group for log in.
          *
          */
-        private $UsedGroup = array();
+        private $UsedGroup;
         /**
          *
          *  Min value from user groups.
          *
          */
-        private $GroupValue = 254;
+        private $GroupValue;
         /**
          *
          *  Session id.
          *
          */
-        private $SessionId = 0;
+        private $SessionId;
         /**
          *
          *  User login time.
          *
          */
-        private $Logtime = "";
+        private $Logtime;
         /**
          *
          *  Id in user_log table.     
          *
          */
-        private $LogId = 0;
+        private $LogId;
         /**
          *
          *  Flag is logged.     
          *
          */
-        private $IsLogged = false;
-        private $IsImpersonated = false;
+        private $IsLogged;
+        private $IsImpersonated;
 
-        private $Token = "";
+        private $Token;
+
+        // end of resetState() fields
 
         private $cookieName;
 
@@ -98,6 +102,27 @@
 
         public static function setDefaultCookieParameters($params) {
             self::$cookieParams = array_merge(self::$cookieParams, $params);
+        }
+
+        public function __construct() {
+            $this->resetState();
+        }
+
+        private function resetState() {
+            $this->UserLogin = "";
+            $this->UserId = 0;
+            $this->UserName = "";
+            $this->UserSurname = "";
+            $this->UserGroup = "";
+            $this->Groups = array(array('gid' => 3, 'name' => "web"));
+            $this->UsedGroup = array();
+            $this->GroupValue = 254;
+            $this->SessionId = 0;
+            $this->Logtime = "";
+            $this->LogId = 0;
+            $this->IsLogged = false;
+            $this->IsImpersonated = false;
+            $this->Token = "";
         }
 
         /**
@@ -256,7 +281,7 @@
                         $this->setAuthCookie($token, 60 * $sessionTimeout);
                     }
 
-                    $this->LoggedIn = true;
+                    $this->IsLogged = true;
 
                     return true;
                 } else {
@@ -329,7 +354,7 @@
         public function logout($template, $group) {
             $sql = parent::sql()->update("user_log", array("logout_timestamp" => time()), array("session_id" => $this->SessionId));
             parent::db()->execute($sql);
-            $this->LoggedIn = false;
+            $this->resetState();
 
             $sessionId = $group . '_session_id';
             $_SESSION[$sessionId] = '';
