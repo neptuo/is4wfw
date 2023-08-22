@@ -100,6 +100,10 @@
 			return $currentVersion["major"] == $moduleVersion["major"] && $currentVersion["patch"] >= $moduleVersion["patch"];
 		}
 
+        public static function rootPath($alias) {
+            return MODULES_PATH . $alias . "/";
+        }
+
         // --- Instance members -----------------------------------------------
 
         public $id;
@@ -120,7 +124,7 @@
         }
 
         public function getRootPath() {
-            return MODULES_PATH . $this->alias . "/";
+            return Module::rootPath($this->alias);
         }
 
         public function getLibsPath() {
@@ -265,8 +269,9 @@
             $code->addLine("// Generated content", true);
             $code->addLine("");
 
-            foreach (Module::all() as $module) {
-                $path = $module->getRootPath() . ModuleGenerator::postInitFileName;
+            $xml = ModuleXml::read();
+            foreach ($xml->module as $module) {
+                $path = Module::rootPath((string)$module->alias) . ModuleGenerator::postInitFileName;
                 if (file_exists($path)) {
                     $log = $code->var("logObject");
 
