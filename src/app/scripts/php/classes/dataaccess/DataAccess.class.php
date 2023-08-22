@@ -308,8 +308,6 @@ class DataAccess {
   
 	
 	private function tryToProcessError($query) {
-    	global $logObject;
-		
 		$this->errorCode = mysqli_errno($this->connection);
 		if ($this->errorCode != 0) {
 			$this->errorMessage = mysqli_error($this->connection);
