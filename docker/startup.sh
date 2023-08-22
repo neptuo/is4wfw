@@ -27,5 +27,8 @@ else
     echo "\ndate.timezone = $TZ\n" >> /usr/local/etc/php/conf.d/php-my.ini
 fi
 
+echo "Migrate instance"
 php /var/www/html/bin/migrate.php
+
+echo "Start apache"
 apache2-foreground
