@@ -375,13 +375,14 @@
 				}
 
 				if (!empty($newModuleAliases)) {
+					ModuleGenerator::all();
+					Module::reload();
+					
 					foreach ($newModuleAliases as $alias) {
 						$extractPath = MODULES_PATH . $alias;
 						$postScript = FileUtils::combinePath($extractPath, "postinstall.inc.php");
 						$this->runScriptIsolated($postScript);
 					}
-
-					ModuleGenerator::all();
 				}
 
 				$template();
