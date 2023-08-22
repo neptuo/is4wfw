@@ -23,7 +23,7 @@
             "name" => "admin",
             "surname" => "admin",
             "login" => "admin",
-            "password" => "admin"
+            "password" => sha1("admin" . "admin") // Duplicated in User.class.php
         ];
         $batch = '';
         while (($line = fgets($importFile)) !== false) {
