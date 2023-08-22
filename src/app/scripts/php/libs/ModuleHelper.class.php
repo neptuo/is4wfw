@@ -268,7 +268,7 @@
 			if (!isset($xml->is4wfw->minVersion)) {
 				Validator::addInvalidValue($model, "zip");
 			} else {
-				if (!Module::isSupportedVersion($xml->is4wfw->minVersion)) {
+				if (!Module::isSupportedVersion((string)$xml->is4wfw->minVersion)) {
 					Validator::addInvalidValue($model, "zip");
 				}
 			}
