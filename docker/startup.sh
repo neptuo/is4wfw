@@ -14,8 +14,8 @@ mkdir -p \
     /var/www/html/instance/user/filesystem \
     /var/www/html/instance/user/public \
 
-chmod 777 -R /var/www/html/cache
-chmod 777 -R /var/www/html/instance
+chmod 777 -R /var/www/html/cache --silent
+chmod 777 -R /var/www/html/instance --silent
 
 if [ -z "$TZ" ]
 then
