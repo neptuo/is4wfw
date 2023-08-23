@@ -171,4 +171,15 @@
       Vrací "false".
     </comment>
   </property>
+  <decorator>
+    <function>decorateAnyAttribute</function>
+    <attribute>
+      <name>anyAttribute</name>
+      <comment>Asociativní pole pro any attribute.</comment>
+    </attribute>
+    <features>
+      <modifiesAttributes />
+    </features>
+    <comment>Předá hodnotu atributu jako asociavní pole pro any atribut tagy, na kterém je použit.</comment>
+  </decorator>
 </taglib>

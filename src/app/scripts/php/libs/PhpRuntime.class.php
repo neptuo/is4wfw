@@ -363,6 +363,15 @@
             // Tag can also be a '*'. Caused by TemplateParser.
             return $this->defaultGlobalAttributes[$prefix][$tag][$name];
         }
+
+        public function decorateAnyAttribute($value, $tagPrefix, $tagName, $tagParameters) {
+            if (!$value) {
+                $value = [];
+            }
+
+            $tagParameters[PhpRuntime::$ParamsName] = $value;
+            return $tagParameters;
+        }
     }
 
 ?>
