@@ -123,7 +123,8 @@ nav[data-mode='standard'] [data-menu='favorites'] {
     min-height: 56px;
 }
 
-.main-menu-col .navbar-toggler {
+.main-menu-col .navbar-toggler,
+.content-col .navbar-toggler {
     display: block;
     border: none;
     outline: none;
@@ -137,6 +138,20 @@ nav[data-mode='standard'] [data-menu='favorites'] {
 .main-menu-collapsed {
     flex: 0 0 41px;
     width: 41px;
+}
+
+@media (max-width:575px) {
+    .main-menu-collapsed {
+        display: none;
+    }
+
+    .main-menu-col + .content-col {
+        display: none;
+    }
+
+    .main-menu-col.main-menu-collapsed + .content-col {
+        display: block;
+    }
 }
 
 .main-menu-collapsed .navbar {

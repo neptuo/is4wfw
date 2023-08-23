@@ -22,20 +22,29 @@
         tooltips = [];
     }
 
+    var menuBreakpoint = 576;
     var $mainMenuCol = $(".main-menu-col");
     $(".navbar-toggler").click(function(e) {
         e.preventDefault();
         
         if ($mainMenuCol.hasClass("main-menu-collapsed")) {
             $mainMenuCol.removeClass("main-menu-collapsed");
-            cookies.create("mainMenu", null);
+            if (window.innerWidth >= menuBreakpoint) {
+                cookies.create("mainMenu", null);
+            }
             destroyTooltips();
         } else {
             $mainMenuCol.addClass("main-menu-collapsed");
-            cookies.create("mainMenu", "collapsed");
+            if (window.innerWidth >= menuBreakpoint) {
+                cookies.create("mainMenu", "collapsed");
+            }
             createTooltips();
         }
     });
+
+    if (window.innerWidth < menuBreakpoint) {
+        $mainMenuCol.addClass("main-menu-collapsed");
+    }
 
     if ($mainMenuCol.hasClass("main-menu-collapsed")) {
         createTooltips();

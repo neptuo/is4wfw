@@ -24,12 +24,13 @@
             <utils:concat output="mainMenuColCssClass" separator=" " value1="var:mainMenuColCssClass" value2="main-menu-collapsed" />
             <var:declare name="mainMenuColCssClass" value="utils:mainMenuColCssClass" />
         </web:condition>
-        <bs:column default="3" large="2" class="var:mainMenuColCssClass">
+        <bs:column default="12" small="3" large="2" class="var:mainMenuColCssClass">
             <nav class="navbar navbar-expand navbar-dark bg-dark sticky-top">
-                <web:a pageId="route:index" class="navbar-brand d-none d-md-block mr-auto">
+                <button class="navbar-toggler d-block d-sm-none ml-2 mr-auto" type="button"><span class="navbar-toggler-icon"></span></button>
+                <web:a pageId="route:index" class="navbar-brand mr-auto">
                     &lt;is4wfw /&gt;
                 </web:a>
-                <button class="navbar-toggler" type="button"><span class="navbar-toggler-icon"></span></button>
+                <button class="navbar-toggler d-none d-sm-block" type="button"><span class="navbar-toggler-icon"></span></button>
             </nav>
                 
             <div class="border-right shadow main-menu main-menu-background">
@@ -53,8 +54,9 @@
             </div>
         </bs:column>
 
-        <bs:column>
+        <bs:column class="content-col">
             <div class="navbar navbar-dark bg-dark sticky-top">
+                <button class="navbar-toggler mr-2 d-block d-sm-none" type="button"><span class="navbar-toggler-icon"></span></button>
                 <div>
                     <wp:selectProject showMsg="false" useFrames="false" label=" " />
                 </div>
