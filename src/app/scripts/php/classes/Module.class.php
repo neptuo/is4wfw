@@ -100,10 +100,6 @@
 			return $currentVersion["major"] == $moduleVersion["major"] && $currentVersion["patch"] >= $moduleVersion["patch"];
 		}
 
-        public static function rootPath($alias) {
-            return MODULES_PATH . $alias . "/";
-        }
-
         // --- Instance members -----------------------------------------------
 
         public $id;
@@ -124,7 +120,7 @@
         }
 
         public function getRootPath() {
-            return Module::rootPath($this->alias);
+            return MODULES_PATH . $this->alias . "/";
         }
 
         public function getLibsPath() {
@@ -212,8 +208,13 @@
         public const loaderFileName = "loader.inc.php";
         public const postInitFileName = "postinit.inc.php";
 
+        /**
+         * Regenerates all cache scripts for modules.
+         * Side effect is that it reloads in-memory modules.
+         */
         public static function all() {
             ModuleGenerator::loader();
+            Module::reload();
             ModuleGenerator::postInit();
         }
         
@@ -269,9 +270,8 @@
             $code->addLine("// Generated content", true);
             $code->addLine("");
 
-            $xml = ModuleXml::read();
-            foreach ($xml->module as $module) {
-                $path = Module::rootPath((string)$module->alias) . ModuleGenerator::postInitFileName;
+            foreach (Module::all() as $module) {
+                $path = $module->getRootPath() . ModuleGenerator::postInitFileName;
                 if (file_exists($path)) {
                     $log = $code->var("logObject");
 

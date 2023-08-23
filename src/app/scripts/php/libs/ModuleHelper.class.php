@@ -312,7 +312,6 @@
 
 				ZipUtils::extract($fileName, $extractPath);
 				ModuleGenerator::all();
-				Module::reload();
 				
 				$postScript = FileUtils::combinePath($extractPath, $isEdit ? "postupdate.inc.php" : "postinstall.inc.php");
 				$this->runScriptIsolated($postScript);
@@ -376,7 +375,6 @@
 
 				if (!empty($newModuleAliases)) {
 					ModuleGenerator::all();
-					Module::reload();
 					
 					foreach ($newModuleAliases as $alias) {
 						$extractPath = MODULES_PATH . $alias;
