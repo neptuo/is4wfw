@@ -14,4 +14,15 @@
       Zapíše zprávu do log souboru aplikace.	
     </comment>
   </tag>
+  <tag>
+    <name>page</name>
+    <function>page</function>
+    <attribute>
+      <name>msg</name>
+      <required />
+    </attribute>
+    <comment>
+      Zapíše zprávu do page logu aplikace.	
+    </comment>
+  </tag>
 </taglib>

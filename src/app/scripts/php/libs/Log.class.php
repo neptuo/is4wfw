@@ -48,6 +48,10 @@
             fwrite($this->File, date("H:i:s") . "\t" . $msg . "\r\n");
         }
 
+        public function page($msg) {
+            parent::log($msg);
+        }
+
         public function writeToCustom($logName, $msg) {
             $path = LOGS_PATH . $logName . "-" . date("Y-m-d") . ".log";
             if (is_file($path)) {
