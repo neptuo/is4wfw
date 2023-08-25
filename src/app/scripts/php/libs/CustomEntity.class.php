@@ -879,7 +879,7 @@
 
             // Inside "ce:form".
             $model = parent::getEditModel(false);
-            if ($model != null) {
+            if ($model != null && ($model->hasKey($name) || $name == "_")) {
                 if ($name == "_") {
                     return $model;
                 }
