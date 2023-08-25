@@ -905,7 +905,7 @@
                     $filter = $filter[""];
                     $sqlName = Filter::formatColumnName($filter, $resolver["columnName"]);
                     $sqlValue = parent::sql()->escape($value);
-                    $filter[] = "$sqlName = $sqlValue";
+                    $filter[$resolver["columnName"]] = "$sqlName = $sqlValue";
                     $tableName = $filter->wrapTableName($tableName);
                     $filter = $filter->toSql();
                 } else {
