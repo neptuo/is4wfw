@@ -653,7 +653,7 @@
 			}
 			
 			if ($model->isSubmit()) {
-				$this->setModelValueFromRequest($model, $name, $name, $nameIndex, ['&#126' => '~']);
+				$this->setModelValueFromRequest($model, $name, $name, $nameIndex, ['&#126;' => '~']);
 			}
 			
 			if ($model->isRender()) {
@@ -666,7 +666,7 @@
 
 				$params = $this->appendId($params);
 				$attributes = $this->joinAttributes($params);
-				$modelValue = str_replace('~', '&#126', $modelValue);
+				$modelValue = str_replace('~', '&#126;', $modelValue);
 				return "<textarea name='$formName'$attributes>$modelValue</textarea>";
 			}
 		}
