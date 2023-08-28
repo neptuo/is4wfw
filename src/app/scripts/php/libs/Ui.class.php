@@ -9,8 +9,13 @@
 
 		private $id;
 
-		private function setModelValueFromRequest($model, $modelKey, $requestKey, $index = -1) {
+		private function setModelValueFromRequest($model, $modelKey, $requestKey, $index = -1, $replacements = null) {
 			$value = $model->request($requestKey, $index);
+			if ($replacements) {
+				foreach ($replacements as $search => $replacement) {
+					$value = str_replace($search, $replacement, $value);
+				}
+			}
 			$model->set($modelKey, $index, $value);
 		}
 
@@ -648,7 +653,7 @@
 			}
 			
 			if ($model->isSubmit()) {
-				$this->setModelValueFromRequest($model, $name, $name, $nameIndex);
+				$this->setModelValueFromRequest($model, $name, $name, $nameIndex, ['&#126' => '~']);
 			}
 			
 			if ($model->isRender()) {
@@ -661,6 +666,7 @@
 
 				$params = $this->appendId($params);
 				$attributes = $this->joinAttributes($params);
+				$modelValue = str_replace('~', '&#126', $modelValue);
 				return "<textarea name='$formName'$attributes>$modelValue</textarea>";
 			}
 		}
