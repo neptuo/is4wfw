@@ -864,6 +864,41 @@
     </comment>
   </property>
   <property>
+  	<name>currentHttpMethod</name>
+  	<getFunction>getHttpMethod</getFunction>
+    <comment>
+      Vrácí HTTP method aktuálního requestu (GET, POST, etc).
+    </comment>
+  </property>
+  <property>
+    <name>isCurrentHttpMethodGet</name>
+    <getFunction>isHttpMethodGet</getFunction>
+    <comment>
+      Vrácí true pokud HTTP method aktuálního requestu je GET.
+    </comment>
+  </property>
+  <property>
+  	<name>isCurrentHttpMethodPost</name>
+  	<getFunction>isHttpMethodPost</getFunction>
+    <comment>
+      Vrácí true pokud HTTP method aktuálního requestu je POST.
+    </comment>
+  </property>
+  <property>
+  	<name>isCurrentHttpMethodPut</name>
+  	<getFunction>isHttpMethodPut</getFunction>
+    <comment>
+      Vrácí true pokud HTTP method aktuálního requestu je PUT.
+    </comment>
+  </property>
+  <property>
+  	<name>isCurrentHttpMethodDelete</name>
+  	<getFunction>isHttpMethodDelete</getFunction>
+    <comment>
+      Vrácí true pokud HTTP method aktuálního requestu je DELETE.
+    </comment>
+  </property>
+  <property>
   	<name>currentHost</name>
   	<getFunction>getHttpHost</getFunction>
     <comment>

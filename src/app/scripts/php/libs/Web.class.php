@@ -12,6 +12,7 @@
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/WebForwardManager.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/HttpClient.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/MissingEntrypointException.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/utils/HttpUtils.class.php");
 
     /**
      *
@@ -2490,6 +2491,26 @@
          */
         public function getHttpHost() {
             return $_SERVER['HTTP_HOST'];
+        }
+
+        public function getHttpMethod() {
+            return HttpUtils::httpMethod();
+        }
+
+        public function isHttpMethodGet() {
+            return HttpUtils::isGet();
+        }
+
+        public function isHttpMethodPost() {
+            return HttpUtils::isPost();
+        }
+
+        public function isHttpMethodPut() {
+            return HttpUtils::isPut();
+        }
+
+        public function isHttpMethodDelete() {
+            return HttpUtils::isDelete();
         }
 
         public function getProtocol() {
