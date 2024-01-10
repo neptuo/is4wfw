@@ -15,6 +15,8 @@
         private $container;
 		private $currentName = "";
 
+		private $currentItem;
+
 		private function ensureDeclaration($name, $throw = true) {
 			if (!array_key_exists($name, $this->container)) {
 				if ($throw) {
@@ -67,6 +69,16 @@
 				$index->set($this->container[$name]->itemCount() - 1);
 			}
 		}
+		
+		public function addItemFulltag($template, $name = "", $index = null) {
+			$previousItem = $this->currentItem;
+			$this->currentItem = [];
+
+			$template();
+
+			$this->addItem($this->currentItem, $name, $index);
+			$this->currentItem = $previousItem;
+		}
 
 		public function updateItem($key, $index, $name = "") {
 			$name = $this->ensureName($name);
@@ -81,6 +93,23 @@
 			}
 
 			$this->container[$name]->itemAtIndex($index, $item);
+		}
+		
+		public function updateItemFulltag($template, $name = "", $index = null) {
+			$previousItem = $this->currentItem;
+			$this->currentItem = [];
+
+			$template();
+			
+			$this->updateItem($this->currentItem, $name, $index);
+			$this->currentItem = $previousItem;
+		}
+
+		public function setKeyValue($key, $value) {
+			if (!is_array($this->currentItem)) {
+				throw new Exception("Using 'list:set' outside of 'list:add' or 'list:update'");
+			}
+			$this->currentItem[$key] = $value;
 		}
 		
 		public function sort($key, $name = "") {

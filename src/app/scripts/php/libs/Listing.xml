@@ -60,6 +60,26 @@
       Přidá položku do list modelu.
     </comment>
   </tag>
+  <fulltag>
+    <name>add</name>
+    <function>addItemFulltag</function>
+    <lookless />
+    <attribute>
+      <name>name</name>
+      <comment>
+        Název (property), pod kterým má být list model dostupný.
+        Povinný jen pokud je použitý mimo tělo "list:declare".
+      </comment>
+    </attribute>
+    <attribute>
+      <name>index</name>
+      <type>propertyReference</type>
+      <comment>(výstupní) Index nově přidané položky.</comment>
+    </attribute>
+    <comment>
+      Přidá položku do list modelu, uvnitř je monžné použít "list:set" pro nastavení klíčů a jejích hodnot.
+    </comment>
+  </fulltag>
   <tag>
     <name>update</name>
     <function>updateItem</function>
@@ -83,7 +103,46 @@
       </comment>
     </attribute>
     <comment>
-      Přidá položku do list modelu.
+      Upraví položku v list modelu.
+    </comment>
+  </tag>
+  <fulltag>
+    <name>update</name>
+    <function>updateItemFulltag</function>
+    <lookless />
+    <attribute>
+      <name>index</name>
+      <type>number</type>
+      <required />
+      <comment>Index položky, která se má upravit.</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <comment>
+        Název (property), pod kterým má být list model dostupný.
+        Povinný jen pokud je použitý mimo tělo "list:declare".
+      </comment>
+    </attribute>
+    <comment>
+      Upraví položku v list modelu, uvnitř je monžné použít "list:set" pro nastavení klíčů a jejích hodnot.
+    </comment>
+  </fulltag>
+  <tag>
+    <name>set</name>
+    <function>setKeyValue</function>
+    <lookless />
+    <attribute>
+      <name>key</name>
+      <required />
+      <comment>Název klíče.</comment>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required />
+      <comment>Hodnota klíče.</comment>
+    </attribute>
+    <comment>
+      Nastavuje klíč "key" na hodnotu "value" uvnitř párového "list:add".
     </comment>
   </tag>
   <tag>
