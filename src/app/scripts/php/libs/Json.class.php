@@ -31,6 +31,8 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/HttpClient.class.php");
 
         private $currentInputKey;
 
+        private $fetchStatusCode;
+
         public function processOutput($template, $format = 'indented') {
             parent::web()->setFlushOptions("none", $this->outputPreferedContentType);
 
@@ -158,17 +160,16 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/HttpClient.class.php");
             }
 
             $value = $http->getJson($url, $header);
-            if ($value != null) {
-                $this->mode = JsonMode::Input;
-    
-                $previousInput = $this->input;
-                $this->input = new Stack();
-                $this->input->push($value);
-    
-                $template();
+            $this->fetchStatusCode = $http->getResponseStatusCode();
+            $this->mode = JsonMode::Input;
 
-                $this->input = $previousInput;
-            }
+            $previousInput = $this->input;
+            $this->input = new Stack();
+            $this->input->push($value);
+
+            $template();
+
+            $this->input = $previousInput;
         }
 
         public function processObject($template) {
@@ -390,6 +391,19 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/HttpClient.class.php");
                 $value = $this->input->peek();
                 return $value;
             }
+        }
+
+        public function getFetchStatusCode() {
+            if ($this->mode == JsonMode::Output) {
+                throw new JsonOutputException("Property 'value' is not supported in output mode.");
+            } else if ($this->mode == JsonMode::Input) {
+                return $this->fetchStatusCode;
+            }
+        }
+
+        public function getFetchSuccess() {
+            $statusCode = $this->getFetchStatusCode();
+            return $statusCode >= 200 && $statusCode < 300;
         }
     }
     

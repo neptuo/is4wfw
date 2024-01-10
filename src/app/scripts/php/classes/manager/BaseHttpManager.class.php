@@ -7,6 +7,11 @@ abstract class BaseHttpManager extends BaseTagLib {
     private $isSessionCookieIncluded = false;
     private $username;
     private $password;
+    private $responseStatusCode;
+
+    public function getResponseStatusCode() {
+        return $this->responseStatusCode;
+    }
 
     public function setSessionCookieIncluded($value) {
         $this->isSessionCookieIncluded = $value;
@@ -49,7 +54,10 @@ abstract class BaseHttpManager extends BaseTagLib {
             }
     
             $content = curl_exec($curl);
+            $this->responseStatusCode = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+            
             curl_close($curl);
+
             return $content;
         } else if (file_get_contents(__FILE__) && ini_get('allow_url_fopen')) {
             $content = file_get_contents($url);

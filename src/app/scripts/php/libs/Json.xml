@@ -138,4 +138,20 @@
       Při outputu nedělá nic.
     </comment>
   </property>
+  <property>
+    <name>fetchStatusCode</name>
+    <getFunction>getFetchStatusCode</getFunction>
+    <comment>
+      Vrací status kód requestu uvnitř "json:fetch".
+      Nefunguje mimo "json:fetch".
+    </comment>
+  </property>
+  <property>
+    <name>fetchSuccess</name>
+    <getFunction>getFetchSuccess</getFunction>
+    <comment>
+      Vrací true pokud request uvnitř "json:fetch" dopadl úspěchem (2xx).
+      Nefunguje mimo "json:fetch".
+    </comment>
+  </property>
 </taglib>
