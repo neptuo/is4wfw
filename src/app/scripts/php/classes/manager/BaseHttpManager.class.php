@@ -31,7 +31,7 @@ abstract class BaseHttpManager extends BaseTagLib {
         if (function_exists('curl_version')) {
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_USERAGENT, 'phpwfw-installer'); 
+            curl_setopt($curl, CURLOPT_USERAGENT, 'is4wfw'); 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_MAXREDIRS, 5); 
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); 
@@ -62,8 +62,12 @@ abstract class BaseHttpManager extends BaseTagLib {
         return null;
     }
 
-    protected function httpGetJson($url) {
-        $content = $this->httpGet($url);
+    protected function httpGetJson($url, $headers = []) {
+        if (!array_key_exists("Accept", $headers)) {
+            $headers["Accept"] = "application/json";
+        }
+        
+        $content = $this->httpGet($url, $headers);
         if ($content != null && strlen($content) != 0) {
             $json = json_decode($content);
             return  $json;

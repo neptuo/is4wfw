@@ -27,6 +27,39 @@
     </comment>
   </fulltag>
   <fulltag>
+    <name>fetch</name>
+    <function>fetch</function>
+    <attribute>
+      <name>url</name>
+      <required />
+      <comment>
+        URL adresa, ze které se mají stáhnout data.
+      </comment>
+    </attribute>
+    <attribute>
+      <name>header</name>
+      <prefix />
+      <comment>
+        HTTP hlavičky přidané k požadavku.
+      </comment>
+    </attribute>
+    <attribute>
+      <name>basicUsername</name>
+      <comment>
+        Optional username pro basic authentication.
+      </comment>
+    </attribute>
+    <attribute>
+      <name>basicPassword</name>
+      <comment>
+        Optional password pro basic authentication.
+      </comment>
+    </attribute>
+    <comment>
+      Server-side fetch ze zadané URL. Šablonu zpracuje jako v módu input, ale nevytváří edit model.
+    </comment>
+  </fulltag>
+  <fulltag>
     <name>object</name>
     <function>processObject</function>
     <comment>
@@ -73,14 +106,22 @@
     <attribute>
       <name>name</name>
       <type>string</type>
-      <required />
+      <default as="unused" />
       <comment>Hodnota JSON klíče.</comment>
     </attribute>
     <comment>
       Vygeneruje do výstupu JSON dvojici klíč-hodnota. Své tělo je jeho obsahem.
-      Nastaví jako aktuální položku hodnotu klíče z "name".
+      Nastaví jako aktuální položku hodnotu klíče z "name". Pokud je použit bez "name", spuští šablonu pro každý key-value v aktuálním objektu
     </comment>
   </fulltag>
+  <property>
+    <name>key</name>
+    <getFunction>getInputKey</getFunction>
+    <comment>
+      Vrací klíč z inputu uvnitř "json:key" pokud je použit bez "name".
+      Při outputu nedělá nic.
+    </comment>
+  </property>
   <property>
     <name>value</name>
     <getFunction>getInputValue</getFunction>

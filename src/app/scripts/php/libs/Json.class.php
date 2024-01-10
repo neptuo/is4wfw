@@ -5,6 +5,7 @@ use Mpdf\Writer\ObjectWriter;
 require_once("BaseTagLib.class.php");
 require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonInputException.class.php");
 require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
+require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/HttpClient.class.php");
 
 	/**
 	 * 
@@ -27,6 +28,8 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
         private $inputKey;
         private $inputParentType = '';
         private $inputArrayIndex;
+
+        private $currentInputKey;
 
         public function processOutput($template, $format = 'indented') {
             parent::web()->setFlushOptions("none", $this->outputPreferedContentType);
@@ -54,18 +57,19 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
                     $this->mode = JsonMode::Input;
 
                     $this->outputPreferedContentType = $contentType;
+        
                     $this->input = new Stack();
                     $this->input->push($value);
-
+        
                     $prevModel = parent::getEditModel(false);
                     $model = new EditModel();
                     parent::setEditModel($model);
-
+        
                     // Submit form / bind data into the model.
                     $model->submit();
                     $template();
                     $model->submit(false);
-
+        
                     if ($model->isValid()) {
                         // Save data in transaction.
                         try {
@@ -77,7 +81,7 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
                         } catch (Exception $e) {
                             $this->internalServerError($e);
                         }
-
+        
                         // Process after save redirects.
                         $model->saved(true);
                         $template();
@@ -85,7 +89,7 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
                     } else {
                         $this->badRequest($model);
                     }
-
+        
                     parent::clearEditModel($prevModel);
 
                     $this->input = null;
@@ -145,6 +149,26 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
             }
 
             parent::close();
+        }
+
+        public function fetch($template, $url, $header = [], $basicUsername = "", $basicPassword = "") {
+            $http = new HttpClient();
+            if ($basicUsername) {
+                $http->setBasicAuthentication($basicUsername, $basicPassword);
+            }
+
+            $value = $http->getJson($url, $header);
+            if ($value != null) {
+                $this->mode = JsonMode::Input;
+    
+                $previousInput = $this->input;
+                $this->input = new Stack();
+                $this->input->push($value);
+    
+                $template();
+
+                $this->input = $previousInput;
+            }
         }
 
         public function processObject($template) {
@@ -287,12 +311,16 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
             }
         }
 
-        public function processKeyWithBody($template, $name) {
+        public function processKeyWithBody($template, $name = PhpRuntime::UnusedAttributeValue) {
             $previousOutputKey = $this->outputKey;
             $previousOutputParentType = $this->outputParentType;
             if ($this->mode == JsonMode::Output) {
                 if ($this->output->isEmpty() || $this->outputParentType != 'object') {
                     throw new JsonOutputException("Key-value '$name' can't be placed outside of object.");
+                }
+
+                if (empty($name)) {
+                    throw new ParameterException("name", "Required in output mode");
                 }
                 
                 $this->outputKey = $name;
@@ -308,35 +336,56 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/JsonOutputException.class.php");
                 }
 
                 $value = (array)$this->input->peek();
-                if (array_key_exists($name, $value)) {
-                    $previousInputParentType = $this->inputParentType;
-                    $previousKey = $this->inputKey;
-                    $this->inputKey = $name;
-
-                    $item = $value[$name];
-                    $this->input->push($item);
-                    $this->inputParentType = 'key-value';
-
-                    $template();
-
-                    $this->input->pop();
-                    $this->inputParentType = $previousInputParentType;
-                    $this->inputKey = $previousKey;
+                if ($name == PhpRuntime::UnusedAttributeValue) {
+                    $previousKey = $this->currentInputKey;
+                    foreach ($value as $key => $val) {
+                        $this->currentInputKey = $key;
+                        $this->processKeyValue($template, $key, $val);
+                    }
+                    $this->currentInputKey = $previousKey;
+                } else {
+                    if (array_key_exists($name, $value)) {
+                        $item = $value[$name];
+                        $this->processKeyValue($template, $name, $item);
+                    }
                 }
             }
         }
 
+        private function processKeyValue($template, $name, $item) {
+            $previousInputParentType = $this->inputParentType;
+            $previousKey = $this->inputKey;
+            $this->inputKey = $name;
+
+            $this->input->push($item);
+            $this->inputParentType = 'key-value';
+
+            $template();
+
+            $this->input->pop();
+            $this->inputParentType = $previousInputParentType;
+            $this->inputKey = $previousKey;
+        }
+
         public function getArrayIndex() {
             if ($this->mode == JsonMode::Output) {
-                throw new JsonOutputException("Property 'arrayIndex' are not support in output mode.");
+                throw new JsonOutputException("Property 'arrayIndex' is not supported in output mode.");
             } else if ($this->mode == JsonMode::Input) {
                 return $this->inputArrayIndex;
             }
         }
 
+        public function getInputKey() {
+            if ($this->mode == JsonMode::Output) {
+                throw new JsonOutputException("Property 'key' is not supported in output mode.");
+            } else if ($this->mode == JsonMode::Input) {
+                return $this->currentInputKey;
+            }
+        }
+
         public function getInputValue() {
             if ($this->mode == JsonMode::Output) {
-                throw new JsonOutputException("Property 'value' are not support in output mode.");
+                throw new JsonOutputException("Property 'value' is not supported in output mode.");
             } else if ($this->mode == JsonMode::Input) {
                 $value = $this->input->peek();
                 return $value;

@@ -7,6 +7,10 @@
         public function get($url, $headers = []) {
             return parent::httpGet($url, $headers);
         }
+
+        public function getJson($url, $headers = []) {
+            return $this->httpGetJson($url, $headers);
+        }
     }
 
 ?>
