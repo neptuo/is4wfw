@@ -62,6 +62,11 @@
 			return '';
 		}
 
+		public function setValueFulltag($template, $name, $scope = PhpRuntime::UnusedAttributeValue) {
+			$value = $template();
+			return $this->setValue($name, $value, $scope);
+		}
+
 		public function setScope($name, $scope) {
 			$this->nameScopes[$name] = $scope;
 		}
