@@ -25,7 +25,7 @@
 			}
 		}
 
-		private function ensureName($name) {
+		private function ensureName($name, $throw = true) {
 			if ($name == "") {
 				if ($this->currentName == "") {
 					throw new ParameterException("name", "Missing parameter 'name'");
@@ -37,7 +37,7 @@
 					throw new ParameterException("name", "Can't be used inside of list:declare full tag");
 				}
 				
-				$this->ensureDeclaration($name);
+				$this->ensureDeclaration($name, $throw);
 				return $name;
 			}
 		}
@@ -61,7 +61,7 @@
 		}
 		
 		public function addItem($key, $name = "", $index = null) {
-			$name = $this->ensureName($name);
+			$name = $this->ensureName($name, false);
 			$this->container[$name]->addItem($key);
 			if ($index instanceof PropertyReference) {
 				$index->set($this->container[$name]->itemCount() - 1);
