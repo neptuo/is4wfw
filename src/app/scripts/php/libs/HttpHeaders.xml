@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
+  <comment>
+    Knihovna pro práci s HTTP hlavičkami požadavku.
+  </comment>
+  <anyProperty>
+    <comment>Vrátí hodnotu HTTP hlavičky.</comment>
+  </anyProperty>
+</taglib>

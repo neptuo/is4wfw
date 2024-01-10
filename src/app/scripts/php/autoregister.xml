@@ -22,6 +22,7 @@
 	<reg prefix="filter" class="php.libs.Filter" />
 	<reg prefix="google" class="php.libs.Google" />
 	<reg prefix="g" class="php.libs.Guestbook" />
+	<reg prefix="header" class="php.libs.HttpHeaders" />
 	<reg prefix="i" class="php.libs.Inquiry" />
 	<reg prefix="if" class="php.libs.Condition" />
 	<reg prefix="img" class="php.libs.Image" />
