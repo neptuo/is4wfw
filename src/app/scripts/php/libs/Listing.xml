@@ -51,6 +51,37 @@
         Povinný jen pokud je použitý mimo tělo "list:declare".
       </comment>
     </attribute>
+    <attribute>
+      <name>index</name>
+      <type>propertyReference</type>
+      <comment>(výstupní) Index nově přidané položky.</comment>
+    </attribute>
+    <comment>
+      Přidá položku do list modelu.
+    </comment>
+  </tag>
+  <tag>
+    <name>update</name>
+    <function>updateItem</function>
+    <lookless />
+    <attribute>
+      <name>key</name>
+      <prefix default="merge" />
+      <comment>Klíč hodnota jednotlivých fieldů položky list modelu.</comment>
+    </attribute>
+    <attribute>
+      <name>index</name>
+      <type>number</type>
+      <required />
+      <comment>Index položky, která se má upravit.</comment>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <comment>
+        Název (property), pod kterým má být list model dostupný.
+        Povinný jen pokud je použitý mimo tělo "list:declare".
+      </comment>
+    </attribute>
     <comment>
       Přidá položku do list modelu.
     </comment>

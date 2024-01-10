@@ -34,7 +34,7 @@
 				return $this->currentName;
 			} else {
 				if ($this->currentName != "") {
-					throw new ParameterException("name", "Parameter 'name' can't be used inside of list:declare full tag");
+					throw new ParameterException("name", "Can't be used inside of list:declare full tag");
 				}
 				
 				$this->ensureDeclaration($name);
@@ -60,9 +60,27 @@
 			$this->currentName = $oldName;
 		}
 		
-		public function addItem($key, $name = "") {
+		public function addItem($key, $name = "", $index = null) {
 			$name = $this->ensureName($name);
 			$this->container[$name]->addItem($key);
+			if ($index instanceof PropertyReference) {
+				$index->set($this->container[$name]->itemCount() - 1);
+			}
+		}
+
+		public function updateItem($key, $index, $name = "") {
+			$name = $this->ensureName($name);
+			$itemCount = $this->container[$name]->itemCount();
+			if (!is_numeric($index) || $index >= $itemCount || $index < 0) {
+				throw new ParameterException("index", "Out of range ('0' <= index < '$itemCount')");
+			}
+
+			$item = $this->container[$name]->itemAtIndex($index);
+			foreach ($key as $k => $value) {
+				$item[$k] = $value;
+			}
+
+			$this->container[$name]->itemAtIndex($index, $item);
 		}
 		
 		public function sort($key, $name = "") {

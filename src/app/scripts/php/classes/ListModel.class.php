@@ -79,7 +79,15 @@
         }
 
         public function currentItem() {
-            return $this->items[$this->currentIndex];
+            return $this->itemAtIndex($this->currentIndex);
+        }
+
+        public function itemAtIndex($index, $item = "z.z-def") {
+            if ($item != "z.z-def") {
+                $this->items[$index] = $item;
+            } else {
+                return $this->items[$index];
+            }
         }
 
         public function hasCurrentItem() {
