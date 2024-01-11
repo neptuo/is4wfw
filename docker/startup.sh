@@ -1,6 +1,7 @@
 mkdir -p \
     /var/www/html/cache \
     /var/www/html/cache/images \
+    /var/www/html/cache/json \
     /var/www/html/cache/modules \
     /var/www/html/cache/output \
     /var/www/html/cache/pages \

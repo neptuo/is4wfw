@@ -55,8 +55,17 @@
         Optional password pro basic authentication.
       </comment>
     </attribute>
+    <attribute>
+      <name>cache</name>
+      <type>number</type>
+      <default>0</default>
+      <comment>
+        Jak dlouho znovu používat předchozí odpověď místo nového stahování dat.
+      </comment>
+    </attribute>
     <comment>
       Server-side fetch ze zadané URL. Šablonu zpracuje jako v módu input, ale nevytváří edit model.
+      Pokud je použita cache, status kód je vždy 200 (success).
     </comment>
   </fulltag>
   <fulltag>

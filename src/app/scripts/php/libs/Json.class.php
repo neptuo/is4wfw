@@ -153,16 +153,52 @@ require_once(APP_SCRIPTS_PHP_PATH . "classes/manager/HttpClient.class.php");
             parent::close();
         }
 
-        public function fetch($template, $url, $header = [], $basicUsername = "", $basicPassword = "") {
+        public function fetch($template, $url, $header = [], $basicUsername = "", $basicPassword = "", $cache = 0) {
             $http = new HttpClient();
             if ($basicUsername) {
                 $http->setBasicAuthentication($basicUsername, $basicPassword);
             }
 
-            $value = $http->getJson($url, $header);
-            $this->fetchStatusCode = $http->getResponseStatusCode();
-            $this->mode = JsonMode::Input;
+            $cacheKey = "";
+            $cachePath = "";
+            if ($cache > 0) {
+                FileUtils::ensureDirectory(CACHE_JSON_PATH);
+                $cacheKey = sha1($url . "-" . implode(";", $header) . "-" . $basicUsername . "-" . $basicPassword);
+                $cachePath = FileUtils::combinePath(CACHE_JSON_PATH, "$cacheKey.json");
 
+                if (file_exists($cachePath)) {
+                    $mtime = filemtime($cachePath);
+                    if ($mtime + $cache > time()) {
+                        $content = file_get_contents($cachePath);
+                        if ($content != null && strlen($content) != 0) {
+                            $value = json_decode($content);
+                            $this->fetchStatusCode = 200;
+                        }
+                    }
+                }
+            }
+
+            if (!$value) {
+                if (!$header) {
+                    $header = [];
+                }
+
+                if (!array_key_exists("Accept", $header)) {
+                    $header["Accept"] = "application/json";
+                }
+
+                $content = $http->get($url, $header);
+                if ($cache > 0) {
+                    file_put_contents($cachePath, $content);
+                }
+
+                $this->fetchStatusCode = $http->getResponseStatusCode();
+                if ($content != null && strlen($content) != 0) {
+                    $value = json_decode($content);
+                }
+            }
+            
+            $this->mode = JsonMode::Input;
             $previousInput = $this->input;
             $this->input = new Stack();
             $this->input->push($value);

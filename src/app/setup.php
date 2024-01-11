@@ -104,6 +104,7 @@ if (isset($_POST['setup-save']) && $_POST['setup-save'] == 'Setup') {
 
     ensureDirectory(CACHE_PATH);
     ensureDirectory(CACHE_IMAGES_PATH);
+    ensureDirectory(CACHE_JSON_PATH);
     ensureDirectory(CACHE_PAGES_PATH);
     ensureDirectory(CACHE_TEMPLATES_PATH);
     ensureDirectory(CACHE_SYSTEMPROPERTY_PATH);
