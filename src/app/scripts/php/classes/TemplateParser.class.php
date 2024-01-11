@@ -300,6 +300,15 @@
                 if ($functionName != null) {
                     $this->generateAttributePropertyFunctions($attributes->Attributes);
                     $this->propertyFunctionsToGenerate = $prevProperties;
+
+                    $indexOfNewLine = strpos($ctag[0], PHP_EOL);
+                    if ($indexOfNewLine > 0) {
+                        $sourceLine = substr($ctag[0], 0, $indexOfNewLine);
+                    } else {
+                        $sourceLine = $ctag[0];
+                    }
+                    $code = $this->Code->addLine("// " . $sourceLine);
+
                     return $this->generateFunctionOutput($uniqueIdentifier, $object[0], $object[1], $hasBodyTemplate, $functionName, $attributes);
                 }
             }
