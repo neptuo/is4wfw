@@ -2,6 +2,7 @@
 
     require_once("CodeWriter.class.php");
     require_once("manager/Version.class.php");
+    require_once("utils/FileUtils.class.php");
 
     class Module {
         private static $all = null;
