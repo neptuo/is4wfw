@@ -65,12 +65,33 @@
 			return $result;
 		}
 		
-		public function includeById($id, $params) {
-			return $this->includeWithBodyById(null, $id, $params);
+		public function includeByIdOrIdentifier($id = PhpRuntime::UnusedAttributeValue, $group = PhpRuntime::UnusedAttributeValue, $identifier = PhpRuntime::UnusedAttributeValue, $params = []) {
+			return $this->includeWithBodyByIdOrIdentifier(null, $id, $group, $identifier, $params);
 		}
 		
-		public function includeWithBodyById(?callable $template, $id, $params) {
-			return $this->includeBy(["id" => $id], TemplateCacheKeys::template($id), $template, $params);
+		public function includeWithBodyByIdOrIdentifier(?callable $template, $id = PhpRuntime::UnusedAttributeValue, $group = PhpRuntime::UnusedAttributeValue, $identifier = PhpRuntime::UnusedAttributeValue, $params = []) {
+			if ($id === PhpRuntime::UnusedAttributeValue && $identifier === PhpRuntime::UnusedAttributeValue) {
+				throw new ParameterException("id", "Either 'id' or 'identifier' must be set");
+			}
+			
+			if ($id !== PhpRuntime::UnusedAttributeValue) {
+				$filter = ["id" => $id];
+
+				// If we use "id" attribute, maintain backward compatibility by adding group+identifier as parameters.
+				if ($identifier !== PhpRuntime::UnusedAttributeValue) {
+					$params["identifier"] = $identifier;
+				}
+				if ($group !== PhpRuntime::UnusedAttributeValue) {
+					$params["group"] = $group;
+				}
+			}
+			if ($identifier !== PhpRuntime::UnusedAttributeValue) {
+				$filter = ["identifier" => $identifier];
+				if ($group !== PhpRuntime::UnusedAttributeValue) {
+					$filter["group"] = $group;
+				}
+			}
+			return $this->includeBy($filter, TemplateCacheKeys::template($id), $template, $params);
 		}
 
 		public function includeByIdentifier($identifier, $params) {

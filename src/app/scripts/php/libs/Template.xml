@@ -5,32 +5,52 @@
   </comment>
   <tag>
     <name>include</name>
-    <function>includeById</function>
+    <function>includeByIdOrIdentifier</function>
     <attribute>
       <name>id</name>
       <type>number</type>
-      <required />
+      <default as="unused" />
       <comment>ID šablony, která se má vložit.</comment>
+    </attribute>
+    <attribute>
+      <name>group</name>
+      <default as="unused" />
+      <comment>Group šablony, která se má vložit.</comment>
+    </attribute>
+    <attribute>
+      <name>identifier</name>
+      <default as="unused" />
+      <comment>Identifier šablony, která se má vložit.</comment>
     </attribute>
     <anyAttribute />
     <comment>
-      Vloží obsah šablony.
+      Vloží obsah šablony, buď podle číselného "id" nebo v kombinaci "group" a "identifier".
       Uživatel musí mít právo READ k dané šabloně.
       Všechny další atributy jsou parametry šablony.
     </comment>
   </tag>
   <fulltag>
     <name>include</name>
-    <function>includeWithBodyById</function>
+    <function>includeWithBodyByIdOrIdentifier</function>
     <attribute>
       <name>id</name>
       <type>number</type>
-      <required />
+      <default as="unused" />
       <comment>ID šablony, která se má vložit.</comment>
+    </attribute>
+    <attribute>
+      <name>group</name>
+      <default as="unused" />
+      <comment>Group šablony, která se má vložit.</comment>
+    </attribute>
+    <attribute>
+      <name>identifier</name>
+      <default as="unused" />
+      <comment>Identifier šablony, která se má vložit.</comment>
     </attribute>
     <anyAttribute />
     <comment>
-      Vloží obsah šablony.
+      Vloží obsah šablony, buď podle číselného "id" nebo v kombinaci "group" a "identifier".
       Uživatel musí mít právo READ k dané šabloně.
       Všechny další atributy jsou parametry šablony.
       Tělo je použito pro "template:content".
