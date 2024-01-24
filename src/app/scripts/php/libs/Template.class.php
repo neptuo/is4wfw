@@ -75,8 +75,6 @@
 			}
 			
 			if ($id !== PhpRuntime::UnusedAttributeValue) {
-				$filter = ["id" => $id];
-
 				// If we use "id" attribute, maintain backward compatibility by adding group+identifier as parameters.
 				if ($identifier !== PhpRuntime::UnusedAttributeValue) {
 					$params["identifier"] = $identifier;
@@ -84,14 +82,16 @@
 				if ($group !== PhpRuntime::UnusedAttributeValue) {
 					$params["group"] = $group;
 				}
-			}
-			if ($identifier !== PhpRuntime::UnusedAttributeValue) {
+			} elseif ($identifier !== PhpRuntime::UnusedAttributeValue) {
 				$filter = ["identifier" => $identifier];
 				if ($group !== PhpRuntime::UnusedAttributeValue) {
 					$filter["group"] = $group;
 				}
+
+				$sql = $this->sql()->select("template", ["id"], $filter);
+				$id = $this->dataAccess()->fetchScalar($sql);
 			}
-			return $this->includeBy($filter, TemplateCacheKeys::template($id), $template, $params);
+			return $this->includeBy(["id" => $id], TemplateCacheKeys::template($id), $template, $params);
 		}
 
 		public function includeByIdentifier($identifier, $params) {
