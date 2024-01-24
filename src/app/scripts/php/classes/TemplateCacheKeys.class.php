@@ -18,6 +18,10 @@ class TemplateCacheKeys {
             return ["template", $templateId];
         }
 
+        public static function eval($template) {
+            return ["eval", sha1($template)];
+        }
+
     }
 
 ?>

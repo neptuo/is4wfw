@@ -2958,6 +2958,10 @@
             return "";
         }
 
+        public function eval($template) {
+            return $this->executeTemplateContent(TemplateCacheKeys::eval($template), $template);
+        }
+
         /* ================== PROPERTIES ================================================== */
 
         public function setChildPage($pageId) {

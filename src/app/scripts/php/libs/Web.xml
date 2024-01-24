@@ -751,6 +751,17 @@
     <lookless />
     <comment>Zpracuje tělo, ale kompletně ignoruje jeho výstup.</comment>
   </fulltag>
+  <tag>
+    <name>eval</name>
+    <function>eval</function>
+    <attribute>
+      <name>template</name>
+      <comment>Nezpracovaná šablona, která se má zkompilovat a spustit</comment>
+    </attribute>
+    <comment>
+      Zkompiluje a spustí šablonu v atributu "template".
+    </comment>
+  </tag>
   <fulltag>
     <name>head</name>
     <function>appendToHead</function>
