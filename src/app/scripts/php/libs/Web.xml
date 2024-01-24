@@ -686,21 +686,24 @@
     <function>setFlushOptions</function>
     <attribute>
       <name>template</name>
+      <default as="unused" />
       <comment>Nahrazuje globální parametr requestu '__TEMPLATE' pro definici výstupní šablony - 'none', 'xml' nebo 'null'</comment>
     </attribute>
     <attribute>
       <name>contentType</name>
+      <default as="unused" />
       <comment>Typ odpovědi - 'text/html', 'text/json'</comment>
     </attribute>
     <attribute>
       <name>isZipEnabled</name>
       <type>bool</type>
-      <default>true</default>
+      <default as="unused" />
       <comment>Zda se má odpověď zipovat.</comment>
     </attribute>
     <attribute>
       <name>statusCode</name>
       <type>number</type>
+      <default as="unused" />
       <comment>HTTP response status code</comment>
     </attribute>
     <comment>

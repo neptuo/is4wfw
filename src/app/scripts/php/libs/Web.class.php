@@ -2860,24 +2860,28 @@
             return $this->Doctype;
         }
 
-        public function setFlushOptions($template = false, $contentType = false, $isZipEnabled = true, $statusCode = 0) {
-            if ($template == 'null') {
-                $this->Template = null;
-            } else if ($template == 'xml') {
-                $this->Template = 'xml';
-            } else if ($template == 'none') {
-                $this->Template = 'none';
+        public function setFlushOptions($template = PhpRuntime::UnusedAttributeValue, $contentType = PhpRuntime::UnusedAttributeValue, $isZipEnabled = PhpRuntime::UnusedAttributeValue, $statusCode = PhpRuntime::UnusedAttributeValue) {
+            if ($template !== PhpRuntime::UnusedAttributeValue) {
+                if ($template == 'null') {
+                    $this->Template = null;
+                } else if ($template == 'xml') {
+                    $this->Template = 'xml';
+                } else if ($template == 'none') {
+                    $this->Template = 'none';
+                }
             }
 
-            if ($contentType != false && $contentType != '') {
+            if ($contentType !== PhpRuntime::UnusedAttributeValue && $contentType != '') {
                 $this->ContentType = $contentType;
             }
 
-            if ($statusCode > 0) {
+            if ($statusCode !== PhpRuntime::UnusedAttributeValue) {
                 http_response_code($statusCode);
             }
 
-            $this->setZipOutput($isZipEnabled);
+            if ($isZipEnabled !== PhpRuntime::UnusedAttributeValue) {
+                $this->setZipOutput($isZipEnabled);
+            }
         }
 
         public function getFavicon($url, $contentType) {
