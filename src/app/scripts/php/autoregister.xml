@@ -49,6 +49,7 @@
 	<reg prefix="sys" class="php.libs.System" />
 	<reg prefix="session" class="php.libs.Session" />
 	<reg prefix="template" class="php.libs.Template" />
+	<reg prefix="templateadmin" class="php.libs.TemplateAdmin" />
 	<reg prefix="u" class="php.libs.User" />
 	<reg prefix="ui" class="php.libs.Ui" />
 	<reg prefix="utils" class="php.libs.Utilities" />

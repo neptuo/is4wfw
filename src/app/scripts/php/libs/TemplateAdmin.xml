@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
+  <comment>
+    Knihovna pro správu šablon v CMS.
+  </comment>
+  <fulltag>
+    <name>list</name>
+    <function>listItems</function>
+    <attribute>
+      <name>filter</name>
+      <type>string</type>
+      <prefix />
+      <comment>Filtry, kterým data musí vyhovovat.</comment>
+    </attribute>
+    <attribute>
+      <name>orderBy</name>
+      <prefix />
+      <comment>Nastavení řazení. Klíčem je název sloupce, hodnota může být "asc" nebo "desc".</comment>
+    </attribute>
+    <comment>
+      Vypíše seznam šablon.
+    </comment>
+  </fulltag>
+  <property>
+    <name>list</name>
+    <getFunction>getListItems</getFunction>
+    <comment>
+        Vrací seznam šablon uvnitř "templateadmin:list".
+    </comment>
+  </property>
+  <property>
+    <name>id</name>
+    <getFunction>getListItemId</getFunction>
+    <comment>
+        Vrací id aktuální šablony uvnitř "templateadmin:list".
+    </comment>
+  </property>
+  <property>
+    <name>name</name>
+    <getFunction>getListItemName</getFunction>
+    <comment>
+        Vrací název aktuální šablony uvnitř "templateadmin:list".
+    </comment>
+  </property>
+  <property>
+    <name>group</name>
+    <getFunction>getListItemGroup</getFunction>
+    <comment>
+        Vrací group aktuální šablony uvnitř "templateadmin:list".
+    </comment>
+  </property>
+  <property>
+    <name>identifier</name>
+    <getFunction>getListItemIdentifier</getFunction>
+    <comment>
+        Vrací identifier aktuální šablony uvnitř "templateadmin:list".
+    </comment>
+  </property>
+  <property>
+    <name>content</name>
+    <getFunction>getListItemContent</getFunction>
+    <comment>
+        Vrací content aktuální šablony uvnitř "templateadmin:list".
+    </comment>
+  </property>
+</taglib>
