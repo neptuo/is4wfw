@@ -15,9 +15,17 @@
 		const TableName = "template";
         
         private $tagPrefix;
+        private $urlProperties;
+        private $urlResolvers;
 
 		public function __construct($tagPrefix) {
             $this->tagPrefix = $tagPrefix;
+            $this->urlProperties = [];
+            $this->urlResolvers = [];
+        }
+
+        private function hasAccessToTemplate($data) {
+            return RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(Web::$TemplateRightDesc, $data["id"], WEB_R_READ));
         }
 
 		public function listItems($template, $filter = [], $orderBy = []) {
@@ -55,7 +63,7 @@
 
             $items = [];
             foreach ($data as $item) {
-                if (RoleHelper::isInRole(parent::login()->getGroupsIds(), RoleHelper::getRights(Web::$TemplateRightDesc, $item["id"], WEB_R_READ))) {
+                if ($this->hasAccessToTemplate($item["id"])) {
                     $items[] = $item;
                 }
             }
@@ -90,12 +98,55 @@
 		}
 
 		public function getListItemIdentifier() {
-			return parent::peekListModel()->field("identifier");
+            $model = parent::peekListModel(false);
+            if ($model != null) {
+                return $model->field("identifier");
+            }
+
+            if (array_key_exists("identifier", $this->urlProperties)) {
+                return $this->urlProperties["identifier"];
+            }
+
+            return null;
 		}
 
 		public function getListItemContent() {
 			return parent::peekListModel()->field("content");
 		}
+
+        public function identifierUrlResolver($filter = array()) {
+            $this->urlResolvers["identifier"] = [
+                "filter" => $filter
+            ];
+        }
+
+        public function setIdentifierFromUrl($value) {
+            if (array_key_exists("identifier", $this->urlResolvers)) {
+                $resolver = $this->urlResolvers["identifier"];
+
+                $tableName = self::TableName;
+                $filter = $resolver["filter"];
+                if (parent::isFilterModel($filter)) {
+                    $filter = $filter[""];
+                    $sqlName = Filter::formatColumnName($filter, "identifier");
+                    $sqlValue = parent::sql()->escape($value);
+                    $filter[] = "$sqlName = $sqlValue";
+                    $tableName = $filter->wrapTableName(self::TableName);
+                    $filter = $filter->toSql();
+                } else {
+                    $filter["identifier"] = $value;
+                }
+
+                $sql = parent::sql()->select($tableName, ["id"], $filter);
+                $data = parent::db()->fetchAll($sql);
+                if (empty($data) || count($data) != 1 || !$this->hasAccessToTemplate($data[0])) {
+                    return "x.x---y\\r";
+                }
+            }
+
+            $this->urlProperties["identifier"] = $value;
+            return $value;
+        }
 	}
 
 ?>

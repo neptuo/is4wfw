@@ -52,8 +52,10 @@
   <property>
     <name>identifier</name>
     <getFunction>getListItemIdentifier</getFunction>
+    <setFunction>setIdentifierFromUrl</setFunction>
     <comment>
         Vrací identifier aktuální šablony uvnitř "templateadmin:list".
+        Nastavení se používá pro resolve identifier z URL.
     </comment>
   </property>
   <property>
@@ -63,4 +65,17 @@
         Vrací content aktuální šablony uvnitř "templateadmin:list".
     </comment>
   </property>
+  <tag>
+    <name>identifierUrlResolver</name>
+    <function>identifierUrlResolver</function>
+    <lookless />
+    <attribute>
+      <name>filter</name>
+      <prefix />
+      <comment>Seznam filtračních parametrů.</comment>
+    </attribute>
+    <comment>
+      Url resolver pro identifier.
+    </comment>
+  </tag>
 </taglib>
