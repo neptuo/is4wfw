@@ -2,6 +2,7 @@
 
 	require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
 	/**
 	 * 
@@ -15,6 +16,21 @@
 
 		private $tempValues = [];
 		private $nameScopes = [];
+		private $localScopes;
+
+		public function __construct() {
+			$this->localScopes = new Stack();
+		}
+
+		public function declareScope($template) {
+			$this->localScopes->push(new RequestStorage());
+			try {
+				$output = $template();
+			} finally {
+				$this->localScopes->pop();
+			}
+			return $output;
+		}
 
 		public function setValue($name, $value, $scope = PhpRuntime::UnusedAttributeValue, $select = "") {
 			if ($value instanceof ListModel) {
@@ -35,11 +51,17 @@
 			if ($scope == PhpRuntime::UnusedAttributeValue) {
 				$scope = $this->findScope($name);
 				if ($scope == null) {
-					$scope = "request";
+					if ($this->localScopes->isEmpty()) {
+						$scope = "request";
+					} else {
+						$scope = "local";
+					}
 				}
 			}
 
-			if ($scope == 'request') {
+			if ($scope == 'local') {
+				$this->localScopes->peek()->set($name, $value, 'variable');
+			} else if ($scope == 'request') {
 				parent::request()->set($name, $value, 'variable');
 			} else if ($scope == 'session') {
 				parent::session()->set($name, $value, 'variable');
@@ -88,6 +110,10 @@
 		}
 
 		public function removeValue($name) {
+			if ($this->isScopeAvailableForName($name, "local") && !$this->localScopes->isEmpty() && $this->localScopes->peek()->exists($name, 'variable')) {
+				return $this->localScopes->peek()->delete($name, 'variable');
+			}
+
 			if ($this->isScopeAvailableForName($name, "request") && parent::request()->exists($name, 'variable')) {
 				return parent::request()->delete($name, 'variable');
 			}
@@ -121,6 +147,11 @@
 		}
 
 		public function getProperty($name) {
+			if ($this->isScopeAvailableForName($name, "local") && !$this->localScopes->isEmpty() && $this->localScopes->peek()->exists($name, 'variable')) {
+				// TODO: Probing all scopes
+				return $this->localScopes->peek()->get($name, 'variable');
+			}
+
 			if ($this->isScopeAvailableForName($name, "request") && parent::request()->exists($name, 'variable')) {
 				return parent::request()->get($name, 'variable');
 			}

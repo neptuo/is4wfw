@@ -23,8 +23,8 @@
       <type>string</type>
       <default as="unused" />
       <comment>
-        Může nabývat hodnot 'request', 'session', 'temp', 'cookie', 'user' a 'application'.
-        Výchozí hodnota je 'request'.
+        Může nabývat hodnot 'local', 'request', 'session', 'temp', 'cookie', 'user' a 'application'.
+        Výchozí hodnota je 'local', pokud existuje, jinak 'request'.
       </comment>
     </attribute>
     <attribute>
@@ -55,6 +55,13 @@
     </attribute>
     <comment>
       Nastaví hodnotu proměnné s názvem 'name'.
+    </comment>
+  </fulltag>
+  <fulltag>
+    <name>scope</name>
+    <function>declareScope</function>
+    <comment>
+      Vytvoří scope a všechny proměnné se scope 'current' budou resetovány po jeho ukončení.
     </comment>
   </fulltag>
   <tag>
