@@ -11,7 +11,11 @@
 			parent::setLocalizationBundle("bootstrapui");
 		}
 
-		public function resources() {
+		public function resources($skip = false) {
+			if ($skip == true) {
+				$this->areResourcesIncluded = true;
+			}
+
 			if (!$this->areResourcesIncluded) {
 				parent::js()->addjQuery("3.5.1");
 				parent::js()->addScript("~/js/bootstrap/popper.min.js");
