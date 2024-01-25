@@ -1,6 +1,6 @@
 <?php
 
-	require_once("BaseTagLib.class.php");
+    require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/ListModel.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/Stack.class.php");
 
@@ -147,9 +147,14 @@
 		}
 
 		public function getProperty($name) {
-			if ($this->isScopeAvailableForName($name, "local") && !$this->localScopes->isEmpty() && $this->localScopes->peek()->exists($name, 'variable')) {
-				// TODO: Probing all scopes
-				return $this->localScopes->peek()->get($name, 'variable');
+			if ($this->isScopeAvailableForName($name, "local") && !$this->localScopes->isEmpty()) {
+				$offset = 1;
+				while ($scope = $this->localScopes->peekWithOffset($offset)) {
+					if ($scope->exists($name, 'variable')) {
+						return $scope->get($name, 'variable');
+					}
+					$offset++;
+				}
 			}
 
 			if ($this->isScopeAvailableForName($name, "request") && parent::request()->exists($name, 'variable')) {
