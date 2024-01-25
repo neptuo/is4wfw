@@ -6,6 +6,20 @@
   <tag>
     <name>resources</name>
     <function>resources</function>
+    <attribute>
+      <name>customUrl</name>
+      <default as="unused" />
+      <comment>
+        URL pro vložení vlastní verze css a fontů z vlastního zdroje.
+      </comment>
+    </attribute>
+    <attribute>
+      <name>skip</name>
+      <type>bool</type>
+      <comment>
+        Pokud je nastaven na "true", žádné zdroje se nevloží. Nutno vložit vlastní cestou.
+      </comment>
+    </attribute>
     <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá.</comment>
   </tag>
   <tag>

@@ -6,9 +6,17 @@
 
 		private $areResourcesIncluded = false;
 
-		public function resources() {
+		public function resources($customUrl = PhpRuntime::UnusedAttributeValue, $skip = false) {
+			if ($skip == true) {
+				$this->areResourcesIncluded = true;
+			}
+			
 			if (!$this->areResourcesIncluded) {
-				parent::js()->addStyle("~/css/fontawesome/all.min.css");
+				if ($customUrl === PhpRuntime::UnusedAttributeValue) {
+					$customUrl = "~/css/fontawesome/all.min.css";
+				}
+
+				parent::js()->addStyle($customUrl);
 			}
 		}
 
