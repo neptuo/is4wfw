@@ -21,6 +21,7 @@
 				parent::js()->addScript("~/js/bootstrap/popper.min.js");
 				parent::js()->addScript("~/js/bootstrap/bootstrap.min.js");
 				parent::js()->addStyle("~/css/bootstrap/bootstrap.min.css");
+				$this->areResourcesIncluded = true;
 			}
 		}
 

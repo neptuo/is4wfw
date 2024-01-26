@@ -10,13 +10,14 @@
 			if ($skip == true) {
 				$this->areResourcesIncluded = true;
 			}
-			
+
 			if (!$this->areResourcesIncluded) {
 				if ($customUrl === PhpRuntime::UnusedAttributeValue) {
 					$customUrl = "~/css/fontawesome/all.min.css";
 				}
 
 				parent::js()->addStyle($customUrl);
+				$this->areResourcesIncluded = true;
 			}
 		}
 
