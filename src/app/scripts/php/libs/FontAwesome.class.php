@@ -6,14 +6,20 @@
 
 		private $areResourcesIncluded = false;
 
-		public function resources($customUrl = PhpRuntime::UnusedAttributeValue, $skip = false) {
+		public function resources($customUrl = PhpRuntime::UnusedAttributeValue, $skip = false, $version = "5") {
 			if ($skip == true) {
 				$this->areResourcesIncluded = true;
 			}
 
 			if (!$this->areResourcesIncluded) {
 				if ($customUrl === PhpRuntime::UnusedAttributeValue) {
-					$customUrl = "~/css/fontawesome/all.min.css";
+					if ($version == "5") {
+						$customUrl = "~/css/fontawesome/all.min.css"; // 5.13.0
+					} else if ($version == "6") {
+						$customUrl = "~/assets-web/fontawesome/6.5.1/css/all.min.css";
+					} else {
+						throw new ParameterException("version", "Currently supported versions are 5 and 6. For any other version use 'customUrl' attribute");
+					}
 				}
 
 				parent::js()->addStyle($customUrl);

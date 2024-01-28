@@ -20,6 +20,13 @@
         Pokud je nastaven na "true", žádné zdroje se nevloží. Nutno vložit vlastní cestou.
       </comment>
     </attribute>
+    <attribute>
+      <name>version</name>
+      <default>5</default>
+      <comment>
+        Verze ikon, 5 = 5.13.0 (výchozí), 6 = 6.5.1. Atribut "customUrl" má přednost.
+      </comment>
+    </attribute>
     <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá.</comment>
   </tag>
   <tag>
