@@ -6,21 +6,30 @@
 
 		private $areResourcesIncluded = false;
 		private $lastId = 0;
+		private $version = "4";
 
 		public function __construct() {
 			parent::setLocalizationBundle("bootstrapui");
 		}
 
-		public function resources($skip = false) {
+		public function resources($skip = false, $version = "4") {
 			if ($skip == true) {
 				$this->areResourcesIncluded = true;
 			}
 
 			if (!$this->areResourcesIncluded) {
-				parent::js()->addjQuery("3.5.1");
-				parent::js()->addScript("~/js/bootstrap/popper.min.js");
-				parent::js()->addScript("~/js/bootstrap/bootstrap.min.js");
-				parent::js()->addStyle("~/css/bootstrap/bootstrap.min.css");
+				$this->version = $version;
+				if ($version == "4") {
+					parent::js()->addjQuery("3.5.1");
+					parent::js()->addScript("~/js/bootstrap/popper.min.js");
+					parent::js()->addScript("~/js/bootstrap/bootstrap.min.js");
+					parent::js()->addStyle("~/css/bootstrap/bootstrap.min.css");
+				} else if ($version == "5") {
+					parent::js()->addScript("~/assets-web/bootstrap/5.3.2/js/bootstrap.bundle.min.js");
+					parent::js()->addStyle("~/assets-web/bootstrap/5.3.2/css/bootstrap.min.css");
+				} else {
+					throw new ParameterException("version", "Currently supported versions are 4 and 5");
+				}
 				$this->areResourcesIncluded = true;
 			}
 		}
@@ -60,7 +69,7 @@
 			return "<div$attributes>$content</div>";
 		}
 		
-		public function column($template, $default = "", $small = "", $medium = "", $large = "", $extraLarge = "", $params = array()) {
+		public function column($template, $default = "", $small = "", $medium = "", $large = "", $extraLarge = "", $extraExtraLarge = "", $params = array()) {
 			$hasColumn = false;
 			if ($default != "") {
 				$params = $this->appendClass($params, "col-$default");
@@ -80,6 +89,10 @@
 			}
 			if ($extraLarge != "") {
 				$params = $this->appendClass($params, "col-xl-$extraLarge");
+				$hasColumn = true;
+			}
+			if ($extraExtraLarge != "") {
+				$params = $this->appendClass($params, "col-xxl-$extraExtraLarge");
 				$hasColumn = true;
 			}
 			
@@ -129,8 +142,9 @@
 			$dismissHtml = "";
 			if ($isDismissible) {
 				$params = $this->appendClass($params, "alert-dismissible fade show");
+				$dismissAttribute = $this->version == "4" ? "data-dismiss='alert'" : "data-bs-dismiss='alert'";
 				$dismissHtml = ""
-				. "<button type='button' class='close' data-dismiss='alert'>"
+				. "<button type='button' class='close' $dismissAttribute>"
 					. "<span aria-hidden='true'>&times;</span>"
 			  	. "</button>";
 			}
@@ -164,6 +178,10 @@
 			}
 
 			if ($isBlock) {
+				if ($this->version != "4") {
+					throw new ParameterException("isBlock", "Attribute is not supported in selected version");
+				}
+
 				$params = $this->appendClass($params, "btn-block");
 			}
 			
@@ -198,6 +216,10 @@
 				$labelId = $this->newId();
 				$label["for"] = $labelId;
 			}
+			
+			if ($this->version != "4") {
+				$label = $this->appendClass($label, "form-label");
+			}
 
 			$labelHtml = $this->getTagHtml($label, "label");
 			
@@ -207,10 +229,18 @@
 				$template = function() use($template, $field, $fieldCssClass) { return $this->fieldValidator($template, $field, $fieldCssClass); };
 			}
 
-			$params = $this->appendClass($params, "form-group");
-			$attributes = parent::joinAttributes($params);
-			$content = $template();
-			$result = "<div$attributes>$labelHtml$content</div>";
+			if ($this->version == "4") {
+				$params = $this->appendClass($params, "form-group");
+			}
+
+			if ($this->version == "4" || !empty($params)) {
+				$attributes = parent::joinAttributes($params);
+				$content = $template();
+				$result = "<div$attributes>$labelHtml$content</div>";
+			} else {
+				$content = $template();
+				$result = "$labelHtml$content";
+			}
 
 			parent::ui()->popId($labelId);
 			return $result;

@@ -13,6 +13,13 @@
         Pokud je nastaven na "true", žádné zdroje se nevloží. Nutno vložit vlastní cestou.
       </comment>
     </attribute>
+    <attribute>
+      <name>version</name>
+      <default>4</default>
+      <comment>
+        Verze ikon, 4 = 4.5.0 (výchozí), 5 = 5.3.2.
+      </comment>
+    </attribute>
     <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá.</comment>
   </tag>
   <fulltag>
@@ -32,7 +39,6 @@
   <fulltag>
     <name>grid</name>
     <function>row</function>
-    <obsolete>Použijte "bs:row".</obsolete>
     <attribute>
       <name>horizontal</name>
       <type>string</type>
@@ -47,6 +53,7 @@
       <comment>Všechny atributy jsou předány obalovému "div".</comment>
     </anyAttribute>
     <comment>Vykresluje obalový div pro grid (div class="row").</comment>
+    <obsolete>Použijte "bs:row".</obsolete>
   </fulltag>
   <fulltag>
     <name>row</name>
@@ -93,6 +100,11 @@
       <name>extraLarge</name>
       <type>string</type>
       <comment>Šířka extra large.</comment>
+    </attribute>
+    <attribute>
+      <name>extraExtraLarge</name>
+      <type>string</type>
+      <comment>Šířka extra extra large (version 5 a novější).</comment>
     </attribute>
     <anyAttribute>
       <comment>Všechny atributy jsou předány obalovému "div".</comment>
@@ -248,7 +260,10 @@
     <anyAttribute>
       <comment>Všechny atributy jsou předány obalovému "div".</comment>
     </anyAttribute>
-    <comment>Vykresluje komponentu "form-group". Pokud není zadán "label-for", pak se ho pokusí vygenerovat a "ui" komponenty by ho měly použit.</comment>
+    <comment>
+      Vykresluje komponentu "form-group". Pokud není zadán "label-for", pak se ho pokusí vygenerovat a "ui" komponenty by ho měly použit.
+      Pro version = 5 generuje div bez žádné třídy.
+    </comment>
   </fulltag>
   <fulltag>
     <name>nav</name>
