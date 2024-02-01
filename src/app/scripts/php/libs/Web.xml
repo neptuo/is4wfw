@@ -711,6 +711,11 @@
       <prefix />
       <comment>Attributy předané kořenovému HTML elementu.</comment>
     </attribute>
+    <attribute>
+      <name>body</name>
+      <prefix />
+      <comment>Attributy předané BODY elementu.</comment>
+    </attribute>
     <comment>
       Nastaví vlastnosti výstupu.
     </comment>

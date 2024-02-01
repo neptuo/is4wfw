@@ -56,6 +56,7 @@
         private $PageTailScripts = "";
         private $PageStyles = "";
         private $HtmlAttributes = [];
+        private $BodyAttributes = [];
 
         public function getPageHeadScripts() {
             return $this->PageHeadScripts;
@@ -1337,6 +1338,7 @@
                 }
 
                 if ($isHtml) {
+                    $bodyAttributes = parent::joinAttributes($this->BodyAttributes);
                     $return = ''
                         . $doctype
                         . '<head>'
@@ -1349,7 +1351,7 @@
                             . '<title>' . $this->PageTitle . '</title>'
                             . $this->PageHead . $this->PageStyles . $this->PageHeadScripts
                         . '</head>'
-                        . '<body>' 
+                        . '<body' . $bodyAttributes . '>' 
                             . $this->PageContent 
                             . $diacont 
                             . $this->PageTailScripts
@@ -2868,7 +2870,7 @@
             return $this->Doctype;
         }
 
-        public function setFlushOptions($template = PhpRuntime::UnusedAttributeValue, $contentType = PhpRuntime::UnusedAttributeValue, $isZipEnabled = PhpRuntime::UnusedAttributeValue, $statusCode = PhpRuntime::UnusedAttributeValue, $html = []) {
+        public function setFlushOptions($template = PhpRuntime::UnusedAttributeValue, $contentType = PhpRuntime::UnusedAttributeValue, $isZipEnabled = PhpRuntime::UnusedAttributeValue, $statusCode = PhpRuntime::UnusedAttributeValue, $html = [], $body = []) {
             if ($template !== PhpRuntime::UnusedAttributeValue) {
                 if ($template == 'null') {
                     $this->Template = null;
@@ -2892,6 +2894,7 @@
             }
 
             $this->HtmlAttributes = array_merge($this->HtmlAttributes, $html);
+            $this->BodyAttributes = array_merge($this->BodyAttributes, $body);
         }
 
         public function getFavicon($url, $contentType) {
