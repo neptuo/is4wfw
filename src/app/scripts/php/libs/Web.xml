@@ -706,6 +706,11 @@
       <default as="unused" />
       <comment>HTTP response status code</comment>
     </attribute>
+    <attribute>
+      <name>html</name>
+      <prefix />
+      <comment>Attributy předané kořenovému HTML elementu.</comment>
+    </attribute>
     <comment>
       Nastaví vlastnosti výstupu.
     </comment>

@@ -55,6 +55,7 @@
         private $PageHeadScripts = "";
         private $PageTailScripts = "";
         private $PageStyles = "";
+        private $HtmlAttributes = [];
 
         public function getPageHeadScripts() {
             return $this->PageHeadScripts;
@@ -1313,19 +1314,26 @@
             } else {
                 $isHtml = false;
                 if ($this->Doctype == 'html5') {
+                    if ($isLang) {
+                        $this->HtmlAttributes["lang"] = $lang;
+                    }
+
+                    $htmlAttributes = parent::joinAttributes($this->HtmlAttributes);
                     $isHtml = true;
                     $doctype = ''
                     . '<!DOCTYPE html>'
-                    . '<html' . ($isLang ? ' lang="' . $lang . '"' : '') . '>';
+                    . '<html' . $htmlAttributes . '>';
                 } else if ($this->Doctype == 'svg') {
                     $doctype = ''
                     . '<?xml version="1.0" encoding="utf-8"?>'
                     . '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
                 } else {
+                    $this->HtmlAttributes["xmlns"] = "http://www.w3.org/1999/xhtml";
+                    $htmlAttributes = parent::joinAttributes($this->HtmlAttributes);
                     $isHtml = true;
                     $doctype = ''
                     . '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
-                    . '<html xmlns="http://www.w3.org/1999/xhtml">';
+                    . '<html' . $htmlAttributes . '>';
                 }
 
                 if ($isHtml) {
@@ -2860,7 +2868,7 @@
             return $this->Doctype;
         }
 
-        public function setFlushOptions($template = PhpRuntime::UnusedAttributeValue, $contentType = PhpRuntime::UnusedAttributeValue, $isZipEnabled = PhpRuntime::UnusedAttributeValue, $statusCode = PhpRuntime::UnusedAttributeValue) {
+        public function setFlushOptions($template = PhpRuntime::UnusedAttributeValue, $contentType = PhpRuntime::UnusedAttributeValue, $isZipEnabled = PhpRuntime::UnusedAttributeValue, $statusCode = PhpRuntime::UnusedAttributeValue, $html = []) {
             if ($template !== PhpRuntime::UnusedAttributeValue) {
                 if ($template == 'null') {
                     $this->Template = null;
@@ -2882,6 +2890,8 @@
             if ($isZipEnabled !== PhpRuntime::UnusedAttributeValue) {
                 $this->setZipOutput($isZipEnabled);
             }
+
+            $this->HtmlAttributes = array_merge($this->HtmlAttributes, $html);
         }
 
         public function getFavicon($url, $contentType) {
