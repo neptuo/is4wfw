@@ -51,7 +51,7 @@ class UserVariableDao extends AbstractDao {
 		}
 	}
 
-	public function delete($userId, $name) {
+	public function deleteValue($userId, $name) {
 		$sql = $this->sql()->delete(UserVariableDao::getTableName(), ["user_id" => $userId, "name" => $name]);
 		$this->dataAccess()->execute($sql);
 		return $this->dataAccess->getErrorCode();

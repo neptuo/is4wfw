@@ -135,7 +135,7 @@
 
 			if ($this->isScopeAvailableForName($name, "user") && $this->login()->isLogged()) {
 				if (parent::dao('UserVariable')->getValue($this->login()->getUserId(), $name) !== null) {
-					parent::dao('UserVariable')->delete($this->login()->getUserId(), $name);
+					parent::dao('UserVariable')->deleteValue($this->login()->getUserId(), $name);
 					return;
 				}
 			}

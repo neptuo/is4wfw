@@ -431,6 +431,7 @@
     </attribute>
     <attribute>
       <name>repeat</name>
+      <type>string</type>
       <default>vertical</default>
       <comment>Směr, jakým se mají checkboxy opakovat ("horizontal" nebo "vertical").</comment>
     </attribute>
