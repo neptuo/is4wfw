@@ -168,17 +168,17 @@
             return $phpObject;
         }
 
-        public function web() {
+        public static function web() {
             global $webObject;
             return $webObject;
         }
 
-        public function db() {
+        public static function db() {
             global $dbObject;
             return $dbObject;
         }
 
-        public function ui() {
+        public static function ui() {
             global $uiObject;
             if ($uiObject == NULL) {
                 $this->php()->autoRegisterPrefix("ui");
@@ -208,7 +208,7 @@
             return new SqlBuilder($this->dataAccess());
         }
 
-        public function login() {
+        public static function login() {
             global $loginObject;
             return $loginObject;
         }
@@ -218,17 +218,17 @@
             return $sysObject;
         }
 
-        public function request() {
+        public static function request() {
             global $requestStorage;
             return $requestStorage;
         }
 
-        public function session() {
+        public static function session() {
             global $sessionStorage;
             return $sessionStorage;
         }
 
-        public function query() {
+        public static function query() {
             global $queryStorage;
             return $queryStorage;
         }

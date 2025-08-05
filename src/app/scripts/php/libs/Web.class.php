@@ -2082,6 +2082,7 @@
                 }
             }
 
+            $sql_return = [];
             if (is_numeric($pageId)) {
                 $sql_return = $dbObject->fetchAll("SELECT `href`, `is_visible` FROM `page` LEFT JOIN `info` ON `page`.`id` = `info`.`page_id` WHERE `page`.`id` = " . $pageId . " AND `info`.`language_id` = " . $languageId . ";");
             }

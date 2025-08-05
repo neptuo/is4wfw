@@ -165,7 +165,7 @@
 			}
 			
 			if ($model->isRender()) {
-				if (count($model->items()) == 0) {
+				if ($model->itemCount() == 0) {
 					return $template();
 				}
 			}
@@ -177,7 +177,7 @@
 			}
 			
 			if ($model->isRender()) {
-				if (count($model->items()) > 0) {
+				if ($model->itemCount() > 0) {
 					return $template();
 				}
 			}
@@ -192,7 +192,7 @@
 			
 			if ($model->isRender()) {
 				$prevCount = $this->countListModel;
-				$this->countListModel = count($model->items());
+				$this->countListModel = $model->itemCount();
 				$result = $template();
 				$this->countListModel = $prevCount;
 				return $result;
@@ -201,7 +201,7 @@
 
 		public function countListModelSelfClosing($model) {
 			if ($model->isRender()) {
-				return count($model->items());
+				return $model->itemCount();
 			}
 		}
 
@@ -456,7 +456,7 @@
 			return $result;
 		}
 		
-		public function dropdownlist($name, $nameIndex = -1, $source, $display, $id, $emptyText = "", $mode = "single", $params = array()) {
+		public function dropdownlist($name, $nameIndex, $source, $display, $id, $emptyText = "", $mode = "single", $params = array()) {
 			if ($mode == "multi" && $nameIndex != -1) {
 				throw new ParameterException("nameIndex", "In mode=multi nameIndex is not supported.");
 			}

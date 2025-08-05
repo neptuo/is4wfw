@@ -18,7 +18,7 @@
             $model->validationMessage($key, "invalid");
         }
         
-        public static function addMustMatch(EditModel $model, string $key, string $otherKey = null) {
+        public static function addMustMatch(EditModel $model, string $key, ?string $otherKey = null) {
             $model->validationMessage($key, "mustmatch");
             if ($otherKey != null) {
                 $model->validationMessage($otherKey, "mustmatch");

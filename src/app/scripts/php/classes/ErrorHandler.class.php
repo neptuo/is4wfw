@@ -23,7 +23,6 @@
             E_PARSE             => false,
             E_NOTICE            => false,
             E_USER_NOTICE       => false,
-            E_STRICT            => false,
             E_DEPRECATED        => false,
             E_USER_DEPRECATED   => false,
             E_ALL               => false,

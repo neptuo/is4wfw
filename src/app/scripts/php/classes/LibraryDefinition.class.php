@@ -165,7 +165,7 @@
             foreach ($this->xml->decorator as $decorator) {
                 foreach ($decorator->attribute as $attribute) {
                     if (in_array($attribute->name, $attributeNames)) {
-                        if (!array_key_exists($attribute->name, $decorators)) {
+                        if (!array_key_exists((string)$attribute->name, $decorators)) {
                             $modifiesAttributes = isset($decorator->features->modifiesAttributes);
                             $conditionsExecution = isset($decorator->features->conditionsExecution);
                             $providesFullTagBody = isset($decorator->features->providesFullTagBody);
