@@ -180,10 +180,10 @@ abstract class AbstractDao {
 			$isFirst = true;
 			foreach($idField as $field) {
 				if($isFirst) {
-					$select->where($key, '=', $id[$idField]);
+					$select->where($field, '=', $id[$field]);
 					$isFirst = false;
 				} else {
-					$select->conjunct($key, '=', $id[$idField]);
+					$select->conjunct($field, '=', $id[$field]);
 				}
 			}
 		} else {

@@ -23,8 +23,6 @@
                     global $__loadModules;
                     if (is_callable($__loadModules)) {
                         Module::$all = $__loadModules();
-                    } else if (function_exists("__loadModules")) {
-                        Module::$all = __loadModules();
                     }
                 }
             }

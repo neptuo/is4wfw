@@ -832,6 +832,8 @@
                     return $this->sortAttributesForXmlElement($tag, $atts, $tagPrefix . ":" . $tagName, $uniqueIdentifier, function($att) use ($tagPrefix, $tagName) { return $this->getDefaultGlobalAttribute($tagPrefix, $tagName, $att); });
                 }
             }
+
+            return false;
         }
 
         private function getDefaultGlobalAttribute(string $prefix, string $tag, SimpleXMLElement $attribute) {

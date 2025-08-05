@@ -832,16 +832,7 @@
                 $this->LanguageName = $name[0]['language'];
 
                 $path = StringUtils::explode($this->Path, '/', 1);
-                if ($ok && $parsed_url[1] != '') {
-                    $temp_path = StringUtils::explode($parsed_url[1], '/');
-                    for ($j = 0; $j < count($temp_path); $j++) {
-                        $this->PropertyAttr = $path[0];
-                        $this->PropertyUse = 'set';
-                        $temp_path_rrc = preg_replace_callback($this->PROP_RE, array(&$this, 'parsecproperty'), $temp_path[$j]);
-                        $path = StringUtils::explode($path[1], '/', 1);
-                    }
-                }
-
+                
                 // Old code ...
                 $this->CacheInfo['id'] = $ucache[0]['id'];
                 $this->CacheInfo['cachetime'] = $ucache[0]['cachetime'];
@@ -1469,10 +1460,10 @@
          *  @param  pageId      	page id of required page path
          *  @param  languageId  	language id
          *  @param	absolutePath  use absolute path any time
-         *  @return composed url
+         *  @return string url
          *
          */
-        public function composeUrl($pageId, $languageId = false, $absolutePath = false, $forceDefProp = false, $copyParameters = false) {
+        public function composeUrl($pageId, $languageId = false, $absolutePath = false, $forceDefProp = false, $copyParameters = false): string {
             $languageId = ($languageId === false) ? $this->LanguageId : $languageId;
             $lastPageId = 0;
             $pageProjectId = 0;
@@ -1687,6 +1678,7 @@
                     global ${$object[0] . "Object"};
                     $func = $phpObject->getFuncToProperty($object[0], $object[1], $this->PropertyUse);
                     if($func) {
+                        $return = null;
                         eval('$return =  ${$object[0]."Object"}->{$func}("' . $this->PropertyAttr . '");');
                         return $return;
                     } else {
@@ -1700,6 +1692,8 @@
                     } else {
                         $func = 'getProperty';
                     }
+
+                    $return = null;
                     eval('$return =  ${$object[0]."Object"}->{$func}("' . $object[1] . '", "' . $this->PropertyAttr . '");');
                     return $return;
                 }
