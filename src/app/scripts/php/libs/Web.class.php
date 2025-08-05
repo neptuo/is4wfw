@@ -1303,7 +1303,7 @@
                     . (($this->getDebugMode() && strlen($this->PageLog) != 0) ? '<rssmm:log>' . $this->PageLog . '</rssmm:log>' : '')
                     . '<rssmm:head>'
                         . '<rssmm:title>' . $this->PageTitle . '</rssmm:title>'
-                        . '<rssmm:keywords>' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo</rssmm:keywords>'
+                        . '<rssmm:keywords>' . ((strlen($this->keywords) > 0) ? $this->keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo</rssmm:keywords>'
                         . '<rssmm:styles>' . $this->PageStyles . '</rssmm:styles>'
                         . '<rssmm:scripts>' . $this->PageHeadScripts . $this->PageTailScripts . '</rssmm:scripts>'
                     . '</rssmm:head>'
@@ -1344,7 +1344,7 @@
                         . '<head>'
                             . (($areHeadersSent || $this->IsCached) ? '<meta http-equiv="content-type" content="' . $this->ContentType . '; charset=utf-8" />' : '')
                             . '<meta name="description" content="' . $this->PageTitle . '" />'
-                            . '<meta name="keywords" content="' . ((strlen($this->Keywords) > 0) ? $this->Keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo" />'
+                            . '<meta name="keywords" content="' . ((strlen($this->keywords) > 0) ? $this->keywords . ',' : '') . ((strlen($keywords) > 0) ? $keywords . ',' : '') . 'wfw,rssmm,is4wfw,neptuo" />'
                             . (($areHeadersSent && $isLang) ? '<meta http-equiv="Content-language" content="' . $lang . '" />' : '')
                             . '<meta name="robots" content="all, index, follow" />'
                             . '<meta name="author" content="Marek Fišera" />'
@@ -1777,7 +1777,7 @@
             if (strlen($page['keywords']) > 0) {
                 $page['keywords'] = $this->executeTemplateContent(TemplateCacheKeys::page($page["id"], $this->LanguageId, "keywords"), $page['keywords']);
             }
-            $this->Keywords .= ( (strlen($page['keywords']) != 0) ? ((strlen($this->Keywords) != 0) ? ',' . $page['keywords'] : $page['keywords']) : '');
+            $this->keywords .= ( (strlen($page['keywords']) != 0) ? ((strlen($this->keywords) != 0) ? ',' . $page['keywords'] : $page['keywords']) : '');
 
             $this->Path = $path[1];
 

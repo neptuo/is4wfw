@@ -81,6 +81,7 @@
             }
 
             $this->triggerFail("Unnable to find tag [".$tagName."] in lib [".$this->prefix."]");
+            return "";
         }
 
         // ------- FULL TAG ---------------------------------------------------
