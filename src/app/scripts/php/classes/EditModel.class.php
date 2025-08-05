@@ -40,7 +40,7 @@
 
         // ------- ArrayAccess ------------------------------------------------
 
-        public function offsetSet($offset, $value) {
+        public function offsetSet($offset, $value): void {
             if (is_null($offset)) {
                 $this->container[$this->prefix][] = $value;
             } else {
@@ -48,15 +48,15 @@
             }
         }
     
-        public function offsetExists($offset) {
+        public function offsetExists($offset): bool {
             return isset($this->container[$this->prefix][$offset]);
         }
     
-        public function offsetUnset($offset) {
+        public function offsetUnset($offset): void {
             unset($this->container[$this->prefix][$offset]);
         }
     
-        public function offsetGet($offset, $evaluate = true) {
+        public function offsetGet($offset, $evaluate = true): mixed {
             if ($this->offsetExists($offset)) {
                 $value = $this->container[$this->prefix][$offset];
                 if ($evaluate && is_callable($value)) {
@@ -75,33 +75,31 @@
 
         // ------- Iterator ---------------------------------------------------
 
-        public function rewind(){
+        public function rewind(): void {
             $this->index = 0;
         }
 
-        public function current(){
+        public function current(): mixed {
             $keys = $this->keys();
-            $value = $this[$keys[$this->index]];
-            return $value;
+            if (isset($this[$keys[$this->index]])) {
+                $value = $this[$keys[$this->index]];
+                return $value;
+            } else {
+                return null;
+            }
         }
 
-        public function key(){
+        public function key(): mixed{
             $keys = $this->keys();
             $value = $keys[$this->index];
             return $value;
         }
 
-        public function next(){
-            $keys = $this->keys();
-            if (isset($keys[++$this->index])) {
-                $value = $this[$keys[$this->index]];
-                return $value;
-            } else {
-                return false;
-            }
+        public function next(): void {
+            $this->index++;
         }
 
-        public function valid() {
+        public function valid() : bool {
             $keys = $this->keys();
             $isIndexSet = isset($keys[$this->index]);
             return $isIndexSet;

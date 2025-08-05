@@ -104,7 +104,7 @@
             return $className;
         }
 
-        private function parseInternal(string $content, string $mode, array $keys = null, bool $excapeText = true) {
+        private function parseInternal(string $content, string $mode, ?array $keys = null, bool $excapeText = true) {
             if ($mode == 'parse') {
                 return $this->parseContentInternal($content, $excapeText);
             } else if($mode == 'compile') {
@@ -451,7 +451,7 @@
             }
         }
 
-        protected function sortAnyTagAttributes(string $tagName, TemplateAttributeCollection $attributes, string $content = null) {
+        protected function sortAnyTagAttributes(string $tagName, TemplateAttributeCollection $attributes, ?string $content = null) {
             $params = array();
             foreach ($attributes->Attributes as $usedName => $usedValue) {
                 $params[$usedName] = $usedValue;

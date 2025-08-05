@@ -42,7 +42,7 @@ class SystemProperty extends BaseTagLib {
     public function getValue($name) {
         $this->ensureCache();
 
-        if (array_key_exists($name, SystemProperty::$storage)) {
+        if (array_key_exists($name, (array)SystemProperty::$storage)) {
             return SystemProperty::$storage[$name];
         }
 
