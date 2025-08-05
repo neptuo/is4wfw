@@ -181,7 +181,7 @@
         public static function ui() {
             global $uiObject;
             if ($uiObject == NULL) {
-                $this->php()->autoRegisterPrefix("ui");
+                self::php()->autoRegisterPrefix("ui");
                 global $uiObject;
             }
             

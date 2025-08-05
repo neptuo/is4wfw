@@ -34,7 +34,7 @@
 				$value *= $multiply;
 			}
 
-			if ($divide != "") {
+			if ($divide != "" && $divide != 0) {
 				$value /= $divide;
 			}
 
@@ -51,7 +51,7 @@
 			$out->set($value);
 		}
 		
-		public function random(PropertyReference $out, $min = 0, $max) {
+		public function random(PropertyReference $out, $min, $max) {
 			$value = rand($min, $max);
 			$out->set($value);
 		}

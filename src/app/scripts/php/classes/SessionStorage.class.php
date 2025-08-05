@@ -27,11 +27,11 @@
 		}
 		
 		public function exists($key, $storage = 'default') {
-			return array_key_exists($key, $_SESSION['session-storage'][$storage]);
+			return array_key_exists($key, (array)$_SESSION['session-storage'][$storage]);
 		}
 		
 		public function keys($storage = 'default') {
-			if (array_key_exists($storage, $_SESSION['session-storage'])) {
+			if (array_key_exists($storage, (array)$_SESSION['session-storage'])) {
 				return array_keys($_SESSION['session-storage'][$storage]);
 			}
 

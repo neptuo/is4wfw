@@ -7,7 +7,7 @@
         private $isIterate;
 
         private $fields;
-        private $items;
+        private array $items = [];
         private $currentIndex = -1;
         
         private $metadata = [];
@@ -57,8 +57,8 @@
             }
         }
 
-        public function items($items = "z.z-def") {
-            if ($items != "z.z-def") {
+        public function items(?array $items = null) {
+            if ($items != null) {
                 $this->items = $items;
                 $this->currentIndex = -1;
             } else {

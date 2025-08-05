@@ -855,7 +855,7 @@
 		public function getProperty($name) {
             // Inside "ce:list".
 			$model = parent::peekListModel(false);
-			if ($model != null && (array_key_exists($name, $model->currentItem()) || $name == "_" || !$model->isRender())) {
+			if ($model != null && (array_key_exists($name, (array)$model->currentItem()) || $name == "_" || !$model->isRender())) {
                 if ($name == "_") {
                     return $model->currentItem();
                 }
