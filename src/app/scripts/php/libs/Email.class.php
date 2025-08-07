@@ -34,6 +34,7 @@
             $this->attachments = $oldAttachments;
 
             $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+            $mail->CharSet = PHPMailer\PHPMailer\PHPMailer::CHARSET_UTF8;
             
             $headers = array();
             $headers[] = 'MIME-Version: 1.0';
