@@ -3225,7 +3225,7 @@
 
                 $content = $params['content'];
                 $content = str_replace('&amp;web:page', '&web:page', $content);
-                $content = $db->escape(str_replace('&#126', '~', $content));
+                $content = str_replace('&#126', '~', $content);
 
                 $updateContentSql .= '`content` = "' . $db->escape($content) . '"';
             }
