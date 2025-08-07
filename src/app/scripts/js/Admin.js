@@ -121,7 +121,7 @@
 
     const $monaco = $(".monaco-container");
     if ($monaco.length > 0) {
-        require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.34.0/dev/vs' } });
+        require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.52.2/dev/vs' } });
         require(['vs/editor/editor.main'], async () => {
 
             var intellisense = await fetch("/api/intellisense.view").then(response => response.json());

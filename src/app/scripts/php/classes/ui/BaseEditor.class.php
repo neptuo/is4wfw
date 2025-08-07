@@ -3,7 +3,7 @@
 	class BaseEditor {
 
 		public static function monaco($name, $content, $language = "html") {
-			BaseTagLib::js()->addScript("https://unpkg.com/monaco-editor@0.34.0/min/vs/loader.js");
+			BaseTagLib::js()->addScript("https://unpkg.com/monaco-editor@0.52.2/min/vs/loader.js");
 
 			return ''
 			. '<div id="' . $name . '" class="monaco-container" data-theme="' . BaseTagLib::system()->getPropertyValue('Page.monacoTheme', 'vs') . '" data-language="' . $language . '" style="height: ' . BaseTagLib::system()->getPropertyValue('Page.monacoHeight', 600) . 'px;">'
@@ -12,7 +12,7 @@
 		}
 
 		public static function monacoList($id, $editors, $language = "html") {
-			BaseTagLib::js()->addScript("https://unpkg.com/monaco-editor@0.34.0/min/vs/loader.js");
+			BaseTagLib::js()->addScript("https://unpkg.com/monaco-editor@0.52.2/min/vs/loader.js");
 
 			$result = '<div class="mb-2">';
 
