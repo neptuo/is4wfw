@@ -161,6 +161,15 @@
       <default>false</default>
       <comment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</comment>
     </attribute>
+    <attribute>
+      <name>emailAzureResource</name>
+    </attribute>
+    <attribute>
+      <name>emailAzureRegion</name>
+    </attribute>
+    <attribute>
+      <name>emailAzureAccessKey</name>
+    </attribute>
     <comment>
       Zobrazí formulář, "formId" je identifikátor formuláře, "rowId" slouží pro editaci již existujícího záznamu.
       "type" je 'db' nebo 'email', pokud je 'email', tak nemusí být formulář registrovaný, v tom případě
@@ -217,6 +226,15 @@
       <name>emailIsHtml</name>
       <default>false</default>
       <comment>Pokud je nastaven na 'true', pak je email odeslán jako HTML.</comment>
+    </attribute>
+    <attribute>
+      <name>emailAzureResource</name>
+    </attribute>
+    <attribute>
+      <name>emailAzureRegion</name>
+    </attribute>
+    <attribute>
+      <name>emailAzureAccessKey</name>
     </attribute>
     <comment>
       Zobrazí formulář, "formId" je identifikátor formuláře, tělo značky je formulářem, 

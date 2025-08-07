@@ -2,6 +2,7 @@
 
     require_once("BaseTagLib.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/AzureEmailApiClient.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "libs/FileAdmin.class.php");
 
     /**
@@ -247,12 +248,20 @@
         
         /* ===================== FORM =========================================== */
 
-        public function form($formId, $templateId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false) {
+        public function form($formId, $templateId, $type, $pageId, $rowId = false, 
+            $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false,
+            $emailAzureResource = "", $emailAzureRegion = "", $emailAzureAccessKey = "") {
+
             $template = $this->getTemplateById($templateId);
-            return $this->formFullTag($template, $formId, $type, $pageId, $rowId, $emailTemplateId, $emailAddresses, $emailSubject, $emailSender, $emailSenderFieldName, $emailReplyTo, $emailReplyToFieldName, $emailIsHtml);
+            return $this->formFullTag($template, $formId, $type, $pageId, $rowId, 
+                $emailTemplateId, $emailAddresses, $emailSubject, $emailSender, $emailSenderFieldName, $emailReplyTo, $emailReplyToFieldName, $emailIsHtml,
+                $emailAzureResource, $emailAzureRegion, $emailAzureAccessKey);
         }
 
-        public function formFullTag($template, $formId, $type, $pageId, $rowId = false, $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false) {
+        public function formFullTag($template, $formId, $type, $pageId, $rowId = false, 
+            $emailTemplateId = false, $emailAddresses = false, $emailSubject = false, $emailSender = false, $emailSenderFieldName = false, $emailReplyTo = false, $emailReplyToFieldName = false, $emailIsHtml = false,
+            $emailAzureResource = "", $emailAzureRegion = "", $emailAzureAccessKey = "") {
+
             global $webObject;
             $rb = $this->rb();
             $return = "";
@@ -398,7 +407,39 @@
                             $headers[] = 'Reply-To: ' . $emailReplyTo;
                         }
 
-                        $result = mail($emailAddresses, $subject, $content, implode(PHP_EOL, $headers));
+                        $result = true;
+                        if (strlen($emailAzureAccessKey) > 0) {
+                            $mailer = new AzureEmailApiClient([
+                                'azureResourceName' => $emailAzureResource,
+                                'azureRegion' => $emailAzureRegion,
+                                'accessKey' => $emailAzureAccessKey,
+                                'senderAddress' => $emailSender,
+                                'replyToAddress' => $emailReplyTo,
+                            ]);
+
+                            $email = [
+                                'subject' => $subject,
+                                'to' => []
+                            ];
+
+                            if ($emailIsHtml) {
+                                $email['htmlContent'] = $content;
+                            } else {
+                                $email['plainContent'] = $content;
+                            }
+
+                            foreach (explode(",", $emailAddresses) as $value) {
+                                $email['to'][] = [
+                                    'address' => $value,
+                                    'displayName' => ''
+                                ];
+                            }
+
+                            $response = $mailer->sendEmail($email);
+                            $result = $response["statusCode"] == 202;
+                        } else {
+                            $result = mail($emailAddresses, $subject, $content, implode(PHP_EOL, $headers));
+                        }
                         if ($result) {
                             if($pageId) {
                                 $webObject->redirectTo($pageId);
