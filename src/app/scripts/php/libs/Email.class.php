@@ -3,6 +3,7 @@
     // use PHPMailer\PHPMailer;
 
 	require_once("BaseTagLib.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/AzureEmailApiClient.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/EmailException.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/FileUploadModel.class.php");
 	require_once(APP_SCRIPTS_PHP_PATH . "classes/Validator.class.php");
@@ -24,7 +25,7 @@
 
         private $attachments;
 
-		public function send($template, $from, $to, $replyTo, $cc, $bcc, $subject, $isHtml = true) {
+		public function send($template, $from, $to, $replyTo, $cc, $bcc, $subject, $isHtml = true, $azureResource = "", $azureRegion = "", $azureAccessKey = "") {
             $oldAttachments = $this->attachments;
             $this->attachments = [];
 
@@ -33,56 +34,97 @@
             $attachments = $this->attachments;
             $this->attachments = $oldAttachments;
 
-            $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-            $mail->CharSet = PHPMailer\PHPMailer\PHPMailer::CHARSET_UTF8;
-            
-            $headers = array();
-            $headers[] = 'MIME-Version: 1.0';
+            if (strlen($azureAccessKey) > 0) {
+                $mailer = new AzureEmailApiClient([
+                    'azureResourceName' => $azureResource,
+                    'azureRegion' => $azureRegion,
+                    'accessKey' => $azureAccessKey,
+                    'senderAddress' => $from,
+                    'replyToAddress' => $replyTo,
+                ]);
 
-            if ($isHtml) {
-                $headers[] = 'Content-type: text/html; charset=utf8';
-            }
+                $email = [
+                    'subject' => $subject,
+                    'to' => []
+                ];
 
-            if (Validator::isEmail($from)) {
-                $headers[] = 'From: ' . $from;
-                $mail->setFrom($from);
-            }
-
-            if (Validator::isEmail($replyTo)) {
-                $headers[] = 'Reply-To: ' . $replyTo;
-                $mail->addReplyTo($replyTo);
-            }
-            
-            if (Validator::isEmail($cc)) {
-                $headers[] = 'Cc: ' . $cc;
-                $mail->addCC($cc);
-            }
-
-            if (Validator::isEmail($bcc)) {
-                $headers[] = 'Bcc: ' . $bcc;
-                $mail->addBCC($bcc);
-            }
-
-            $tos = explode(",", $to);
-            $to = [];
-            foreach ($tos as $item) {
-                if (Validator::isEmail($item)) {
-                    $to[] = $item;
-                    $mail->addAddress($item);
+                if ($isHtml) {
+                    $email['htmlContent'] = $content;
+                } else {
+                    $email['plainContent'] = $content;
                 }
-            }
 
-            foreach ($attachments as $attachment) {
-                $mail->addAttachment($attachment["path"], $attachment["name"]);
-            }
+                $tos = explode(",", $to);
+                $to = [];
+                foreach ($tos as $item) {
+                    if (Validator::isEmail($item)) {
+                        $email['to'][] = [
+                            'address' => $item,
+                            'displayName' => ''
+                        ];
+                    }
+                }
 
-            try {
-                $mail->isHTML($isHtml);
-                $mail->Subject = $subject;
-                $mail->Body = $content;
-                $mail->send();
-            } catch (\PHPMailer\PHPMailer\Exception $e) {
-                throw new EmailException($to, $subject, $e->getMessage());
+                try {
+                    $response = $mailer->sendEmail($email);
+                    if ($response["statusCode"] != 202) {
+                        throw new EmailException($to, $subject, $response["content"]["error"]);
+                    }
+                } catch (Exception $e) {
+                    throw new EmailException($to, $subject, $e->getMessage());
+                }
+            } else {
+                $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+                $mail->CharSet = PHPMailer\PHPMailer\PHPMailer::CHARSET_UTF8;
+                
+                $headers = array();
+                $headers[] = 'MIME-Version: 1.0';
+
+                if ($isHtml) {
+                    $headers[] = 'Content-type: text/html; charset=utf8';
+                }
+
+                if (Validator::isEmail($from)) {
+                    $headers[] = 'From: ' . $from;
+                    $mail->setFrom($from);
+                }
+
+                if (Validator::isEmail($replyTo)) {
+                    $headers[] = 'Reply-To: ' . $replyTo;
+                    $mail->addReplyTo($replyTo);
+                }
+                
+                if (Validator::isEmail($cc)) {
+                    $headers[] = 'Cc: ' . $cc;
+                    $mail->addCC($cc);
+                }
+
+                if (Validator::isEmail($bcc)) {
+                    $headers[] = 'Bcc: ' . $bcc;
+                    $mail->addBCC($bcc);
+                }
+
+                $tos = explode(",", $to);
+                $to = [];
+                foreach ($tos as $item) {
+                    if (Validator::isEmail($item)) {
+                        $to[] = $item;
+                        $mail->addAddress($item);
+                    }
+                }
+
+                foreach ($attachments as $attachment) {
+                    $mail->addAttachment($attachment["path"], $attachment["name"]);
+                }
+
+                try {
+                    $mail->isHTML($isHtml);
+                    $mail->Subject = $subject;
+                    $mail->Body = $content;
+                    $mail->send();
+                } catch (\PHPMailer\PHPMailer\Exception $e) {
+                    throw new EmailException($to, $subject, $e->getMessage());
+                }
             }
 		}
 

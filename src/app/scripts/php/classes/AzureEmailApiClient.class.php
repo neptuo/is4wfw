@@ -12,7 +12,7 @@ class AzureEmailApiClient {
 	
 	private $replyToAddress = 'noreply@example.com';
 	
-	private $replyToDisplayName = 'NoReply';
+	private $replyToDisplayName = '';
 	
 	public function __construct($details = []) {
 		$this->configure($details);

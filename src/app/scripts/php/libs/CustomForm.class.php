@@ -1,8 +1,8 @@
 <?php
 
     require_once("BaseTagLib.class.php");
-    require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "classes/AzureEmailApiClient.class.php");
+    require_once(APP_SCRIPTS_PHP_PATH . "classes/LocalizationBundle.class.php");
     require_once(APP_SCRIPTS_PHP_PATH . "libs/FileAdmin.class.php");
 
     /**
@@ -15,7 +15,7 @@
      */
     class CustomForm extends BaseTagLib {
 
-        private $tagPregix;
+        private $tagPrefix;
 
         private $FunctionRegex = '#([a-zA-Z0-9]+)\(([^)]*)\)#';
         private $EmailRegex = '/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i';

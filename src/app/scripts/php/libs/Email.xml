@@ -45,8 +45,22 @@
       <default>true</default>
       <comment>Zda se má email odeslat jako HTML.</comment>
     </attribute>
+    <attribute>
+      <name>azureResource</name>
+      <comment>Azure Resource Name zvolený při vytváření, např. 'communucation-resource-for-is4wfw'.</comment>
+    </attribute>
+    <attribute>
+      <name>azureRegion</name>
+      <comment>Azure Region zvolený při vytváření resource, např. 'europe'.</comment>
+    </attribute>
+    <attribute>
+      <name>azureAccessKey</name>
+      <comment>Azure Access Key pro přístup k Azure Communucation Resource.</comment>
+    </attribute>
     <comment>
       Odešle email na adresy 'to'. Tělo definuje obsah emailu.
+      Pokud jsou vyplněny atribut 'azureResource', 'azureRegion' a 'azureAccessKey', posílá email pomocí Azure Communication Service.
+      Azure neumí posílat přilohy.
     </comment>
   </fulltag>
   <tag>
