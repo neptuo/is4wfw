@@ -12,5 +12,5 @@ Nightly tag builds can be grabbed at [AppVeyor](https://ci.appveyor.com/project/
 
 ## Docker
 
-Prebuilt docker images are in our docker hub repository [neptuo/is4wfw](https://hub.docker.com/r/neptuo/is4wfw).
+Prebuilt docker images are in our ghcr.io repository [neptuo/is4wfw](https://ghcr.io/neptuo/is4wfw).
 We are producing two types of images, one is production ready and the second one (with `-dev` suffix) has xdebug installed and configured, so it is intended for development purposes.

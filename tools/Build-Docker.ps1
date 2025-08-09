@@ -1,4 +1,4 @@
-# Example: .\tools\Pack-Patch.ps1 v338.7
+# Example: .\tools\Build-Docker.ps1 v338.7 -push
 param(
     [Parameter(Mandatory=$true)][string]$versionName,
     [Parameter(Mandatory=$false)][switch]$push
@@ -31,7 +31,7 @@ Invoke-Expression ".\Update-InstancePath.ps1 instance";
 Invoke-Expression ".\DockerizeHtaccess.ps1";
 
 $versionName = $versionName.Substring(1);
-$tag = "neptuo/is4wfw:$versionName";
+$tag = "ghcr.io/neptuo/is4wfw:$versionName";
 $tagDev = "$tag-dev";
 
 # Build docker image

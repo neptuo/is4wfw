@@ -1,6 +1,6 @@
 ARG baseversion
 
-FROM neptuo/is4wfw:$baseversion
+FROM ghcr.io/neptuo/is4wfw:$baseversion
 
 ENV IS4WFW_DEVELOPMENT=true
 
