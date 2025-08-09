@@ -5,6 +5,7 @@ Ajax = function({ selector, parentPageId, modifyUrl, includeCredentials }) {
     this.LoadingHandlers = [];
     this.CompletedHandlers = [];
     this.FailedHandlers = [];
+    this._RequestNumber = 0;
 
     if (typeof(parentPageId) != 'undefined') {
         this.ParentPageId = parentPageId;
@@ -95,7 +96,8 @@ Ajax.prototype._Fetch = function(url, method, data) {
     }
 
     this._ObserveRequest(fetchOptions);
-
+    
+    const requestNumber = ++this._RequestNumber;
     fetch(url, fetchOptions)
         .then(response => { 
             if (!response.ok) {
@@ -106,10 +108,14 @@ Ajax.prototype._Fetch = function(url, method, data) {
             return response.text(); 
         })
         .then(result => {
-            this._OnLoadCompleted(result, url);
+            if (requestNumber == this._RequestNumber) {
+                this._OnLoadCompleted(result, url);
+            }
         })
         .catch(error => {
-            this._RaiseEvent("failed", error);
+            if (requestNumber == this._RequestNumber) {
+                this._RaiseEvent("failed", error);
+            }
         });
 }
 
