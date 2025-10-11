@@ -894,11 +894,7 @@
             
             if($pageable) {
                 $total = $dbObject->fetchSingle($countSql);
-                $padingPageId = $this->web()->getCurrentPage();
-                if (!$padingPageId) {
-                    $padingPageId = $_SERVER['REQUEST_URI'];
-                }
-                $paging = $this->getPaging($total['id'], $this->getArticlePageSize(), $this->getArticlePage(), $padingPageId, $this->web()->getLanguageId());
+                $paging = $this->getPaging($total['id'], $this->getArticlePageSize(), $this->getArticlePage(), $_SERVER['REQUEST_URI'], 0);
                 
                 if(strlen($paging) > 0) {
                     $returnTmp .= '<div class="gray-box">' . $paging . '</div>';

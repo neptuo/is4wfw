@@ -1454,8 +1454,7 @@
                 $url = str_replace('~/', INSTANCE_URL, $url);
             } else {
                 $project = $this->UrlResolver->getWebProject();
-                $pageId = str_replace("~/", "/", $url);
-                $url = $this->composeUrlProjectPart($pageId, $project, $absolutePath);
+                $url = $this->composeUrlProjectPart($url, $project, $absolutePath);
             }
 
             return $url;
@@ -1556,6 +1555,7 @@
                 $this->CurrentPath = "";
             }
 
+            $tmpPath = UrlResolver::combinePath('~', $tmpPath);
             if ($pageProjectId == $this->ProjectId) {
                 // Dosestav url z dat v urlResolveru
                 $url = $this->composeUrlProjectPart($tmpPath, $this->UrlResolver->getWebProject(), $absolutePath);
@@ -1592,7 +1592,11 @@
         }
 
         private function composeUrlProjectPart($pageUrl, $project, $absolute) {
-            $pageUrl = UrlResolver::combinePath($project['alias']['virtual_url'], $pageUrl);
+            $isVirtual = strpos($pageUrl, "~/") === 0;
+            $pageUrl = str_replace("~/", "/", $pageUrl);
+            if ($isVirtual) {
+                $pageUrl = UrlResolver::combinePath($project['alias']['virtual_url'], $pageUrl);
+            }
             $pageUrl = UrlResolver::combinePath($project['alias']['root_url'], $pageUrl);
 
             $isEmptyProject = empty($project);
