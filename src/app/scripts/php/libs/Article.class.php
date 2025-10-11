@@ -894,7 +894,11 @@
             
             if($pageable) {
                 $total = $dbObject->fetchSingle($countSql);
-                $paging = $this->getPaging($total['id'], $this->getArticlePageSize(), $this->getArticlePage(), $_SERVER['REQUEST_URI'], 0);
+                $padingPageId = $this->web()->getCurrentPage();
+                if (!$padingPageId) {
+                    $padingPageId = $_SERVER['REQUEST_URI'];
+                }
+                $paging = $this->getPaging($total['id'], $this->getArticlePageSize(), $this->getArticlePage(), $padingPageId, $this->web()->getLanguageId());
                 
                 if(strlen($paging) > 0) {
                     $returnTmp .= '<div class="gray-box">' . $paging . '</div>';
@@ -980,9 +984,9 @@
                 }
             }
             
-                    if ($detailPageId != false) {
-                        $actionUrl = $webObject->composeUrl($detailPageId);
-                    }
+            if ($detailPageId != false) {
+                $actionUrl = $webObject->composeUrl($detailPageId);
+            }
 
             if($_POST['article-new'] == $rb->get('articles.newcap')) {
                 $url = UrlUtils::addParameter($actionUrl, 'line-id', $lineId);
@@ -1378,7 +1382,7 @@
             }
 
             $cfContent = '';
-            if ((!$isClosing || $isSaved) && $hasCustomForm) {
+            if ((!$isClosing || $isSaved) && $hasCustomForm && $languageId) {
                 parent::web()->setIsInsideForm(true);
                 $additionalKeys = array('id' => $articleId, 'language_id' => $languageId);
                 $cfContent .= $cfObject->form($customFormId, $customFormTemplateId, 'db', false, $additionalKeys);
