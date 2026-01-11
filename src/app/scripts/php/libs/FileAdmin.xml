@@ -299,10 +299,17 @@
       <default>0</default>
       <comment>Id souboru, který se má nahradit.</comment>
     </attribute>
+    <attribute>
+      <name>generateUniqueFileName</name>
+	    <type>bool</type>
+      <default>false</default>
+      <comment>Nahradí původní název souboru GUIDem.</comment>
+    </attribute>
     <comment>
       Zpracuje všechny klíče uvnitř edit modelu jako soubory, nebo pole souborů.
       Pokud je zadán "fileId", edituje/nahrazuje existující soubor (jeho obsah) a dává smysl tak odeslat jen jeden soubor.
       Pokud je zadán "dirId", nahrává nový soubor(y) do složky a dává smysl odeslat více souborů.
+      Tělo tagu se nespouští pro fázi "save". Použití "fa:uploadFormTagFileIds" je tak nutno dát mimo "fa:upload", ale uvnitř "edit:form".
     </comment>
   </fulltag>
   <property>

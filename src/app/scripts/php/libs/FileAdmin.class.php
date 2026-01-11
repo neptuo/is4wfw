@@ -776,7 +776,7 @@
 			}
 		}
 
-		public function uploadFormTag($template, $dirId = 0, $fileId = 0) {
+		public function uploadFormTag($template, $dirId = 0, $fileId = 0, $generateUniqueFileName = false) {
 			$model = parent::getEditModel();
 
 			if ($model->isSubmit()) {
@@ -787,9 +787,18 @@
 					$hasAccess = false;
 				}
 
-				$this->forEachModelFile($model, function($file, $key) use ($model, $hasAccess, $dirId, $fileId) {
+				$this->forEachModelFile($model, function($file, $key) use ($model, $hasAccess, $dirId, $fileId, $generateUniqueFileName) {
 					if (!$hasAccess) {
 						$model->validationMessage($key, parent::rb('permissiondenied'));
+					}
+
+					if ($generateUniqueFileName) {
+						$info = pathinfo($file->Name);
+						$uniqueName = $this->newGuid();
+						if (strlen($info['extension']) > 0) {
+							$uniqueName .= "." . $info['extension'];
+						}
+						$file->Name = $uniqueName;
 					}
 
 					if (strlen($file->Name) == 0) {
