@@ -514,7 +514,8 @@
             .'</div>'
             .'<div class="gray-box">'
                 .'There are some special GET parameters in the system, here is list of them:<br />'
-                . "<strong>Debug mode must be enabled to make them work</strong>"
+                . "<strong>Debug mode must be enabled to make them work</strong><br />"
+                . "<strong>User must be logged-in to the admin on the same domain as web is hosted to make debug mode work</strong>"
                 .'<ul>'
                     .'<li><strong>auto-login-ignore</strong> - ignore auto-login parameteres for login:login.</li>'
                     .'<li><strong>duration-stats</strong> - time required to generate response.</li>'

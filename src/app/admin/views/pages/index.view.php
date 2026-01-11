@@ -35,6 +35,10 @@
 			<web:redirectToSelf />
 		</web:condition>
 
+		<p>
+			User must be logged-in to the admin on the same domain as web is hosted to make debug mode work.
+		</p>
+
 		<ui:form>
 			<web:switch when="web:debug">
 				<web:case is="true">
