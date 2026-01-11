@@ -25,6 +25,7 @@ $instancePath = INSTANCE_PATH;
 define("APP_PATH", INSTANCE_PATH . "app/");
 define("APP_SCRIPTS_PATH", APP_PATH . "scripts/");
 define("APP_SCRIPTS_PHP_PATH", APP_SCRIPTS_PATH . "php/");
+define("APP_SCRIPTS_ASSETS_PATH", APP_SCRIPTS_PATH . "assets/");
 define("APP_SCRIPTS_BUNDLES_PATH", APP_SCRIPTS_PATH . "bundles/");
 
 define("CACHE_PATH", INSTANCE_PATH . "cache/");

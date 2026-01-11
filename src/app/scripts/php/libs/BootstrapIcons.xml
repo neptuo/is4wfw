@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
+  <comment>
+    Knihovna pro generování FontAwesome ikon.
+  </comment>
+  <tag>
+    <name>resources</name>
+    <function>resources</function>
+    <attribute>
+      <name>customUrl</name>
+      <default as="unused" />
+      <comment>
+        URL pro vložení vlastní verze css a fontů z vlastního zdroje.
+      </comment>
+    </attribute>
+    <attribute>
+      <name>skip</name>
+      <type>bool</type>
+      <comment>
+        Pokud je nastaven na "true", žádné zdroje se nevloží. Nutno vložit vlastní cestou.
+      </comment>
+    </attribute>
+    <attribute>
+      <name>version</name>
+      <default>1</default>
+      <comment>
+        Verze ikon, 1 = 1.13.1 (výchozí). Atribut "customUrl" má přednost.
+      </comment>
+    </attribute>
+    <comment>Slouží pro explicitní přidání resourců do stránky. Není nutné, jakékoli použití ostatních tagů resources přidá (s vyjímkou inline SVG).</comment>
+  </tag>
+  <tag>
+    <name>icon</name>
+    <function>icon</function>
+    <attribute>
+      <name>name</name>
+      <type>string</type>
+      <required />
+      <comment>Identifikátor ikony (automaticky se přidá "bi-" prefix).</comment>
+    </attribute>
+    <attribute>
+      <name>tag</name>
+      <type>string</type>
+      <default>i</default>
+      <comment>HTML tag, který se má použít. Pokud je nastaven "svg", vrátí SVG element s inline verzí ikony. SVG nefunguje pro custom URL</comment>
+    </attribute>
+    <anyAttribute>
+      <comment>Všechny atributy jsou předány obalovému tagu.</comment>
+    </anyAttribute>
+    <comment>
+      Vrací HTML tag s ikonou.
+      Pro SVG jsou podporovány "anyAttribute". Je nutné využít CSS pro nastavení velikosti, barvy atd.
+    </comment>
+  </tag>
+  <anyProperty>
+    <comment>Vrací i tag s ikonou. Název property je použit jako identifikátor ikony.</comment>
+  </anyProperty>
+</taglib>
