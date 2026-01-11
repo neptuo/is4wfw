@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <taglib xmlns="http://schemas.neptuo.com/xsd/is4wfw/taglib.xsd">
   <comment>
-    Knihovna pro generování FontAwesome ikon.
+    Knihovna pro generování Bootstrap ikon.
   </comment>
   <tag>
     <name>resources</name>
