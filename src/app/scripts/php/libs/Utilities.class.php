@@ -154,6 +154,10 @@
             $this->setOutput($output, Formatter::toByteString($value));
         }
 
+        public function random($output, $min, $max) {
+            $this->setOutput($output, rand($min, $max));
+        }
+
         public function clear($output) {
             unset($this->OutputValues[$output]);
         }

@@ -369,6 +369,29 @@
     <comment>Naformátuje hodnotu ve "value" na nejvyšší desetinnou jednotku (GB, MB, KB).</comment>
   </tag>
   <tag>
+    <name>random</name>
+    <function>random</function>
+    <lookless />
+    <attribute>
+      <name>output</name>
+      <type preferPropertyReference="true">string</type>
+      <required />
+      <comment>Název property z této knihovny, do níž bude uložen výstup.</comment>
+    </attribute>
+    <attribute>
+      <name>min</name>
+      <type>number</type>
+      <default>0</default>
+      <comment>Minimum generovaného čísla.</comment>
+    </attribute>
+    <attribute>
+      <name>max</name>
+      <type>number</type>
+      <comment>Maximum generovaného čísla.</comment>
+    </attribute>
+    <comment>Vygeneruje náhodné celé číslo v rozmezí 'min' a 'max'.</comment>
+  </tag>
+  <tag>
     <name>clear</name>
     <function>clear</function>
     <lookless />

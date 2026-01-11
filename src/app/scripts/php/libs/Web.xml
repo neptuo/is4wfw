@@ -582,6 +582,7 @@
   <tag>
     <name>genRandNum</name>
     <function>generateRandomNumber</function>
+    <obsolete>Použijte "utils:random".</obsolete>
     <attribute>
       <name>min</name>
     </attribute>
