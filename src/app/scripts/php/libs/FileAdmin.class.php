@@ -842,6 +842,10 @@
 		private function forEachModelFile($model, $handler) {
 			foreach ($model->keys() as $key) {
 				$files = $model[$key];
+				if ($files == null) {
+					continue;
+				}
+
 				if (is_array($files)) {
 					foreach ($files as $file) {
 						$handler($file, $key);
